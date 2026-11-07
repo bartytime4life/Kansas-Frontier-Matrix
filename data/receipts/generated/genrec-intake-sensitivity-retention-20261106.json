@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-intake-sensitivity-retention-20261106",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/intake_studio/intake_server.py",
+    "tests/local_data/test_intake_studio.py",
+    "tests/local_data/test_intake_studio_sensitivity.py",
+    "tests/local_data/test_intake_studio_security.py",
+    "tests/local_data/test_intake_studio_browser.py",
+    "docs/runbooks/local-intake-studio.md"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/intake_studio/intake_server.py": "sha256:daeac845de74d5638a39fc36e94b43bea7a3c8b173bfa16fa8b35b2d78751c6a",
+    "tests/local_data/test_intake_studio.py": "sha256:80b6df7e52cc6c5fd7a308ab0faabdbceb7b03f848db188101c59deb740aa9f4",
+    "tests/local_data/test_intake_studio_sensitivity.py": "sha256:d1c6c4b83452fabd5b4f2db43119550c9afcfac74d44eec9e0a048ea9a4ec3d3",
+    "tests/local_data/test_intake_studio_security.py": "sha256:a01c3d0b698662cfc87135f5e1a04d5ae82facaaabd19ba3728251dbb4627f1a",
+    "tests/local_data/test_intake_studio_browser.py": "sha256:a0e523568652a9763cef861716877100aa9c670f2d521d3477744b2f3b0302ae",
+    "docs/runbooks/local-intake-studio.md": "sha256:5fa35f061de253afdec47bc53fe281515c254d2d2e5aca8c8b679929a35defb7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/205e344ea8d05077414d3a0f8606512b66272be5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5746#discussion_r4496762986",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@205e344ea8d05077414d3a0f8606512b66272be5",
+      "repo:.github/CODEOWNERS@205e344ea8d05077414d3a0f8606512b66272be5",
+      "repo:.github/workflows/codeql.yml@205e344ea8d05077414d3a0f8606512b66272be5"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/intake_studio/intake_server.py": "CONFIRMED",
+    "tests/local_data/test_intake_studio.py": "CONFIRMED",
+    "tests/local_data/test_intake_studio_sensitivity.py": "CONFIRMED",
+    "tests/local_data/test_intake_studio_security.py": "CONFIRMED",
+    "tests/local_data/test_intake_studio_browser.py": "CONFIRMED",
+    "docs/runbooks/local-intake-studio.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Original bypass reproduction",
+      "outcome": "PASS",
+      "reason": "The initial seven sensitivity regression methods produced 13 failures/assertion subtests against pinned main; clearance-payload rejection already passed. The correction passes eight sensitivity methods including recovery and immutable history checks."
+    },
+    {
+      "gate": "Targeted intake/review/limits/studio/security",
+      "outcome": "PASS",
+      "reason": "95 passed, 3 native skips, 48 subtests passed. Final studio/sensitivity/security unittest rerun: 25 tests, 3 native skips."
+    },
+    {
+      "gate": "Strict local-data target",
+      "outcome": "PASS",
+      "reason": "make local-data-check: 844 passed, 13 explicit skips, 588 subtests passed with no-network guard enforced. Loopback HTTP and browser checks run separately, without weakening that guard."
+    },
+    {
+      "gate": "Browser review flow",
+      "outcome": "PASS",
+      "reason": "Opt-in Playwright 1.56.0 / Chromium Headless Shell 141.0.7390.37: one test, desktop 1365x1000 and narrow 390x844. Upload, repeated edits, reload/discard, server/Store restart, ready rejection, downloaded ZIP hashes and private authority flags pass; no page errors or external page requests."
+    },
+    {
+      "gate": "HTTP response splitting investigation",
+      "outcome": "PASS",
+      "reason": "Inspected PR draft/final sources and all current responder call sites for alerts 650/651/652; no exploitable current route demonstrated. Serialization delimiter tests and loopback hostile-name/header/authentication tests pass. Existing header sanitizers, CodeQL queries and alert settings unchanged; hosted CodeQL remains separate."
+    },
+    {
+      "gate": "Native extraction acceptance",
+      "outcome": "FAIL",
+      "reason": "Attempted 14 native studio tests: 2 failures and 2 errors caused by extraction unavailable. Direct bubblewrap diagnostic: NETLINK_ROUTE socket denied by command sandbox. No isolation controls relaxed. This does not qualify native OCR/PDF or owner-PC installation."
+    },
+    {
+      "gate": "Lint/documentation/integrity",
+      "outcome": "PASS",
+      "reason": "New test files pass Ruff. Existing server/test files retain the same 13 inherited lint findings as pinned base. JavaScript syntax, git whitespace, runbook metadata and all four local link targets pass."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "Repository guardrails passed before receipt staging; final staged topology/receipt validation is rechecked before branch delivery. Existing topology reports 89 baselined warnings, zero new drift."
+    },
+    {
+      "gate": "Hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending PR creation; inspect current GitHub run results separately."
+    },
+    {
+      "gate": "Accountable human review and owner-PC acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Human sensitivity/security review remains pending. Replacement-PC recovery state and installation were not accessed or changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/205e344ea8d05077414d3a0f8606512b66272be5"
+    },
+    {
+      "id": "original-review",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5746#discussion_r4496762986"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-11-07T02:03:28.714803Z",
+  "emitter": "Codex repository repair session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Restores the existing sensitivity-hold boundary; no clearance authority is added. Reads recover legacy flags without rewriting the inbox, history, original objects or prior exports. Explicit saves append flag snapshots and preserve the actual stored previous review. No operational datasets, source admission, services, owner-PC installation, deployment or publication changes. Pending review; no override."
+}

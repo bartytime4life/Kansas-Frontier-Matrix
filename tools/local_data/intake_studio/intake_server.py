@@ -140,6 +140,28 @@ def flags_for(text):
     return [reason for pattern, reason in rules if re.search(pattern, text, re.I)]
 
 
+def retain_sensitivity(record):
+    """Conservative read projection; never rewrite stored history or objects.
+
+    Earlier studio versions could erase description flags. Recover those holds
+    from saved review context, including the previousReview snapshots. This
+    desk has no clearance authority: editing text or selecting Public cannot
+    remove a recorded flag. A separate governed process must handle clearance.
+    """
+    flags = list(record["analysis"]["flags"])
+    flags += flags_for(record["review"]["description"])
+    for event in record["history"]:
+        flags += event.get("sensitivityFlags", [])
+        for key in ("previousReview", "review"):
+            flags += flags_for(event.get(key, {}).get("description", ""))
+    record["analysis"]["flags"] = list(dict.fromkeys(flags))
+    if flags and record["review"]["decision"] == "Ready for integration review":
+        # A legacy ready label cannot override a recovered restriction. Reads
+        # remain side-effect free; the next explicit save persists this hold.
+        record["review"]["decision"] = "Needs review"
+    return record
+
+
 def signature(raw):
     if raw.startswith(b"%PDF-"):
         return "application/pdf"
@@ -199,17 +221,20 @@ class Store:
         finally:
             db.close()
 
-    def get(self, id):
+    def _load_record(self, id):
         with self.db() as db:
             row = db.execute("SELECT data FROM files WHERE id=?", (id,)).fetchone()
         if not row:
             raise KeyError("File not found.")
         return json.loads(row[0])
 
+    def get(self, id):
+        return retain_sensitivity(self._load_record(id))
+
     def list(self):
         with self.db() as db:
             return [
-                json.loads(r[0])
+                retain_sensitivity(json.loads(r[0]))
                 for r in db.execute("SELECT data FROM files ORDER BY rowid DESC")
             ]
 
@@ -388,7 +413,9 @@ class Store:
 
     def review(self, id, value):
         with self.lock:
-            record = self.get(id)
+            record = self._load_record(id)
+            old = dict(record["review"])
+            retain_sensitivity(record)
             if value.get("version") != record["version"]:
                 raise RuntimeError("This record changed. Reload it before saving.")
             if set(value) - set(REVIEW_FIELDS) - {"version"}:
@@ -437,7 +464,6 @@ class Store:
             ):
                 r["decision"] = "Needs review"
             record["version"] += 1
-            old = record["review"]
             record["review"] = r
             # Raw extraction stays immutable; operator description can add explicit suggestion context.
             record["analysis"]["suggestions"] = suggest(
@@ -447,7 +473,11 @@ class Store:
                 (self.objects / record["sha256"] / "analysis.json").read_text()
             )
             record["analysis"]["flags"] = list(
-                dict.fromkeys(original["flags"] + flags_for(r["description"]))
+                dict.fromkeys(
+                    original["flags"]
+                    + record["analysis"]["flags"]
+                    + flags_for(r["description"])
+                )
             )
             if (
                 record["analysis"]["flags"]
@@ -462,6 +492,7 @@ class Store:
                     "version": record["version"],
                     "previousReview": old,
                     "review": dict(r),
+                    "sensitivityFlags": list(record["analysis"]["flags"]),
                 }
             )
             self.save(record)

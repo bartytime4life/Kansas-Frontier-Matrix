@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-runbooks-local-intake-studio
 title: Local photo and PDF intake review
 type: runbook
-version: v1
+version: v1.1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
@@ -10,7 +10,7 @@ updated: 2026-11-06
 policy_label: public
 owning_root: docs/
 responsibility: Explain private preparation and governed capture handoff.
-truth_posture: CONFIRMED targeted local regressions; NEEDS VERIFICATION camera and browser acceptance; no admission or publication.
+truth_posture: CONFIRMED targeted local regressions and synthetic Chromium review flow; NEEDS VERIFICATION native extraction on this revision, camera and owner-PC acceptance; no admission or publication.
 [/KFM_META_BLOCK_V2] -->
 
 # Review photos and PDFs on your development PC
@@ -147,11 +147,59 @@ are committed here. No new schema, policy, registry or proof authority is create
 
 ## Validation and rollback
 
+### Recorded sensitivity holds
+
+Sensitivity flags accumulate across saved description edits and review decisions.
+Replacing sensitive text, selecting **Public**, or switching between **Needs
+review** and **Keep quarantined** does not clear an earlier flag. Previously
+flagged records cannot become **Ready for integration review** here. Clearance
+requires separately authorized governed review outside this desk; no clearance
+field, endpoint, or local override is provided. Export a held package for that
+review and retain its private history.
+
+On reopening an older inbox, flags erased by the original description-edit bug
+are recovered from saved `review` and `previousReview` history snapshots. Current
+descriptions and recorded flag snapshots also retain restrictions. List, detail
+and export use the same conservative read projection: a legacy ready label with
+a recovered flag is shown as **Needs review**. Reading or exporting does not
+rewrite SQLite rows, prior history, original bytes or extraction objects. The
+next explicit review save persists the retained hold, appends a `sensitivityFlags`
+snapshot, and records the actual stored previous review. No schema migration or
+automatic inbox rewrite is needed. Recovery cannot reconstruct history that was
+never saved or was removed outside this application; a clean flag list is not
+sensitivity clearance.
+
 Standard-library regressions (synthetic extraction; native cases explicitly skip):
 
 ```bash
 /usr/bin/python3 -m unittest tests.local_data.test_intake_studio -v
 ```
+
+Sensitivity recovery and HTTP-security regressions:
+
+```bash
+python -m unittest tests.local_data.test_intake_studio_sensitivity \
+  tests.local_data.test_intake_studio_security -v
+```
+
+The strict `make local-data-check` target keeps its Python no-network guard.
+Socket-free header serialization tests run there; the two loopback HTTP tests
+skip explicitly and must also be run separately using the commands above. No
+guard exceptions or application authentication changes are introduced.
+
+Opt-in browser acceptance, with Playwright and Chromium separately provisioned:
+
+```bash
+KFM_INTAKE_BROWSER_TESTS=1 python -m unittest \
+  tests.local_data.test_intake_studio_browser -v
+```
+
+`KFM_INTAKE_TEST_CHROMIUM` may select an installed browser executable. An explicit
+browser run fails if its dependency or browser is unavailable. It uses temporary
+synthetic uploads and synthetic extraction, checks desktop and narrow viewports,
+repeated edits, discarded unsaved changes, reload, a restarted server and inbox,
+readiness denial, and downloaded-package hashes. It does not activate a camera
+or qualify real OCR, a phone browser, or an installed copy on the owner's PC.
 
 Installed Linux extraction regressions (actual sandbox, Pillow, PDF and OCR):
 
@@ -166,6 +214,49 @@ malformed-image handling. They use temporary synthetic files, not user uploads.
 Camera hardware, cross-browser acceptance, source admission and public readiness
 are separate unverified scopes. Existing acceptance-board tests do not qualify
 this repository revision's browser behavior.
+
+### Header-warning investigation — 2026-11-06
+
+Inspection is pinned to `main@205e344ea8d05077414d3a0f8606512b66272be5`
+and the PR #5746 draft and final heads. The initial draft responder at
+`be3ae9c1ee5cc626833ad12d76a0a59c14859b74` lacked generic header sanitization;
+the final head `ee0de9ddf290c2f3b8127f35d1ab256c8a48ef12` already includes it.
+
+| CodeQL warning | Sink and current source path | Evidence and disposition |
+|---|---|---|
+| [650](https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/code-scanning/650) | `Content-Type`; literal API types or MIME lookup on four allowlisted static asset paths | Current responder removes CR, LF and NUL. Five hostile delimiter inputs produce one HTTP response, one content-type line, no injected header and an intact body. No exploitable current route demonstrated. |
+| [651](https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/code-scanning/651) | Earlier `Content-Disposition` sink in the draft | The review thread is outdated. Production download names are generated from a regex-validated 32-hex ID plus a fixed suffix or signature-selected extension; uploaded filenames are not header inputs. The final head additionally sanitizes control characters and quotes. No exploitable current route demonstrated. |
+| [652](https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/code-scanning/652) | Sanitized `Content-Disposition` sink in the final head | Serialized-header tests cover CR/LF response boundaries, every C0 filename control, DEL and quotes. Live loopback tests upload a hostile filename and confirm fixed original/export headers, CSP, no-store, nosniff and Host/Origin/token/fetch-site rejection. No exploitable current route demonstrated. |
+
+These bounded source and negative-test findings do not establish that every
+historical version or future caller is safe. The response handler, sanitizers,
+CodeQL queries, alert settings and security headers are unchanged by this
+correction; no warning is suppressed or dismissed. Hosted CodeQL at the PR head
+and accountable sensitivity/security review remain separate evidence gates.
+
+### Sensitivity correction validation — 2026-11-06
+
+The original regression tests fail against the pinned main behavior (13 failed
+assertions/subtests across the initial seven test methods). The corrected tests
+also cover saved legacy ready labels, read-only recovery, audit-snapshot recovery,
+interrupted persistence, stale-session retry, unknown clearance fields, unchanged
+history/provenance/originals, and checksummed exports.
+
+Targeted intake/review/limits/studio/security checks: **95 passed, 3 skipped,
+48 subtests passed**. The complete strict local-data target: **844 passed,
+13 skipped, 588 subtests passed**. Skips include optional native/runtime cases,
+the opt-in browser flow and the two separately executed loopback HTTP tests.
+Chromium Headless Shell 141.0.7390.37 with Playwright 1.56.0 passed the browser
+flow at 1365×1000 and 390×844; no page-script errors or external page requests
+were observed.
+
+The installed Chromium launcher initially failed on a denied Unix socket; the
+headless-shell fallback ran successfully. Native OCR/PDF acceptance was attempted
+and failed because this command sandbox denies the `NETLINK_ROUTE` socket needed
+by bubblewrap's network isolation. No sandbox protection was relaxed. Native
+extraction, camera hardware, broader browser coverage, and the replacement
+development PC's recovery and installation state remain unverified. No owner-PC
+installation, operational-dataset change, source admission or publication occurred.
 
 ### Repository integration check — 2026-11-06
 
