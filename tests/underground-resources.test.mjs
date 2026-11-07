@@ -31,6 +31,15 @@ test('historical mine partial flags, exact frame, duplicate and malformed positi
  assert.match(v.rows[0].details.find(([name])=>name==='Record updated')?.[1]??'',/^\d{4}-\d{2}-\d{2}$/);
  assert.throws(()=>model.resourceLocations({type:'FeatureCollection',features:Array(202).fill(feature())},'oilgas',bounds));
 });
+test('a rejected feature does not pull the lookahead record into the prior page',()=>{
+ const malformed=feature(1,[0,0]);
+ const first=model.resourceLocations({type:'FeatureCollection',features:[malformed,feature(2),feature(3)]},'oilgas',bounds,2);
+ const second=model.resourceLocations({type:'FeatureCollection',features:[feature(3),feature(4)]},'oilgas',bounds,2);
+ assert.deepEqual(first.rows.map(row=>row.id),['oilgas:2']);
+ assert.equal(first.rejected,1);assert.equal(first.partial,true);
+ assert.deepEqual(second.rows.map(row=>row.id),['oilgas:3','oilgas:4']);
+ assert.equal(second.partial,false);
+});
 test('source failures and excessive response bytes remain unavailable',async()=>{
  const old=globalThis.fetch;
  try{for(const body of ['x'.repeat(1_000_001),JSON.stringify({error:'provider error'})]){globalThis.fetch=async()=>new Response(body);assert.equal((await GET(new Request(`https://kfm.test/api?kind=minerals&bounds=${bounds}`))).status,502);}}finally{globalThis.fetch=old;}
