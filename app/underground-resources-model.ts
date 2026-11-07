@@ -20,7 +20,9 @@ export function resourceLocations(value:unknown,kind:ResourceKind,bounds:AreaBou
   if(!validAreaBounds(bounds)||!Number.isSafeInteger(limit)||limit<1||limit>500||!object(value)||value.type!=="FeatureCollection"||!Array.isArray(value.features)||value.features.length>limit+1)throw new Error("Unrecognized source response.");
   const seen=new Set<string>();let rejected=0;
   const rows:ResourceLocation[]=[];
-  for(const f of value.features){
+  // The extra raw feature is lookahead only. Filtering it into this page would
+  // repeat that record when the next request starts at the raw offset.
+  for(const f of value.features.slice(0,limit)){
     if(!object(f)||!object(f.geometry)||f.geometry.type!=="Point"||!validPosition(f.geometry.coordinates)||!object(f.properties)){rejected++;continue;}
     const p=f.properties,c=f.geometry.coordinates;
     if(!inKansas(c)||c[0]<bounds[0]||c[0]>bounds[2]||c[1]<bounds[1]||c[1]>bounds[3]||!Number.isSafeInteger(p.OBJECTID)||Number(p.OBJECTID)<0){rejected++;continue;}

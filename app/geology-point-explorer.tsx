@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
 import { startSubsurfaceWorker } from "./subsurface-workers";
@@ -32,7 +32,7 @@ export function geologyPointFrame(center: Position, span: Position): AreaBounds 
   return [Number(west.toFixed(5)), Number(south.toFixed(5)), Number((west + width).toFixed(5)), Number((south + height).toFixed(5))];
 }
 
-export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean }) {
+export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible, pickingEnabled }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean; pickingEnabled: () => boolean }) {
   const [viewport, setViewport] = useState<AreaBounds | null>(null);
   const [frame, setFrame] = useState<AreaBounds | null>(null);
   const [sources, setSources] = useState<Record<ResourceKind, SourceState>>({ oilgas: emptySource(), minerals: emptySource() });
@@ -45,6 +45,8 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
   const [detailError, setDetailError] = useState("");
   const [coincident, setCoincident] = useState<string[]>([]);
   const workerRef = useRef<Worker | null>(null);
+  const pickingRef = useRef(pickingEnabled);
+  useLayoutEffect(() => { pickingRef.current = pickingEnabled; }, [pickingEnabled]);
   const requestNumber = useRef(0);
   const pointRequest = useRef(0);
   const detailRequest = useRef(0);
@@ -121,7 +123,6 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
           if (!Array.isArray(value.rows) || value.rows.length > (detailedFrame ? 500 : 200) || typeof value.partial !== "boolean") throw new Error("Invalid source response");
           rows.push(...value.rows);
           if (!value.partial) return { rows, partial: false, error: false, complete: true };
-          if (value.rows.length === 0) break;
         }
         return { rows, partial: true, error: false, complete: false };
       } catch { return { rows: [], partial: false, error: !controller.signal.aborted, complete: false }; }
@@ -152,6 +153,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       if (!map.getLayer(GEOLOGY_POINT_LAYER_IDS[1])) map.addLayer({ id: GEOLOGY_POINT_LAYER_IDS[1], type: "symbol", source: SOURCE_ID, filter: ["==", ["get", "kind"], "cluster"], layout: { "text-field": ["get", "countLabel"], "text-size": 11, "text-allow-overlap": true }, paint: { "text-color": "#ffffff" } });
     };
     const click = (event: MapMouseEvent) => {
+      if (!pickingRef.current()) return;
       const layers = GEOLOGY_POINT_LAYER_IDS.filter(id => map.getLayer(id));
       if (!layers.length) return;
       const hits = map.queryRenderedFeatures(event.point, { layers });
