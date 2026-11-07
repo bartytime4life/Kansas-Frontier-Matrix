@@ -8,15 +8,20 @@ import ts from 'typescript';
 const compile = async name => ts.transpileModule(await readFile(new URL(`../app/${name}.ts`,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const materialUrl=`data:text/javascript;base64,${Buffer.from(await compile('subsurface-materials')).toString('base64')}`;
 const moduleText=(await compile('subsurface-model')).replace('from "./subsurface-materials"', `from "${materialUrl}"`);
-const model=await import(`data:text/javascript;base64,${Buffer.from(moduleText).toString('base64')}`);
-const code=(await compile('subsurface-worker')).replace(/^import[^;]+;/m,'const { inKansas, nearbyColumns, areaColumns, displayColumns, validAreaBounds, validBorehole, validPosition } = model;');
+const modelUrl=`data:text/javascript;base64,${Buffer.from(moduleText).toString('base64')}`;
+const model=await import(modelUrl);
+const geologyText=(await compile('geology-locator-model')).replace('from "./subsurface-model"',`from "${modelUrl}"`);
+const geology=await import(`data:text/javascript;base64,${Buffer.from(geologyText).toString('base64')}`);
+const code=(await compile('subsurface-worker'))
+ .replace(/^import[^;]+;/m,'const { inKansas, nearbyColumns, areaColumns, displayColumns, validAreaBounds, validBorehole, validPosition } = model;')
+ .replace(/^import[^;]+;/m,'const { mapLocator, validGeologyBounds } = geology;');
 const well=(id,date='2000-01-01')=>({id,sourceId:'kgs-wwc5',kind:'well',name:id,coordinates:[-95,39],coordinateReference:'WGS84',locationMethod:'PLSS',sourceUrl:'https://www.kgs.ku.edu/',sourceTime:date,depthUnit:'ft',depthReference:'land-surface',totalDepth:100,intervals:[{top:0,bottom:10,description:'sand'}]});
 const bytes=gzipSync(JSON.stringify([well('a'),well('b','2026-01-01'),well('unknown','Unknown'),{...well('invalid'),coordinates:null}]));
 const sha=createHash('sha256').update(bytes).digest('hex');
 const manifest={version:1,sources:[],tiles:[{id:'one',bounds:[-95.2,38.8,-94.8,39.2],url:'/data/subsurface/tile-one.json.gz',sha256:sha}],counties:[]};
 function harness(fetcher) {
  const messages=[];const scope={postMessage:v=>messages.push(v),onmessage:null,location:{origin:"https://kfm-worker.invalid"}};
- const context=vm.createContext({self:scope,model,fetch:fetcher,Blob,Response,AbortController,DecompressionStream,crypto:webcrypto,TextDecoder,console,URL,Uint8Array,Date,setTimeout,clearTimeout});
+ const context=vm.createContext({self:scope,model,geology,fetch:fetcher,Blob,Response,AbortController,DecompressionStream,crypto:webcrypto,TextDecoder,console,URL,Uint8Array,Date,setTimeout,clearTimeout});
  vm.runInContext(code,context);
  return {messages,send:q=>scope.onmessage({origin:scope.location.origin,data:{id:1,kind:'probe',anchor:[-95,39],route:[],sources:['kgs-wwc5'],year:2026,...q}}),sendForeign:q=>scope.onmessage({origin:"https://foreign.invalid",data:{id:1,kind:'probe',anchor:[-95,39],route:[],sources:['kgs-wwc5'],year:2026,...q}})};
 }
@@ -26,6 +31,21 @@ test('real gzip integrity, record validation, date holds, and source filters',as
  const h=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):bytes));
  h.send({year:2020});let r=await wait(h);assert.equal(r.columns.length,1);assert.equal(r.columns[0].record.id,'a');assert.equal(r.rejected,1);assert.equal(r.timeHeld,2);
  h.send({id:2,sources:[]});r=await wait(h,2);assert.equal(r.columns.length,0);
+});
+test('geology map reads the pinned locator and resolves an individual 2D record',async()=>{
+ const point=well('wwc5-123'),tileBytes=gzipSync(JSON.stringify([point]));
+ const locatorBytes=gzipSync(JSON.stringify([['wwc5-123','Jefferson',[-95,39],'one']]));
+ const digest=value=>createHash('sha256').update(value).digest('hex');
+ const meta={...manifest,locator:{url:'/data/subsurface/locator.json.gz',sha256:digest(locatorBytes)},
+  tiles:[{...manifest.tiles[0],sha256:digest(tileBytes)}]};
+ const h=harness(async url=>new Response(url.endsWith('manifest.json')?JSON.stringify(meta):url.split('?')[0].endsWith('locator.json.gz')?locatorBytes:tileBytes));
+ h.send({kind:'geology-points',bounds:[-95.1,38.9,-94.9,39.1],maxPoints:2500,columns:8,rows:6});
+ const points=await wait(h);assert.equal(points.kind,'geology-points');assert.equal(points.total,1);
+ assert.equal(points.points[0].id,'wwc5-123');assert.equal(points.points[0].tileId,'one');
+ h.send({id:2,kind:'geology-detail',recordId:'wwc5-123',tileId:'one'});
+ const detail=await wait(h,2);assert.equal(detail.kind,'geology-detail');
+ assert.equal(detail.record.name,'wwc5-123');assert.equal(detail.record.totalDepth,100);
+ assert.equal(detail.record.intervalCount,1);
 });
 test('stale or canceled source requests cannot replace a newer result',async()=>{
  let resolveOld;let manifestReads=0;
