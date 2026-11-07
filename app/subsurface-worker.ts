@@ -1,6 +1,9 @@
 import { inKansas, nearbyColumns, areaColumns, displayColumns, validAreaBounds, validBorehole, validPosition, type AreaBounds, type Borehole, type Position, type SubsurfaceManifest } from "./subsurface-model";
+import { mapLocator, validGeologyBounds, type LocatorEntry } from "./geology-locator-model";
 
-type Query = { id: number; kind: "probe" | "search" | "area" | "prepare"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string };
+type Query = { id: number; kind: "probe" | "search" | "area" | "prepare"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string }
+  | { id: number; kind: "geology-points"; bounds: AreaBounds; maxPoints: number; columns: number; rows: number }
+  | { id: number; kind: "geology-detail"; recordId: string; tileId: string };
 const scope = self as unknown as { onmessage: ((event: MessageEvent<Query>) => void) | null; postMessage: (message: unknown) => void };
 let controller: AbortController | null = null;
 let manifest: SubsurfaceManifest | null = null;
@@ -56,6 +59,25 @@ async function run(q: Query, signal: AbortSignal) {
     if (m.version !== 1 || !Array.isArray(m.tiles) || !Array.isArray(m.sources) || m.tiles.some(t => !safeAsset(t.url))) throw new Error("Unsupported source manifest");
     manifest = m;
   }
+  if (q.kind === "geology-points") {
+    if (!validGeologyBounds(q.bounds) || !manifest.locator) throw new Error("Geology locator unavailable");
+    if (!locator) locator = await readAsset(manifest.locator.url, signal, manifest.locator.sha256, manifest.locator.decodedSha256) as LocatorEntry[];
+    return { manifest, ...mapLocator(locator, q.bounds, q.maxPoints, q.columns, q.rows) };
+  }
+  if (q.kind === "geology-detail") {
+    if (!/^(wwc5|core)-[a-zA-Z0-9._-]{1,150}$/.test(q.recordId)) throw new Error("Invalid record identity");
+    const tile = manifest.tiles.find(item => item.id === q.tileId);
+    if (!tile) throw new Error("Source tile unavailable");
+    const raw = await readAsset(tile.url, signal, tile.sha256, tile.decodedSha256);
+    if (!Array.isArray(raw)) throw new Error("Invalid source tile");
+    const record = raw.find(item => validBorehole(item) && item.id === q.recordId) as Borehole | undefined;
+    if (!record) throw new Error("Record not found in source tile");
+    return { record: { id: record.id, name: record.name, kind: record.kind, coordinates: record.coordinates,
+      sourceTime: record.sourceTime, totalDepth: record.totalDepth, depthUnit: record.depthUnit,
+      depthReference: record.depthReference, locationMethod: record.locationMethod,
+      coordinateReference: record.coordinateReference, sourceUrl: record.sourceUrl,
+      intervalCount: record.intervals.length } };
+  }
   // Opening this tool warms only its bounded local manifest, never source tiles.
   if (q.kind === "prepare") return { manifest, prepared: true };
   if (q.kind === "search") {
@@ -106,6 +128,6 @@ scope.onmessage = event => {
   const expectedOrigin = self.location.origin;
   if (event.origin && event.origin !== expectedOrigin) return;
   controller?.abort(); controller = new AbortController(); const current = controller; const q = event.data;
-  void run(q, current.signal).then(result => { if (!current.signal.aborted) scope.postMessage({ id: q.id, ...result }); })
-    .catch(error => { if (!current.signal.aborted) scope.postMessage({ id: q.id, error: error instanceof Error ? error.message : "Underground source unavailable" }); });
+  void run(q, current.signal).then(result => { if (!current.signal.aborted) scope.postMessage({ id: q.id, kind: q.kind, ...result }); })
+    .catch(error => { if (!current.signal.aborted) scope.postMessage({ id: q.id, kind: q.kind, error: error instanceof Error ? error.message : "Underground source unavailable" }); });
 };

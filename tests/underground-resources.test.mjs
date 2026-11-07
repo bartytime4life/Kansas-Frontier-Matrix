@@ -20,11 +20,15 @@ test('resource source requests are Kansas bounded, capped, transformed to WGS84 
  globalThis.fetch=async u=>{sent=new URL(u);return Response.json({type:'FeatureCollection',features:[feature()]});};
  try{assert.equal((await GET(new Request('https://kfm.test/api?kind=oilgas&bounds=-104,38,-90,39'))).status,400);assert.equal(sent,undefined);
  const r=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}`));const v=await r.json();assert.equal(r.status,200);assert.equal(sent.hostname,'services.kansasgis.org');assert.equal(sent.searchParams.get('outSR'),'4326');assert.equal(sent.searchParams.get('resultRecordCount'),'201');assert.equal(v.rows[0].status,'P&A');assert.match(v.source.limitation,/not current production/);assert.ok(v.retrievedAt);
+ const page=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&page=1`));assert.equal(page.status,200);assert.equal(sent.searchParams.get('resultOffset'),'500');assert.equal(sent.searchParams.get('resultRecordCount'),'501');
+ assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&page=-1`))).status,400);
  }finally{globalThis.fetch=old;}
 });
 test('historical mine partial flags, exact frame, duplicate and malformed positions stay distinct',()=>{
- const v=model.resourceLocations({type:'FeatureCollection',properties:{exceededTransferLimit:true},features:[feature(),feature(),feature(3,[-99.9,38.8]),feature(4,[0,0]),{bad:true}]},'minerals',bounds);
+ const dated=feature();dated.properties.UPDATE_DATE='951727442000';
+ const v=model.resourceLocations({type:'FeatureCollection',properties:{exceededTransferLimit:true},features:[dated,feature(),feature(3,[-99.9,38.8]),feature(4,[0,0]),{bad:true}]},'minerals',bounds);
  assert.equal(v.rows.length,1);assert.equal(v.rejected,4);assert.equal(v.partial,true);assert.equal(v.rows[0].material,'Limestone');assert.match(model.RESOURCE_SOURCES.minerals.limitation,/circa 2000/);
+ assert.match(v.rows[0].details.find(([name])=>name==='Record updated')?.[1]??'',/^\d{4}-\d{2}-\d{2}$/);
  assert.throws(()=>model.resourceLocations({type:'FeatureCollection',features:Array(202).fill(feature())},'oilgas',bounds));
 });
 test('source failures and excessive response bytes remain unavailable',async()=>{
