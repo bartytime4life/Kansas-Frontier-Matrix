@@ -2221,6 +2221,9 @@ for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
     await p.evaluate(`document.querySelector('.topic-agriculture').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.map-topic-edit')?.textContent.includes('Agriculture')`,'agriculture opened');
     assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock')`),false,'the map opens with instruments hidden');
+    // The deferred Explorer applies the category camera after the chooser exits.
+    // Take the unchanged-map baseline only once that intended handoff is saved.
+    await p.wait(`(()=>{const view=new URLSearchParams(history.state?.kfmExplorerView);return view.get('c')==='-100.90000,37.98000'&&view.get('z')==='10.50';})()`,'the initial agriculture camera is serialized before opening its key');
     const before=await p.evaluate(`({entry:history.state.kfmExplorerEntry,view:history.state.kfmExplorerView})`);
     const activate=async selector=>{
       const quoted=JSON.stringify(selector);
