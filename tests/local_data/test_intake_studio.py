@@ -207,6 +207,10 @@ class Tests(unittest.TestCase):
         self.assertIn("water", r["analysis"]["text"].lower())
         self.assertTrue(r["preview"])
 
+    @unittest.skipIf(
+        os.environ.get("KFM_NO_NETWORK") == "1",
+        "Loopback HTTP is tested separately; keep the no-network guard enforced",
+    )
     def test_http_boundaries(self):
         server = Server(0, self.store)
         server.origin = f"http://127.0.0.1:{server.server_port}"
