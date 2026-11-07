@@ -86,6 +86,23 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
+/** Shared checked symbols for the map menu and category tools. */
+export const renderMapKeys = (keys: readonly MapKey[]) => (
+      <div>
+      {keys.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
+      <strong>{key.title}</strong>
+      {key.ramp && <div className="category-map-dock-key-ramp">
+        <span className="category-map-dock-key-ramp-bar" aria-hidden="true" style={{ background: key.ramp.css }} />
+        <span className="category-map-dock-key-ramp-ticks">{key.ramp.ticks.map(tick => <span key={tick.label} style={{ left: `${tick.at}%` }}>{tick.label}</span>)}</span>
+      </div>}
+      {key.items.length > 0 && <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
+        data-dashed={item.dashed ? "true" : undefined}
+        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>}
+      <small>{key.note}</small>
+    </section>)}
+      </div>
+);
+
 export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
@@ -436,19 +453,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     </header>
     {keys && keys.length > 0 && <details className="category-map-dock-map-key">
       <summary>Map key <span>Colors &amp; symbols</span></summary>
-      <div>
-      {keys.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
-      <strong>{key.title}</strong>
-      {key.ramp && <div className="category-map-dock-key-ramp">
-        <span className="category-map-dock-key-ramp-bar" aria-hidden="true" style={{ background: key.ramp.css }} />
-        <span className="category-map-dock-key-ramp-ticks">{key.ramp.ticks.map(tick => <span key={tick.label} style={{ left: `${tick.at}%` }}>{tick.label}</span>)}</span>
-      </div>}
-      {key.items.length > 0 && <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
-        data-dashed={item.dashed ? "true" : undefined}
-        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>}
-      <small>{key.note}</small>
-    </section>)}
-      </div>
+      {renderMapKeys(keys)}
     </details>}
     {look.topic === "government" && civic && <section className="category-map-dock-layer-set" aria-label="Kansas congressional districts">
       <strong>U.S. House · {civic.congress ? `Congress ${civic.congress}` : "history"}</strong>

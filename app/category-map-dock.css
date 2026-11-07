@@ -81,6 +81,13 @@
 .category-map-dock .category-map-dock-places button[aria-pressed=true]{background:#d8c58f;color:#14212a;border-color:#f1e6c2}
 .category-map-dock-scale-note{display:block;margin-top:4px;color:#9fb6bf;font-size:11px}
 /* Map keys: what the starter layers' symbols encode, drawn as the map draws them. */
+.map-menu-key{min-width:0;border-block:1px solid #749bac40;margin-block:4px}
+.map-menu-key>summary{min-height:44px;padding:10px 8px;cursor:pointer;color:#f1e6c2;font-size:13px;font-weight:650;overflow-wrap:anywhere}
+.map-menu-key>summary small{display:block;margin:3px 0 0 15px;font-weight:400}
+.map-menu-key>div{display:grid;gap:14px;padding:10px 8px 14px;min-width:0}
+.map-menu-key>p{padding:0 8px 10px;font-size:12px;line-height:1.5;color:#c9dbe2}
+.map-menu-key .category-map-dock-key{min-width:0;overflow-wrap:anywhere}
+.map-menu-key>summary:focus-visible{outline:2px solid #f1e6c2;outline-offset:-2px;border-radius:5px}
 .category-map-dock-key{display:grid;gap:6px}
 .category-map-dock-key>strong{font-family:inherit;font-size:12px;letter-spacing:.04em;color:#f1e6c2}
 .category-map-dock-key ul{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px}

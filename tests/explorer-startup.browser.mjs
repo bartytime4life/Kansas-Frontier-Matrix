@@ -2211,3 +2211,47 @@ for(const [width,height] of [[1280,800],[390,844]]) {
   await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('f')===${JSON.stringify(feature)} && document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden')==='false' && document.querySelector('.evidence-drawer')?.textContent.includes('Kansas U.S. House District 1')`,'reload reconstructs inspection after its source loads');
  });
 }
+
+// The startup map hides its instrument dock; its color key must remain reachable
+// from the existing header menu without changing the selected map or camera.
+for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
+  test(`map menu exposes crop key without instruments at ${width}x${height}`, {timeout:90000}, async t => {
+    const b=await browser(t),p=await pageSession(b,width,height);
+    await p.open('/?motion=off');await readyWelcome(p);
+    await p.evaluate(`document.querySelector('.topic-agriculture').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.map-topic-edit')?.textContent.includes('Agriculture')`,'agriculture opened');
+    assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock')`),false,'the map opens with instruments hidden');
+    // The deferred Explorer applies the category camera after the chooser exits.
+    // Take the unchanged-map baseline only once that intended handoff is saved.
+    await p.wait(`(()=>{const view=new URLSearchParams(history.state?.kfmExplorerView);return view.get('c')==='-100.90000,37.98000'&&view.get('z')==='10.50';})()`,'the initial agriculture camera is serialized before opening its key');
+    const before=await p.evaluate(`({entry:history.state.kfmExplorerEntry,view:history.state.kfmExplorerView})`);
+    const activate=async selector=>{
+      const quoted=JSON.stringify(selector);
+      await p.evaluate(`document.querySelector(${quoted})?.scrollIntoView({block:'nearest',inline:'nearest'})`);
+      await p.wait(`(()=>{const e=document.querySelector(${quoted});if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&r.left>=0&&r.top>=0&&r.right<=innerWidth&&r.bottom<=innerHeight&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`,'map control is visible and hit-testable in the viewport');
+      const point=await p.evaluate(`(()=>{const r=document.querySelector(${quoted}).getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+      if(width<600){
+        await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+        await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});
+        await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      }else for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...point,button:'left',clickCount:1});
+    };
+    await activate('.map-dock-map-menu>summary');
+    await p.wait(`document.querySelector('.map-dock-map-menu').open`,'map menu opened');
+    await activate('.map-menu-key>summary');
+    await p.wait(`document.querySelector('.map-menu-key').open&&document.querySelector('.map-menu-key').textContent.includes('USDA Cropland Data Layer 2024')`,'dated crop key is readable');
+    const layout=await p.evaluate(`(()=>{const key=document.querySelector('.map-menu-key'),panel=document.querySelector('.map-dock-menu-panel'),r=key.getBoundingClientRect(),s=key.querySelector('summary').getBoundingClientRect();return{height:s.height,left:r.left,right:r.right,width:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth+1,panelOverflow:panel.scrollWidth>panel.clientWidth+1,text:key.textContent};})()`);
+    assert.ok(layout.height>=44,'the disclosure has a full touch target');
+    assert.ok(layout.left>=0&&layout.right<=layout.width,'the key stays within the viewport');
+    assert.equal(layout.overflow,false);assert.equal(layout.panelOverflow,false,'long class names wrap within the menu');
+    for(const label of ['Corn','Soybeans','Double crop winter wheat/soybeans','Grassland/pasture'])assert.ok(layout.text.includes(label),label);
+    assert.deepEqual(await p.evaluate(`({entry:history.state.kfmExplorerEntry,view:history.state.kfmExplorerView})`),before,'opening the key preserves map settings and history ownership');
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+      const capture=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`map-menu-key-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
+    }
+    await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('.map-dock-map-menu').open`,'Escape closes the menu');
+    assert.equal(await p.evaluate(`document.activeElement?.matches('.map-dock-map-menu>summary')`),true,'focus returns to Map');
+  });
+}
