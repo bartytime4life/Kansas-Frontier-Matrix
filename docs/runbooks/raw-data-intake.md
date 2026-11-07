@@ -49,8 +49,8 @@ pyshp; projection-grid networking remains disabled. See the
 
 For manual uploads, camera capture, local OCR and held placement proposals, use
 the [Local Intake Studio](local-intake-studio.md) on port 8776. Its private inbox
-is preparation storage; capture into this pipeline remains a separate reviewed
-action. Studio decisions and export checksums do not confer source rights,
+is preparation storage; **Send to KFM** performs an explicit capture and index
+for saved ready reviews when Working Data is configured. Studio decisions and export checksums do not confer source rights,
 admission, release or publication.
 
 ## Quick start

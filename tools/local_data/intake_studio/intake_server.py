@@ -1,15 +1,18 @@
 #!/usr/bin/python3
-"""Loopback-only intake review companion. Never writes to a KFM repository/store."""
+"""Loopback intake review and explicitly configured private Working Data capture."""
 
 from __future__ import annotations
 from contextlib import contextmanager
-import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3, stat, subprocess, tempfile, threading, uuid, zipfile
+import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3, stat, subprocess, sys, tempfile, threading, uuid, zipfile
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs, quote
 
 APP = Path(__file__).resolve().parent
+sys.path.insert(0, str(APP.parents[2]))
+from tools.local_data.intake_studio import handoff  # noqa: E402
+from tools.local_data.file_io import hash_regular, read_regular  # noqa: E402
 MAX_BYTES = 25 * 1024 * 1024
 DOMAINS = {
     "hydrology": (
@@ -215,13 +218,17 @@ def integration(review):
 
 
 class Store:
-    def __init__(self, root, runtime):
+    def __init__(self, root, runtime, *, kfm_root=None, pipeline_lock=None, store_check=None, working_connection=None):
         self.root = Path(root).expanduser().resolve()
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(self.root, 0o700)
         self.objects = self.root / "objects"
         self.objects.mkdir(exist_ok=True, mode=0o700)
         self.runtime = Path(runtime).expanduser().resolve()
+        self.kfm_root = Path(kfm_root) if kfm_root else None
+        self.pipeline_lock = Path(pipeline_lock) if pipeline_lock else None
+        self.store_check = Path(store_check) if store_check else None
+        self.working_connection = Path(working_connection) if working_connection else None
         self.lock = threading.RLock()
         self.extract_lock = threading.Lock()
         with self.db() as db:
@@ -543,6 +550,70 @@ class Store:
             self.save(record)
             return record
 
+    def send(self, id, value):
+        with self.lock:
+            if not self.kfm_root:
+                raise ValueError("Working Data is not configured on this Studio. Ask the operator to connect it.")
+            if not isinstance(value, dict) or set(value) != {"version"} or type(value["version"]) is not int:
+                raise ValueError("Send requires the saved review revision.")
+            record = self.get(id)
+            previous = record.get("transfer")
+            already = bool(previous and record["integration"].get("state") == "CAPTURED_IN_WORKING_DATA")
+            versions = {record["version"], previous["reviewVersion"]} if already else {record["version"]}
+            if value["version"] not in versions:
+                raise RuntimeError("This record changed. Reload and review the saved revision before sending.")
+            r = record["review"]
+            if (r["decision"] != "Ready for integration review" or not all(r[k] for k in ("title", "source", "reviewer"))
+                    or r["rights"] in ("Unknown", "Restricted") or r["sensitivity"] != "Public"
+                    or r["domain"] not in DOMAINS or r["surface"] not in SURFACES[:-1]
+                    or record["analysis"]["status"] == "Failed" or record["analysis"]["flags"]):
+                raise ValueError("Save a ready review with usable rights, Public sensitivity, a source, reviewer and destination before sending.")
+            digest, _ = hash_regular(self.objects / record["sha256"] / "original", MAX_BYTES, expected_size=record["size"])
+            if digest != record["sha256"]:
+                raise ValueError("Original integrity check failed. Send refused.")
+            if self.store_check:
+                try:
+                    subprocess.run(["/usr/bin/python3", str(self.store_check)], check=True,
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15)
+                except (OSError, subprocess.SubprocessError):
+                    raise RuntimeError("The KFM data volume is unavailable. Reconnect it before sending.") from None
+            if already:
+                # Check the stored capture as well as the Studio original on retry.
+                manifest = json.loads(read_regular(self.kfm_root / previous["manifestPath"], handoff.MAX_REVIEW_BYTES))
+                from tools.local_data import manage, intake
+                args = manage.parser().parse_args(["verify", "--root", str(self.kfm_root), "--manifest", "unused"])
+                manifest = manage.validate_manifest(manifest, args)
+                handoff.validate_root(manage.external_root(str(self.kfm_root)))
+                manage.inspect_objects(self.kfm_root, manifest, None, args)
+                manage.check_snapshots(self.kfm_root, manifest, required=True)
+                intake.get_item(self.kfm_root, previous["itemId"])
+                return record, True
+            try:
+                transfer = handoff.capture(self, record)
+            except ValueError as error:
+                if str(error) in {"INTAKE_BUSY", "STORE_LOCKED"}:
+                    raise RuntimeError("Working Data is busy. Try Send to KFM again when its current job finishes.") from None
+                raise
+            record["version"] += 1
+            record["transfer"] = transfer
+            record["integration"] = {**integration(r), "state": transfer["state"], "itemId": transfer["itemId"],
+                                     "proposedLane": "Captured privately in Working Data; public integration remains a proposal."}
+            record["history"].append({"at": now(), "action": "Sent to KFM Working Data; publication hold retained",
+                                      "version": record["version"], "transfer": transfer})
+            self.save(record)
+            return record, False
+
+    def working_url(self):
+        if self.working_connection:
+            try:
+                url = json.loads(read_regular(self.working_connection, 4096))["url"]
+                match = re.fullmatch(r"http://127\.0\.0\.1:([0-9]{4,5})/#kfm-intake=[A-Za-z0-9_-]+", url) if isinstance(url, str) else None
+                if match and 1024 <= int(match[1]) <= 65535:
+                    return url
+            except (OSError, ValueError, KeyError):
+                pass
+        return None
+
     def export(self, id):
         record = self.get(id)
         obj = self.objects / record["sha256"]
@@ -673,6 +744,7 @@ class Handler(BaseHTTPRequestHandler):
                         "sourceFingerprint": self.server.source_fingerprint,
                         "token": self.server.token,
                         "storagePath": str(self.server.store.root),
+                        "sendToKfmAvailable": self.server.store.kfm_root is not None,
                         "maxBytes": MAX_BYTES,
                         "capabilities": self.server.store.capabilities(),
                         "authority": {
@@ -684,6 +756,8 @@ class Handler(BaseHTTPRequestHandler):
                 )
             if path == "/api/files":
                 return self.respond(200, {"files": self.server.store.list()})
+            if path == "/api/working-data":
+                return self.respond(200, {"url": self.server.store.working_url()})
             m = re.fullmatch(
                 r"/api/files/([a-f0-9]{32})(?:/(preview|original|export))?", path
             )
@@ -756,6 +830,11 @@ class Handler(BaseHTTPRequestHandler):
                 name = parse_qs(path.query).get("name", ["uploaded-file"])[0]
                 record, duplicate = self.server.store.ingest(name, body)
                 return self.respond(201, {"file": record, "duplicate": duplicate})
+            m = re.fullmatch(r"/api/files/([a-f0-9]{32})/send", path.path)
+            if m:
+                record, already = self.server.store.send(m[1], json.loads(body))
+                return self.respond(200, {"file": record, "alreadySent": already,
+                                          "workingDataUrl": self.server.store.working_url()})
             m = re.fullmatch(r"/api/files/([a-f0-9]{32})/review", path.path)
             if m:
                 value = json.loads(body)
@@ -773,7 +852,7 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(
                 500,
                 {
-                    "error": "Local operation failed. Please retry; no KFM production data was changed."
+                    "error": "Local operation did not finish. Original files remain preserved. Reload and retry safely."
                 },
             )
 
@@ -788,8 +867,13 @@ def main():
     parser.add_argument(
         "--runtime", default=str(Path.home() / ".local/share/kfm-intake-runtime")
     )
+    parser.add_argument("--kfm-root", type=Path, help="explicit initialized private Working Data store")
+    parser.add_argument("--pipeline-lock", type=Path, help="shared local pipeline flock file")
+    parser.add_argument("--store-check", type=Path, help="trusted Python volume-identity check run before each send")
+    parser.add_argument("--working-connection", type=Path, help="private Working Data connection JSON for the success link")
     a = parser.parse_args()
-    store = Store(a.store, a.runtime)
+    store = Store(a.store, a.runtime, kfm_root=a.kfm_root, pipeline_lock=a.pipeline_lock,
+                  store_check=a.store_check, working_connection=a.working_connection)
     server = Server(a.port, store)
     print(f"KFM Local Intake: {server.origin}", flush=True)
     print(f"Private inbox: {store.root}", flush=True)
