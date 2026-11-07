@@ -42,3 +42,7 @@ these tests additionally use the repository's declared test dependencies.
 runtime installed to exercise actual extraction. See the [studio runbook](../../docs/runbooks/local-intake-studio.md#validation-and-rollback).
 Skipped native cases are not successful OCR evidence; camera and public-site
 acceptance remain separate.
+
+`test_intake_studio_integrity.py` covers original-byte corruption at reuse,
+download and export, plus safe refusal to reuse older running code. Its loopback
+case runs separately from the strict no-network target.
