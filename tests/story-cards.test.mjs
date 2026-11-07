@@ -172,14 +172,21 @@ test('CSV rows and ranges come from the bundle', reactOnly, async t => {
   assert.deepEqual(csv.rows[2], [2001, 'Kansas', 'Temperature', 60, '°F', 15, '1901-2000', 1], 'an unfinished year compares only the months it has');
 });
 
-test('the section is mounted once, below the topic cards, and the 22 topics are untouched', siteOnly, () => {
+test('the section is mounted below the topic cards on desktop, on the map’s caption row on phones, and the 22 topics are untouched', siteOnly, () => {
   const welcome = read('app/living-welcome/welcome.jsx');
   assert.match(welcome, /const StorySection=lazy\(\(\)=>import\('\.\/stories\/StorySection\.jsx'\)\)/, 'the section is a lazy chunk');
   assert.doesNotMatch(welcome, /from '\.\/stories\//, 'nothing from the stories is in the welcome chunk');
-  const mounted = welcome.indexOf('<StorySection '), field = welcome.indexOf('</section>', welcome.indexOf('className="discovery-field discovery-field--grouped"'));
-  assert.ok(mounted > field && field > 0, 'after section.discovery-field');
+  assert.equal((welcome.match(/<StorySection /g) || []).length, 2, 'one desktop section, one phone launcher; never both at once');
+  const desktop = '<StorySection paused={paused} reduced={reduced} modal={modal} compact={false} onOpenChange={setStoryOpen}/>';
+  const phone = '<StorySection paused={paused} reduced={reduced} modal={modal} compact onOpenChange={setStoryOpen}/>';
+  const mounted = welcome.indexOf(desktop), field = welcome.indexOf('</section>', welcome.indexOf('className="discovery-field discovery-field--grouped"'));
+  assert.ok(mounted > field && field > 0, 'the desktop section follows section.discovery-field');
   assert.ok(mounted < welcome.indexOf('{fullscreen&&touched&&<aside className="welcome-layer-demo"'), 'inside .welcome-discovery-content');
-  assert.match(welcome, /<StorySection paused=\{paused\} reduced=\{reduced\} modal=\{modal\} compact=\{carousel\} onOpenChange=\{setStoryOpen\}\/>/);
+  assert.match(welcome, /\{!fullscreen&&!carousel&&<Suspense fallback=\{null\}><StorySection paused=\{paused\} reduced=\{reduced\} modal=\{modal\} compact=\{false\}/, 'desktop only');
+  const launcher = welcome.indexOf(phone);
+  assert.ok(launcher > welcome.indexOf('className="welcome-capability-stage"') && launcher < welcome.indexOf('className="welcome-heading-row"'), 'the phone launcher is the map stage’s sibling, so it can share the caption row');
+  assert.match(welcome, /\{carousel&&!fullscreen&&<Suspense fallback=\{null\}><StorySection paused=\{paused\} reduced=\{reduced\} modal=\{modal\} compact onOpenChange/, 'phones only');
+  assert.doesNotMatch(read('app/living-welcome/welcome.css'), /--welcome-selection/, 'phones reserve no strip under the card rail now that the tray is gone');
   assert.match(welcome, /paused=\{paused\|\|modal\|\|storyOpen\|\|/, 'an open lab also holds the map stage');
   for (const name of ['StorySection.jsx', 'StoryLab.jsx', 'story-parts.jsx']) assert.doesNotMatch(read(`app/living-welcome/stories/${name}`), /topic-callout/, 'story cards are never counted as topic cards');
   assert.doesNotMatch(read('app/layer-workspaces.ts'), /iron-horse|climate-stripes/, 'stories are not topics');

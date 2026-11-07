@@ -584,6 +584,12 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
       await revealControl(p,`.topic-add[data-topic="${id}"]`);
       await p.evaluate(`document.querySelector('.topic-add[data-topic="${id}"]').focus()`);await p.key('Enter','Enter',13);
     }
+    if(width<=700){
+      // Ticked topics reserve nothing under the card rail, and "The Kansas record" shares the caption row instead of floating over the map.
+      assert.equal(await p.evaluate(`document.querySelector('.welcome-map-stage').getBoundingClientRect().bottom-document.querySelector('.welcome-discovery-layout').getBoundingClientRect().bottom<=20`),true,'the card rail sits on the stage’s bottom gutter with no strip beneath it');
+      await p.wait(`!!document.querySelector('.story-launcher')`,'The Kansas record button loads on the phone layout');
+      assert.equal(await p.evaluate(`(()=>{const a=document.querySelector('.story-launcher').getBoundingClientRect(),c=document.querySelector('.domain-stage-caption')?.getBoundingClientRect(),s=document.querySelector('.welcome-capability-stage').getBoundingClientRect(),d=document.querySelector('.welcome-discovery-layout').getBoundingClientRect();return a.top>=s.top&&a.bottom<d.top-40&&a.right<=s.right&&a.height>=44&&(!c||!c.width||(a.left>=c.right-1&&Math.abs(a.top-c.top)<=8));})()`),true,'The Kansas record button shares the caption row at the top of the map');
+    }
     // Hit-testing guards against an inherited pointer-events:none rule leaving
     // a visibly rendered Preview button inert while keyboard checks pass.
     const preview=await revealControl(p,'.topic-preview-weather');

@@ -231,6 +231,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
       <div className="welcome-capability-stage"><DomainStage topic={carousel||touched||atlas?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||storyOpen||(!engaged&&!fullscreen&&!atlas)} reduced={reduced} onPreviewState={setPreviewState}/></div>
+      {/* Phones: "The Kansas record" shares the map's caption row, so the card rail keeps the full map below it. */}
+      {carousel&&!fullscreen&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact onOpenChange={setStoryOpen}/></Suspense>}
       <div className="welcome-heading-row">
         <div className="welcome-toolbar" role="group" aria-label="Welcome options">
           {/* There is no selection tray: cards and the focus panel tick topics, and this opens the ticked set. The phone toolbar has room for one primary, so there it stands in for Explore freely while topics are ticked. */}
@@ -269,7 +271,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           <a href="/data-library"><strong>Public data library</strong><small>{RECORD_COUNTS.collections} collections · {RECORD_COUNTS.mapped} with map geometry · every field, every source</small></a>
           <a href={newspaperSearchUrl('tornado')}><strong>Newspaper &amp; text archive</strong><small>Search the digitised Kansas pages, 1864–1960, and public-domain texts</small></a>
         </nav>}
-        {!fullscreen&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact={carousel} onOpenChange={setStoryOpen}/></Suspense>}
+        {!fullscreen&&!carousel&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact={false} onOpenChange={setStoryOpen}/></Suspense>}
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
       {atlas&&atlasTopic&&<aside className="welcome-focus" aria-label="Chosen map" data-topic={control} key={control}>
