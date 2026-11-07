@@ -826,22 +826,22 @@
 .living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-preview-controls { display:none; }
 @media(max-width:1000px) { .living-welcome[data-builder=true] .discovery-group { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 /* On phones, one centered card drives the map above it. */
-.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) { --welcome-deck:158px; --welcome-selection:0px; overflow:hidden; }
-.living-welcome[data-builder=true][data-carousel=true]:not([data-selected-count="0"]):not([data-fullscreen=true]) { --welcome-selection:64px; }
+/* Nothing is reserved under the card rail: the tray is gone, and "The Kansas record" shares the caption row at the top of the map. */
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) { --welcome-deck:158px; --welcome-record-width:168px; overflow:hidden; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-map-stage { height:100%; min-height:0; padding:12px; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-hero { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
 .living-welcome[data-builder=true][data-carousel=true] .welcome-toolbar { margin:0; }
-.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-capability-stage { position:absolute; inset:64px 0 calc(var(--welcome-deck) + var(--welcome-selection)); opacity:1; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-capability-stage { position:absolute; inset:64px 0 var(--welcome-deck); opacity:1; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-wash { position:absolute; inset:0; background:linear-gradient(#061e2b80,transparent 24%,transparent 62%,#061e2b); }
-.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption { display:grid; position:absolute; left:14px; right:14px; top:10px; bottom:auto; max-width:calc(100% - 28px); width:max-content; padding:8px 12px; border:0; border-radius:8px; background:#082b3ed9; box-shadow:none; text-align:left; justify-items:start; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption { display:grid; position:absolute; left:14px; right:14px; top:10px; bottom:auto; max-width:calc(100% - 42px - var(--welcome-record-width)); width:max-content; padding:8px 12px; border:0; border-radius:8px; background:#082b3ed9; box-shadow:none; text-align:left; justify-items:start; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage .maplibregl-ctrl-bottom-right { bottom:0; }
-.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > span { font-size:9px; letter-spacing:.12em; }
-.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > strong { font-size:22px; text-shadow:0 1px 12px #00121c; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > span { font-size:8px; letter-spacing:.08em; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > strong { font-size:20px; line-height:1.15; text-shadow:0 1px 12px #00121c; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > small { display:none; }
 .living-welcome .domain-stage-caption .domain-stage-map-key { color:#f0d99f; font-size:11px; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > .domain-stage-map-key { display:block; max-width:270px; font-size:10px; line-height:1.4; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > .domain-stage-data { display:block; max-width:270px; font-size:9px; line-height:1.35; }
-.living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-layout { position:absolute; left:0; right:0; top:auto; bottom:calc(18px + var(--welcome-selection)); height:140px; margin:0; }
+.living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-layout { position:absolute; left:0; right:0; top:auto; bottom:18px; height:140px; margin:0; }
 .living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-content { position:relative; }
 .living-welcome[data-builder=true][data-carousel=true] .discovery-hint { display:none; }
 .living-welcome[data-builder=true][data-carousel=true] .welcome-carousel-nav { display:flex; align-items:center; gap:6px; height:44px; margin:0 14px 4px; }

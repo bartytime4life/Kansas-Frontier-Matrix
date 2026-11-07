@@ -44,6 +44,11 @@ map; the owner asked for the map to be seen.
 - **The stage caption** (map name, preview layers and their source clocks)
   shows beside the rail as a chip; the toolbar floats top-right over the map.
 - **"The Kansas record"** reads as a list of story rows at the end of the rail.
+  On phones (2026-11-07) it is one button on the map's caption row, top-right
+  beside the preview caption (`.story-launcher` is the map stage's sibling, so
+  it shares that row; the caption narrows to leave it room), and nothing is
+  reserved under the card rail any more: the 64 px strip the retired tray used
+  to claim whenever a topic was ticked goes back to the map.
 - **The record is one step away.** The hero carries one search box with a
   scope: newspapers 1864–1960 and archive texts open the data library with the
   search already asked (`/data-library?q=…&source=…`, which `search.tsx` now
