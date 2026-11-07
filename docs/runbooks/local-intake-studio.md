@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-runbooks-local-intake-studio
 title: Local photo and PDF intake review
 type: runbook
-version: v1.1
+version: v1.2
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
@@ -20,6 +20,8 @@ studio prepares private placement proposals. It does not embed content in the
 Explorer, admit sources, activate data, or publish the website.
 An explicitly configured **Send to KFM** action captures reviewed originals and
 review snapshots into the private Working Data store and indexes them there.
+The same local workspace can also host the existing **Working Data** and
+read-only **Data Library** interfaces in its sidebar, under one address.
 
 ## Start here
 
@@ -39,6 +41,13 @@ separate-port trial below. The desktop sidebar shows a short local version;
 `/api/session` reports the full `sourceFingerprint`. This identifies bundled
 server, worker, launcher and client bytes, not OCR dependencies, approval or
 public readiness. A running server retains its startup fingerprint.
+
+When configured, **Working Data** at `/working-data` provides the existing
+catalog, geographic filters, file details, analysis and local review controls.
+**Data Library** at `/library` browses the immutable imported catalog. These are
+native pages in Studio's shared sidebar and origin; no separate tab, capability
+fragment or embedded external site is required. **Send to KFM** links directly
+to the captured item's details inside this workspace.
 
 For a separately testable foreground instance, with a disposable private inbox:
 
@@ -145,17 +154,29 @@ Operators enable the action with an explicit initialized private store:
 /usr/bin/python3 tools/local_data/intake_studio/intake_server.py \
   --store "$HOME/.local/share/kfm-intake-studio" \
   --kfm-root "$KFM_DATA_ROOT" \
+  --library-root /private/KFM-library \
+  --archive-root /private/kfm-imports/original-archive \
+  --raster-python /private/atlas/bin/python \
+  --inbox "$HOME/Downloads/KFM" \
   --pipeline-lock /private/pipeline.lock \
   --store-check /private/check-data-mount.py \
   --working-connection /private/working-data.json
 ```
 
-The lock, trusted Python volume-check script, and private connection JSON are
+The roots, lock, trusted Python volume-check script, and private connection JSON are
 operator configuration, never browser inputs. The connection JSON comes from
-`intake_service.py --connection-file` and supplies a loopback capability link.
+`intake_service.py --connection-file` and is retained for legacy configurations;
+configured Working Data uses the internal workspace route.
 Configure the same pipeline lock used by feeds and scheduled analysis. With no
 `--kfm-root`, the button explains that Working Data is not connected; uploads,
 reviews and ZIP exports remain available.
+
+The mounted views reuse `intake_service.Desk` and its existing HTTP handlers,
+with Studio's current capability and strict same-origin boundary. Library keeps
+catalog-only restrictions and immutable SQLite reads. Dedicated old loopback
+services may remain for compatibility with existing operational checks; user
+launchers can route all views to Studio. Catalogs and uploads are not merged,
+copied or migrated as part of combining these interfaces.
 
 Exporting a ZIP remains an optional manual handoff. The existing
 [local capture procedure](local-pc-data-store.md#add-downloaded-maps-pictures-and-documents)
@@ -268,6 +289,12 @@ Capture/index handoff regressions, including retry and provenance isolation:
 
 ```bash
 /usr/bin/python3 -m unittest tests.local_data.test_intake_studio_handoff -v
+```
+
+Combined workspace routes and read-only boundary regressions:
+
+```bash
+/usr/bin/python3 -m unittest tests.local_data.test_intake_workspace -v
 ```
 
 Use `KFM_INTAKE_TEST_RUNTIME` for a nondefault runtime. Tests cover provenance

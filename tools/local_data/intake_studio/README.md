@@ -25,6 +25,8 @@ the established capture and intake primitives. `intake_server.py` owns storage
 and review, `intake_worker.py` performs
 sandboxed extraction, and `local-web/` supplies the local client. The launcher is
 on demand; it does not install packages, services or public routes.
+`workspace.py` mounts the existing Working Data and read-only Library desks
+inside the same sidebar and loopback origin when their roots are configured.
 
 Owning root: `tools/`, following the adjacent local-data operators and desk.
 No registry, contract, policy or proof authority lives here. Originals and state

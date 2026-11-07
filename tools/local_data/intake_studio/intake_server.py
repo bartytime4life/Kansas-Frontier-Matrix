@@ -218,7 +218,8 @@ def integration(review):
 
 
 class Store:
-    def __init__(self, root, runtime, *, kfm_root=None, pipeline_lock=None, store_check=None, working_connection=None):
+    def __init__(self, root, runtime, *, kfm_root=None, pipeline_lock=None, store_check=None, working_connection=None,
+                 library_root=None, archive_root=None, raster_python=None, inbox=None):
         self.root = Path(root).expanduser().resolve()
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(self.root, 0o700)
@@ -229,6 +230,10 @@ class Store:
         self.pipeline_lock = Path(pipeline_lock) if pipeline_lock else None
         self.store_check = Path(store_check) if store_check else None
         self.working_connection = Path(working_connection) if working_connection else None
+        self.library_root = Path(library_root) if library_root else None
+        self.archive_root = Path(archive_root) if archive_root else None
+        self.raster_python = Path(raster_python) if raster_python else None
+        self.inbox = Path(inbox) if inbox else None
         self.lock = threading.RLock()
         self.extract_lock = threading.Lock()
         with self.db() as db:
@@ -571,12 +576,7 @@ class Store:
             digest, _ = hash_regular(self.objects / record["sha256"] / "original", MAX_BYTES, expected_size=record["size"])
             if digest != record["sha256"]:
                 raise ValueError("Original integrity check failed. Send refused.")
-            if self.store_check:
-                try:
-                    subprocess.run(["/usr/bin/python3", str(self.store_check)], check=True,
-                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15)
-                except (OSError, subprocess.SubprocessError):
-                    raise RuntimeError("The KFM data volume is unavailable. Reconnect it before sending.") from None
+            self.check_volume()
             if already:
                 # Check the stored capture as well as the Studio original on retry.
                 manifest = json.loads(read_regular(self.kfm_root / previous["manifestPath"], handoff.MAX_REVIEW_BYTES))
@@ -603,7 +603,18 @@ class Store:
             self.save(record)
             return record, False
 
-    def working_url(self):
+    def check_volume(self):
+        if self.store_check:
+            try:
+                subprocess.run(["/usr/bin/python3", str(self.store_check)], check=True,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15)
+            except (OSError, subprocess.SubprocessError):
+                raise RuntimeError("The KFM data volume is unavailable. Reconnect it before continuing.") from None
+
+    def working_url(self, item_id=None):
+        if self.kfm_root:
+            suffix = "?item=" + item_id if isinstance(item_id, str) and re.fullmatch(r"[a-f0-9]{32}", item_id) else ""
+            return "/working-data" + suffix
         if self.working_connection:
             try:
                 url = json.loads(read_regular(self.working_connection, 4096))["url"]
@@ -663,6 +674,8 @@ class Server(ThreadingHTTPServer):
         self.token = secrets.token_urlsafe(32)
         super().__init__(("127.0.0.1", port), Handler)
         self.origin = f"http://127.0.0.1:{self.server_port}"
+        from tools.local_data.intake_studio.workspace import Workspace
+        self.workspace = Workspace(store, self.server_port, self.token)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -712,7 +725,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def guard(self, token=True):
+    def guard(self, token=True, header="X-KFM-Token"):
         if self.headers.get("Host") != self.server.origin[7:]:
             self.respond(403, {"error": "Exact loopback address required."})
             return False
@@ -723,7 +736,7 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(403, {"error": "Same-origin local access required."})
             return False
         if token and not secrets.compare_digest(
-            self.headers.get("X-KFM-Token", ""), self.server.token
+            self.headers.get(header, ""), self.server.token
         ):
             self.respond(
                 403, {"error": "Session expired. Refresh this local workspace."}
@@ -733,6 +746,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlsplit(self.path).path
+        if path.startswith("/api/workspace/"):
+            return self.server.workspace.dispatch(self, "GET")
         if not self.guard(token=path.startswith("/api/") and path != "/api/session"):
             return
         try:
@@ -745,6 +760,7 @@ class Handler(BaseHTTPRequestHandler):
                         "token": self.server.token,
                         "storagePath": str(self.server.store.root),
                         "sendToKfmAvailable": self.server.store.kfm_root is not None,
+                        "workspaceViews": list(self.server.workspace.desks),
                         "maxBytes": MAX_BYTES,
                         "capabilities": self.server.store.capabilities(),
                         "authority": {
@@ -758,6 +774,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, {"files": self.server.store.list()})
             if path == "/api/working-data":
                 return self.respond(200, {"url": self.server.store.working_url()})
+            if path in ("/working-data", "/library"):
+                from tools.local_data.intake_studio.workspace import page
+                return self.respond(200, page("working" if path == "/working-data" else "library"), "text/html")
+            if path in ("/workspace/desk.js", "/workspace/reviews.js", "/workspace/desk.css"):
+                from tools.local_data.intake_studio.workspace import asset
+                content, mime = asset(path)
+                return self.respond(200, content, mime)
             m = re.fullmatch(
                 r"/api/files/([a-f0-9]{32})(?:/(preview|original|export))?", path
             )
@@ -809,6 +832,8 @@ class Handler(BaseHTTPRequestHandler):
             )
 
     def do_POST(self):
+        if urlsplit(self.path).path.startswith("/api/workspace/"):
+            return self.server.workspace.dispatch(self, "POST")
         if not self.guard():
             return
         try:
@@ -834,7 +859,7 @@ class Handler(BaseHTTPRequestHandler):
             if m:
                 record, already = self.server.store.send(m[1], json.loads(body))
                 return self.respond(200, {"file": record, "alreadySent": already,
-                                          "workingDataUrl": self.server.store.working_url()})
+                                          "workingDataUrl": self.server.store.working_url(record["transfer"]["itemId"])})
             m = re.fullmatch(r"/api/files/([a-f0-9]{32})/review", path.path)
             if m:
                 value = json.loads(body)
@@ -871,9 +896,14 @@ def main():
     parser.add_argument("--pipeline-lock", type=Path, help="shared local pipeline flock file")
     parser.add_argument("--store-check", type=Path, help="trusted Python volume-identity check run before each send")
     parser.add_argument("--working-connection", type=Path, help="private Working Data connection JSON for the success link")
+    parser.add_argument("--library-root", type=Path, help="private immutable imported catalog shown inside Studio")
+    parser.add_argument("--archive-root", type=Path, help="original archive for Library file locators")
+    parser.add_argument("--raster-python", type=Path, help="trusted spatial preview Python for Working Data")
+    parser.add_argument("--inbox", type=Path, help="existing read-only downloads inbox for Working Data")
     a = parser.parse_args()
     store = Store(a.store, a.runtime, kfm_root=a.kfm_root, pipeline_lock=a.pipeline_lock,
-                  store_check=a.store_check, working_connection=a.working_connection)
+                  store_check=a.store_check, working_connection=a.working_connection,
+                  library_root=a.library_root, archive_root=a.archive_root, raster_python=a.raster_python, inbox=a.inbox)
     server = Server(a.port, store)
     print(f"KFM Local Intake: {server.origin}", flush=True)
     print(f"Private inbox: {store.root}", flush=True)
