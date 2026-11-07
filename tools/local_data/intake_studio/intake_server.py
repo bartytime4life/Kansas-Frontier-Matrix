@@ -627,7 +627,9 @@ class Handler(BaseHTTPRequestHandler):
             raw_attachment = re.sub(r"[\r\n\x00-\x1f\x7f]+", "", str(attachment)).strip()
             if not raw_attachment:
                 raw_attachment = "download"
-            fallback_attachment = re.sub(r'["\\]+', "_", raw_attachment)
+            fallback_attachment = re.sub(r"[^A-Za-z0-9._-]+", "_", raw_attachment).strip("._-")
+            if not fallback_attachment:
+                fallback_attachment = "download"
             encoded_attachment = quote(raw_attachment, safe="")
             self.send_header(
                 "Content-Disposition",
