@@ -51,6 +51,7 @@ import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
+import GeologyPointExplorer, { GEOLOGY_POINT_LAYER_ID } from "./geology-point-explorer";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
 import { chooseResearchAnchor, readResearchInventory, nearbyResearch, providerResearchPoints, persistableResearch, researchIdentity, researchSourceUrl, validResearchRecord, validResearchContext, type ResearchContext, type ResearchCoverage, type ResearchRecord, type ResearchRadius } from "./research-context";
@@ -3734,6 +3735,13 @@ export default function Home() {
     }
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshSelectedStreamflow, runtimeOfficialVisibility]);
 
+  // A geology topic opens with the existing statewide KGS point snapshot visible.
+  // Later manual visibility changes are left to the layer control.
+  useEffect(() => {
+    if (officialWorkspace === "geology" && !officialVisibilityRef.current["kgs-monitoring-wells"])
+      setOfficialContextVisible("kgs-monitoring-wells", true);
+  }, [officialWorkspace, setOfficialContextVisible]);
+
   const applyStarterContext = (ids: readonly OfficialContextId[], title: string) => {
     // Revalidate at the owning state boundary. No camera, time, opacity, release or specialist-owner writes.
     const plan = starterPlan(ids, OFFICIAL_CONTEXT_SOURCES, starterAccess);
@@ -5340,6 +5348,7 @@ export default function Home() {
         const hoverSampler = createMapHoverSampler<MapMouseEvent>((event) => {
           if (disposed || aviationPickingRef.current || !styleGenerationReadyRef.current || document.hidden) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
+          if (map.getLayer(GEOLOGY_POINT_LAYER_ID) && map.queryRenderedFeatures(event.point, { layers: [GEOLOGY_POINT_LAYER_ID] }).length) { clearHoverCandidate(); return; }
           if (map.isMoving()) { clearHoverCandidate(); return; }
           if (scenePresetRef.current === "elevation-3d" && styleGenerationReadyRef.current
             && attachedTerrainProviderRef.current === terrainProviderRef.current
@@ -5471,6 +5480,9 @@ export default function Home() {
             }
             return;
           }
+
+          // The geology point card owns its source markers, including when a county lies beneath one.
+          if (map.getLayer(GEOLOGY_POINT_LAYER_ID) && map.queryRenderedFeatures(event.point, { layers: [GEOLOGY_POINT_LAYER_ID] }).length) return;
 
           const renderedHits = map.queryRenderedFeatures(event.point).filter(feature => {
             const source = OFFICIAL_CONTEXT_BY_SOURCE_ID[feature.source];
@@ -9868,6 +9880,10 @@ export default function Home() {
             <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" style={{ opacity: officialOpacity["usgs-streamflow"] }} aria-hidden="true" />
             {windArrowState === "READY" && windArrowFrame && windArrowHover && <output className="wind-arrow-hover" style={{ left: windArrowHover.screenX, top: windArrowHover.screenY }} aria-label="Nearest wind model grid point"><span>GFS MODEL GRID POINT · VALID {windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC</span><strong>{Math.round(windArrowHover.sample.speedMetersPerSecond * 2.23694)} mph <b>→ {windToCompass(windArrowHover.sample.windToDegrees)}</b></strong><small>{windArrowHover.sample.latitude.toFixed(3)}°, {windArrowHover.sample.longitude.toFixed(3)}° · 10 m forecast</small></output>}
           </div>
+          <GeologyPointExplorer map={styleReady ? mapRef.current : null}
+            enabled={officialWorkspace === "geology" && primaryWorkspace === "map" && !undergroundOpen && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME}
+            redacted={locationCameraRedacted || locationDerivedViewRef.current || subsurfacePrivate}
+            monitoringVisible={effectiveOfficialVisibility["kgs-monitoring-wells"]} />
           {buildYearCurrent && officialVisibility["nws-forecast-wind"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && <output className="wind-arrow-map-badge" data-state={windArrowState} aria-live="polite"><strong>OPEN-METEO · GFS WIND FLOW</strong><span>{windArrowState === "READY" && windArrowFrame ? `10 m forecast · valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} grid points` : windArrowState === "ERROR" ? "Forecast unavailable · flow hidden" : "Loading forecast wind flow…"}</span></output>}
           {runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0 && <EarthEngineRasterFallback manifests={earthEngineContext.manifests} display={earthEngineDisplay} onOpenLayers={openEarthEngineLayers} />}
           {(runtime.kind === "loading" || runtime.kind === "error" || (runtime.kind === "unsupported" && !earthEngineContext.manifests.length)) && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : runtime.kind === "unsupported" ? "Map runtime unsupported" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
