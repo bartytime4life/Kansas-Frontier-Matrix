@@ -89,7 +89,7 @@ test('page dispatch respects dedicated pick modes, aircraft hits and ordinary-co
     let picks=0;
     const scope={aviationPickingRef:{current:mode==='aviation'},undergroundOpenRef:{current:mode==='underground'},measureModeRef:{current:mode==='measure'?'point':null},
       measureCoordinatesRef:{set current(_value){throw Error('measurement owns click');}},
-      pickKansasSkyAircraft:()=>{picks++;return mode==='aircraft';},map:{queryRenderedFeatures(){throw Error('ordinary context owns click');}}};
+      pickKansasSkyAircraft:()=>{picks++;return mode==='aircraft';},GEOLOGY_POINT_LAYER_IDS:[],map:{queryRenderedFeatures(){throw Error('ordinary context owns click');}}};
     const output=ts.transpileModule(`return ${callback};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
     const click=new Function(...Object.keys(scope),output)(...Object.values(scope));
     if(mode==='measure')assert.throws(()=>click({point:{x:50,y:50},lngLat:{lng:-90,lat:0}}),/measurement owns click/);
