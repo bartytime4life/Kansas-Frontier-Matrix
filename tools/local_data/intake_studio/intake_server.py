@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 from contextlib import contextmanager
-import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3, subprocess, tempfile, threading, uuid, zipfile
+import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3, stat, subprocess, tempfile, threading, uuid, zipfile
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -83,6 +83,24 @@ REVIEW_FIELDS = [
     "reviewer",
     "decision",
 ]
+
+
+def source_fingerprint():
+    """Identity of executable/client bytes, independent of Git or installation path."""
+    digest = hashlib.sha256()
+    for relative in (
+        "intake_server.py",
+        "intake_worker.py",
+        "launch_local.py",
+        "start-local.sh",
+        "local-web/index.html",
+        "local-web/app.js",
+        "local-web/style.css",
+    ):
+        digest.update(relative.encode() + b"\0")
+        digest.update((APP / relative).read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def now():
@@ -245,6 +263,28 @@ class Store:
                 (record["id"], json.dumps(record, ensure_ascii=False)),
             )
 
+    def original_bytes(self, record):
+        """Return the exact bytes verified for this record; never silently repair."""
+        path = self.objects / record["sha256"] / "original"
+        try:
+            fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            with os.fdopen(fd, "rb") as stream:
+                if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+                    raise ValueError("Original integrity check failed. Read refused.")
+                original = stream.read(MAX_BYTES + 1)
+        except OSError as error:
+            raise ValueError(
+                "Original integrity check failed. Read refused."
+            ) from error
+        if (
+            len(original) != record["size"]
+            or hashlib.sha256(original).hexdigest() != record["sha256"]
+        ):
+            raise ValueError(
+                "Original integrity check failed. Read refused; preserve the inbox for recovery."
+            )
+        return original
+
     def capabilities(self):
         sandbox = all(Path(p).is_file() for p in ("/usr/bin/bwrap", "/usr/bin/prlimit"))
         pillow = (
@@ -278,6 +318,8 @@ class Store:
         dest = self.objects / digest
         with self.extract_lock:
             duplicate = dest.exists()
+            if duplicate:
+                self.original_bytes({"sha256": digest, "size": len(body)})
             if not duplicate:
                 work = Path(tempfile.mkdtemp(prefix="extract-", dir=self.root))
                 try:
@@ -320,6 +362,9 @@ class Store:
                         "--bind",
                         str(work),
                         "/work",
+                        "--ro-bind",
+                        str(work / "original"),
+                        "/work/original",
                         "--chdir",
                         "/work",
                         "--clearenv",
@@ -501,9 +546,7 @@ class Store:
     def export(self, id):
         record = self.get(id)
         obj = self.objects / record["sha256"]
-        original = (obj / "original").read_bytes()
-        if hashlib.sha256(original).hexdigest() != record["sha256"]:
-            raise ValueError("Original integrity check failed. Export refused.")
+        original = self.original_bytes(record)
         content = {
             "kind": "KFM_LOCAL_INTAKE_REVIEW_PROPOSAL",
             "schemaVersion": 1,
@@ -545,6 +588,7 @@ class Server(ThreadingHTTPServer):
 
     def __init__(self, port, store):
         self.store = store
+        self.source_fingerprint = source_fingerprint()
         self.token = secrets.token_urlsafe(32)
         super().__init__(("127.0.0.1", port), Handler)
         self.origin = f"http://127.0.0.1:{self.server_port}"
@@ -580,7 +624,9 @@ class Handler(BaseHTTPRequestHandler):
             "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self'; media-src 'self' blob:; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
         )
         if attachment:
-            safe_attachment = re.sub(r'[\r\n\x00-\x1f\x7f"]+', "_", str(attachment)).strip()
+            safe_attachment = re.sub(
+                r'[\r\n\x00-\x1f\x7f"]+', "_", str(attachment)
+            ).strip()
             if not safe_attachment:
                 safe_attachment = "download"
             self.send_header(
@@ -618,6 +664,7 @@ class Handler(BaseHTTPRequestHandler):
                     200,
                     {
                         "app": "kfm-local-intake-studio",
+                        "sourceFingerprint": self.server.source_fingerprint,
                         "token": self.server.token,
                         "storagePath": str(self.server.store.root),
                         "maxBytes": MAX_BYTES,
@@ -659,7 +706,7 @@ class Handler(BaseHTTPRequestHandler):
                 }[record["mime"]]
                 return self.respond(
                     200,
-                    (obj / "original").read_bytes(),
+                    self.server.store.original_bytes(record),
                     "application/octet-stream",
                     "original-" + m[1][:8] + "." + ext,
                 )

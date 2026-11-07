@@ -29,8 +29,14 @@ From the KFM checkout, run:
 
 Open <http://127.0.0.1:8776/>. The launcher opens the browser and starts an
 on-demand process; it does not install a login service. `--no-open` starts without
-opening a browser. If an existing studio occupies that port, the launcher reuses
-it; that does **not** establish that the running copy matches this checkout.
+opening a browser. The launcher reuses an existing studio only when its code
+fingerprint matches this copy. An older copy, a missing fingerprint or a mismatch
+stops startup with an explanation; it preserves the existing process, PID record
+and inbox. Close the inspected older instance before replacing it, or use the
+separate-port trial below. The desktop sidebar shows a short local version;
+`/api/session` reports the full `sourceFingerprint`. This identifies bundled
+server, worker, launcher and client bytes, not OCR dependencies, approval or
+public readiness. A running server retains its startup fingerprint.
 
 For a separately testable foreground instance, with a disposable private inbox:
 
@@ -126,6 +132,26 @@ inside Git, a public directory, a shared folder or the governed store.
    release and public use remain governed transitions. A local pass proves none
    of those transitions. The public Explorer must never fetch this private inbox.
 
+## Integrity and recovery
+
+Original downloads, duplicate reuse and ZIP export verify both recorded size and
+SHA-256 against the same bounded bytes being returned. A missing, replaced,
+symlinked or damaged original is refused. A repeated upload never silently repairs
+or relabels a damaged object, and no new duplicate record is created on failure.
+Preserve the inbox for recovery and use a separately verified backup or original;
+checksums detect changed bytes but do not prove that content is safe or correct.
+The extraction sandbox mounts its original input read-only.
+
+## Next improvements — proposed
+
+- Add an explicit, versioned retry for failed extraction after dependencies are
+  repaired. Reuploading currently reuses stored analysis, including failures.
+- Fetch lightweight, paged inbox summaries. The current list sends every record,
+  including text and history; large libraries need bounded loading.
+- Prepare a reviewed capture manifest from a selected proposal, using the
+  existing local-data tools and explicit owner action. Domain/surface choices
+  still describe proposals; map attachment and public embedding are not wired.
+
 ## Placement and migration note
 
 Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
@@ -214,6 +240,24 @@ malformed-image handling. They use temporary synthetic files, not user uploads.
 Camera hardware, cross-browser acceptance, source admission and public readiness
 are separate unverified scopes. Existing acceptance-board tests do not qualify
 this repository revision's browser behavior.
+
+### Integrity and startup review — 2026-11-06
+
+Base: `main@284ca2f93dba25f310264a1549f86de4febe550a`. A synthetic damaged
+original was downloadable with HTTP 200 before correction, and a duplicate
+upload reused it. Both now return an integrity error; healthy bytes remain exact.
+The new integrity suite covers HTTP download/duplicate/export denial, original
+identity and startup refusal for old copies without spawning replacements.
+
+Validation in this review: **852 passed, 11 skipped, 590 subtests passed** in the
+strict offline local-data target; separately **31 studio tests ran, 3 native
+cases skipped**, and all **14 native OCR/PDF tests passed** with the installed
+Linux runtime. The in-app browser saved a ready review in a disposable inbox,
+downloaded the original with a matching SHA-256, and displayed the interface at
+390×844. Camera and other browsers were not exercised. The existing installed
+port-8776 studio remains an older copy; checkout changes do not update it.
+Earlier PR #5746's failed offline check was followed by merged corrections;
+PR #5758's local-data check passed. None of these results establish public use.
 
 ### Header-warning investigation — 2026-11-06
 
