@@ -7,7 +7,7 @@ import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3,
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import urlsplit, parse_qs, quote
 
 APP = Path(__file__).resolve().parent
 MAX_BYTES = 25 * 1024 * 1024
@@ -624,13 +624,14 @@ class Handler(BaseHTTPRequestHandler):
             "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'self'; media-src 'self' blob:; font-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
         )
         if attachment:
-            safe_attachment = re.sub(
-                r'[\r\n\x00-\x1f\x7f"]+', "_", str(attachment)
-            ).strip()
-            if not safe_attachment:
-                safe_attachment = "download"
+            raw_attachment = re.sub(r"[\r\n\x00-\x1f\x7f]+", "", str(attachment)).strip()
+            if not raw_attachment:
+                raw_attachment = "download"
+            fallback_attachment = re.sub(r'["\\]+', "_", raw_attachment)
+            encoded_attachment = quote(raw_attachment, safe="")
             self.send_header(
-                "Content-Disposition", f'attachment; filename="{safe_attachment}"'
+                "Content-Disposition",
+                f'attachment; filename="{fallback_attachment}"; filename*=UTF-8\'\'{encoded_attachment}',
             )
         self.end_headers()
         self.wfile.write(body)
