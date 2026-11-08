@@ -634,9 +634,9 @@ class Handler(BaseHTTPRequestHandler):
             content_disposition = (
                 f'attachment; filename="{fallback_attachment}"; filename*=UTF-8\'\'{encoded_attachment}'
             )
-            content_disposition = re.sub(
-                r"[\r\n\x00-\x1f\x7f]+", "", content_disposition
-            ).strip()
+            # Final sink hardening: keep only visible ASCII plus whitespace separators.
+            # This prevents CR/LF and other control-char based header injection.
+            content_disposition = re.sub(r"[^\t\x20-\x7e]+", "", content_disposition).strip()
             self.send_header("Content-Disposition", content_disposition)
         self.end_headers()
         self.wfile.write(body)
