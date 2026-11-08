@@ -145,6 +145,17 @@ test("preferences are bounded public IDs only; empty selections, upgrades and ex
   assert.equal(model.preferredContextIds(new URLSearchParams(), null), null);
 });
 
+test("geology opens with the local public point context while explicit and saved selections win", () => {
+  const ids = model.GEOLOGY_OPENING_CONTEXT_IDS;
+  assert.equal(ids.length, 8);
+  assert.equal(new Set(ids).size, ids.length);
+  for (const id of ids) assert.equal(sources.find(source => source.id === id)?.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+  assert.deepEqual(model.openingContextIds(new URLSearchParams("topic=geology"), null, "geology"), ids);
+  assert.deepEqual(model.openingContextIds(new URLSearchParams("topic=geology&ctx=usgs-earthquakes"), ["census-counties"], "geology"), ["usgs-earthquakes"]);
+  assert.deepEqual(model.openingContextIds(new URLSearchParams("topic=geology"), [], "geology"), []);
+  assert.equal(model.openingContextIds(new URLSearchParams("topic=water"), null, "water"), null);
+});
+
 test("device storage writes exclude personal state and restricted IDs; failure is safe and forgetting is explicit", () => {
   const storage = memoryStorage(); globalThis.window = { localStorage: storage };
   assert.equal(model.writeContextPreference([...learning.ids, "private-record"], sources), true);
