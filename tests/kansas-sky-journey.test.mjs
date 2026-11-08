@@ -21,10 +21,10 @@ test('altitude profile preserves disconnected height references and bounds geome
 });
 
 test('whole recorded journey distinguishes past and retained future, keeps explicit gaps, and interpolates only observed spans',()=>{
-  const points=[point(),point(20000,{lon:-97}),point(40000,{lon:-96}),point(120000),point(140000)];
+  const points=[point(),point(20000,{lon:-97.95}),point(40000,{lon:-97.9}),point(120000),point(140000)];
   const journey=sky.selectedJourney(points,epoch+10000);
   assert.equal(journey.length,3);assert.equal(journey[0].future,false);assert.equal(journey[1].future,true);assert.equal(journey[2].future,true);
-  assert.equal(journey[0].points.at(-1).lon,-97.5);assert.equal(journey[1].points[0].observedAt,epoch+10000);
+  assert.ok(Math.abs(journey[0].points.at(-1).lon+97.975)<1e-10);assert.equal(journey[1].points[0].observedAt,epoch+10000);
   assert.equal(journey[1].points.at(-1).observedAt,epoch+40000);assert.equal(journey[2].points[0].observedAt,epoch+120000);
   assert.deepEqual(sky.selectedJourney([point()],epoch),[],'an isolated observation is not a path');
   assert.equal(sky.samplesAt(new Map([['a00001',points]]),epoch)[0].positionAgeS,2,'original receipt-age metadata is retained');
@@ -49,8 +49,8 @@ test('reduced motion uses coarse explicit playback; adaptive budget lowers frequ
 });
 
 test('buffered live has one delayed clock, requires current eligibility and never extrapolates across a warm-up or gap',()=>{
-  const tracks=new Map([['a00001',[point(),point(20000,{lon:-97})]],['b00002',[point(0,{hex:'b00002'}),point(20000,{hex:'b00002',lon:-96})]]]);
-  const sampled=sky.bufferedSkySamples(tracks,epoch+10000,new Set(['a00001']));assert.equal(sampled.length,1);assert.equal(sampled[0].lon,-97.5);
+  const tracks=new Map([['a00001',[point(),point(20000,{lon:-97.95})]],['b00002',[point(0,{hex:'b00002'}),point(20000,{hex:'b00002',lon:-97.9})]]]);
+  const sampled=sky.bufferedSkySamples(tracks,epoch+10000,new Set(['a00001']));assert.equal(sampled.length,1);assert.ok(Math.abs(sampled[0].lon+97.975)<1e-10);
   assert.deepEqual(sky.bufferedSkySamples(tracks,epoch-1,new Set(['a00001'])),[]);
   assert.deepEqual(sky.bufferedSkySamples(tracks,epoch+20001,new Set(['a00001'])),[]);
   assert.deepEqual(sky.bufferedSkySamples(tracks,epoch+10000,new Set()),[],'expired or failed current-feed eligibility removes old buffered positions');
@@ -196,4 +196,20 @@ test('interpolated dossier values have deliberate display precision with exact v
  const displayed=html.split('Exact displayed values')[0];assert.equal(displayed.includes('17849.061957074402'),false);assert.ok(html.includes('17849.061957074402'),'exact values remain inspectable separately');
  const compact=renderToStaticMarkup(createElement(detailsExports.SkyAltitudeProfile,{points:[point(),point(10000)],cursor:epoch,canSeek:true,showRange:false,onSeek:()=>{}}));assert.equal(compact.includes('type="range"'),false,'dock profile reuses its single visible timeline');
  const brief=renderToStaticMarkup(createElement(detailsExports.SkyAircraftBrief,{aircraft:plane,observationCount:10,gap:true}));assert.ok(brief.includes('Observation gap'));assert.ok(brief.includes('TEST'));assert.equal(brief.includes('370.762478'),false);
+});
+
+test('flight brief separates evaluated motion, source reports, heading and height references',()=>{
+ const aircraft={...point(),observedAt:new Date(epoch).toISOString(),sampledAt:new Date(epoch+5000).toISOString(),interpolated:true,renderedTrackDeg:90,trueHeadingDeg:null,interpolation:{fromObservedAt:new Date(epoch).toISOString(),toObservedAt:new Date(epoch+10000).toISOString(),model:'bounded-hermite'}};
+ const brief=renderToStaticMarkup(createElement(detailsExports.SkyAircraftBrief,{aircraft,observationCount:2}));
+ for(const text of ['estimated position is displayed near','Estimated position','12:00:05 UTC','12:00:00 UTC','12:00:10 UTC','bounded curve','Reported ground speed','not reported aircraft heading','do not measure clearance'])assert.ok(brief.includes(text),text);
+ assert.equal(brief.includes('Interpolated ground speed'),false);
+ const dossier=renderToStaticMarkup(createElement(detailsExports.SkyAircraftDossier,{aircraft,source:'adsb.lol'}));
+ for(const text of ['Evaluated playback time','Earlier bounding report','Later bounding report','Reported ground track','Reported true heading','Estimated path direction','Interpolated roll'])assert.ok(dossier.includes(text),text);
+ const unknown=renderToStaticMarkup(createElement(detailsExports.SkyAircraftBrief,{aircraft:{...aircraft,renderedTrackDeg:null,trackDeg:null},observationCount:2}));assert.ok(unknown.includes('Direction is unavailable'));
+});
+
+test('archive loader preserves reported true heading and rejects calculated motion fields in source points',()=>{
+ const file={schemaVersion:1,id:entry.id,provider:entry.provider,license:entry.license,sourceUrl:entry.sourceUrl,sourceSha256:'b'.repeat(64),points:[point(0,{trueHeadingDeg:123})]};
+ assert.equal(parsers.archive(file,entry).get('a00001')[0].trueHeadingDeg,123);
+ for(const bad of [{interpolated:true},{trueHeadingDeg:361},{trueHeadingDeg:'90'},{sampledAt:new Date(epoch).toISOString()},{interpolation:{model:'bounded-hermite'}},{renderedTrackDeg:90}])assert.throws(()=>parsers.archive({...file,points:[point(0,bad)]},entry),/heading|observations/);
 });

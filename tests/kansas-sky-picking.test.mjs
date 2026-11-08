@@ -31,7 +31,7 @@ function fixture(loaded=true,{failStroke=false}={}){
     off(name,fn){events.push(['off',name]);listeners.get(name)?.delete(fn);},triggerRepaint(){},queryTerrainElevation:()=>0,
     addLayer(layer){layers.set(layer.id,layer);layer.onAdd(map,gl);},removeLayer(id){layers.get(id)?.onRemove();layers.delete(id);}};
   const matrix=[1/512,0,0,0,0,1/512,0,0,0,0,0,0,-.25,-.5,0,1];
-  return {map,events,uploads,draws,blends,vertices:()=>vertices,setStyleLoaded:value=>{styleLoaded=value;},emit:(name,event)=>{for(const fn of [...(listeners.get(name)??[])])fn(event);},listenerCount:name=>listeners.get(name)?.size??0,draw:()=>layers.get('kfm-kansas-sky').render(gl,{modelViewProjectionMatrix:matrix})};
+  return {map,events,uploads,draws,blends,vertices:()=>vertices,setStyleLoaded:value=>{styleLoaded=value;},emit:(name,event)=>{for(const fn of [...(listeners.get(name)??[])])fn(event);},listenerCount:name=>listeners.get(name)?.size??0,draw:()=>layers.get('kfm-kansas-sky').render(gl,{modelViewProjectionMatrix:matrix,shaderData:{variantName:'mercator',vertexShaderPrelude:'uniform mat4 u_projection_matrix;',define:'#define PROJECTION_MERCATOR'},getProjectionData:()=>({mainMatrix:matrix,fallbackMatrix:matrix,tileMercatorCoords:[0,0,1/8192,1/8192],clippingPlane:[0,0,0,1],projectionTransition:0})})};
 }
 const aircraft={hex:'abc123',lon:-90,lat:0,onGround:false,altGeomFt:5000,altBaroFt:4800,trackDeg:90,rollDeg:null,emergency:null};
 for(const readyEvent of ['render','error'])for(const phase of ['initial attachment','replacement style'])test(`aircraft renderer recovers after pending ${phase} on ${readyEvent} and cancels disposed work`,()=>{
@@ -102,15 +102,16 @@ test('page dispatch respects dedicated pick modes, aircraft hits and ordinary-co
 // Exercise the actual React camera callbacks, including release of shared map ownership.
 const cameraControlSource=await readFile(process.env.KFM_SKY_CONTROL_PATH??'app/kansas-sky-control.tsx','utf8');
 const cameraAst=ts.createSourceFile('camera.tsx',cameraControlSource,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
-const cameraEffects=[];let elevationInitializer,paddingInitializer,journeyFit;
+const cameraEffects=[];let elevationInitializer,paddingInitializer,journeyFit,flightCameraDeclaration;
 function cameraNodes(node){
  if(ts.isCallExpression(node)&&node.expression.getText(cameraAst)==='useEffect')cameraEffects.push(node.arguments[0].getText(cameraAst));
  if(ts.isVariableDeclaration(node)&&node.name.getText(cameraAst)==='cameraElevation')elevationInitializer=node.initializer.getText(cameraAst);
  if(ts.isVariableDeclaration(node)&&node.name.getText(cameraAst)==='flightPadding')paddingInitializer=node.initializer.getText(cameraAst);
  if(ts.isFunctionDeclaration(node)&&node.name?.text==='fitSkyJourney')journeyFit=node.getText(cameraAst);
+ if(ts.isFunctionDeclaration(node)&&node.name?.text==='flightCamera')flightCameraDeclaration=node.getText(cameraAst);
  ts.forEachChild(node,cameraNodes);
 }cameraNodes(cameraAst);
-const executeCamera=(text,scope)=>new Function(...Object.keys(scope),ts.transpileModule(`return (${text});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));
+const executeCamera=(text,scope)=>{scope={projectionPhase:0,...scope};if(!scope.layer)scope.layer={current:{projection:()=>scope.projectionPhase}};if(text.includes('flightCamera(')&&text!==flightCameraDeclaration&&!scope.flightCamera)scope.flightCamera=executeCamera(flightCameraDeclaration,{cameraElevation:executeCamera(elevationInitializer,{}),flightPadding:executeCamera(paddingInitializer,{})});return new Function(...Object.keys(scope),ts.transpileModule(`return (${text});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));};
 const mapCameraSource=await readFile('node_modules/maplibre-gl/src/geo/projection/camera_helper.ts','utf8');
 const mapCameraAst=ts.createSourceFile('mapCamera.ts',mapCameraSource,ts.ScriptTarget.ES2022,true);
 const fittingFunction=mapCameraAst.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text==='cameraForBoxAndBearing');
@@ -167,7 +168,7 @@ test('whole-path fitting waits for layout, refits on resize, and cancels after c
 });
 test('Follow targets the aircraft display height instead of the ground beneath it',()=>{
  const moves=[];const plane={...aircraft,altGeomFt:31000};
- const map={jumpTo:options=>moves.push(options),getBearing:()=>0,queryTerrainElevation:()=>700,getCanvas:()=>({clientWidth:375,clientHeight:700})};
+ const map={jumpTo:options=>moves.push(options),getZoom:()=>9.7,getBearing:()=>0,queryTerrainElevation:()=>700,getCanvas:()=>({clientWidth:375,clientHeight:700})};
  const height=elevationInitializer?executeCamera(elevationInitializer,{}):()=>undefined;
  const follow=cameraEffects.find(text=>text.includes('camera!=="follow"'));
  assert.ok(follow);
@@ -179,7 +180,7 @@ test('3D flight view acquires and restores camera elevation and ground clamping'
  const ownership=cameraEffects.find(text=>text.includes('getCenterClampedToGround'));
  assert.ok(ownership,'the flight view must release shared map camera ownership');
  let clamped=true,elevation=620,padding={top:1,bottom:2,left:3,right:4},bounds=globe.REGIONAL_NAVIGATION_BOUNDS,minZoom=4;const moves=[],resize=new Map();
- const map={getProjection:()=>({type:'mercator'}),getMaxBounds:()=>bounds,setMaxBounds:value=>{bounds=value;},getMinZoom:()=>minZoom,setMinZoom:value=>{minZoom=value;},getPadding:()=>padding,setPadding:value=>{padding=value;},getCanvas:()=>({clientWidth:375,clientHeight:700}),on:(name,fn)=>resize.set(name,fn),off:name=>resize.delete(name),getCenterClampedToGround:()=>clamped,getCenterElevation:()=>elevation,setCenterClampedToGround:v=>{clamped=v;},setCenterElevation:v=>{elevation=v;},jumpTo:v=>{moves.push(v);if(v.elevation!==undefined)elevation=v.elevation;},getBearing:()=>0,queryTerrainElevation:()=>620};
+ const map={getProjection:()=>({type:'mercator'}),getMaxBounds:()=>bounds,setMaxBounds:value=>{bounds=value;},getMinZoom:()=>minZoom,setMinZoom:value=>{minZoom=value;},getPadding:()=>padding,setPadding:value=>{padding=value;},getCanvas:()=>({clientWidth:375,clientHeight:700}),on:(name,fn)=>resize.set(name,fn),off:name=>resize.delete(name),getCenterClampedToGround:()=>clamped,getCenterElevation:()=>elevation,setCenterClampedToGround:v=>{clamped=v;},setCenterElevation:v=>{elevation=v;},jumpTo:v=>{moves.push(v);if(v.elevation!==undefined)elevation=v.elevation;if(v.padding)padding=v.padding;},getBearing:()=>0,queryTerrainElevation:()=>620};
  const height=executeCamera(elevationInitializer,{}),ownCameraMove={current:false};
  const cleanup=executeCamera(ownership,{mapRef:{current:map},enabled:true,hidden:false,flat:false,cameraLeaseActive:true,flightView:true,overview:false,camera:'follow',frameRequest:1,latestPicked:{current:{...aircraft,altGeomFt:31000}},ownCameraMove,cameraElevation:height,flightPadding:executeCamera(paddingInitializer,{}),leaseProjectionNavigation:globe.leaseProjectionNavigation})();
  assert.equal(clamped,false);assert.equal(elevation,620,'the lease does not itself move the camera');
@@ -282,7 +283,7 @@ test('camera layout is measured once across 600 follow frames and refreshed for 
 test('manual camera-mode changes retain one navigation lease until the flight view closes',()=>{
  let call;const visit=node=>{if(ts.isCallExpression(node)&&node.expression.getText(cameraAst)==='useEffect'&&node.arguments[0]?.getText(cameraAst).includes('getCenterClampedToGround'))call=node.getText(cameraAst);ts.forEachChild(node,visit);};visit(cameraAst);assert.ok(call);
  let acquired=0,released=0,previous,cleanup;
- const map={getCenterClampedToGround:()=>true,getCenterElevation:()=>300,getPadding:()=>({top:0,bottom:0,left:0,right:0}),setCenterClampedToGround(){},setCenterElevation(){},setPadding(){},on(){},off(){},jumpTo:()=>assert.fail('a lease transition must not reframe a manual camera'),getCanvas:()=>({clientWidth:1280,clientHeight:800})};
+ const map={getCenterClampedToGround:()=>true,getCenterElevation:()=>300,getPadding:()=>({top:0,bottom:0,left:0,right:0}),setCenterClampedToGround(){},setCenterElevation(){},setPadding(){},on(){},off(){},jumpTo:options=>{assert.equal(options.center,undefined,'a lease transition cannot recenter manual exploration');assert.equal(options.zoom,undefined,'a lease transition cannot rezoom manual exploration');assert.equal(options.elevation,300);},getCanvas:()=>({clientWidth:1280,clientHeight:800})};
  const useEffect=(effect,deps)=>{if(!previous||deps.some((value,index)=>!Object.is(value,previous[index]))){cleanup?.();cleanup=effect();previous=deps;}};
  const mapRef={current:map},ownCameraMove={current:false};
  const render=(camera,overview,flightView=true)=>executeCamera(`()=>{${call};}`,{useEffect,mapRef,ownCameraMove,enabled:true,hidden:false,flat:false,camera,overview,flightView,frameRequest:1,cameraLeaseActive:flightView||camera!=='free',latestPicked:{current:undefined},flightPadding:()=>({top:0,bottom:0,left:0,right:0}),leaseProjectionNavigation:()=>{acquired++;return()=>released++;}})();
@@ -293,7 +294,7 @@ test('manual camera-mode changes retain one navigation lease until the flight vi
 
 test('explicit static framing supports reduced motion and cannot repeat after manual exploration',()=>{
  const effect=cameraEffects.find(text=>text.includes('framedRequest.current'));assert.ok(effect);
- const moves=[],map={jumpTo:value=>moves.push(value),getBearing:()=>28,queryTerrainElevation:()=>0};
+ const moves=[],map={jumpTo:value=>moves.push(value),getBearing:()=>28,queryTerrainElevation:()=>0,getCanvas:()=>({clientWidth:1280,clientHeight:800})};
  const scope={mapRef:{current:map},enabled:true,hidden:false,flat:false,flightView:true,overview:false,frameRequest:4,framedRequest:{current:-1},latestPicked:{current:aircraft},ownCameraMove:{current:false},reduced:true,camera:'free',cameraElevation:executeCamera(elevationInitializer,{}),flightPadding:()=>({top:0,bottom:0,left:0,right:0})};
  executeCamera(effect,scope)();assert.equal(moves.length,1);assert.equal(moves[0].bearing,28,'entry does not abruptly spin to the reported heading');
  executeCamera(effect,scope)();assert.equal(moves.length,1,'the same request is already consumed');
@@ -301,11 +302,11 @@ test('explicit static framing supports reduced motion and cannot repeat after ma
 });
 
 test('flight focus recolors only map context and restores exact original chart and raster paint',()=>{
- const layers=[{id:'kfm-background',type:'background'},{id:'chart-elevation-tint',type:'color-relief'},{id:'chart-place-labels',type:'symbol'},{id:'esri-imagery-raster',type:'raster'},{id:'kfm-aviation-tfr-edge',type:'line'}];
+ const layers=[{id:'kfm-background',type:'background'},{id:'chart-elevation-tint',type:'color-relief'},{id:'chart-place-labels',type:'symbol'},{id:'chart-urban',type:'fill'},{id:'esri-imagery-raster',type:'raster'},{id:'kfm-aviation-tfr-edge',type:'line'}];
  const relief=['interpolate',['linear'],['elevation'],0,'#eeeeaa',2000,'#ffffff'];
- const paint=new Map([['kfm-background:background-color','#efdda4'],['chart-elevation-tint:color-relief-color',relief],['esri-imagery-raster:raster-brightness-max',.9],['kfm-aviation-tfr-edge:line-opacity',1]]),listeners=new Map();
+ const paint=new Map([['chart-urban:fill-outline-color','#c9a92c'],['kfm-background:background-color','#efdda4'],['chart-elevation-tint:color-relief-color',relief],['esri-imagery-raster:raster-brightness-max',.9],['kfm-aviation-tfr-edge:line-opacity',1]]),listeners=new Map();
  const before=new Map(paint),map={getStyle:()=>({name:'KFM Aviation Chart',layers}),getLayer:id=>layers.find(layer=>layer.id===id),getPaintProperty:(id,key)=>paint.get(`${id}:${key}`),setPaintProperty:(id,key,value)=>{if(value===undefined)paint.delete(`${id}:${key}`);else paint.set(`${id}:${key}`,value);},on:(name,fn)=>listeners.set(name,fn),off:name=>listeners.delete(name)};
- const cleanup=attachKansasSkyFocus(map);assert.notDeepEqual(paint.get('chart-elevation-tint:color-relief-color'),relief);assert.ok(paint.get('esri-imagery-raster:raster-brightness-max')<.9);assert.equal(paint.get('kfm-aviation-tfr-edge:line-opacity'),1);
+ const cleanup=attachKansasSkyFocus(map);assert.notEqual(paint.get('chart-urban:fill-outline-color'),'#c9a92c');assert.notDeepEqual(paint.get('chart-elevation-tint:color-relief-color'),relief);assert.ok(paint.get('esri-imagery-raster:raster-brightness-max')<.9);assert.equal(paint.get('kfm-aviation-tfr-edge:line-opacity'),1);
  cleanup();assert.deepEqual(paint,before,'paint values and absent defaults return exactly to their owner');
 });
 
@@ -364,4 +365,52 @@ test('terrain tile completion refreshes stationary markers and guides without in
  terrain=null;height=null;f.emit('terrain',{terrain});f.draw();assert.equal(renderer.metrics().heightGuides,0);assert.equal(snapshot().ground,0,'terrain off removes stale elevated ground locations');
  renderer.dispose();const disposedRepaints=repaints;f.emit('sourcedata',{sourceId:'terrain-dem'});f.emit('terrain',{terrain:null});assert.equal(repaints,disposedRepaints);
  assert.equal(f.listenerCount('sourcedata'),0);assert.equal(f.listenerCount('terrain'),0);
+});
+
+test('slower React readout cannot rewind a newer shared-clock aircraft frame',()=>{
+ let render;const visit=node=>{if(ts.isCallExpression(node)&&node.expression.getText(cameraAst)==='animateSkyReplay')render=node.arguments[0].properties.find(p=>p.name?.getText(cameraAst)==='render').initializer.getText(cameraAst);ts.forEachChild(node,visit);};visit(cameraAst);
+ const effect=cameraEffects.find(text=>text.includes('layer.current?.update('));assert.ok(render&&effect);
+ const points=[{...aircraft,lon:-98,lat:38,observedAt:1000000,providerId:'adsb-lol'},{...aircraft,lon:-97.98,lat:38,observedAt:1020000,providerId:'adsb-lol'}],tracks=new Map([[aircraft.hex,points]]),writes=[];
+ const layer={current:{projection:()=>0,updateAircraft:a=>writes.push(a[0].lon),update:a=>writes.push(a[0].lon)}},motionCursor={current:0};
+ executeCamera(render,{motionCursor,motionState:{current:{tracks,enabled:true,hidden:false,selected:aircraft.hex}},samplesAt:skyHelpers.samplesAt,layer,latestPicked:{current:null},document:{hidden:false},performance:{now:()=>1000},previous:950,mapRef:{current:null}})(1010000);
+ executeCamera(effect,{layer,aircraft:skyHelpers.samplesAt(tracks,1008000),trails:[],selected:aircraft.hex,flat:false,showPaths:true,showGuides:true,playing:true,replaying:true,mode:'recorded',reduced:false,motionCursor,tracks,samplesAt:skyHelpers.samplesAt})();
+ assert.equal(writes[1],writes[0],'the lower-frequency readout uses the latest motion cursor, not its stale position snapshot');
+});
+
+
+test('flight focus terrain leases keep one display scale and restore the latest requested terrain',()=>{
+ let terrain={source:'dem-a',exaggeration:2.5};const listeners=new Map(),writes=[];
+ const emit=name=>{for(const listener of [...(listeners.get(name)??[])])listener();};
+ const map={getTerrain:()=>terrain,setTerrain:value=>{terrain=value;writes.push(value);emit('terrain');},on:(name,fn)=>{if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name).add(fn);},off:(name,fn)=>listeners.get(name)?.delete(fn)};
+ const first=exports.leaseKansasSkyTerrain(map),second=exports.leaseKansasSkyTerrain(map);
+ assert.equal(terrain.exaggeration,1);emit('style.load');first();first();assert.equal(terrain.exaggeration,1,'other focus owner remains active');
+ second();assert.equal(terrain.exaggeration,2.5,'a style event does not overwrite the original requested scale');
+ const third=exports.leaseKansasSkyTerrain(map);map.setTerrain({source:'dem-b',exaggeration:3});assert.equal(terrain.exaggeration,1);third();assert.deepEqual(terrain,{source:'dem-b',exaggeration:3},'latest provider and scale are restored');
+ const fourth=exports.leaseKansasSkyTerrain(map);map.setTerrain({source:'dem-b',exaggeration:1});fourth();assert.equal(terrain.exaggeration,1,'a new explicit1× preference is preserved');
+ const fifth=exports.leaseKansasSkyTerrain(map);map.setTerrain(null);fifth();assert.equal(terrain,null,'focus cleanup never reactivates disabled terrain');
+ assert.equal(listeners.get('terrain').size,0);assert.equal(listeners.get('style.load').size,0);
+});
+
+test('flight framing reserves measured phone overlays and dock with a usable focal viewport',()=>{
+ const padding=executeCamera(paddingInitializer,{});
+ for(const [width,height,canvasTop,dockTop,badgeBottom]of [[375,730,54,319.65625,165.34375],[390,762,54,351,165.34375],[375,730,54,292.36,165.34375]]){
+  const badge={getBoundingClientRect:()=>({top:120,bottom:badgeBottom,left:94,right:281,width:187,height:45})};
+  const map={getCanvas:()=>({clientWidth:width,clientHeight:height,getBoundingClientRect:()=>({top:canvasTop,bottom:canvasTop+height,right:width})}),getContainer:()=>({querySelector:()=>({getBoundingClientRect:()=>({left:10,top:dockTop})}),querySelectorAll:()=>[badge]})};
+  const p=padding(map,true),top=canvasTop+p.top,bottom=canvasTop+height-p.bottom,center=(top+bottom)/2;
+  assert.ok(top>=badgeBottom+16,`${width}px: usable map begins below the replay badge, actual ${top}, badge bottom ${badgeBottom}`);
+  assert.ok(center-30>badgeBottom&&center+30<dockTop,`${width}px: aircraft/halo has a 60px clear focal region`);
+  assert.ok(bottom-top>=79.99,'expanded disclosures retain a bounded, nonnegative focal viewport');
+ }
+});
+
+test('paused flight framing refreshes owned padding when status or dock layout changes',()=>{
+ const effect=cameraEffects.find(text=>text.includes('Layout changes refresh this cache'));assert.ok(effect);
+ const observed=[],events=new Map(),moves=[];let resizeCallback,disconnected=false;
+ const canvas={},dock={},badge={},ownCameraMove={current:false};
+ const map={getCanvas:()=>canvas,getContainer:()=>({querySelector:()=>dock,querySelectorAll:()=>[badge]}),on:(name,fn)=>events.set(name,fn),off:name=>events.delete(name),getCenterElevation:()=>5670,jumpTo:options=>{assert.equal(ownCameraMove.current,true);moves.push(options);}};
+ const scope={mapRef:{current:map},enabled:true,cameraLeaseActive:true,ownCameraMove,flightPadding:()=>({top:135,bottom:488,left:35,right:35}),ResizeObserver:class{constructor(fn){resizeCallback=fn;}observe(node){observed.push(node);}disconnect(){disconnected=true;}}};
+ const cleanup=executeCamera(effect,scope)();assert.equal(moves.length,1,'paused camera reserves the newly measured layout');assert.equal(moves[0].elevation,5670,'padding updates preserve the aircraft camera target height');
+ assert.ok(observed.includes(badge),'status geometry participates in layout invalidation');resizeCallback();assert.equal(moves.length,2);assert.equal(ownCameraMove.current,false);
+ cleanup();assert.equal(disconnected,true);assert.equal(events.size,0);
+ const before=moves.length,release=executeCamera(effect,{...scope,cameraLeaseActive:false})();resizeCallback();assert.equal(moves.length,before,'outside the camera lease, layout measurement cannot move the map');release();
 });

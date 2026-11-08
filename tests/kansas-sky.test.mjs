@@ -17,9 +17,9 @@ test('session ingests observation time, deduplicates, sorts out-of-order samples
  assert.deepEqual(b.range(),[epoch,epoch+10000]); assert.equal(b.tracks().get('a00001').length,2);assert.equal(b.tracks().get('a00001')[1].lon,-98);
  b.ingest({...envelope(20000),retrievedAt:'bad'});assert.equal(b.tracks().get('a00001').length,2);
 });
-test('replay interpolates only bracketing observations and shortest heading turn; optional instruments stay unknown',()=>{
- const tracks=new Map([['a00001',[point(),point(20000,{lon:-97,trackDeg:10,altBaroFt:null})]]]);
- const [sample]=sky.samplesAt(tracks,epoch+10000);assert.equal(sample.lon,-97.5);assert.equal(sample.trackDeg,0);assert.equal(sample.altBaroFt,null);assert.equal(sample.rollDeg,null);assert.equal(sample.interpolated,true);assert.equal(sample.observedAt,new Date(epoch).toISOString());
+test('replay interpolates only bracketing observations, separates the rendered turn and leaves optional instruments unknown',()=>{
+ const tracks=new Map([['a00001',[point(),point(20000,{lat:38.04,trackDeg:10,altBaroFt:null})]]]);
+ const [sample]=sky.samplesAt(tracks,epoch+10000);assert.ok(sample.lon<-98);assert.ok(Math.abs(sample.lat-38.02)<1e-9);assert.equal(sample.trackDeg,350);assert.ok(Math.min(sample.renderedTrackDeg,360-sample.renderedTrackDeg)<1e-6);assert.equal(sample.altBaroFt,null);assert.equal(sample.rollDeg,null);assert.equal(sample.interpolated,true);assert.equal(sample.observedAt,new Date(epoch).toISOString());
  assert.deepEqual(sky.samplesAt(tracks,epoch-1),[]);assert.deepEqual(sky.samplesAt(tracks,epoch+20001),[]);assert.equal(sky.samplesAt(tracks,epoch)[0].interpolated,false);
 });
 test('gaps, provider changes, ground transitions and explicit breaks never become continuous flights',()=>{

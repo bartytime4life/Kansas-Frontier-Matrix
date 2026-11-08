@@ -400,3 +400,96 @@ or queries. Disposing the layer removes both subscriptions. The source test
 fails at the old 0m cached height and passes with the new 333m value; it also
 checks terrain exaggeration, terrain removal, cache reuse and cleanup. This is
 cache-lifecycle evidence, not validation of DEM accuracy or flight clearance.
+
+## Position model and relative geometry — 2026-11-08
+
+Aircraft positions are observations at their own reported times, not a prediction
+of destination or a filed route. Ordinary live mode can contain different
+observation ages. The optional delayed live view and replay evaluate eligible
+aircraft at one common cursor; an aircraft without a valid bracket is absent at
+that time. Neither mode extrapolates beyond the last received position.
+
+Between continuous airborne observations, the position model uses a cubic
+Hermite curve in local east/north metres. Endpoint derivatives come from
+reported ground speed and true ground track, with knots converted to metres per
+second. Local curvature uses the
+[WGS84 ellipsoid parameters](https://earth-info.nga.mil/index.php?action=wgs84&dir=wgs84).
+This is an estimate inside an observed interval, not an aerodynamic simulation.
+Wind, intention, actual acceleration and unreported turns remain unknown.
+
+The model accepts a curve only when both endpoint speeds are between one half
+and twice the observed chord speed, the Bezier control polygon progresses
+monotonically along the chord, and each transverse control displacement is at
+most one quarter of the chord length. Finite accepted speed/track ranges and
+the existing 60-second continuity limit also apply. These are explicit rendering
+guards, not certified aircraft dynamics limits. A rejected curve uses bounded
+spherical great-circle interpolation. Exact observation positions stay exact.
+Rendered motion bearing is separate from reported ground track and true heading;
+it cannot establish the aircraft's physical nose direction or wind correction.
+
+A height-reference transition now disconnects interpolation as well as the
+profile and trail. No WGS84-to-pressure conversion is invented. A conservative
+horizontal continuity limit is 1,500 knots times the elapsed seconds plus a
+two-second allowance, then an additional 1,000 metres. It rejects a connecting
+animation across a gross positional jump while preserving each raw observation.
+The allowances accommodate timing and coordinate uncertainty; they are not
+evidence that any individual report is accurate. Source, method, ground/air,
+explicit-break and ordinary time-gap boundaries remain in force.
+
+The brief distinguishes evaluated time, bounding observation times and the
+interpolation model. Reported speed/ground track retain their source values;
+estimated positions and interpolated instruments are not new measurements.
+The readsb trace field used for airborne ground track means **true heading on
+the ground**. New offline preparation preserves that distinction; existing
+released files are not rewritten. The source contract is documented in the
+[readsb trace specification](https://github.com/wiedehopf/readsb/blob/dev/README-json.md).
+
+An offline withheld-observation comparison used 553 interior reports from two
+selected November 3 records. Median horizontal error against those retained
+reports changed from 7.07m with latitude/longitude interpolation to 5.10m with
+the bounded curve; p95 changed from 23.57m to 15.53m. This small retrospective
+comparison does not establish physical accuracy or generalization to other
+traffic. Some estimates became worse, and short-interval derivative agreement
+with reported instruments did not consistently improve. The dense actual
+recordings move by roughly one metre at the median relative to the old model;
+large cinematic corrections would misrepresent this evidence.
+
+Projection fixes follow the installed MapLibre 6.9.0 custom-layer contract and
+its [3D projection interface](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/CustomRenderMethodInput/).
+The actual shader variant, rather than the requested map projection name,
+determines the path through globe/Mercator transitions. Height units and depth
+must agree with other 3D layers. Symbol size remains deliberately schematic;
+terrain scale and datum differences cannot establish aircraft ground clearance.
+Slower instrument updates must not replace a newer animation-frame position.
+Opaque aircraft establish their own depth before transparent paths and glow.
+Flight focus temporarily displays terrain at 1× and restores the latest requested
+terrain source/scale when released. This presentation lease never changes the
+aircraft's reported height or stored scene preference.
+
+Globe camera aiming needs its own correction: MapLibre's globe camera keeps its
+target on the sea-level sphere even when center elevation is supplied. Follow
+and Orbit shift only the public camera center so its viewing ray passes through
+the elevated aircraft. The actual rendered projection transition weights this
+correction; Mercator receives no extra offset. A distance-based zoom bound keeps
+the target in front of the camera. Phone framing reserves measured top controls
+and the flight deck, including while paused. These camera changes never alter
+aircraft coordinates or heights. Installed-matrix checks cover 60 projection,
+bearing and zoom combinations; browser framing is a separate acceptance check.
+
+Detailed trajectories sample the same bounded curve as aircraft. Under crowding,
+historical geometry thins original observations instead of constructing extra
+estimated vertices. A single weakly owned selected-route cache remains within
+the existing 20,000-point budget. An initial 3,000-aircraft CPU trial exposed a
+32.81ms median regional-trail build; removing per-vertex measurement receipts and
+caching selected geometry reduced that trial to 6.38ms. The preceding source was
+still faster at 4.17ms. Sampling increased from 1.21ms to 3.49ms median, while a
+cached selected journey took 0.053ms. These synthetic Node24 measurements expose
+the extra mathematics cost; they establish neither browser FPS nor device capacity.
+
+This refinement stays in the existing app, scripts, tests and docs responsibility
+roots under Directory Rules / ADR-0029. It does not modify prepared public data,
+activate collection, change source admission or publish a deployment. Revert
+the source candidate to restore preceding behavior; retain source observations
+and diagnostic receipts. Focused source failures, local browser verification,
+CI, merged code and target-environment behavior remain separate evidence states.
+None of these newly reproduced defects establishes the cause of issue #5737.

@@ -9,8 +9,30 @@ export function pickKansasSkyAircraft(map: MapLibreMap, point: SkyPickPoint): bo
   return aircraftPickers.get(map)?.(point) ?? false;
 }
 
+type SkyTerrain=NonNullable<ReturnType<MapLibreMap["getTerrain"]>>;
+const terrainFocusLeases=new WeakMap<MapLibreMap,{owners:number;release:()=>void}>();
+/** Display terrain at 1× during focus; preserve the latest requested source/scale. */
+export function leaseKansasSkyTerrain(map:MapLibreMap):()=>void{
+  let lease=terrainFocusLeases.get(map);
+  if(!lease){
+    let requested:SkyTerrain|null=null,changing=false;
+    const reconcile=()=>{
+      if(changing)return;
+      const current=map.getTerrain?.();requested=current?{...current}:null;
+      if(current&&(current.exaggeration??1)!==1){changing=true;try{map.setTerrain({...current,exaggeration:1});}finally{changing=false;}}
+    };
+    const styleChanged=()=>{const current=map.getTerrain?.();if(!current||current.source!==requested?.source||(current.exaggeration??1)!==1)reconcile();};
+    map.on("terrain",reconcile);map.on("style.load",styleChanged);reconcile();
+    lease={owners:0,release:()=>{map.off("terrain",reconcile);map.off("style.load",styleChanged);const current=map.getTerrain?.();if(current&&requested&&current.source===requested.source&&(current.exaggeration??1)===1)map.setTerrain(requested);}};
+    terrainFocusLeases.set(map,lease);
+  }
+  lease.owners++;let active=true;
+  return()=>{if(!active)return;active=false;if(--lease!.owners===0){terrainFocusLeases.delete(map);lease!.release();}};
+}
+
 /** Explicit presentation-only focus. Restores owned paint values and leaves TFRs and source state intact. */
 export function attachKansasSkyFocus(map:MapLibreMap){
+  const restoreTerrain=leaseKansasSkyTerrain(map);
   type PaintName=Parameters<MapLibreMap["getPaintProperty"]>[1];
   type PaintValue=Parameters<MapLibreMap["setPaintProperty"]>[2];
   const owned=new Map<string,{layer:unknown;property:PaintName;original:PaintValue;applied:PaintValue}>();let active=true,changing=false;
@@ -25,6 +47,8 @@ export function attachKansasSkyFocus(map:MapLibreMap){
       if(chart){
         if(layer.type==="color-relief"){paints["color-relief-color"]=["interpolate",["linear"],["elevation"],0,"#0d2935",500,"#163843",1500,"#224550",3500,"#30505a"];paints["color-relief-opacity"]=.8;}
         if(layer.type==="fill"){paints["fill-color"]=layer.id.includes("water")?"#092b3d":"#26434e";paints["fill-opacity"]=.65;}
+        // Provider land-use outlines are basemap context, not airspace restrictions.
+        if(layer.id==="chart-urban")paints["fill-outline-color"]="#3f5c63";
         if(layer.type==="line"){paints["line-color"]="#60818b";paints["line-opacity"]=layer.id.includes("boundary")||layer.id.includes("outline")?.65:.3;}
         if(layer.type==="symbol"){paints["text-color"]="#b5cbd0";paints["text-halo-color"]="#0c2531";paints["text-halo-width"]=1;paints["text-opacity"]=.8;}
         if(layer.type==="circle"){paints["circle-opacity"]=.2;paints["circle-stroke-opacity"]=.5;}
@@ -40,7 +64,7 @@ export function attachKansasSkyFocus(map:MapLibreMap){
     }}finally{changing=false;}
   };
   map.on("styledata",apply);apply();
-  return ()=>{active=false;map.off("styledata",apply);for(const [key,record]of owned){const id=key.slice(0,key.lastIndexOf(":"));if(map.getLayer(id)===record.layer&&same(map.getPaintProperty(id,record.property),record.applied))map.setPaintProperty(id,record.property,record.original);}owned.clear();};
+  return ()=>{active=false;map.off("styledata",apply);for(const [key,record]of owned){const id=key.slice(0,key.lastIndexOf(":"));if(map.getLayer(id)===record.layer&&same(map.getPaintProperty(id,record.property),record.applied))map.setPaintProperty(id,record.property,record.original);}owned.clear();restoreTerrain();};
 }
 
 const ID = "kfm-kansas-sky";
@@ -67,8 +91,10 @@ function color(a: Position, selected: boolean): readonly number[] {
 }
 /** One persistent buffer; bounded trail detail degrades before aircraft are removed.
  * Altitude is explicitly approximate, never an airspace-membership calculation. */
-export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void, report: (message: string) => void) {
+export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void, report: (message: string) => void, projectionChanged?:(phase:number|null)=>void) {
   let gl: WebGL2RenderingContext | null = null, buffer: WebGLBuffer | null = null, active = true, dirty = true;
+  let projectionPhase:number|null=null,projectionNoticePending=false;
+  const notifyProjection=(phase:number|null)=>{if(phase===projectionPhase)return;projectionPhase=phase;if(projectionChanged&&!projectionNoticePending){projectionNoticePending=true;queueMicrotask(()=>{projectionNoticePending=false;if(active)projectionChanged(projectionPhase);});}};
   let strokeBuffer:WebGLBuffer|null=null,strokeVertices=0,routeVertices=0;
   const strokeData=new Float32Array(STROKE_SEGMENTS*6*11),strokeBundles=new Map<string,Bundle>();
   let planes: readonly Aircraft[] = [], trails: readonly SkyTrail[] = [], selected: string | null = null;
@@ -100,19 +126,26 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     if (!gl!.getShaderParameter(shader, gl!.COMPILE_STATUS)) { gl!.deleteShader(shader); throw new Error("Aircraft shader unavailable"); }
     return shader;
   };
-  const build = (input: CustomRenderMethodInput, globe: boolean, stroke=false) => {
-    const vertex = compile(gl!.VERTEX_SHADER, `#version 300 es\n${globe ? `${input.shaderData.vertexShaderPrelude}\n${input.shaderData.define}` : "uniform mat4 u_matrix; uniform float u_world;"}
-      uniform vec2 u_origin; in vec3 a_position; in vec3 a_color; out vec3 v_color; uniform float u_point;
+  const build = (input: CustomRenderMethodInput, stroke=false) => {
+    const vertex = compile(gl!.VERTEX_SHADER, `#version 300 es\n${input.shaderData.vertexShaderPrelude}\n${input.shaderData.define}
+      uniform vec2 u_origin; in vec3 a_position; in vec3 a_color; out vec3 v_color; out float v_visibility; uniform float u_point;
       ${stroke?"in vec3 a_other; in float a_side; in float a_edge; out float v_edge; uniform vec2 u_viewport; uniform float u_width;":""}
-      void main(){v_color=a_color; gl_PointSize=36.; gl_Position=${globe ? "projectTileWithElevation(u_origin+a_position.xy,a_position.z)" : "u_matrix*vec4((u_origin+a_position.xy)*u_world,a_position.z,1.)"};
-        ${stroke?`vec4 other=${globe?"projectTileWithElevation(u_origin+a_other.xy,a_other.z)":"u_matrix*vec4((u_origin+a_other.xy)*u_world,a_other.z,1.)"};
+      void main(){v_color=a_color; gl_PointSize=36.; gl_Position=projectTileFor3D((u_origin+a_position.xy)*8192.,a_position.z);
+        v_visibility=1.;
+        #ifdef GLOBE
+        // Keep true depth and clip the hidden hemisphere independently.
+        vec3 elevated=projectToSphere((u_origin+a_position.xy)*8192.)*(1.+a_position.z/6371008.8);
+        v_visibility=1.-globeComputeClippingZ(elevated)*clamp((u_projection_transition-.2)/.8,0.,1.);
+        #endif
+        ${stroke?`vec4 other=projectTileFor3D((u_origin+a_other.xy)*8192.,a_other.z);
           v_edge=a_edge;
           if(gl_Position.w<=.00001||other.w<=.00001){gl_Position=vec4(2.,2.,2.,1.);return;}
           vec2 direction=(other.xy/max(.00001,other.w)-gl_Position.xy/max(.00001,gl_Position.w))*u_viewport;
           vec2 normal=vec2(-direction.y,direction.x)/max(.00001,length(direction));
           gl_Position.xy+=normal*a_side*u_width/u_viewport*gl_Position.w;`:""}
       }`);
-    const fragment = compile(gl!.FRAGMENT_SHADER, `#version 300 es\nprecision highp float; in vec3 v_color; uniform float u_opacity; uniform float u_point; ${stroke?"uniform float u_halo; in float v_edge;":""} out vec4 fragColor; void main(){
+    const fragment = compile(gl!.FRAGMENT_SHADER, `#version 300 es\nprecision highp float; in vec3 v_color; in float v_visibility; uniform float u_opacity; uniform float u_point; ${stroke?"uniform float u_halo; in float v_edge;":""} out vec4 fragColor; void main(){
+      if(v_visibility<0.)discard;
       float alpha=u_opacity;
       ${stroke?"alpha*=u_halo>.5?pow(max(0.,1.-abs(v_edge)),2.):1.-smoothstep(.55,1.,abs(v_edge));":"if(u_point>.5){float d=length(gl_PointCoord-vec2(.5))*2.;alpha=(1.-smoothstep(.15,1.,d))*.22+(1.-smoothstep(.035,.085,abs(d-.64)))*.45;}"}
       fragColor=vec4(v_color,alpha);}`);
@@ -128,14 +161,15 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   const upload = () => {
     let count = 0;
     const put = (x: number, y: number, z: number, c: readonly number[],shade=1) => {const offset=count++*6;data[offset]=x-origin[0];data[offset+1]=y-origin[1];data[offset+2]=z;data[offset+3]=Math.min(1,c[0]*shade);data[offset+4]=Math.min(1,c[1]*shade);data[offset+5]=Math.min(1,c[2]*shade);};
-    const size = Math.max(35, Math.min(1600, 180000 / 2 ** (map.getZoom() - 1)));
+    const size = Math.min(1600, 180000 / 2 ** (map.getZoom() - 1));
     for (const a of planes.slice(0, LIMIT)) {
       const [x,y] = xy(a.lon,a.lat), unit = 1 / (40075016.686 * Math.cos(a.lat * RAD));
-      const heading = (a.trackDeg ?? 0) * RAD, bank = (flat?0:a.rollDeg ?? 0) * RAD, c = color(a,a.hex===selected);
+      const direction=a.trueHeadingDeg??a.renderedTrackDeg??a.trackDeg;
+      const heading = (direction ?? 0) * RAD, bank = (flat?0:a.rollDeg ?? 0) * RAD, c = color(a,a.hex===selected);
       // The selected aircraft is a larger faceted symbol; it is not a scale model.
       // Other aircraft retain the small, bounded four-triangle silhouette.
-      const detailed=a.hex===selected&&a.trackDeg!==null&&!flat;
-      const symbolSize=size*(detailed?4.5:1),outline=a.trackDeg===null?DIAMOND:detailed?SELECTED_PLANE:PLANE;
+      const detailed=a.hex===selected&&direction!==null&&!flat;
+      const symbolSize=size*(detailed?4.5:1),outline=direction===null?DIAMOND:detailed?SELECTED_PLANE:PLANE;
       const height=markerAltitude(a);
       for (const [east,north,up=0,shade=1] of outline) {
         const e=(east*Math.cos(bank)+up*Math.sin(bank))*symbolSize,n=north*symbolSize;
@@ -199,28 +233,35 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     strokeBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,strokeBuffer);gl.bufferData(gl.ARRAY_BUFFER,strokeData.byteLength,gl.DYNAMIC_DRAW);dirty=true;trailDirty=true;
   },render(_context,input) {
     if(!active||!gl||!buffer||document.hidden) return;
-    const globe=map.getProjection().type==="globe", key=globe?input.shaderData.variantName:"mercator";
+    // Requested globe can render the Mercator variant at close zoom.
+    const key=input.shaderData.variantName,globe=key!=="mercator";
+    // World-tile coordinates use meter Z in both projection variants. The
+    // default custom-layer Mercator matrix instead expects conformal Z.
+    const projection=input.getProjectionData({tileID:{canonical:{z:0,x:0,y:0}},applyGlobeMatrix:true});
+    const phase=globe?Math.max(0,Math.min(1,projection.projectionTransition)):0;
+    notifyProjection(phase);
     if(failed.has(key))return;
     let bundle=bundles.get(key);
-    try { if(!bundle) {bundle=build(input,globe);bundles.set(key,bundle);} } catch {failed.add(key);report("Aircraft renderer unavailable; use the aircraft list.");return;}
+    try { if(!bundle) {bundle=build(input);bundles.set(key,bundle);} } catch {failed.add(key);report("Aircraft renderer unavailable; use the aircraft list.");return;}
     if(showGuides&&performance.now()-terrainRetry>5000){terrainRetry=performance.now();for(const [key,value]of terrainCache)if(value===null)terrainCache.delete(key);trailDirty=true;}
     if(dirty||trailDirty) upload();
-    const project=(target:Bundle)=>{gl!.useProgram(target.program);gl!.bindVertexArray(target.vao);const u=target.u, world=512*2**map.getZoom();
-    gl!.uniform2f(u.u_origin,...origin as [number,number]);
-    if(globe) {const p=input.defaultProjectionData;gl!.uniformMatrix4fv(u.u_projection_matrix,false,p.mainMatrix as Float32Array);gl!.uniformMatrix4fv(u.u_projection_fallback_matrix,false,p.fallbackMatrix as Float32Array);gl!.uniform4f(u.u_projection_tile_mercator_coords,...p.tileMercatorCoords);gl!.uniform4f(u.u_projection_clipping_plane,...p.clippingPlane);gl!.uniform1f(u.u_projection_transition,p.projectionTransition);}
-    else {gl!.uniformMatrix4fv(u.u_matrix,false,Float32Array.from(input.modelViewProjectionMatrix));gl!.uniform1f(u.u_world,world);}};
+    const project=(target:Bundle)=>{gl!.useProgram(target.program);gl!.bindVertexArray(target.vao);const u=target.u,p=projection;
+      gl!.uniform2f(u.u_origin,...origin as [number,number]);
+      gl!.uniformMatrix4fv(u.u_projection_matrix,false,Float32Array.from(p.mainMatrix));gl!.uniformMatrix4fv(u.u_projection_fallback_matrix,false,Float32Array.from(p.fallbackMatrix));gl!.uniform4f(u.u_projection_tile_mercator_coords,...p.tileMercatorCoords);gl!.uniform4f(u.u_projection_clipping_plane,...p.clippingPlane);gl!.uniform1f(u.u_projection_transition,p.projectionTransition);};
     project(bundle);
     if(flat)gl.disable(gl.DEPTH_TEST);else gl.enable(gl.DEPTH_TEST);gl.depthMask(false);gl.disable(gl.CULL_FACE);gl.lineWidth(1);
-    gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.uniform1f(bundle.u.u_point,0);gl.uniform1f(bundle.u.u_opacity,.48);
+    gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.uniform1f(bundle.u.u_point,0);gl.uniform1f(bundle.u.u_opacity,1);
+    // Opaque aircraft establish depth before transparent paths and focal glow.
+    gl.depthMask(!flat);gl.drawArrays(gl.TRIANGLES,0,planeVertices);gl.depthMask(false);gl.uniform1f(bundle.u.u_opacity,.48);
     gl.drawArrays(gl.LINES,PLANE_CAPACITY+fallbackVertices,trailVertices-fallbackVertices);
-    if(strokeVertices&&!failed.has(`stroke:${key}`)){let pathBundle=strokeBundles.get(key);try{if(!pathBundle){pathBundle=build(input,globe,true);strokeBundles.set(key,pathBundle);}project(pathBundle);
+    if(strokeVertices&&!failed.has(`stroke:${key}`)){let pathBundle=strokeBundles.get(key);try{if(!pathBundle){pathBundle=build(input,true);strokeBundles.set(key,pathBundle);}project(pathBundle);
       gl.uniform2f(pathBundle.u.u_viewport,map.getCanvas().clientWidth,map.getCanvas().clientHeight);
       // Pixel-width strips remain legible at regional zoom; their centerline is still the observed route.
       gl.uniform1f(pathBundle.u.u_halo,1);gl.uniform1f(pathBundle.u.u_opacity,.34);gl.uniform1f(pathBundle.u.u_width,8);gl.drawArrays(gl.TRIANGLES,0,routeVertices);
       gl.uniform1f(pathBundle.u.u_halo,0);gl.uniform1f(pathBundle.u.u_opacity,.96);gl.uniform1f(pathBundle.u.u_width,2.5);gl.drawArrays(gl.TRIANGLES,0,routeVertices);
       gl.uniform1f(pathBundle.u.u_opacity,.32);gl.uniform1f(pathBundle.u.u_width,1.2);gl.drawArrays(gl.TRIANGLES,routeVertices,strokeVertices-routeVertices);
     }catch{failed.add(`stroke:${key}`);report("Flight path emphasis unavailable; aircraft and source details remain available.");}}
-    project(bundle);if(fallbackVertices&&failed.has(`stroke:${key}`)){gl.uniform1f(bundle.u.u_opacity,.8);gl.drawArrays(gl.LINES,PLANE_CAPACITY,fallbackVertices);}gl.uniform1f(bundle.u.u_opacity,1);if(focalVertex>=0){gl.uniform1f(bundle.u.u_point,1);gl.drawArrays(gl.POINTS,focalVertex,1);}gl.uniform1f(bundle.u.u_point,0);gl.drawArrays(gl.TRIANGLES,0,planeVertices);gl.bindVertexArray(null);
+    project(bundle);if(fallbackVertices&&failed.has(`stroke:${key}`)){gl.uniform1f(bundle.u.u_opacity,.8);gl.drawArrays(gl.LINES,PLANE_CAPACITY,fallbackVertices);}gl.uniform1f(bundle.u.u_opacity,1);if(focalVertex>=0){gl.uniform1f(bundle.u.u_point,1);gl.drawArrays(gl.POINTS,focalVertex,1);}gl.uniform1f(bundle.u.u_point,0);gl.bindVertexArray(null);
     // Mercator's exact elevated clip positions make aircraft clickable in 3D.
     hits=[];
     if(!globe) {const m=input.modelViewProjectionMatrix,world=512*2**map.getZoom();for(const a of planes.slice(0,LIMIT)){const [xx,yy]=xy(a.lon,a.lat),x=xx*world,y=yy*world,z=markerAltitude(a),w=m[3]*x+m[7]*y+m[11]*z+m[15];if(w<=0)continue;hits.push({hex:a.hex,x:((m[0]*x+m[4]*y+m[8]*z+m[12])/w+1)*map.getCanvas().clientWidth/2,y:(1-(m[1]*x+m[5]*y+m[9]*z+m[13])/w)*map.getCanvas().clientHeight/2});}}
@@ -235,7 +276,7 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   };
   // Other style listeners can queue source work before this renderer mounts.
   // Recheck on ready frames, then release the listener after installation.
-  const awaitStyle=()=>{if(!active)return;terrainCache.clear();groundMarkers.clear();trailDirty=true;map.on("render",install);map.on("error",install);install();};
+  const awaitStyle=()=>{if(!active)return;notifyProjection(null);terrainCache.clear();groundMarkers.clear();trailDirty=true;map.on("render",install);map.on("error",install);install();};
   const zoom=()=>{dirty=true;groundMarkers.clear();};
   // Completed DEM tiles can have no sourceDataType, even while other tiles load.
   // Invalidate only the active terrain source, then coalesce queries at next draw.
@@ -245,5 +286,5 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false, paths=true, guides=true){
     if(trails!==nextTrails||selected!==id||flat!==flatView||showPaths!==paths||showGuides!==guides)trailDirty=true;
     flat=flatView;planes=next;trails=nextTrails;selected=id;showPaths=paths;showGuides=guides;dirty=true;map.triggerRepaint();
-  }, updateAircraft(next:readonly Aircraft[]){planes=next;dirty=true;map.triggerRepaint();}, metrics(){return {aircraft:Math.min(planes.length,LIMIT),trailVertices,heightGuides:guideCount,terrainQueries};}, dispose(){active=false;map.off("style.load",awaitStyle);map.off("render",install);map.off("error",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);map.off("sourcedata",terrainChanged);map.off("terrain",invalidateTerrain);terrainCache.clear();groundMarkers.clear();if(map.getLayer(ID))map.removeLayer(ID);} };
+  }, updateAircraft(next:readonly Aircraft[]){planes=next;dirty=true;map.triggerRepaint();}, projection(){return projectionPhase;}, metrics(){return {aircraft:Math.min(planes.length,LIMIT),trailVertices,heightGuides:guideCount,terrainQueries};}, dispose(){active=false;map.off("style.load",awaitStyle);map.off("render",install);map.off("error",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);map.off("sourcedata",terrainChanged);map.off("terrain",invalidateTerrain);terrainCache.clear();groundMarkers.clear();if(map.getLayer(ID))map.removeLayer(ID);} };
 }

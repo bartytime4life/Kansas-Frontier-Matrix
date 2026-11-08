@@ -81,3 +81,5 @@
 }
 @media(min-width:761px) and (max-height:740px){.kansas-sky-flight-deck{top:75px;max-height:calc(100% - 150px);padding:12px}.kansas-sky-flight-readout{margin:8px 0;padding:8px 0}.kansas-sky-flight-menu{margin:7px 0 0}}
 @media(prefers-reduced-motion:reduce){.kansas-sky-flight-deck button{transition:none}}
+
+.sky-motion-explanation{border-left:2px solid #8ebbc5;padding-left:10px}.sky-motion-explanation>strong{display:block;margin-bottom:4px;color:#f0d29b}
