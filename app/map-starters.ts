@@ -72,6 +72,17 @@ export function preferredContextIds(params: URLSearchParams, saved: readonly Off
   return params.has("ctx") ? params.get("ctx")!.split(",") : saved;
 }
 
+/** Recreate the local geology map's public context when no visitor selection exists. */
+export const GEOLOGY_OPENING_CONTEXT_IDS = [
+  "census-counties", "usgs-streamflow", "usgs-3dhp-hydrography",
+  "nasa-gibs-fire-points", "nifc-fire-reports", "kgs-monitoring-wells",
+  "usgs-earthquakes", "usgs-3dep-slope",
+] as const satisfies readonly OfficialContextId[];
+
+export function openingContextIds(params: URLSearchParams, saved: readonly OfficialContextId[] | null, topic: string): readonly string[] | null {
+  return preferredContextIds(params, saved) ?? (topic === "geology" ? GEOLOGY_OPENING_CONTEXT_IDS : null);
+}
+
 export function writeContextPreference(ids: readonly string[] | null, sources: readonly OfficialContextSource[]): boolean {
   try {
     if (ids === null) window.localStorage.removeItem(CONTEXT_PREFERENCE_KEY);

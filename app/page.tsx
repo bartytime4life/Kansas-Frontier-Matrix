@@ -20,7 +20,7 @@ import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
 import { FrameCheck } from "./frame-check";
 import { MapStartersControl } from "./map-starters-control";
-import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
+import { contextSelectionChanges, openingContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, combineCategoryMaps, normalizeCategoryTopics, type CategoryScene } from "./category-maps";
@@ -6292,7 +6292,7 @@ export default function Home() {
       opacityRef.current = nextOpacity;
       setOpacity(nextOpacity);
       const knownOfficialIds = new Set<OfficialContextId>(OFFICIAL_CONTEXT_SOURCES.map((source) => source.id));
-      const preferredIds = preferredContextIds(params, readContextPreference(OFFICIAL_CONTEXT_SOURCES));
+      const preferredIds = openingContextIds(params, readContextPreference(OFFICIAL_CONTEXT_SOURCES), restoredTopic);
       const restoredOfficialIds = preferredIds?.filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
       const nextOfficialVisibility = preferredIds !== null
         ? Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, restoredOfficialIds.includes(source.id)])) as Record<OfficialContextId, boolean>
