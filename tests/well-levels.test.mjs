@@ -164,7 +164,7 @@ test('the Aquifer dock offers water levels at wells: the nearest wells, the pick
  assert.match(page,/\} else if \(!wellsWereOnRef\.current\) setOfficialContextVisible\("kgs-monitoring-wells", false\);/);
  assert.match(page,/if \(wellsOnRef\.current && renderedHits\[0\]\?\.source === OFFICIAL_CONTEXT_BY_ID\["kgs-monitoring-wells"\]\.sourceId\) \{\s*const site = renderedHits\[0\]\.properties\?\.USGS_ID;/);
  assert.match(page,/void fetch\(wellLevelsApiPath\(site\), \{ signal: controller\.signal \}\)/);
- assert.match(page,/\|\| \(wellsOnRef\.current && renderedHits\[0\]\?\.source === OFFICIAL_CONTEXT_BY_ID\["kgs-monitoring-wells"\]\.sourceId\)\) \{\s*map\.getCanvas\(\)\.style\.cursor = "pointer";/,'no hover preview over a well the dock picks');
+ assert.match(page,/\|\| \(wellsOnRef\.current && renderedHits\[0\]\?\.source === OFFICIAL_CONTEXT_BY_ID\["kgs-monitoring-wells"\]\.sourceId\)\) \{\s*showInspectionCursor\(\);/,'inspection cursor without a hover preview over a well the dock picks');
  assert.match(page,/\.\.\.\(wellsOn \? \[wellLevelsKey\(\)\] : \[\]\)/);
  assert.match(page,/wellsWereOnRef\.current = false;\s*setWellsOn\(false\);\s*setWellPicked\(null\);/,'closes with its map');
 });
