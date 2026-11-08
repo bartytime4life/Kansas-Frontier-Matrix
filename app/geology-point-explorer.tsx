@@ -5,7 +5,7 @@ import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibr
 import { readBoundedJson } from "./bounded-json";
 import { startSubsurfaceWorker } from "./subsurface-workers";
 import type { AreaBounds, Position, SubsurfaceManifest } from "./subsurface-model";
-import { RESOURCE_SOURCES, type ResourceKind, type ResourceLocation } from "./underground-resources-model";
+import { MINE_OPERATIONS, RESOURCE_SOURCES, type MineVisibility, type MineOperation, type ResourceKind, type ResourceLocation } from "./underground-resources-model";
 import type { LocatorCluster, LocatorPoint } from "./geology-locator-model";
 import { geologyResourceCells, layoutResourceGroups, type ResourceCell, type ResourceGroup } from "./geology-resource-grid";
 import { GeologyLayerControls, type GeologyPointVisibility, type GeologyPointKind, type GeologyEarthquakeMode } from "./geology-layer-controls";
@@ -39,10 +39,13 @@ export function geologyPointFrame(center: Position, span: Position): AreaBounds 
   return [Number(west.toFixed(5)), Number(south.toFixed(5)), Number((west + width).toFixed(5)), Number((south + height).toFixed(5))];
 }
 
-export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible, pickingEnabled, visibility, onVisibility, earthquakeMode, onEarthquakeMode, onUnderground, recentTime, dockOpen }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean; pickingEnabled: () => boolean; visibility: GeologyPointVisibility; onVisibility: (kind: GeologyPointKind, shown: boolean) => void; earthquakeMode: GeologyEarthquakeMode; onEarthquakeMode: (mode: GeologyEarthquakeMode) => void; onUnderground: () => void; recentTime?: string | null; dockOpen: boolean }) {
+export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible, pickingEnabled, visibility, onVisibility, mineVisibility, onMineVisibility, earthquakeMode, onEarthquakeMode, onUnderground, recentTime, dockOpen }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean; pickingEnabled: () => boolean; visibility: GeologyPointVisibility; onVisibility: (kind: GeologyPointKind, shown: boolean) => void; mineVisibility: MineVisibility; onMineVisibility: (operation: MineOperation, shown: boolean) => void; earthquakeMode: GeologyEarthquakeMode; onEarthquakeMode: (mode: GeologyEarthquakeMode) => void; onUnderground: () => void; recentTime?: string | null; dockOpen: boolean }) {
   const [viewport, setViewport] = useState<AreaBounds | null>(null);
   const [frame, setFrame] = useState<AreaBounds | null>(null);
-  const [sources, setSources] = useState<Record<ResourceKind, SourceState>>({ oilgas: emptySource(), minerals: emptySource() });
+  const mineTypesKey = MINE_OPERATIONS.filter(kind => mineVisibility[kind]).join(",");
+  const [sourceMineTypes, setSourceMineTypes] = useState("");
+  const [loadedSources, setSources] = useState<Record<ResourceKind, SourceState>>({ oilgas: emptySource(), minerals: emptySource() });
+  const sources = useMemo(() => ({ oilgas: loadedSources.oilgas, minerals: sourceMineTypes === mineTypesKey ? loadedSources.minerals : emptySource() }), [loadedSources, sourceMineTypes, mineTypesKey]);
   const [locator, setLocator] = useState<LocatorState>(emptyLocator);
   const [locatorKindsKey, setLocatorKindsKey] = useState("11");
   const [snapshot, setSnapshot] = useState<{ wells: number; cores: number; capturedAt: string } | null>(null);
@@ -93,7 +96,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
   const browsePageCount = Math.max(1, Math.ceil(browseItems.length / 20));
   const visibleBrowsePage = Math.min(browsePage, browsePageCount - 1);
   const visibleBrowseItems = browseItems.slice(visibleBrowsePage * 20, visibleBrowsePage * 20 + 20);
-  const selectedResource = resourceRows.find(row => row.id === selected) ?? (retainedResource?.id === selected && visibility[retainedResource.id.startsWith("oilgas:") ? "oilgas" : "minerals"] ? retainedResource : undefined);
+  const selectedResource = resourceRows.find(row => row.id === selected) ?? (retainedResource?.id === selected && visibility[retainedResource.id.startsWith("oilgas:") ? "oilgas" : "minerals"] && (retainedResource.id.startsWith("oilgas:") || mineVisibility[retainedResource.mineOperation ?? "unspecified"]) ? retainedResource : undefined);
   const selectedLocator = shownLocator.points.find(row => row.id === selected) ?? (retainedLocator?.id === selected && visibility[retainedLocator.kind] ? retainedLocator : undefined);
   const detailedFrame = Boolean(viewport && viewport[2] - viewport[0] <= 0.8 && viewport[3] - viewport[1] <= 0.8);
 
@@ -168,23 +171,24 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
   useEffect(() => {
     const hidden = (selected.startsWith("wwc5-") && !visibility.well) || (selected.startsWith("core-") && !visibility.core)
       || (selected.startsWith("oilgas:") && !visibility.oilgas) || (selected.startsWith("minerals:") && !visibility.minerals);
-    if (hidden) { setSelected(""); setDetail(null); setCoincident([]); setInspectedGroup(null); }
+    if (hidden || selected.startsWith("minerals:")) { setSelected(""); setDetail(null); setCoincident([]); setInspectedGroup(null); }
     if ((browseCategory === "wells" && !visibility.well) || (browseCategory === "cores" && !visibility.core)
       || (browseCategory === "oilgas" && !visibility.oilgas) || (browseCategory === "minerals" && !visibility.minerals)) setBrowseCategory("groups");
     if (inspectedGroup) setInspectedGroup(null);
   // Selections are invalidated by a visibility change, not by a refreshed count.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visibility.well, visibility.core, visibility.oilgas, visibility.minerals]);
+  }, [visibility.well, visibility.core, visibility.oilgas, visibility.minerals, mineTypesKey]);
 
   useEffect(() => {
     if (!enabled || redacted || !viewport || !frame) return;
     const controller = new AbortController();
     setLoading(true);
     const count = async (kind: ResourceKind, cell: ResourceCell) => {
-      const key = `${kind}:${cell.bounds.join(",")}`;
+      const key = `${kind}:${kind === "minerals" ? mineTypesKey : "all"}:${cell.bounds.join(",")}`;
       const cached = countCache.current.get(key);
       if (cached && cached.expiresAt > Date.now()) return cached.count;
       const query = new URLSearchParams({ kind, bounds: cell.bounds.join(","), mode: "count" });
+      if (kind === "minerals") query.set("mineTypes", mineTypesKey || "none");
       const response = await fetch(`/api/subsurface/resources?${query}`, { signal: controller.signal });
       if (!response.ok) throw new Error("Source count unavailable");
       const value = await readBoundedJson(response, 100_000, controller.signal) as { count?: unknown };
@@ -193,6 +197,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       return Number(value.count);
     };
     const load = async (kind: ResourceKind): Promise<SourceState> => {
+      if (!visibility[kind] || (kind === "minerals" && !mineTypesKey)) return { ...emptySource(), complete: true };
       const cells = detailedFrame ? [{ id: "detail", bounds: frame, coordinates: [(frame[0] + frame[2]) / 2, (frame[1] + frame[3]) / 2] as Position }] : geologyResourceCells(viewport);
       const groups: ResourceGroup[] = [];
       let unavailable = 0, cursor = 0;
@@ -212,6 +217,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
         try {
           for (let page = 0; page < 3; page++) {
             const query = new URLSearchParams({ kind, bounds: frame.join(","), page: String(page) });
+            if (kind === "minerals") query.set("mineTypes", mineTypesKey || "none");
             const response = await fetch(`/api/subsurface/resources?${query}`, { signal: controller.signal });
             if (!response.ok) throw new Error("Source unavailable");
             const value = await readBoundedJson(response, 1_000_000, controller.signal) as SourceResult;
@@ -227,10 +233,10 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       return { rows: [], groups, unavailable, partial: unavailable > 0, error: unavailable > 0, complete: unavailable === 0 };
     };
     void Promise.all([load("oilgas"), load("minerals")]).then(([oilgas, minerals]) => {
-      if (!controller.signal.aborted) { setSources({ oilgas, minerals }); setLoading(false); }
+      if (!controller.signal.aborted) { setSources({ oilgas, minerals }); setSourceMineTypes(mineTypesKey); setLoading(false); }
     });
     return () => controller.abort();
-  }, [enabled, redacted, frameKey, viewportKey, detailedFrame]);
+  }, [enabled, redacted, frameKey, viewportKey, detailedFrame, mineTypesKey, visibility.oilgas, visibility.minerals]);
 
   useEffect(() => {
     if (!map || !enabled || redacted) return;
@@ -239,7 +245,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       if (!map.getSource(SOURCE_ID)) map.addSource(SOURCE_ID, { type: "geojson", data: dataRef.current });
       if (!map.getLayer(GEOLOGY_POINT_LAYER_IDS[0])) map.addLayer({ id: GEOLOGY_POINT_LAYER_IDS[0], type: "circle", source: SOURCE_ID, paint: {
         "circle-radius": ["case", ["==", ["get", "kind"], "cluster"], ["interpolate", ["linear"], ["get", "count"], 1, 9, 100, 14, 10000, 21], ["==", ["get", "kind"], "resource-group"], ["interpolate", ["linear"], ["get", "count"], 1, 10, 100, 15, 10000, 22], ["get", "selected"], 8, 5],
-        "circle-color": ["match", ["get", "kind"], "well", "#75cfa7", "core", "#8dc3ee", "oilgas", "#ef9d51", "minerals", "#bd92e4", "cluster", ["case", [">", ["get", "cores"], ["get", "wells"]], "#8dc3ee", "#75cfa7"], "resource-group", ["match", ["get", "sourceKind"], "oilgas", "#ef9d51", "#bd92e4"], "#ffffff"],
+        "circle-color": ["match", ["get", "kind"], "well", "#75cfa7", "core", "#8dc3ee", "oilgas", "#ef9d51", "minerals", ["match", ["get", "mineOperation"], "surface", "#dec18c", "solution", "#82cbd4", "underground", "#bd92e4", "#bdc5cc"], "cluster", ["case", [">", ["get", "cores"], ["get", "wells"]], "#8dc3ee", "#75cfa7"], "resource-group", ["match", ["get", "sourceKind"], "oilgas", "#ef9d51", "#bd92e4"], "#ffffff"],
         "circle-stroke-color": ["case", ["==", ["get", "kind"], "cluster"], ["case", [">", ["get", "cores"], 0], "#8dc3ee", "#10212d"], ["==", ["get", "kind"], "resource-group"], "#f2efe4", "#10212d"], "circle-stroke-width": ["case", ["==", ["get", "kind"], "resource-group"], 2.2, 1.8],
       } });
       if (!map.getLayer(GEOLOGY_POINT_LAYER_IDS[1])) map.addLayer({ id: GEOLOGY_POINT_LAYER_IDS[1], type: "symbol", source: SOURCE_ID, filter: ["in", ["get", "kind"], ["literal", ["cluster", "resource-group"]]], layout: { "text-field": ["get", "countLabel"], "text-size": 11, "text-allow-overlap": false }, paint: { "text-color": "#10212d" } });
@@ -256,7 +262,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       ...shownLocator.points.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: row.id, kind: row.kind, tileId: row.tileId, selected: row.id === selected } })),
       ...shownLocator.clusters.map((row, index) => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: `cluster:${index}`, kind: "cluster", count: row.count, countLabel: compactCount(row.count), wells: row.wells, cores: row.cores, west: row.bounds[0], south: row.bounds[1], east: row.bounds[2], north: row.bounds[3] } })),
       ...resourceGroups.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.displayCoordinates }, properties: { id: `group:${row.kind}:${row.id}`, kind: "resource-group", sourceKind: row.kind, count: row.count, countLabel: compactCount(row.count), west: row.bounds[0], south: row.bounds[1], east: row.bounds[2], north: row.bounds[3] } })),
-      ...resourceRows.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: row.id, kind: row.id.startsWith("oilgas:") ? "oilgas" : "minerals", selected: row.id === selected } })),
+      ...resourceRows.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: row.id, kind: row.id.startsWith("oilgas:") ? "oilgas" : "minerals", selected: row.id === selected, mineOperation: row.mineOperation ?? "unspecified" } })),
     ];
     const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features };
     dataRef.current = data;
@@ -293,7 +299,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
     <div className={s.heading}><strong>GEOLOGY POINTS <span>· KANSAS 2D</span></strong><button type="button" className={s.mobileToggle} aria-expanded={mobileExpanded} aria-controls="geology-source-content" onClick={() => setMobileExpanded(value => !value)}>{mobileExpanded ? "Hide details" : "Show sources"}</button></div>
     <p className={s.mobileSummary} role="status">{shownLocator.loading || loading ? "Updating geology points…" : sourceFailure ? "Some source regions unavailable" : `${formatCount(shownLocator.total)} well and core locations · ${groupCount} groups`}</p>
     <div id="geology-source-content" className={s.content}>
-    <details className={s.layerControls}><summary>Layer controls · {Object.values(visibility).filter(Boolean).length} of 4 point types on</summary><GeologyLayerControls compact visibility={visibility} onVisibility={onVisibility} earthquakeMode={earthquakeMode} onEarthquakeMode={onEarthquakeMode} onUnderground={onUnderground} recentTime={recentTime}
+    <details className={s.layerControls}><summary>Layer controls · {Object.values(visibility).filter(Boolean).length} of 4 point types on</summary><GeologyLayerControls compact visibility={visibility} onVisibility={onVisibility} mineVisibility={mineVisibility} onMineVisibility={onMineVisibility} earthquakeMode={earthquakeMode} onEarthquakeMode={onEarthquakeMode} onUnderground={onUnderground} recentTime={recentTime}
       counts={{ well: visibility.well ? shownLocator.loading && shownLocator.total === 0 ? "checking…" : `${formatCount(shownLocator.wells)} in view` : "hidden",
         core: visibility.core ? shownLocator.loading && shownLocator.total === 0 ? "checking…" : `${formatCount(shownLocator.cores)} in view` : "hidden",
         oilgas: visibility.oilgas ? sourceLabel(sources.oilgas) : "hidden", minerals: visibility.minerals ? sourceLabel(sources.minerals) : "hidden" }} /></details>
@@ -319,6 +325,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
     <details className={s.coverage}><summary>Coverage &amp; source limits</summary>
       <p>The published KGS WWC5 and Core Library locator{snapshot ? ` contains ${formatCount(snapshot.wells)} wells and ${formatCount(snapshot.cores)} cores in its ${snapshot.capturedAt.slice(0, 10)} source snapshot` : " reports its coverage when available"}. Every valid locator point in view is counted; crowded views group locations. Zoom in to separate them.</p>
       <p>Oil, gas and mine regions use live source counts for each whole map cell, including any sliver beyond the screen edge. Adjacent source envelopes can share boundary records; regional counts must not be added into a statewide unique total. Individual records appear only where a close frame has a verified count of 1,000 or fewer and every page loads. A failed count is unavailable, never zero.</p>
+      <p>Mine counts and points include only enabled operation layers. Surface includes pits and dredges; solution mining is separate. Unrecorded or other source types remain selectable, with no operating method inferred.</p>
       <p>Coordinates are source locations with varying accuracy, not surveyed underground trajectories. <a href="https://www.kgs.ku.edu/General/copyright.html" target="_blank" rel="noreferrer">KGS use terms ↗</a></p>
       <p>The source of this material is the Kansas Geological Survey website at http://www.kgs.ku.edu/. All Rights Reserved.</p>
     </details>
