@@ -80,7 +80,9 @@ class HeaderTests(unittest.TestCase):
             if line.startswith(b"Content-Disposition:")
         )
         self.assertEqual(
-            disposition, b'Content-Disposition: attachment; filename="a_b.zip"'
+            disposition,
+            b'Content-Disposition: attachment; filename="a_b.zip"; filename*=UTF-8'
+            b"''a%22b.zip"
         )
         self.assertEqual(body, b"body")
 
@@ -148,7 +150,8 @@ class HeaderTests(unittest.TestCase):
                         if attachment:
                             self.assertEqual(
                                 headers["Content-Disposition"],
-                                f'attachment; filename="{attachment}"',
+                                f'attachment; filename="{attachment}"; filename*=UTF-8'
+                                f"''{quote(attachment, safe='')}",
                             )
                 for headers in [
                     {},

@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-intake-combined-workspace-20261108",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-intake-studio.md",
+    "docs/runbooks/raw-data-intake.md",
+    "tests/local_data/test_intake_studio_handoff.py",
+    "tests/local_data/test_intake_studio_security.py",
+    "tests/local_data/test_intake_workspace.py",
+    "tools/local_data/README.md",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_desk/reviews.js",
+    "tools/local_data/intake_studio/README.md",
+    "tools/local_data/intake_studio/handoff.py",
+    "tools/local_data/intake_studio/intake_server.py",
+    "tools/local_data/intake_studio/local-web/app.js",
+    "tools/local_data/intake_studio/local-web/index.html",
+    "tools/local_data/intake_studio/workspace.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-intake-studio.md": "sha256:ae0593bc9f08fcd5a449fb60ea6dc3e22ffca40d547e3441411c3330f29c1cbe",
+    "docs/runbooks/raw-data-intake.md": "sha256:c445414c2ac47b01d1f89d1e80dce51c9470df3ac86ef9b42dcd359d73e6d73b",
+    "tests/local_data/test_intake_studio_handoff.py": "sha256:8c502e1e58111d46f918d4d48f480678b08844ae10c24f7eab6b06725267aa80",
+    "tests/local_data/test_intake_studio_security.py": "sha256:0944faa766cf0452f34cc0178744e50881553e9d26d517f92def01ec89035f4a",
+    "tests/local_data/test_intake_workspace.py": "sha256:58d05d71b1577a0d7c931a0f1a7408272ebde91eefc80bb173cbe8b5c14c811b",
+    "tools/local_data/README.md": "sha256:f1220bf25668ca0f7c3bb7a1f8e10476486e51b6ddbed2fda6739ef19c32a2c8",
+    "tools/local_data/intake_desk/desk.js": "sha256:8577d398954380580c8cdc4a9995fac05f3ad7c23297cde62478086d14f93722",
+    "tools/local_data/intake_desk/reviews.js": "sha256:01bd3830d5187e2987e74ed9cf53062c338eb8b0cdf2ed5520ab0f12b2461905",
+    "tools/local_data/intake_studio/README.md": "sha256:4fc93e8818f3023ba4d65663e8361b902a3ea1c47561532c697244417cde2dbf",
+    "tools/local_data/intake_studio/handoff.py": "sha256:a28c924a49ae86add82908801e2ace660336dc1ad6219c7d3bb4751a3c587ef4",
+    "tools/local_data/intake_studio/intake_server.py": "sha256:d2d99970425f485925d4134ab09daf355de17850a58c47fe4daad1d72cabcdfd",
+    "tools/local_data/intake_studio/local-web/app.js": "sha256:5f3ce375836380cb387c71837d4b07ee8ba40e06e795052967e1c2d00638150e",
+    "tools/local_data/intake_studio/local-web/index.html": "sha256:2bceb78a4021ed5bf2ccdbf5f588f0cdd8eafa0303a6422ab374634e0d9bd27c",
+    "tools/local_data/intake_studio/workspace.py": "sha256:a0db5b8bdb62106b18d7a42453d197d8d652c17cd095bf69ec336e882621080c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "evidence_refs": [
+      "repo:CONTRIBUTING.md@2a7448f5ea4b7325c011ef152b7c552051882c15",
+      "repo:docs/doctrine/ai-build-operating-contract.md@2a7448f5ea4b7325c011ef152b7c552051882c15",
+      "repo:docs/doctrine/directory-rules.md@2a7448f5ea4b7325c011ef152b7c552051882c15",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a7448f5ea4b7325c011ef152b7c552051882c15",
+      "repo:tools/local_data/intake_studio@552d6047d7aa6ecf79c8acde1f7dd06e5aff84b0"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-intake-studio.md": "CONFIRMED",
+    "docs/runbooks/raw-data-intake.md": "CONFIRMED",
+    "tests/local_data/test_intake_studio_handoff.py": "CONFIRMED",
+    "tests/local_data/test_intake_studio_security.py": "CONFIRMED",
+    "tests/local_data/test_intake_workspace.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.js": "CONFIRMED",
+    "tools/local_data/intake_desk/reviews.js": "CONFIRMED",
+    "tools/local_data/intake_studio/README.md": "CONFIRMED",
+    "tools/local_data/intake_studio/handoff.py": "CONFIRMED",
+    "tools/local_data/intake_studio/intake_server.py": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/app.js": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/index.html": "CONFIRMED",
+    "tools/local_data/intake_studio/workspace.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused native intake, handoff, workspace, integrity, sensitivity, review, library and HTTP regressions",
+      "outcome": "PASS",
+      "reason": "133 tests and 150 subtests passed with KFM_INTAKE_NATIVE_TESTS=1 on the integrated candidate."
+    },
+    {
+      "gate": "Synthetic Chromium photo/PDF handoff",
+      "outcome": "PASS",
+      "reason": "Real sandboxed extraction; saved reviews, original bytes/digests, same-origin item links, busy-lock retry, idempotency, persistence and publication holds verified; no uncaught page errors. Isolated temporary stores only."
+    },
+    {
+      "gate": "Header compatibility regression",
+      "outcome": "PASS",
+      "reason": "Pinned main independently reproduced three stale exact-header assertions. Updated expectations include its percent-encoded filename parameter, retaining delimiter and authorization checks; three test methods and 12 subtests pass."
+    },
+    {
+      "gate": "JavaScript syntax, whitespace and documentation links",
+      "outcome": "PASS",
+      "reason": "All three changed JavaScript files pass node --check, git diff --check passes, and relative file-link targets in four modified documents resolve."
+    },
+    {
+      "gate": "Repository-wide tests, hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Focused scope validated locally; hosted exact-head checks and independent human review are separate pending gates."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@2a7448f5ea4b7325c011ef152b7c552051882c15"
+    },
+    {
+      "id": "native-capture-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/local_data/manage.py@2a7448f5ea4b7325c011ef152b7c552051882c15"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-11-08T23:50:45.851226+00:00",
+  "emitter": "Codex PR preparation",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Emitted during PR preparation before first publication, binding final candidate bytes including integration with newer main fixes. The prior local feature commits did not contain this receipt. CONFIRMED denotes inspected implementation and bounded checks, not factual approval, rights clearance, source admission, deployment or publication. Private inputs, live review records and operational recovery artifacts are excluded. No human approval or override is claimed."
+}
