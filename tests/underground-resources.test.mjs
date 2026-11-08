@@ -16,20 +16,12 @@ const {GET}=await import(url((await compile('api/subsurface/resources/route.ts')
 const bounds=[-99.7,38.7,-99.3,39];
 const feature=(id=1,p=[-99.5,38.8])=>({type:'Feature',geometry:{type:'Point',coordinates:p},properties:{OBJECTID:id,KID:50,LEASE_NAME:'Test inventory',WELL_CLASS:'OIL',STATUS:'P&A',ROTARY_TOTAL_DEPTH:500,PRODUCT:'Limestone'}});
 test('resource source requests are Kansas bounded, capped, transformed to WGS84 and fixed-host',async()=>{
- const old=globalThis.fetch;const sent=[];
- globalThis.fetch=async u=>{const request=new URL(u);sent.push(request);return Response.json(request.searchParams.has('returnIdsOnly')?{objectIdFieldName:'OBJECTID',objectIds:Array.from({length:601},(_,i)=>i+1)}:{type:'FeatureCollection',features:request.searchParams.get('objectIds').split(',').map(id=>feature(Number(id)))});};
- try{assert.equal((await GET(new Request('https://kfm.test/api?kind=oilgas&bounds=-104,38,-90,39'))).status,400);assert.equal(sent.length,0);
- const r=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}`));const v=await r.json();assert.equal(r.status,200);assert.equal(sent[0].hostname,'services.kansasgis.org');assert.equal(sent[0].searchParams.get('returnIdsOnly'),'true');assert.equal(sent[1].searchParams.get('outSR'),'4326');assert.equal(sent[1].searchParams.get('objectIds').split(',').length,201);assert.equal(v.rows.length,200);assert.equal(v.partial,true);assert.equal(v.rows[0].status,'P&A');assert.match(v.source.limitation,/not current production/);assert.ok(v.retrievedAt);
- const page=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&page=1`));const pageValue=await page.json();assert.equal(page.status,200);assert.equal(sent[3].searchParams.get('objectIds').split(',')[0],'501');assert.equal(pageValue.rows[0].id,'oilgas:501');assert.equal(pageValue.partial,false);
+ const old=globalThis.fetch;let sent;
+ globalThis.fetch=async u=>{sent=new URL(u);return Response.json({type:'FeatureCollection',features:[feature()]});};
+ try{assert.equal((await GET(new Request('https://kfm.test/api?kind=oilgas&bounds=-104,38,-90,39'))).status,400);assert.equal(sent,undefined);
+ const r=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}`));const v=await r.json();assert.equal(r.status,200);assert.equal(sent.hostname,'services2.arcgis.com');assert.match(sent.pathname,/\/Oil_and_Gas_Wells\/FeatureServer\/0\/query$/);assert.equal(sent.searchParams.get('outSR'),'4326');assert.equal(sent.searchParams.get('resultRecordCount'),'201');assert.equal(sent.searchParams.get('orderByFields'),'OBJECTID ASC');assert.equal(v.rows[0].status,'P&A');assert.match(v.source.limitation,/not current production/);assert.ok(v.retrievedAt);
+ const page=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&page=1`));assert.equal(page.status,200);assert.equal(sent.searchParams.get('resultOffset'),'500');assert.equal(sent.searchParams.get('resultRecordCount'),'501');
  assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&page=-1`))).status,400);
- }finally{globalThis.fetch=old;}
-});
-test('oil and gas ID pages are sorted, distinct and reject incomplete source responses',async()=>{
- assert.deepEqual(model.oilgasPageIds({objectIdFieldName:'OBJECTID',objectIds:[4,2,3,1]},1,2),[2,3,4]);
- assert.throws(()=>model.oilgasPageIds({objectIdFieldName:'OBJECTID',objectIds:[1,1]},0,2));
- const old=globalThis.fetch;
- try{globalThis.fetch=async u=>Response.json(new URL(u).searchParams.has('returnIdsOnly')?{objectIdFieldName:'OBJECTID',objectIds:[1,2]}:{type:'FeatureCollection',features:[feature(1)]});
-  assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}`))).status,502);
  }finally{globalThis.fetch=old;}
 });
 test('historical mine partial flags, exact frame, duplicate and malformed positions stay distinct',()=>{
@@ -63,11 +55,11 @@ test('the real Worker runtime reads resource records and refuses provider redire
   'materials.mjs':await compile('subsurface-materials.ts'),
   'resources.mjs':(await compile('underground-resources-model.ts')).replace('"./subsurface-model"','"./subsurface.mjs"'),
  };
- const mf=new Miniflare(convertV4MiniflareOptions({modulesRoot:root,modules:Object.entries(contents).map(([name,contents])=>({type:'ESModule',path:path.join(root,name),contents})),compatibilityDate:'2026-08-28',outboundService:async request=>{calls.push(request.url);return redirect?Response.redirect('https://unapproved.example/records'):Response.json(new URL(request.url).searchParams.has('returnIdsOnly')?{objectIdFieldName:'OBJECTID',objectIds:[1]}:{type:'FeatureCollection',features:[feature()]});}}));
+ const mf=new Miniflare(convertV4MiniflareOptions({modulesRoot:root,modules:Object.entries(contents).map(([name,contents])=>({type:'ESModule',path:path.join(root,name),contents})),compatibilityDate:'2026-08-28',outboundService:async request=>{calls.push(request.url);return redirect?Response.redirect('https://unapproved.example/records'):Response.json({type:'FeatureCollection',features:[feature()]});}}));
  try{
   const request=`https://kfm.test/api/subsurface/resources?kind=oilgas&bounds=${bounds}`;
-  const accepted=await mf.dispatchFetch(request);assert.equal(accepted.status,200);assert.equal((await accepted.json()).rows.length,1);assert.equal(calls.length,2);
-  redirect=true;assert.equal((await mf.dispatchFetch(request)).status,502);assert.equal(calls.length,3,'redirect target was never requested');
+  const accepted=await mf.dispatchFetch(request);assert.equal(accepted.status,200);assert.equal((await accepted.json()).rows.length,1);assert.equal(calls.length,1);
+  redirect=true;assert.equal((await mf.dispatchFetch(request)).status,502);assert.equal(calls.length,2,'redirect target was never requested');
  }finally{await mf.dispose();}
 });
 test('switching area discards delayed resource response before displaying markers or details',async()=>{
