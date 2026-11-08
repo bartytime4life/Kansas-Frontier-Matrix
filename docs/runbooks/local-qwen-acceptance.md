@@ -36,7 +36,10 @@ extent and time metadata, declared provenance, flags, and a bounded text sample
 where supported. Files sent from Studio include the verified saved review and
 available OCR. Images/PDFs without extracted content require separate review.
 Archive reviews use inspected metadata rather than extracting and executing
-members. This is not full-content or record-by-record dataset validation.
+members. Archives without an inspected text sample are always held, including
+when Qwen recommends acceptance with high confidence. Metadata-only descriptions
+can contain unsupported filename-based interpretations and need admin checking.
+This is not full-content or record-by-record dataset validation.
 
 Qwen produces a title, description, proposed domain, private-use recommendation,
 qualitative confidence, concerns and selected evidence IDs. KFM attaches exact

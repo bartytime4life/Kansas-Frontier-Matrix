@@ -214,6 +214,9 @@ def gates(item, review, packet):
                  "\n".join(f["text"] for f in packet["facts"]),re.I):
         reasons.append("CONTENT_SENSITIVITY_REQUIRES_ADMIN")
     if item["profile"]["format"]["family"] == "unknown": reasons.append("FORMAT_UNRECOGNIZED")
+    if (item["profile"]["format"]["family"] == "archive"
+            and not any(f["id"] in {"sample","ocr"} and f["text"].strip() for f in packet["facts"])):
+        reasons.append("ARCHIVE_CONTENT_NOT_INSPECTED")
     if (declared.get("rights") or {}).get("redistribution") in {"restricted","denied"}: reasons.append("CAPTURE_RIGHTS_RESTRICTED")
     if declared.get("sensitivity") in {"restricted","controlled"}: reasons.append("CAPTURE_SENSITIVITY_RESTRICTED")
     if item["size_bytes"] > intake.DEFAULT_HASH_LIMIT: reasons.append("FILE_REQUIRES_SEPARATE_LARGE_FILE_REVIEW")
