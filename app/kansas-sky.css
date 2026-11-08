@@ -12,75 +12,72 @@
    clears attribution on desktop and the existing 48px mobile action dock. */
 @media(max-width:760px){.kansas-sky-map-status{bottom:calc(112px + env(safe-area-inset-bottom));max-width:calc(100% - 112px);padding:6px 8px}}
 
-/* Flight controls share the existing map; no second application or data path. */
-.kansas-sky .kansas-sky-open-flight{width:100%;min-height:44px;background:linear-gradient(120deg,#eac578,#f6dfac);color:#112d36;border-color:#f3d899;font-weight:700;font-size:14px;margin:12px 0 6px}
-.kansas-sky-flight-deck{position:absolute;z-index:4;right:72px;top:90px;width:270px;max-width:calc(100% - 96px);padding:15px;border:1px solid #8da5a5;border-top:2px solid #e9c579;border-radius:10px;background:rgba(9,29,39,.94);backdrop-filter:blur(12px);box-shadow:0 12px 35px #0005;color:#edf6f4;font:12px/1.45 system-ui,sans-serif}
-.kansas-sky-flight-deck header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.kansas-sky-flight-deck header strong{display:block;font-size:21px;letter-spacing:.03em}.kansas-sky-flight-deck small{display:block;font-size:10px;line-height:1.4;color:#b8ced0}.kansas-sky-flight-deck header small{font-size:9px;letter-spacing:.1em;color:#efd08d}.kansas-sky-flight-deck button{min-height:44px;min-width:44px;padding:8px;border:1px solid #5d7b84;border-radius:5px;background:#173945;color:#edf6f4;cursor:pointer;font:inherit}.kansas-sky-flight-deck button:disabled{opacity:.5;cursor:default}.kansas-sky-flight-deck :is(button,input):focus-visible{outline:3px solid #f0cf85;outline-offset:2px}.kansas-sky-flight-readout{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-block:1px solid #56717b;margin:12px 0;padding:10px 0;font-size:19px;font-variant-numeric:tabular-nums}.kansas-sky-flight-actions{display:flex;gap:6px;margin-bottom:12px}.kansas-sky-flight-actions button{flex:1}.kansas-sky-flight-actions button[aria-pressed=true]{background:#eed08c;color:#112e39}.kansas-sky-flight-deck label{display:block;margin-bottom:10px;font-size:10px;color:#c3d9dc}.kansas-sky-flight-deck input{display:block;width:100%;accent-color:#edcc82;margin:9px 0}
-@media(max-width:760px){.kansas-sky-flight-deck{top:70px;right:58px;width:230px;padding:10px}.kansas-sky-flight-deck header strong{font-size:17px}.kansas-sky-flight-readout{font-size:16px;margin:8px 0;padding:6px 0}}
-
-/* A scientific flight instrument: the path is the image, source measurements the ink. */
-.kansas-sky-flight-deck{max-height:calc(100% - 190px);overflow:auto;scrollbar-color:#72959c #102b36;overscroll-behavior:contain}
-.kansas-sky-guide-toggles{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 0}
-.kansas-sky-guide-toggles label,.kansas-sky .kansas-sky-guide-toggles label{display:flex;flex-direction:row;align-items:center;gap:7px;margin:0;min-height:36px;font-size:11px;cursor:pointer}
-.kansas-sky-guide-toggles input,.kansas-sky-flight-deck .kansas-sky-guide-toggles input{display:inline-block;width:16px;height:16px;accent-color:#efd08b;margin:0}
-.kansas-sky-profile{border-block:1px solid #486975;padding:12px 0;margin:15px 0;min-width:0}
-.kansas-sky-profile header{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.kansas-sky-profile header strong,.kansas-sky-flight-deck .kansas-sky-profile header strong{font-size:13px;letter-spacing:0;color:#f4d693}
-.kansas-sky-profile header span{font-size:10px;color:#bdd7da}
-.kansas-sky-profile svg{display:block;width:100%;height:auto;overflow:visible;margin-top:8px;touch-action:pan-y}
-.kansas-sky-profile svg text{fill:#bdd1d6;font:9px sans-serif;font-variant-numeric:tabular-nums}
-.sky-profile-grid{stroke:#6e929a;stroke-opacity:.3;stroke-width:.5}
-.sky-profile-geom{stroke:#f2cd79;fill:#f2cd79}.sky-profile-baro{stroke:#69d0df;fill:#69d0df}
-.kansas-sky-profile path{fill:none;stroke-width:1.7;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.sky-profile-cursor{stroke:#f4f6e9;stroke-width:1;stroke-dasharray:3 3}.sky-profile-time{fill:#f4f6e9}
-.kansas-sky-profile input[type=range]{margin:0 0 9px;min-height:24px}
-.sky-profile-key-geom{color:#f2cd79}.sky-profile-key-baro{color:#69d0df}
-.kansas-sky-dossier,.kansas-sky-history{margin:14px 0;border:1px solid #58717a;background:#0d2834}
-.kansas-sky-dossier>summary,.kansas-sky-history>summary{padding:13px 11px;cursor:pointer;font-size:13px;color:#f3d28c;font-weight:600;min-height:44px;box-sizing:border-box}
-.kansas-sky-dossier>summary span,.kansas-sky-history>summary span{display:block;color:#c4d9dc;font-size:10px;font-weight:400;letter-spacing:.04em;margin-top:4px}
-.kansas-sky-dossier>summary:focus-visible,.kansas-sky-history>summary:focus-visible{outline:3px solid #f0cf85;outline-offset:2px}
-.kansas-sky-dossier>p,.kansas-sky-history>p,.kansas-sky-history>small,.kansas-sky-history>label{margin:10px 11px}
-.kansas-sky-dossier section{padding:0 11px 10px}.kansas-sky-dossier h6{font:600 11px/1.4 inherit;text-transform:uppercase;letter-spacing:.07em;color:#a5cdd4;margin:15px 0 7px}
-.kansas-sky-dossier dl{margin:0}.kansas-sky-dossier dl>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:10px;padding:7px 0;border-bottom:1px solid #355460}
-.kansas-sky-dossier dt{font-size:10px}.kansas-sky-dossier dd{font-size:11px;margin:0;overflow-wrap:anywhere}
-.kansas-sky-history ul{list-style:none;padding:0;margin:0 10px 10px;max-height:280px;overflow:auto}.kansas-sky-history li+li{margin-top:7px}
-.kansas-sky-history li button{display:block;width:100%;text-align:left;padding:10px;border-color:#4d7882}.kansas-sky-history li strong{display:block;font-size:12px}.kansas-sky-history li span{display:block;font-size:10px;margin-top:5px}
-.kansas-sky-brief{border-left:2px solid #efd08b;padding:3px 0 3px 10px;color:#e9f1e9}.kansas-sky-brief strong{color:#f4d694}
+/* Flight observatory: the recorded path remains the primary canvas. */
+.kansas-sky .kansas-sky-open-flight{width:100%;min-height:44px;background:#efd09a;color:#102b35;border-color:#efd09a;font-weight:700;font-size:14px;margin:12px 0 6px}
+.kansas-sky-flight-deck{--sky-ink:#081e2a;--sky-line:#37535e;--sky-muted:#adc7ce;--sky-gold:#f4d198;box-sizing:border-box;position:absolute;z-index:4;right:72px;top:90px;width:328px;max-width:calc(100% - 96px);max-height:calc(100% - 175px);padding:17px;border:1px solid #658089;border-top:2px solid var(--sky-gold);border-radius:4px;background:linear-gradient(145deg,#102d38,#081e2a 65%);box-shadow:0 16px 38px #00101866;color:#edf4ee;font:12px/1.45 "Avenir Next","Segoe UI",sans-serif;overflow:auto;scrollbar-width:thin;scrollbar-color:#5b7d87 #0a2430;overscroll-behavior:contain}
+.kansas-sky-flight-deck header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.kansas-sky-flight-deck header strong{display:flex;align-items:baseline;gap:12px;font-size:28px;line-height:1.25;font-weight:600;letter-spacing:.025em;margin:3px 0}
+.kansas-sky-flight-deck header strong span{font:11px/1.2 ui-monospace,monospace;letter-spacing:.02em;color:var(--sky-muted)}
+.kansas-sky-flight-deck small{display:block;font-size:11px;line-height:1.5;color:var(--sky-muted)}
+.kansas-sky-flight-deck header small{font-size:9px;letter-spacing:.11em;color:var(--sky-gold)}
+.sky-flight-source{display:block;font-size:10px;color:#adc7ce;font-variant-numeric:tabular-nums}
+.kansas-sky-flight-deck button{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:44px;min-width:44px;padding:8px;border:1px solid var(--sky-line);border-radius:3px;background:#143540;color:#e5efec;cursor:pointer;font:inherit;transition:background .15s,border-color .15s,color .15s}
+.kansas-sky-flight-deck button svg{flex-shrink:0}.kansas-sky-flight-deck button:hover:not(:disabled){background:#224651;border-color:#8ca9ad}.kansas-sky-flight-deck button:disabled{opacity:.45;cursor:default}
+.kansas-sky-flight-deck :is(button,input,select,summary):focus-visible{outline:3px solid #f6d49a;outline-offset:2px}
+.kansas-sky-flight-deck .sky-flight-close{background:transparent;border-color:transparent;font-size:24px;color:#b9cdd2;margin:-9px -9px 0 0}
+.kansas-sky-flight-readout{display:grid;grid-template-columns:1fr 1fr;gap:15px;border-block:1px solid var(--sky-line);margin:14px 0 12px;padding:12px 0;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.25;letter-spacing:-.02em}
+.kansas-sky-flight-readout small{font-size:10px;letter-spacing:0;margin-top:3px}
+.kansas-sky-flight-deck .sky-dock-timeline{display:block;margin:10px 0 8px;font-size:9px;letter-spacing:.08em;color:#abc6cd}
+.sky-dock-timeline>time{float:right;color:#f3d49d;font:13px/1.3 ui-monospace,monospace;letter-spacing:0}.sky-dock-timeline>time small{display:inline;font:9px/1.3 inherit;color:#9ebcc6}
+.kansas-sky-flight-deck input[type=range]{display:block;box-sizing:border-box;width:100%;height:28px;min-height:28px;accent-color:#f0cf93;margin:2px 0;cursor:pointer}
+.sky-timeline-ends{display:flex;justify-content:space-between;font:9px/1.2 ui-monospace,monospace;letter-spacing:0;color:#9db9c0}
+.kansas-sky-flight-actions{display:flex;gap:7px;margin:12px 0 9px;align-items:stretch}
+.kansas-sky-flight-deck .sky-play{flex:1;background:#efd09a;color:#122d36;border-color:#efd09a;font-weight:600}
+.kansas-sky-flight-deck .sky-play:hover:not(:disabled){background:#ffe0a9;color:#122d36}
+.kansas-sky-flight-deck .sky-restart{background:transparent}
+.kansas-sky-flight-deck .sky-speed{margin:0;min-width:60px}.sky-speed select{height:44px;width:100%;padding:0 8px;border:1px solid #526f79;border-radius:3px;background:#0d2a36;color:#f4d69d;font:13px ui-monospace,monospace}
+.sky-camera-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:8px 0}.sky-camera-choices button{font-size:11px;padding:6px 3px;gap:4px;background:transparent}
+.sky-camera-choices button[aria-pressed=true]{border-color:#c9ad77;color:#f7d599;background:#263e42}
+.kansas-sky-flight-menu{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:11px 0 2px;border-top:1px solid #37535e;padding-top:8px}
+.kansas-sky-flight-menu button{justify-content:flex-start;font-size:11px;border:0;background:transparent;padding:5px 0;gap:6px}.kansas-sky-flight-menu button>span{margin-left:auto;font-size:17px;color:#9fbec5}
+.kansas-sky-flight-menu button[aria-expanded=true]{color:#f2d196}
+.sky-flight-focus{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:0 0 6px}
+.sky-flight-focus label{display:flex;gap:7px;align-items:center;min-height:44px;font-size:11px;color:#d8e6e4;cursor:pointer;flex-shrink:0}
+.sky-flight-focus input{width:16px;height:16px;margin:0;accent-color:#e8c78d}
+.sky-flight-focus>span{font-size:9px;color:#9ebdc5;text-align:right;max-width:132px;line-height:1.4}
+.sky-flight-legend{display:flex;flex-wrap:wrap;gap:9px;color:#b0c8cf;font-size:9px;line-height:1.4}
+.sky-flight-legend span:before{display:inline-block;content:"";width:16px;height:2px;vertical-align:middle;margin-right:5px;background:#6ad8ed}
+.sky-flight-legend .sky-legend-past:before{background:#f5cb77;box-shadow:0 0 6px #f5cb7744}.sky-flight-legend .sky-legend-ahead:before{box-shadow:0 0 6px #6ad8ed55}.sky-flight-legend .sky-legend-ground:before{width:1px;height:9px;background:#82aeb9}
+.sky-flight-expanded{border-top:1px solid #496670;margin-top:13px;padding-top:10px}.sky-flight-expanded .sky-fly-start{width:100%;color:#f7d997;border-color:#776e51;background:transparent;margin-bottom:6px}
+.kansas-sky-flight-deck .sky-gap-jump{width:100%;margin:5px 0;color:#f4d39a;background:transparent;font-size:11px}
+.sky-flight-gap{color:#f3c297!important;font-size:11px!important;letter-spacing:0!important;margin-top:4px}
+.kansas-sky-guide-toggles{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 0}.kansas-sky-guide-toggles label,.kansas-sky .kansas-sky-guide-toggles label{display:flex;flex-direction:row;align-items:center;gap:7px;margin:0;min-height:44px;font-size:11px;cursor:pointer}
+.kansas-sky-guide-toggles input{display:inline-block;width:16px;height:16px;accent-color:#efd08b;margin:0}
+.kansas-sky-profile{border-block:1px solid #395762;padding:13px 0;margin:15px 0;min-width:0}.kansas-sky-profile header{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.kansas-sky-profile header strong,.kansas-sky-flight-deck .kansas-sky-profile header strong{font-size:14px;letter-spacing:0;color:#f4d69e}.kansas-sky-profile header span{font-size:10px;color:#b4cdd2}
+.kansas-sky-profile svg{display:block;width:100%;height:auto;overflow:visible;margin:8px 0;touch-action:pan-y;cursor:crosshair}.kansas-sky-profile svg text{fill:#aec6cd;font:9px ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.sky-profile-grid{stroke:#74949e;stroke-opacity:.24;stroke-width:.5}.sky-profile-geom{stroke:#f2cd79;fill:#f2cd79}.sky-profile-baro{stroke:#69d0df;fill:#69d0df}
+.kansas-sky-profile path{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}.kansas-sky-profile path.sky-profile-area{fill:currentColor;stroke:none;opacity:.07}
+.sky-profile-cursor{stroke:#f4f6e9;stroke-width:1;stroke-dasharray:2 3}.sky-profile-time{fill:#f4f6e9}.sky-profile-position{fill:#f4e4bc;stroke:#102c37;stroke-width:1.5}.sky-profile-geom{color:#f2cd79}.sky-profile-baro{color:#69d0df}
+.kansas-sky-profile input[type=range]{margin:0 0 9px;min-height:44px}.sky-profile-key-geom{color:#f2cd79}.sky-profile-key-baro{color:#69d0df}
+.kansas-sky-dossier,.kansas-sky-history{margin:14px 0;border:1px solid #486670;background:#0b2531}.kansas-sky-dossier>summary,.kansas-sky-history>summary{padding:13px 12px;cursor:pointer;font-size:13px;color:#f3d49a;font-weight:600;min-height:44px;box-sizing:border-box}
+.kansas-sky-dossier>summary span,.kansas-sky-history>summary span{display:block;color:#b6cdd1;font-size:10px;font-weight:400;letter-spacing:.03em;margin-top:4px}.kansas-sky-dossier>summary:focus-visible,.kansas-sky-history>summary:focus-visible{outline:3px solid #f0cf85;outline-offset:2px}
+.kansas-sky-dossier>p,.kansas-sky-history>p,.kansas-sky-history>small,.kansas-sky-history>label{margin:10px 12px}.kansas-sky-dossier section{padding:0 12px 12px}.kansas-sky-dossier h6{font-size:11px;font-weight:600;line-height:1.4;text-transform:uppercase;letter-spacing:.08em;color:#b3d0d8;margin:15px 0 7px}
+.kansas-sky-dossier dl{margin:0}.kansas-sky-dossier dl>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:10px;padding:8px 0;border-bottom:1px solid #2c4b57}.kansas-sky-dossier dt{font-size:11px;color:#b4cbd2}.kansas-sky-dossier dd{font-size:12px;margin:0;color:#edf4ee;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.kansas-sky-history ul{list-style:none;padding:0;margin:0 10px 10px;max-height:280px;overflow:auto}.kansas-sky-history li+li{margin-top:7px}.kansas-sky-history li button{display:block;width:100%;text-align:left;padding:11px;border-color:#496e7b}.kansas-sky-history li strong{display:block;font-size:12px}.kansas-sky-history li span{display:block;font-size:10px;margin-top:5px}
+.kansas-sky-brief{border-left:2px solid #efd08b;padding:1px 0 1px 12px;color:#e7eee8;font-size:12px;line-height:1.7}.kansas-sky-brief p{margin:8px 0}.kansas-sky-brief strong{color:#f6dba9}
+.sky-brief-provenance{font-size:11px;line-height:1.6}.sky-brief-provenance a{color:#f4d59a}.sky-brief-provenance span{display:block;color:#aec8cd;font-size:10px}
 .kansas-sky-journey-actions{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.kansas-sky-journey-actions button{flex:1;min-height:44px}
 .kansas-sky-parts{margin:10px 0;padding:10px;border:1px solid #5b7c85;background:#102f3b}.kansas-sky-parts strong{color:#efd18f}.kansas-sky-parts>div{display:flex;gap:7px;margin:8px 0}.kansas-sky-parts button{flex:1;min-height:44px}.sky-flight-part-badge{margin:5px 0;color:#f0d292!important;font-variant-numeric:tabular-nums}
-@media(max-width:760px){.kansas-sky-flight-deck{max-height:calc(100% - 200px)}.kansas-sky-profile.is-compact{margin:10px 0;padding:8px 0}.kansas-sky-profile.is-compact small{font-size:9px}}
-
-/* The selected aircraft stays on the map; the dock expands only on request. */
-.kansas-sky-flight-deck{width:292px;padding:12px;border-radius:7px;max-height:calc(100% - 180px)}
-.kansas-sky-flight-deck .kansas-sky-flight-readout{margin:8px 0;padding:7px 0;font-size:18px}
-.kansas-sky-flight-deck .kansas-sky-flight-actions{margin-bottom:8px}
-.kansas-sky-flight-menu{display:flex;gap:5px;margin:8px 0}.kansas-sky-flight-menu button{flex:1;padding:6px 5px;font-size:11px}
-.kansas-sky-flight-menu button[aria-expanded=true]{border-color:#e9cd8c;background:#244550;color:#ffe0a1}
-.kansas-sky-flight-deck .sky-dock-timeline{margin:6px 0;font-size:10px}
-.sky-dock-timeline time{float:right;font-variant-numeric:tabular-nums;font-size:9px;color:#e4d1a6}
-.kansas-sky-flight-deck .sky-dock-timeline input{margin:5px 0;min-height:22px}
-.sky-flight-focus{display:flex;gap:7px;align-items:center;justify-content:space-between;margin:6px 0}
-.sky-flight-focus label{display:flex;gap:6px;align-items:center;flex-shrink:0!important;margin:0!important;min-height:28px;font-size:11px!important;color:#f0d39a!important}
-.sky-flight-focus input{width:15px!important;height:15px;margin:0!important;accent-color:#e8c77d}
-.sky-flight-focus span{font-size:9px;color:#aec9ce;text-align:right;max-width:130px;line-height:1.3}
-.sky-flight-legend{display:flex;flex-wrap:wrap;gap:8px;color:#c1d6d9;font-size:9px;line-height:1.4}
-.sky-flight-legend span:before{display:inline-block;content:"";width:14px;height:2px;vertical-align:middle;margin-right:4px;background:#76cad4;box-shadow:0 0 0 1px #061e28}
-.sky-flight-legend .sky-legend-past:before{background:#ffd14d}.sky-flight-legend .sky-legend-ahead:before{background:#66e0ff}.sky-flight-legend .sky-legend-ground:before{width:2px;height:10px;background:#73ccd4}
-.sky-flight-expanded{border-top:1px solid #58717b;margin-top:9px;padding-top:9px}
-.sky-flight-expanded .sky-fly-start{width:100%;color:#f7d997;border-color:#bba370}
-.sky-flight-gap{color:#f3c297!important;font-size:10px!important;letter-spacing:0!important}
-.kansas-sky-flight-deck .kansas-sky-brief{font-size:12px;line-height:1.6;color:#dbe8e7}.kansas-sky-flight-deck .kansas-sky-brief p{margin:8px 0}
-.kansas-sky-flight-deck .kansas-sky-dossier{margin:12px 0 0}.kansas-sky-flight-deck .kansas-sky-dossier p{font-size:11px;line-height:1.5}
-.kansas-sky-flight-deck .kansas-sky-dossier dt{color:#b4cfd4}.kansas-sky-flight-deck .kansas-sky-dossier dd{color:#eff7f4;font-variant-numeric:tabular-nums}
-.kansas-sky-exact-values{margin:12px 10px}.kansas-sky-exact-values summary{padding:8px 0;min-height:32px;cursor:pointer;font-size:11px;color:#ecd19b}.kansas-sky-exact-values pre{white-space:pre-wrap;overflow-wrap:anywhere;font:10px/1.5 monospace;color:#c8e3e6;background:#061d28;padding:8px;border:1px solid #476a74}
+.kansas-sky-exact-values{margin:12px 10px}.kansas-sky-exact-values summary{padding:8px 0;min-height:44px;cursor:pointer;font-size:11px;color:#ecd19b}.kansas-sky-exact-values pre{white-space:pre-wrap;overflow-wrap:anywhere;font:10px/1.5 monospace;color:#c8e3e6;background:#061d28;padding:8px;border:1px solid #476a74}
+.sky-recording-intro{border-left:2px solid #e8c78d;padding:4px 0 4px 11px;margin:14px 0}.sky-recording-intro strong{display:block;font-size:17px;color:#f3dbb2}.sky-recording-intro p{margin:5px 0!important}.sky-recording-selection{margin:12px 0;padding:12px;border:1px solid #577887;background:#0a2632}.sky-recording-selection strong{display:block;color:#f5d59d;font-size:15px}.sky-recording-selection button{width:100%;margin-top:10px;min-height:44px;background:#efd09a;color:#122c35;font-weight:600}
 @media(max-width:760px){
-  .kansas-sky-flight-deck{top:auto;bottom:calc(110px + env(safe-area-inset-bottom));left:12px;right:12px;width:auto;max-width:none;max-height:44vh;padding:9px 11px;border-radius:7px}
-  .kansas-sky-flight-deck header{align-items:center}.kansas-sky-flight-deck header strong{font-size:18px}.kansas-sky-flight-deck header small{font-size:8px}
-  .kansas-sky-flight-deck .kansas-sky-flight-readout{display:flex;gap:18px;font-size:16px;margin:5px 0;padding:0;border:0}
-  .kansas-sky-flight-deck .kansas-sky-flight-readout span{display:flex;gap:5px;align-items:baseline}.kansas-sky-flight-deck .kansas-sky-flight-readout small{font-size:8px}
-  .kansas-sky-flight-deck .kansas-sky-flight-actions{margin-bottom:4px;gap:5px}.kansas-sky-flight-deck .kansas-sky-flight-actions button{padding:5px}
-  .kansas-sky-flight-menu{margin:5px 0}.sky-flight-focus{margin:3px 0}.sky-flight-legend{font-size:8px;gap:7px}
-  .kansas-sky-flight-deck .sky-dock-timeline{margin:4px 0}.kansas-sky-flight-deck .sky-dock-timeline input{margin:2px 0;min-height:20px}
-  .kansas-sky-map-status[data-flight-view=true]{top:66px;bottom:auto;max-width:calc(100% - 124px)}
+.kansas-sky-flight-deck{top:auto;bottom:calc(110px + env(safe-area-inset-bottom));left:10px;right:10px;width:auto;max-width:none;max-height:47vh;padding:11px 13px;border-radius:4px}
+.kansas-sky-flight-deck header strong{font-size:22px;margin:1px 0}.kansas-sky-flight-deck header small{font-size:8px}.sky-flight-source{font-size:9px}.kansas-sky-flight-deck .sky-flight-close{margin:-7px -8px 0 0}
+.kansas-sky-flight-readout{font-size:18px;margin:5px 0;padding:5px 0;gap:14px}.kansas-sky-flight-readout small{font-size:9px}
+.kansas-sky-flight-deck .sky-dock-timeline{margin:7px 0 4px}.kansas-sky-flight-actions{margin:8px 0 5px}.sky-camera-choices{margin:5px 0}.kansas-sky-flight-menu{margin:5px 0 0;padding-top:3px}.sky-flight-focus{margin:0}.sky-flight-focus label{font-size:10px}.sky-flight-focus>span{font-size:9px}
+.kansas-sky-flight-deck:not([data-extra="profile"])>.sky-flight-focus,.kansas-sky-flight-deck:not([data-extra="profile"])>.sky-flight-legend{display:none}.sky-flight-legend{font-size:10px;gap:7px}.kansas-sky-map-status[data-flight-view=true]{top:66px;bottom:auto;max-width:calc(100% - 124px)}
+.kansas-sky-profile.is-compact{margin:10px 0;padding:8px 0}
 }
-@media(min-width:761px) and (max-height:740px){.kansas-sky-flight-deck{top:75px;max-height:calc(100% - 150px);padding:10px}.kansas-sky-flight-deck .kansas-sky-flight-readout{margin:5px 0;padding:4px 0}.kansas-sky-flight-menu{margin:5px 0}}
+@media(min-width:761px) and (max-height:740px){.kansas-sky-flight-deck{top:75px;max-height:calc(100% - 150px);padding:12px}.kansas-sky-flight-readout{margin:8px 0;padding:8px 0}.kansas-sky-flight-menu{margin:7px 0 0}}
+@media(prefers-reduced-motion:reduce){.kansas-sky-flight-deck button{transition:none}}

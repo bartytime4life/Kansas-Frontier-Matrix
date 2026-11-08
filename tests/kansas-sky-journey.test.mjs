@@ -177,7 +177,16 @@ test('the production aircraft dossier renders every field group with honest unav
 });
 test('production altitude profile supplies a shared-time keyboard control and disconnected paths',()=>{
   const html=renderToStaticMarkup(createElement(detailsExports.SkyAltitudeProfile,{points:[point(),point(10000),point(100000),point(110000)],cursor:epoch+5000,canSeek:true,onSeek:()=>{}}));
-  assert.equal((html.match(/<path /g)??[]).length,2);assert.ok(html.includes('aria-label="Altitude profile time"'));assert.ok(html.includes(`value="${epoch+5000}"`));assert.ok(html.includes('Gaps remain disconnected'));
+  const groups=[...html.matchAll(/<g class="sky-profile-(?:geom|baro)">(.*?)<\/g>/g)];
+  assert.equal(groups.length,2,'the source gap splits both line and shaded area');
+  for(const [,group]of groups){
+    const paths=[...group.matchAll(/<path(?: class="(sky-profile-area)")? d="([^"]+)"/g)];
+    assert.equal(paths.length,2);assert.equal(paths.filter(([,kind])=>kind==='sky-profile-area').length,1);
+    const area=paths.find(([,kind])=>kind),line=paths.find(([,kind])=>!kind);
+    assert.ok(area[2].startsWith(line[2]+' L'),'the area follows only its own observed line before closing to the baseline');
+    assert.equal((line[2].match(/M/g)??[]).length,1);
+  }
+  assert.ok(html.includes('aria-label="Altitude profile time"'));assert.ok(html.includes(`value="${epoch+5000}"`));assert.ok(html.includes('Gaps remain disconnected'));
 });
 
 test('interpolated dossier values have deliberate display precision with exact values separately disclosed',()=>{

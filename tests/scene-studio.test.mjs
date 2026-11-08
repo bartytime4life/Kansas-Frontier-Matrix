@@ -227,6 +227,7 @@ test("merged curtain, star and water callback shares bounded repaint timing and 
     const frames = new Map(), shimmer = [], twinkle = [], flow = [];
     const context = {
       mapRef: { current: { triggerRepaint() { paints += 1; } } }, runtime: { kind: mode === "loading" ? "loading" : "ready" },
+      primaryWorkspace: "map", guideOpen: false,
       dynamicEffects: true, reducedMotion: mode === "reduced", renderQuality: "auto", browserRenderBudget: () => ({ efficient: mode === "efficient" }),
       sceneEffects: { curtain: mode === "curtain", stars: mode !== "curtain" && mode !== "off" && mode !== "water", waterFlow: mode === "water" },
       setCurtainShimmer: (value) => shimmer.push(value), setNightSkyTwinkle: (value) => twinkle.push(value), curtainIsVisible: () => true, nightSkyIsTwinkling: () => true,
@@ -248,6 +249,54 @@ test("merged curtain, star and water callback shares bounded repaint timing and 
     }
     context.document.hidden = true; tick(200); assert.equal(paints, 2);
     cleanup(); assert.equal(frames.size, 0); assert.equal(shimmer.at(-1), false); assert.equal(twinkle.at(-1), false); assert.equal(flow.at(-1), false);
+  }
+});
+
+test("shared decorative repaint pauses behind workspaces and welcome, then resumes one loop with preferences intact", async () => {
+  const tree = ts.createSourceFile("page.tsx", await read("app/page.tsx"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let effectCall;
+  const walk = (node) => {
+    if (ts.isCallExpression(node) && node.expression.getText(tree) === "useEffect" && node.arguments[0]?.getText(tree).includes("setNightSkyTwinkle(twinkle)")) effectCall = node.getText(tree);
+    ts.forEachChild(node, walk);
+  };
+  walk(tree); assert.ok(effectCall);
+  for (const effect of ["curtain", "stars", "waterFlow"]) {
+    const frames = new Map(), clocks = {}, settings = Object.freeze({ curtain: effect === "curtain", stars: effect === "stars", waterFlow: effect === "waterFlow" });
+    let paints = 0, serial = 0, previous, cleanup;
+    const context = {
+      mapRef: { current: { triggerRepaint() { paints++; } } }, runtime: { kind: "ready" },
+      primaryWorkspace: "map", guideOpen: false, dynamicEffects: true, reducedMotion: false,
+      renderQuality: "auto", browserRenderBudget: () => ({ efficient: false }), sceneEffects: settings,
+      setCurtainShimmer: value => { clocks.curtain = value; }, setNightSkyTwinkle: value => { clocks.stars = value; }, setWaterFlowMotion: value => { clocks.waterFlow = value; },
+      curtainIsVisible: () => true, nightSkyIsTwinkling: () => true, waterFlowIsAnimating: () => true,
+      document: { hidden: false }, window: {
+        requestAnimationFrame(callback) { frames.set(++serial, callback); return serial; }, cancelAnimationFrame(id) { frames.delete(id); },
+      },
+      // Run the real dependency list as well as the callback: return-to-map must
+      // restart the clock even when all renderer and preference inputs are stable.
+      useEffect(callback, dependencies) {
+        if (!previous || dependencies.some((value, index) => !Object.is(value, previous[index]))) {
+          cleanup?.(); cleanup = callback(); previous = dependencies;
+        }
+      },
+    };
+    const render = (workspace, guide) => {
+      context.primaryWorkspace = workspace; context.guideOpen = guide;
+      new Function(...Object.keys(context), transpile(effectCall))(...Object.values(context));
+    };
+    const tick = timestamp => { const [id, callback] = frames.entries().next().value; frames.delete(id); callback(timestamp); };
+    render("map", false); assert.equal(frames.size, 1); tick(66); assert.equal(paints, 1);
+    for (const [workspace, guide] of [["reports", false], ["stories", false], ["map", true], ["map", null]]) {
+      render(workspace, guide);
+      assert.equal(frames.size, 0, `${effect}: ${workspace}/${guide} must cancel covered-map animation`);
+      assert.deepEqual(clocks, { curtain: false, stars: false, waterFlow: false });
+      assert.equal(paints, 1, "changing covered workspaces never repaints the map");
+    }
+    render("map", false); assert.equal(frames.size, 1); assert.equal(clocks[effect], true);
+    render("map", false); assert.equal(frames.size, 1, "an unchanged render cannot create another clock");
+    tick(132); assert.equal(paints, 2, "returning to the map resumes the chosen effect");
+    assert.equal(context.sceneEffects, settings, "presentation pause does not alter the user's preferences");
+    cleanup(); assert.equal(frames.size, 0);
   }
 });
 

@@ -49,6 +49,12 @@ export function connected(left: SkyPoint, right: SkyPoint): boolean {
   return !right.breakBefore && left.providerId === right.providerId && left.onGround === right.onGround && left.positionMethod === right.positionMethod &&
     right.observedAt > left.observedAt && right.observedAt - left.observedAt <= SKY_MAX_GAP_MS;
 }
+/** Explicit navigation across a missing span; never automatic playback or interpolation. */
+export function nextSkyObservationAfterGap(points: readonly SkyPoint[], timeMs: number): number | null {
+  if (!Number.isFinite(timeMs)) return null;
+  const index = lowerBound(points, timeMs), next = points[index], previous = points[index - 1];
+  return previous && next && next.observedAt !== timeMs && !connected(previous, next) ? next.observedAt : null;
+}
 const asAircraft = (point: SkyPoint): Aircraft => ({ ...point, observedAt: new Date(point.observedAt).toISOString(), interpolated: false });
 const blend = (a: number | null, b: number | null, ratio: number) => a === null || b === null ? null : a + (b - a) * ratio;
 
@@ -136,7 +142,22 @@ export function samplesAt(tracks: SkyTracks, timeMs: number): readonly Aircraft[
   return result;
 }
 
-export type SkyTrail = Readonly<{ hex: string; points: readonly SkyPoint[]; future?: boolean }>;
+export type SkyTrail = Readonly<{ hex: string; points: readonly SkyPoint[]; future?: boolean; heightReference?: ReturnType<typeof skyHeightReference> }>;
+/** Sample only within already separated source segments. Never infer gaps from display spacing. */
+export function limitSkyTrailPoints(segments:readonly SkyTrail[],budget:number):readonly SkyTrail[]{
+  const cap=Math.max(0,Math.floor(budget));
+  if(segments.reduce((sum,segment)=>sum+segment.points.length,0)<=cap)return segments;
+  const kept=[...segments].sort((a,b)=>b.points.at(-1)!.observedAt-a.points.at(-1)!.observedAt).slice(0,Math.floor(cap/2));
+  let remaining=cap;
+  return kept.map((segment,index)=>{const quota=Math.min(segment.points.length,Math.floor(remaining/(kept.length-index)));remaining-=quota;
+    return {...segment,points:quota>=segment.points.length?segment.points:Array.from({length:quota},(_,i)=>segment.points[Math.round(i*(segment.points.length-1)/Math.max(1,quota-1))])};});
+}
+/** Internal trail metadata records continuity before thinning; legacy raw input is split first. */
+export function skyDrawableTrails(trails:readonly SkyTrail[],flat=false):readonly SkyTrail[]{
+  return flat?trails:trails.flatMap(trail=>trail.heightReference!==undefined
+    ? trail.heightReference?[trail]:[]
+    :heightProfile(trail.points,SKY_MAX_TRAIL_POINTS).map(points=>({...trail,points,heightReference:skyHeightReference(points[0])})));
+}
 /** A recorded route ahead of its cursor is retained history, never a live prediction. */
 export function selectedJourney(points:readonly SkyPoint[],time:number):readonly SkyTrail[] {
   if(!points.length)return [];
@@ -148,7 +169,7 @@ export function selectedJourney(points:readonly SkyPoint[],time:number):readonly
     const before=segment.points.filter(point=>point.observedAt<=time),after=segment.points.filter(point=>point.observedAt>time);
     if(cursorPoint&&segment.points[0].observedAt<time&&segment.points.at(-1)!.observedAt>time){before.push(cursorPoint);after.unshift(cursorPoint);}
     else if(before.length&&after.length)after.unshift(before.at(-1)!);
-    return [...(before.length>1?[{hex:segment.hex,points:before,future:false}]:[]),...(after.length>1?[{hex:segment.hex,points:after,future:true}]:[])];
+    return [...(before.length>1?[{...segment,points:before,future:false}]:[]),...(after.length>1?[{...segment,points:after,future:true}]:[])];
   });
 }
 /** Gaps and provider changes split trails. Rendering budget thins geometry, never current aircraft. */
@@ -158,23 +179,12 @@ export function trailSegments(tracks: SkyTracks, timeMs: number, windowMs = SKY_
     let segment: SkyPoint[] = [];
     for (let i = lowerBound(points, timeMs - windowMs); i < points.length && points[i].observedAt <= timeMs; i++) {
       const point = points[i];
-      if (segment.length && !connected(segment[segment.length - 1], point)) { if (segment.length > 1) segments.push({ hex, points: segment }); segment = []; }
+      if (segment.length && (!connected(segment[segment.length - 1], point)||skyHeightReference(segment.at(-1)!)!==skyHeightReference(point))) { if (segment.length > 1) segments.push({ hex, points: segment, heightReference:skyHeightReference(segment[0]) }); segment = []; }
       segment.push(point);
     }
-    if (segment.length > 1) segments.push({ hex, points: segment });
+    if (segment.length > 1) segments.push({ hex, points: segment, heightReference:skyHeightReference(segment[0]) });
   }
-  const total = segments.reduce((sum, segment) => sum + segment.points.length, 0);
-  if (total <= SKY_MAX_TRAIL_POINTS) return segments;
-  // Preserve each segment's ends. If the number of segments itself exceeds the budget,
-  // prioritize recent segments; this affects historical trail detail only.
-  const kept = segments.sort((a, b) => b.points[b.points.length - 1].observedAt - a.points[a.points.length - 1].observedAt).slice(0, SKY_MAX_TRAIL_POINTS / 2);
-  let remaining = SKY_MAX_TRAIL_POINTS;
-  return kept.map((segment, index) => {
-    const quota = Math.min(segment.points.length, Math.floor(remaining / (kept.length - index)));
-    const sampled = quota >= segment.points.length ? segment.points : Array.from({ length: quota }, (_, j) => segment.points[Math.round(j * (segment.points.length - 1) / (quota - 1))]);
-    remaining -= sampled.length;
-    return { hex: segment.hex, points: sampled };
-  });
+  return limitSkyTrailPoints(segments,SKY_MAX_TRAIL_POINTS);
 }
 
 export class SkyBuffer {

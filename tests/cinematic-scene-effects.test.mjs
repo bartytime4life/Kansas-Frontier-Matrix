@@ -337,3 +337,28 @@ test('hidden curtain allocates no shader program; visible variants compile once 
   layer.onAdd(map,gl);assert.equal(programs,2,'context recreation is also lazy');
   layer.render(gl,flat);assert.equal(programs,3);layer.onRemove(map,gl);
 });
+
+
+test("flight focus leases hide only the decorative curtain across style and preference changes", async () => {
+  const effects = await loadSceneEffects(), layers = new Map(), layout = new Map();
+  const map = { getLayer: id => layers.get(id), getStyle: () => ({layers: []}),
+    addLayer: layer => layers.set(layer.id, layer), removeLayer: id => {layers.delete(id);layout.delete(id);},
+    getLayoutProperty: id => layout.get(id), setLayoutProperty: (id,property,value) => layout.set(id,value),
+    getProjection: () => ({type: "mercator"}), getPitch: () => 45 };
+  effects.registerSceneEffects(map, {...effects.DEFAULT_SCENE_EFFECTS});
+  effects.syncBorderCurtain(map,false);assert.equal(effects.curtainIsVisible(map),true);
+  const first=effects.leaseBorderCurtainSuppression(map),second=effects.leaseBorderCurtainSuppression(map);
+  assert.equal(effects.curtainIsVisible(map),false,"hidden decoration cannot keep the shared repaint loop active");
+  assert.equal(effects.sceneEffectsFor(map).curtain,true,"the user's preference stays intact");
+  layers.clear();layout.clear();effects.syncBorderCurtain(map,false);
+  assert.equal(layout.get(effects.CURTAIN_LAYER_ID),"none","replacement styles honor the active lease");
+  first();first();assert.equal(effects.curtainIsVisible(map),false,"idempotent cleanup cannot release another owner");
+  effects.syncBorderCurtainVisibility(map,true);second();
+  assert.equal(effects.curtainIsVisible(map),false,"cleanup honors newly enabled Battery saver");
+  effects.syncBorderCurtainVisibility(map,false);assert.equal(effects.curtainIsVisible(map),true);
+  const third=effects.leaseBorderCurtainSuppression(map);
+  effects.registerSceneEffects(map,{...effects.DEFAULT_SCENE_EFFECTS,curtain:false});
+  effects.syncBorderCurtain(map,false);third();assert.equal(layers.has(effects.CURTAIN_LAYER_ID),false,"cleanup cannot resurrect a newly disabled curtain");
+  effects.registerSceneEffects(map,{...effects.DEFAULT_SCENE_EFFECTS});effects.syncBorderCurtain(map,false);
+  const fourth=effects.leaseBorderCurtainSuppression(map);fourth();assert.equal(effects.curtainIsVisible(map),true,"the last lease restores the current visible preference");
+});

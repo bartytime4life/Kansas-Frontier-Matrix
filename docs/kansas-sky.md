@@ -104,8 +104,10 @@ The map overlay keeps Play/Pause, Orbit/Follow, and the recorded-flight timeline
 available with Layers closed. Source-backed times, missing observations and the
 REPLAY label remain visible. Playback uses the existing chosen speed; the overlay
 does not start playback automatically. A panel resize does not release the
-camera. Manual map input or another camera navigation does; disabling the layer,
-hiding the tab or unmounting also releases its elevation/ground-clamping settings.
+camera. Manual map input or another camera navigation stops Follow/Orbit while
+keeping the dock and its presentation lease available for exploration. Closing
+the flight view, disabling the layer, hiding the tab or unmounting releases its
+elevation/ground-clamping settings.
 Reduced motion permits a static framed view and explicit playback, without
 Follow or Orbit. No new source, collector, service or application is introduced.
 
@@ -330,3 +332,71 @@ Review exact-head CI and its screenshots before merging. A merge, Preview
 deployment, public publication and governed data activation are separate actions.
 Publication remains on hold. Rollback targets the relevant source commit;
 no database rollback is necessary. Volumetric historical weather is deferred.
+
+
+## Cinematic flight view — 2026-11-08
+
+The existing map now emphasizes observed three-dimensional routes with a thin,
+feathered cyan line for recorded-ahead history and amber for elapsed history.
+Independent segment quads preserve source breaks; a soft selected-position ring
+and enlarged ivory aircraft make the current sample easy to find. The stroke
+shader is optional: if it fails, the same selected route remains as basic lines
+and a diagnostic remains visible. Straight-alpha blending preserves destination
+alpha. These are presentation changes, not reconstructed missing observations.
+
+The compact dock exposes replay speed, restart, Follow, Orbit and whole-path
+framing directly. Aircraft brief and profile start collapsed. The phone view
+keeps optional focus and legend controls inside **Profile & view**. Manual map
+movement keeps the dock open and switches to free exploration; selecting Follow
+resumes tracking. Explicit static framing remains available under reduced motion.
+Within an actual observation gap, **Next observed segment** explicitly seeks and
+pauses at the next retained timestamp. It never silently fast-forwards playback,
+loads another part, or draws a connecting route through the missing span.
+
+Flight focus is enabled on entry and reversibly subdues chart/raster context.
+The decorative Kansas aurora border has a separate reference-counted visibility
+lease: active focus suppresses its drawing and shared repaint eligibility;
+cleanup restores the current scene preference and efficiency mode. It does not
+rewrite preferences, source state, airspace restrictions or TFR styling. Style
+replacement and overlapping owners retain the suppression until the last lease
+ends. Chart paint restores only values still owned by flight focus.
+
+A crowded-source regression established a distinct display defect. Splitting
+continuous source tracks and then thinning to the 20,000-point display limit
+created sample intervals over 60 seconds. The renderer incorrectly interpreted
+those display intervals as new acquisition gaps. Continuity and height-reference
+segments are now established from raw observations before thinning and retained
+through rendering. The actual renderer transformation for 3,000 aircraft with
+31 continuous observations each previously produced zero visible paths; the
+corrected transformation retains a path for every aircraft within the same
+20,000-point cap. Separate checks preserve real gaps, provider/method changes,
+ground transitions and height-reference breaks. This does not establish the
+cause of historical intermittent browser failures with different inputs.
+
+Camera layout measurements are cached outside animation callbacks and refreshed
+on map or dock resize/content changes. A 600-call source regression observes two
+initial element measurements, then two on explicit refresh, instead of measuring
+on every frame. Camera-mode changes retain a single presentation lease rather
+than briefly restoring regional constraints during manual exploration. Shared
+symbol meshes and scalar buffer writes reduce per-vertex temporary allocations.
+
+The retained synthetic Node24 benchmark uses 3,000 aircraft, 100,000 retained
+points and 20,000 display points. Trail construction median changed from 3.441ms
+to 3.584ms; p95 changed from 6.857ms to 6.342ms. These CPU-only measurements do not
+establish a meaningful speed improvement, GPU frame rate, physical-device
+capacity or production reliability. Browser captures, production-preview
+profiling, hosted acceptance and release approval remain separate evidence.
+Rollback reverts the application and focused test changes; no production data,
+collection state, external imagery, provider or persisted preference is changed.
+
+
+A separate terrain-cache regression showed stationary ground markers and guide
+bases retaining an earlier finite height after ordinary DEM tile completion.
+Such events can omit a source subtype and arrive while other source tiles are
+still loading. The renderer now invalidates both caches only for the active DEM
+source, and on terrain option changes. Multiple events before one draw coalesce
+into one query per retained location; unrelated sources do not trigger uploads
+or queries. Disposing the layer removes both subscriptions. The source test
+fails at the old 0m cached height and passes with the new 333m value; it also
+checks terrain exaggeration, terrain removal, cache reuse and cleanup. This is
+cache-lifecycle evidence, not validation of DEM accuracy or flight clearance.
