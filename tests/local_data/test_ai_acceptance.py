@@ -97,6 +97,19 @@ class AcceptanceTests(unittest.TestCase):
         self.run_batch(retryHeld=True)
         self.assertEqual(self.client.calls,2)
 
+    def test_admin_local_resolution_updates_live_counts_without_rewriting_ai_hold(self):
+        self.client.hold=True
+        self.run_batch()
+        item=intake.get_item(self.root,self.id)
+        intake_review.save(self.root,{'id':self.id,'sha256':item['sha256'],'revision':0,
+            'decision':'local','domain':'','rights':'unknown','sensitivity':'unknown','reference':'',
+            'reviewer':'Admin-directed QA','note':'Accepted as a private reference; taxonomy and sharing remain unresolved.',
+            'confirmed':True},intake_route.load_budget())
+        job=self.manager.status()['job']
+        self.assertEqual(job['counts'],{'held':1})
+        self.assertEqual(job['currentStatuses'],{'reviewed':1})
+        self.assertEqual(intake.get_item(self.root,self.id)['ai_review_history'][0]['outcome'],'held')
+
     def test_sensitive_flags_cannot_be_cleared_by_ai(self):
         with intake.open_index(self.root) as db:
             body = json.loads(db.execute("SELECT decision_json FROM items WHERE id=?",(self.id,)).fetchone()[0])

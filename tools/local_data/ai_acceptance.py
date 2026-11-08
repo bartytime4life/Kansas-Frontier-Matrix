@@ -329,6 +329,9 @@ class Manager:
             job["sourceBatch"] = selection.get("source_batch")
             job["sourceState"] = selection.get("source_state")
             job["counts"] = dict(db.execute("SELECT state,count(*) FROM ai_acceptance_tasks WHERE job=? GROUP BY state",(job["id"],)))
+            job["currentStatuses"] = dict(db.execute(
+                "SELECT i.status,count(*) FROM ai_acceptance_tasks t JOIN items i ON i.id=t.item AND i.sha256=t.sha "
+                "WHERE t.job=? AND i.present=1 GROUP BY i.status",(job["id"],)))
             recent = db.execute("SELECT item,state,result,error FROM ai_acceptance_tasks WHERE job=? AND state NOT IN ('pending','working') ORDER BY seq DESC LIMIT 20",(job["id"],)).fetchall()
             job["recent"] = [{"id":r[0],"state":r[1],"review":json.loads(r[2]) if r[2] else None,"error":r[3]} for r in recent]
             current = db.execute("SELECT item FROM ai_acceptance_tasks WHERE job=? AND state='working' LIMIT 1",(job["id"],)).fetchone()

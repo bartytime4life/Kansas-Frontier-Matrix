@@ -78,7 +78,12 @@ rejects any change outside those deterministic renderings.
 Generated descriptions appear in the file list and **Local Qwen review** in
 the details drawer. They are AI-generated interpretations; confidence is the
 model's self-assessment, not a calibrated probability or evidence certification.
-Admins can inspect the evidence or make a separate human review decision.
+Admins can inspect the evidence and record a separate review decision with the
+actual reviewer identified. Explicit local-use acceptance can retain unknown
+rights/sensitivity and an unassigned routing domain; sharing stays on hold.
+Qwen's recommendation and confidence remain historical records. After later
+operator decisions, the workspace also shows the selected files' current statuses
+so a resolved local review is not confused with the earlier Qwen hold count.
 
 ## Attribution and persistence
 

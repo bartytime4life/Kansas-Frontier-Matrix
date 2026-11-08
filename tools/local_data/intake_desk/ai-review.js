@@ -29,16 +29,18 @@
     $("ai-model").textContent = data.model ? `${data.model} · on this PC` : "Not connected";
     if (!configured) { $("ai-state").textContent = data.reason || "Local Qwen is not configured."; scope(); return; }
     const job = current, counts = job?.counts || {};
+    const live = job?.currentStatuses || {}, resolvedLater=(live.reviewed||0)>(counts.accepted||0)||(live.ready||0)>0;
     const done = ["accepted","held","failed","stale"].reduce((n,k)=>n+(counts[k]||0),0);
     $("ai-progress").hidden = !job;
     $("ai-progress").max = job?.total || 1; $("ai-progress").value = done;
     $("ai-pause").hidden = !active(); $("ai-pause").disabled = job?.state !== "running";
     $("ai-resume").hidden = job?.state !== "paused";
     $("ai-cancel").hidden = !job || !["running","paused","pausing"].includes(job.state);
-    $("ai-rerun").hidden = !job || !["completed","cancelled"].includes(job.state) || (!!counts.accepted && !counts.held);
+    $("ai-rerun").hidden = !job || !["completed","cancelled"].includes(job.state) || (!!counts.accepted && !counts.held) || resolvedLater;
     $("ai-rerun").textContent = counts.held ? `Re-review ${counts.held} held files` : "Re-review same pending files";
     $("ai-state").textContent = !job ? "Ready. Enter your name, choose a batch size, and start a local review."
       : `${job.state.replaceAll("_"," ")} · ${done} / ${job.total} processed · ${counts.accepted||0} accepted locally · ${counts.held||0} held · ${counts.failed||0} failed · ${counts.stale||0} changed/skipped · requested by ${job.admin}${job.cached ? ` · ${job.cached} unchanged AI reviews skipped` : ""}${job.error ? `. ${explain(job.error)}` : ""}${["pausing","cancelling"].includes(job.state) ? ". Finishing the current file first." : ""}`;
+    if (job && resolvedLater) $("ai-state").textContent += ` Qwen run outcomes above are historical. Current files: ${live.reviewed||0} reviewed locally · ${live.review||0} need review · ${live.blocked||0} blocked.`;
     const results = $("ai-results"); results.replaceChildren();
     if (job?.recent.length) {
       const list = el("ul",{class:"ai-results"});
