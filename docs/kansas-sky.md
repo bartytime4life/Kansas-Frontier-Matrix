@@ -6,6 +6,26 @@ Aviation glimpse remains zones-only. Water-animation defaults are unchanged.
 Clicking a map aircraft opens Layers → On map and focuses its instruments;
 the aircraft list provides the same selection without requiring a pointer.
 
+## Explore a retained flight
+
+1. Open **Map layers**, choose **Aviation & airspace**, and enable the aviation layer.
+2. Expand **Airspace shells, drone zones, weather & controls**, then choose
+   **Recorded flights** in Kansas Sky.
+3. Choose a recording day and flight, then **Open retained journey**. Only the
+   available published recordings appear; an empty date is not proof of no traffic.
+4. Use **Whole path** for the retained regional segments, **Follow** to travel with
+   the aircraft, or **Orbit** to look around it. **Play flight**, the timeline and
+   1×/4×/16× controls share one replay clock. Panning or zooming releases tracking;
+   choose Follow again to resume it.
+5. Open **Aircraft brief** for source-backed fields and the estimated-position
+   explanation; **Profile & view** shows height references, gaps and path controls.
+
+Gold is the elapsed recorded route; cyan is later **recorded** observations, not
+an expected future route. A missing segment stays missing. Aircraft symbols are
+schematic, heights are approximate, and current map context is not historical
+weather or airspace reconstruction. See the position-model section below for
+what interpolation can and cannot establish.
+
 ## Observation and time contract
 
 The existing Kansas center/250 NM request and regional bounds are retained.
@@ -493,3 +513,41 @@ the source candidate to restore preceding behavior; retain source observations
 and diagnostic receipts. Focused source failures, local browser verification,
 CI, merged code and target-environment behavior remain separate evidence states.
 None of these newly reproduced defects establishes the cause of issue #5737.
+
+## Validation and review checkpoint — 2026-11-08
+
+The cinematic and motion candidate is proposed for the existing Node composition
+on `a0-hosted-ai-web-20261017`. This dated record documents source and local
+verification; GitHub review, merge and deployment remain separate transitions.
+
+| Evidence state | Recorded result and boundary |
+| --- | --- |
+| Source inspected and tested | `017527fbfbc5a4a883a49af57846f2239f094cd0`; preceding cinematic commits `d7abf60103696f19142ac6b2b95b2858ca9675d1` and `9d8f757fb104a35bf0ec7708bdcf1fe4475e597f`. |
+| Application input identity | `sha256:8eb7cf2a88121547ac5c9981c145ae8cd6288ef573026d6006eb81400fc2622d`, 1,229 inputs. Documentation-only follow-up does not change these application bytes. |
+| Automated checks | Node 24.11.1 production build, TypeScript and scoped ESLint passed. Full suite: 2,725 passed, zero failed, 25 existing skips, 2,750 total. Run `kfm-motion-20261108-final-checks`. |
+| Failed-before diagnostics | Retained math, projection, animation-clock, globe-framing and phone-layout failures demonstrate the corresponding bounded corrections. A separate build/test overlap run failed four build-dependent checks; unchanged tests passed after the build completed. |
+| Local browser | Root-operated in-app browser checks covered 375×812, 390×844, 768×1024 and 1440×900; Follow/Orbit, playback, manual zoom release, projection changes and brief expansion. Exact browser binary version was unavailable through the exposed capability. |
+| Visual review | Independent image review passed round 2; the evaluator could not connect its browser. This is not an independent interaction test. |
+| Remaining browser diagnostics | Ten captured external map-font 404 warnings used local fallback; zero captured error entries. This is not a whole-application no-error claim. |
+| GitHub, target and physical behavior | Read current PR/check records for hosted status. This checkpoint establishes neither merge/deployment, hosted archive activation, physical-device acceptance nor production reliability. |
+
+The exported `kfm-motion-evidence.zip` and its hash inventory remain in the
+owner's local evidence outputs, outside application deployment assets. Preserve
+the bundle, source observations and original failed diagnostics before temporary
+CI/browser artifacts expire. Reproduce source checks with `npm test` (which
+builds first); do not run checks of generated assets concurrently with a build.
+
+The earlier [intermittent layer-absence issue #5737](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5737)
+remains open and causally unresolved. Its failed desktop run `42104888741` and
+passing rerun `42105300252` used identical tree
+`ae417eb8c50dd6f09dbf46496bc858d7d730fd47` and Chrome `156.0.8078.79`.
+Its retained artifact `13450569646` expires November 19, 2026, according to the
+issue record checked on November 8. Preserve it before expiry. Application
+behavior, map-style lifecycle and browser-test synchronization remain alternatives;
+this candidate's newly reproduced corrections do not retrospectively prove which
+caused that incident. Do not substitute longer timeouts, skips or weaker assertions.
+
+The daily regional archive remains prepared but inactive on the hosted service.
+No production data, source admission, release or publishing setting changed.
+Rollback uses a reviewed revert of the flight candidate while retaining source
+observations and evidence; a later merge or deployment requires its own receipt.
