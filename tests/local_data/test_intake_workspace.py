@@ -133,6 +133,42 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(self.store.working_url('a'*32), '/working-data?item='+'a'*32)
         self.assertEqual(self.store.working_url('https://example.org'), '/working-data')
 
+    def ai_manager(self):
+        from tools.local_data.ai_acceptance import Manager
+        from tests.local_data.test_ai_acceptance import FakeQwen
+        self.server.workspace.ai = Manager(self.base/'working',FakeQwen())
+        def finish():
+            manager = self.server.workspace.ai
+            if manager.thread:
+                manager.stop.set();manager.thread.join(5)
+        self.addCleanup(finish)
+        return self.server.workspace.ai
+
+    def test_ai_endpoints_need_session_and_exact_origin_and_refuse_library(self):
+        self.ai_manager()
+        route='/api/workspace/working/ai-review/start'
+        value={'admin':'QA admin','filters':{},'limit':1,'retryHeld':False}
+        self.assertEqual(self.request(route,method='POST',body=value)[0],403)
+        self.assertEqual(self.request(route,method='POST',body=value,headers={'X-KFM-Session':self.server.token})[0],403)
+        self.assertEqual(self.request('/api/workspace/library/ai-review/start',method='POST',body=value,headers=self.auth)[0],403)
+        self.assertIsNone(self.server.workspace.ai.status()['job'])
+
+    def test_ai_batch_is_explicit_and_cannot_request_public_acceptance(self):
+        manager=self.ai_manager()
+        route='/api/workspace/working/ai-review/start'
+        value={'admin':'QA admin','filters':{},'limit':1,'retryHeld':False}
+        self.assertEqual(self.request(route,method='POST',body={**value,'decision':'public'},headers=self.auth)[0],400)
+        self.assertEqual(manager.client.calls,0)
+        self.assertEqual(self.request(route,method='POST',body=value,headers=self.auth)[0],200)
+        manager.thread.join(5)
+        self.assertEqual(manager.status()['job']['counts'],{'accepted':1})
+
+    def test_unconfigured_ai_is_reported_without_starting_a_model(self):
+        code,body,_=self.request('/api/workspace/working/ai-review/status',headers=self.auth)
+        self.assertEqual(code,200)
+        self.assertFalse(json.loads(body)['enabled'])
+        self.assertEqual(self.request('/api/workspace/working/ai-review/start',method='POST',headers=self.auth)[0],403)
+
 
 if __name__ == '__main__':
     unittest.main()

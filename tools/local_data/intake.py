@@ -447,8 +447,20 @@ def list_items(root: Path, *, status=None, domain=None, family=None, lane=None, 
         total = conn.execute(f"SELECT COUNT(*) FROM items {join}{clause}", args).fetchone()[0]
         rows = conn.execute(f"SELECT {', '.join('items.' + c for c in ITEM_COLUMNS)} FROM items {join}{clause} "
                             "ORDER BY items.status, items.domain, items.relative_path LIMIT ? OFFSET ?", args + [limit, offset]).fetchall()
+        summaries = []
+        from tools.local_data.ai_acceptance import current_result
+        for row in rows:
+            item = _row_item(row,ITEM_COLUMNS)
+            item["review_history"] = intake_review.history(conn,item["id"])
+            ai = current_result(conn,item)
+            summary = _summary(item)
+            if ai:
+                summary["ai_review"] = {"title":ai["title"],"description":ai["description"][:220],
+                    "outcome":ai["outcome"],"model":ai["attribution"]["model"],
+                    "requested_by":ai["attribution"]["requested_by"]}
+            summaries.append(summary)
     return {"schema": "kfm-intake-list/v1", "total": total, "limit": limit, "offset": offset,
-            "items": [_summary(_row_item(r, ITEM_COLUMNS)) for r in rows]}
+            "items": summaries}
 
 
 def _summary(item: dict) -> dict:
@@ -473,7 +485,15 @@ def get_item(root: Path, identity: str, *, read_only=False) -> dict:
         applications = [dict(zip(("action", "target", "sha256", "applied_at", "receipt_path"), r)) for r in
                         conn.execute("SELECT action, target, sha256, applied_at, receipt_path FROM applications WHERE item_id=? ORDER BY seq", (identity,))]
         review_history = intake_review.history(conn, identity)
-    value = _row_item(row, ITEM_COLUMNS)
+        value = _row_item(row,ITEM_COLUMNS)
+        value["review_history"] = review_history
+        from tools.local_data.ai_acceptance import current_result, review_history as ai_history
+        ai = current_result(conn,value)
+        if ai:
+            value["ai_review"] = ai
+        past = ai_history(conn,identity)
+        if past:
+            value["ai_review_history"] = past
     value["applications"] = applications
     value["review_history"] = review_history
     return value
