@@ -6842,6 +6842,15 @@ export default function Home() {
           setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying catalog layers and interactions…` });
         });
 
+        let hoverCursorActive = false;
+        const showInspectionCursor = () => {
+          map.getCanvas().style.cursor = "crosshair";
+          hoverCursorActive = true;
+        };
+        const clearInspectionCursor = () => {
+          if (hoverCursorActive && map.getCanvas().style.cursor === "crosshair") map.getCanvas().style.cursor = "";
+          hoverCursorActive = false;
+        };
         const clearHoverCandidate = () => {
           if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
           hoverDrawerTimerRef.current = null;
@@ -6868,8 +6877,14 @@ export default function Home() {
           if (disposed || aviationPickingRef.current || !styleGenerationReadyRef.current || document.hidden) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
           const geologyLayers = GEOLOGY_POINT_LAYER_IDS.filter(id => map.getLayer(id));
-          if (geologyLayers.length && map.queryRenderedFeatures(event.point, { layers: geologyLayers }).length) { clearHoverCandidate(); return; }
           if (map.isMoving()) { clearHoverCandidate(); return; }
+          if (geologyLayers.length && map.queryRenderedFeatures(event.point, { layers: geologyLayers }).length) {
+            showInspectionCursor();
+            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
+            hoveredRef.current = null;
+            clearHoverCandidate();
+            return;
+          }
           if (scenePresetRef.current === "elevation-3d" && styleGenerationReadyRef.current
             && attachedTerrainProviderRef.current === terrainProviderRef.current
             && map.getTerrain()?.source === TERRAIN_SOURCE_ID
@@ -6892,12 +6907,18 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
-          if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) return;
-          // Features whose selection the category dock owns point the cursor without opening a hover preview;
+          if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) {
+            showInspectionCursor();
+            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
+            hoveredRef.current = null;
+            clearHoverCandidate();
+            return;
+          }
+          // Features whose selection the category dock owns change the cursor without opening a hover preview;
           // so do the monitoring wells while water levels at wells is on.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID || renderedHits[0]?.source === REVIEWED_SOURCE_ID
             || (wellsOnRef.current && renderedHits[0]?.source === OFFICIAL_CONTEXT_BY_ID["kgs-monitoring-wells"].sourceId)) {
-            map.getCanvas().style.cursor = "pointer";
+            showInspectionCursor();
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
             clearHoverCandidate();
@@ -6912,13 +6933,13 @@ export default function Home() {
             return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
           });
           if (!candidate && !externalCandidate) {
-            map.getCanvas().style.cursor = "";
+            clearInspectionCursor();
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
             clearHoverCandidate();
             return;
           }
-          map.getCanvas().style.cursor = "pointer";
+          showInspectionCursor();
           if (!candidate) {
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
@@ -6968,12 +6989,15 @@ export default function Home() {
             try { map.setFeatureState(hoveredRef.current, { hover: false }); } catch { /* Source teardown can race a pointer exit. */ }
           }
           hoveredRef.current = null;
-          map.getCanvas().style.cursor = "";
+          clearInspectionCursor();
           clearHoverCandidate();
           setTerrainElevationReading(null);
           setTerrainElevationUnavailable(null);
         });
-        map.on("movestart", () => { hoverSampler.cancel(); clearHoverCandidate(); });
+        map.on("movestart", () => {
+          hoverSampler.cancel(); clearHoverCandidate();
+          if (!aviationPickingRef.current && !measureModeRef.current) clearInspectionCursor();
+        });
 
         map.on("click", (event) => {
           if (aviationPickingRef.current) return;
