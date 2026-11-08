@@ -64,6 +64,46 @@ test('annual counts cover every year of the record, empty years included',()=>{
  assert.deepEqual(counts.map(c=>[c.year,c.count]),[[1973,0],[1974,2],[1975,0],[1976,1]]);
 });
 
+test('monthly cadence counts UTC months and keeps the strongest reported magnitude',()=>{
+ const record={events:[
+  {id:'a',time:'2015-01-31T23:59:59.000Z',year:2015,magnitude:2.6},
+  {id:'b',time:'2015-02-01T00:00:00.000Z',year:2015,magnitude:4.1},
+  {id:'c',time:'2015-02-10T00:00:00.000Z',year:2015,magnitude:3.2},
+  {id:'d',time:'2016-02-10T00:00:00.000Z',year:2016,magnitude:5.5}]};
+ const months=quakes.monthlyCadence(record,2015);
+ assert.equal(months.length,12);
+ assert.deepEqual(months.slice(0,3).map(m=>[m.month,m.count,m.strongest]),[[1,1,2.6],[2,2,4.1],[3,0,null]]);
+ assert.deepEqual(quakes.recordEventList(record,2015,40,2).map(e=>e.id),['c','b']);
+ assert.equal(quakes.recordEventList(record,2015,40,3).length,0);
+});
+
+test('monthly cadence offers twelve accessible month buttons and a full-year reset',async()=>{
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const changes=[];
+ const months=Array.from({length:12},(_,index)=>({month:index+1,count:index===1?2:0,strongest:index===1?4.1:null}));
+ const tree=h.exports.CategoryMapDock({look:maps.categoryMap('geology'),mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onQuakes(){},onQuakeMonth:month=>changes.push(month),quakes:{on:true,loading:false,failed:false,counts:[],total:2,startYear:1973,endYear:2026,minMagnitude:2.5,truncated:false,year:2015,month:2,months,selected:null,selectedUrl:null}});
+ const cadence=findNode(tree,node=>typeof node.type==='function'&&node.type.name==='QuakeMonthlyCadence');
+ assert.ok(cadence);
+ const rendered=cadence.type(cadence.props);
+ const buttons=findNode(rendered,node=>node.props?.className==='category-map-dock-month-grid').props.children;
+ assert.equal(buttons.length,12);
+ assert.equal(buttons[1].props['aria-pressed'],true);
+ assert.match(buttons[1].props['aria-label'],/Feb 2015: 2 earthquakes M2\.5 or greater; strongest catalog magnitude 4\.1/);
+ buttons[1].props.onClick();buttons[0].props.onClick();
+ assert.deepEqual(changes,[null,1]);
+ h.dispose?.();
+});
+
+test('a selected month filters actual historical map marks and can restore the full year',()=>{
+ const calls=[];const layers=[];let source=null;
+ const map={getSource:()=>source,addSource:()=>{source={setData(){}}},getLayer:id=>layers.find(l=>l.id===id),addLayer:spec=>layers.push(spec),getStyle:()=>({layers:[]}),setFilter:(id,filter)=>calls.push([id,filter])};
+ const record={endYear:2026,events:[{id:'a',time:'2015-02-01T00:00:00Z',year:2015,magnitude:3,longitude:-97,latitude:38}]};
+ quakes.syncEarthquakeRecord(map,record,2015,null,2);
+ assert.deepEqual(calls[0][1],['all',['==',['get','year'],2015],['==',['get','month'],2]]);
+ calls.length=0;quakes.syncEarthquakeRecord(map,record,2015,null,null);
+ assert.deepEqual(calls[0][1],['==',['get','year'],2015]);
+});
+
 test('the year colours, the map expression and the key share one ramp',()=>{
  const end=2026;
  assert.equal(quakes.recordYearColor(1975,end),quakes.RECORD_RAMP[0],'every year before 2010 shares the first colour');
@@ -88,7 +128,7 @@ test('the map layers draw the record, filter a year and ring the selected event'
  const map={getSource:id=>id===quakes.EARTHQUAKE_RECORD_SOURCE_ID?source:undefined,addSource:(id,spec)=>{source={spec,setData(d){calls.push(['setData',d.features.length]);}};calls.push(['addSource',id,spec.data.features.length]);},
   getLayer:id=>layers.find(l=>l.id===id),addLayer:(spec,before)=>{layers.splice(layers.findIndex(l=>l.id===before),0,{id:spec.id,spec});calls.push(['addLayer',spec.id,before]);},
   getStyle:()=>({layers}),setFilter:(id,f)=>calls.push(['setFilter',id,f]),removeLayer:id=>{layers.splice(layers.findIndex(l=>l.id===id),1);calls.push(['removeLayer',id]);},removeSource:id=>{source=null;calls.push(['removeSource',id]);}};
- const record={endYear:2026,events:[{id:'a',year:2015,magnitude:3,longitude:-97.6,latitude:37.3},{id:'b',year:1989,magnitude:4,longitude:-96.6,latitude:39.2}]};
+ const record={endYear:2026,events:[{id:'a',time:'2015-03-01T00:00:00Z',year:2015,magnitude:3,longitude:-97.6,latitude:37.3},{id:'b',time:'1989-06-01T00:00:00Z',year:1989,magnitude:4,longitude:-96.6,latitude:39.2}]};
  quakes.syncEarthquakeRecord(map,record,2015,'a');
  assert.deepEqual(calls.slice(0,3),[['addSource','kfm-earthquake-record',2],['addLayer','kfm-earthquake-record-points','kfm-roads'],['addLayer','kfm-earthquake-record-selected','kfm-roads']]);
  assert.deepEqual(layers.map(l=>l.id),['background','kfm-earthquake-record-points','kfm-earthquake-record-selected','kfm-roads'],'above the base, under the site overlays');
@@ -117,7 +157,7 @@ test('both record layers pass the MapLibre style validator, filters included',as
  assert.deepEqual(ring[4].slice(3),[2.5,5.7,4,8,5,10.5],'the ring sits 3.5 px outside the event');
 });
 
-test('the Landform relief dock offers the record, with the histogram, a year, and the selected event',async()=>{
+test('the Geology & subsurface dock offers the record, with the histogram, a year, and the selected event',async()=>{
  const geology=maps.categoryMap('geology');
  assert.ok(geology.tools.includes('quakes'));
  const h=await componentHarness('app/category-map-dock.tsx',{});
@@ -199,7 +239,7 @@ test('record events can be picked from a keyboard list: a year newest first, or 
  assert.equal(findNode(h.render(h.exports.CategoryMapDock,{...base,quakes:{...state,year:null,total:1234,list:quakes.recordEventList(record,null)}}),n=>n.props?.label==='Largest earthquakes in the record').props.summary,'Largest events (4 of 1,234)');
  assert.ok(!findNode(h.render(h.exports.CategoryMapDock,{...base,quakes:{...state,list:[]}}),n=>n.props?.label==='Earthquakes in 2015, newest first'),'no list when the year has no events');
  h.dispose?.();
- assert.match(page,/const quakeEventList = useMemo\(\(\) => quakeRecord \? recordEventList\(quakeRecord, quakeRecordYear\) : \[\], \[quakeRecord, quakeRecordYear\]\);/);
+ assert.match(page,/const quakeEventList = useMemo\(\(\) => quakeRecord \? recordEventList\(quakeRecord, quakeRecordYear, 40, quakeRecordMonth\) : \[\], \[quakeRecord, quakeRecordYear, quakeRecordMonth\]\);/);
  assert.match(page,/onQuakePick=\{\(id\) => \{\s*const event = quakeRecordEventsRef\.current\.get\(id\);\s*if \(!event\) return;\s*setQuakeRecordSelected\(event\);\s*easeToPicked\(\[event\.longitude, event\.latitude\]\);/);
 });
 
@@ -244,6 +284,6 @@ test('the record draws as a west–east depth section and a magnitude–frequenc
  assert.ok(fit,'the fitted line is drawn');assert.ok(fit.props.y2>fit.props.y1,'it falls with magnitude');
  assert.equal(h.exports.QuakeMagnitudeFrequency({frequency:quakes.magnitudeFrequency([{magnitude:2.5}])}),null,'one bin is no plot');
  h.dispose?.();
- assert.match(page,/const quakePlots = useMemo\(\(\) => quakeRecord \? recordPlots\(quakeRecord, quakeRecordYear\) : null, \[quakeRecord, quakeRecordYear\]\);/);
+ assert.match(page,/const quakePlots = useMemo\(\(\) => quakeRecord \? recordPlots\(quakeRecord, quakeRecordYear, quakeRecordMonth\) : null, \[quakeRecord, quakeRecordYear, quakeRecordMonth\]\);/);
  assert.match(page,/list: quakeEventList, plots: quakePlots \} : undefined\}/);
 });

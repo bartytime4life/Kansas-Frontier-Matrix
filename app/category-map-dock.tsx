@@ -6,7 +6,7 @@ import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
 import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
-import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, YearCount } from "./earthquake-record";
+import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, MonthCadence, YearCount } from "./earthquake-record";
 import type { FloodGauge, FloodHydrograph } from "./flood-forecast";
 import type { FemaYear, HAZARD_FAMILIES, HazardFamilyId } from "./fema-record";
 import type { RainfallKind } from "./mrms-rainfall";
@@ -103,7 +103,7 @@ export const renderMapKeys = (keys: readonly MapKey[]) => (
       </div>
 );
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, populationChange, quakes, onQuakes, onQuakeYear, onQuakeMonth, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -315,7 +315,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    */
   quakes?: Readonly<{
     on: boolean; loading: boolean; failed: boolean; counts: readonly (YearCount & { color: string })[] | null; total: number; startYear: number; endYear: number;
-    minMagnitude: number; truncated: boolean; year: number | null; selected: EarthquakeRecordEvent | null; selectedUrl: string | null;
+    minMagnitude: number; truncated: boolean; year: number | null; month?: number | null; months?: readonly MonthCadence[] | null; selected: EarthquakeRecordEvent | null; selectedUrl: string | null;
     /** The chosen year's events newest first, or the largest across all years, so an event can be picked without the map. */
     list?: readonly Readonly<{ id: string; label: string }>[];
     /** The record (or the chosen year) as a west–east depth section and a magnitude–frequency distribution. */
@@ -324,6 +324,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   onQuakePick?: (id: string) => void;
   onQuakes?: (on: boolean) => void;
   onQuakeYear?: (year: number | null) => void;
+  onQuakeMonth?: (month: number | null) => void;
   onQuakeClear?: () => void;
   /**
    * The SPC convective outlook, for looks that offer the outlook tool: the day
@@ -850,10 +851,11 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
             {quakes.counts.filter(entry => entry.count > 0).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.count}</option>)}
           </select></label>}
         <p className="category-map-dock-reading" aria-live="polite">{quakeReading(quakes)}</p>
+        {quakes.year !== null && quakes.months && <QuakeMonthlyCadence year={quakes.year} endYear={quakes.endYear} months={quakes.months} selected={quakes.month ?? null} truncated={quakes.truncated} onMonth={onQuakeMonth} />}
         {quakes.plots && quakes.plots.section.points.length > 0 && <QuakeDepthSection section={quakes.plots.section} selected={quakes.selected?.id ?? null} onPick={onQuakePick} />}
         {quakes.plots && <QuakeMagnitudeFrequency frequency={quakes.plots.frequency} />}
-        {onQuakePick && quakes.list && quakes.list.length > 0 && <PickList summary={`${quakes.year === null ? "Largest events" : `Events in ${quakes.year}`} (${shownOf(quakes.list.length, quakes.year === null ? quakes.total : quakes.counts?.find(entry => entry.year === quakes.year)?.count ?? 0)})`}
-          label={quakes.year === null ? "Largest earthquakes in the record" : `Earthquakes in ${quakes.year}, newest first`} items={quakes.list} selected={quakes.selected?.id ?? null} onPick={onQuakePick} />}
+        {onQuakePick && quakes.list && quakes.list.length > 0 && <PickList summary={`${quakes.year === null ? "Largest events" : quakes.month ? `Events in ${new Date(Date.UTC(2000, quakes.month - 1, 1)).toLocaleString("en-US", { month: "long", timeZone: "UTC" })} ${quakes.year}` : `Events in ${quakes.year}`} (${shownOf(quakes.list.length, quakes.year === null ? quakes.total : quakes.month ? quakes.months?.[quakes.month - 1]?.count ?? 0 : quakes.counts?.find(entry => entry.year === quakes.year)?.count ?? 0)})`}
+          label={quakes.year === null ? "Largest earthquakes in the record" : `Earthquakes in ${quakes.year}${quakes.month ? ` month ${quakes.month}` : ""}, newest first`} items={quakes.list} selected={quakes.selected?.id ?? null} onPick={onQuakePick} />}
         {quakes.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>M {quakes.selected.magnitude.toFixed(1)}{quakes.selected.magnitudeType ? ` ${quakes.selected.magnitudeType}` : ""}</b> · {quakes.selected.time.slice(0, 16).replace("T", " ")} UTC<br />
             {quakes.selected.place ?? "Kansas"}{quakes.selected.depthKilometers !== null ? ` · depth ${quakes.selected.depthKilometers} km` : ""}{quakes.selected.status ? ` · ${quakes.selected.status}` : ""}</p>
@@ -998,10 +1000,15 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
 type QuakeDockState = NonNullable<Parameters<typeof CategoryMapDock>[0]["quakes"]>;
 
 /** What the record shows now, or why it shows nothing. */
-export function quakeReading(quakes: Pick<QuakeDockState, "loading" | "failed" | "counts" | "total" | "startYear" | "endYear" | "minMagnitude" | "truncated" | "year">): string {
+export function quakeReading(quakes: Pick<QuakeDockState, "loading" | "failed" | "counts" | "total" | "startYear" | "endYear" | "minMagnitude" | "truncated" | "year" | "month" | "months">): string {
   if (quakes.loading) return "Reading the USGS earthquake catalog…";
   if (quakes.failed || !quakes.counts) return "The USGS catalog did not answer. Go back to the past 30 days, or try the record again.";
   const cut = quakes.truncated ? " · the catalog answer was cut short" : "";
+  if (quakes.year !== null && quakes.month !== null && quakes.month !== undefined) {
+    const name = new Intl.DateTimeFormat("en-US", { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(2000, quakes.month - 1, 1)));
+    const count = quakes.months?.[quakes.month - 1]?.count ?? 0;
+    return `${count.toLocaleString("en-US")} ${count === 1 ? "earthquake" : "earthquakes"} M${quakes.minMagnitude}+ in ${name} ${quakes.year} · map, list, and depth views use this month${cut}`;
+  }
   if (quakes.year !== null) {
     const count = quakes.counts.find(entry => entry.year === quakes.year)?.count ?? 0;
     return `${count.toLocaleString("en-US")} ${count === 1 ? "earthquake" : "earthquakes"} M${quakes.minMagnitude}+ in ${quakes.year} · choose All years to see the record${cut}`;
@@ -1332,6 +1339,21 @@ export function QuakeMagnitudeFrequency({ frequency }: Readonly<{ frequency: Mag
     </svg>
     <figcaption><span>{bValueReading(frequency)}</span></figcaption>
   </figure>;
+}
+
+function QuakeMonthlyCadence({ year, endYear, months, selected, truncated, onMonth }: Readonly<{ year: number; endYear: number; months: readonly MonthCadence[]; selected: number | null; truncated: boolean; onMonth?: (month: number | null) => void }>) {
+  const max = Math.max(1, ...months.map(entry => entry.count));
+  const formatter = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
+  return <section className="category-map-dock-months" aria-label={`Monthly earthquake cadence for ${year}`}>
+    <div className="category-map-dock-months-heading"><strong>{year} · MONTH BY MONTH</strong>{selected !== null && <button type="button" onClick={() => onMonth?.(null)}>Show full year</button>}</div>
+    <div className="category-map-dock-month-grid">{months.map(entry => {
+      const name = formatter.format(new Date(Date.UTC(2000, entry.month - 1, 1)));
+      return <button key={entry.month} type="button" aria-pressed={selected === entry.month} aria-label={`${name} ${year}: ${entry.count} ${entry.count === 1 ? "earthquake" : "earthquakes"} M2.5 or greater${entry.strongest === null ? "" : `; strongest catalog magnitude ${entry.strongest.toFixed(1)}`}. ${selected === entry.month ? "Show full year" : "Show this month"}`} onClick={() => onMonth?.(selected === entry.month ? null : entry.month)}>
+        <span>{name}</span><i style={{ height: `${Math.max(3, entry.count / max * 34)}px` }} aria-hidden="true" /><b>{entry.count}</b><small>{entry.strongest === null ? "—" : `M${entry.strongest.toFixed(1)}`}</small>
+      </button>;
+    })}</div>
+    <p>USGS catalog M2.5+ · count and strongest magnitude per UTC month. {year === endYear ? year === new Date().getUTCFullYear() ? "Current year is partial through retrieval. " : "Latest catalog year is partial through retrieval. " : ""}Detection improved over time; older months may miss smaller events. {truncated ? "Catalog answer was cut short; these counts are incomplete." : "Catalog and network changes limit comparisons."}</p>
+  </section>;
 }
 
 function QuakeHistogram({ counts, year, onYear }: Readonly<{ counts: readonly (YearCount & { color: string })[]; year: number | null; onYear?: (year: number | null) => void }>) {

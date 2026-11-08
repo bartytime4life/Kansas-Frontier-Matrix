@@ -52,7 +52,7 @@ import { inLandCoverRegion, LAND_COVER_SOURCE_ID, landCoverKey, landCoverPointAp
 import { isQpfHours, isRainfallHours, QPF_WINDOWS, qpfWindowButton, qpfWindowLabel, RAINFALL_REFRESH_MS, RAINFALL_SOURCE_ID, RAINFALL_WINDOWS, rainfallLegendApiPath, rainfallReading, rainfallStamp, rainfallWindowLabel, syncRainfall, validRainfallLegend, type QpfHours, type RainfallHours, type RainfallKind, type RainfallLegend, type RainfallView } from "./mrms-rainfall";
 import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasses, femaCountyCollection, femaCountyCounts, femaCountyDisasters, femaCountyList, femaCountyReading, femaKey, femaReading, femaSelect, femaYears, syncFemaRecord, validFemaRecord, type FemaFilter, type FemaRecord } from "./fema-record";
 import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
-import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
+import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, monthlyCadence, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
@@ -112,6 +112,7 @@ import AssistantWorkspace from "./assistant/workspace";
 import {sampleAssistantSelection, type AssistantFocus, type AssistantContext} from "./assistant-context";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import GeologyPointExplorer, { GEOLOGY_POINT_LAYER_IDS } from "./geology-point-explorer";
+import { GeologyLayerControls, type GeologyEarthquakeMode, type GeologyPointKind, type GeologyPointVisibility } from "./geology-layer-controls";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
 import { chooseResearchAnchor, readResearchInventory, nearbyResearch, providerResearchPoints, persistableResearch, researchIdentity, researchSourceUrl, validResearchRecord, validResearchContext, type ResearchContext, type ResearchCoverage, type ResearchRecord, type ResearchRadius } from "./research-context";
@@ -1676,14 +1677,16 @@ export default function Home() {
   const popChangePrismsRef = useRef(false);
   const popChangeHidCountiesRef = useRef(false);
   const popChangeCountiesAskedRef = useRef(false);
-  // The Kansas earthquake record since 1973 (Landform relief): shown or not, the
+  // The Kansas earthquake record since 1973 (Geology & subsurface): shown or not, the
   // served record once read, whether the read failed, one year or all, and the
   // event a visitor selected. While it is shown the 30-day catalog is hidden.
   const [quakeRecordOn, setQuakeRecordOn] = useState(false);
   const [quakeRecord, setQuakeRecord] = useState<EarthquakeRecord | null>(null);
   const [quakeRecordFailed, setQuakeRecordFailed] = useState(false);
   const [quakeRecordYear, setQuakeRecordYear] = useState<number | null>(null);
+  const [quakeRecordMonth, setQuakeRecordMonth] = useState<number | null>(null);
   const [quakeRecordSelected, setQuakeRecordSelected] = useState<EarthquakeRecordEvent | null>(null);
+  const [geologyPointVisibility, setGeologyPointVisibility] = useState<GeologyPointVisibility>({ well: true, core: true, oilgas: true, minerals: true });
   const quakeRecordEventsRef = useRef<ReadonlyMap<string, EarthquakeRecordEvent>>(new Map());
   const quakeLiveWasOnRef = useRef(false);
   // The SPC convective outlook (Storm desk): the day shown (null when off), the
@@ -4230,6 +4233,7 @@ export default function Home() {
   const showQuakeRecord = useCallback((on: boolean) => {
     setQuakeRecordOn(on);
     setQuakeRecordYear(null);
+    setQuakeRecordMonth(null);
     setQuakeRecordSelected(null);
     if (on) {
       setQuakeRecordFailed(false);
@@ -4240,6 +4244,26 @@ export default function Home() {
       setOfficialContextVisible("usgs-earthquakes", true);
     }
   }, [setOfficialContextVisible]);
+  const setGeologyEarthquakeMode = useCallback((mode: GeologyEarthquakeMode) => {
+    if (mode === "record") {
+      if (!quakeRecordOn) showQuakeRecord(true);
+      setCategoryToolsOnCurrentMap(true);
+      setCategoryDockTopic("geology");
+      setCategoryDockHidden(false);
+      setLeftOpen(false);
+      setRightOpen(false);
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+        const dock = document.querySelector<HTMLElement>(".category-map-dock");
+        dock?.querySelector<HTMLElement>('[data-category-tool="quakes"]')?.focus({ preventScroll: true });
+      }));
+      return;
+    }
+    if (quakeRecordOn) showQuakeRecord(false);
+    setOfficialContextVisible("usgs-earthquakes", mode === "recent");
+  }, [quakeRecordOn, showQuakeRecord, setOfficialContextVisible]);
+  const setGeologyPointKind = useCallback((kind: GeologyPointKind, shown: boolean) => {
+    setGeologyPointVisibility(current => ({ ...current, [kind]: shown }));
+  }, []);
   useEffect(() => {
     if (!quakeRecordOn || quakeRecord || quakeRecordFailed) return;
     const controller = new AbortController();
@@ -4260,7 +4284,7 @@ export default function Home() {
     if (!map || !styleReady) return;
     const record = quakeRecordOn ? quakeRecord : null;
     const sync = () => {
-      try { syncEarthquakeRecord(map, record, quakeRecordYear, quakeRecordSelected?.id ?? null); }
+      try { syncEarthquakeRecord(map, record, quakeRecordYear, quakeRecordSelected?.id ?? null, quakeRecordMonth); }
       catch { /* The style is reloading; its styledata event draws the record again. */ }
     };
     sync();
@@ -4269,7 +4293,7 @@ export default function Home() {
     const restore = () => { if (map.isStyleLoaded() && !map.getSource(EARTHQUAKE_RECORD_SOURCE_ID)) sync(); };
     map.on("styledata", restore);
     return () => { map.off("styledata", restore); };
-  }, [quakeRecordOn, quakeRecord, quakeRecordYear, quakeRecordSelected, styleReady]);
+  }, [quakeRecordOn, quakeRecord, quakeRecordYear, quakeRecordMonth, quakeRecordSelected, styleReady]);
   // A day's outlook is read when it is first shown, and again each time it is a quarter-hour old.
   const OUTLOOK_REFRESH_MS = 15 * 60_000;
   const chooseOutlook = useCallback((day: OutlookDay | null) => { setOutlookDay(day); setOutlookFailed(null); }, []);
@@ -11144,10 +11168,11 @@ export default function Home() {
   const reviewedData = reviewed.on ? reviewedDataForDay(reviewed.product, reviewedMapDay, buildYearCurrent) : null;
   // A pick that the shown release does not hold (another snapshot, or none) is no selection.
   const reviewedFeature = reviewedPick && reviewedData ? reviewedData.features.find(feature => String(feature.id ?? "") === reviewedPick) ?? null : null;
-  const quakePlots = useMemo(() => quakeRecord ? recordPlots(quakeRecord, quakeRecordYear) : null, [quakeRecord, quakeRecordYear]);
+  const quakePlots = useMemo(() => quakeRecord ? recordPlots(quakeRecord, quakeRecordYear, quakeRecordMonth) : null, [quakeRecord, quakeRecordYear, quakeRecordMonth]);
   const quakeCounts = useMemo(() => quakeRecord ? annualCounts(quakeRecord).map(entry => ({ ...entry, color: recordYearColor(entry.year, quakeRecord.endYear) })) : null, [quakeRecord]);
+  const quakeMonths = useMemo(() => quakeRecord && quakeRecordYear !== null ? monthlyCadence(quakeRecord, quakeRecordYear) : null, [quakeRecord, quakeRecordYear]);
   // Keyboard lists for the selections otherwise made only by clicking the map.
-  const quakeEventList = useMemo(() => quakeRecord ? recordEventList(quakeRecord, quakeRecordYear) : [], [quakeRecord, quakeRecordYear]);
+  const quakeEventList = useMemo(() => quakeRecord ? recordEventList(quakeRecord, quakeRecordYear, 40, quakeRecordMonth) : [], [quakeRecord, quakeRecordYear, quakeRecordMonth]);
   const reviewedList = useMemo(() => reviewedData && reviewedSource ? reviewedFeatureList(reviewedSource, reviewedData, reviewedSource === "newberry-county-history" ? 107 : 40) : [], [reviewedData, reviewedSource]);
   /** Moves the map to a picked feature without motion when reduced motion is asked for. */
   const easeToPicked = (center: [number, number]) => mapRef.current?.easeTo({ center, zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(600) });
@@ -11772,6 +11797,9 @@ export default function Home() {
           </div>
           <div className="layer-catalog-body" hidden={starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <div className="layer-browse-context" hidden={layerCatalogView === "selected"}><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          {officialWorkspace === "geology" && <GeologyLayerControls visibility={geologyPointVisibility} onVisibility={setGeologyPointKind}
+            earthquakeMode={quakeRecordOn ? "record" : officialVisibility["usgs-earthquakes"] ? "recent" : "off"}
+            onEarthquakeMode={setGeologyEarthquakeMode} onUnderground={toggleUnderground} recentTime={officialArchiveDays["usgs-earthquakes"]} />}
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView === "local"} aria-labelledby="official-context-title">
             <h2 id="official-context-title" className="sr-only">Map layers</h2>
             <p className="archive-map-notice"><Link href="/data-library">Browse all recovered public data →</Link></p>
@@ -12250,9 +12278,9 @@ export default function Home() {
             onPopulationChange={showPopulationChange} onPopulationChangePick={pickPopChangeCounty} onPopulationChangeClear={() => setPopChangeCounty(null)}
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,
               counts: quakeCounts, total: quakeRecord?.events.length ?? 0, startYear: quakeRecord?.startYear ?? 1973, endYear: quakeRecord?.endYear ?? new Date().getUTCFullYear(),
-              minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear,
+              minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear, month: quakeRecordMonth, months: quakeMonths,
               selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null, list: quakeEventList, plots: quakePlots } : undefined}
-            onQuakes={showQuakeRecord}
+            onQuakes={on => on ? showQuakeRecord(true) : setGeologyEarthquakeMode("recent")}
             outlook={activeCategoryMap.tools?.includes("outlook") ? { day: outlookDay, product: outlookProduct, products: outlookDay ? outlookProducts(outlookDay) : [], loading: Boolean(outlookId && !shownOutlook && outlookFailed !== outlookId),
               failed: outlookId !== null && outlookFailed === outlookId, reading: shownOutlook ? spcOutlookReading(shownOutlook) : null, url: SPC_OUTLOOK_PAGE } : undefined}
             onOutlook={chooseOutlook}
@@ -12270,7 +12298,8 @@ export default function Home() {
               easeToPicked([report.longitude, report.latitude]);
             }}
             onReportClear={() => setReportSelected(null)}
-            onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordSelected(null); }}
+            onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordMonth(null); setQuakeRecordSelected(null); }}
+            onQuakeMonth={month => { setQuakeRecordMonth(month); setQuakeRecordSelected(null); }}
             onQuakeClear={() => setQuakeRecordSelected(null)}
             onQuakePick={(id) => {
               const event = quakeRecordEventsRef.current.get(id);
@@ -12294,8 +12323,12 @@ export default function Home() {
           </div>
           <GeologyPointExplorer map={styleReady ? mapRef.current : null}
             enabled={officialWorkspace === "geology" && primaryWorkspace === "map" && !undergroundOpen && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME}
+            dockOpen={showCategoryDock}
             redacted={locationCameraRedacted || locationDerivedViewRef.current || subsurfacePrivate}
             monitoringVisible={effectiveOfficialVisibility["kgs-monitoring-wells"]}
+            visibility={geologyPointVisibility} onVisibility={setGeologyPointKind}
+            earthquakeMode={quakeRecordOn ? "record" : officialVisibility["usgs-earthquakes"] ? "recent" : "off"}
+            onEarthquakeMode={setGeologyEarthquakeMode} onUnderground={toggleUnderground} recentTime={officialArchiveDays["usgs-earthquakes"]}
             pickingEnabled={() => !measureModeRef.current && !aviationPickingRef.current && !undergroundOpenRef.current} />
           {buildYearCurrent && officialVisibility["nws-forecast-wind"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && <output className="wind-arrow-map-badge" data-state={windArrowState} aria-live="polite"><strong>OPEN-METEO · GFS WIND FLOW</strong><span>{windArrowState === "READY" && windArrowFrame ? `10 m forecast · valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} grid points` : windArrowState === "ERROR" ? "Forecast unavailable · flow hidden" : "Loading forecast wind flow…"}</span></output>}
           {runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0 && <EarthEngineRasterFallback manifests={earthEngineContext.manifests} display={earthEngineDisplay} onOpenLayers={openEarthEngineLayers} />}

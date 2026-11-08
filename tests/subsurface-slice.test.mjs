@@ -178,7 +178,11 @@ test('compact record time restores undated rows at its explicit All endpoint wit
 test('source and atlas-year transitions withhold stale rows and captures before the debounce runs',async()=>{
  for(const change of ['source','year']){
   const p=await panelHarness(),last=p.messages.at(-1);assert.equal(p.aquifer().props.records.length,3);
-  if(change==='source')button(p.aquifer().props.recordNavigation,'Well logs').props.onClick();else p.props.year=1900;
+  if(change==='source'){
+   const sourceLayers=p.aquifer().props.recordTools;
+   assert.ok(findNode(sourceLayers,n=>n.props?.['aria-label']==='Underground source layers'));
+   button(sourceLayers,'Well logs').props.onClick();
+  }else p.props.year=1900;
   p.render();assert.equal(p.messages.at(-1),last,'the source request remains debounced');assert.equal(p.aquifer().props.records.length,0);assert.equal(p.aquifer().props.recordsLoading,true);
   assert.equal(p.contexts.at(-1).records.length,0,'the first new context cannot pair changed eligibility with old rows');assert.match(p.contexts.at(-1).coverage.join(' '),/Source loading/);
   if(change==='source')same(p.contexts.at(-1).selectedSources,['kgs-core']);

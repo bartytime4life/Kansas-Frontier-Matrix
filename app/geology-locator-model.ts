@@ -13,7 +13,7 @@ export function validGeologyBounds(value: unknown): value is AreaBounds {
 
 /** Every matching locator is counted in a fixed geographic grid at each scale.
  * The grid origin never follows the viewport, so modest pans do not reshuffle marks. */
-export function mapLocator(entries: unknown, bounds: AreaBounds, maxPoints = 2500, columns = 32, rows = 20) {
+export function mapLocator(entries: unknown, bounds: AreaBounds, maxPoints = 2500, columns = 32, rows = 20, visible: Readonly<{ well: boolean; core: boolean }> = { well: true, core: true }) {
   if (!validGeologyBounds(bounds) || !Array.isArray(entries) || !Number.isSafeInteger(maxPoints) || maxPoints < 1 || maxPoints > 5000)
     throw new Error("Invalid geology point request");
   const cols = Math.max(1, Math.min(64, Math.floor(columns)));
@@ -27,7 +27,7 @@ export function mapLocator(entries: unknown, bounds: AreaBounds, maxPoints = 250
     if (!Array.isArray(entry) || entry.length !== 4 || typeof entry[0] !== "string" || typeof entry[1] !== "string"
       || !validPosition(entry[2]) || !inKansas(entry[2]) || typeof entry[3] !== "string") continue;
     const kind = entry[0].startsWith("wwc5-") ? "well" : entry[0].startsWith("core-") ? "core" : null;
-    if (!kind) continue;
+    if (!kind || !visible[kind]) continue;
     const [lon, lat] = entry[2];
     if (lon < bounds[0] || lon > bounds[2] || lat < bounds[1] || lat > bounds[3]) continue;
     total++; if (kind === "well") wells++; else cores++;

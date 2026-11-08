@@ -8,6 +8,7 @@ import type { AreaBounds, Position, SubsurfaceManifest } from "./subsurface-mode
 import { RESOURCE_SOURCES, type ResourceKind, type ResourceLocation } from "./underground-resources-model";
 import type { LocatorCluster, LocatorPoint } from "./geology-locator-model";
 import { geologyResourceCells, layoutResourceGroups, type ResourceCell, type ResourceGroup } from "./geology-resource-grid";
+import { GeologyLayerControls, type GeologyPointVisibility, type GeologyPointKind, type GeologyEarthquakeMode } from "./geology-layer-controls";
 import s from "./geology-point-explorer.module.css";
 
 type SourceResult = { rows: ResourceLocation[]; partial: boolean };
@@ -21,6 +22,7 @@ type BrowseItem =
   | { type: "point"; id: string; label: string; point: LocatorPoint | ResourceLocation };
 const emptySource = (): SourceState => ({ rows: [], groups: [], unavailable: 0, partial: false, error: false, complete: false });
 const emptyLocator = (): LocatorState => ({ total: 0, wells: 0, cores: 0, points: [], clusters: [], error: false, loading: true });
+const pendingLocator = emptyLocator();
 const KANSAS: AreaBounds = [-102.1, 36.95, -94.55, 40.05];
 const SOURCE_ID = "kfm-geology-source-points";
 export const GEOLOGY_POINT_LAYER_IDS = [`${SOURCE_ID}-circles`, `${SOURCE_ID}-counts`] as const;
@@ -37,11 +39,12 @@ export function geologyPointFrame(center: Position, span: Position): AreaBounds 
   return [Number(west.toFixed(5)), Number(south.toFixed(5)), Number((west + width).toFixed(5)), Number((south + height).toFixed(5))];
 }
 
-export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible, pickingEnabled }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean; pickingEnabled: () => boolean }) {
+export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible, pickingEnabled, visibility, onVisibility, earthquakeMode, onEarthquakeMode, onUnderground, recentTime, dockOpen }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean; pickingEnabled: () => boolean; visibility: GeologyPointVisibility; onVisibility: (kind: GeologyPointKind, shown: boolean) => void; earthquakeMode: GeologyEarthquakeMode; onEarthquakeMode: (mode: GeologyEarthquakeMode) => void; onUnderground: () => void; recentTime?: string | null; dockOpen: boolean }) {
   const [viewport, setViewport] = useState<AreaBounds | null>(null);
   const [frame, setFrame] = useState<AreaBounds | null>(null);
   const [sources, setSources] = useState<Record<ResourceKind, SourceState>>({ oilgas: emptySource(), minerals: emptySource() });
   const [locator, setLocator] = useState<LocatorState>(emptyLocator);
+  const [locatorKindsKey, setLocatorKindsKey] = useState("11");
   const [snapshot, setSnapshot] = useState<{ wells: number; cores: number; capturedAt: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [workerReady, setWorkerReady] = useState(false);
@@ -64,31 +67,34 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
   useLayoutEffect(() => { pickingRef.current = pickingEnabled; }, [pickingEnabled]);
   const requestNumber = useRef(0);
   const pointRequest = useRef(0);
+  const pointRequestKinds = useRef("11");
   const detailRequest = useRef(0);
   const viewportKey = viewport?.join(",") ?? "";
   const frameKey = frame?.join(",") ?? "";
-  const resourceRows = useMemo(() => [...sources.oilgas.rows, ...sources.minerals.rows], [sources]);
+  const kindsKey = `${Number(visibility.well)}${Number(visibility.core)}`;
+  const shownLocator = locatorKindsKey === kindsKey ? locator : pendingLocator;
+  const resourceRows = useMemo(() => [...(visibility.oilgas ? sources.oilgas.rows : []), ...(visibility.minerals ? sources.minerals.rows : [])], [sources, visibility.oilgas, visibility.minerals]);
   const resourceGroups = useMemo(() => map ? layoutResourceGroups(
-    [...sources.oilgas.groups, ...sources.minerals.groups],
+    [...(visibility.oilgas ? sources.oilgas.groups : []), ...(visibility.minerals ? sources.minerals.groups : [])],
     map.getCanvas().clientWidth,
     coordinates => map.project(coordinates),
     point => map.unproject([point.x, point.y]),
-  ) : [], [map, sources, viewportKey]);
+  ) : [], [map, sources, viewportKey, visibility.oilgas, visibility.minerals]);
   const browseItems = useMemo((): BrowseItem[] => {
     if (browseCategory === "groups") return [
-      ...locator.clusters.map((group, index): BrowseItem => ({ type: "group", id: `locator:${index}`, label: `${formatCount(group.count)} well and core locations · ${formatCount(group.wells)} ${group.wells === 1 ? "well" : "wells"}, ${formatCount(group.cores)} ${group.cores === 1 ? "core" : "cores"}`, detailLabel: group.wells && group.cores ? "WWC5 wells and cores" : group.wells ? "WWC5 wells" : "cores", coordinates: group.coordinates, count: group.count, region: "locator group", wells: group.wells, cores: group.cores })),
+      ...shownLocator.clusters.map((group, index): BrowseItem => ({ type: "group", id: `locator:${index}`, label: `${formatCount(group.count)} well and core locations · ${formatCount(group.wells)} ${group.wells === 1 ? "well" : "wells"}, ${formatCount(group.cores)} ${group.cores === 1 ? "core" : "cores"}`, detailLabel: group.wells && group.cores ? "WWC5 wells and cores" : group.wells ? "WWC5 wells" : "cores", coordinates: group.coordinates, count: group.count, region: "locator group", wells: group.wells, cores: group.cores })),
       ...resourceGroups.map((group): BrowseItem => ({ type: "group", id: `source:${group.kind}:${group.id}`, label: `${formatCount(group.count)} ${group.kind === "oilgas" ? "oil and gas" : "mine"} source records · regional count`, detailLabel: group.kind === "oilgas" ? "Oil and gas source records" : "Mine source records", coordinates: group.displayCoordinates, count: group.count, region: "whole source count region" })),
     ].sort((a, b) => a.type === "group" && b.type === "group" ? b.coordinates[1] - a.coordinates[1] || a.coordinates[0] - b.coordinates[0] || a.id.localeCompare(b.id) : 0);
-    if (browseCategory === "wells" || browseCategory === "cores") return locator.points.filter(point => point.kind === (browseCategory === "wells" ? "well" : "core"))
+    if (browseCategory === "wells" || browseCategory === "cores") return shownLocator.points.filter(point => point.kind === (browseCategory === "wells" ? "well" : "core"))
       .map(point => ({ type: "point", id: point.id, label: `${point.kind === "well" ? "WWC5 well" : "Core"} ${point.id} · ${point.county || "Kansas"}`, point }));
     return resourceRows.filter(point => point.id.startsWith(`${browseCategory}:`) && (!viewport || (point.coordinates[0] >= viewport[0] && point.coordinates[0] <= viewport[2] && point.coordinates[1] >= viewport[1] && point.coordinates[1] <= viewport[3])))
       .map(point => ({ type: "point", id: point.id, label: `${browseCategory === "oilgas" ? "Oil and gas well" : "Mine"} · ${point.name}`, point }));
-  }, [browseCategory, locator.clusters, locator.points, resourceGroups, resourceRows, viewportKey]);
+  }, [browseCategory, shownLocator.clusters, shownLocator.points, resourceGroups, resourceRows, viewportKey]);
   const browsePageCount = Math.max(1, Math.ceil(browseItems.length / 20));
   const visibleBrowsePage = Math.min(browsePage, browsePageCount - 1);
   const visibleBrowseItems = browseItems.slice(visibleBrowsePage * 20, visibleBrowsePage * 20 + 20);
-  const selectedResource = resourceRows.find(row => row.id === selected) ?? (retainedResource?.id === selected ? retainedResource : undefined);
-  const selectedLocator = locator.points.find(row => row.id === selected) ?? (retainedLocator?.id === selected ? retainedLocator : undefined);
+  const selectedResource = resourceRows.find(row => row.id === selected) ?? (retainedResource?.id === selected && visibility[retainedResource.id.startsWith("oilgas:") ? "oilgas" : "minerals"] ? retainedResource : undefined);
+  const selectedLocator = shownLocator.points.find(row => row.id === selected) ?? (retainedLocator?.id === selected && visibility[retainedLocator.kind] ? retainedLocator : undefined);
   const detailedFrame = Boolean(viewport && viewport[2] - viewport[0] <= 0.8 && viewport[3] - viewport[1] <= 0.8);
 
   const inspectGroup = useCallback((group: { label: string; count: number; region: string; coordinates: Position; wells?: number; cores?: number }, fromBrowser = false) => {
@@ -137,6 +143,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
             total: result.total ?? 0, wells: result.wells ?? 0, cores: result.cores ?? 0,
             points: result.points ?? [], clusters: result.clusters ?? [], loading: false, error: false,
           });
+          setLocatorKindsKey(pointRequestKinds.current);
         }
         if (result.kind === "geology-detail" && result.id === detailRequest.current) {
           setDetail(result.record ?? null); setDetailError(result.error ?? "");
@@ -152,10 +159,22 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
     if (!workerReady || !viewport || !map) return;
     setLocator(previous => ({ ...previous, loading: true }));
     const id = ++requestNumber.current; pointRequest.current = id;
-    workerRef.current?.postMessage({ id, kind: "geology-points", bounds: viewport, maxPoints: 2500,
+    pointRequestKinds.current = kindsKey;
+    workerRef.current?.postMessage({ id, kind: "geology-points", bounds: viewport, maxPoints: 2500, visible: { well: visibility.well, core: visibility.core },
       columns: Math.max(8, Math.min(24, Math.round(map.getCanvas().clientWidth / 110))),
       rows: Math.max(5, Math.min(16, Math.round(map.getCanvas().clientHeight / 100))) });
-  }, [workerReady, viewportKey, map]);
+  }, [workerReady, viewportKey, map, kindsKey, visibility.well, visibility.core]);
+
+  useEffect(() => {
+    const hidden = (selected.startsWith("wwc5-") && !visibility.well) || (selected.startsWith("core-") && !visibility.core)
+      || (selected.startsWith("oilgas:") && !visibility.oilgas) || (selected.startsWith("minerals:") && !visibility.minerals);
+    if (hidden) { setSelected(""); setDetail(null); setCoincident([]); setInspectedGroup(null); }
+    if ((browseCategory === "wells" && !visibility.well) || (browseCategory === "cores" && !visibility.core)
+      || (browseCategory === "oilgas" && !visibility.oilgas) || (browseCategory === "minerals" && !visibility.minerals)) setBrowseCategory("groups");
+    if (inspectedGroup) setInspectedGroup(null);
+  // Selections are invalidated by a visibility change, not by a refreshed count.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibility.well, visibility.core, visibility.oilgas, visibility.minerals]);
 
   useEffect(() => {
     if (!enabled || redacted || !viewport || !frame) return;
@@ -234,15 +253,15 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
   useEffect(() => {
     if (!map || !enabled || redacted) return;
     const features: GeoJSON.Feature[] = [
-      ...locator.points.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: row.id, kind: row.kind, tileId: row.tileId, selected: row.id === selected } })),
-      ...locator.clusters.map((row, index) => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: `cluster:${index}`, kind: "cluster", count: row.count, countLabel: compactCount(row.count), wells: row.wells, cores: row.cores, west: row.bounds[0], south: row.bounds[1], east: row.bounds[2], north: row.bounds[3] } })),
+      ...shownLocator.points.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: row.id, kind: row.kind, tileId: row.tileId, selected: row.id === selected } })),
+      ...shownLocator.clusters.map((row, index) => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: `cluster:${index}`, kind: "cluster", count: row.count, countLabel: compactCount(row.count), wells: row.wells, cores: row.cores, west: row.bounds[0], south: row.bounds[1], east: row.bounds[2], north: row.bounds[3] } })),
       ...resourceGroups.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.displayCoordinates }, properties: { id: `group:${row.kind}:${row.id}`, kind: "resource-group", sourceKind: row.kind, count: row.count, countLabel: compactCount(row.count), west: row.bounds[0], south: row.bounds[1], east: row.bounds[2], north: row.bounds[3] } })),
       ...resourceRows.map(row => ({ type: "Feature" as const, geometry: { type: "Point" as const, coordinates: row.coordinates }, properties: { id: row.id, kind: row.id.startsWith("oilgas:") ? "oilgas" : "minerals", selected: row.id === selected } })),
     ];
     const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features };
     dataRef.current = data;
     if (map.isStyleLoaded() && map.getSource(SOURCE_ID)) (map.getSource(SOURCE_ID) as GeoJSONSource).setData(data);
-  }, [map, enabled, redacted, locator, resourceGroups, resourceRows, selected]);
+  }, [map, enabled, redacted, shownLocator, resourceGroups, resourceRows, selected]);
 
   useEffect(() => {
     if (!map || !enabled || redacted) return;
@@ -259,37 +278,41 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
         return;
       }
       const ids = [...new Set(hits.map(feature => feature.properties?.id).filter((id): id is string => typeof id === "string" && !id.startsWith("cluster:") && !id.startsWith("group:")))];
-      const point = locator.points.find(row => row.id === properties.id) ?? resourceRows.find(row => row.id === properties.id);
+      const point = shownLocator.points.find(row => row.id === properties.id) ?? resourceRows.find(row => row.id === properties.id);
       if (point) inspectPoint(point, ids);
     };
     map.on("click", click);
     return () => { map.off("click", click); };
-  }, [map, enabled, redacted, locator.points, resourceRows, inspectGroup, inspectPoint]);
+  }, [map, enabled, redacted, shownLocator.points, resourceRows, inspectGroup, inspectPoint]);
 
   if (!enabled || redacted || !map) return null;
-  const sourceFailure = sources.oilgas.error || sources.minerals.error;
-  const groupCount = locator.clusters.length + sources.oilgas.groups.length + sources.minerals.groups.length;
+  const sourceFailure = (visibility.oilgas && sources.oilgas.error) || (visibility.minerals && sources.minerals.error);
+  const groupCount = shownLocator.clusters.length + (visibility.oilgas ? sources.oilgas.groups.length : 0) + (visibility.minerals ? sources.minerals.groups.length : 0);
   const sourceLabel = (source: SourceState) => source.rows.length ? `${formatCount(source.rows.length)} points` : source.groups.length ? `${source.groups.length} regions` : source.error ? "unavailable" : source.complete ? "0 in this view" : "checking…";
-  return <aside className={s.card} aria-label="Geology source points" data-mobile-expanded={mobileExpanded}>
+  return <aside className={s.card} aria-label="Geology source points" data-mobile-expanded={mobileExpanded} data-dock-open={dockOpen}>
     <div className={s.heading}><strong>GEOLOGY POINTS <span>· KANSAS 2D</span></strong><button type="button" className={s.mobileToggle} aria-expanded={mobileExpanded} aria-controls="geology-source-content" onClick={() => setMobileExpanded(value => !value)}>{mobileExpanded ? "Hide details" : "Show sources"}</button></div>
-    <p className={s.mobileSummary} role="status">{locator.loading || loading ? "Updating geology points…" : sourceFailure ? "Some source regions unavailable" : `${formatCount(locator.total)} well and core locations · ${groupCount} groups`}</p>
+    <p className={s.mobileSummary} role="status">{shownLocator.loading || loading ? "Updating geology points…" : sourceFailure ? "Some source regions unavailable" : `${formatCount(shownLocator.total)} well and core locations · ${groupCount} groups`}</p>
     <div id="geology-source-content" className={s.content}>
+    <details className={s.layerControls}><summary>Layer controls · {Object.values(visibility).filter(Boolean).length} of 4 point types on</summary><GeologyLayerControls compact visibility={visibility} onVisibility={onVisibility} earthquakeMode={earthquakeMode} onEarthquakeMode={onEarthquakeMode} onUnderground={onUnderground} recentTime={recentTime}
+      counts={{ well: visibility.well ? shownLocator.loading && shownLocator.total === 0 ? "checking…" : `${formatCount(shownLocator.wells)} in view` : "hidden",
+        core: visibility.core ? shownLocator.loading && shownLocator.total === 0 ? "checking…" : `${formatCount(shownLocator.cores)} in view` : "hidden",
+        oilgas: visibility.oilgas ? sourceLabel(sources.oilgas) : "hidden", minerals: visibility.minerals ? sourceLabel(sources.minerals) : "hidden" }} /></details>
     <div className={s.key}>
       {monitoringVisible && <span><i className={s.monitoring} /> Monitoring wells</span>}
-      <span><i className={s.well} /> WWC5 · {locator.loading && locator.total === 0 ? "checking…" : `${formatCount(locator.wells)} in view`}</span>
-      <span><i className={s.core} /> Cores · {locator.loading && locator.total === 0 ? "checking…" : `${formatCount(locator.cores)} in view`}</span>
-      <span><i className={s.oilgas} /> Oil &amp; gas · {sourceLabel(sources.oilgas)}</span>
-      <span><i className={s.mine} /> Mines · {sourceLabel(sources.minerals)}</span>
+      {visibility.well && <span><i className={s.well} /> WWC5 · {shownLocator.loading && shownLocator.total === 0 ? "checking…" : `${formatCount(shownLocator.wells)} in view`}</span>}
+      {visibility.core && <span><i className={s.core} /> Cores · {shownLocator.loading && shownLocator.total === 0 ? "checking…" : `${formatCount(shownLocator.cores)} in view`}</span>}
+      {visibility.oilgas && <span><i className={s.oilgas} /> Oil &amp; gas · {sourceLabel(sources.oilgas)}</span>}
+      {visibility.minerals && <span><i className={s.mine} /> Mines · {sourceLabel(sources.minerals)}</span>}
     </div>
-    <p className={s.legendNote}>Blue-rimmed well groups include cores; fill color shows the majority.</p>
-    <p role="status" className={s.status}>{locator.loading || loading ? "Updating this view · existing marks stay visible" : groupCount ? `${formatCount(locator.total)} well and core locations in view. Select a count group to zoom closer.` : "Individual source locations are selectable at this scale."}</p>
-    {!locator.loading && locator.error && <p>Well and core locations are unavailable; their missing markers do not mean no records exist.</p>}
+    {visibility.well && visibility.core && <p className={s.legendNote}>Blue-rimmed well groups include cores; fill color shows the majority.</p>}
+    <p role="status" className={s.status}>{!Object.values(visibility).some(Boolean) ? "All four geology point layers are hidden. Turn on a layer to show its source locations." : locatorKindsKey !== kindsKey ? "Updating enabled well and core groups…" : shownLocator.loading || loading ? "Updating this view · existing marks stay visible" : groupCount ? `${formatCount(shownLocator.total)} enabled well and core locations in view. Select a count group to zoom closer.` : "Individual source locations are selectable at this scale."}</p>
+    {!shownLocator.loading && shownLocator.error && <p>Well and core locations are unavailable; their missing markers do not mean no records exist.</p>}
     {!loading && sourceFailure && <p>Some live source regions could not be counted. Missing marks there do not establish zero records.</p>}
-    {!loading && (sources.oilgas.partial || sources.minerals.partial) && !sourceFailure && <p>Some local source records lack selectable positions or complete pages. Their source count group remains visible.</p>}
+    {!loading && ((visibility.oilgas && sources.oilgas.partial) || (visibility.minerals && sources.minerals.partial)) && !sourceFailure && <p>Some local source records lack selectable positions or complete pages. Their source count group remains visible.</p>}
     {inspectedGroup && <div className={s.groupDetail}><button type="button" onClick={() => setInspectedGroup(null)} aria-label="Close group details">×</button><h3 ref={groupHeadingRef} tabIndex={-1}>{formatCount(inspectedGroup.count)} {inspectedGroup.label}</h3>{inspectedGroup.wells !== undefined && inspectedGroup.cores !== undefined && <span>{formatCount(inspectedGroup.wells)} WWC5 {inspectedGroup.wells === 1 ? "well" : "wells"} · {formatCount(inspectedGroup.cores)} {inspectedGroup.cores === 1 ? "core" : "cores"}</span>}<span>{inspectedGroup.region}. {inspectedGroup.canZoom ? "Zoom closer for individual marks where the source can return complete pages." : "At this scale, these records remain grouped when a complete individual result is unavailable."}</span></div>}
     <details className={s.browse}><summary>Browse visible groups and records</summary>
       <label>Show <select value={browseCategory} onChange={event => { setBrowseCategory(event.target.value as BrowseCategory); setBrowsePage(0); }}><option value="groups">Count groups</option><option value="wells">WWC5 wells</option><option value="cores">Cores</option><option value="oilgas">Oil and gas points</option><option value="minerals">Mine points</option></select></label>
-      <p className={s.browseCount} aria-live="polite">{browseItems.length ? `${formatCount(browseItems.length)} available in this view · page ${visibleBrowsePage + 1} of ${browsePageCount}` : loading || locator.loading ? "Checking this view…" : "No selectable marks in this category at this scale. Choose count groups or zoom closer."}</p>
+      <p className={s.browseCount} aria-live="polite">{browseItems.length ? `${formatCount(browseItems.length)} available in this view · page ${visibleBrowsePage + 1} of ${browsePageCount}` : loading || shownLocator.loading ? "Checking this view…" : "No selectable marks in this category at this scale. Choose count groups or zoom closer."}</p>
       <ol>{visibleBrowseItems.map(item => <li key={item.id}><button type="button" onClick={() => { if (item.type === "group") inspectGroup({ label: item.detailLabel, count: item.count, region: item.region, coordinates: item.coordinates, wells: item.wells, cores: item.cores }, true); else inspectPoint(item.point, undefined, true); }}>{item.type === "group" && map.getZoom() < 18 ? "Zoom to " : "Inspect "}{item.label}</button></li>)}</ol>
       {browsePageCount > 1 && <div className={s.browsePages}><button type="button" disabled={visibleBrowsePage === 0} onClick={() => setBrowsePage(visibleBrowsePage - 1)}>Previous</button><span>Page {visibleBrowsePage + 1} of {browsePageCount}</span><button type="button" disabled={visibleBrowsePage >= browsePageCount - 1} onClick={() => setBrowsePage(visibleBrowsePage + 1)}>Next</button></div>}
     </details>
@@ -301,7 +324,7 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
     </details>
     {coincident.length > 1 && <label className={s.coincident}>Records under this point <select value={selected} onChange={event => {
       const id = event.target.value;
-      const point = locator.points.find(row => row.id === id) ?? resourceRows.find(row => row.id === id);
+      const point = shownLocator.points.find(row => row.id === id) ?? resourceRows.find(row => row.id === id);
       if (point) inspectPoint(point, coincident, true);
     }}>{coincident.map(id => <option key={id} value={id}>{id}</option>)}</select></label>}
     {selectedResource && <div className={s.detail}>

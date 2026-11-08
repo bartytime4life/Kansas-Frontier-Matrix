@@ -1,0 +1,24 @@
+.controls { border: 1px solid rgba(156,218,233,.24); border-radius: 9px; padding: 10px; background: rgba(16,39,52,.56); color: #f2efe4; }
+.heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.heading strong { font-size: 10px; letter-spacing: .14em; color: #9cdae9; }
+.heading span { color: #b7cbd1; font-size: 10px; }
+.rows { display: grid; gap: 2px; }
+.row { display: grid; grid-template-columns: 18px 11px minmax(0,1fr); align-items: center; gap: 7px; min-height: 33px; padding: 3px 4px; border-radius: 5px; cursor: pointer; }
+.row:hover { background: rgba(156,218,233,.1); }
+.row input { width: 16px; height: 16px; margin: 0; accent-color: #9cdae9; }
+.row i { width: 10px; height: 10px; border: 1px solid #10212d; border-radius: 50%; }
+.row span { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; min-width: 0; }
+.row strong { font-size: 12px; font-weight: 650; }
+.row small { color: #bbccd1; font-size: 10px; text-align: right; }
+.row[data-visible="false"] span, .row[data-visible="false"] i { opacity: .56; }
+.well { background: #75cfa7; }.core { background: #8dc3ee; }.oilgas { background: #ef9d51; }.minerals { background: #bd92e4; }
+.earthquakes { display: flex; flex-wrap: wrap; gap: 5px 12px; margin: 8px 0 0; padding: 8px 3px 0; border: 0; border-top: 1px solid rgba(172,227,239,.2); }
+.earthquakes legend { padding: 0 3px; color: #b9dce4; font-size: 11px; font-weight: 650; }
+.earthquakes label { display: inline-flex; align-items: center; gap: 4px; min-height: 30px; font-size: 11px; cursor: pointer; }
+.earthquakes input { accent-color: #9cdae9; }
+.underground { width: 100%; min-height: 35px; margin-top: 6px; padding: 5px 8px; border: 1px solid rgba(172,227,239,.4); border-radius: 6px; background: #193646; color: #ace3ef; font: inherit; font-weight: 650; text-align: left; cursor: pointer; }
+.underground span { float: right; }
+.note { margin: 7px 0 0; color: #c8d4d9; font-size: 11px; line-height: 1.4; }
+.controls :is(input,button):focus-visible { outline: 2px solid #f4d57d; outline-offset: 2px; }
+.controls[data-compact="true"] { margin-top: 9px; }
+@media (max-width: 480px) { .row span { display: grid; gap: 0; } .row small { text-align: left; } }

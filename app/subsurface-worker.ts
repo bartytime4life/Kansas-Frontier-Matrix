@@ -2,7 +2,7 @@ import { inKansas, nearbyColumns, areaColumns, displayColumns, validAreaBounds, 
 import { mapLocator, validGeologyBounds, type LocatorEntry } from "./geology-locator-model";
 
 type Query = { id: number; kind: "probe" | "search" | "area" | "prepare"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string }
-  | { id: number; kind: "geology-points"; bounds: AreaBounds; maxPoints: number; columns: number; rows: number }
+  | { id: number; kind: "geology-points"; bounds: AreaBounds; maxPoints: number; columns: number; rows: number; visible: { well: boolean; core: boolean } }
   | { id: number; kind: "geology-detail"; recordId: string; tileId: string };
 const scope = self as unknown as { onmessage: ((event: MessageEvent<Query>) => void) | null; postMessage: (message: unknown) => void };
 let controller: AbortController | null = null;
@@ -62,7 +62,7 @@ async function run(q: Query, signal: AbortSignal) {
   if (q.kind === "geology-points") {
     if (!validGeologyBounds(q.bounds) || !manifest.locator) throw new Error("Geology locator unavailable");
     if (!locator) locator = await readAsset(manifest.locator.url, signal, manifest.locator.sha256, manifest.locator.decodedSha256) as LocatorEntry[];
-    return { manifest, ...mapLocator(locator, q.bounds, q.maxPoints, q.columns, q.rows) };
+    return { manifest, ...mapLocator(locator, q.bounds, q.maxPoints, q.columns, q.rows, q.visible) };
   }
   if (q.kind === "geology-detail") {
     if (!/^(wwc5|core)-[a-zA-Z0-9._-]{1,150}$/.test(q.recordId)) throw new Error("Invalid record identity");

@@ -289,6 +289,7 @@ export default function UndergroundPanel(props: Props) {
   const missing = initialContext?.recordIds.filter(id => !loading && !columns.some(c => c.record.id === id)) ?? [];
   const changeDepth = (index: 0 | 1, value: number) => { if (!Number.isFinite(value)) return; const next: [number, number] = [...range]; next[index] = value; if (next[0] >= 0 && next[1] > next[0] && next[1] <= 12000) { setRange(next); setDepth(Math.max(next[0], Math.min(next[1], depth))); } };
   const recordTools = <div className={s.areaRecordSources}>
+    <div className={s.actions} role="group" aria-label="Underground source layers"><strong>Source layers</strong>{["kgs-wwc5","kgs-core"].map(id=><button type="button" key={id} aria-pressed={sources.includes(id)} onClick={()=>setSources(value=>value.includes(id)?value.filter(source=>source!==id):[...value,id])}>{id==="kgs-wwc5"?"Well logs":"Core inventory"}</button>)}</div>
     <label>Recorded samples <select aria-label="Recorded sample sources" value={sources.includes("kgs-core") && sources.includes("kgs-wwc5") ? "both" : sources.includes("kgs-core") ? "core" : sources.includes("kgs-wwc5") ? "well" : "none"} onChange={e => { setTimePlaying(false); setSources(e.target.value === "both" ? ["kgs-wwc5", "kgs-core"] : e.target.value === "core" ? ["kgs-core"] : e.target.value === "well" ? ["kgs-wwc5"] : []); }}>
       <option value="both">Wells + cores</option><option value="core">Cores only</option><option value="well">Wells only</option>{sources.length === 0 && <option value="none">No sources selected</option>}
     </select></label>
@@ -310,7 +311,6 @@ export default function UndergroundPanel(props: Props) {
       <p>Atlas year {year} applies first to source eligibility. Open Time in the main toolbar to change that year. All loaded records restores undated rows only when the atlas year permits them.</p>
       <label>Playback step <select value={timeStep} onChange={e=>setTimeStep(Number(e.target.value))}><option value={1500}>1.5 seconds</option><option value={3000}>3 seconds</option><option value={5000}>5 seconds</option></select></label>
       {reduceMotion&&<p>Reduced motion is on. Use the year slider or menu to step manually.</p>}
-      <div className={s.actions}>{["kgs-wwc5","kgs-core"].map(id=><button type="button" key={id} aria-pressed={sources.includes(id)} onClick={()=>setSources(value=>value.includes(id)?value.filter(source=>source!==id):[...value,id])}>{id==="kgs-wwc5"?"Well logs":"Core inventory"}</button>)}</div>
     </details>
   </section>;
   return <>{display !== "aquifer" && display !== "3d" && <div className={s.locatorBar} aria-label="Underground 2D locator">
