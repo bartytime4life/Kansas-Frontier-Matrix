@@ -48,7 +48,11 @@ test("aquifer layers load only when selected and keep their independent controls
     assert.ok(sources.has(source.sourceId));
     assert.equal(layers.get(source.layerIds[0]).layout?.visibility ?? "visible", "visible");
   }
-  assert.equal(layers.get("external-kgs-monitoring-wells-points").paint["circle-opacity"], 0.42);
+  const monitoringPaint = layers.get("external-kgs-monitoring-wells-points").paint;
+  assert.deepEqual(monitoringPaint["circle-opacity"], context.monitoringWellOpacity(0.42));
+  assert.deepEqual(monitoringPaint["circle-stroke-opacity"], context.monitoringWellOpacity(0.42));
+  assert.deepEqual(monitoringPaint["circle-radius"], ["interpolate", ["linear"], ["zoom"], 5, 1.25, 7, 1.8, 10, 5]);
+  assert.ok(context.monitoringWellOpacity(0.42)[4] < context.monitoringWellOpacity(0.42)[8], "broad marks recede while close marks remain fully visible");
   context.applyOfficialContextState(map, visibility(["kgs-water-table"]), opacity, {});
   assert.equal(layers.get("external-kgs-monitoring-wells-points").layout.visibility, "none");
   assert.deepEqual(layers.get("external-kgs-water-table-fill").filter, ["==", ["get", "hasValue"], true]);

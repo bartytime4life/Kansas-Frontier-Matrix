@@ -1,6 +1,11 @@
-.card { position: absolute; z-index: 14; top: 14px; left: 72px; width: min(330px, calc(100% - 150px)); max-height: min(56vh, 510px); overflow: auto; padding: 12px 14px; border: 1px solid rgba(132, 194, 211, .45); border-radius: 12px; background: rgba(12, 28, 39, .93); color: #f2efe4; box-shadow: 0 14px 34px rgba(0, 0, 0, .3); backdrop-filter: blur(14px); font-size: 12px; line-height: 1.4; }
+.card { position: absolute; z-index: 14; top: 14px; left: 72px; width: min(330px, calc(100% - 150px)); max-height: min(56vh, 510px); overflow: auto; padding: 12px 14px; border: 1px solid rgba(132, 194, 211, .45); border-radius: 12px; background: rgba(12, 28, 39, .94); color: #f2efe4; box-shadow: 0 14px 34px rgba(0, 0, 0, .3); backdrop-filter: blur(14px); font-size: 12px; line-height: 1.4; }
 .card > strong { color: #9cdae9; letter-spacing: .13em; font-size: 11px; }
+.heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.heading strong { color: #9cdae9; letter-spacing: .13em; font-size: 11px; }
+.heading strong span { color: #beced4; font-weight: 550; letter-spacing: .08em; }
+.mobileToggle, .mobileSummary { display: none; }
 .card p { margin: 8px 0 0; color: #d4dce0; }
+.card .status { color: #f2efe4; padding-top: 8px; border-top: 1px solid rgba(172, 227, 239, .18); }
 .card a { color: #ace3ef; }
 .key { display: flex; flex-wrap: wrap; gap: 5px 14px; margin-top: 8px; font-weight: 650; }
 .key span { display: inline-flex; align-items: center; gap: 6px; }
@@ -10,8 +15,27 @@
 .oilgas { background: #ef9d51; }
 .mine { background: #bd92e4; }
 .monitoring { background: #f4d57d; }
+.legendNote { font-size: 11px; }
 .coverage { margin-top: 8px; border-top: 1px solid rgba(172, 227, 239, .2); padding-top: 7px; }
 .coverage summary { cursor: pointer; color: #ace3ef; }
+.coverage summary:focus-visible, .browse summary:focus-visible, .browse button:focus-visible, .browse select:focus-visible, .mobileToggle:focus-visible, .detail button:focus-visible, .detail h3:focus-visible, .groupDetail button:focus-visible, .groupDetail h3:focus-visible, .coincident select:focus-visible { outline: 2px solid #f4d57d; outline-offset: 2px; }
+.browse { margin-top: 8px; border-top: 1px solid rgba(172, 227, 239, .2); padding-top: 7px; }
+.browse summary { cursor: pointer; color: #ace3ef; min-height: 28px; }
+.browse label { display: flex; align-items: center; gap: 8px; margin-top: 7px; }
+.browse select { flex: 1; min-width: 0; min-height: 36px; border: 1px solid rgba(172, 227, 239, .35); border-radius: 5px; background: #172f3e; color: #f2efe4; padding: 0 5px; }
+.browse .browseCount { font-size: 11px; color: #c9d9dd; }
+.browse ol { margin: 7px 0; padding: 0; list-style: none; max-height: 200px; overflow-y: auto; }
+.browse li + li { border-top: 1px solid rgba(172, 227, 239, .12); }
+.browse li button { display: block; width: 100%; min-height: 38px; padding: 7px 6px; border: 0; background: transparent; color: #f2efe4; text-align: left; line-height: 1.35; cursor: pointer; }
+.browse li button:hover { background: rgba(156, 218, 233, .13); }
+.browsePages { display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+.browsePages button { min-height: 34px; border: 1px solid rgba(172, 227, 239, .35); border-radius: 5px; background: #172f3e; color: #f2efe4; cursor: pointer; }
+.browsePages button:disabled { opacity: .45; cursor: default; }
+.groupDetail { position: relative; display: grid; gap: 3px; margin-top: 9px; padding: 9px 36px 9px 10px; border-left: 3px solid #9cdae9; background: rgba(156, 218, 233, .09); }
+.groupDetail b { font-size: 12px; }
+.groupDetail h3 { margin: 0; font-size: 12px; line-height: 1.35; }
+.groupDetail span { color: #d4dce0; }
+.groupDetail button { position: absolute; top: 5px; right: 5px; width: 28px; height: 28px; border: 1px solid rgba(172, 227, 239, .3); border-radius: 7px; color: #f2efe4; background: transparent; cursor: pointer; }
 .coincident { display: grid; gap: 4px; margin-top: 10px; color: #d4dce0; }
 .coincident select { width: 100%; min-height: 30px; border: 1px solid rgba(172, 227, 239, .35); border-radius: 5px; background: #172f3e; color: #f2efe4; }
 .detail { position: relative; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(172, 227, 239, .24); }
@@ -21,4 +45,11 @@
 .detail dl div { display: grid; grid-template-columns: 95px 1fr; gap: 8px; }
 .detail dt { color: #9eb3bd; }
 .detail dd { margin: 0; overflow-wrap: anywhere; }
-@container (max-width: 640px) { .card { top: 62px; left: 62px; width: min(260px, calc(100% - 72px)); max-height: 38vh; padding: 9px 10px; } }
+@media (max-width: 640px) {
+ .card { top: 62px; left: 62px; width: min(260px, calc(100% - 72px)); max-height: 38vh; padding: 7px 10px; }
+ .heading strong span { display: none; }
+ .mobileToggle { display: inline-block; min-height: 44px; padding: 0 7px; border: 1px solid rgba(172, 227, 239, .4); border-radius: 6px; background: #183443; color: #ace3ef; font: inherit; font-weight: 650; cursor: pointer; }
+ .mobileSummary { display: block; margin: 1px 0 0 !important; font-size: 11px; line-height: 1.25; }
+ .card[data-mobile-expanded="false"] .content { display: none; }
+ .card[data-mobile-expanded="true"] .content { padding-top: 6px; }
+}

@@ -823,6 +823,9 @@ export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContext
   if (feed === "nifc-fire-reports") syncFireReportDisplay(map, false, 0);
   return cleared;
 };
+/** The statewide monitoring snapshot stays present but recedes beneath source
+ * groups until a visitor zooms close enough to inspect individual locations. */
+export const monitoringWellOpacity = (opacity: number): ExpressionSpecification => ["interpolate", ["linear"], ["zoom"], 5, opacity * 0.22, 7, opacity * 0.38, 10, opacity];
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
   if (!map.getLayer(specification.id)) map.addLayer(specification, beforeId);
   // The fire renderer selects a footprint hit radius or a bounded fallback
@@ -990,8 +993,8 @@ export const applyOfficialContextState = (
     if (!map.getSource(source.sourceId)) map.addSource(source.sourceId, { type: "geojson", data: source.mapUrl!, attribution: source.attribution });
     if (source.id === "kgs-monitoring-wells") {
       ensureLayer(map, { id: source.layerIds[0], type: "circle", source: source.sourceId, paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2.5, 10, 5], "circle-color": source.color,
-        "circle-stroke-color": "#092b31", "circle-stroke-width": 1, "circle-opacity": source.defaultOpacity,
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 1.25, 7, 1.8, 10, 5], "circle-color": source.color,
+        "circle-stroke-color": "#092b31", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 5, 0, 8, 0.5, 10, 1], "circle-opacity": monitoringWellOpacity(source.defaultOpacity),
       } });
     } else {
       ensureLayer(map, { id: source.layerIds[0], type: "fill", source: source.sourceId, filter: ["==", ["get", "hasValue"], true], paint: {
@@ -1018,9 +1021,16 @@ export const applyOfficialContextState = (
           const expression: ExpressionSpecification = ["case", ["==", ["get", "missing"], true], 0, ["==", ["get", "selected"], true], safeOpacity, gaugeConditions, safeOpacity * 0.82, safeOpacity * 0.16];
           if (JSON.stringify(map.getPaintProperty(layerId, "circle-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-opacity", expression);
         } else if (source.id === "usgs-streamflow") setPaintIfChanged(map, layerId, "circle-opacity", 0);
+        else if (source.id === "kgs-monitoring-wells") {
+          const expression = monitoringWellOpacity(safeOpacity);
+          if (JSON.stringify(map.getPaintProperty(layerId, "circle-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-opacity", expression);
+        }
         else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
       }
-      if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
+      if (layer?.type === "circle" && source.id === "kgs-monitoring-wells") {
+        const expression = monitoringWellOpacity(safeOpacity);
+        if (JSON.stringify(map.getPaintProperty(layerId, "circle-stroke-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-stroke-opacity", expression);
+      } else if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
       if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
       if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", layerId.endsWith("-glow") ? safeOpacity * 0.3 : source.id === "census-counties" ? safeOpacity * 0.58 : safeOpacity);
       if (layer?.type === "raster") requestRasterOpacity(map, layerId, source.id === "noaa-lightning-density" && layerId.endsWith("-glow") ? 0 : safeOpacity);

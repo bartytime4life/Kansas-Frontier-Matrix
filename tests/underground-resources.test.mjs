@@ -24,6 +24,25 @@ test('resource source requests are Kansas bounded, capped, transformed to WGS84 
  assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&page=-1`))).status,400);
  }finally{globalThis.fetch=old;}
 });
+test('regional source counts use validated Kansas envelopes and reject source errors as unavailable',async()=>{
+ const wide=[-102.1,36.95,-99.583333,38.5];
+ assert.equal(model.validResourceCountBounds(wide),true);
+ assert.equal(model.validResourceCountBounds([-103,36.95,-99.5,38.5]),false);
+ assert.equal(model.resourceCount({count:519826}),519826);
+ assert.throws(()=>model.resourceCount({count:0,error:{message:'failed'}}));
+ assert.throws(()=>model.resourceCount({count:'519826'}));
+ const old=globalThis.fetch;let sent;
+ try{
+  globalThis.fetch=async u=>{sent=new URL(u);return Response.json({count:317});};
+  const response=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${wide}&mode=count`));
+  assert.equal(response.status,200);assert.equal((await response.json()).count,317);
+  assert.equal(sent.searchParams.get('returnCountOnly'),'true');
+  assert.equal(sent.searchParams.get('returnGeometry'),'false');
+  assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${wide}`))).status,400,'wide envelopes cannot fetch rows');
+  globalThis.fetch=async()=>Response.json({error:{message:'source unavailable'}});
+  assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${wide}&mode=count`))).status,502);
+ }finally{globalThis.fetch=old;}
+});
 test('historical mine partial flags, exact frame, duplicate and malformed positions stay distinct',()=>{
  const dated=feature();dated.properties.UPDATE_DATE='951727442000';
  const v=model.resourceLocations({type:'FeatureCollection',properties:{exceededTransferLimit:true},features:[dated,feature(),feature(3,[-99.9,38.8]),feature(4,[0,0]),{bad:true}]},'minerals',bounds);

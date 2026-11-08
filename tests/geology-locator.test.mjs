@@ -16,10 +16,19 @@ test('statewide locator accounts for every published well and core without a fir
   assert.equal(mapped.total, 321442);
   assert.equal(mapped.wells, 314844);
   assert.equal(mapped.cores, 6598);
-  assert.equal(mapped.points.length, 0);
-  assert.ok(mapped.clusters.length > 0 && mapped.clusters.length <= 48);
-  assert.equal(mapped.clusters.reduce((sum, cluster) => sum + cluster.count, 0), mapped.total);
-  assert.equal(mapped.clusters.reduce((sum, cluster) => sum + cluster.cores, 0), mapped.cores);
+  assert.ok(mapped.points.length > 0, 'sparse places remain individually selectable beside dense groups');
+  assert.ok(mapped.clusters.length > 0);
+  assert.equal(mapped.clusters.reduce((sum, cluster) => sum + cluster.count, mapped.points.length), mapped.total);
+  assert.equal(mapped.clusters.reduce((sum, cluster) => sum + cluster.cores, mapped.points.filter(point => point.kind === 'core').length), mapped.cores);
+});
+
+test('nearby pans keep source groups in fixed geographic cells with exact count conservation', () => {
+  const a = mapLocator(entries, [-100.5, 38, -99.5, 39], 40, 8, 6);
+  const b = mapLocator(entries, [-100.49, 38.01, -99.49, 39.01], 40, 8, 6);
+  assert.equal(a.clusters.reduce((sum, group) => sum + group.count, a.points.length), a.total);
+  assert.equal(b.clusters.reduce((sum, group) => sum + group.count, b.points.length), b.total);
+  const shared = a.clusters.find(group => b.clusters.some(other => other.bounds.join(',') === group.bounds.join(',')));
+  assert.ok(shared, 'at least one shared fixed cell stays anchored during a small pan');
 });
 
 test('zoomed view exposes individual source identities and rejects invalid bounds', () => {
