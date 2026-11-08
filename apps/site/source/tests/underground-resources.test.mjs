@@ -18,7 +18,7 @@ test('resource source requests are Kansas bounded, capped, transformed to WGS84 
  const old=globalThis.fetch;let sent;
  globalThis.fetch=async u=>{sent=new URL(u);return Response.json({type:'FeatureCollection',features:[feature()]});};
  try{assert.equal((await GET(new Request('https://kfm.test/api?kind=oilgas&bounds=-104,38,-90,39'))).status,400);assert.equal(sent,undefined);
- const r=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}`));const v=await r.json();assert.equal(r.status,200);assert.equal(sent.hostname,'services.kansasgis.org');assert.equal(sent.searchParams.get('outSR'),'4326');assert.equal(sent.searchParams.get('resultRecordCount'),'201');assert.equal(v.rows[0].status,'P&A');assert.match(v.source.limitation,/not current production/);assert.ok(v.retrievedAt);
+ const r=await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}`));const v=await r.json();assert.equal(r.status,200);assert.equal(sent.hostname,'services2.arcgis.com');assert.match(sent.pathname,/\/Oil_and_Gas_Wells\/FeatureServer\/0\/query$/);assert.equal(sent.searchParams.get('outFields'),'OBJECTID,KID,API_NUMBER,LEASE_NAME,WELL_NAME,STATUS,WELL_CLASS,ROTARY_TOTAL_DEPTH,COUNTY');assert.equal(sent.searchParams.get('outSR'),'4326');assert.equal(sent.searchParams.get('resultRecordCount'),'201');assert.equal(v.rows[0].status,'P&A');assert.match(v.source.limitation,/not current production/);assert.ok(v.retrievedAt);
  }finally{globalThis.fetch=old;}
 });
 test('historical mine partial flags, exact frame, duplicate and malformed positions stay distinct',()=>{
