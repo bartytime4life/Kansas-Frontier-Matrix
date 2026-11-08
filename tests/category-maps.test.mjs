@@ -256,7 +256,7 @@ test('the water map toggles the flowing-water effect from its dock and reports w
  assert.match(page,/flow=\{\{ on: sceneEffects\.waterFlow, reading: sceneReadings\.waterFlow, still: runtime\.kind === "degraded" \? "the map is degraded" : runtime\.kind !== "ready" \? "the map is still starting" : reducedMotion \? "reduced motion" : !dynamicEffects \? "ambient motion is off" : browserRenderBudget\(renderQuality\)\.efficient \? "efficient rendering" : null \}\}/,'the dock names each condition of the water animation\'s motion rule');
  assert.match(page,/onFlow=\{\(waterFlow\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, waterFlow \}\)\}/,'only the visitor turns it on or off, through the shared settings path');
  assert.match(page,/const flowing = motionAllowed && sceneEffects\.waterFlow;/);
- assert.match(page,/const motionAllowed = runtime\.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget\(renderQuality\)\.efficient;/,'same rule as the dock reading');
+ assert.match(page,/const motionAllowed = primaryWorkspace === "map" && guideOpen === false\s*&& runtime\.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget\(renderQuality\)\.efficient;/,'the visible Explorer retains every motion condition reported by the dock and pauses while another workspace or welcome covers it');
 });
 
 test('the aquifer and geology maps open Underground from their dock through the guide\'s own entry',async()=>{
