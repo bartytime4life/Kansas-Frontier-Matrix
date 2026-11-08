@@ -16,6 +16,20 @@ export function resourceQuery(kind:ResourceKind,bounds:AreaBounds,offset=0,limit
   if(!Number.isSafeInteger(offset)||offset<0||offset>1_000_000||!Number.isSafeInteger(limit)||limit<1||limit>500)throw new Error("Invalid resource page.");
   return `${RESOURCE_SOURCES[kind].url}/query?${new URLSearchParams({f:"geojson",where:"1=1",geometry:bounds.join(","),geometryType:"esriGeometryEnvelope",spatialRel:"esriSpatialRelIntersects",inSR:"4326",outSR:"4326",returnGeometry:"true",outFields:RESOURCE_SOURCES[kind].fields,resultRecordCount:String(limit+1),resultOffset:String(offset),orderByFields:"OBJECTID ASC"})}`;
 }
+/** An ArcGIS count belongs to one requested envelope; adjacent envelopes may share boundary points. */
+export function resourceCountQuery(kind:ResourceKind,bounds:AreaBounds){
+  if(!validResourceCountBounds(bounds))throw new Error("Choose a Kansas count region.");
+  return `${RESOURCE_SOURCES[kind].url}/query?${new URLSearchParams({f:"json",where:"1=1",geometry:bounds.join(","),geometryType:"esriGeometryEnvelope",spatialRel:"esriSpatialRelIntersects",inSR:"4326",returnCountOnly:"true",returnGeometry:"false"})}`;
+}
+export function validResourceCountBounds(value:unknown):value is AreaBounds{
+  return Array.isArray(value)&&value.length===4&&value.every(Number.isFinite)
+    &&value[0]>=-102.2&&value[2]<=-94.4&&value[1]>=36.8&&value[3]<=40.2
+    &&value[2]>value[0]&&value[3]>value[1]&&value[2]-value[0]<=3&&value[3]-value[1]<=1.6;
+}
+export function resourceCount(value:unknown){
+  if(!object(value)||value.error!==undefined||!Number.isSafeInteger(value.count)||Number(value.count)<0)throw new Error("Unrecognized source count.");
+  return Number(value.count);
+}
 export function resourceLocations(value:unknown,kind:ResourceKind,bounds:AreaBounds,limit=200){
   if(!validAreaBounds(bounds)||!Number.isSafeInteger(limit)||limit<1||limit>500||!object(value)||value.type!=="FeatureCollection"||!Array.isArray(value.features)||value.features.length>limit+1)throw new Error("Unrecognized source response.");
   const seen=new Set<string>();let rejected=0;
