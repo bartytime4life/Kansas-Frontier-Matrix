@@ -40,3 +40,19 @@ test('zoomed view exposes individual source identities and rejects invalid bound
   assert.equal(mapped.clusters.length, 0);
   assert.equal(validGeologyBounds([-120, 0, 0, 90]), false);
 });
+
+test('a hidden locator kind is absent from individual marks and mixed group totals', () => {
+  const wells = mapLocator(entries, kansas, 2500, 8, 6, { well: true, core: false });
+  assert.equal(wells.total, wells.wells);
+  assert.equal(wells.cores, 0);
+  assert.ok(wells.points.every(point => point.kind === 'well'));
+  assert.ok(wells.clusters.every(group => group.cores === 0 && group.wells === group.count));
+  assert.equal(wells.clusters.reduce((sum, group) => sum + group.count, wells.points.length), wells.total);
+  const cores = mapLocator(entries, kansas, 2500, 8, 6, { well: false, core: true });
+  assert.equal(cores.total, 6598);
+  assert.equal(cores.wells, 0);
+  assert.ok(cores.points.every(point => point.kind === 'core'));
+  assert.ok(cores.clusters.every(group => group.wells === 0 && group.cores === group.count));
+  const hidden = mapLocator(entries, kansas, 2500, 8, 6, { well: false, core: false });
+  assert.deepEqual([hidden.total, hidden.points.length, hidden.clusters.length], [0, 0, 0]);
+});

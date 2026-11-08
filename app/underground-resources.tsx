@@ -39,7 +39,7 @@ export default function UndergroundResources({map,bounds,revision,active,redacte
     return()=>{map.off("styledata",draw);map.off("click",click);try{if(map.getLayer(layer))map.removeLayer(layer);if(map.getSource(source))map.removeSource(source);}catch{}};
   },[map,enabled,kind,rows,selected]);
   const source=kind==="water"?null:RESOURCE_SOURCES[kind];
-  return <details className={s.resourcePanel} onToggle={e=>setOpen(e.currentTarget.open)}><summary>Water, oil, gas &amp; minerals</summary>
+  return <details className={s.resourcePanel} onToggle={e=>setOpen(e.currentTarget.open)}><summary>Resource layers · water, oil, gas &amp; minerals</summary>
     {!bounds?<p>Show an area to find its resource locations.</p>:redacted?<p>Location details are hidden in this view.</p>:<>
       <label>Resource <select aria-label="Underground resource type" value={kind} onChange={e=>{setKind(e.target.value as ResourceKind|"water");setSelected("");}}><option value="oilgas">Oil &amp; gas wells</option><option value="minerals">Mines &amp; minerals</option><option value="water">Water well logs</option></select></label>
       {kind==="water"?<><p>{water.length} loaded well logs at the selected record time. Open a record for its water-use, depth and interval descriptions.</p><div className={s.resourceList}>{water.map(r=><button type="button" key={r.id} onClick={()=>onInspect(r)}>{r.name}</button>)}</div></>:<>

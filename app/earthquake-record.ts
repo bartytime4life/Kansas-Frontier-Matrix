@@ -6,7 +6,7 @@ import type { MapKey } from "./map-keys";
 /**
  * The instrumental earthquake record for Kansas: every USGS ComCat event of
  * magnitude 2.5 or more since 1973 whose epicentre lies inside the state. It
- * is drawn on the Landform relief map beside the rolling 30-day catalog, and
+ * is drawn on the Geology & subsurface map beside the rolling 30-day catalog, and
  * coloured by year, so the 2014–2016 rise in south-central Kansas reads
  * against the decades before it.
  */
@@ -97,10 +97,25 @@ export function validEarthquakeRecord(value: unknown): value is EarthquakeRecord
  * Record events for a keyboard list: a chosen year's events newest first, or,
  * across all years, the largest first, so the list stays short over thousands.
  */
-export function recordEventList(record: Pick<EarthquakeRecord, "events">, year: number | null, limit = 40): readonly Readonly<{ id: string; label: string }>[] {
+export function recordEventList(record: Pick<EarthquakeRecord, "events">, year: number | null, limit = 40, month: number | null = null): readonly Readonly<{ id: string; label: string }>[] {
   const events = year === null ? [...record.events].sort((a, b) => b.magnitude - a.magnitude || b.time.localeCompare(a.time))
-    : record.events.filter(event => event.year === year).sort((a, b) => b.time.localeCompare(a.time));
+    : record.events.filter(event => event.year === year && (month === null || Number(event.time.slice(5, 7)) === month)).sort((a, b) => b.time.localeCompare(a.time));
   return events.slice(0, limit).map(event => ({ id: event.id, label: [event.time.slice(0, 10), `M ${event.magnitude.toFixed(1)}`, event.place].filter(Boolean).join(" · ") }));
+}
+
+export type MonthCadence = Readonly<{ month: number; count: number; strongest: number | null }>;
+/** Counts are calendar months in UTC; the strongest value is a catalog magnitude, never summed energy. */
+export function monthlyCadence(record: Pick<EarthquakeRecord, "events">, year: number): readonly MonthCadence[] {
+  const months = Array.from({ length: 12 }, (_, index) => ({ month: index + 1, count: 0, strongest: null as number | null }));
+  for (const event of record.events) {
+    if (event.year !== year) continue;
+    const month = Number(event.time.slice(5, 7));
+    if (!Number.isInteger(month) || month < 1 || month > 12) continue;
+    const entry = months[month - 1];
+    entry.count++;
+    entry.strongest = Math.max(entry.strongest ?? -Infinity, event.magnitude);
+  }
+  return months;
 }
 
 /** The record's events for a chosen year, or all of them. */
@@ -172,9 +187,11 @@ export function magnitudeFrequency(events: readonly Pick<EarthquakeRecordEvent, 
   }
   return Object.freeze({ bins: Object.freeze(bins.map(bin => Object.freeze(bin))), b, bError, a, count, completeness });
 }
-/** The section and the distribution for the record or a chosen year. */
-export const recordPlots = (record: Pick<EarthquakeRecord, "events" | "endYear">, year: number | null) =>
-  Object.freeze({ section: depthSection(record, year), frequency: magnitudeFrequency(ofYear(record.events, year)) });
+/** The section and distribution follow the same year/month selection as map marks. */
+export const recordPlots = (record: Pick<EarthquakeRecord, "events" | "endYear">, year: number | null, month: number | null = null) => {
+  const events = year === null || month === null ? record.events : record.events.filter(event => event.year === year && Number(event.time.slice(5, 7)) === month);
+  return Object.freeze({ section: depthSection({ events, endYear: record.endYear }, year), frequency: magnitudeFrequency(ofYear(events, year)) });
+};
 
 export type YearCount = Readonly<{ year: number; count: number }>;
 /** Events per calendar year (UTC), every year of the record, empty years included. */
@@ -248,7 +265,7 @@ export function earthquakeRecordKey(endYear: number): MapKey {
 const geojson = (events: readonly EarthquakeRecordEvent[]): FeatureCollection<Point> => ({
   type: "FeatureCollection",
   features: events.map((event): Feature<Point> => ({ type: "Feature", id: event.id, geometry: { type: "Point", coordinates: [event.longitude, event.latitude] },
-    properties: { id: event.id, year: event.year, magnitude: event.magnitude } })),
+    properties: { id: event.id, year: event.year, month: Number(event.time.slice(5, 7)), magnitude: event.magnitude } })),
 });
 const shown = new WeakMap<MapLibreMap, readonly EarthquakeRecordEvent[]>();
 
@@ -256,7 +273,7 @@ const shown = new WeakMap<MapLibreMap, readonly EarthquakeRecordEvent[]>();
  * Draws the record (or removes it, for null), showing one year or every year,
  * and rings the selected event. Safe to call on every style load.
  */
-export function syncEarthquakeRecord(map: MapLibreMap, record: EarthquakeRecord | null, year: number | null, selectedId: string | null): void {
+export function syncEarthquakeRecord(map: MapLibreMap, record: EarthquakeRecord | null, year: number | null, selectedId: string | null, month: number | null = null): void {
   if (!record) {
     for (const id of [EARTHQUAKE_RECORD_SELECTED_LAYER_ID, EARTHQUAKE_RECORD_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
     if (map.getSource(EARTHQUAKE_RECORD_SOURCE_ID)) map.removeSource(EARTHQUAKE_RECORD_SOURCE_ID);
@@ -274,8 +291,10 @@ export function syncEarthquakeRecord(map: MapLibreMap, record: EarthquakeRecord 
     paint: { "circle-color": recordColor(record.endYear), "circle-radius": recordRadius(), "circle-opacity": 0.88, "circle-stroke-color": RECORD_STROKE, "circle-stroke-width": 0.8, "circle-stroke-opacity": 0.9 } }, before);
   if (!map.getLayer(EARTHQUAKE_RECORD_SELECTED_LAYER_ID)) map.addLayer({ id: EARTHQUAKE_RECORD_SELECTED_LAYER_ID, type: "circle", source: EARTHQUAKE_RECORD_SOURCE_ID,
     paint: { "circle-color": "rgba(0,0,0,0)", "circle-radius": recordRadius(3.5), "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } }, before);
-  map.setFilter(EARTHQUAKE_RECORD_LAYER_ID, year === null ? null : ["==", ["get", "year"], year]);
-  map.setFilter(EARTHQUAKE_RECORD_SELECTED_LAYER_ID, ["==", ["get", "id"], selectedId ?? ""]);
+  map.setFilter(EARTHQUAKE_RECORD_LAYER_ID, year === null ? null : month === null ? ["==", ["get", "year"], year] : ["all", ["==", ["get", "year"], year], ["==", ["get", "month"], month]]);
+  map.setFilter(EARTHQUAKE_RECORD_SELECTED_LAYER_ID, month !== null && year !== null
+    ? ["all", ["==", ["get", "id"], selectedId ?? ""], ["==", ["get", "year"], year], ["==", ["get", "month"], month]]
+    : ["==", ["get", "id"], selectedId ?? ""]);
 }
 
 /** The USGS event page for a record event id (ids are checked when the record is parsed). */

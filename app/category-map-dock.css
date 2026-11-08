@@ -108,6 +108,18 @@
 .category-map-dock-histogram svg{display:block;width:100%;height:48px;border-bottom:1px solid #749bac80}
 .category-map-dock-histogram g{cursor:pointer}
 .category-map-dock-histogram figcaption{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums;color:#cfe2ea}
+.category-map-dock-months{display:grid;gap:5px;padding:8px;border:1px solid #749bac80;border-radius:8px;background:#102737}
+.category-map-dock-months-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.1em;color:#b8e2e9}
+.category-map-dock-months-heading button{border:0;background:transparent;color:#a8e7f4;text-decoration:underline;cursor:pointer}
+.category-map-dock-month-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;align-items:end}
+.category-map-dock-month-grid button{display:grid;grid-template-rows:16px 36px 17px 16px;justify-items:center;align-items:end;min-width:0;min-height:88px;padding:2px 0;border:1px solid transparent;border-radius:4px;background:transparent;color:#edf4f3;font:inherit;cursor:pointer}
+.category-map-dock-month-grid button:hover,.category-map-dock-month-grid button[aria-pressed="true"]{background:#25485b;border-color:#9cdae9}
+.category-map-dock-month-grid button:focus-visible,.category-map-dock-months-heading button:focus-visible{outline:2px solid #f4d57d;outline-offset:2px}
+.category-map-dock-month-grid span,.category-map-dock-month-grid small{font-size:10px;color:#cfe2ea}
+.category-map-dock-month-grid i{display:block;width:80%;max-width:16px;min-height:3px;background:#cf799b;border-radius:2px 2px 0 0;align-self:end}
+.category-map-dock-month-grid b{font-size:11px;font-variant-numeric:tabular-nums}
+.category-map-dock-months p{margin:0;font-size:10px;line-height:1.35;color:#c9dbe2}
+@media(max-width:760px){.category-map-dock-month-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .category-map-dock-quake-year select{min-height:32px;border:1px solid #2c4a57;border-radius:7px;background:#0d2a35;color:#e6eff2;font-size:12px;padding:2px 6px}
 .category-map-dock-quake-event{display:grid;gap:4px;border-left:2px solid #f1e6c2;padding:2px 0 2px 8px}
 .category-map-dock-quake-event p{margin:0;font-size:12px;line-height:1.4;color:#e6eff2}
