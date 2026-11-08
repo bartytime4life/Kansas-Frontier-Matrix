@@ -113,6 +113,7 @@ import {sampleAssistantSelection, type AssistantFocus, type AssistantContext} fr
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import GeologyPointExplorer, { GEOLOGY_POINT_LAYER_IDS } from "./geology-point-explorer";
 import { GeologyLayerControls, type GeologyEarthquakeMode, type GeologyPointKind, type GeologyPointVisibility } from "./geology-layer-controls";
+import type { MineOperation, MineVisibility } from "./underground-resources-model";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
 import { chooseResearchAnchor, readResearchInventory, nearbyResearch, providerResearchPoints, persistableResearch, researchIdentity, researchSourceUrl, validResearchRecord, validResearchContext, type ResearchContext, type ResearchCoverage, type ResearchRecord, type ResearchRadius } from "./research-context";
@@ -1686,6 +1687,10 @@ export default function Home() {
   const [quakeRecordYear, setQuakeRecordYear] = useState<number | null>(null);
   const [quakeRecordMonth, setQuakeRecordMonth] = useState<number | null>(null);
   const [quakeRecordSelected, setQuakeRecordSelected] = useState<EarthquakeRecordEvent | null>(null);
+  const [geologyMineVisibility, setGeologyMineVisibility] = useState<MineVisibility>({ surface: true, underground: true, solution: true, unspecified: true });
+  const setGeologyMineKind = useCallback((operation: MineOperation, shown: boolean) => {
+    setGeologyMineVisibility(current => ({ ...current, [operation]: shown }));
+  }, []);
   const [geologyPointVisibility, setGeologyPointVisibility] = useState<GeologyPointVisibility>({ well: true, core: true, oilgas: true, minerals: true });
   const quakeRecordEventsRef = useRef<ReadonlyMap<string, EarthquakeRecordEvent>>(new Map());
   const quakeLiveWasOnRef = useRef(false);
@@ -11797,7 +11802,7 @@ export default function Home() {
           </div>
           <div className="layer-catalog-body" hidden={starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <div className="layer-browse-context" hidden={layerCatalogView === "selected"}><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
-          {officialWorkspace === "geology" && <GeologyLayerControls visibility={geologyPointVisibility} onVisibility={setGeologyPointKind}
+          {officialWorkspace === "geology" && <GeologyLayerControls visibility={geologyPointVisibility} onVisibility={setGeologyPointKind} mineVisibility={geologyMineVisibility} onMineVisibility={setGeologyMineKind}
             earthquakeMode={quakeRecordOn ? "record" : officialVisibility["usgs-earthquakes"] ? "recent" : "off"}
             onEarthquakeMode={setGeologyEarthquakeMode} onUnderground={toggleUnderground} recentTime={officialArchiveDays["usgs-earthquakes"]} />}
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView === "local"} aria-labelledby="official-context-title">
@@ -12326,7 +12331,7 @@ export default function Home() {
             dockOpen={showCategoryDock}
             redacted={locationCameraRedacted || locationDerivedViewRef.current || subsurfacePrivate}
             monitoringVisible={effectiveOfficialVisibility["kgs-monitoring-wells"]}
-            visibility={geologyPointVisibility} onVisibility={setGeologyPointKind}
+            visibility={geologyPointVisibility} onVisibility={setGeologyPointKind} mineVisibility={geologyMineVisibility} onMineVisibility={setGeologyMineKind}
             earthquakeMode={quakeRecordOn ? "record" : officialVisibility["usgs-earthquakes"] ? "recent" : "off"}
             onEarthquakeMode={setGeologyEarthquakeMode} onUnderground={toggleUnderground} recentTime={officialArchiveDays["usgs-earthquakes"]}
             pickingEnabled={() => !measureModeRef.current && !aviationPickingRef.current && !undergroundOpenRef.current} />

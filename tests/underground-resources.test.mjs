@@ -91,3 +91,37 @@ test('switching area discards delayed resource response before displaying marker
  tree=h.render(h.exports.default,props);assert.doesNotMatch(JSON.stringify(tree),/STALE/);
  requests[1].resolve(Response.json({rows:[],partial:false,rejected:0,retrievedAt:'2026-10-07'}));await settle();h.dispose();
 });
+
+
+test('mine operation groups preserve the source classification including missing and future types',()=>{
+ const expected={Surface:'surface','Surface or Pit':'surface',Pit:'surface','Pit or Lake Dredge':'surface','River Dredge':'surface',Underground:'underground',Subsurface:'underground','Solution Mine':'solution','New source label':'unspecified','':'unspecified'};
+ for(const [value,kind] of Object.entries(expected))assert.equal(model.mineOperation(value),kind);
+ assert.equal(model.mineOperation(null),'unspecified');
+ const surface=feature(2);surface.properties.QUARRY_TYPE='Surface';
+ assert.equal(model.resourceLocations({type:'FeatureCollection',features:[surface]},'minerals',bounds,200,['underground']).rows.length,0);
+ const row=feature();row.properties.QUARRY_TYPE='Underground';
+ assert.equal(model.resourceLocations({type:'FeatureCollection',features:[row]},'minerals',bounds).rows[0].mineOperation,'underground');
+ assert.equal(model.mineOperationWhere([]),'1=0');
+ assert.equal(model.mineOperationWhere(),'1=1');
+ assert.match(model.mineOperationWhere(['unspecified']),/IS NULL OR QUARRY_TYPE NOT IN/);
+});
+test('mine layer filters use the identical fixed predicate for regional counts and individual pages',async()=>{
+ const old=globalThis.fetch;const sent=[];
+ try{
+  globalThis.fetch=async url=>{const u=new URL(url);sent.push(u);return u.searchParams.has('returnCountOnly')?Response.json({count:1}):Response.json({type:'FeatureCollection',features:[feature()]});};
+  for(const mineTypes of ['surface','underground','solution','unspecified','surface,underground','none']){
+   const base=`https://kfm.test/api?kind=minerals&bounds=${bounds}&mineTypes=${mineTypes}`;
+   assert.equal((await GET(new Request(base+'&mode=count'))).status,200);
+   assert.equal((await GET(new Request(base+'&page=0'))).status,200);
+   const [count,rows]=sent.slice(-2);
+   assert.equal(count.searchParams.get('where'),rows.searchParams.get('where'));
+   if(mineTypes==='underground')assert.equal(count.searchParams.get('where'),"QUARRY_TYPE IN ('Underground','Subsurface')");
+   if(mineTypes==='surface')assert.match(count.searchParams.get('where'),/'Pit or Lake Dredge','River Dredge'/);
+  }
+  const calls=sent.length;
+  for(const mineTypes of ['invalid',"surface') OR 1=1 --",'surface,surface',''])assert.equal((await GET(new Request(`https://kfm.test/api?kind=minerals&bounds=${bounds}&mineTypes=${encodeURIComponent(mineTypes)}`))).status,400);
+  assert.equal((await GET(new Request(`https://kfm.test/api?kind=oilgas&bounds=${bounds}&mineTypes=surface`))).status,400);
+  assert.equal((await GET(new Request(`https://kfm.test/api?kind=minerals&bounds=${bounds}&mineTypes=surface&mineTypes=underground`))).status,400);
+  assert.equal(sent.length,calls,'invalid filters never reach the source');
+ }finally{globalThis.fetch=old;}
+});
