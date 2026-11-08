@@ -23,10 +23,11 @@ class FakeQwen:
     def review(self,packet):
         self.calls += 1
         self.before(packet)
+        evidence=next((f for f in packet["facts"] if f["id"].startswith("gzip_text_")),packet["facts"][1])
         review = {"title":"Hydrology CSV for private local review",
             "description":"The inspected metadata identifies a CSV table with hydrology fields. The bounded text sample is a local QA fixture; it does not establish real observations or public-use rights.",
             "domain":"hydrology","recommendation":"hold" if self.hold else "accept_local","confidence":"high",
-            "evidence":[{"source":"format","quote":packet["facts"][1]["text"][:60]}],"concerns":[]}
+            "evidence":[{"source":evidence["id"],"quote":evidence["text"][:60]}],"concerns":[]}
         return review,hashlib.sha256(manage.canonical(review)).hexdigest()
 
 
@@ -105,10 +106,10 @@ class AcceptanceTests(unittest.TestCase):
     def test_uninspected_archive_is_held_even_when_model_is_high_confidence(self):
         import gzip
         self.path.unlink()
-        archive=self.root/'data/raw/hydrology.txt.gz'
+        archive=self.root/'data/raw/hydrology.csv.gz'
         archive.write_bytes(gzip.compress(b'Synthetic river water notes, QA only.'))
         intake.analyze(self.root)
-        identity=intake.item_id('raw','hydrology.txt.gz')
+        identity=intake.item_id('raw','hydrology.csv.gz')
         self.assertEqual(self.run_batch()['counts'],{'held':1})
         item=intake.get_item(self.root,identity)
         self.assertEqual(item['status'],'review')
@@ -116,6 +117,58 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(item['ai_review']['confidence'],'high')
         self.assertIn('ARCHIVE_CONTENT_NOT_INSPECTED',item['ai_review']['holds'])
         self.assertEqual(item['review_history'],[])
+
+    def test_txt_gzip_supplies_bounded_text_evidence_and_preserves_scope(self):
+        import gzip
+        self.path.unlink()
+        archive=self.root/'data/raw/hydrology.txt.gz'
+        archive.write_bytes(gzip.compress(b'Synthetic Kansas river water notes, QA only.'))
+        intake.analyze(self.root)
+        identity=intake.item_id('raw','hydrology.txt.gz')
+        packet=ai.packet_for(self.root,intake.get_item(self.root,identity))
+        self.assertIn('Synthetic Kansas river water',next(f['text'] for f in packet['facts'] if f['id']=='gzip_text_1'))
+        review,_=self.client.review(packet)
+        review['evidence']=[{'source':'format','quote':packet['facts'][1]['text'][:60]}]
+        with self.assertRaisesRegex(ValueError,'TEXT_EVIDENCE_REQUIRED'):
+            ai.validate_output(review,packet)
+        self.assertEqual(self.run_batch()['counts'],{'accepted':1})
+        result=intake.get_item(self.root,identity)['ai_review']
+        self.assertIn('bounded gzip text prefix',result['attribution']['coverage'])
+        self.assertNotIn('ARCHIVE_CONTENT_NOT_INSPECTED',result['holds'])
+
+    def test_corrupt_gzip_stays_held_even_if_some_text_was_extracted(self):
+        import gzip
+        self.path.unlink()
+        archive=self.root/'data/raw/hydrology.txt.gz'
+        archive.write_bytes(gzip.compress(b'Synthetic Kansas water notes, QA only.')[:-4])
+        intake.analyze(self.root)
+        identity=intake.item_id('raw','hydrology.txt.gz')
+        self.assertEqual(self.run_batch()['counts'],{'held':1})
+        result=intake.get_item(self.root,identity)['ai_review']
+        self.assertIn('GZIP_EXTRACTION_REQUIRES_ADMIN',result['holds'])
+
+    def test_exact_rerun_keeps_original_ids_when_new_files_sort_before_them(self):
+        self.client.hold=True
+        original=self.run_batch()
+        (self.root/'data/raw/aaa-new-water.csv').write_text('station,value\nNEW,1\n')
+        intake.analyze(self.root)
+        rerun=self.run_batch(sourceBatch=original['id'],retryHeld=True,limit=1)
+        self.assertEqual(rerun['total'],1)
+        self.assertEqual(rerun['sourceBatch'],original['id'])
+        self.assertEqual(rerun['recent'][0]['id'],self.id)
+        self.assertEqual(len(intake.get_item(self.root,self.id)['ai_review_history']),2)
+
+    def test_exact_rerun_rejects_changed_or_already_reviewed_originals(self):
+        original=self.run_batch()
+        with self.assertRaisesRegex(ValueError,'CHANGED_OR_REVIEWED'):
+            self.manager.start(self.request(sourceBatch=original['id'],retryHeld=True,limit=1))
+
+    def test_new_prompt_version_does_not_reuse_metadata_only_holds(self):
+        self.client.hold=True
+        with patch.object(ai,'PROMPT_VERSION','old-metadata-only-version'):
+            self.run_batch()
+        self.run_batch()
+        self.assertEqual(self.client.calls,2)
 
     def test_changed_original_is_not_sent_to_ai_or_accepted(self):
         self.path.write_text("changed original bytes\n")

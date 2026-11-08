@@ -35,11 +35,24 @@ The reviewer receives a bounded evidence packet: profiled format/structure,
 extent and time metadata, declared provenance, flags, and a bounded text sample
 where supported. Files sent from Studio include the verified saved review and
 available OCR. Images/PDFs without extracted content require separate review.
-Archive reviews use inspected metadata rather than extracting and executing
-members. Archives without an inspected text sample are always held, including
+For `.txt.gz` files identified as gzip, a streaming in-memory reader inspects the
+first member. It reads at most 256 KiB compressed, expands at most 48 KiB, and
+supplies at most 6,000 text characters in numbered evidence blocks. It writes no
+unpacked files and does not traverse archives or execute contents. Empty, binary,
+corrupt/truncated streams and trailing members/data retain admin holds. Other
+archives use metadata only. Archives without an inspected text sample are held, including
 when Qwen recommends acceptance with high confidence. Metadata-only descriptions
 can contain unsupported filename-based interpretations and need admin checking.
 This is not full-content or record-by-record dataset validation.
+
+The extraction record states byte/character limits and actual counts, sample
+fingerprint, stop reason, text truncation, first-member completion and CRC scope.
+CRC is validated only when the first gzip member's trailer is reached; bounded
+prefixes do not validate the unprocessed remainder. Even a fully expanded member
+may have only its first 6,000 characters supplied to Qwen. Source bytes remain
+digest-checked before and after review. The implementation uses the documented
+bounded streaming [Python zlib API](https://docs.python.org/3.14/library/zlib.html#zlib.Decompress.decompress),
+without an unbounded decompression or flush call.
 
 Qwen produces a title, description, proposed domain, private-use recommendation,
 qualitative confidence, concerns and selected evidence IDs. KFM attaches exact
@@ -78,6 +91,14 @@ batch** retains completed work and leaves remaining files unchanged. Closing
 the browser does not stop a running server-side batch. A model outage pauses
 the batch; model/prompt changes require verifying configuration and starting a
 new batch. Valid drafts survive a busy catalog writer without another model call.
+
+For a completed batch whose files are still pending, **Re-review same pending
+files** uses the original saved IDs and order, independent of current filters and
+new arrivals. It refuses the rerun if an original file changed or was already
+accepted/reviewed. The private start request records the optional `sourceBatch`
+identifier, alongside `filters: {}`, `retryHeld: true` and the original count.
+Prompt/extraction revisions invalidate older cached reviews; old results remain
+in AI history. Changing the prompt does not silently resume an old paused batch.
 
 ## Local model configuration
 

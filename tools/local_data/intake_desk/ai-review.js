@@ -12,6 +12,7 @@
     AI_WORKING_DATA_BUSY_RESUME:"Working Data is busy. The AI draft is saved; resume when analysis finishes.",
     AI_DATA_VOLUME_UNAVAILABLE:"The data volume is unavailable. Reconnect it, then resume.",
     AI_PROMPT_CHANGED_START_NEW_BATCH:"The review rules changed. Stop this saved batch and start a new one.",
+    AI_SOURCE_BATCH_FILE_CHANGED_OR_REVIEWED:"An original file changed or has already been reviewed. Use the filters to start a new pending-file selection.",
     INTERRUPTED_RESTART:"Progress was saved after an interruption. Resume to continue."
   };
   const explain = code => messages[code] || String(code || "").replaceAll("_"," ");
@@ -20,7 +21,7 @@
     const disallowed = ($("f-status").value && $("f-status").value !== "review") || $("f-lane").value === "inbox";
     $("ai-start").disabled = !configured || active() || current?.state === "paused" || !!disallowed;
     $("ai-scope").textContent = disallowed ? "Choose Any status or Needs review, and captured files, to run smart acceptance."
-      : "Only pending files matching the current filters are queued. Qwen reviews metadata, bounded text and available Studio OCR; it does not validate every record.";
+      : "Only pending files matching the current filters are queued. Qwen reviews metadata, bounded text (including .txt.gz) and available Studio OCR; it does not validate every record.";
   }
   function render(data) {
     configured = data.enabled === true; current = data.job || null;
@@ -34,6 +35,7 @@
     $("ai-pause").hidden = !active(); $("ai-pause").disabled = job?.state !== "running";
     $("ai-resume").hidden = job?.state !== "paused";
     $("ai-cancel").hidden = !job || !["running","paused","pausing"].includes(job.state);
+    $("ai-rerun").hidden = !job || !["completed","cancelled"].includes(job.state) || !!counts.accepted;
     $("ai-state").textContent = !job ? "Ready. Enter your name, choose a batch size, and start a local review."
       : `${job.state.replaceAll("_"," ")} · ${done} / ${job.total} processed · ${counts.accepted||0} accepted locally · ${counts.held||0} held · ${counts.failed||0} failed · ${counts.stale||0} changed/skipped · requested by ${job.admin}${job.cached ? ` · ${job.cached} unchanged AI reviews skipped` : ""}${job.error ? `. ${explain(job.error)}` : ""}${["pausing","cancelling"].includes(job.state) ? ". Finishing the current file first." : ""}`;
     const results = $("ai-results"); results.replaceChildren();
@@ -79,6 +81,16 @@
   for (const action of ["pause","resume","cancel"]) $("ai-"+action).addEventListener("click",async()=>{
     try { ++serial; render(await api("/api/ai-review/"+action,{})); poll(); }
     catch(error) { $("ai-state").textContent = explain(error.message); }
+  });
+  $("ai-rerun").addEventListener("click",async()=>{
+    if (!$("ai-admin").reportValidity() || !current) return;
+    const sourceBatch=current.id, admin=$("ai-admin").value.trim();
+    try {
+      ++serial; $("ai-rerun").disabled=true;
+      render(await api("/api/ai-review/start",{admin,filters:{},limit:current.total,retryHeld:true,sourceBatch}));
+      poll();
+    } catch(error) { $("ai-state").textContent=explain(error.message); }
+    finally { $("ai-rerun").disabled=false; }
   });
   poll();
 })();

@@ -17,8 +17,9 @@ from tools.local_data import intake, intake_review, intake_route
 from tools.local_data.file_io import check_directory, hash_regular, open_regular, read_regular, write_new
 from tools.local_data.manage import canonical, utc_now
 from tools.local_data.acquisition import validate_root
+from tools.local_data import text_sample
 
-PROMPT_VERSION = "kfm-local-acceptance-v1"
+PROMPT_VERSION = "kfm-local-acceptance-v2-gzip"
 ACTIVE = {"running", "pausing", "cancelling"}
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS ai_acceptance_jobs (
@@ -41,7 +42,7 @@ CREATE INDEX IF NOT EXISTS ai_acceptance_result_item ON ai_acceptance_results(it
 """
 OUTPUT_SCHEMA = {"type":"object", "properties":{
     "title":{"type":"string"}, "description":{"type":"string"},
-    "domain":{"type":"string","enum":[*intake_review.DOMAINS,"unassigned"]},
+    "domain":{"type":"string","enum":["unassigned",*intake_review.DOMAINS]},
     "recommendation":{"type":"string","enum":["accept_local","hold"]},
     "confidence":{"type":"string","enum":["high","medium","low"]},
     "evidence":{"type":"array","items":{"type":"object","properties":{
@@ -67,6 +68,20 @@ calibrated probability. In evidence select 1-3 source ID strings from the suppli
 facts. The server attaches exact text from those facts; do not invent quotations.
 Use an allowed domain or
 unassigned. Mention limitations without claiming a public release or rights approval.
+Use unassigned when the inspected content does not support an allowed domain.
+When gzip_text_* facts exist, describe what that text excerpt actually says and
+select at least one gzip_text_* evidence ID. It may be noisy historical OCR or
+an error page, not the document suggested by the filename. Treat path names and
+path year hints as unverified hints. Never invent dates, authors, page counts,
+subjects, or use restrictions. Separate historical text claims from established
+facts. Do not call a bounded inspected gzip excerpt entirely uninspected. Explain
+that text beyond the saved sample and any unvalidated gzip trailer remain unchecked.
+Make the title about the content, without private-use boilerplate. Spend most of
+the description on the excerpt's actual subject and document type, with at most
+one concise limitations sentence. Put unknown rights/provenance in concerns;
+unknown rights do not mean a declared restriction. Include names and dates only
+when present in the supplied text; flag conflicting/noisy OCR instead of guessing.
+Do not turn what a historical excerpt says into an independently verified fact.
 Do not infer current dates from your training; the packet supplies review_time.
 Keep title under 140 characters, description under 1500, and concerns to 5 brief items.
 """
@@ -124,7 +139,7 @@ class Qwen:
             raw = response.get("message", {}).get("content", "")
             try:
                 parsed = json.loads(raw)
-                if not isinstance(parsed.get("evidence"),list) or any(not isinstance(v,str) or v not in facts for v in parsed["evidence"]):
+                if not isinstance(parsed,dict) or not isinstance(parsed.get("evidence"),list) or any(not isinstance(v,str) or v not in facts for v in parsed["evidence"]):
                     raise ValueError("AI_EVIDENCE_SOURCE_INVALID")
                 parsed["evidence"] = [{"source":v,"quote":facts[v][:500]} for v in parsed["evidence"]]
                 parsed = validate_output(parsed, packet)
@@ -156,6 +171,8 @@ def validate_output(value, packet):
                 or not 2 <= len(evidence["quote"]) <= 500
                 or evidence["quote"] not in facts[evidence["source"]]):
             raise ValueError("AI_EVIDENCE_QUOTE_INVALID")
+    if any(k.startswith("gzip_text_") for k in facts) and not any(e["source"].startswith("gzip_text_") for e in value["evidence"]):
+        raise ValueError("AI_TEXT_EVIDENCE_REQUIRED")
     if (not isinstance(value["concerns"], list) or len(value["concerns"]) > 5
             or any(not isinstance(v,str) or not 1 <= len(v) <= 300 for v in value["concerns"])):
         raise ValueError("AI_CONCERNS_INVALID")
@@ -183,7 +200,7 @@ def packet_for(root, item):
     fact("spatial",profile.get("spatial",{}),1500)
     fact("temporal",profile.get("temporal",{}),1000)
     fact("capture",item.get("declared") or {"rights":"unknown","provenance":"not declared"},2000)
-    fact("flags",{"review_flags":item["decision"].get("review_flags",[]),"issues":profile.get("issues",[])})
+    fact("flags",{"review_flags":item["decision"].get("review_flags",[]),"native_profiler_issues":profile.get("issues",[])})
     coverage = "metadata only; no full-content or record-by-record validation"
     uri = (item.get("declared") or {}).get("source_uri", "")
     match = re.fullmatch(r"file-ref:intake-studio/([a-f0-9]{32})/([a-f0-9]{64})",uri)
@@ -195,6 +212,14 @@ def packet_for(root, item):
         fact("studio_review",snapshot["review"],3000)
         fact("ocr",snapshot["analysis"].get("text", ""),6000)
         coverage = "metadata plus saved, hash-bound Studio review and bounded derived OCR; OCR may be incomplete"
+    elif profile["format"]["kind"] == "gzip" and path.name.lower().endswith(".txt.gz"):
+        sample = text_sample.gzip_text(path)
+        fact("gzip_inspection",sample["inspection"])
+        for offset in range(0,len(sample["text"]),1000):
+            fact("gzip_text_"+str(offset//1000+1),sample["text"][offset:offset+1000],1000)
+        coverage = ("metadata plus a bounded gzip text prefix: up to 256 KiB compressed, "
+                    "48 KiB expanded, 6000 text characters; not every page or record; "
+                    "see gzip_inspection for truncation and CRC scope")
     elif profile["format"]["kind"] in {"csv","geojson","json","text"}:
         fd = open_regular(path)
         with os.fdopen(fd,"rb") as stream:
@@ -202,7 +227,7 @@ def packet_for(root, item):
         fact("sample",sample[:12000].decode("utf-8","replace"),6000)
         coverage = "metadata plus the first bounded text bytes; not every record"
     return {"review_time":utc_now(),"facts":facts,"coverage":coverage,
-            "allowed_domains":list(intake_review.DOMAINS),"purpose":"private local-use acceptance only"}
+            "allowed_domains":["unassigned",*intake_review.DOMAINS],"purpose":"private local-use acceptance only"}
 
 
 def gates(item, review, packet):
@@ -215,8 +240,11 @@ def gates(item, review, packet):
         reasons.append("CONTENT_SENSITIVITY_REQUIRES_ADMIN")
     if item["profile"]["format"]["family"] == "unknown": reasons.append("FORMAT_UNRECOGNIZED")
     if (item["profile"]["format"]["family"] == "archive"
-            and not any(f["id"] in {"sample","ocr"} and f["text"].strip() for f in packet["facts"])):
+            and not any((f["id"] in {"sample","ocr"} or f["id"].startswith("gzip_text_")) and f["text"].strip() for f in packet["facts"])):
         reasons.append("ARCHIVE_CONTENT_NOT_INSPECTED")
+    for fact in packet["facts"]:
+        if fact["id"] == "gzip_inspection" and json.loads(fact["text"])["issues"]:
+            reasons.append("GZIP_EXTRACTION_REQUIRES_ADMIN")
     if (declared.get("rights") or {}).get("redistribution") in {"restricted","denied"}: reasons.append("CAPTURE_RIGHTS_RESTRICTED")
     if declared.get("sensitivity") in {"restricted","controlled"}: reasons.append("CAPTURE_SENSITIVITY_RESTRICTED")
     if item["size_bytes"] > intake.DEFAULT_HASH_LIMIT: reasons.append("FILE_REQUIRES_SEPARATE_LARGE_FILE_REVIEW")
@@ -275,6 +303,7 @@ class Manager:
             job["filters"] = selection.get("selection",selection)
             job["promptSha256"] = selection.get("prompt_sha256")
             job["limit"] = selection.get("limit")
+            job["sourceBatch"] = selection.get("source_batch")
             job["counts"] = dict(db.execute("SELECT state,count(*) FROM ai_acceptance_tasks WHERE job=? GROUP BY state",(job["id"],)))
             recent = db.execute("SELECT item,state,result,error FROM ai_acceptance_tasks WHERE job=? AND state NOT IN ('pending','working') ORDER BY seq DESC LIMIT 20",(job["id"],)).fetchall()
             job["recent"] = [{"id":r[0],"state":r[1],"review":json.loads(r[2]) if r[2] else None,"error":r[3]} for r in recent]
@@ -296,11 +325,16 @@ class Manager:
         return {"enabled":True,"model":self.client.model,"modelDigest":self.client.digest,"job":job}
 
     def start(self,value):
-        if (not isinstance(value,dict) or set(value) != {"admin","filters","limit","retryHeld"}
+        if (not isinstance(value,dict) or set(value)-{"admin","filters","limit","retryHeld","sourceBatch"}
+                or not {"admin","filters","limit","retryHeld"} <= set(value)
                 or not isinstance(value["admin"],str) or not 1 <= len(value["admin"].strip()) <= 80
                 or any(ord(c)<32 for c in value["admin"]) or type(value["limit"]) is not int
                 or not 0 <= value["limit"] <= intake.MAX_CONFIGURED_FILES or type(value["retryHeld"]) is not bool):
             raise ValueError("AI_BATCH_REQUEST_INVALID")
+        source_batch = value.get("sourceBatch")
+        if source_batch is not None and (not isinstance(source_batch,str) or not re.fullmatch(r"qwen-[a-f0-9]{32}",source_batch)
+                or value["filters"] or not value["retryHeld"]):
+            raise ValueError("AI_SOURCE_BATCH_REQUEST_INVALID")
         filters = value["filters"]
         if not isinstance(filters,dict) or set(filters)-{"domain","family","lane","text","bbox"}:
             raise ValueError("AI_BATCH_FILTER_INVALID")
@@ -322,10 +356,20 @@ class Manager:
                 job = "qwen-"+uuid.uuid4().hex
                 tasks, cached, offset = [],0,0
                 with intake.writer_lock(self.root):
+                    original = None
+                    if source_batch:
+                        with self.db() as db:
+                            original = db.execute("SELECT item,sha FROM ai_acceptance_tasks WHERE job=? ORDER BY seq",(source_batch,)).fetchall()
+                        if not original or value["limit"] not in (0,len(original)):
+                            raise ValueError("AI_SOURCE_BATCH_NOT_FOUND_OR_LIMIT_MISMATCH")
+                        original = dict(original)
                     while True:
-                        listing = intake.list_items(self.root,status="review",limit=500,offset=offset,**filters)
+                        listing = ({"items":[{"id":i} for i in original],"total":len(original)} if original is not None
+                                   else intake.list_items(self.root,status="review",limit=500,offset=offset,**filters))
                         for summary in listing["items"]:
                             item = intake.get_item(self.root,summary["id"])
+                            if original is not None and (item["status"] != "review" or item.get("sha256") != original[item["id"]] or not item["present"]):
+                                raise ValueError("AI_SOURCE_BATCH_FILE_CHANGED_OR_REVIEWED")
                             context = intake_review.context(item)
                             key = hashlib.sha256(canonical([item["id"],context,self.client.digest,PROMPT_VERSION,hashlib.sha256(SYSTEM.encode()).hexdigest()])).hexdigest()
                             with self.db() as db:
@@ -344,6 +388,7 @@ class Manager:
                 now = utc_now()
                 with self.db() as db:
                     selection = {"selection":filters,"prompt_sha256":hashlib.sha256(SYSTEM.encode()).hexdigest(),"limit":value["limit"]}
+                    if source_batch: selection["source_batch"] = source_batch
                     db.execute("INSERT INTO ai_acceptance_jobs VALUES (?,?,?,?,?,?,?,?,?,?,?)",(job,"running",value["admin"].strip(),self.client.model,self.client.digest,json.dumps(selection),now,now,len(tasks),cached,None))
                     db.executemany("INSERT INTO ai_acceptance_tasks(job,seq,item,sha,context,cache_key,state) VALUES (?,?,?,?,?,?,?)",tasks)
                 self.launch(job,fd)
@@ -453,6 +498,9 @@ class Manager:
             "input_path":f"data/work/intake/ai-context/{hashlib.sha256(canonical(packet)).hexdigest()}.json",
             "response_sha256":response_hash,"coverage":packet["coverage"],"review":review,
             "generated_at":utc_now(),"options":{"temperature":0,"num_ctx":8192,"num_predict":800,"think":False}}
+        inspection = next((json.loads(f["text"]) for f in packet["facts"] if f["id"]=="gzip_inspection"),None)
+        if inspection is not None:
+            attribution["text_extraction"] = inspection
         if getattr(self.client,"last_response",None) is not None:
             attribution["response_path"] = f"data/work/intake/ai-responses/{response_hash}.json"
         result = {**review,"ai_reviewed":True,"attribution":attribution,"reviewed_at":utc_now(),

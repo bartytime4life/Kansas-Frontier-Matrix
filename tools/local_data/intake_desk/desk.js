@@ -314,6 +314,10 @@ async function openItem(id) {
       el("p",{class:"fine",text:`AI reviewer: ${a.model} · requested by ${a.requested_by} · ${ai.outcome==='accepted'?'Accepted for private local use':ai.outcome==='pending'?'AI draft saved; not accepted':'Held for admin review'} · ${ai.reviewed_at}`}),
       el("p",{class:"fine",text:`Review scope: ${a.coverage}. Confidence: ${ai.confidence} (model self-assessment).`}));
     if (ai.concerns?.length) section.append(el("ul",{},...ai.concerns.map(v=>el("li",{text:v}))));
+    if (a.text_extraction) {
+      const x=a.text_extraction;
+      section.append(el("p",{class:"fine",text:`Gzip text inspected: ${x.text_characters} characters from ${x.expanded_bytes} expanded bytes; ${x.compressed_bytes_read} compressed bytes read. ${x.text_truncated?'Bounded excerpt; more text remains unchecked.':'Complete text of the first member supplied.'} First-member CRC ${x.crc_validated?'validated':'not validated'}.`}));
+    }
     section.append(el("details",{},el("summary",{text:"Evidence and AI attribution"}),
       el("ul",{},...ai.evidence.map(v=>el("li",{text:`${v.source}: ${v.quote}`}))),
       kv([["Model digest",a.model_digest],["Requested by",a.requested_by],["Batch",a.batch_id],
