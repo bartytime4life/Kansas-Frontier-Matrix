@@ -23,6 +23,14 @@ class FakeQwen:
     def review(self,packet):
         self.calls += 1
         self.before(packet)
+        self.last_rendering=None
+        if packet.get('description_policy')==ai.grounded_review.VERSION:
+            selection={'title_ids':[],'passage_ids':[next(iter(ai.grounded_review.choices(packet)[1]))],
+                'domain':'hydrology','recommendation':'hold' if self.hold else 'accept_local',
+                'confidence':'high','concern_codes':[]}
+            inspection=next(json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection')
+            review,self.last_rendering=ai.grounded_review.render(selection,packet,inspection)
+            return review,hashlib.sha256(manage.canonical(review)).hexdigest()
         evidence=next((f for f in packet["facts"] if f["id"].startswith("gzip_text_")),packet["facts"][1])
         review = {"title":"Hydrology CSV for private local review",
             "description":"The inspected metadata identifies a CSV table with hydrology fields. The bounded text sample is a local QA fixture; it does not establish real observations or public-use rights.",
@@ -129,7 +137,7 @@ class AcceptanceTests(unittest.TestCase):
         self.assertIn('Synthetic Kansas river water',next(f['text'] for f in packet['facts'] if f['id']=='gzip_text_1'))
         review,_=self.client.review(packet)
         review['evidence']=[{'source':'format','quote':packet['facts'][1]['text'][:60]}]
-        with self.assertRaisesRegex(ValueError,'TEXT_EVIDENCE_REQUIRED'):
+        with self.assertRaisesRegex(ValueError,'TEXT_EVIDENCE_REQUIRED|SOURCE_PASSAGES_REQUIRED'):
             ai.validate_output(review,packet)
         self.assertEqual(self.run_batch()['counts'],{'accepted':1})
         result=intake.get_item(self.root,identity)['ai_review']
@@ -162,6 +170,26 @@ class AcceptanceTests(unittest.TestCase):
         original=self.run_batch()
         with self.assertRaisesRegex(ValueError,'CHANGED_OR_REVIEWED'):
             self.manager.start(self.request(sourceBatch=original['id'],retryHeld=True,limit=1))
+
+    def test_held_subset_rerun_excludes_prior_acceptances_and_preserves_order(self):
+        other=self.root/'data/raw/zz-water.csv'
+        other.write_text('station,value\nQA,3\n');intake.analyze(self.root)
+        old=self.client.review
+        def mixed(packet):
+            self.client.hold=any(f['id']=='path' and f['text']=='zz-water.csv' for f in packet['facts'])
+            return old(packet)
+        self.client.review=mixed
+        original=self.run_batch();self.assertEqual(original['counts'],{'accepted':1,'held':1})
+        rerun=self.run_batch(sourceBatch=original['id'],sourceState='held',retryHeld=True,limit=1)
+        self.assertEqual(rerun['sourceState'],'held')
+        self.assertEqual(rerun['total'],1)
+        self.assertEqual(rerun['recent'][0]['id'],intake.item_id('raw','zz-water.csv'))
+        self.assertEqual(len(intake.get_item(self.root,self.id)['review_history']),1)
+
+    def test_source_state_requires_a_bound_source_batch(self):
+        for patches in ({'sourceState':'held'},{'sourceBatch':'qwen-'+'a'*32,'sourceState':'accepted','retryHeld':True}):
+            with self.assertRaisesRegex(ValueError,'SOURCE_BATCH_REQUEST_INVALID'):
+                self.manager.start(self.request(**patches))
 
     def test_new_prompt_version_does_not_reuse_metadata_only_holds(self):
         self.client.hold=True

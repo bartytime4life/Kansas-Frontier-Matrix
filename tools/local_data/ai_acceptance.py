@@ -17,9 +17,9 @@ from tools.local_data import intake, intake_review, intake_route
 from tools.local_data.file_io import check_directory, hash_regular, open_regular, read_regular, write_new
 from tools.local_data.manage import canonical, utc_now
 from tools.local_data.acquisition import validate_root
-from tools.local_data import text_sample
+from tools.local_data import grounded_review, text_sample
 
-PROMPT_VERSION = "kfm-local-acceptance-v2-gzip"
+PROMPT_VERSION = "kfm-local-acceptance-v3-source-passages"
 ACTIVE = {"running", "pausing", "cancelling"}
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS ai_acceptance_jobs (
@@ -91,6 +91,11 @@ class ProviderError(RuntimeError):
     pass
 
 
+def prompt_sha():
+    return hashlib.sha256(canonical({'standard':SYSTEM,'gzip':grounded_review.SYSTEM,
+        'rendering':grounded_review.VERSION,'extraction':text_sample.VERSION})).hexdigest()
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         raise ProviderError("LOCAL_QWEN_REDIRECT_REFUSED")
@@ -124,12 +129,18 @@ class Qwen:
 
     def review(self, packet):
         self.identity()
+        self.last_rendering = None
+        inspection=next((json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection'),None)
+        extractive=packet.get('description_policy')==grounded_review.VERSION
         facts = {f["id"]:f["text"] for f in packet["facts"] if len(f["text"].strip())>=2}
         wire_schema = json.loads(json.dumps(OUTPUT_SCHEMA))
         wire_schema["properties"]["evidence"] = {"type":"array","minItems":1,"maxItems":3,
             "items":{"type":"string","enum":list(facts)}}
-        messages = [{"role":"system","content":SYSTEM},
-                    {"role":"user","content":json.dumps(packet,ensure_ascii=False)}]
+        if extractive: wire_schema=grounded_review.schema(packet)
+        system=grounded_review.SYSTEM if extractive else SYSTEM
+        self.last_prompt_sha256=hashlib.sha256(system.encode()).hexdigest()
+        messages = [{"role":"system","content":system},
+                    {"role":"user","content":json.dumps(grounded_review.model_packet(packet) if extractive else packet,ensure_ascii=False)}]
         for attempt in range(2):
             response = self.call("/api/chat", {"model":self.model,"messages":messages,
                 "format":wire_schema,"think":False,"stream":False,"keep_alive":"24h",
@@ -139,17 +150,21 @@ class Qwen:
             raw = response.get("message", {}).get("content", "")
             try:
                 parsed = json.loads(raw)
-                if not isinstance(parsed,dict) or not isinstance(parsed.get("evidence"),list) or any(not isinstance(v,str) or v not in facts for v in parsed["evidence"]):
-                    raise ValueError("AI_EVIDENCE_SOURCE_INVALID")
-                parsed["evidence"] = [{"source":v,"quote":facts[v][:500]} for v in parsed["evidence"]]
+                if extractive:
+                    parsed,rendering=grounded_review.render(parsed,packet,inspection)
+                else:
+                    if not isinstance(parsed,dict) or not isinstance(parsed.get("evidence"),list) or any(not isinstance(v,str) or v not in facts for v in parsed["evidence"]):
+                        raise ValueError("AI_EVIDENCE_SOURCE_INVALID")
+                    parsed["evidence"] = [{"source":v,"quote":facts[v][:500]} for v in parsed["evidence"]]
                 parsed = validate_output(parsed, packet)
+                if extractive: self.last_rendering=rendering
                 self.last_response = raw
                 return parsed, hashlib.sha256(raw.encode()).hexdigest()
             except (ValueError, TypeError, KeyError):
                 if attempt:
                     raise ValueError("AI_OUTPUT_INVALID_OR_UNGROUNDED") from None
                 messages += [{"role":"assistant","content":raw[:10000]}, {"role":"user","content":
-                    "Your JSON did not validate. Use the exact schema and select evidence source IDs from the facts. Correct the review; do not add new facts."}]
+                    "Your JSON did not validate. Use the exact schema and only allowed source IDs. Correct the selections; do not add text or facts."}]
 
 
 def validate_output(value, packet):
@@ -163,6 +178,9 @@ def validate_output(value, packet):
             or value["confidence"] not in {"high","medium","low"}):
         raise ValueError("AI_RECOMMENDATION_INVALID")
     facts = {f["id"]:f["text"] for f in packet["facts"]}
+    extractive=packet.get('description_policy')==grounded_review.VERSION
+    if extractive:
+        facts.update(grounded_review.choices(packet)[1])
     if not isinstance(value["evidence"], list) or not 1 <= len(value["evidence"]) <= 3:
         raise ValueError("AI_EVIDENCE_REQUIRED")
     for evidence in value["evidence"]:
@@ -171,11 +189,14 @@ def validate_output(value, packet):
                 or not 2 <= len(evidence["quote"]) <= 500
                 or evidence["quote"] not in facts[evidence["source"]]):
             raise ValueError("AI_EVIDENCE_QUOTE_INVALID")
-    if any(k.startswith("gzip_text_") for k in facts) and not any(e["source"].startswith("gzip_text_") for e in value["evidence"]):
+    if not extractive and any(k.startswith("gzip_text_") for k in facts) and not any(e["source"].startswith("gzip_text_") for e in value["evidence"]):
         raise ValueError("AI_TEXT_EVIDENCE_REQUIRED")
     if (not isinstance(value["concerns"], list) or len(value["concerns"]) > 5
             or any(not isinstance(v,str) or not 1 <= len(v) <= 300 for v in value["concerns"])):
         raise ValueError("AI_CONCERNS_INVALID")
+    if extractive:
+        inspection=next(json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection')
+        grounded_review.validate_rendered(value,packet,inspection)
     return value
 
 
@@ -226,8 +247,10 @@ def packet_for(root, item):
             sample = stream.read(12001)
         fact("sample",sample[:12000].decode("utf-8","replace"),6000)
         coverage = "metadata plus the first bounded text bytes; not every record"
-    return {"review_time":utc_now(),"facts":facts,"coverage":coverage,
+    packet={"review_time":utc_now(),"facts":facts,"coverage":coverage,
             "allowed_domains":["unassigned",*intake_review.DOMAINS],"purpose":"private local-use acceptance only"}
+    if any(f['id']=='gzip_inspection' for f in facts): packet['description_policy']=grounded_review.VERSION
+    return packet
 
 
 def gates(item, review, packet):
@@ -304,6 +327,7 @@ class Manager:
             job["promptSha256"] = selection.get("prompt_sha256")
             job["limit"] = selection.get("limit")
             job["sourceBatch"] = selection.get("source_batch")
+            job["sourceState"] = selection.get("source_state")
             job["counts"] = dict(db.execute("SELECT state,count(*) FROM ai_acceptance_tasks WHERE job=? GROUP BY state",(job["id"],)))
             recent = db.execute("SELECT item,state,result,error FROM ai_acceptance_tasks WHERE job=? AND state NOT IN ('pending','working') ORDER BY seq DESC LIMIT 20",(job["id"],)).fetchall()
             job["recent"] = [{"id":r[0],"state":r[1],"review":json.loads(r[2]) if r[2] else None,"error":r[3]} for r in recent]
@@ -325,13 +349,16 @@ class Manager:
         return {"enabled":True,"model":self.client.model,"modelDigest":self.client.digest,"job":job}
 
     def start(self,value):
-        if (not isinstance(value,dict) or set(value)-{"admin","filters","limit","retryHeld","sourceBatch"}
+        if (not isinstance(value,dict) or set(value)-{"admin","filters","limit","retryHeld","sourceBatch","sourceState"}
                 or not {"admin","filters","limit","retryHeld"} <= set(value)
                 or not isinstance(value["admin"],str) or not 1 <= len(value["admin"].strip()) <= 80
                 or any(ord(c)<32 for c in value["admin"]) or type(value["limit"]) is not int
                 or not 0 <= value["limit"] <= intake.MAX_CONFIGURED_FILES or type(value["retryHeld"]) is not bool):
             raise ValueError("AI_BATCH_REQUEST_INVALID")
         source_batch = value.get("sourceBatch")
+        source_state = value.get("sourceState")
+        if source_state is not None and (source_state!='held' or source_batch is None):
+            raise ValueError("AI_SOURCE_BATCH_REQUEST_INVALID")
         if source_batch is not None and (not isinstance(source_batch,str) or not re.fullmatch(r"qwen-[a-f0-9]{32}",source_batch)
                 or value["filters"] or not value["retryHeld"]):
             raise ValueError("AI_SOURCE_BATCH_REQUEST_INVALID")
@@ -359,7 +386,8 @@ class Manager:
                     original = None
                     if source_batch:
                         with self.db() as db:
-                            original = db.execute("SELECT item,sha FROM ai_acceptance_tasks WHERE job=? ORDER BY seq",(source_batch,)).fetchall()
+                            original = db.execute("SELECT item,sha FROM ai_acceptance_tasks WHERE job=?"+
+                                (" AND state='held'" if source_state=='held' else "")+" ORDER BY seq",(source_batch,)).fetchall()
                         if not original or value["limit"] not in (0,len(original)):
                             raise ValueError("AI_SOURCE_BATCH_NOT_FOUND_OR_LIMIT_MISMATCH")
                         original = dict(original)
@@ -371,7 +399,7 @@ class Manager:
                             if original is not None and (item["status"] != "review" or item.get("sha256") != original[item["id"]] or not item["present"]):
                                 raise ValueError("AI_SOURCE_BATCH_FILE_CHANGED_OR_REVIEWED")
                             context = intake_review.context(item)
-                            key = hashlib.sha256(canonical([item["id"],context,self.client.digest,PROMPT_VERSION,hashlib.sha256(SYSTEM.encode()).hexdigest()])).hexdigest()
+                            key = hashlib.sha256(canonical([item["id"],context,self.client.digest,PROMPT_VERSION,prompt_sha()])).hexdigest()
                             with self.db() as db:
                                 exists = db.execute("SELECT 1 FROM ai_acceptance_results WHERE cache_key=?",(key,)).fetchone()
                             if exists and not value["retryHeld"]:
@@ -387,8 +415,9 @@ class Manager:
                     raise ValueError("AI_NO_NEW_PENDING_FILES_MATCH_FILTERS")
                 now = utc_now()
                 with self.db() as db:
-                    selection = {"selection":filters,"prompt_sha256":hashlib.sha256(SYSTEM.encode()).hexdigest(),"limit":value["limit"]}
+                    selection = {"selection":filters,"prompt_sha256":prompt_sha(),"limit":value["limit"]}
                     if source_batch: selection["source_batch"] = source_batch
+                    if source_state: selection["source_state"] = source_state
                     db.execute("INSERT INTO ai_acceptance_jobs VALUES (?,?,?,?,?,?,?,?,?,?,?)",(job,"running",value["admin"].strip(),self.client.model,self.client.digest,json.dumps(selection),now,now,len(tasks),cached,None))
                     db.executemany("INSERT INTO ai_acceptance_tasks(job,seq,item,sha,context,cache_key,state) VALUES (?,?,?,?,?,?,?)",tasks)
                 self.launch(job,fd)
@@ -412,7 +441,7 @@ class Manager:
                 if job["state"] != "paused": raise ValueError("AI_BATCH_NOT_PAUSED")
                 self.check_volume(); self.client.identity()
                 if job["digest"] != self.client.digest: raise ValueError("AI_MODEL_PIN_CHANGED")
-                if job["promptSha256"] != hashlib.sha256(SYSTEM.encode()).hexdigest(): raise ValueError("AI_PROMPT_CHANGED_START_NEW_BATCH")
+                if job["promptSha256"] != prompt_sha(): raise ValueError("AI_PROMPT_CHANGED_START_NEW_BATCH")
                 fd = self.worker_lock()
                 with self.db() as db:
                     db.execute("UPDATE ai_acceptance_jobs SET state='running',error=NULL,updated=? WHERE id=?",(utc_now(),job["id"]))
@@ -493,7 +522,7 @@ class Manager:
         reasons = gates(item,review,packet)
         attribution = {"kind":"local-ai","provider":"ollama","model":self.client.model,
             "model_digest":self.client.digest,"requested_by":job["admin"],"batch_id":job["id"],
-            "prompt_version":PROMPT_VERSION,"prompt_sha256":hashlib.sha256(SYSTEM.encode()).hexdigest(),
+            "prompt_version":PROMPT_VERSION,"prompt_sha256":prompt_sha(),
             "input_sha256":hashlib.sha256(canonical(packet)).hexdigest(),
             "input_path":f"data/work/intake/ai-context/{hashlib.sha256(canonical(packet)).hexdigest()}.json",
             "response_sha256":response_hash,"coverage":packet["coverage"],"review":review,
@@ -501,6 +530,10 @@ class Manager:
         inspection = next((json.loads(f["text"]) for f in packet["facts"] if f["id"]=="gzip_inspection"),None)
         if inspection is not None:
             attribution["text_extraction"] = inspection
+        rendering=getattr(self.client,'last_rendering',None)
+        if rendering is not None: attribution['description_rendering']=rendering
+        generation_prompt=getattr(self.client,'last_prompt_sha256',None)
+        if generation_prompt is not None: attribution['generation_prompt_sha256']=generation_prompt
         if getattr(self.client,"last_response",None) is not None:
             attribution["response_path"] = f"data/work/intake/ai-responses/{response_hash}.json"
         result = {**review,"ai_reviewed":True,"attribution":attribution,"reviewed_at":utc_now(),

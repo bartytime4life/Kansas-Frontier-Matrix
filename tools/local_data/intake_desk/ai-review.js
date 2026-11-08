@@ -35,7 +35,8 @@
     $("ai-pause").hidden = !active(); $("ai-pause").disabled = job?.state !== "running";
     $("ai-resume").hidden = job?.state !== "paused";
     $("ai-cancel").hidden = !job || !["running","paused","pausing"].includes(job.state);
-    $("ai-rerun").hidden = !job || !["completed","cancelled"].includes(job.state) || !!counts.accepted;
+    $("ai-rerun").hidden = !job || !["completed","cancelled"].includes(job.state) || (!!counts.accepted && !counts.held);
+    $("ai-rerun").textContent = counts.held ? `Re-review ${counts.held} held files` : "Re-review same pending files";
     $("ai-state").textContent = !job ? "Ready. Enter your name, choose a batch size, and start a local review."
       : `${job.state.replaceAll("_"," ")} · ${done} / ${job.total} processed · ${counts.accepted||0} accepted locally · ${counts.held||0} held · ${counts.failed||0} failed · ${counts.stale||0} changed/skipped · requested by ${job.admin}${job.cached ? ` · ${job.cached} unchanged AI reviews skipped` : ""}${job.error ? `. ${explain(job.error)}` : ""}${["pausing","cancelling"].includes(job.state) ? ". Finishing the current file first." : ""}`;
     const results = $("ai-results"); results.replaceChildren();
@@ -85,9 +86,10 @@
   $("ai-rerun").addEventListener("click",async()=>{
     if (!$("ai-admin").reportValidity() || !current) return;
     const sourceBatch=current.id, admin=$("ai-admin").value.trim();
+    const held=current.counts.held||0;
     try {
       ++serial; $("ai-rerun").disabled=true;
-      render(await api("/api/ai-review/start",{admin,filters:{},limit:current.total,retryHeld:true,sourceBatch}));
+      render(await api("/api/ai-review/start",{admin,filters:{},limit:held||current.total,retryHeld:true,sourceBatch,...(held?{sourceState:"held"}:{})}));
       poll();
     } catch(error) { $("ai-state").textContent=explain(error.message); }
     finally { $("ai-rerun").disabled=false; }

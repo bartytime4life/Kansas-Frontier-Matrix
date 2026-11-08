@@ -60,6 +60,21 @@ text from the selected input facts. Outputs must validate before use. Source
 text is untrusted data and cannot supply operations, endpoints, paths or rights
 changes. Deterministic file/context and sensitivity checks also apply.
 
+Gzip text uses a stricter source-passage mode. Qwen selects numbered title and
+passage IDs plus domain/recommendation/confidence and fixed concern codes. KFM
+quotes those source passages with whitespace normalized and renders measured
+scope/CRC text itself. Free historical interpretation and technical scope prose
+are not accepted from the model. Numerical OCR headings are excluded from title
+choices; dates and names within quotations remain explicitly unverified source
+transcriptions. This prevents invented interpretation while retaining OCR errors
+as visible source data; it does not repair a historical scan or certify its claims.
+
+Attribution identifies **Qwen-selected source quotations; KFM-rendered scope**,
+retains the original selection JSON, and fingerprints both the complete policy
+and actual generation system prompt. The saved input and policy reproduce the
+rendered title, source quotations, concern labels and scope exactly. Validation
+rejects any change outside those deterministic renderings.
+
 Generated descriptions appear in the file list and **Local Qwen review** in
 the details drawer. They are AI-generated interpretations; confidence is the
 model's self-assessment, not a calibrated probability or evidence certification.
@@ -97,6 +112,10 @@ files** uses the original saved IDs and order, independent of current filters an
 new arrivals. It refuses the rerun if an original file changed or was already
 accepted/reviewed. The private start request records the optional `sourceBatch`
 identifier, alongside `filters: {}`, `retryHeld: true` and the original count.
+When a completed batch has acceptances and holds, **Re-review N held files** uses
+`sourceState: "held"` and the saved held count. The prior acceptances are excluded;
+new arrivals do not alter the selection. A changed or human-reviewed original is
+still refused rather than silently overwritten.
 Prompt/extraction revisions invalidate older cached reviews; old results remain
 in AI history. Changing the prompt does not silently resume an old paused batch.
 
