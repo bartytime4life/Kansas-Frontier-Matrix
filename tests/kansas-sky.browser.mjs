@@ -235,9 +235,9 @@ test('Kansas Sky basemap warning lifecycle records first failure and preserves r
   await p.evaluate(`(()=>{const s=document.querySelector('select[aria-label="Appearance basemap"]');s.value='midnight';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
   await p.wait(warning,'new real fixture failure is not hidden by recovery reset');
   await p.call('Emulation.setDeviceMetricsOverride',{width:375,height:844,deviceScaleFactor:1,mobile:false});
-  await p.wait(`innerWidth===375`,'phone viewport');
+  await p.wait(`innerWidth===375 && (${warning})`,'phone viewport retains the visible failed-basemap warning');
   await p.call('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
-  await p.wait(`innerWidth===1440 && window.__kfmBasemapTrace.snapshot().events.some(e=>e.event==='resize')`,'desktop viewport and resize trace');
+  await p.wait(`innerWidth===1440 && window.__kfmBasemapTrace.snapshot().events.some(e=>e.event==='resize') && (${warning})`,'desktop viewport retains the visible warning and resize trace');
   assert.equal(await p.evaluate(`Boolean(${warning})`),true,'still-failed source stays warned after resizing');
   const trace=await p.evaluate(`window.__kfmBasemapTrace.snapshot()`),network=p.networkSnapshot();
   assert.ok(trace.events.some(e=>e.generation>generation));assert.equal(trace.collectorErrors,0);
