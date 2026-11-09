@@ -241,7 +241,7 @@ test("look presets are complete and recognised; Plain turns every effect off", a
 
 test("the curtain has a globe shader path that uses MapLibre's projection prelude", async () => {
   const layer = await read("app/aurora-curtain-layer.ts");
-  assert.match(layer, /projectTileWithElevation\(a_pos/);
+  assert.match(layer, /projectTileFor3D\(a_pos\*8192/);
   assert.match(layer, /variantName === "globe"/);
   for (const uniform of ["u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition"]) assert.match(layer, new RegExp(uniform));
 });
@@ -255,7 +255,7 @@ test("a globe shader that fails to compile disables only the globe curtain, once
       if (name === "VERTEX_SHADER") return 1;
       if (name === "FRAGMENT_SHADER") return 2;
       if (name === "getShaderParameter") return shader => { compileAttempts += 1; return !failedShaders.has(shader); };
-      if (name === "shaderSource") return (shader, source) => { if (source.includes("projectTileWithElevation")) { globeCompiles += 1; failedShaders.add(shader); } };
+      if (name === "shaderSource") return (shader, source) => { if (source.includes("#define GLOBE")) { globeCompiles += 1; failedShaders.add(shader); } };
       if (name === "getProgramParameter") return () => true;
       if (name === "getAttribLocation") return () => 0;
       if (name === "drawArrays") return () => { draws += 1; };
@@ -265,13 +265,13 @@ test("a globe shader that fails to compile disables only the globe curtain, once
   const map = { on() {}, off() {}, getTerrain: () => null, getZoom: () => 3, getBounds: () => ({ getWest: () => -110, getEast: () => -90, getSouth: () => 30, getNorth: () => 45 }) };
   const layer = curtain.createAuroraCurtainLayer({ id: "test", ring: [[-100, 37], [-95, 37], [-95, 40], [-100, 37]], clock: () => null });
   layer.onAdd(map, gl);
-  const globeFrame = { shaderData: { variantName: "globe", vertexShaderPrelude: "", define: "" }, defaultProjectionData: { mainMatrix: [], fallbackMatrix: [], tileMercatorCoords: [0, 0, 1, 1], clippingPlane: [0, 0, 0, 0], projectionTransition: 1 } };
+  const globeFrame = { getProjectionData:()=>({ mainMatrix: [], fallbackMatrix: [], tileMercatorCoords: [0,0,1/8192,1/8192], clippingPlane: [0,0,0,0], projectionTransition:1 }), shaderData: { variantName: "globe", vertexShaderPrelude: "", define: "#define GLOBE" }, defaultProjectionData: { mainMatrix: [], fallbackMatrix: [], tileMercatorCoords: [0, 0, 1, 1], clippingPlane: [0, 0, 0, 0], projectionTransition: 1 } };
   assert.doesNotThrow(() => layer.render(gl, globeFrame));
   assert.doesNotThrow(() => layer.render(gl, globeFrame));
   assert.equal(globeCompiles, 1, "a failed globe shader is not recompiled every frame");
   assert.equal(compileAttempts, 1, "a failed lazy variant is checked only once");
   assert.equal(draws, 0);
-  layer.render(gl, { shaderData: { variantName: "mercator" }, modelViewProjectionMatrix: [] });
+  layer.render(gl, { getProjectionData:globeFrame.getProjectionData, shaderData: { variantName: "mercator",vertexShaderPrelude:"",define:"" }, modelViewProjectionMatrix: [] });
   assert.equal(draws, 1, "the flat-map curtain still draws");
   layer.onRemove(map, gl);
   layer.onAdd(map, gl);
@@ -324,13 +324,13 @@ test('hidden curtain allocates no shader program; visible variants compile once 
   }});
   const map={on(){},off(){},getTerrain:()=>null,getZoom:()=>6,getBounds:()=>({getWest:()=>-110,getEast:()=>-90,getSouth:()=>30,getNorth:()=>45})};
   const layer=curtain.createAuroraCurtainLayer({id:'test',ring:[[-100,37],[-95,37],[-95,40],[-100,37]],clock:()=>null});
-  const flat={shaderData:{variantName:'mercator'},modelViewProjectionMatrix:[]};
-  const globe={shaderData:{variantName:'globe',vertexShaderPrelude:'',define:''},defaultProjectionData:{mainMatrix:[],fallbackMatrix:[],tileMercatorCoords:[0,0,1,1],clippingPlane:[0,0,0,0],projectionTransition:1}};
+  const flat={getProjectionData:()=>({mainMatrix:[],fallbackMatrix:[],tileMercatorCoords:[0,0,1/8192,1/8192],clippingPlane:[0,0,0,0],projectionTransition:0}),shaderData:{variantName:'mercator',vertexShaderPrelude:'',define:''},modelViewProjectionMatrix:[]};
+  const globe={getProjectionData:flat.getProjectionData,shaderData:{variantName:'globe',vertexShaderPrelude:'',define:'#define GLOBE'},defaultProjectionData:{mainMatrix:[],fallbackMatrix:[],tileMercatorCoords:[0,0,1,1],clippingPlane:[0,0,0,0],projectionTransition:1}};
   layer.onAdd(map,gl);
   assert.equal(programs,0,'adding a hidden custom layer must not compile shaders');
   layer.render(gl,flat);layer.render(gl,flat);
   assert.equal(programs,1);assert.equal(draws,2);
-  assert.ok(shaders[0].includes('u_world_size'),'first visible Mercator frame uses its own shader');
+  assert.ok(shaders[0].includes('projectTileFor3D(a_pos*8192.'),'first visible Mercator frame uses the public world-tile contract');
   layer.render(gl,globe);layer.render(gl,flat);
   assert.equal(programs,2);assert.equal(draws,4,'both projections remain usable');
   layer.onRemove(map,gl);assert.equal(deleted,2);

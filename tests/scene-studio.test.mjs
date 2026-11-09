@@ -122,7 +122,7 @@ function curtainHarness() {
     removeLayer: () => { layer.onRemove(map, gl); layer = undefined; },
     getLayoutProperty: () => visibility, setLayoutProperty: (_id, _key, value) => { visibility = value; },
   };
-  const frame = { shaderData: { variantName: "mercator" }, modelViewProjectionMatrix: [] };
+  const frame = { getProjectionData:()=>({mainMatrix:[],fallbackMatrix:[],tileMercatorCoords:[0,0,1/8192,1/8192],clippingPlane:[0,0,0,0],projectionTransition:0}), shaderData: { variantName: "mercator",vertexShaderPrelude:"",define:"" }, modelViewProjectionMatrix: [] };
   return { map, gl, counts, uniforms, render: () => { counts.frames++; layer.render(gl, frame); } };
 }
 

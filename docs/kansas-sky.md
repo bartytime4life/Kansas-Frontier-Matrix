@@ -551,3 +551,60 @@ The daily regional archive remains prepared but inactive on the hosted service.
 No production data, source admission, release or publishing setting changed.
 Rollback uses a reviewed revert of the flight candidate while retaining source
 observations and evidence; a later merge or deployment requires its own receipt.
+
+
+## Aircraft discovery and decorative globe repair — 2026-11-09 UTC
+
+The existing Aviation topic now exposes **Explore Kansas Sky** on desktop and
+**Aircraft** in the mobile dock. This is an explicit request to show the existing
+aviation layer, enable its aircraft view, expand its controls and focus its
+existing selector. Merely choosing a topic or rendering the action does not make
+that request. A visitor's later traffic opt-out is preserved until another
+explicit request. Aircraft/replay controls are available independently of the
+FAA NASR context load; an unavailable airspace product still shows its error and
+does not invent replacement context.
+
+**Find aircraft** in the map's time badge opens the same inspector and includes
+the current displayed observation count. The timestamp remains noninteractive
+and map clicks outside the button pass through. Counts are source/time bounded,
+not a complete census or a count of visible aircraft in the viewport. REPLAY,
+waiting, unavailable and missing-position states retain their existing meanings.
+
+A GPU locator supplements the existing 3D aircraft mesh at the exact same
+approximate observation height and geographic position. Unselected locators are
+22 CSS pixels, reducing to 18 above 1,000 displayed observations; the selected
+locator has a 40-pixel gold ring. A one-time GPU point-size capability check
+can reduce these sizes on limited hardware; click extents use the same limit. The renderer retains the 3,000-aircraft bound
+and one point per aircraft, with no DOM element per aircraft or independent
+animation clock. A dark backing and ivory silhouette make small regional
+positions distinguishable on both bright terrain and the dark chart. A diamond
+still means direction unavailable. Symbols are enlarged schematics and their
+screen footprint does not represent physical aircraft dimensions or clearance.
+
+Selection now follows the actual public world-tile projection used by the GPU,
+including the globe-to-Mercator transition. CPU hit centers reproduce
+`projectTileFor3D` matrix interpolation and reject the hidden hemisphere,
+nonpositive clip W, depth-frustum clipping and offscreen centers. Clicks outside
+the bounded locator radius remain available to ordinary map inspection. The GPU
+keeps terrain/depth testing. Numeric tests establish the projection and hit
+contract; they do not establish physical-device, long-session or production
+reliability, and do not establish terrain-occlusion picking in every landscape.
+
+The decorative Kansas curtain previously combined a 52-km height at zoom 6,
+terrain-exaggeration scaling and additive light. Its globe path also used the
+default custom-layer projection and horizon Z rather than the world-tile 3D
+contract. It now uses the public world tile, normalized XY multiplied by 8,192,
+meter elevation, actual 3D depth and separate hidden-hemisphere clipping in both
+projections. At zoom 6 its decorative height is 6.5 km, independent of terrain
+exaggeration. Premultiplied alpha is capped at 0.28 and uses normal alpha
+composition so the outline cannot add white saturation over the basemap. The
+existing effect preference, reduced-motion clock, focus suppression lease,
+Battery saver gate and restriction layers retain their ownership.
+
+Targeted before/after regressions cover globe/transition hits, regional locator
+availability and the curtain's public projection/height/composition contract.
+Source/matrix and local browser checks, hosted deployment identity and target
+behavior remain separate evidence states. The historical intermittent
+layer-absence issue #5737 retains its earlier unresolved alternatives.
+Rollback is a reviewed revert of these presentation/control changes; preserve
+source observations, failed diagnostic logs and deployment receipts separately.
