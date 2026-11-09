@@ -2,17 +2,17 @@
 doc_id: kfm://app/review-console/readme
 title: Review Console App README
 type: app-readme
-version: v0.2
-status: draft; repository-grounded; documentation-scaffold; non-publisher
+version: v0.3
+status: browser-local recovery client implemented; governed steward console remains scaffold; non-publisher
 owners: OWNER_TBD — Apps steward · Review steward · Policy steward · Evidence steward · Release steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-05
+updated: 2026-11-08
 policy_label: public
 current_path: apps/review-console/README.md
 owning_root: apps/
-responsibility: Orient contributors to the restricted review application boundary, verified scaffold, separate fixture-validation support, and safe implementation sequence.
+responsibility: Orient contributors to the browser-local recovery workspace, restricted steward-console scaffold, separate validation and non-publishing boundaries.
 truth_posture: cite-or-abstain; repository presence is not operational readiness
-evidence_snapshot:
+historical_scaffold_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_commit: cbd6d82bad962a58ab62cfb776ee31696b575107
   app_tree: 33e26773850d908973f78c0bf179d30e5aa57eed
@@ -37,7 +37,7 @@ related:
 tags: [kfm, apps, review-console, steward-review, evidence, policy, sensitivity, audit, correction, rollback]
 notes:
   - "Same-path documentation update; document identity and existing section anchors are retained."
-  - "Eleven tracked app files were inspected: ten READMEs and one placeholder package manifest. No executable app source, app-local tests, or app-local fixtures are present in this subtree."
+  - "Historical scaffold checkpoint: eleven files were inspected before the browser-local recovery workspace was added. Current implementation is described in recovery-desk.md."
   - "Role gating, review submission, audit persistence, and deployment are requirements, not implemented app capabilities."
   - "ReviewRecord fixture validation is separate from a Review Console runtime and creates no review, promotion, release, or publication authority."
 [/KFM_META_BLOCK_V2] -->
@@ -46,10 +46,30 @@ notes:
 
 # Review Console App
 
-`apps/review-console/` is the reserved application home for **restricted steward review**, not a running review service. Its intended job is to inspect governed review projections and, after a separately validated write path exists, submit accountable review records. It is neither a general data editor nor a publication console.
+`apps/review-console/` now contains a **browser-local feed recovery desk**. Its separate restricted steward-review service remains a scaffold. Local reviewer names and decisions are working attestations, not authenticated KFM ReviewRecords, policy decisions or publication authority.
+
+## Browser-local recovery desk
+
+[Run and inspect the recovery workspace](recovery-desk.md). It records IEM wind, USGS daily and Wikidata Kansas evidence; compares historical failures with entered after-change observations; retains run revisions; requires scoped review; and supports JSON backups and opt-in offline preparation. It has no operational database connection, provider-fetch path, ingestion control or release installer.
+
+From `apps/review-console/recovery`, use Node 22.13 or newer:
+
+```bash
+npm ci
+npm run typecheck
+npm test
+npm run build
+npm run dev
+```
+
+The development origin is `http://127.0.0.1:5179`; `npm run preview` serves the build at `http://127.0.0.1:4179`. Both bind to loopback. Browser records are specific to their origin; use export/import when moving between the hosted Site and these local origins. Imports require fresh review.
+
+**Placement:** Directory Rules section 10.1 and accepted ADR-0029 assign deployable client composition to the existing `apps/` root. The app owns these local UI types and working notes; canonical evidence, source registries, policy, contracts, schemas, releases and operational records retain their existing homes. The [integration note](recovery-desk.md#source-integration-and-rollback) records the upstream snapshot and reversible adaptation. No new authority root is created.
+
+The dated scaffold analysis below retains its original snapshot and section anchors. Its unimplemented identity, authorization, governed submission and durable audit requirements still apply to a future steward service; the local recovery desk does not satisfy or activate those interfaces.
 
 > [!IMPORTANT]
-> **Current maturity: documentation scaffold.** At the [inspected commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cbd6d82bad962a58ab62cfb776ee31696b575107), this subtree contains ten READMEs and a private `review-console@0.0.0` manifest. There are no app entrypoints, routes, package scripts, dependencies, app-local tests, or app-local fixtures. Authentication, authorization, decision recording, audit persistence, and deployment are not established. “Role-gated” describes a required boundary, not a functioning control.
+> **Historical restricted-console checkpoint: documentation scaffold.** At the [inspected commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/cbd6d82bad962a58ab62cfb776ee31696b575107), this subtree contains ten READMEs and a private `review-console@0.0.0` manifest. There are no app entrypoints, routes, package scripts, dependencies, app-local tests, or app-local fixtures. Authentication, authorization, decision recording, audit persistence, and deployment are not established. “Role-gated” describes a required boundary, not a functioning control.
 
 **Navigation:** [Purpose](#1-purpose) · [Repo fit](#2-repo-fit) · [Authority](#3-authority-boundary) · [Inputs](#5-inputs) · [Exclusions](#6-exclusions) · [Feature map](#7-review-console-surface-map) · [Decisions](#9-review-decision-contract) · [Inspection](#11-inspection-path) · [Validation](#12-validation-expectations) · [Completion gates](#14-definition-of-done)
 
@@ -61,8 +81,8 @@ The [Review Console architecture](../../docs/architecture/ui/REVIEW_CONSOLE.md) 
 
 | Inspected surface | Truth / maturity | What the evidence establishes |
 |---|---|---|
-| This app and its seven feature lanes | CONFIRMED / DRAFT | Documentation and a placeholder manifest exist; executable app behavior is absent in this subtree. |
-| [Package manifest](package.json) | CONFIRMED / DRAFT | `name: review-console`, `private: true`, `version: 0.0.0`; no `scripts`, `dependencies`, or `devDependencies`. |
+| Historical steward-console scaffold and its seven feature lanes | CONFIRMED / DRAFT at the pinned snapshot | The local recovery client is now executable; the seven governed service lanes remain documentation-only. |
+| [Recovery client manifest](recovery/package.json) | CONFIRMED source | Private `kfm-feed-recovery-workspace@0.1.0` has its own pinned client toolchain, local scripts and [focused tests](recovery/tests/recovery-model.test.mjs). The parent manifest remains the steward-service placeholder. |
 | Explorer read-only review entry (retired) | CONFIRMED / DRAFT | It exports `placeholder = true`; it is not an integrated review viewer or a decision API. |
 | [ReviewRecord validator](../../tools/validators/validate_review_record.py) | CONFIRMED / IMPLEMENTED, fixture-only | Separate executable checks for synthetic release-promotion review projections exist; execution results must be recorded separately. |
 | Integrated identity, queue, API, evidence, policy, audit, and release handoffs | UNKNOWN / NOT INSPECTED as a running system | Documentation and validator source do not establish an operational review service. |
@@ -129,7 +149,7 @@ The console must not directly edit published artifacts, expose a public administ
 
 ## 7. Review Console surface map
 
-The complete app inventory is **11 tracked files: this README, `package.json`, `src/README.md`, `src/features/README.md`, and the seven feature READMEs below**. Each feature directory contains only its README at the inspected snapshot. The directory names are real; the described behavior is proposed.
+The historical scaffold inventory at the pinned checkpoint was **11 tracked files: this README, `package.json`, `src/README.md`, `src/features/README.md`, and the seven feature READMEs below**. Each feature directory contains only its README at the inspected snapshot. The directory names are real; the described behavior is proposed.
 
 | Existing feature guide | Intended responsibility | Required limit |
 |---|---|---|
@@ -192,7 +212,7 @@ These obligations are requirements, not a claim that this app currently satisfie
 
 ## 11. Inspection path
 
-There is **no supported console start, build, or app-test command yet**: the app manifest has no scripts. Do not invent `pnpm --filter review-console dev`, a port, a URL, or an environment-variable contract. Workspace membership would not make this scaffold launchable.
+The browser-local recovery client has the explicit commands above and in [the recovery guide](recovery-desk.md#local-use). There is still **no operational steward-console service or governed review-submission command**. The following inspection commands describe the historical scaffold at its pinned commit.
 
 From a repository checkout, inspect the exact historical baseline:
 

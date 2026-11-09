@@ -2,12 +2,15 @@
 doc_id: kfm://app/review-console/src/readme
 title: Review Console Source README
 type: app-readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Review steward · UI steward · API steward · Policy steward · Evidence steward · Release steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-11-08
 policy_label: public
+owning_root: apps/
+responsibility: Describe the proposed steward-console source boundary and link the separate browser-local recovery client.
+truth_posture: CONFIRMED source placement; local client checks recorded separately; governed steward-service behavior remains proposed.
 related:
   - ../README.md
   - ./features/README.md
@@ -34,6 +37,8 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
+
+> **Adjacent local client:** [recovery/main.tsx](../recovery/src/main.tsx) composes the browser-local [feed recovery desk](../recovery/src/feed-recovery.tsx), [local evidence model](../recovery/src/recovery-model.ts) and [styles](../recovery/src/styles.css). See [local use, provenance and boundaries](../recovery-desk.md). The feature-lane contract below describes the proposed governed steward service; it does not make these local notes authenticated ReviewRecords or activate a review-write API. Existing `features/` lanes remain documentation scaffolds.
 
 <div align="center">
 
