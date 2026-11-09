@@ -91,17 +91,14 @@ REVIEW_FIELDS = [
 def source_fingerprint():
     """Identity of executable/client bytes, independent of Git or installation path."""
     digest = hashlib.sha256()
-    for relative in (
-        "intake_server.py",
-        "intake_worker.py",
-        "launch_local.py",
-        "start-local.sh",
-        "local-web/index.html",
-        "local-web/app.js",
-        "local-web/style.css",
-    ):
-        digest.update(relative.encode() + b"\0")
-        digest.update((APP / relative).read_bytes())
+    # Include the combined workspace and its local-data dependencies. Otherwise
+    # a launcher could reuse an older Qwen implementation with the same identity.
+    files = set(APP.parent.glob("*.py")) | set(APP.glob("*.py")) | set(APP.glob("*.sh"))
+    for directory in (APP / "local-web", APP.parent / "intake_desk"):
+        files.update(path for path in directory.iterdir() if path.suffix in {".html", ".js", ".css"})
+    for path in sorted(files, key=lambda path:path.relative_to(APP.parent).as_posix()):
+        digest.update(path.relative_to(APP.parent).as_posix().encode() + b"\0")
+        digest.update(path.read_bytes())
         digest.update(b"\0")
     return digest.hexdigest()
 
@@ -219,7 +216,7 @@ def integration(review):
 
 class Store:
     def __init__(self, root, runtime, *, kfm_root=None, pipeline_lock=None, store_check=None, working_connection=None,
-                 library_root=None, archive_root=None, raster_python=None, inbox=None):
+                 library_root=None, archive_root=None, raster_python=None, inbox=None, qwen_model=None, qwen_digest=None):
         self.root = Path(root).expanduser().resolve()
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(self.root, 0o700)
@@ -234,6 +231,7 @@ class Store:
         self.archive_root = Path(archive_root) if archive_root else None
         self.raster_python = Path(raster_python) if raster_python else None
         self.inbox = Path(inbox) if inbox else None
+        self.qwen_model, self.qwen_digest = qwen_model, qwen_digest
         self.lock = threading.RLock()
         self.extract_lock = threading.Lock()
         with self.db() as db:
@@ -777,7 +775,7 @@ class Handler(BaseHTTPRequestHandler):
             if path in ("/working-data", "/library"):
                 from tools.local_data.intake_studio.workspace import page
                 return self.respond(200, page("working" if path == "/working-data" else "library"), "text/html")
-            if path in ("/workspace/desk.js", "/workspace/reviews.js", "/workspace/desk.css"):
+            if path in ("/workspace/desk.js", "/workspace/reviews.js", "/workspace/ai-review.js", "/workspace/desk.css"):
                 from tools.local_data.intake_studio.workspace import asset
                 content, mime = asset(path)
                 return self.respond(200, content, mime)
@@ -900,10 +898,15 @@ def main():
     parser.add_argument("--archive-root", type=Path, help="original archive for Library file locators")
     parser.add_argument("--raster-python", type=Path, help="trusted spatial preview Python for Working Data")
     parser.add_argument("--inbox", type=Path, help="existing read-only downloads inbox for Working Data")
+    parser.add_argument("--qwen-model", help="installed local Qwen model used for admin smart acceptance")
+    parser.add_argument("--qwen-digest", help="exact installed Ollama model digest; required with --qwen-model")
     a = parser.parse_args()
+    if bool(a.qwen_model) != bool(a.qwen_digest):
+        parser.error("--qwen-model and --qwen-digest must be supplied together")
     store = Store(a.store, a.runtime, kfm_root=a.kfm_root, pipeline_lock=a.pipeline_lock,
                   store_check=a.store_check, working_connection=a.working_connection,
-                  library_root=a.library_root, archive_root=a.archive_root, raster_python=a.raster_python, inbox=a.inbox)
+                  library_root=a.library_root, archive_root=a.archive_root, raster_python=a.raster_python, inbox=a.inbox,
+                  qwen_model=a.qwen_model, qwen_digest=a.qwen_digest)
     server = Server(a.port, store)
     print(f"KFM Local Intake: {server.origin}", flush=True)
     print(f"Private inbox: {store.root}", flush=True)

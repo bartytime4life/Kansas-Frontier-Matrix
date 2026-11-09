@@ -22,6 +22,8 @@ An explicitly configured **Send to KFM** action captures reviewed originals and
 review snapshots into the private Working Data store and indexes them there.
 The same local workspace can also host the existing **Working Data** and
 read-only **Data Library** interfaces in its sidebar, under one address.
+Working Data can use [local Qwen smart acceptance](local-qwen-acceptance.md)
+for admin-requested descriptions and attributed private-use batch reviews.
 
 ## Start here
 

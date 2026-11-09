@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-qwen-main-recovery-20261109",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-intake-studio.md",
+    "docs/runbooks/local-qwen-acceptance.md",
+    "tests/local_data/test_ai_acceptance.py",
+    "tests/local_data/test_ai_acceptance_captured.py",
+    "tests/local_data/test_grounded_review.py",
+    "tests/local_data/test_intake_studio_integrity.py",
+    "tests/local_data/test_intake_workspace.py",
+    "tests/local_data/test_text_sample.py",
+    "tools/local_data/README.md",
+    "tools/local_data/ai_acceptance.py",
+    "tools/local_data/grounded_review.py",
+    "tools/local_data/intake.py",
+    "tools/local_data/intake_desk/ai-review.js",
+    "tools/local_data/intake_desk/desk.css",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_desk/index.html",
+    "tools/local_data/intake_review.py",
+    "tools/local_data/intake_service.py",
+    "tools/local_data/intake_studio/intake_server.py",
+    "tools/local_data/intake_studio/workspace.py",
+    "tools/local_data/text_sample.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-intake-studio.md": "sha256:c062ec98857ec74f5f48715fc807f10bb528321b639fbc0707c10a2651bec19a",
+    "docs/runbooks/local-qwen-acceptance.md": "sha256:9ca3c722525b0cb228a3b1623efca2077782ca7e50c9945c35a69ed0c09b2ca1",
+    "tests/local_data/test_ai_acceptance.py": "sha256:831f005e329ffecf6afdd28bdd2bb9e17f35a2fc16737b999f5f34b24641edf6",
+    "tests/local_data/test_ai_acceptance_captured.py": "sha256:43a220c02d0693d0e34ce2f2ba58829de089b506b9a2eb7ea5d36910a29a6cbd",
+    "tests/local_data/test_grounded_review.py": "sha256:44ff792796f2d5f703cc52aa5162ac50f1c4abfa60eba990b09b343dad4ad1c9",
+    "tests/local_data/test_intake_studio_integrity.py": "sha256:a469619b490397272238bee8b3672c5f27ec103d52948a78432867bb55d36866",
+    "tests/local_data/test_intake_workspace.py": "sha256:546c7a3a20ce7648d28dfcd1605c094392b70be0a94bfecc1adfc5571357f508",
+    "tests/local_data/test_text_sample.py": "sha256:9a6cec0dab6de4cca0d75d8bef109f5c549067996b5ca6117857faf324f6cff4",
+    "tools/local_data/README.md": "sha256:f6ec64ed7649564669c5477d080877ec457b2e42c3f27b1a12f308b0f3cfce8d",
+    "tools/local_data/ai_acceptance.py": "sha256:7e0d014d32c0e18e8a1a7fd287d0aa18765bf0df982c9cdec7c4417ca06836cf",
+    "tools/local_data/grounded_review.py": "sha256:68b41346e8f76b0fb7d9146d6885dac1f8ae8513ca29a2c5b94695081f7bba34",
+    "tools/local_data/intake.py": "sha256:e8d3d96b1fe797e80c8f388ce954604181642b42dfc0cfb1ea0ca234c387953e",
+    "tools/local_data/intake_desk/ai-review.js": "sha256:b2984cc51295154df70a68e38b082ffa7ef78355da1bb786fa46c8b0b5483476",
+    "tools/local_data/intake_desk/desk.css": "sha256:f6c9b9b1a1e0878721a884eacc597f49eaab2f14bed60df658298004c11e525f",
+    "tools/local_data/intake_desk/desk.js": "sha256:3c3a4cb318c1d51c4125d066d9439fa66d653dc066fbe5703677abef60ec1e30",
+    "tools/local_data/intake_desk/index.html": "sha256:5d9975425acb9ba76dbf0addaf96d1a901b379ebbef0244228b9e3e39b84af17",
+    "tools/local_data/intake_review.py": "sha256:cbbc47a308ab5b710c7ecae3b65d5422338c44ab3fccf9ee86475cb5282d2b61",
+    "tools/local_data/intake_service.py": "sha256:1273a8debcd1bdadb189813ff13c4ef871bff2f8e77f374b481b91e132902307",
+    "tools/local_data/intake_studio/intake_server.py": "sha256:c2f7ddc2b63ea581be9c83f8f655d753614476ad604dd3540dcc63a8bcff7e63",
+    "tools/local_data/intake_studio/workspace.py": "sha256:a443ab97e59083babdbc32d423b38dcbd603a565ca64b9793a36f100f80e1728",
+    "tools/local_data/text_sample.py": "sha256:7392d84f4a525b835c94b8ed56d7e8de4154c5fc4913429a4d016924be165d60"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:main@5815a56252ff1c4633d299ed1447116f69502f45",
+      "repo:CONTRIBUTING.md@5815a56252ff1c4633d299ed1447116f69502f45",
+      "repo:docs/doctrine/directory-rules.md@5815a56252ff1c4633d299ed1447116f69502f45",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@5815a56252ff1c4633d299ed1447116f69502f45",
+      "repo:tools/local_data/ai_acceptance.py@b078c3c267ecdecd1d69bf69dcedd9ac661b53f4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5777#discussion_r4508501130"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-intake-studio.md": "CONFIRMED",
+    "docs/runbooks/local-qwen-acceptance.md": "CONFIRMED",
+    "tests/local_data/test_ai_acceptance.py": "CONFIRMED",
+    "tests/local_data/test_ai_acceptance_captured.py": "CONFIRMED",
+    "tests/local_data/test_grounded_review.py": "CONFIRMED",
+    "tests/local_data/test_intake_studio_integrity.py": "CONFIRMED",
+    "tests/local_data/test_intake_workspace.py": "CONFIRMED",
+    "tests/local_data/test_text_sample.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/ai_acceptance.py": "CONFIRMED",
+    "tools/local_data/grounded_review.py": "CONFIRMED",
+    "tools/local_data/intake.py": "CONFIRMED",
+    "tools/local_data/intake_desk/ai-review.js": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.css": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.js": "CONFIRMED",
+    "tools/local_data/intake_desk/index.html": "CONFIRMED",
+    "tools/local_data/intake_review.py": "CONFIRMED",
+    "tools/local_data/intake_service.py": "CONFIRMED",
+    "tools/local_data/intake_studio/intake_server.py": "CONFIRMED",
+    "tools/local_data/intake_studio/workspace.py": "CONFIRMED",
+    "tools/local_data/text_sample.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Six-commit source recovery onto current main",
+      "outcome": "PASS",
+      "reason": "Original six Qwen commits preserved by a clean local merge of reviewed head b078c3c267ecdecd1d69bf69dcedd9ac661b53f4 into main at 5815a56252ff1c4633d299ed1447116f69502f45, with corrections included in the integration commit. Workspace foundation is a shared ancestor and no commits are replayed. Initial replay was only a local equivalence check; the final candidate uses the original history."
+    },
+    {
+      "gate": "Targeted no-network synthetic checks",
+      "outcome": "PASS",
+      "reason": "190 unittest cases run: 184 pass, six explicit OCR/loopback skips. Repository Python no-network guard enabled. Includes 15 new captured-payload cases and one workspace-fingerprint case."
+    },
+    {
+      "gate": "Synthetic loopback HTTP checks",
+      "outcome": "PASS",
+      "reason": "Three socket-level tests pass separately with ephemeral temporary stores, including original integrity and header boundaries."
+    },
+    {
+      "gate": "Source syntax and whitespace",
+      "outcome": "PASS",
+      "reason": "Eight affected Python runtime modules parse; four JavaScript assets pass node --check; git diff --check passes."
+    },
+    {
+      "gate": "Canonical pytest target, native OCR and browser acceptance",
+      "outcome": "SKIPPED",
+      "reason": "pytest is absent; no software was installed. Used standard-library unittest for the relevant modules. Native OCR/browser cases were not activated."
+    },
+    {
+      "gate": "Hosted exact-candidate CI, independent review, installed machine and real Qwen/private files",
+      "outcome": "SKIPPED",
+      "reason": "Candidate remains local awaiting owner approval to publish a branch and draft PR. No real-model calls, private-file processing, installation, admission or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "workspace-foundation",
+      "validated": true,
+      "evidence_ref": "repo:main@5815a56252ff1c4633d299ed1447116f69502f45"
+    },
+    {
+      "id": "declared-name-finding",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5777#discussion_r4508501130"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-09T18:03:34.411159+00:00",
+  "emitter": "Codex local Qwen recovery candidate preparation",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Final candidate hashes supersede the recovered November 8 receipt for current-content validation. That earlier receipt is preserved unchanged as historical provenance. This receipt is source/test evidence only, not human approval, merge, installation or publication authority. User approval is required before any remote write. No source payloads or prompts included."
+}

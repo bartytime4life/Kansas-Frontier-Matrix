@@ -21,6 +21,21 @@
 </header>
 
 <main>
+  <section id="smart-acceptance" class="plan" hidden aria-labelledby="ai-title">
+    <div class="panel-head"><h2 id="ai-title">Smart acceptance with local Qwen</h2><span id="ai-model" class="chip"></span></div>
+    <p>Generate descriptions and AI-credited reviews for pending files matching your filters. Suitable files are accepted for private local use; uncertain or flagged files stay in review. Sharing rights are preserved.</p>
+    <form id="ai-form" class="ai-controls">
+      <label>Requested by <input id="ai-admin" type="text" maxlength="80" required autocomplete="name" placeholder="Your admin name"></label>
+      <label>Batch size <select id="ai-limit"><option value="100">Up to 100 files</option><option value="500">Up to 500 files</option><option value="0">All matching pending files</option></select></label>
+      <label class="toggle"><input type="checkbox" id="ai-retry"> Re-review previous AI holds</label>
+      <button class="primary" id="ai-start" type="submit">Review &amp; accept locally</button>
+    </form>
+    <p id="ai-scope" class="fine">Reviews metadata, bounded text samples and available Studio OCR; it does not validate every record.</p>
+    <progress id="ai-progress" hidden max="1" value="0" aria-label="Qwen batch progress"></progress>
+    <p id="ai-state" role="status" aria-live="polite"></p>
+    <div class="ai-controls"><button id="ai-pause" type="button" hidden>Pause after current file</button><button id="ai-resume" type="button" hidden>Resume batch</button><button id="ai-cancel" type="button" hidden>Stop batch</button><button id="ai-rerun" type="button" hidden>Re-review same pending files</button></div>
+    <div id="ai-results"></div>
+  </section>
   <section id="pipeline-health" class="plan" aria-labelledby="pipeline-health-title" hidden>
     <h2 id="pipeline-health-title">Source pipeline health</h2>
     <p id="pipeline-health-state" role="status"></p>
@@ -110,5 +125,6 @@
 <div id="toast" class="toast" role="alert" hidden></div>
 <script src="/desk.js"></script>
 <script src="/reviews.js"></script>
+<script src="/ai-review.js"></script>
 </body>
 </html>
