@@ -445,3 +445,25 @@ test('explicit Sky requests reveal disabled traffic and collapsed controls once,
  assert.equal(visible,false);assert.equal(traffic,false);assert.equal(detailsRef.current.open,false,'a category remount cannot replay a consumed explicit request');
  render(3);assert.equal(traffic,true);assert.equal(detailsRef.current.open,true,'a new explicit request still works after remount');
 });
+
+test('responsive flight padding keeps the installed camera valid while dock and canvas resize at different times',()=>{
+ const effect=cameraEffects.find(text=>text.includes('Layout changes refresh this cache'));
+ const map=new cameraModule.exports.Camera({minZoom:0,maxZoom:16,maxPitch:72,renderWorldCopies:false,transformConstrain:null,centerClampedToGround:false,requestRenderFrame:()=>0,cancelRenderFrame:()=>{}});
+ let width=768,height=970,canvasRight=768,dockLeft=370,dockTop=90;const events=new Map();
+ const canvas={get clientWidth(){return width;},get clientHeight(){return height;},getBoundingClientRect:()=>({top:54,right:canvasRight,bottom:height+54})};
+ const dock={getBoundingClientRect:()=>({left:dockLeft,top:dockTop})},badge={getBoundingClientRect:()=>({top:120,bottom:190,width:190,height:70})};
+ Object.assign(map,{getCanvas:()=>canvas,getContainer:()=>({querySelector:()=>dock,querySelectorAll:()=>[badge]}),on:(name,fn)=>events.set(name,fn),off:name=>events.delete(name)});map.transform.resize(width,height);
+ const ownCameraMove={current:false};const cleanup=executeCamera(effect,{mapRef:{current:map},enabled:true,cameraLeaseActive:true,ownCameraMove,flightPadding:executeCamera(paddingInitializer,{}),ResizeObserver:class{observe(){}disconnect(){}}})();
+ // CSS moves the desktop flight dock before the canvas resize observer commits
+ // its new width. This is a valid transient layout, not malformed source data.
+ dockLeft=1150;
+ assert.doesNotThrow(()=>events.get('resize')(),'an off-canvas dock cannot send a negative edge inset to Camera.jumpTo');
+ assert.equal(map.getPadding().right,0,'a dock beyond the old canvas reserves no negative occlusion');
+ for(const state of [[1440,846,1440,1040,144],[375,730,375,10,319.65625],[768,970,768,370,144],[0,0,0,1040,144]]){
+  [width,height,canvasRight,dockLeft,dockTop]=state;map.transform.resize(width,height);
+  assert.doesNotThrow(()=>events.get('resize')());const p=map.getPadding();
+  assert.ok(Object.values(p).every(value=>Number.isFinite(value)&&value>=0),'all four camera insets are finite and nonnegative');
+  assert.ok(p.left+p.right<=width&&p.top+p.bottom<=height,'hidden and narrow layout bounds cannot reserve outside the current canvas');
+ }
+ cleanup();assert.equal(events.size,0);assert.equal(ownCameraMove.current,false);
+});

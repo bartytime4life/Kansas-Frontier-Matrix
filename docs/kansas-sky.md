@@ -608,3 +608,15 @@ behavior remain separate evidence states. The historical intermittent
 layer-absence issue #5737 retains its earlier unresolved alternatives.
 Rollback is a reviewed revert of these presentation/control changes; preserve
 source observations, failed diagnostic logs and deployment receipts separately.
+
+
+The independent local browser review reproduced a selected-flight resize error
+between tablet and desktop: `Invalid value for edge-insets` followed by
+`MAP_MAP_CONTAINER_RESIZE_FAILED`. A cause-specific regression executes the real
+flight-layout callback through the installed MapLibre camera. When responsive
+CSS moves the dock beyond the canvas before its resize commits, the earlier
+right-padding calculation becomes negative and the installed `EdgeInsets`
+constructor throws the same error. Padding now reserves a nonnegative
+intersection within the current canvas, including transient hidden/narrow sizes;
+the error banner and exception handling remain intact. Grow/shrink and ownership
+cleanup are checked separately from browser revalidation and hosted acceptance.
