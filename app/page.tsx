@@ -6885,7 +6885,12 @@ export default function Home() {
             map.setProjection({ type: projectionRef.current });
             map.resize();
           })) return;
-          setRuntime({ kind: "loading", message: `MapLibre ${version} loaded · verifying catalog layers and interactions…` });
+          // MapLibre can fire load after errored tiles have settled. Do not
+          // replace an already observed failure with a blocking loading state.
+          const existingFailure = runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}`
+            : degradedReason ?? basemapHealth.warning() ?? mapMutationErrorRef.current;
+          setRuntime(existingFailure ? { kind: "degraded", message: existingFailure }
+            : { kind: "loading", message: `MapLibre ${version} loaded · verifying catalog layers and interactions…` });
         });
 
         let hoverCursorActive = false;

@@ -20,12 +20,13 @@ function visit(node) {
       || name==='sourcedata' && body.includes('OFFICIAL_CONTEXT_BY_SOURCE_ID')
       || name==='idle' && body.includes('Map readiness check')) callbacks[name] = body;
   }
+  if (ts.isCallExpression(node) && node.expression.getText(ast)==='map.once' && node.arguments[0]?.text==='load' && node.arguments[1]?.getText(ast).includes('Map load finalization')) callbacks.load=node.arguments[1].getText(ast);
   if (ts.isVariableDeclaration(node) && node.name.getText(ast)==='syncStyle') callbacks.style = node.initializer.getText(ast);
   if (ts.isCallExpression(node) && node.expression.getText(ast)==='useEffect' && node.arguments[0]?.getText(ast).includes('"Basemap style update"')) callbacks.replace = node.arguments[0].getText(ast);
   ts.forEachChild(node,visit);
 }
 visit(ast);
-for (const name of ['error','sourcedata','idle','style','replace']) assert.ok(callbacks[name],name);
+for (const name of ['error','sourcedata','idle','style','replace','load']) assert.ok(callbacks[name],name);
 const callbackCode = compile(Object.entries(callbacks).map(([name,body])=>`exports.${name}=${body};`).join('\n'));
 const dem = {type:'raster-dem',tiles:['https://example.invalid/current/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256};
 const coord = {canonical:{z:6,x:14,y:24}};
@@ -50,7 +51,7 @@ function harness(basemap='aviation-chart') {
     setNoaaRadarFrameLoadState(){},setTerrainElevationReading(){},setTerrainElevationUnavailable(){},setPlaying(){},setStyleReady(){},
     setOfficialStates(){},setMaplibreProbe(){},setSourceStates(){},setSourceActivity(){},
     failedSourceIds:new Set(),TERRAIN_SOURCE_ID:'terrain-test',TERRAIN_HILLSHADE_SOURCE_ID:'hill-test',TERRAIN_COLOR_SOURCE_ID:'color-test',
-    window:{clearTimeout(){}},version:'6.9.0',
+    window:{clearTimeout(){}},version:'6.9.0',projectionRef:{current:'mercator'},
     setRuntime(value){states.push(typeof value==='function'?value(states.at(-1)):value);},
     sameValues:(a,b)=>JSON.stringify(a)===JSON.stringify(b),
     setBasemap(value){ctx.basemapRef.current=value;ctx.basemap=value;},
@@ -59,11 +60,11 @@ function harness(basemap='aviation-chart') {
     // unchanged page's real warning-state transitions and style replacement.
     runMapMutation(label,fn){if(label!=='Map style synchronization')fn();return true;},
     hiDpiBasemapStyle:style=>style,
-    map:{getSource:id=>sources[id],getPixelRatio:()=>1,setStyle(){exports.style();}},
+    map:{getSource:id=>sources[id],getPixelRatio:()=>1,setProjection(){},resize(){},setStyle(){exports.style();}},
   };
   ctx.mapRef={current:ctx.map};
   vm.runInNewContext(callbackCode,ctx);
-  return {ctx,sources,states,error:e=>exports.error(e),data:e=>exports.sourcedata(e),idle:()=>exports.idle(),style:()=>exports.style(),
+  return {ctx,sources,states,error:e=>exports.error(e),data:e=>exports.sourcedata(e),idle:()=>exports.idle(),style:()=>exports.style(),load:()=>exports.load(),
     replace(name='midnight',duringSetStyle){ctx.basemapRef.current=name;ctx.basemap=name;ctx.map.setStyle=()=>{for(const [id,spec] of Object.entries(specs))sources[id]={serialize:()=>spec};duringSetStyle?.();exports.style();};exports.replace();}};
 }
 
@@ -140,4 +141,8 @@ test('tracking overflow stays explicitly unknown after all retained tiles recove
   h.error({...input,event:{...event(),tile:{state:'errored',tileID:{canonical:{z:6,x:15,y:24}}}}});
   h.loaded({...input,event:event('relief','loaded')});assert.match(h.warning(),/exceeded the health tracking bound/);
   h.beginStyle();assert.equal(h.warning(),null);
+});
+
+test('first MapLibre load cannot overwrite an already observed tile failure with loading',()=>{
+ const h=harness();h.error(event());h.load();assert.equal(h.states.at(-1).message,health.BASEMAP_TILE_WARNING);
 });

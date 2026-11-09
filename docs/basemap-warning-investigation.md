@@ -22,6 +22,11 @@ terminal errored tiles settled. Unknown/tileless source failures remain
 explicit until the style is replaced. Tracking overflow remains explicitly
 unknown. Genuine tile and independent renderer errors stay visible.
 
+The first MapLibre `load` callback also preserves an already observed failure.
+It can run after errored tiles have settled; replacing their warning with
+generic loading temporarily covered the drawn map until the next idle event.
+An executed callback regression fails before and passes after this correction.
+
 Only a positive request/decoder-specification mismatch establishes a stale
 source event. Missing event provenance remains unknown. Identical source IDs
 and specifications cannot prove an event's original style generation. The
