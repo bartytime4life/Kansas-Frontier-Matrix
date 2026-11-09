@@ -1,11 +1,22 @@
 import assert from "node:assert/strict";
 import "./cloudflare-register.mjs";
-import test from "node:test";
+import test, { after } from "node:test";
 
+const blockedRequests = [];
+const denyFetch = async input => { blockedRequests.push(String(input)); throw new Error("Unexpected transport outside an earthquake fixture."); };
+// The Worker captures fetch during import and replaces it on first request.
+// Initialize both stages with denied transport before installing any fixture.
+globalThis.fetch = denyFetch;
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `earthquake-bounds-${process.pid}`);
 const { default: worker } = await import(workerUrl.href);
 const context = { waitUntil() {}, passThroughOnException() {} };
+const primed = await worker.fetch(new Request("http://localhost/api/live-context?feed=unsupported-test-fixture"), {}, context);
+assert.equal(primed.status, 400);
+await primed.arrayBuffer();
+assert.deepEqual(blockedRequests, []);
+globalThis.fetch = denyFetch;
+after(() => assert.deepEqual(blockedRequests, [], "all provider access must belong to an explicit fixture"));
 const day = "2020-01-01";
 const event = (index, overrides = {}) => ({
   type: "Feature", id: `event-${index}`,
@@ -28,7 +39,8 @@ async function withCatalog(features, run) {
     queries.push(url);
     return Response.json({ type: "FeatureCollection", features, metadata: { count: features.length } });
   };
-  try { await run(queries); } finally { globalThis.fetch = originalFetch; }
+  try { await run(queries); assert.equal(queries.length, 1, "the fixture serves exactly one bounded catalog request"); }
+  finally { globalThis.fetch = originalFetch; }
 }
 
 test("earthquake lookahead distinguishes exactly 250 events from an incomplete bounded view", async () => {
@@ -104,8 +116,8 @@ test("downloaded earthquake context retains partial state, record count and trun
 });
 
 test("unavailable earthquake upstreams return an error instead of an empty catalog", async () => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => new Response("Unavailable", { status: 503 });
+  const originalFetch = globalThis.fetch, calls = [];
+  globalThis.fetch = async input => { calls.push(new URL(input)); return new Response("Unavailable", { status: 503 }); };
   try {
     const response = await request();
     assert.equal(response.status, 502);
@@ -115,5 +127,8 @@ test("unavailable earthquake upstreams return an error instead of an empty catal
     assert.equal(body.state, "error");
     assert.equal("data" in body, false);
     assert.match(body.fallback, /No fallback inference/);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].origin, "https://earthquake.usgs.gov");
+    assert.equal(calls[0].pathname, "/fdsnws/event/1/query");
   } finally { globalThis.fetch = originalFetch; }
 });

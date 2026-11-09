@@ -1070,13 +1070,13 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert lock["packages"]["node_modules/minimatch"]["version"] == "3.1.5"
     assert "minimatch" not in manifest["overrides"]  # Legacy ESLint plugins need the callable API.
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 911
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 916
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
     assert result["file_states"]["inherited_repository_overlay"] == 69
-    assert result["file_states"]["repository_only_overlay"] == 49
-    assert result["file_states"]["repository_safety_overlay"] == 22
+    assert result["file_states"]["repository_only_overlay"] == 54
+    assert result["file_states"]["repository_safety_overlay"] == 26
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
@@ -1816,13 +1816,14 @@ def test_history_hold_receipt_withholds_carriers_without_restoring_or_releasing_
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def test_explorer_successor_preserves_history_and_distinguishes_proposed_overlays() -> None:
+def test_historical_explorer_successor_preserves_its_declared_overlays() -> None:
     directory = ROOT / 'data/receipts/generated'
     predecessor = directory / 'site-v268-minimatch-security-overlay-20261101.json'
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == '2a711fde2878b6898c11d0dd8c76a46fb05b9f867da98bf4cb15ce467e584dc6'
     previous = json.loads(predecessor.read_text())
-    current = json.loads((directory / 'site-v268-explorer-recovery-overlay-20261109.json').read_text())
-    assert TOOL.RECEIPT.name == 'site-v268-explorer-recovery-overlay-20261109.json'
+    path = directory / 'site-v268-explorer-recovery-overlay-20261109.json'
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == '471f81343aa7e815a11ab22e49ded8a421509e5a892e1900712d4991898a5d49'
+    current = json.loads(path.read_text())
     assert current['predecessor_receipt'] == predecessor.name
     assert current['predecessor_receipt_sha256'] == hashlib.sha256(predecessor.read_bytes()).hexdigest()
     for name in ('site_candidate_commit', 'site_project_id', 'site_version_id', 'site_audience',
@@ -1860,9 +1861,69 @@ def test_explorer_successor_preserves_history_and_distinguishes_proposed_overlay
         assert declaration['previous_receipt_sha256'] == (old['mirror_sha256'] if old else None)
         assert entry['site_sha256'] == (old['site_sha256'] if old else None)
         assert entry['state'] == declaration['state'] != 'identical'
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # Immutable historical bytes are pinned above; the selected successor
+        # below checks current files after later corrections.
+        digest = entry['mirror_sha256']
         assert declaration['mirror_sha256'] == entry['mirror_sha256'] == digest
         assert declaration['proposed_in_this_change'] == (declaration['repository_base_sha256'] != digest)
     inventory = {name: entry['mirror_sha256'] for name, entry in after.items()}
     assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')
+
+
+def test_source_resilience_successor_binds_only_current_corrections_and_preserves_holds() -> None:
+    directory = ROOT / 'data/receipts/generated'
+    predecessor = directory / 'site-v268-explorer-recovery-overlay-20261109.json'
+    previous_hash = '471f81343aa7e815a11ab22e49ded8a421509e5a892e1900712d4991898a5d49'
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == previous_hash
+    previous = json.loads(predecessor.read_text())
+    path = directory / 'site-v268-source-resilience-overlay-20261109.json'
+    current = json.loads(path.read_text())
+    assert TOOL.RECEIPT == path
+    assert current['predecessor_receipt'] == predecessor.name
+    assert current['predecessor_receipt_sha256'] == previous_hash
+    administrative = {'comparison', 'counts', 'inventory_sha256', 'recorded_at',
+                      'predecessor_receipt', 'predecessor_receipt_sha256', 'repository_reconciled_base',
+                      'repository_reconciliation', 'source_identity_currentness', 'validation', 'rollback'}
+    assert set(current) == set(previous)
+    for name in previous.keys() - administrative:
+        assert current[name] == previous[name], name
+    assert current['status'] == 'REVIEW_ONLY'
+    assert current['review']['source_and_overlay_review'] == 'PENDING'
+    assert current['review']['human_acceptance'] is current['review']['hosted_equivalence'] is False
+    assert current['counts']['repository_withheld'] == previous['counts']['repository_withheld'] == 262
+    before, after = previous['comparison'], current['comparison']
+    assert set(before) <= set(after)
+    assert set(after) - set(before) == {
+        'tests/live-alert-context.test.mjs', 'tests/live-streamflow-context.test.mjs',
+        'tests/lightning-transport.test.mjs', 'tests/observatory-science-probe.test.mjs',
+        'docs/explorer-source-resilience-2026-11-09.md',
+    }
+    changed = {name for name in after if after[name] != before.get(name)}
+    assert changed == {
+        'app/api/live-context/route.ts', 'app/observatory/workspace.tsx',
+        'app/lightning-server.ts', 'app/soil-moisture-server.ts',
+        'tests/live-alert-context.test.mjs', 'tests/live-streamflow-context.test.mjs',
+        'tests/lightning-transport.test.mjs', 'tests/soil-moisture.test.mjs',
+        'tests/observatory-science-probe.test.mjs', 'docs/explorer-source-resilience-2026-11-09.md',
+        'tests/live-earthquake-context.test.mjs', 'tests/live-fire-context.test.mjs',
+    }
+    declarations = {entry['path']: entry for entry in current['repository_reconciliation']['changes']}
+    assert set(declarations) == changed
+    for name in set(before) - changed:
+        assert after[name] == before[name], name
+    for name in changed:
+        declaration, entry, old = declarations[name], after[name], before.get(name)
+        old_hash = old['mirror_sha256'] if old else None
+        assert declaration['proposed_in_this_change'] is True
+        assert declaration['repository_base_sha256'] == declaration['previous_receipt_sha256'] == old_hash
+        assert entry['site_sha256'] == (old['site_sha256'] if old else None)
+        assert entry['state'] == declaration['state'] != 'identical'
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert digest == entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
+    assert current['repository_reconciled_base'] == current['repository_reconciliation']['base_commit'] == '35b54959327fddc284457ea38bedf99304f600f1'
+    assert current['repository_reconciliation']['authority'] == 'CONTENT_PARITY_ONLY'
+    assert current['repository_reconciliation']['restored_recorded_paths'] == []
+    assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')
+    inventory = {name: entry['mirror_sha256'] for name, entry in after.items()}
+    assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()

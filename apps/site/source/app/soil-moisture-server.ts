@@ -55,7 +55,7 @@ export function parseTileRequest(url: string): { view: SoilView; day: string; z:
   if (["view", "day", "z", "x", "y"].some(k => !p.has(k))) throw new SoilSourceError("INVALID_TILE_REQUEST", 400);
   const view = p.get("view") as SoilView, day = p.get("day") ?? "";
   const coords = ["z", "x", "y"].map(k => p.get(k) ?? "");
-  if (!(view in SOIL_VIEWS) || !validSoilDay(day) || coords.some(v => !/^\d+$/.test(v))) throw new SoilSourceError("INVALID_TILE_REQUEST", 400);
+  if (!Object.hasOwn(SOIL_VIEWS, view) || !validSoilDay(day) || coords.some(v => !/^\d+$/.test(v))) throw new SoilSourceError("INVALID_TILE_REQUEST", 400);
   const [z, x, y] = coords.map(Number), n = 2 ** z;
   if (![z, x, y].every(Number.isSafeInteger) || z < 0 || z > 6 || x >= n || y >= n) throw new SoilSourceError("INVALID_TILE_REQUEST", 400);
   return { view, day, z, x, y };
