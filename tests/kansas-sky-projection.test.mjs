@@ -14,14 +14,14 @@ const mult=(m,v)=>Array.from({length:4},(_,r)=>m[r]*v[0]+m[4+r]*v[1]+m[8+r]*v[2]
 const ndc=v=>v.slice(0,3).map(x=>x/v[3]);
 const close=(a,b,message)=>{for(let i=0;i<a.length;i++)assert.ok(Math.abs(a[i]-b[i])<1e-4,`${message}: axis${i}, actual${a[i]}, expected${b[i]}`);};
 const plane={hex:'abc123',lon:-98.35,lat:38.5,onGround:false,altGeomFt:5000,altBaroFt:4800,trackDeg:90,rollDeg:null,emergency:null};
-function harness(transition,requested='globe',zoom=8,terrainElevation=0,onProjection){
+function harness(transition,requested='globe',zoom=8,terrainElevation=0,onProjection,maxPointSize=256){
  const tr=new GlobeTransform();tr.resize(1280,800);tr.setCenter(new LngLat(plane.lon,plane.lat));tr.setZoom(zoom);tr.setPitch(55);tr.setTransitionState(transition);tr.setElevation(terrainElevation);
  const shaders=[],fragments=[],uniforms={},draws=[];let layer,depthWrites=false,bound,serial=0;const uploads=[];
- const gl=new Proxy({VERTEX_SHADER:35633,LINES:1,TRIANGLES:4,POINTS:0,createShader:kind=>({kind}),shaderSource:(shader,source)=>{shader.source=source;if(shader.kind===35633)shaders.push(source);else fragments.push(source);},getShaderParameter:()=>true,getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:(_p,name)=>name,uniformMatrix4fv:(name,_transpose,value)=>uniforms[name]=Array.from(value),uniform4f:(name,...value)=>uniforms[name]=value,uniform2f:(name,...value)=>uniforms[name]=value,uniform1f:(name,value)=>uniforms[name]=value,depthMask:value=>depthWrites=value,drawArrays:(mode,start,count)=>draws.push({mode,start,count,depthWrites}),createBuffer:()=>({id:++serial}),bindBuffer:(_target,buffer)=>bound=buffer,bufferSubData:(_target,offset,data)=>uploads.push({buffer:bound.id,offset,data:new Float32Array(data)})},{get:(o,k)=>k in o?o[k]:()=>({})});
+ const gl=new Proxy({VERTEX_SHADER:35633,ONE:1,ONE_MINUS_SRC_ALPHA:771,LINES:1,TRIANGLES:4,POINTS:0,getParameter:()=>[1,maxPointSize],createShader:kind=>({kind}),shaderSource:(shader,source)=>{shader.source=source;if(shader.kind===35633)shaders.push(source);else fragments.push(source);},getShaderParameter:()=>true,getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:(_p,name)=>name,uniformMatrix4fv:(name,_transpose,value)=>uniforms[name]=Array.from(value),uniform4f:(name,...value)=>uniforms[name]=value,uniform2f:(name,...value)=>uniforms[name]=value,uniform1f:(name,value)=>uniforms[name]=value,depthMask:value=>depthWrites=value,drawArrays:(mode,start,count)=>draws.push({mode,start,count,depthWrites}),createBuffer:()=>({id:++serial}),bindBuffer:(_target,buffer)=>bound=buffer,bufferSubData:(_target,offset,data)=>uploads.push({buffer:bound.id,offset,data:new Float32Array(data)})},{get:(o,k)=>k in o?o[k]:()=>({})});
  const map={isStyleLoaded:()=>true,getLayer:()=>layer,getZoom:()=>zoom,getCenter:()=>tr.center,getProjection:()=>({type:requested}),getCanvas:()=>({clientWidth:1280,clientHeight:800}),on(){},off(){},triggerRepaint(){},queryTerrainElevation:()=>0,addLayer:l=>{layer=l;l.onAdd(map,gl);},removeLayer(){layer.onRemove();layer=undefined;}};
- const attachment=renderer.attachKansasSky(map,()=>{},message=>assert.fail(message),onProjection);
+ const selected=[];const attachment=renderer.attachKansasSky(map,hex=>selected.push(hex),message=>assert.fail(message),onProjection);
  const input={modelViewProjectionMatrix:tr.modelViewProjectionMatrix,shaderData:{variantName:transition?'globe':'mercator',vertexShaderPrelude:'uniform mat4 u_projection_matrix;',define:transition?'#define GLOBE':'#define PROJECTION_MERCATOR'},defaultProjectionData:tr.getProjectionDataForCustomLayer(),getProjectionData:({tileID,applyGlobeMatrix})=>tr.getProjectionData({overscaledTileID:new OverscaledTileID(tileID.canonical.z,0,tileID.canonical.z,tileID.canonical.x,tileID.canonical.y),applyGlobeMatrix})};
- return {tr,map,attachment,uniforms,draws,uploads,shaders,fragments,input,draw(observed=plane){attachment.update([observed],[],observed.hex,false,false,false);layer.render(gl,input);}};
+ return {tr,map,gl,attachment,uniforms,draws,uploads,shaders,fragments,input,selected,draw(observed=plane){attachment.update([observed],[],observed.hex,false,false,false);layer.render(gl,input);}};
 }
 // Evaluate the actual renderer's position expression with installed MapLibre
 // matrices. This is shader algebra/CPU evidence, not a GPU/browser result.
@@ -114,4 +114,59 @@ test('Mercator picking matches the elevated public world-tile render position',(
   assert.equal(renderer.pickKansasSkyAircraft(h.map,point),true,`${requested} zoom${zoom}: rendered aircraft center is pickable`);
   assert.equal(renderer.pickKansasSkyAircraft(h.map,{x:point.x+40,y:point.y+40}),false,'outside the symbol hit radius remains a miss');h.attachment.dispose();
  }
+});
+
+
+test('actual globe and transition aircraft centers are selectable without claiming surrounding map clicks',()=>{
+ for(const phase of [0,.25,.5,.75,1])for(const zoom of [3,6,9.7]){
+  const h=harness(phase,'globe',zoom);h.draw();const clip=projected(h),point={x:(clip[0]/clip[3]+1)*1280/2,y:(1-clip[1]/clip[3])*800/2};
+  assert.equal(renderer.pickKansasSkyAircraft(h.map,point),true,`phase${phase} zoom${zoom}: actual rendered aircraft center is selectable`);
+  assert.deepEqual(h.selected,[plane.hex]);
+  assert.equal(renderer.pickKansasSkyAircraft(h.map,{x:point.x+45,y:point.y+45}),false,'surrounding geography remains available to ordinary map picking');h.attachment.dispose();
+ }
+});
+
+test('globe hidden hemisphere and offscreen aircraft cannot own clicks',()=>{
+ for(const observed of [{...plane,lon:plane.lon+180,lat:-plane.lat},{...plane,lon:plane.lon+80}]){
+  const h=harness(1,'globe',3);h.draw(observed);const clip=projected(h,observed),point={x:(clip[0]/clip[3]+1)*1280/2,y:(1-clip[1]/clip[3])*800/2};
+  assert.equal(renderer.pickKansasSkyAircraft(h.map,point),false,'hidden or clipped geometry cannot be selected through the map');h.attachment.dispose();
+ }
+});
+
+test('regional and close aircraft receive a bounded high contrast screen locator at the observed center',()=>{
+ for(const phase of [0,.5,1])for(const zoom of [3,6,9.7,16]){
+  const h=harness(phase,'globe',zoom);h.draw();
+  const markerShader=h.shaders.find(source=>source.includes('v_marker_direction'));
+  assert.ok(markerShader,'a GPU locator remains available when world-size wings become tiny');
+  assert.ok(h.draws.some(draw=>draw.mode===0&&draw.count===1),'selected and unselected locators use bounded point draws');
+  assert.ok(h.uniforms.u_marker_size>=18&&h.uniforms.u_marker_size<=42,'the locator has deliberate CSS pixel bounds at every zoom');
+  assert.match(h.fragments.find(source=>source.includes('v_marker_direction')),/vec3\(\.02,\.08,\.12\)/,'a dark backing keeps the silhouette legible on light terrain');
+  h.attachment.dispose();
+ }
+});
+
+
+test('decorative Kansas curtain uses public world-tile 3D depth and bounded non-additive light in both projections',async()=>{
+ const curtain={};new Function('exports',ts.transpileModule(await readFile('app/aurora-curtain-layer.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(curtain);
+ for(const phase of [0,.5,1]){
+  const h=harness(phase,'globe',6),blend=[];
+  h.gl.blendFunc=(...args)=>blend.push(args);Object.assign(h.map,{getTerrain:()=>({source:'dem',exaggeration:2.5}),getBounds:()=>({getWest:()=>-110,getEast:()=>-90,getSouth:()=>30,getNorth:()=>45})});
+  const layer=curtain.createAuroraCurtainLayer({id:'test-curtain',ring:[[plane.lon,plane.lat],[plane.lon+.01,plane.lat],[plane.lon,plane.lat+.01],[plane.lon,plane.lat]],clock:()=>null});layer.onAdd(h.map,h.gl);layer.render(h.gl,h.input);
+  assert.match(h.shaders[0],/projectTileFor3D\(a_pos\s*\*\s*8192/,'the curtain uses the same public 3D position contract as aircraft');
+  const expected=h.tr.getProjectionData({overscaledTileID:new OverscaledTileID(0,0,0,0,0),applyGlobeMatrix:true});
+  close(h.uniforms.u_projection_matrix,Array.from(expected.mainMatrix),'world-tile matrix matches installed MapLibre');
+  assert.ok(h.uniforms.u_height<=8000,'decorative height stays modest statewide and is independent of DEM exaggeration');
+  assert.equal(blend.at(-1)[1],h.gl.ONE_MINUS_SRC_ALPHA,'premultiplied alpha preserves basemap contrast instead of adding white');
+  assert.match(h.fragments[0],/v_visibility<0\./,'hidden hemisphere clipping is independent of 3D depth');
+  layer.onRemove(h.map,h.gl);h.attachment.dispose();
+ }
+});
+
+
+test('locator point limits are sampled on attachment and hit extents match high-density hardware clamping',()=>{
+ const h=harness(0,'mercator',6,0,undefined,32);h.map.getCanvas=()=>({clientWidth:1280,clientHeight:800,width:2560});h.draw();
+ assert.equal(h.uniforms.u_pixel_ratio,2);assert.equal(h.uniforms.u_marker_max_size,32);
+ const clip=projected(h),point={x:(clip[0]/clip[3]+1)*640,y:(1-clip[1]/clip[3])*400};
+ assert.equal(renderer.pickKansasSkyAircraft(h.map,point),true);assert.equal(renderer.pickKansasSkyAircraft(h.map,{x:point.x+9,y:point.y}),false,'a hardware-limited 16 CSS-pixel locator owns only its visible radius');
+ assert.match(h.shaders.find(source=>source.includes('v_marker_direction')),/gl_PointSize=min\(/,'the actual shader applies the one-time capability limit');h.attachment.dispose();
 });

@@ -106,9 +106,11 @@ function ProfileChart({ points, bands, aircraft }: Readonly<{ points: readonly P
   </svg>;
 }
 
-export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest, onPickingChange, showRequest, onAircraftInspect }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
+export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest, onPickingChange, showRequest, aircraftShowRequest, onAircraftInspect }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
   /** A category map asks to show this layer; it never hides it. */
   showRequest?: number;
+  /** An explicit Kansas Sky action reveals its existing controls and observed traffic. */
+  aircraftShowRequest?: number;
   /** A map aircraft click reveals its instruments without changing selected layers. */
   onAircraftInspect?: () => void;
   /** Points this layer offers the "Near here" dossier while shown; null while hidden or loading. */
@@ -384,6 +386,14 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
   const inspectorRef = useRef<HTMLDivElement | null>(null);
   const detailsRef = useRef<HTMLDetailsElement | null>(null);
+  // A remounted category panel must not replay an already issued request.
+  const seenAircraftShowRequest=useRef(aircraftShowRequest??0);
+  useEffect(()=>{
+    if(!aircraftShowRequest||aircraftShowRequest===seenAircraftShowRequest.current)return;
+    seenAircraftShowRequest.current=aircraftShowRequest;
+    setVisible(true);setShowTraffic(true);
+    if(detailsRef.current)detailsRef.current.open=true;
+  },[aircraftShowRequest]);
   const inspectAircraft = useCallback(() => {
     if (detailsRef.current) detailsRef.current.open = true;
     // The parent owns focus after its panel and catalog filters commit.
@@ -489,6 +499,14 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
       {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}
       {edition && <p role="status" data-edition={edition.state}><strong>{edition.state === "CURRENT" ? "Current edition" : edition.state === "PREVIEW" ? "Preview edition" : "Expired edition"}:</strong> {edition.text}</p>}
+      <fieldset><legend>Kansas Sky · aircraft journeys</legend>
+          <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Kansas Sky · observed aircraft, trails and recorded replay</label>
+          <ul className="aviation-legend">{TRAFFIC_ALTITUDE_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value === 0 ? "Below 1,000 ft / reported surface / unknown height" : `${value.toLocaleString("en-US")} reported ft and above (approximate)`}</li>)}<li><i style={{ background: "#e0301e" }} /> Emergency squawk (7500/7600/7700)</li><li><i style={{ background: "#ffd66b" }} /> Selected aircraft and trail (overrides altitude color)</li></ul>
+          {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{trafficRecords.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){trafficRecords.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
+          <KansasSkyControl mapRef={mapRef} styleReady={styleReady} enabled={visible && showTraffic} flat={view === "2d"} onReplayMode={setSkyReplay} onAircraftInspect={inspectAircraft} envelope={traffic.value} feedState={traffic.state} />
+          {skyReplay && <small>Flight replay active: current aircraft are omitted from the side profile and nearby-point inspection. Use Kansas Sky for the selected historical aircraft.</small>}
+          <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic.</small>
+      </fieldset>
       {context && <>
         <fieldset><legend>Airspace volumes</legend>
           <div role="radiogroup" aria-label="Airspace display"><label><input type="radio" name="kfm-aviation-view" checked={view === "3d"} onChange={() => chooseView("3d")} /> 3D volumes</label>
@@ -520,12 +538,6 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           <label><input type="checkbox" checked={showPrivate} onChange={event => setShowPrivate(event.target.checked)} /> Private-use airports, heliports and strips ({context.airports.filter(airport => airport.use === "PRIVATE").length}; hollow dots, “PVT”). Landing needs the owner’s permission.</label>
           <label><input type="checkbox" checked={airwayKinds.has("VICTOR")} onChange={event => toggleAirway(["VICTOR", "RNAV_T"], event.target.checked)} /> Low airways (Victor, T routes) · 1,200 AGL–below FL180</label>
           <label><input type="checkbox" checked={airwayKinds.has("JET")} onChange={event => toggleAirway(["JET", "RNAV_Q"], event.target.checked)} /> High routes (Jet, Q routes) · FL180–FL450</label>
-          <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Kansas Sky · observed aircraft, trails and recorded replay</label>
-          <ul className="aviation-legend">{TRAFFIC_ALTITUDE_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value === 0 ? "Below 1,000 ft / reported surface / unknown height" : `${value.toLocaleString("en-US")} reported ft and above (approximate)`}</li>)}<li><i style={{ background: "#e0301e" }} /> Emergency squawk (7500/7600/7700)</li><li><i style={{ background: "#ffd66b" }} /> Selected aircraft and trail (overrides altitude color)</li></ul>
-          {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{trafficRecords.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){trafficRecords.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
-          <KansasSkyControl mapRef={mapRef} styleReady={styleReady} enabled={visible && showTraffic} flat={view === "2d"} onReplayMode={setSkyReplay} onAircraftInspect={inspectAircraft} envelope={traffic.value} feedState={traffic.state} />
-          {skyReplay && <small>Flight replay active: current aircraft are omitted from the side profile and nearby-point inspection. Use Kansas Sky for the selected historical aircraft.</small>}
-          <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic.</small>
         </fieldset>
         <fieldset><legend>Airport weather &amp; pilot reports (live)</legend>
           <label><input type="checkbox" checked={showMetar} onChange={event => setShowMetar(event.target.checked)} /> METAR stations (ASOS/AWOS) by flight category</label>

@@ -27,24 +27,29 @@ export function floraKey(year: number): MapKey {
 export function syncFloraContext(map: MapLibreMap, year: number | null, opacity = 0.75, revision = 0): void {
   const id = year === null ? null : floraSourceId(year, revision);
   const tiles = year === null ? null : floraTileUrl(year);
-  for (const layer of map.getStyle().layers ?? []) {
+  // Native WebGL context loss clears MapLibre's style before React disables
+  // its context layers. There is nothing to remove or add until styledata
+  // restores a style; keep the surrounding Explorer controls available.
+  const style = map.getStyle();
+  if (!style) return;
+  for (const layer of style.layers ?? []) {
     if (layer.id.startsWith(FLORA_SOURCE_PREFIX) && layer.id !== id) map.removeLayer(layer.id);
   }
-  for (const source of Object.keys(map.getStyle().sources ?? {})) {
+  for (const source of Object.keys(style.sources ?? {})) {
     if (source.startsWith(FLORA_SOURCE_PREFIX) && source !== id) map.removeSource(source);
   }
   if (id === null || tiles === null) return;
   if (!map.getSource(id)) map.addSource(id, { type: "raster", tiles: [tiles], tileSize: 512, minzoom: 0, maxzoom: 6,
     bounds: [-102.1, 36.9, -94.5, 40.1], attribution: "GBIF occurrence contributors · Plantae · annual generalized records" });
   const alpha = Number.isFinite(opacity) ? Math.max(0, Math.min(1, opacity)) : 0.75;
-  const before = map.getStyle().layers?.find(layer => layer.type === "symbol")?.id;
+  const before = style.layers?.find(layer => layer.type === "symbol")?.id;
   if (!map.getLayer(id)) map.addLayer({ id, type: "raster", source: id, paint: { "raster-opacity": alpha, "raster-resampling": "nearest", "raster-fade-duration": 0 } }, before);
   else map.setPaintProperty(id, "raster-opacity", alpha);
   placeFloraContext(map, id);
 }
 
 function placeFloraContext(map: MapLibreMap, id: string): void {
-  const layers = map.getStyle().layers ?? [];
+  const layers = map.getStyle()?.layers ?? [];
   const index = layers.findIndex(layer => layer.id === id);
   const cover = layers.findLastIndex(layer => ["tool-nlcd-land-cover-raster", "tool-usda-cdl-raster"].includes(layer.id));
   if (index >= 0 && cover > index) map.moveLayer(id, layers[cover + 1]?.id);

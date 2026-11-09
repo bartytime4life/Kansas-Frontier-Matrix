@@ -24,14 +24,16 @@ const {attachKansasSky,pickKansasSkyAircraft,attachKansasSkyFocus}=exports;
 function fixture(loaded=true,{failStroke=false}={}){
   const layers=new Map(),events=[],listeners=new Map();
   let styleLoaded=loaded,vertices=new Float32Array(),bufferSerial=0,boundBuffer;const uploads=[],draws=[],blends=[],shaderSources=new Map();
-  const gl=new Proxy({createBuffer:()=>({id:++bufferSerial}),bindBuffer:(_target,buffer)=>{boundBuffer=buffer;},LINES:1,TRIANGLES:4,POINTS:0,SRC_ALPHA:770,ONE_MINUS_SRC_ALPHA:771,ONE:1,createShader:()=>({}),shaderSource:(shader,source)=>shaderSources.set(shader,source),drawArrays:(...args)=>draws.push(args),blendFuncSeparate:(...args)=>blends.push(args),bufferSubData:(_target,_offset,value)=>{vertices=new Float32Array(value);uploads.push({buffer:boundBuffer?.id,offset:_offset,data:vertices});},getShaderParameter:shader=>!(failStroke&&shaderSources.get(shader)?.includes("in vec3 a_other")),getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:()=>null},
+  const gl=new Proxy({createBuffer:()=>({id:++bufferSerial}),bindBuffer:(_target,buffer)=>{boundBuffer=buffer;},LINES:1,TRIANGLES:4,POINTS:0,SRC_ALPHA:770,ONE_MINUS_SRC_ALPHA:771,ONE:1,createShader:()=>({}),shaderSource:(shader,source)=>shaderSources.set(shader,source),drawArrays:(...args)=>draws.push(args),blendFuncSeparate:(...args)=>blends.push(args),bufferSubData:(_target,_offset,value)=>{vertices=new Float32Array(value);uploads.push({buffer:boundBuffer?.id,offset:_offset,data:vertices});},getShaderParameter:shader=>!(failStroke&&shaderSources.get(shader)?.includes("in float a_edge")),getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:()=>null},
     {get:(target,key)=>key in target?target[key]:()=>({})});
   const map={isStyleLoaded:()=>styleLoaded,getLayer:id=>layers.get(id),getZoom:()=>0,getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:100}),
     on(name,fn){events.push(['on',name]);if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name).add(fn);},
     off(name,fn){events.push(['off',name]);listeners.get(name)?.delete(fn);},triggerRepaint(){},queryTerrainElevation:()=>0,
     addLayer(layer){layers.set(layer.id,layer);layer.onAdd(map,gl);},removeLayer(id){layers.get(id)?.onRemove();layers.delete(id);}};
   const matrix=[1/512,0,0,0,0,1/512,0,0,0,0,0,0,-.25,-.5,0,1];
-  return {map,events,uploads,draws,blends,vertices:()=>vertices,setStyleLoaded:value=>{styleLoaded=value;},emit:(name,event)=>{for(const fn of [...(listeners.get(name)??[])])fn(event);},listenerCount:name=>listeners.get(name)?.size??0,draw:()=>layers.get('kfm-kansas-sky').render(gl,{modelViewProjectionMatrix:matrix,shaderData:{variantName:'mercator',vertexShaderPrelude:'uniform mat4 u_projection_matrix;',define:'#define PROJECTION_MERCATOR'},getProjectionData:()=>({mainMatrix:matrix,fallbackMatrix:matrix,tileMercatorCoords:[0,0,1/8192,1/8192],clippingPlane:[0,0,0,1],projectionTransition:0})})};
+  // The public world-tile contract uses 0..8192 XY, separately from world pixels.
+  const tileMatrix=[1/8192,0,0,0,0,1/8192,0,0,0,0,0,0,-.25,-.5,0,1];
+  return {map,events,uploads,draws,blends,vertices:()=>vertices,setStyleLoaded:value=>{styleLoaded=value;},emit:(name,event)=>{for(const fn of [...(listeners.get(name)??[])])fn(event);},listenerCount:name=>listeners.get(name)?.size??0,draw:()=>layers.get('kfm-kansas-sky').render(gl,{modelViewProjectionMatrix:matrix,shaderData:{variantName:'mercator',vertexShaderPrelude:'uniform mat4 u_projection_matrix;',define:'#define PROJECTION_MERCATOR'},getProjectionData:()=>({mainMatrix:tileMatrix,fallbackMatrix:tileMatrix,tileMercatorCoords:[0,0,1/8192,1/8192],clippingPlane:[0,0,0,1],projectionTransition:0})})};
 }
 const aircraft={hex:'abc123',lon:-90,lat:0,onGround:false,altGeomFt:5000,altBaroFt:4800,trackDeg:90,rollDeg:null,emergency:null};
 for(const readyEvent of ['render','error'])for(const phase of ['initial attachment','replacement style'])test(`aircraft renderer recovers after pending ${phase} on ${readyEvent} and cancels disposed work`,()=>{
@@ -413,4 +415,55 @@ test('paused flight framing refreshes owned padding when status or dock layout c
  assert.ok(observed.includes(badge),'status geometry participates in layout invalidation');resizeCallback();assert.equal(moves.length,2);assert.equal(ownCameraMove.current,false);
  cleanup();assert.equal(disconnected,true);assert.equal(events.size,0);
  const before=moves.length,release=executeCamera(effect,{...scope,cameraLeaseActive:false})();resizeCallback();assert.equal(moves.length,before,'outside the camera lease, layout measurement cannot move the map');release();
+});
+
+
+test('Kansas Sky topic launch explicitly enables aviation and opens the existing filtered inspector',async()=>{
+ const page=await readFile('app/page.tsx','utf8'),ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);let launch;
+ function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='openKansasSky')launch=node.initializer.arguments[0].getText(ast);ts.forEachChild(node,visit);}visit(ast);
+ assert.ok(launch,'the Aviation topic exposes a direct Kansas Sky entry');
+ let request=7,aircraftRequest=3;const events=[],scope={setAircraftShowRequest:fn=>{aircraftRequest=fn(aircraftRequest);},setOfficialWorkspace:v=>events.push(['workspace',v]),setOfficialSourceQuery:v=>events.push(['query',v]),setOfficialCatalogFilter:v=>events.push(['filter',v]),setSourceStatusOpen:v=>events.push(['status',v]),setStarterPanelOpen:v=>events.push(['starter',v]),setLayerCatalogView:v=>events.push(['view',v]),setAviationShowRequest:fn=>{request=fn(request);},openAtlasPanel:(...args)=>events.push(['panel',...args]),announce:v=>events.push(['announce',v])};
+ const click=executeCamera(launch,scope);assert.equal(request,7,'rendering or preparing a callback does not activate the feed');click();
+ assert.equal(request,8,'one deliberate launch requests the existing aviation layer');assert.equal(aircraftRequest,4,'the same explicit action reveals the aircraft controls');assert.ok(events.some(([kind,value])=>kind==='view'&&value==='selected'));
+ assert.deepEqual(events.find(([kind])=>kind==='panel'),['panel','layers',null,'[aria-label="Kansas Sky aircraft"]']);
+ assert.match(page,/welcomeTopics\.includes\("aviation"\)&&<button[^>]+className="sky-topic-launch"[^>]+onClick={openKansasSky}/,'entry is scoped to the selected Aviation topic');
+});
+
+
+test('explicit Sky requests reveal disabled traffic and collapsed controls once, preserving later manual opt-out',async()=>{
+ const source=await readFile('app/aviation-layer-control.tsx','utf8'),ast=ts.createSourceFile('aviation.tsx',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);let call,initial;
+ function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='seenAircraftShowRequest')initial=node.initializer.arguments[0].getText(ast);if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('seenAircraftShowRequest'))call=node.getText(ast);ts.forEachChild(node,visit);}visit(ast);
+ assert.ok(call);let prior,visible=false,traffic=false;const detailsRef={current:{open:false}},seenAircraftShowRequest={current:0};
+ const useEffect=(fn,deps)=>{if(!prior||deps.some((v,i)=>v!==prior[i])){fn();prior=deps;}};
+ const render=request=>executeCamera(`()=>{${call};}`,{useEffect,aircraftShowRequest:request,seenAircraftShowRequest,detailsRef,setVisible:v=>visible=v,setShowTraffic:v=>traffic=v})();
+ render(0);assert.equal(traffic,false);assert.equal(detailsRef.current.open,false,'ordinary category rendering cannot expand controls or enable disabled traffic');
+ render(1);assert.equal(visible,true);assert.equal(traffic,true);assert.equal(detailsRef.current.open,true,'explicit entry exposes its intended destination');
+ traffic=false;detailsRef.current.open=false;render(1);assert.equal(traffic,false);assert.equal(detailsRef.current.open,false,'an unchanged request cannot undo a later manual opt-out');
+ render(2);assert.equal(traffic,true);assert.equal(detailsRef.current.open,true,'another deliberate entry can request the experience again');
+ visible=false;traffic=false;detailsRef.current.open=false;prior=undefined;
+ seenAircraftShowRequest.current=executeCamera(initial,{aircraftShowRequest:2});render(2);
+ assert.equal(visible,false);assert.equal(traffic,false);assert.equal(detailsRef.current.open,false,'a category remount cannot replay a consumed explicit request');
+ render(3);assert.equal(traffic,true);assert.equal(detailsRef.current.open,true,'a new explicit request still works after remount');
+});
+
+test('responsive flight padding keeps the installed camera valid while dock and canvas resize at different times',()=>{
+ const effect=cameraEffects.find(text=>text.includes('Layout changes refresh this cache'));
+ const map=new cameraModule.exports.Camera({minZoom:0,maxZoom:16,maxPitch:72,renderWorldCopies:false,transformConstrain:null,centerClampedToGround:false,requestRenderFrame:()=>0,cancelRenderFrame:()=>{}});
+ let width=768,height=970,canvasRight=768,dockLeft=370,dockTop=90;const events=new Map();
+ const canvas={get clientWidth(){return width;},get clientHeight(){return height;},getBoundingClientRect:()=>({top:54,right:canvasRight,bottom:height+54})};
+ const dock={getBoundingClientRect:()=>({left:dockLeft,top:dockTop})},badge={getBoundingClientRect:()=>({top:120,bottom:190,width:190,height:70})};
+ Object.assign(map,{getCanvas:()=>canvas,getContainer:()=>({querySelector:()=>dock,querySelectorAll:()=>[badge]}),on:(name,fn)=>events.set(name,fn),off:name=>events.delete(name)});map.transform.resize(width,height);
+ const ownCameraMove={current:false};const cleanup=executeCamera(effect,{mapRef:{current:map},enabled:true,cameraLeaseActive:true,ownCameraMove,flightPadding:executeCamera(paddingInitializer,{}),ResizeObserver:class{observe(){}disconnect(){}}})();
+ // CSS moves the desktop flight dock before the canvas resize observer commits
+ // its new width. This is a valid transient layout, not malformed source data.
+ dockLeft=1150;
+ assert.doesNotThrow(()=>events.get('resize')(),'an off-canvas dock cannot send a negative edge inset to Camera.jumpTo');
+ assert.equal(map.getPadding().right,0,'a dock beyond the old canvas reserves no negative occlusion');
+ for(const state of [[1440,846,1440,1040,144],[375,730,375,10,319.65625],[768,970,768,370,144],[0,0,0,1040,144]]){
+  [width,height,canvasRight,dockLeft,dockTop]=state;map.transform.resize(width,height);
+  assert.doesNotThrow(()=>events.get('resize')());const p=map.getPadding();
+  assert.ok(Object.values(p).every(value=>Number.isFinite(value)&&value>=0),'all four camera insets are finite and nonnegative');
+  assert.ok(p.left+p.right<=width&&p.top+p.bottom<=height,'hidden and narrow layout bounds cannot reserve outside the current canvas');
+ }
+ cleanup();assert.equal(events.size,0);assert.equal(ownCameraMove.current,false);
 });

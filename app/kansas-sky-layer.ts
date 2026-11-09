@@ -76,7 +76,7 @@ const PLANE=[[0,1],[.13,-.8],[-.13,-.8],[-.9,-.1],[0,.25],[.9,-.1],[-.45,-.75],[
 const SELECTED_PLANE=[[0,1,0,1.1],[.11,-.7,0,.75],[0,-.6,.13,1.1],[0,1,0,1.1],[0,-.6,.13,1.1],[-.11,-.7,0,.9],[0,1,0,.65],[0,-.7,-.1,.5],[.11,-.7,0,.75],[0,1,0,.65],[-.11,-.7,0,.9],[0,-.7,-.1,.5],[-1,-.22,0,.75],[-.1,.28,.02,1],[0,-.35,.04,1.1],[0,-.35,.04,1.1],[.1,.28,.02,1],[1,-.22,0,.7],[-.46,-.82,0,.75],[0,-.54,.04,1.1],[.46,-.82,0,.85],[0,-.92,0,.7],[0,-.48,.04,1],[0,-.77,.38,1.2]];
 const xy = (lon: number, lat: number) => [(lon + 180) / 360, (180 - Math.log(Math.tan(Math.PI / 4 + lat * RAD / 2)) / RAD) / 360];
 const origin = xy(-98.35, 38.5);
-const uniforms = ["u_matrix", "u_world", "u_origin", "u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition", "u_viewport", "u_width", "u_halo", "u_opacity", "u_point"];
+const uniforms = ["u_marker_max_size", "u_marker_size", "u_pixel_ratio", "u_matrix", "u_world", "u_origin", "u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition", "u_viewport", "u_width", "u_halo", "u_opacity", "u_point"];
 type Bundle = { program: WebGLProgram; vao: WebGLVertexArrayObject; u: Record<string, WebGLUniformLocation | null> };
 export type { SkyTrail } from "./kansas-sky";
 type Position = Pick<Aircraft,"onGround"|"altGeomFt"|"altBaroFt"|"emergency">;
@@ -95,7 +95,8 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   let gl: WebGL2RenderingContext | null = null, buffer: WebGLBuffer | null = null, active = true, dirty = true;
   let projectionPhase:number|null=null,projectionNoticePending=false;
   const notifyProjection=(phase:number|null)=>{if(phase===projectionPhase)return;projectionPhase=phase;if(projectionChanged&&!projectionNoticePending){projectionNoticePending=true;queueMicrotask(()=>{projectionNoticePending=false;if(active)projectionChanged(projectionPhase);});}};
-  let strokeBuffer:WebGLBuffer|null=null,strokeVertices=0,routeVertices=0;
+  let strokeBuffer:WebGLBuffer|null=null,markerBuffer:WebGLBuffer|null=null,strokeVertices=0,routeVertices=0,markerPointLimit=256;
+  const markerData=new Float32Array(LIMIT*11),markerBundles=new Map<string,Bundle>();
   const strokeData=new Float32Array(STROKE_SEGMENTS*6*11),strokeBundles=new Map<string,Bundle>();
   let planes: readonly Aircraft[] = [], trails: readonly SkyTrail[] = [], selected: string | null = null;
   let planeVertices = 0, trailVertices = 0, fallbackVertices=0, focalVertex=-1, flat = false, trailDirty = true, showPaths = true, showGuides = true;
@@ -112,7 +113,7 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   };
   const bundles = new Map<string, Bundle>();
   const failed = new Set<string>();
-  let hits: { hex: string; x: number; y: number }[] = [];
+  let hits: { hex: string; x: number; y: number; radius:number; depth:number }[] = [];
   const groundMarkers = new Map<string, {lon:number;lat:number;height:number}>();
   const markerAltitude=(a:Aircraft)=>{
     if(flat)return 0;
@@ -158,6 +159,62 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     gl!.bindVertexArray(null);
     return { program, vao, u: Object.fromEntries(uniforms.map(name => [name, gl!.getUniformLocation(program, name)])) };
   };
+  // One point per observation, independent of world-size mesh detail. The
+  // backing/outline are schematic CSS pixels; position and 3D depth stay exact.
+  const buildMarkers = (input:CustomRenderMethodInput):Bundle => {
+    const vertex=compile(gl!.VERTEX_SHADER,`#version 300 es\n${input.shaderData.vertexShaderPrelude}\n${input.shaderData.define}
+      uniform vec2 u_origin; uniform vec2 u_viewport; uniform float u_marker_size; uniform float u_marker_max_size; uniform float u_pixel_ratio;
+      in vec3 a_position; in vec3 a_other; in vec3 a_color; in float a_selected; in float a_known;
+      out vec3 v_color; out vec2 v_marker_direction; out float v_selected; out float v_known; out float v_visibility;
+      void main(){
+        gl_Position=projectTileFor3D((u_origin+a_position.xy)*8192.,a_position.z);
+        vec4 nose=projectTileFor3D((u_origin+a_other.xy)*8192.,a_other.z);
+        vec2 direction=(nose.xy/max(.00001,nose.w)-gl_Position.xy/max(.00001,gl_Position.w))*u_viewport;
+        v_marker_direction=length(direction)>.00001?normalize(direction):vec2(0.,1.);
+        gl_PointSize=min((a_selected>.5?40.:u_marker_size)*u_pixel_ratio,u_marker_max_size);
+        v_color=a_color;v_selected=a_selected;v_known=a_known;v_visibility=1.;
+        #ifdef GLOBE
+        vec3 elevated=projectToSphere((u_origin+a_position.xy)*8192.)*(1.+a_position.z/6371008.8);
+        v_visibility=1.-globeComputeClippingZ(elevated)*clamp((u_projection_transition-.2)/.8,0.,1.);
+        #endif
+      }`);
+    const fragment=compile(gl!.FRAGMENT_SHADER,`#version 300 es\nprecision highp float;
+      in vec3 v_color;in vec2 v_marker_direction;in float v_selected;in float v_known;in float v_visibility;out vec4 fragColor;
+      float triangle(vec2 p,vec2 a,vec2 b,vec2 c){
+        float ab=(b.x-a.x)*(p.y-a.y)-(b.y-a.y)*(p.x-a.x),bc=(c.x-b.x)*(p.y-b.y)-(c.y-b.y)*(p.x-b.x),ca=(a.x-c.x)*(p.y-c.y)-(a.y-c.y)*(p.x-c.x);
+        return (ab>=0.&&bc>=0.&&ca>=0.)||(ab<=0.&&bc<=0.&&ca<=0.)?1.:0.;
+      }
+      float glyph(vec2 p){return max(triangle(p,vec2(0.,.82),vec2(.13,-.65),vec2(-.13,-.65)),max(triangle(p,vec2(-.8,-.1),vec2(0.,.25),vec2(.8,-.1)),triangle(p,vec2(-.4,-.62),vec2(0.,-.4),vec2(.4,-.62))));}
+      void main(){
+        if(v_visibility<0.)discard;
+        vec2 p=(gl_PointCoord-vec2(.5))*2.;p.y=-p.y;float d=length(p);
+        if(d>.98)discard;
+        vec2 nose=v_marker_direction,right=vec2(nose.y,-nose.x),q=vec2(dot(p,right),dot(p,nose));
+        float shape=v_known>.5?glyph(q*1.3):1.-step(.53,abs(q.x)+abs(q.y));
+        // Crisp ivory and dark backing work on both chart and light terrain.
+        vec3 ink=vec3(.02,.08,.12),bright=mix(v_color,vec3(1.,.98,.88),.7);
+        float ring=(1.-smoothstep(.04,.09,abs(d-.81)))*(v_selected>.5?1.:.5);
+        float backing=(1.-smoothstep(.65,.76,d))*(v_selected>.5?.78:.93);
+        float alpha=max(backing,ring);if(alpha<.01)discard;
+        fragColor=vec4(mix(ink,bright,max(shape,ring)),alpha);
+      }`);
+    const program=gl!.createProgram()!;gl!.attachShader(program,vertex);gl!.attachShader(program,fragment);gl!.linkProgram(program);gl!.deleteShader(vertex);gl!.deleteShader(fragment);
+    if(!gl!.getProgramParameter(program,gl!.LINK_STATUS)){gl!.deleteProgram(program);throw new Error("Aircraft locators unavailable");}
+    const vao=gl!.createVertexArray()!;gl!.bindVertexArray(vao);gl!.bindBuffer(gl!.ARRAY_BUFFER,markerBuffer);
+    for(const [name,offset,size]of [["a_position",0,3],["a_other",12,3],["a_color",24,3],["a_selected",36,1],["a_known",40,1]] as const){const at=gl!.getAttribLocation(program,name);gl!.enableVertexAttribArray(at);gl!.vertexAttribPointer(at,size,gl!.FLOAT,false,44,offset);}
+    gl!.bindVertexArray(null);return{program,vao,u:Object.fromEntries(uniforms.map(name=>[name,gl!.getUniformLocation(program,name)]))};
+  };
+  // CPU counterpart of the installed public projectTileFor3D contract. It is
+  // used only for hit centers; GPU output remains the rendering authority.
+  const multiply=(m:ArrayLike<number>,x:number,y:number,z:number)=>[m[0]*x+m[4]*y+m[8]*z+m[12],m[1]*x+m[5]*y+m[9]*z+m[13],m[2]*x+m[6]*y+m[10]*z+m[14],m[3]*x+m[7]*y+m[11]*z+m[15]];
+  const clipPosition=(lon:number,lat:number,height:number,p:ReturnType<CustomRenderMethodInput["getProjectionData"]>,globe:boolean)=>{
+    const [x,y]=xy(lon,lat);
+    if(!globe)return {clip:multiply(p.mainMatrix,x*8192,y*8192,height),visibility:1};
+    const radius=1+height/6371008.8,cos=Math.cos(lat*RAD),sphere=[Math.sin(lon*RAD)*cos*radius,Math.sin(lat*RAD)*radius,Math.cos(lon*RAD)*cos*radius];
+    const actual=multiply(p.mainMatrix,sphere[0],sphere[1],sphere[2]),fallback=multiply(p.fallbackMatrix,x*8192,y*8192,height),phase=p.projectionTransition;
+    const plane=p.clippingPlane,visibility=1-(1-(sphere[0]*plane[0]+sphere[1]*plane[1]+sphere[2]*plane[2]+plane[3]))*Math.max(0,Math.min(1,(phase-.2)/.8));
+    return {clip:phase>.999?actual:actual.map((value,index)=>fallback[index]*(1-phase)+value*phase),visibility};
+  };
   const upload = () => {
     let count = 0;
     const put = (x: number, y: number, z: number, c: readonly number[],shade=1) => {const offset=count++*6;data[offset]=x-origin[0];data[offset+1]=y-origin[1];data[offset+2]=z;data[offset+3]=Math.min(1,c[0]*shade);data[offset+4]=Math.min(1,c[1]*shade);data[offset+5]=Math.min(1,c[2]*shade);};
@@ -179,6 +236,12 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
       }
     }
     planeVertices=count;
+    let marker=0;
+    for(const a of planes.slice(0,LIMIT)){
+      const [x,y]=xy(a.lon,a.lat),height=markerAltitude(a),unit=1000/(40075016.686*Math.cos(a.lat*RAD)),direction=a.trueHeadingDeg??a.renderedTrackDeg??a.trackDeg,heading=(direction??0)*RAD,c=color(a,a.hex===selected);
+      markerData.set([x-origin[0],y-origin[1],height,x+Math.sin(heading)*unit-origin[0],y-Math.cos(heading)*unit-origin[1],height,c[0],c[1],c[2],a.hex===selected?1:0,direction==null?0:1],marker++*11);
+    }
+    gl!.bindBuffer(gl!.ARRAY_BUFFER,markerBuffer);gl!.bufferSubData(gl!.ARRAY_BUFFER,0,markerData.subarray(0,marker*11));
     focalVertex=-1;const focal=planes.find(plane=>plane.hex===selected);if(focal){focalVertex=count;const [x,y]=xy(focal.lon,focal.lat);put(x,y,markerAltitude(focal),[1,.83,.46]);}
     gl!.bindBuffer(gl!.ARRAY_BUFFER,buffer); gl!.bufferSubData(gl!.ARRAY_BUFFER,0,data.subarray(0,count*6));
     dirty=false;
@@ -229,7 +292,10 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     if(strokeVertices){gl!.bindBuffer(gl!.ARRAY_BUFFER,strokeBuffer);gl!.bufferSubData(gl!.ARRAY_BUFFER,0,strokeData.subarray(0,strokeVertices*11));}trailDirty=false;
   };
   const layer: CustomLayerInterface = { id:ID,type:"custom",renderingMode:"3d",onAdd(_map,context) {
-    gl=context as WebGL2RenderingContext; buffer=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buffer); gl.bufferData(gl.ARRAY_BUFFER,data.byteLength,gl.DYNAMIC_DRAW);
+    gl=context as WebGL2RenderingContext;
+    const pointRange=gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);if(pointRange&&Number.isFinite(pointRange[1]))markerPointLimit=Math.max(1,pointRange[1]);
+    buffer=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buffer); gl.bufferData(gl.ARRAY_BUFFER,data.byteLength,gl.DYNAMIC_DRAW);
+    markerBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,markerBuffer);gl.bufferData(gl.ARRAY_BUFFER,markerData.byteLength,gl.DYNAMIC_DRAW);
     strokeBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,strokeBuffer);gl.bufferData(gl.ARRAY_BUFFER,strokeData.byteLength,gl.DYNAMIC_DRAW);dirty=true;trailDirty=true;
   },render(_context,input) {
     if(!active||!gl||!buffer||document.hidden) return;
@@ -262,11 +328,23 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
       gl.uniform1f(pathBundle.u.u_opacity,.32);gl.uniform1f(pathBundle.u.u_width,1.2);gl.drawArrays(gl.TRIANGLES,routeVertices,strokeVertices-routeVertices);
     }catch{failed.add(`stroke:${key}`);report("Flight path emphasis unavailable; aircraft and source details remain available.");}}
     project(bundle);if(fallbackVertices&&failed.has(`stroke:${key}`)){gl.uniform1f(bundle.u.u_opacity,.8);gl.drawArrays(gl.LINES,PLANE_CAPACITY,fallbackVertices);}gl.uniform1f(bundle.u.u_opacity,1);if(focalVertex>=0){gl.uniform1f(bundle.u.u_point,1);gl.drawArrays(gl.POINTS,focalVertex,1);}gl.uniform1f(bundle.u.u_point,0);gl.bindVertexArray(null);
-    // Mercator's exact elevated clip positions make aircraft clickable in 3D.
+    const canvas=map.getCanvas(),markerSize=planes.length>1000?18:22,pixelRatio=canvas.width>0?canvas.width/canvas.clientWidth:1;
+    if(!failed.has(`marker:${key}`))try{
+      let markers=markerBundles.get(key);if(!markers){markers=buildMarkers(input);markerBundles.set(key,markers);}project(markers);
+      gl.uniform2f(markers.u.u_viewport,canvas.clientWidth,canvas.clientHeight);gl.uniform1f(markers.u.u_marker_size,markerSize);
+      gl.uniform1f(markers.u.u_pixel_ratio,pixelRatio);gl.uniform1f(markers.u.u_marker_max_size,markerPointLimit);
+      gl.drawArrays(gl.POINTS,0,Math.min(planes.length,LIMIT));gl.bindVertexArray(null);
+    }catch{failed.add(`marker:${key}`);report("Aircraft locators unavailable; silhouettes and aircraft list remain available.");}
     hits=[];
-    if(!globe) {const m=input.modelViewProjectionMatrix,world=512*2**map.getZoom();for(const a of planes.slice(0,LIMIT)){const [xx,yy]=xy(a.lon,a.lat),x=xx*world,y=yy*world,z=markerAltitude(a),w=m[3]*x+m[7]*y+m[11]*z+m[15];if(w<=0)continue;hits.push({hex:a.hex,x:((m[0]*x+m[4]*y+m[8]*z+m[12])/w+1)*map.getCanvas().clientWidth/2,y:(1-(m[1]*x+m[5]*y+m[9]*z+m[13])/w)*map.getCanvas().clientHeight/2});}}
-  },onRemove(){if(gl){for(const b of [...bundles.values(),...strokeBundles.values()]){gl.deleteProgram(b.program);gl.deleteVertexArray(b.vao);}if(buffer)gl.deleteBuffer(buffer);if(strokeBuffer)gl.deleteBuffer(strokeBuffer);}bundles.clear();strokeBundles.clear();failed.clear();buffer=null;strokeBuffer=null;gl=null;hits=[];}};
-  const pick=(point:SkyPickPoint)=>{if(!active)return false;const hit=hits.map(h=>({...h,d:Math.hypot(h.x-point.x,h.y-point.y)})).filter(h=>h.d<18).sort((a,b)=>a.d-b.d)[0];if(!hit)return false;select(hit.hex);return true;};
+    for(const a of planes.slice(0,LIMIT)){
+      const {clip,visibility}=clipPosition(a.lon,a.lat,markerAltitude(a),projection,globe),[x,y,z,w]=clip,radius=Math.min(a.hex===selected?40:markerSize,markerPointLimit/pixelRatio)/2;
+      if(visibility<0||w<=0||!clip.every(Number.isFinite)||z < -w||z>w)continue;
+      const px=(x/w+1)*canvas.clientWidth/2,py=(1-y/w)*canvas.clientHeight/2;
+      if(px<0||px>canvas.clientWidth||py<0||py>canvas.clientHeight)continue;
+      hits.push({hex:a.hex,x:px,y:py,radius,depth:z/w});
+    }
+  },onRemove(){if(gl){for(const b of [...bundles.values(),...strokeBundles.values(),...markerBundles.values()]){gl.deleteProgram(b.program);gl.deleteVertexArray(b.vao);}if(buffer)gl.deleteBuffer(buffer);if(strokeBuffer)gl.deleteBuffer(strokeBuffer);if(markerBuffer)gl.deleteBuffer(markerBuffer);}bundles.clear();strokeBundles.clear();markerBundles.clear();failed.clear();buffer=null;strokeBuffer=null;markerBuffer=null;gl=null;hits=[];}};
+  const pick=(point:SkyPickPoint)=>{if(!active)return false;const hit=hits.map(h=>({...h,d:Math.hypot(h.x-point.x,h.y-point.y)})).filter(h=>h.d<h.radius).sort((a,b)=>a.d-b.d||a.depth-b.depth)[0];if(!hit)return false;select(hit.hex);return true;};
   aircraftPickers.set(map,pick);
   const install=()=>{
     if(!active||!map.isStyleLoaded())return;

@@ -1840,6 +1840,7 @@ export default function Home() {
   }, []);
   const [aviationSelected, setAviationSelected] = useState(false);
   const [aviationShowRequest, setAviationShowRequest] = useState(0);
+  const [aircraftShowRequest,setAircraftShowRequest]=useState(0);
   // Explicit category opens start a new display session. Catalogue filtering
   // and 2D/3D switches keep the current session and its manual layer choices.
   const [categoryMapSession, setCategoryMapSession] = useState(0);
@@ -5870,6 +5871,13 @@ export default function Home() {
     });
     return () => window.cancelAnimationFrame(frame);
   }, [debouncedLayerQuery, pendingCatalogTarget, reducedMotion]);
+
+  const openKansasSky = useCallback(() => {
+    setOfficialWorkspace("all");setOfficialSourceQuery("");setOfficialCatalogFilter("all");setSourceStatusOpen(false);setStarterPanelOpen(false);setLayerCatalogView("selected");
+    setAviationShowRequest(request=>request+1);setAircraftShowRequest(request=>request+1);
+    openAtlasPanel("layers",null,'[aria-label="Kansas Sky aircraft"]');
+    announce("Kansas Sky opened. Choose an observed aircraft or a retained recording.");
+  },[announce,openAtlasPanel]);
 
   const openEarthEngineLayers = useCallback(() => {
     setLayerQuery("");
@@ -11351,7 +11359,7 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
-        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button></div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
+        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
@@ -11946,7 +11954,7 @@ export default function Home() {
             <ArchiveLayerControl key={`archive-${categoryMapSession}`} mapRef={mapRef} styleReady={styleReady} selected={archiveSelection} views={archiveViews} onView={saveArchiveView} shown={shownCatalogIds} onChange={setArchiveSelection} pickingEnabled={() => !measureModeRef.current && !aviationPickingRef.current && !undergroundOpenRef.current} onInspect={id => { setOfficialWorkspace("all"); setOfficialSourceQuery(""); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); window.requestAnimationFrame(() => document.querySelector(`[data-archive-layer="${id}"]`)?.scrollIntoView({block:"start"})); }} />
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} onPickingChange={setAviationPicking} onAircraftInspect={() => { setOfficialWorkspace("all"); setOfficialSourceQuery(""); setOfficialCatalogFilter("all"); setSourceStatusOpen(false); setStarterPanelOpen(false); setLayerCatalogView("selected"); openAtlasPanel("layers", null, '[aria-label="Kansas Sky aircraft"]'); }} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} aircraftShowRequest={aircraftShowRequest} onPickingChange={setAviationPicking} onAircraftInspect={() => { setOfficialWorkspace("all"); setOfficialSourceQuery(""); setOfficialCatalogFilter("all"); setSourceStatusOpen(false); setStarterPanelOpen(false); setLayerCatalogView("selected"); openAtlasPanel("layers", null, '[aria-label="Kansas Sky aircraft"]'); }} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
             <details className="layer-source-diagnostics"><summary>Source status &amp; coverage</summary>
 {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
@@ -12803,7 +12811,8 @@ export default function Home() {
 
           {measurementGeometryMode && <div className="measurement-readout" role="region" aria-label="Active screen measurement"><span>{measurementGeometryMode.toUpperCase()} · {measureMode ? "ACTIVE" : "COMPLETE"}</span><strong aria-live="polite">{measurement}</strong><div><button type="button" onClick={undoMeasurementPoint}>Undo</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement}>Clear</button></div></div>}
 
-          <nav className="map-mobile-actions" aria-label="Mobile map actions">
+          <nav className="map-mobile-actions" data-sky={welcomeTopics.includes("aviation")} aria-label="Mobile map actions">
+            {welcomeTopics.includes("aviation")&&<button type="button" className="sky-mobile-launch" aria-label="Explore Kansas Sky" onClick={openKansasSky}>Aircraft</button>}
             <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Map layers <b>{selectedMapLayerCount}</b></button>
             <button type="button" className="map-topics-button" onClick={toggleExplorerGuide}>Topics{welcomeTopics.length > 0 && <b>{welcomeTopics.length}</b>}</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
