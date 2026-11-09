@@ -39,6 +39,7 @@ function harness() {
     runMapMutation: (_label, operation) => { if (!finalizeSucceeds) return false; operation(); return true; },
     setRuntime: state => runtime.push(state),
     version: "test-runtime",
+    runtimeError: null, degradedReason: null, basemapHealth: {warning:()=>null}, mapMutationErrorRef: {current:null},
   });
   return {
     emit(event) { const handler = handlers.get(event); if (once.has(event)) handlers.delete(event); handler?.(); },

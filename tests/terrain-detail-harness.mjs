@@ -26,6 +26,7 @@ function visit(node) {
 visit(ast);
 assert.ok(detailEffect && fallbackEffect && Object.keys(callbacks).length === 3);
 const compile = source => ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+const basemapModule = await import(`data:text/javascript;base64,${Buffer.from(compile(await readFile('app/basemap-health.ts','utf8'))).toString('base64')}`);
 
 export function terrainHarness() {
   const h = { provider: 'mapzen', terrain: 'LOADING', runtime: { kind: 'loading' }, probe: {}, announcements: [], sources: new Map(), loaded: false, timers: new Map(), view: { center: [-98, 38.5], zoom: 10 }, scene: 'elevation-3d' };
@@ -40,6 +41,7 @@ export function terrainHarness() {
   };
   const set = field => value => { h[field] = typeof value === 'function' ? value(h[field]) : value; };
   const scope = {
+    basemapHealth: basemapModule.createBasemapHealth(), classifyBasemapError: basemapModule.classifyBasemapError,
     map, mapRef: ref(map), terrainProviderRef: ref(h.provider), attachedTerrainProviderRef: ref(h.provider),
     terrainDetailRef: ref({ auto: false, failed: false, byHand: false }), terrainDetailFallbackRef: ref(null),
     failedTerrainSourceRef: ref(null), scenePresetRef: ref(h.scene), mapMutationErrorRef: ref(null),

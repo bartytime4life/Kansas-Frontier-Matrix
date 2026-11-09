@@ -48,6 +48,9 @@ async function browser(t) {
   const pending = new Map(), listeners = new Set(), checks = [];
   child.stderr.on('data', chunk => { stderr = (stderr + chunk).slice(-12000); });
   const failPending = error => { closed = true; for (const entry of pending.values()) entry.reject(error); pending.clear(); };
+  // Keep a blocked browser/pipe failure diagnostic instead of an unhandled
+  // stream error that loses Chrome's startup reason.
+  for(const stream of [child.stdio[3],child.stdio[4]])stream.on('error',error=>failPending(new Error(`Chrome transport unavailable: ${error.message}; ${stderr}`)));
   child.on('error', failPending);
   child.on('exit', code => failPending(new Error(`Chrome exited ${code}: ${stderr}`)));
   child.stdio[4].on('data', chunk => {
@@ -84,16 +87,38 @@ async function browser(t) {
 
 // Uses the production page/CSS with isolated aviation and county fixtures.
 // Build identity and airport availability reach loopback; external traffic is blocked.
-async function pageSession(b, { width, height, touch, motion, repaint, tileErrorDelay }) {
+async function pageSession(b, { width, height, touch, motion, repaint, tileErrorDelay, basemapTrace = false }) {
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
   const interceptions = createInterceptionErrorTracker();
   let feedFailed=false, countyRequests=0;
   const archiveRequests=[];
+  const network=[],requests=new Map();let droppedNetworkEvents=0,firstNetworkFailure=null;
+  // This listener exists before Network.enable and the first Page.navigate.
+  // Synthetic fixture traffic only; exported rows contain no URLs/coordinates.
+  const recordNetwork=(message)=>{
+    if(!basemapTrace||!['Network.requestWillBeSent','Network.responseReceived','Network.loadingFailed','Network.loadingFinished'].includes(message.method))return;
+    const e=message.params;
+    if(message.method==='Network.requestWillBeSent'){
+      const u=new URL(e.request.url);
+      const lane=u.hostname==='s3.amazonaws.com'&&u.pathname.startsWith('/elevation-tiles-prod/terrarium/')?'basemap-relief'
+        :u.hostname==='tiles.openfreemap.org'?'basemap-vector'
+        :u.origin===origin.origin&&u.pathname==='/api/governed/v1/layers'?'governed-catalog':'other';
+      if(requests.size>=2048){droppedNetworkEvents++;return;}
+      requests.set(e.requestId,{request:requests.size+1,lane});
+    }
+    const request=requests.get(e.requestId);if(!request)return;
+    if(network.length===512){network.shift();droppedNetworkEvents++;}
+    const row={...request,event:message.method,at:e.timestamp,wallTime:e.wallTime??null,
+      status:e.response?.status??null,cancelled:e.canceled===true||e.errorText==='net::ERR_ABORTED',cors:e.corsErrorStatus?.corsError==='MissingAllowOriginHeader'?'MISSING_ALLOW_ORIGIN':e.corsErrorStatus?'CORS_OTHER':null};
+    if(!firstNetworkFailure&&!row.cancelled&&(row.status>=400||message.method==='Network.loadingFailed'))firstNetworkFailure=row;
+    network.push(row);
+  };
   b.checks.push(() => interceptions.assertHealthy());
   b.listeners.add(message => {
     if (message.sessionId !== sessionId) return;
+    recordNetwork(message);
     if (message.method === 'Network.loadingFailed') interceptions.loadingFailed(message.params);
     if (message.method === 'Network.requestWillBeSent') interceptions.requestWillBeSent(message.params);
     if (message.method === 'Page.frameNavigated') interceptions.frameNavigated(message.params);
@@ -124,7 +149,9 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
       : url.pathname === '/api/live-context' && url.searchParams.get('feed') === 'census-counties' ? JSON.stringify(counties) : null;
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
-        ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
+        // The recovery scenario intentionally needs a successful cross-origin style,
+        // unlike the existing unavailable-provider fixtures.
+        ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, ...(basemapTrace ? [{name:'Access-Control-Allow-Origin',value:'*'}] : [])], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
         : (tileErrorDelay ? pause(tileErrorDelay).then(()=>call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })) : call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })))
       : url.pathname.startsWith('/api/') && !['/api/build', '/api/aviation/airports'].includes(url.pathname)
         ? call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Layout test: unrelated source unavailable"}').toString('base64') })
@@ -182,11 +209,43 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
     const e=document.activeElement,r=e.getBoundingClientRect(),panel=document.querySelector('.layer-panel').getBoundingClientRect(),head=document.querySelector(innerHeight<=600 ? '.layer-panel .panel-heading' : '.layer-panel-explore > summary').getBoundingClientRect(),style=getComputedStyle(e);
     return { tag:e.tagName,text:e.textContent,top:r.top,bottom:r.bottom,hit:e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)),within:r.top>=Math.max(head.bottom,panel.top)-1&&r.bottom<=Math.min(panel.bottom,innerHeight)+1,outline:style.outlineStyle,outlineWidth:parseFloat(style.outlineWidth),focusVisible:e.matches(':focus-visible') };
   })()`);
-  await call('Page.navigate', { url: new URL('?l=&ctx=', origin).href });
+  await call('Page.navigate', { url: new URL(basemapTrace?'?l=&ctx=&base=midnight&mapui=open&maptab=scene&basemapTrace=1':'?l=&ctx=', origin).href });
   await wait(`history.state?.kfmExplorerView && document.querySelector('.map-chrome-dock')`, 'hydration');
-  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests, archiveRequests:()=>[...archiveRequests] };
+  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests, archiveRequests:()=>[...archiveRequests], networkSnapshot:()=>({events:[...network],firstFailure:firstNetworkFailure,droppedEvents:droppedNetworkEvents,boundary:'SYNTHETIC loopback fixture; capture enabled before initial navigation. Provider lanes and catalog remain separate.'}) };
 }
 
+
+test('Kansas Sky basemap warning lifecycle records first failure and preserves real failures across resizing', {timeout:120000}, async t=>{
+  const b=await browser(t),p=await pageSession(b,{width:1440,height:900,touch:false,motion:'no-preference',basemapTrace:true});
+  const warning=`[...document.querySelectorAll('.runtime-degraded-banner')].some(e=>/basemap tiles are unavailable|basemap source reported an error/i.test(e.textContent))`;
+  const snapshot=()=>p.evaluate(`({fixture:'SYNTHETIC',trace:window.__kfmBasemapTrace?.snapshot()??null,style:{name:window.__skyMap?.getStyle()?.name??null,loaded:window.__skyMap?.isStyleLoaded()??false,relief:!!window.__skyMap?.getSource('basemap-relief-dem'),fixtureBackground:!!window.__skyMap?.getLayer('layout-test-background')},selected:document.querySelector('select[aria-label="Appearance basemap"]')?.value??null,banners:[...document.querySelectorAll('.runtime-degraded-banner')].map(e=>e.textContent),errors:window.__skyErrors??[]})`);
+  b.checks.unshift(async()=>{
+    const state=await snapshot();
+    t.diagnostic(JSON.stringify({...state,trace:state.trace?{...state.trace,events:state.trace.events.slice(-15)}:null}));
+    if(process.env.KFM_SKY_SCREENSHOTS){await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,'basemap-warning-final-or-failure.json'),JSON.stringify({...state,network:p.networkSnapshot()},null,2));}
+  });
+  await p.wait(`window.__skyMap?.getSource('basemap-relief-dem') && window.__kfmBasemapTrace`, 'diagnostics attached to running Midnight map');
+  await p.wait(warning,'actual deliberately blocked relief source remains visibly warned');
+  const first=await p.evaluate(`window.__kfmBasemapTrace.snapshot().firstFailure`);
+  assert.ok(first,'first map error retained before recovery');
+  const generation=await p.evaluate(`window.__kfmBasemapTrace.snapshot().events.at(-1).generation`);
+  await p.evaluate(`(()=>{const s=document.querySelector('select[aria-label="Appearance basemap"]');s.value='standard';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await p.wait(`window.__skyMap.isStyleLoaded() && !window.__skyMap.getSource('basemap-relief-dem') && !(${warning})`, 'successful blank fixture style retires abandoned relief warning');
+  assert.deepEqual(await p.evaluate(`window.__kfmBasemapTrace.snapshot().firstFailure`),first,'first failure survives style recovery');
+  await p.evaluate(`(()=>{const s=document.querySelector('select[aria-label="Appearance basemap"]');s.value='midnight';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await p.wait(warning,'new real fixture failure is not hidden by recovery reset');
+  await p.call('Emulation.setDeviceMetricsOverride',{width:375,height:844,deviceScaleFactor:1,mobile:false});
+  await p.wait(`innerWidth===375 && (${warning})`,'phone viewport retains the visible failed-basemap warning');
+  await p.call('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  await p.wait(`innerWidth===1440 && window.__kfmBasemapTrace.snapshot().events.some(e=>e.event==='resize') && (${warning})`,'desktop viewport retains the visible warning and resize trace');
+  assert.equal(await p.evaluate(`Boolean(${warning})`),true,'still-failed source stays warned after resizing');
+  const trace=await p.evaluate(`window.__kfmBasemapTrace.snapshot()`),network=p.networkSnapshot();
+  assert.ok(trace.events.some(e=>e.generation>generation));assert.equal(trace.collectorErrors,0);
+  assert.ok(network.events.some(e=>e.lane==='basemap-relief'),'network capture includes provider lane from beginning');
+  assert.ok(network.events.some(e=>e.event==='Network.requestWillBeSent'));
+  if(process.env.KFM_SKY_SCREENSHOTS){await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,'basemap-warning-lifecycle.json'),JSON.stringify({fixture:'SYNTHETIC',trace,network},null,2));}
+  assert.deepEqual(await p.evaluate(`window.__skyErrors`),[]);
+});
 
 for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repaint:true,tileErrorDelay:0},{repaint:false,tileErrorDelay:1200}]) for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'},{width:390,height:844,touch:true,motion:'reduce'}]) test(`Kansas Sky synthetic live/replay controls ${layout.width}px${repaint?' with continuous repaint':''}${tileErrorDelay?' with late tile failures':''}`,{timeout:120000},async t=>{
   const artifactKey=`${layout.width}${repaint?'-repainting':''}${tileErrorDelay?'-late-tiles':''}`;
@@ -246,6 +305,11 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow camera enabled');
     const canvas=await p.rect('.maplibregl-canvas');
     const x=Math.min(layout.width-20,canvas.x+canvas.width*.9),y=canvas.y+canvas.height*.55;
+    // Follow can move into still-pending delayed fixture tiles. Wait for the
+    // real input surface, as the earlier aircraft click does, instead of
+    // dispatching a gesture into a transient loading overlay. Keep both hit
+    // assertions and the real native-drag release assertion below.
+    await p.wait(`(()=>{const canvas=window.__skyMap.getCanvas();return document.elementFromPoint(${x},${y})===canvas&&document.elementFromPoint(${x-35},${y+10})===canvas;})()`,'native drag canvas is unobstructed after Follow');
     // Retain actual delivery and camera state around the unchanged native drag.
     // This trace never drives the camera or substitutes for the release assertion.
     const gestureHits=await p.evaluate(`(()=>{
