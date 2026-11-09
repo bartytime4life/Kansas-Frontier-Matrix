@@ -145,7 +145,7 @@ test("archive screen server-renders safely before a day or capture is loaded",as
  const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText.replaceAll('"react/jsx-runtime"',JSON.stringify(import.meta.resolve("react/jsx-runtime")));
  const {default:Screen}=await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
  const {createElement}=await import("react");const {renderToStaticMarkup}=await import("react-dom/server");
- const html=renderToStaticMarkup(createElement(Screen));assert.match(html,/Daily archive/);assert.match(html,/No saved data/);assert.match(html,/Maximum archive bytes/);
+ const html=renderToStaticMarkup(createElement(Screen));assert.match(html,/Daily archive/);assert.match(html,/Reading stored coverage/);assert.match(html,/Reading storage status/);assert.doesNotMatch(html,/No saved data|Missing · no capture|0 recent capture days/);assert.match(html,/Maximum archive bytes/);
 });
 
 test("daily scripts execute through the installed stable symlink",async()=>{
