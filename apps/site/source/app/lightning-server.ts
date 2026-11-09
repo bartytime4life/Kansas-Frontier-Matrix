@@ -1,4 +1,4 @@
-import { readBoundedText } from "./bounded-json";
+import { readBoundedBytes, readBoundedText } from "./bounded-json";
 import { NOAA_LIGHTNING_CAPABILITIES_URL, parseLightningCapabilities, type LightningManifest } from "./lightning-data";
 
 const CAPABILITIES_LIMIT = 512 * 1024;
@@ -31,10 +31,7 @@ export async function fetchLightningPng(url: string, signal?: AbortSignal): Prom
   const abort = () => controller.abort(signal?.reason);
   signal?.addEventListener("abort", abort, { once: true });
   let response: Response | undefined;
-  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
   let complete = false;
-  const cancelRead = () => { void reader?.cancel(controller.signal.reason).catch(() => undefined); };
-  controller.signal.addEventListener("abort", cancelRead, { once: true });
   const timer = setTimeout(() => controller.abort(new DOMException("NOAA lightning image request timed out.", "TimeoutError")), 15_000);
   try {
     response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal, headers: { Accept: "image/png", "User-Agent": NOAA_USER_AGENT } });
@@ -43,19 +40,7 @@ export async function fetchLightningPng(url: string, signal?: AbortSignal): Prom
     const announced = Number(response.headers.get("content-length"));
     if (announced > IMAGE_LIMIT) throw new Error("NOAA lightning image exceeds the limit.");
     if (!response.body) throw new Error("NOAA lightning response is not a bounded PNG.");
-    reader = response.body.getReader();
-    const chunks: Uint8Array[] = []; let length = 0;
-    for (;;) {
-      controller.signal.throwIfAborted();
-      const { done, value } = await reader.read();
-      controller.signal.throwIfAborted();
-      if (done) break;
-      length += value.byteLength;
-      if (length > IMAGE_LIMIT) throw new Error("NOAA lightning image exceeds the limit.");
-      chunks.push(value);
-    }
-    const bytes = new Uint8Array(length); let offset = 0;
-    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+    const bytes = await readBoundedBytes(response, IMAGE_LIMIT, controller.signal);
     if (bytes.length < 64 || ![137, 80, 78, 71, 13, 10, 26, 10].every((byte, index) => bytes[index] === byte)) throw new Error("NOAA lightning response is not a bounded PNG.");
     complete = true;
     return bytes;
@@ -64,9 +49,7 @@ export async function fetchLightningPng(url: string, signal?: AbortSignal): Prom
     signal?.removeEventListener("abort", abort);
     if (!complete) {
       controller.abort();
-      if (!reader) void response?.body?.cancel().catch(() => undefined);
+      void response?.body?.cancel().catch(() => undefined);
     }
-    controller.signal.removeEventListener("abort", cancelRead);
-    reader?.releaseLock();
   }
 }

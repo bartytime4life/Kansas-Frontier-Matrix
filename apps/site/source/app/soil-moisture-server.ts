@@ -1,4 +1,4 @@
-import { readBoundedText } from "./bounded-json";
+import { readBoundedBytes, readBoundedText } from "./bounded-json";
 import { commonSoilDays, parseSoilAvailability, SOIL_VIEWS, validSoilDay, type SoilView } from "./soil-moisture";
 
 const CAPABILITIES = "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml";
@@ -14,16 +14,19 @@ export class SoilSourceError extends Error {
   constructor(readonly code: string, readonly httpStatus = 502) { super(code); }
 }
 
-export async function boundedNasaFetch(url: string, accept: string, maxBytes: number): Promise<Response> {
+export async function boundedNasaFetch(url: string, accept: string, maxBytes: number, signal = AbortSignal.timeout(TIMEOUT_MS)): Promise<Response> {
+  let response: Response | undefined;
   try {
-    // The signal remains attached while callers read the body, not just until headers arrive.
-    const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(TIMEOUT_MS), headers: { Accept: accept } });
+    signal.throwIfAborted();
+    response = await fetch(url, { cache: "no-store", redirect: "manual", signal, headers: { Accept: accept } });
+    signal.throwIfAborted();
     if (response.status >= 300 && response.status < 400) throw new SoilSourceError("NASA_REDIRECT_REJECTED");
     if (!response.ok) throw new SoilSourceError("NASA_HTTP_ERROR");
     const size = Number(response.headers.get("content-length"));
     if (Number.isFinite(size) && size > maxBytes) throw new SoilSourceError("NASA_RESPONSE_TOO_LARGE");
     return response;
   } catch (error) {
+    void response?.body?.cancel().catch(() => undefined);
     if (error instanceof SoilSourceError) throw error;
     if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) throw new SoilSourceError("NASA_TIMEOUT", 504);
     throw new SoilSourceError("NASA_NETWORK_ERROR");
@@ -33,10 +36,14 @@ export async function boundedNasaFetch(url: string, accept: string, maxBytes: nu
 export async function soilAvailability(force = false): Promise<{ value: Availability; cache: "hit" | "miss" }> {
   if (!force && cached && cached.expires > Date.now()) return { value: cached.value, cache: "hit" };
   if (!pending) pending = (async () => {
-    const response = await boundedNasaFetch(CAPABILITIES, "application/xml", MAX_CAPABILITIES_BYTES);
-    if (!/xml/i.test(response.headers.get("content-type") ?? "")) throw new SoilSourceError("NASA_UNEXPECTED_CONTENT");
+    const signal = AbortSignal.timeout(TIMEOUT_MS);
+    const response = await boundedNasaFetch(CAPABILITIES, "application/xml", MAX_CAPABILITIES_BYTES, signal);
+    if (!/xml/i.test(response.headers.get("content-type") ?? "")) {
+      void response.body?.cancel().catch(() => undefined);
+      throw new SoilSourceError("NASA_UNEXPECTED_CONTENT");
+    }
     let xml: string;
-    try { xml = await readBoundedText(response, MAX_CAPABILITIES_BYTES); }
+    try { xml = await readBoundedText(response, MAX_CAPABILITIES_BYTES, signal); }
     catch (error) { throw new SoilSourceError(error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? "NASA_TIMEOUT" : "NASA_MALFORMED_OR_OVERSIZED", error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? 504 : 502); }
     let daysByView: Record<SoilView, string[]>;
     try { daysByView = parseSoilAvailability(xml); }
@@ -64,17 +71,15 @@ export function parseTileRequest(url: string): { view: SoilView; day: string; z:
 export async function soilTileBytes(view: SoilView, day: string, z: number, x: number, y: number): Promise<Uint8Array> {
   const layer = SOIL_VIEWS[view].layer;
   const url = `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/${layer}/default/${day}/GoogleMapsCompatible_Level6/${z}/${y}/${x}.png`;
-  const response = await boundedNasaFetch(url, "image/png", MAX_TILE_BYTES);
-  if (!/^image\/png(?:;|$)/i.test(response.headers.get("content-type") ?? "")) throw new SoilSourceError("NASA_UNEXPECTED_CONTENT");
+  const signal = AbortSignal.timeout(TIMEOUT_MS);
+  const response = await boundedNasaFetch(url, "image/png", MAX_TILE_BYTES, signal);
+  if (!/^image\/png(?:;|$)/i.test(response.headers.get("content-type") ?? "")) {
+    void response.body?.cancel().catch(() => undefined);
+    throw new SoilSourceError("NASA_UNEXPECTED_CONTENT");
+  }
   let bytes: Uint8Array;
-  try {
-    const reader = response.body?.getReader();
-    if (!reader) throw new Error();
-    const chunks: Uint8Array[] = []; let length = 0;
-    while (true) { const { value, done } = await reader.read(); if (done) break; length += value.length; if (length > MAX_TILE_BYTES) { await reader.cancel(); throw new Error(); } chunks.push(value); }
-    bytes = new Uint8Array(length); let offset = 0;
-    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-  } catch (error) { throw new SoilSourceError(error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? "NASA_TIMEOUT" : "NASA_MALFORMED_OR_OVERSIZED", error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? 504 : 502); }
+  try { bytes = await readBoundedBytes(response, MAX_TILE_BYTES, signal); }
+  catch (error) { throw new SoilSourceError(error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? "NASA_TIMEOUT" : "NASA_MALFORMED_OR_OVERSIZED", error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? 504 : 502); }
   // GIBS WMTS tiles are 256 px PNGs. Reject an image with a forged signature
   // or implausible dimensions before forwarding it to the map decoder.
   const header = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);

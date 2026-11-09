@@ -1,5 +1,6 @@
-import { validateReview } from "../../../data-intake";
-import { intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, ownedSubmission, sameOrigin, submissionReviews } from "../../../data-intake-server";
+import { MAX_UPLOAD_BYTES, validateReview } from "../../../data-intake";
+import { intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, ownedSubmission, sameOrigin, sha256, submissionReviews } from "../../../data-intake-server";
+import { JsonLimitError, readBoundedBytes } from "../../../bounded-json";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
 
@@ -7,9 +8,23 @@ export async function GET(request: Request, context: Context) {
   try {
     const user = await intakeUser(); const { id } = await context.params; const row = await ownedSubmission(id, user);
     if (new URL(request.url).searchParams.get("download") === "1") {
+      const integrityFailure = () => new IntakeError("Original file integrity failed. Please contact a steward.", 409);
+      if (!Number.isSafeInteger(row.fileBytes) || row.fileBytes < 1 || row.fileBytes > MAX_UPLOAD_BYTES || !/^[0-9a-f]{64}$/.test(row.fileSha256)) throw integrityFailure();
       const object = await intakeStore().bucket.get(row.objectKey);
       if (!object) throw new IntakeError("The uploaded file is temporarily unavailable. Please contact a steward.", 503);
-      return new Response(object.body, { headers: { ...intakeHeaders, "Content-Type": "application/octet-stream", "Content-Length": String(object.size), "Content-Disposition": `attachment; filename="kfm-${id}.${row.fileName.split(".").pop()?.replace(/[^a-z0-9]/gi, "")}"; filename*=UTF-8''${encodeURIComponent(row.fileName).replace(/['()]/g, escape)}`, "Content-Security-Policy": "sandbox; default-src 'none'" } });
+      if (object.size !== row.fileBytes) {
+        void object.body.cancel().catch(() => undefined);
+        throw integrityFailure();
+      }
+      let bytes: Uint8Array;
+      try {
+        bytes = await readBoundedBytes(new Response(object.body), row.fileBytes, AbortSignal.any([request.signal, AbortSignal.timeout(10_000)]));
+      } catch (error) {
+        if (error instanceof JsonLimitError || error instanceof SyntaxError) throw integrityFailure();
+        throw new IntakeError("The uploaded file could not be read. Please retry or contact a steward.", 503);
+      }
+      if (bytes.byteLength !== row.fileBytes || await sha256(bytes.buffer as ArrayBuffer) !== row.fileSha256) throw integrityFailure();
+      return new Response(bytes as Uint8Array<ArrayBuffer>, { headers: { ...intakeHeaders, "Content-Type": "application/octet-stream", "Content-Length": String(bytes.byteLength), "Content-Disposition": `attachment; filename="kfm-${id}.${row.fileName.split(".").pop()?.replace(/[^a-z0-9]/gi, "")}"; filename*=UTF-8''${encodeURIComponent(row.fileName).replace(/['()]/g, escape)}`, "Content-Security-Policy": "sandbox; default-src 'none'" } });
     }
     const { ownerKey: _owner, objectKey: _object, ...submission } = row;
     return Response.json({ submission, reviews: await submissionReviews(id), canReview: user.steward }, { headers: intakeHeaders });
