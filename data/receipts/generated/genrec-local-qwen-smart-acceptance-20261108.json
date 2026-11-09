@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-local-qwen-smart-acceptance-20261108",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-intake-studio.md",
+    "docs/runbooks/local-qwen-acceptance.md",
+    "tests/local_data/test_ai_acceptance.py",
+    "tests/local_data/test_grounded_review.py",
+    "tests/local_data/test_intake_workspace.py",
+    "tests/local_data/test_text_sample.py",
+    "tools/local_data/README.md",
+    "tools/local_data/ai_acceptance.py",
+    "tools/local_data/grounded_review.py",
+    "tools/local_data/intake.py",
+    "tools/local_data/intake_desk/ai-review.js",
+    "tools/local_data/intake_desk/desk.css",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_desk/index.html",
+    "tools/local_data/intake_review.py",
+    "tools/local_data/intake_service.py",
+    "tools/local_data/intake_studio/intake_server.py",
+    "tools/local_data/intake_studio/workspace.py",
+    "tools/local_data/text_sample.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-intake-studio.md": "sha256:c062ec98857ec74f5f48715fc807f10bb528321b639fbc0707c10a2651bec19a",
+    "docs/runbooks/local-qwen-acceptance.md": "sha256:31fab713fa3ac3c934353a89db4c3f408c487ca1f815d834ec072f453e81334a",
+    "tests/local_data/test_ai_acceptance.py": "sha256:831f005e329ffecf6afdd28bdd2bb9e17f35a2fc16737b999f5f34b24641edf6",
+    "tests/local_data/test_grounded_review.py": "sha256:44ff792796f2d5f703cc52aa5162ac50f1c4abfa60eba990b09b343dad4ad1c9",
+    "tests/local_data/test_intake_workspace.py": "sha256:546c7a3a20ce7648d28dfcd1605c094392b70be0a94bfecc1adfc5571357f508",
+    "tests/local_data/test_text_sample.py": "sha256:9a6cec0dab6de4cca0d75d8bef109f5c549067996b5ca6117857faf324f6cff4",
+    "tools/local_data/README.md": "sha256:f6ec64ed7649564669c5477d080877ec457b2e42c3f27b1a12f308b0f3cfce8d",
+    "tools/local_data/ai_acceptance.py": "sha256:30a71c86985b1404fb1ab93d1ec42c302101001f295e39fd4d30de28748988ed",
+    "tools/local_data/grounded_review.py": "sha256:68b41346e8f76b0fb7d9146d6885dac1f8ae8513ca29a2c5b94695081f7bba34",
+    "tools/local_data/intake.py": "sha256:e8d3d96b1fe797e80c8f388ce954604181642b42dfc0cfb1ea0ca234c387953e",
+    "tools/local_data/intake_desk/ai-review.js": "sha256:b2984cc51295154df70a68e38b082ffa7ef78355da1bb786fa46c8b0b5483476",
+    "tools/local_data/intake_desk/desk.css": "sha256:f6c9b9b1a1e0878721a884eacc597f49eaab2f14bed60df658298004c11e525f",
+    "tools/local_data/intake_desk/desk.js": "sha256:3c3a4cb318c1d51c4125d066d9439fa66d653dc066fbe5703677abef60ec1e30",
+    "tools/local_data/intake_desk/index.html": "sha256:5d9975425acb9ba76dbf0addaf96d1a901b379ebbef0244228b9e3e39b84af17",
+    "tools/local_data/intake_review.py": "sha256:cbbc47a308ab5b710c7ecae3b65d5422338c44ab3fccf9ee86475cb5282d2b61",
+    "tools/local_data/intake_service.py": "sha256:1273a8debcd1bdadb189813ff13c4ef871bff2f8e77f374b481b91e132902307",
+    "tools/local_data/intake_studio/intake_server.py": "sha256:870d05c30b2ff6c0f8bdcfe8e901f4abb8ff21af72a752e9d8952db61be9fa0c",
+    "tools/local_data/intake_studio/workspace.py": "sha256:a443ab97e59083babdbc32d423b38dcbd603a565ca64b9793a36f100f80e1728",
+    "tools/local_data/text_sample.py": "sha256:7392d84f4a525b835c94b8ed56d7e8de4154c5fc4913429a4d016924be165d60"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "evidence_refs": [
+      "repo:CONTRIBUTING.md@fbfcbe3ebb585513847cd7aaef8cf1bfb366f406",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fbfcbe3ebb585513847cd7aaef8cf1bfb366f406",
+      "repo:tools/local_data/intake_review.py@fbfcbe3ebb585513847cd7aaef8cf1bfb366f406",
+      "repo:tools/local_data/ai_acceptance.py@bc4f43a8a97b2bb8cca8f39e93217edb5b038b0a",
+      "repo:tools/local_data/grounded_review.py@bc4f43a8a97b2bb8cca8f39e93217edb5b038b0a",
+      "repo:tools/local_data/text_sample.py@bc4f43a8a97b2bb8cca8f39e93217edb5b038b0a"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-intake-studio.md": "CONFIRMED",
+    "docs/runbooks/local-qwen-acceptance.md": "CONFIRMED",
+    "tests/local_data/test_ai_acceptance.py": "CONFIRMED",
+    "tests/local_data/test_grounded_review.py": "CONFIRMED",
+    "tests/local_data/test_intake_workspace.py": "CONFIRMED",
+    "tests/local_data/test_text_sample.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/ai_acceptance.py": "CONFIRMED",
+    "tools/local_data/grounded_review.py": "CONFIRMED",
+    "tools/local_data/intake.py": "CONFIRMED",
+    "tools/local_data/intake_desk/ai-review.js": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.css": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.js": "CONFIRMED",
+    "tools/local_data/intake_desk/index.html": "CONFIRMED",
+    "tools/local_data/intake_review.py": "CONFIRMED",
+    "tools/local_data/intake_service.py": "CONFIRMED",
+    "tools/local_data/intake_studio/intake_server.py": "CONFIRMED",
+    "tools/local_data/intake_studio/workspace.py": "CONFIRMED",
+    "tools/local_data/text_sample.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused native and HTTP integration regressions",
+      "outcome": "PASS",
+      "reason": "202 tests and 184 subtests passed, including grounded source rendering, bounded gzip extraction, batch selection/recovery/credits, Studio handoff, native extraction, current status projection, integrity and sensitivity regressions."
+    },
+    {
+      "gate": "Strict repository local-data target",
+      "outcome": "PASS",
+      "reason": "make local-data-check: 925 passed, 11 explicit skips and 597 subtests passed with the repository no-network guard. Initial attempts lacked connectors-core and RFC3339 checking; installed the declared root test dependencies and connector package in the isolated test environment, then reran successfully."
+    },
+    {
+      "gate": "Source checks and documentation navigation",
+      "outcome": "PASS",
+      "reason": "Pyflakes passes eight affected Python runtime modules; both changed JavaScript files pass node --check; git diff --check and relative file-link checks pass. Added-line scan found no operational absolute paths or credential patterns."
+    },
+    {
+      "gate": "Repository guardrails on staged candidate",
+      "outcome": "PASS",
+      "reason": "make repository-guardrails passed registry/workflow checks, 28 workflow tests, 92 topology tests, 29 diagnostic tests and six target-contract tests. Topology: zero invariant violations, zero new drift, 89 existing baselined warnings; no baseline changes."
+    },
+    {
+      "gate": "Fresh real-model trial, repository-wide tests, hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "No operational data or model batch was changed during PR preparation. Deterministic local tests use synthetic inputs and a controlled provider; prior local real-Qwen trials are not exact-head hosted or independent acceptance. Full repository suite and human review remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-local-review-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/local_data/intake_review.py@fbfcbe3ebb585513847cd7aaef8cf1bfb366f406"
+    },
+    {
+      "id": "bounded-source-rendering",
+      "validated": true,
+      "evidence_ref": "repo:tools/local_data/grounded_review.py@bc4f43a8a97b2bb8cca8f39e93217edb5b038b0a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-11-08T23:54:33.464467+00:00",
+  "emitter": "Codex PR preparation",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Emitted during PR preparation before first publication. Binds the Qwen source delta above the combined workspace; the prior local feature commits did not contain this receipt. CONFIRMED denotes inspected implementation and bounded tests only. Models select source quotations for gzip text; KFM renders measured scope. Local acceptance preserves sharing and publication holds. Private datasets, AI inputs/responses, review histories and operational recovery artifacts are excluded. Human review is pending; no override is claimed."
+}

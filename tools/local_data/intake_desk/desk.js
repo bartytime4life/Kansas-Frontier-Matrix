@@ -180,7 +180,7 @@ async function loadItems() {
     const name = item.name;
     const time = item.time_start ? (item.time_start === item.time_end ? item.time_start : `${item.time_start} → ${item.time_end}`) : "–";
     const row = el("tr", { tabindex: "0", "data-id": item.id, onclick: () => openItem(item.id), onkeydown: (e) => { if (e.key === "Enter") openItem(item.id); } },
-      el("td", {}, el("span", { class: "path", title: item.relative_path, text: name }), el("span", { class: "sub", text: item.declared_label || `${item.lane} · ${item.relative_path}` })),
+      el("td", {}, el("span", { class: "path", title: item.relative_path, text: name }), el("span", { class: "sub", text: item.declared_label || `${item.lane} · ${item.relative_path}` }), item.ai_review ? el("span",{class:"ai-description",text:`Qwen · ${item.ai_review.outcome}: ${item.ai_review.description}`}) : null),
       el("td", { text: item.kind }), el("td", { text: item.domain || "–" }), el("td", { text: item.kansas }), el("td", { class: "time", text: time }),
       el("td", { class: "num", text: bytes(item.size_bytes) }), el("td", {}, el("span", { class: `chip ${item.status}`, text: item.status })));
     if (item.id === state.selected) row.classList.add("selected");
@@ -307,6 +307,24 @@ async function openItem(id) {
     for (const hold of d.holds) holds.append(el("li", { text: HOLD_TEXT[hold] || hold }));
     body.append(holds);
   }
+  if (item.ai_review) {
+    const ai=item.ai_review,a=ai.attribution;
+    const section=el("section",{class:"ai-review"},el("h3",{text:"Local Qwen review"}),
+      el("strong",{text:ai.title}),el("p",{text:ai.description}),
+      el("p",{class:"fine",text:`AI reviewer: ${a.model} · requested by ${a.requested_by} · ${ai.outcome==='accepted'?'Accepted for private local use':ai.outcome==='pending'?'AI draft saved; not accepted':'Held for admin review'} · ${ai.reviewed_at}`}),
+      el("p",{class:"fine",text:`Review scope: ${a.coverage}. Confidence: ${ai.confidence} (model self-assessment).`}));
+    if (ai.concerns?.length) section.append(el("ul",{},...ai.concerns.map(v=>el("li",{text:v}))));
+    if (a.description_rendering) section.append(el("p",{class:"fine",text:"Qwen selected the quoted source passages. KFM rendered the quotations and measured inspection scope; OCR names, dates and historical assertions remain unverified."}));
+    if (a.text_extraction) {
+      const x=a.text_extraction;
+      section.append(el("p",{class:"fine",text:`Gzip text inspected: ${x.text_characters} characters from ${x.expanded_bytes} expanded bytes; ${x.compressed_bytes_read} compressed bytes read. ${x.text_truncated?'Bounded excerpt; more text remains unchecked.':'Complete text of the first member supplied.'} First-member CRC ${x.crc_validated?'validated':'not validated'}.`}));
+    }
+    section.append(el("details",{},el("summary",{text:"Evidence and AI attribution"}),
+      el("ul",{},...ai.evidence.map(v=>el("li",{text:`${v.source}: ${v.quote}`}))),
+      kv([["Model digest",a.model_digest],["Requested by",a.requested_by],["Batch",a.batch_id],
+          ["Prompt",a.prompt_version],["Input fingerprint",a.input_sha256],["Response fingerprint",a.response_sha256]])));
+    body.append(section);
+  }
   body.append(reviewForm(item));
   body.append(el("h3", { text: "Where it goes" }));
   const placements = el("ul", { class: "placements" });
@@ -347,11 +365,18 @@ async function openItem(id) {
     for (const a of item.applications) applied.append(el("li", { text: `${a.applied_at} · ${a.action} → ${a.target}` }));
     body.append(applied);
   }
+  if (item.ai_review_history?.length) {
+    const history=el("details",{class:"review-history"},el("summary",{text:"AI review history"}));
+    history.append(el("ul",{},...item.ai_review_history.map(r=>el("li",{},
+      el("strong",{text:`${r.reviewed_at} · ${r.attribution.model} · ${r.outcome} · requested by ${r.attribution.requested_by}`}),
+      el("p",{text:r.description}),el("small",{text:`Snapshot SHA-256: ${r.sha256}`})))));
+    body.append(history);
+  }
   if (item.review_history?.length) {
     const history = el("details", { class: "review-history" }, el("summary", { text: "Review history" }));
     const list = el("ul");
     for (const entry of item.review_history) list.append(el("li", {},
-      el("strong", { text: `${entry.reviewed_at} · ${entry.reviewer} · ${entry.decision === "local" ? "Reviewed, keep local" : entry.decision === "public" ? "Public routing approved" : "Reopened"}` }),
+      el("strong", { text: `${entry.reviewed_at} · ${entry.reviewer}${entry.ai_attribution ? ` · AI review requested by ${entry.ai_attribution.requested_by}` : ""} · ${entry.decision === "local" ? "Reviewed, keep local" : entry.decision === "public" ? "Public routing approved" : "Reopened"}` }),
       el("p", { text: entry.note }), el("small", { text: `File SHA-256: ${entry.sha256}` })));
     history.append(list); body.append(history);
   }
@@ -393,7 +418,7 @@ function reviewForm(item) {
   const rights = field("rights", "Redistribution rights", select([["unknown", "Unknown — keep local"], ["allowed", "Allowed"], ["restricted", "Restricted"], ["denied", "Denied"]], current?.rights || item.declared?.rights?.redistribution || "unknown"));
   const sensitivity = field("sensitivity", "Sensitivity", select([["unknown", "Not determined — keep local"], ["public", "Public"], ["restricted", "Restricted"], ["controlled", "Controlled"]], current?.sensitivity || item.declared?.sensitivity || "unknown"));
   const reference = field("reference", "Rights reference or license", el("input", { type: "text", maxlength: "512", placeholder: "License, provider policy URL, or rights reference", value: current?.reference || item.declared?.rights?.license_id || "" }));
-  const reviewer = field("reviewer", "Reviewed by", el("input", { type: "text", required: "", maxlength: "80", autocomplete: "name", placeholder: "Your name", value: current?.reviewer || "" }));
+  const reviewer = field("reviewer", "Reviewed by", el("input", { type: "text", required: "", maxlength: "80", autocomplete: "name", placeholder: "Your name", value: current?.ai_attribution ? "" : current?.reviewer || "" }));
   const note = field("note", "Review note", el("textarea", { required: "", minlength: "8", maxlength: "1600", rows: "3", placeholder: "What you checked and the basis for your decision" }));
   note.value = current?.note || "";
   const confirm = el("input", { type: "checkbox", required: "" });

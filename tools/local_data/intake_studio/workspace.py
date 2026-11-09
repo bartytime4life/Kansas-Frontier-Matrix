@@ -1,6 +1,8 @@
 """Mount the established Working Data and immutable Library desks in Studio."""
 from pathlib import Path
+import json
 import re
+import sqlite3
 from urllib.parse import urlsplit
 
 from tools.local_data import intake, intake_service
@@ -32,6 +34,10 @@ class Workspace:
         for name, desk in self.desks.items():
             desk.token = token
             self.handlers[name] = intake_service.handler(desk, port=port)
+        self.ai = None
+        if "working" in self.desks and store.qwen_model:
+            from tools.local_data.ai_acceptance import Manager, Qwen
+            self.ai = Manager(self.desks["working"].root,Qwen(store.qwen_model,store.qwen_digest),check_volume=store.check_volume)
 
     def dispatch(self, request, method):
         parsed = urlsplit(request.path)
@@ -43,6 +49,8 @@ class Workspace:
         name, suffix = match.groups()
         if name not in self.handlers:
             return request.respond(503, {"error": "WORKSPACE_NOT_CONFIGURED"})
+        if suffix.startswith("/ai-review/"):
+            return self.ai_request(request,method,name,suffix)
         if method == "POST" and suffix != "/cancel":
             try:
                 self.store.check_volume()
@@ -57,6 +65,40 @@ class Workspace:
         getattr(delegated, "do_" + method)()
         request.close_connection = delegated.close_connection
 
+    def ai_request(self,request,method,name,suffix):
+        if name != "working":
+            return request.respond(403,{"error":"AI_WORKING_DATA_ONLY"})
+        if self.ai is None:
+            return request.respond(200,{"enabled":False,"reason":"Local Qwen review is not configured."}) if method=="GET" and suffix=="/ai-review/status" else request.respond(403,{"error":"AI_NOT_CONFIGURED"})
+        from tools.local_data.ai_acceptance import ProviderError
+        try:
+            if method=="GET" and suffix=="/ai-review/status":
+                return request.respond(200,self.ai.status())
+            if method!="POST" or suffix not in {"/ai-review/start","/ai-review/pause","/ai-review/resume","/ai-review/cancel"}:
+                return request.respond(404,{"error":"AI_ROUTE_NOT_FOUND"})
+            if request.headers.get("Origin") != request.server.origin:
+                return request.respond(403,{"error":"PRIVATE_REVIEW_ORIGIN_REQUIRED"})
+            if request.headers.get("Content-Type")!="application/json" or request.headers.get("Transfer-Encoding"):
+                return request.respond(415,{"error":"JSON_REQUIRED"})
+            length = int(request.headers.get("Content-Length","0"))
+            if not 0<length<=4096: raise ValueError("REQUEST_BYTE_LIMIT")
+            request.connection.settimeout(5)
+            value = json.loads(request.rfile.read(length))
+            if suffix=="/ai-review/start":
+                result = self.ai.start(value)
+            else:
+                if value!={}: raise ValueError("EMPTY_CONTROL_REQUIRED")
+                result = self.ai.control(suffix.rsplit("/",1)[-1])
+            return request.respond(200,result)
+        except ProviderError as error:
+            return request.respond(503,{"error":str(error)})
+        except sqlite3.Error:
+            return request.respond(503,{"error":"AI_WORKING_DATA_BUSY_RETRY"})
+        except (ValueError,RuntimeError,OSError) as error:
+            code = str(error)
+            return request.respond(409 if "BUSY" in code or "RUNNING" in code else 400,
+                {"error":code if re.fullmatch(r"[A-Z][A-Z0-9_]{2,90}",code) else "AI_REQUEST_FAILED"})
+
 
 def page(name):
     _, title, active = VIEWS[name]
@@ -70,6 +112,7 @@ def page(name):
     desk = (DESK / "index.html").read_text().split('<body>', 1)[1].rsplit('</body>', 1)[0]
     desk = desk.replace('<main>', '<div class="desk-content">').replace('</main>', '</div>')
     desk = desk.replace('src="/desk.js"', 'src="/workspace/desk.js"').replace('src="/reviews.js"', 'src="/workspace/reviews.js"')
+    desk = desk.replace('src="/ai-review.js"','src="/workspace/ai-review.js"')
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light"><title>KFM · {title}</title>
@@ -82,6 +125,7 @@ def page(name):
 
 def asset(path):
     files = {"/workspace/desk.js": ("desk.js", "application/javascript"),
+             "/workspace/ai-review.js": ("ai-review.js", "application/javascript"),
              "/workspace/reviews.js": ("reviews.js", "application/javascript"),
              "/workspace/desk.css": ("desk.css", "text/css")}
     filename, mime = files[path]
