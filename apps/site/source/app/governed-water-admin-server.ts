@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { getRawDb } from "../db";
 import { getChatGPTUser } from "./chatgpt-auth";
 import { WaterAdminError, type WaterAdminBucket, type WaterAdminDb, type WaterAdminStore } from "./governed-water-admin";
+import { JsonLimitError, readBoundedBytes } from "./bounded-json";
 
 export const waterAdminHeaders = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Cookie" };
 
@@ -50,8 +51,14 @@ export function waterAdminFailure(error: unknown): Response {
 }
 
 export async function readBoundedText(request: Request, limit: number): Promise<string> {
-  if (Number(request.headers.get("content-length") ?? 0) > limit) throw new WaterAdminError("REQUEST_TOO_LARGE", 413);
-  const raw = await request.arrayBuffer();
-  if (raw.byteLength > limit) throw new WaterAdminError("REQUEST_TOO_LARGE", 413);
+  let raw: Uint8Array;
+  try { raw = await readBoundedBytes(request, limit, request.signal); }
+  catch (error) {
+    if (error instanceof JsonLimitError) throw new WaterAdminError("REQUEST_TOO_LARGE", 413);
+    // An absent request body previously decoded as empty text. The route's JSON
+    // parser still decides how to report an empty stage or review record.
+    if (error instanceof SyntaxError && !request.body) return "";
+    throw error;
+  }
   try { return new TextDecoder("utf-8", { fatal: true }).decode(raw); } catch { throw new WaterAdminError("REQUEST_NOT_UTF8", 400); }
 }

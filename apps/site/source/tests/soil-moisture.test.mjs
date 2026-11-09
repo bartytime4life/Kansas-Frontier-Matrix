@@ -11,9 +11,10 @@ const compile = async (name, imports = {}) => {
   return mod.exports;
 };
 const soil = await compile("soil-moisture");
+const bounded = await compile("bounded-json");
 const server = await compile("soil-moisture-server", {
   "./soil-moisture": soil,
-  "./bounded-json": { readBoundedText: async response => response.text() },
+  "./bounded-json": bounded,
 });
 const availabilityRoute = await compile("api/soil-moisture/availability/route", {
   "../../../soil-moisture-server": {
@@ -163,4 +164,82 @@ test("tile bytes reject false PNG content and oversized streamed body", async ()
     global.fetch = async () => new Response(new Uint8Array(1024 * 1024 + 1), { headers: { "Content-Type": "image/png" } });
     await assert.rejects(server.soilTileBytes("surface", "2026-09-27", 6, 14, 24), { code: "NASA_MALFORMED_OR_OVERSIZED" });
   } finally { global.fetch = original; }
+});
+
+const tilePng = size => {
+  const bytes = new Uint8Array(size); bytes.set([137, 80, 78, 71, 13, 10, 26, 10]);
+  const header = new DataView(bytes.buffer); header.setUint32(8, 13); bytes.set([73, 72, 68, 82], 12);
+  header.setUint32(16, 256); header.setUint32(20, 256); return bytes;
+};
+const tile = () => server.soilTileBytes("surface", "2026-09-27", 6, 14, 24);
+
+test("soil tiles stop at the streamed budget without awaiting cancellation", { timeout: 1000 }, async t => {
+  let response;
+  t.mock.method(globalThis, "fetch", async () => response);
+  for (const contentLength of [undefined, "1"]) {
+    let pulls = 0, canceled = 0;
+    response = new Response(new ReadableStream({
+      pull(controller) { pulls++; controller.enqueue(tilePng(256 * 1024)); },
+      cancel() { canceled++; return new Promise(() => {}); },
+    }, { highWaterMark: 0 }), { headers: { "Content-Type": "image/png", ...(contentLength ? { "Content-Length": contentLength } : {}) } });
+    await assert.rejects(tile(), { code: "NASA_MALFORMED_OR_OVERSIZED", httpStatus: 502 });
+    assert.equal(pulls, 5); assert.equal(canceled, 1); assert.equal(response.body.locked, false);
+  }
+});
+
+test("soil tile success and invalid PNG failures release their readers", async t => {
+  let response;
+  t.mock.method(globalThis, "fetch", async () => response);
+  for (const length of [33, 1024 * 1024]) {
+    const bytes = tilePng(length);
+    response = new Response(bytes, { headers: { "Content-Type": "image/png" } });
+    assert.deepEqual(await tile(), bytes); assert.equal(response.body.locked, false);
+  }
+  response = new Response(tilePng(33).fill(0, 16, 20), { headers: { "Content-Type": "image/png" } });
+  await assert.rejects(tile(), { code: "NASA_INVALID_PNG" }); assert.equal(response.body.locked, false);
+  response = new Response(null, { headers: { "Content-Type": "image/png" } });
+  await assert.rejects(tile(), { code: "NASA_MALFORMED_OR_OVERSIZED" });
+});
+
+test("NASA header and MIME rejections cancel their bodies without reading or following redirects", { timeout: 1000 }, async t => {
+  let response;
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (input, init) => { calls.push({ input, init }); return response; });
+  for (const [init, code, read] of [
+    [{ status: 302, headers: { Location: "http://127.0.0.1/private" } }, "NASA_REDIRECT_REJECTED", () => tile()],
+    [{ status: 503 }, "NASA_HTTP_ERROR", () => tile()],
+    [{ headers: { "Content-Type": "image/png", "Content-Length": String(1024 * 1024 + 1) } }, "NASA_RESPONSE_TOO_LARGE", () => tile()],
+    [{ headers: { "Content-Type": "text/html" } }, "NASA_UNEXPECTED_CONTENT", () => tile()],
+    [{ headers: { "Content-Type": "text/html" } }, "NASA_UNEXPECTED_CONTENT", () => server.soilAvailability(true)],
+  ]) {
+    let pulls = 0, canceled = 0;
+    response = new Response(new ReadableStream({ pull() { pulls++; }, cancel() { canceled++; return new Promise(() => {}); } }, { highWaterMark: 0 }), init);
+    await assert.rejects(read(), { code, httpStatus: 502 });
+    assert.equal(pulls, 0); assert.equal(canceled, 1); assert.equal(response.body.locked, false);
+  }
+  assert.equal(calls.length, 5);
+  for (const { input, init } of calls) {
+    assert.equal(new URL(input).origin, "https://gibs.earthdata.nasa.gov");
+    assert.equal(init.redirect, "manual"); assert.equal(init.cache, "no-store");
+    assert.match(init.headers.Accept, /image\/png|application\/xml/);
+  }
+});
+
+test("NASA deadlines cancel stalled image and capabilities bodies after headers", { timeout: 1000 }, async t => {
+  let controller, response, started, cancelReason;
+  t.mock.method(AbortSignal, "timeout", delay => { assert.equal(delay, 12_000); return controller.signal; });
+  t.mock.method(globalThis, "fetch", async (_input, init) => { assert.equal(init.signal, controller.signal); return response; });
+  for (const kind of ["tile", "capabilities"]) {
+    controller = new AbortController(); cancelReason = undefined;
+    const reading = new Promise(resolve => { started = resolve; });
+    let pulls = 0;
+    response = new Response(new ReadableStream({
+      pull(stream) { if (pulls++ === 0) stream.enqueue(kind === "tile" ? tilePng(33) : new TextEncoder().encode("<Capabilities>")); else started(); },
+      cancel(reason) { cancelReason = reason; return new Promise(() => {}); },
+    }, { highWaterMark: 0 }), { headers: { "Content-Type": kind === "tile" ? "image/png" : "application/xml" } });
+    const pending = kind === "tile" ? tile() : server.soilAvailability(true);
+    await reading; controller.abort(new DOMException("Fixture NASA deadline", "TimeoutError"));
+    await assert.rejects(pending, { code: "NASA_TIMEOUT", httpStatus: 504 });
+    assert.equal(cancelReason.name, "TimeoutError"); assert.equal(response.body.locked, false);
+  }
 });

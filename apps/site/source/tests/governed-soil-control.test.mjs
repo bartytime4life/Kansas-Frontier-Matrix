@@ -44,6 +44,25 @@ test("evidence binds the selected station's five depth bundles to its observatio
   assert.equal(helpers.soilExportMatchesSelection({ ...full, data: { ...full.data, approval_expires_at: "2099-01-01T00:00:00Z" } }, evidence, station), false);
 });
 
+test("every selected soil row must belong to a bound depth and measurement evidence", () => {
+  const { layers, evidence } = only(station);
+  for (const depth of [999, "5", null, undefined]) {
+    const unbound = structuredClone(layers);
+    unbound.data.observations.push({ ...unbound.data.observations[0], depth_cm: depth, evidence_ref: "kfm://unbound-row" });
+    assert.equal(helpers.soilEvidenceMatchesSelection(unbound, evidence, station), false, `unbound depth ${depth}`);
+    assert.equal(helpers.soilExportMatchesSelection(unbound, evidence, station), false, `export depth ${depth}`);
+  }
+  for (const evidenceRef of [undefined, "kfm://another-measurement"]) {
+    const unbound = structuredClone(layers);
+    unbound.data.observations[0].evidence_ref = evidenceRef;
+    assert.equal(helpers.soilExportMatchesSelection(unbound, evidence, station), false);
+  }
+  const foreign = structuredClone(layers);
+  foreign.data.observations.push({ ...foreign.data.observations[0], station_id: other });
+  assert.equal(helpers.soilExportMatchesSelection(foreign, evidence, station), false);
+  assert.equal(helpers.soilExportMatchesSelection(layers, evidence, station), true);
+});
+
 test("the latest day shows withheld values as withheld, never as zero", () => {
   const day = helpers.latestSoilDay(full.data.observations, station);
   assert.equal(day.date, "2026-10-10");
@@ -125,6 +144,18 @@ test("changing station during an export withholds the download", async () => {
   h.choose(other); h.choose(station);
   h.requests[0].resolve(layers); await settle();
   h.requests[1].resolve(evidence); await settle();
+  assert.deepEqual(h.downloads, []);
+  assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
+
+test("an unbound soil depth withholds the actual export before creating a download", async () => {
+  const { layers, evidence } = only(station);
+  const h = harness(layers); h.start();
+  const unbound = structuredClone(layers);
+  unbound.data.observations.push({ ...unbound.data.observations[0], depth_cm: 999, evidence_ref: "kfm://unbound-row" });
+  h.requests[0].resolve(unbound); await settle();
+  h.requests[1].resolve(evidence); await settle();
+  assert.equal(h.requests.length, 2);
   assert.deepEqual(h.downloads, []);
   assert.match(h.statuses.at(-1), /^Export withheld:/);
 });

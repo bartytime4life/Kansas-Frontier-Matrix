@@ -15,7 +15,7 @@ export function soilEvidenceMatchesSelection(layers: SoilResponse | null, eviden
       || !Array.isArray(a.stations) || !a.stations.some(station => station?.id === stationId)
       || !Array.isArray(a.observations) || !Array.isArray(b.entries) || b.entries.length !== SOIL_DEPTHS.length) return false;
   const rows = a.observations.filter(observation => observation?.station_id === stationId);
-  if (rows.length > SOIL_STATION_ROWS) return false;
+  if (rows.length > SOIL_STATION_ROWS || rows.some(row => !SOIL_DEPTHS.some(depth => row.depth_cm === depth))) return false;
   return SOIL_DEPTHS.every((depth, index) => {
     const entry = b.entries![index], bundle = entry?.bundle, dataset = entry?.evidence_ref;
     if (entry?.station_id !== stationId || entry.series !== depth || !bundle || !dataset

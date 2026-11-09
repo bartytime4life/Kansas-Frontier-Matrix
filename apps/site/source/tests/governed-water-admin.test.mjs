@@ -11,6 +11,14 @@ const waterUrl = moduleUrl(await read("../app/governed-water.ts"), "governed-wat
 const adminUrl = moduleUrl((await read("../app/governed-water-admin.ts")).replace('"./governed-water"', JSON.stringify(waterUrl)), "governed-water-admin.ts");
 const water = await import(waterUrl);
 const admin = await import(adminUrl);
+const boundedUrl = moduleUrl(await read("../app/bounded-json.ts"), "bounded-json.ts");
+const serverUrl = moduleUrl((await read("../app/governed-water-admin-server.ts"))
+  .replace('"cloudflare:workers"', JSON.stringify(moduleUrl("export const env = {};", "workers.ts")))
+  .replace('"../db"', JSON.stringify(moduleUrl("export const getRawDb = () => { throw new Error('Unexpected storage access'); };", "db.ts")))
+  .replace('"./chatgpt-auth"', JSON.stringify(moduleUrl("export const getChatGPTUser = async () => null;", "auth.ts")))
+  .replace('"./governed-water-admin"', JSON.stringify(adminUrl))
+  .replace('"./bounded-json"', JSON.stringify(boundedUrl)), "governed-water-admin-server.ts");
+const server = await import(serverUrl);
 const fixture = (name) => read(`./fixtures/governed-water/${name}.json`);
 const NOW = "2026-09-30T19:00:00Z";
 
@@ -128,7 +136,7 @@ const serverStub = moduleUrl(`
   export const waterSameOrigin = (request) => { if (request.headers.get("origin") !== new URL(request.url).origin) throw new WaterAdminError("SAME_ORIGIN_REQUIRED", 403); };
   export const waterOwner = async () => { if (!globalThis.__waterAdmin.owner) throw new WaterAdminError("OWNER_REQUIRED", 403); return { id: "owner-1", email: "owner@example.test" }; };
   export const waterWorker = (request) => { if (request.headers.get("authorization") !== "Bearer staging-secret") throw new WaterAdminError("STAGING_TOKEN_REQUIRED", 403); };
-  export const readBoundedText = async (request) => request.text();
+  export { readBoundedText } from ${JSON.stringify(serverUrl)};
   export const waterAdminFailure = (error) => Response.json({ outcome: "ERROR", reason_code: error instanceof WaterAdminError ? error.message : "WATER_ADMIN_UNAVAILABLE" }, { status: error.status ?? 503 });
 `, "governed-water-admin-server.ts");
 const route = async (name) => import(moduleUrl((await read(`../app/api/governed/water-admin/${name}/route.ts`))
@@ -208,4 +216,59 @@ test("withdrawal refuses when the active package changed since the page loaded",
   await rejects(admin.withdrawWaterPackage(s, { package_id: owner.package_id }, NOW), "WITHDRAW_REQUEST_INVALID");
   assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_packages WHERE state = 'WITHDRAWN'").get().n, 0);
   assert.equal((await admin.withdrawWaterPackage(s, { package_id: owner.package_id, expected_active: owner.package_id }, NOW)).outcome, "WITHDRAWN");
+});
+
+const streamedRequest = (body, headers = {}, signal) => new Request("https://site.test/api/governed/water-admin/stage", { method: "POST", body, duplex: "half", headers, signal });
+
+test("governed request byte budgets stop missing or forged length streams before buffering the full input", { timeout: 1000 }, async () => {
+  for (const declared of [undefined, "1", "8193"]) {
+    let pulls = 0, canceled = 0;
+    const request = streamedRequest(new ReadableStream({
+      pull(controller) { if (pulls === 20) controller.close(); else { pulls++; controller.enqueue(new Uint8Array(4096)); } },
+      cancel() { canceled++; return new Promise(() => {}); },
+    }, { highWaterMark: 0 }), declared ? { "Content-Length": declared } : {});
+    await assert.rejects(server.readBoundedText(request, 8192), error => error instanceof admin.WaterAdminError && error.message === "REQUEST_TOO_LARGE" && error.status === 413);
+    assert.equal(pulls, declared === "8193" ? 0 : 3);
+    assert.equal(canceled, 1); assert.equal(request.body.locked, false);
+  }
+});
+
+test("governed request reads preserve exact-cap UTF-8, empty input and malformed-text error semantics", async () => {
+  const text = "{\"note\":\"🌾é\"}", bytes = new TextEncoder().encode(text);
+  const request = streamedRequest(new ReadableStream({ start(controller) { for (const byte of bytes) controller.enqueue(Uint8Array.of(byte)); controller.close(); } }));
+  assert.equal(await server.readBoundedText(request, bytes.length), text); assert.equal(request.body.locked, false);
+  assert.equal(await server.readBoundedText(new Request("https://site.test", { method: "POST" }), 1), "");
+  const malformed = streamedRequest(Uint8Array.of(0xc3));
+  await assert.rejects(server.readBoundedText(malformed, 1), error => error instanceof admin.WaterAdminError && error.message === "REQUEST_NOT_UTF8" && error.status === 400);
+  assert.equal(malformed.body.locked, false);
+  const failure = new TypeError("Fixture transport failed");
+  const broken = streamedRequest(new ReadableStream({ pull(controller) { controller.error(failure); } }));
+  await assert.rejects(server.readBoundedText(broken, 10), error => error === failure);
+  assert.equal(broken.body.locked, false);
+});
+
+test("governed request aborts cancel a stalled body without waiting on cancellation", { timeout: 1000 }, async () => {
+  const controller = new AbortController(), reason = new DOMException("Owner closed the request", "AbortError");
+  let started, canceled;
+  const reading = new Promise(resolve => { started = resolve; });
+  const request = streamedRequest(new ReadableStream({ pull() { started(); }, cancel(value) { canceled = value; return new Promise(() => {}); } }, { highWaterMark: 0 }), {}, controller.signal);
+  const pending = server.readBoundedText(request, 8192);
+  await reading; controller.abort(reason);
+  await assert.rejects(pending, error => error === reason);
+  assert.equal(canceled, reason); assert.equal(request.body.locked, false);
+});
+
+test("governed authorization gates reject before a streamed request body is read", async () => {
+  const stage = await route("stage"), activate = await route("activate");
+  const s = await store(); globalThis.__waterAdmin = { store: s, owner: false };
+  for (const [handler, headers] of [[stage, {}], [activate, { Origin: "https://elsewhere.test" }], [activate, { Origin: "https://site.test" }]]) {
+    let pulls = 0;
+    const request = streamedRequest(new ReadableStream({ pull() { pulls++; } }, { highWaterMark: 0 }), headers);
+    const response = await handler.POST(request);
+    assert.equal(response.status, 403); assert.equal(pulls, 0); assert.equal(request.bodyUsed, false);
+    await request.body.cancel();
+  }
+  assert.equal(s.objects.size, 0);
+  assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_packages").get().n, 0);
+  assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_active").get().n, 0);
 });
