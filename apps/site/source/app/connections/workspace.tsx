@@ -13,9 +13,36 @@ const preferred:Record<string,string[]>={"water-quality-portal":["Activity_Start
 export default function ConnectionsWorkspace(){
  const [catalog,setCatalog]=useState<Catalog|null>(null),[selected,setSelected]=useState("noaa-ncei"),[query,setQuery]=useState<Record<string,string>>({});
  const [result,setResult]=useState<Result|null>(null),[receipts,setReceipts]=useState<Receipt[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState(""),[page,setPage]=useState(0),[metric,setMetric]=useState("");
+ const [statusBusy,setStatusBusy]=useState(true),[statusError,setStatusError]=useState("");
  const request=useRef<AbortController|null>(null);
- const refresh=useCallback(async(signal?:AbortSignal)=>{try{const response=await fetch("/api/connections",{cache:"no-store",signal});if(!response.ok)throw new Error("Source status unavailable.");const value:Catalog=await response.json();if(signal?.aborted)return;setCatalog(value);if(!value.owner){setReceipts([]);setResult(null);}setQuery(current=>Object.keys(current).length?current:defaults(value.sources.find(s=>s.id==="noaa-ncei")!.fields));if(value.owner){const r=await fetch("/api/connections?action=captures",{cache:"no-store",signal});if(r.ok){const v=await r.json();if(!signal?.aborted)setReceipts(v.captures);}}}catch{if(!signal?.aborted)setMessage("Source status unavailable. Retry when the host has recovered.");}},[]);
- useEffect(()=>{const controller=new AbortController();void Promise.resolve().then(()=>refresh(controller.signal));return()=>{controller.abort();request.current?.abort();};},[refresh]);
+ const statusRequest=useRef<AbortController|null>(null);
+ const refresh=useCallback(async(signal?:AbortSignal)=>{
+  if(signal?.aborted)return;
+  statusRequest.current?.abort();
+  const controller=new AbortController();statusRequest.current=controller;
+  const cancel=()=>controller.abort();signal?.addEventListener("abort",cancel,{once:true});
+  let timedOut=false;
+  let cancelDeadline=()=>{};
+  const deadline=new Promise<never>((_resolve,reject)=>{
+   cancelDeadline=()=>reject(controller.signal.reason);
+   controller.signal.addEventListener("abort",cancelDeadline,{once:true});
+  });
+  const timeout=setTimeout(()=>{timedOut=true;controller.abort();},15_000);
+  setStatusBusy(true);setStatusError("");
+  try{
+   const load=async()=>{
+   const response=await fetch("/api/connections",{cache:"no-store",signal:controller.signal});
+   if(!response.ok)throw new Error("Source status unavailable.");
+   const value:Catalog=await response.json();if(controller.signal.aborted)return;
+   setCatalog(value);if(!value.owner){setReceipts([]);setResult(null);}
+   setQuery(current=>Object.keys(current).length?current:defaults(value.sources.find(s=>s.id==="noaa-ncei")!.fields));
+   if(value.owner){const r=await fetch("/api/connections?action=captures",{cache:"no-store",signal:controller.signal});if(r.ok){const v=await r.json();if(!controller.signal.aborted)setReceipts(v.captures);}}
+   };
+   await Promise.race([load(),deadline]);
+  }catch{if(statusRequest.current===controller&&(!controller.signal.aborted||timedOut))setStatusError(`${timedOut?"Source status took too long to respond.":"Source status is unavailable."} Retry when the host has recovered. Any earlier status below may be out of date.`);}
+  finally{clearTimeout(timeout);signal?.removeEventListener("abort",cancel);controller.signal.removeEventListener("abort",cancelDeadline);if(statusRequest.current===controller&&(!controller.signal.aborted||timedOut))setStatusBusy(false);}
+ },[]);
+ useEffect(()=>{const controller=new AbortController();void Promise.resolve().then(()=>refresh(controller.signal));return()=>{controller.abort();statusRequest.current?.abort();statusRequest.current=null;request.current?.abort();};},[refresh]);
  const source=catalog?.sources.find(s=>s.id===selected);
  const choose=(id:string)=>{request.current?.abort();setBusy(false);setSelected(id);setQuery(defaults(catalog!.sources.find(s=>s.id===id)!.fields));setResult(null);setMessage("");setPage(0);setMetric("");};
  const inspect=async(receipt?:Receipt)=>{
@@ -24,11 +51,11 @@ export default function ConnectionsWorkspace(){
    const response=await fetch(receipt?"/api/connections?action=view&id="+receipt.captureId:"/api/connections",receipt?{cache:"no-store",signal:controller.signal}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sourceId:selected,query}),signal:controller.signal});
    const value=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error(labels[value.error]??"This request is held. Check configuration, dates and the source limitations.");
    if(receipt){setSelected(receipt.sourceId);setQuery(receipt.query);}
-   setResult(value);setMetric((VALUE_COLUMNS[value.view.sourceId]??[]).find(key=>value.view.rows.some((r:Record<string,unknown>)=>r[key]!==undefined))??"");setMessage(value.cached?"Verified saved capture replayed.":"Stored bytes verified. Review and release remain pending.");void refresh(controller.signal);
+   setResult(value);setMetric((VALUE_COLUMNS[value.view.sourceId]??[]).find(key=>value.view.rows.some((r:Record<string,unknown>)=>r[key]!==undefined))??"");setMessage(value.cached?"Verified saved capture replayed.":"Stored bytes verified. Review and release remain pending.");void refresh();
   }catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Capture held.");}
   finally{if(!controller.signal.aborted)setBusy(false);}
  };
- const runProfiles=async()=>{request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);try{const response=await fetch("/api/connections/run",{method:"POST",signal:controller.signal});const value=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error("Hosted capture profiles are not configured or enabled.");setMessage(value.state==="schedule-disabled"?"Configured-profile capture is disabled.":String(value.captured)+" configured-profile capture(s) stored; review is pending.");void refresh(controller.signal);}catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Profile capture held.");}finally{if(!controller.signal.aborted)setBusy(false);}};
+ const runProfiles=async()=>{request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);try{const response=await fetch("/api/connections/run",{method:"POST",signal:controller.signal});const value=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error("Hosted capture profiles are not configured or enabled.");setMessage(value.state==="schedule-disabled"?"Configured-profile capture is disabled.":String(value.captured)+" configured-profile capture(s) stored; review is pending.");void refresh();}catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Profile capture held.");}finally{if(!controller.signal.aborted)setBusy(false);}};
  const view=result?.view;
  const keys=view?.rows.length?Array.from(new Set(view.rows.slice(0,20).flatMap(row=>Object.keys(row)))):[];
  const columns=preferred[view?.sourceId??""]??keys.slice(0,8);
@@ -36,9 +63,11 @@ export default function ConnectionsWorkspace(){
  const rowPage=view?.rows.slice(page*25,(page+1)*25)??[];
  const readiness=source?.productStatuses?.[query.product]??source;
  const productKeys=source?.productSecrets?.[query.product]??[],productHolds=source?.productConfirmations?.[query.product]??[];
- return <main className="connections-workspace"><nav><Link href="/?layers=sources">← Explorer</Link><Link href="/source-operations">Owner source operations</Link><button onClick={()=>void refresh()} type="button">Refresh status</button></nav>
+ return <main className="connections-workspace"><nav><Link href="/?layers=sources">← Explorer</Link><Link href="/daily-archive">Daily capture &amp; archive</Link><button onClick={()=>void refresh()} type="button" disabled={statusBusy} aria-busy={statusBusy}>{statusBusy?"Refreshing status…":statusError?"Retry source status":"Refresh status"}</button></nav>
   <header><p>Source connections</p><h1>Inspect the data behind Kansas</h1><p>15 additional connections and NOAA NCEI, with bounded capture, durable storage and verified replay. Captures stay private while rights, sensitivity and release review are pending.</p></header>
-  {!catalog?<p role="status">Checking hosted source support…</p>:<>
+  {statusBusy&&<p role="status">{catalog?"Refreshing hosted source support…":"Checking hosted source support…"}</p>}
+  {statusError&&<p role="alert">{statusError}</p>}
+  {catalog&&<>
    <section className="connection-host" aria-label="Host archive status"><strong>{catalog.host.host}</strong><span>{catalog.host.state.replaceAll("-"," ")}</span><p>{catalog.host.usedBytes===null?"Stored bytes have not been verified.":catalog.host.usedBytes.toLocaleString()+" accounted bytes stored."} Archive limit: {catalog.host.limitBytes.toLocaleString()} bytes. {catalog.host.paused?"Capture is paused.":""}</p>{catalog.host.missing?.length? <p>Setup pending: {catalog.host.missing.join(", ")}.</p>:null}<p>{catalog.owner?"Owner access verified. Saved captures are available below.":"Source status is public. Owner sign-in is required to capture or inspect unreleased data."}</p></section>
    <p><button type="button" disabled={busy||!catalog.owner||!catalog.host.configured||catalog.host.paused} onClick={()=>void runProfiles()}>Capture configured profiles</button> Scheduled profiles are disabled until the host configuration is reviewed.</p>
    <div className="connection-layout"><aside aria-label="API connections">{catalog.sources.map(s=><button type="button" key={s.id} aria-pressed={selected===s.id} onClick={()=>choose(s.id)}><strong>{s.name}</strong><span>{s.kind}</span><small>{s.configured?"Adapter ready · review pending":"Credentials or provider review pending"}</small></button>)}</aside>

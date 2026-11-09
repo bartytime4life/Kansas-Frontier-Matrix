@@ -64,15 +64,20 @@ test('the integrated utility mounts only while open and diverts its own feature 
  const css=await readFile('app/local-atlas.css','utf8');assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);
 });
 
-test('actual global click callback yields local hits before official selection with one shared query', async () => {
+test('actual global click callback retains local, geology and aviation click ownership', async () => {
  const page=await readFile('app/page.tsx','utf8');
  const click=page.slice(page.indexOf('        map.on("click", (event) => {'));
  const prefix=click.slice(click.indexOf('{')+1,click.indexOf('          const availableLayers'));
- const handler=new Function('map','event','undergroundOpenRef','measureModeRef','localAtlasHit','aviationPickingRef',prefix+"return 'official';");
- let hits=0,queries=0;const map={queryRenderedFeatures:()=>{queries++;return [];}};const local=()=>{hits++;return true;};
+ const callback=new Function('map','event','undergroundOpenRef','measureModeRef','localAtlasHit','aviationPickingRef','GEOLOGY_POINT_LAYER_ID',prefix+"return 'official';");
+ const handler=(...args)=>callback(...args,'fixture-geology-points');
+ let hits=0,queries=0;const map={getLayer:()=>undefined,queryRenderedFeatures:()=>{queries++;return [];}};const local=()=>{hits++;return true;};
  assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},local,{current:false}),undefined);assert.equal(hits,1);
  assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},()=>false,{current:false}),'official');assert.equal(queries,2);
  assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},local,{current:true}),undefined);assert.equal(queries,2,"aviation drawing does not query or select underlying evidence");
+ map.getLayer=id=>{assert.equal(id,'fixture-geology-points');return {};};
+ map.queryRenderedFeatures=(_point,options)=>{queries++;assert.deepEqual(options.layers,['fixture-geology-points']);return [{id:'synthetic-geology-record'}];};
+ assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},local,{current:false}),undefined);
+ assert.equal(hits,1,'geology markers keep their own click instead of opening local evidence');assert.equal(queries,3);
 });
 test('raster image bounds own only visible local clicks without claiming pixel values', () => {
  const h=harness(),p=preview({kind:'raster',data:{imageDataUrl:'data:image/png;base64,aGVsbG8=',coordinates:[[-100,39],[-99,39],[-99,38],[-100,38]]}}),c=h.start(p);

@@ -72,18 +72,63 @@ test('every Explorer transport authenticates initial GET from the owner fragment
   assert.equal(env.window.location.hash, '');
 });
 
-test('standalone Desk consumes its fragment and authenticates API reads and writes', async () => {
-  const env = browser(`#kfm-intake=${tokens.intake}`);
-  const calls = [];
+async function deskClient(env, fetch, workspace) {
   const repositoryRoot = process.env.KFM_WEATHER_REPOSITORY_ROOT;
   if (repositoryRoot && !isAbsolute(repositoryRoot)) throw new Error('KFM_WEATHER_REPOSITORY_ROOT must be absolute');
   const deskPath = repositoryRoot ? join(repositoryRoot, 'tools/local_data/intake_desk/desk.js') : '../../../tools/local_data/intake_desk/desk.js';
   const desk = (await readFile(deskPath, 'utf8')).split('const project =')[0];
   const context = vm.createContext({ URLSearchParams, location: env.window.location, history: env.window.history, sessionStorage: env.window.sessionStorage,
-    fetch: async (path, init) => { calls.push({ path, init }); return { ok: true, json: async () => ({}) }; } });
+    document: { body: { dataset: workspace ? { kfmWorkspace: workspace } : {} } }, fetch });
   vm.runInContext(desk, context);
+  return context;
+}
+
+test('standalone Desk consumes its fragment and authenticates API reads and writes', async () => {
+  const env = browser(`#kfm-intake=${tokens.intake}`);
+  const calls = [];
+  const context = await deskClient(env, async (path, init) => { calls.push({ path, init }); return { ok: true, json: async () => ({}) }; });
   await vm.runInContext('api("/api/status")', context);
   await vm.runInContext('api("/api/analyze", {})', context);
-  for (const call of calls) assert.equal(call.init.headers['X-KFM-Session'], tokens.intake);
+  assert.deepEqual(calls.map(call => call.path), ['/api/status', '/api/analyze'], 'the public shell does not bootstrap an operator session');
+  for (const call of calls) {
+    assert.equal(call.init.headers['X-KFM-Session'], tokens.intake);
+    assert.equal(call.init.credentials, 'omit');
+    assert.equal(call.init.redirect, 'error');
+    assert.equal(call.path.includes(tokens.intake), false);
+  }
+  assert.equal(calls[0].init.method, undefined);
+  assert.equal(calls[1].init.method, 'POST');
+  assert.equal(calls[1].init.headers['Content-Type'], 'application/json');
+  assert.equal(calls[1].init.body, '{}');
   assert.equal(env.window.location.hash, '');
+});
+
+test('operator Desk awaits its session handshake before scoped API reads and writes', async () => {
+  const env = browser();
+  const calls = [];
+  const workspace = 'operator-fixture', token = 'o'.repeat(43);
+  let completeSession;
+  const pendingSession = new Promise(resolve => { completeSession = resolve; });
+  const context = await deskClient(env, async (path, init) => {
+    calls.push({ path, init });
+    return path === '/api/session' ? pendingSession : { ok: true, json: async () => ({}) };
+  }, workspace);
+  const read = vm.runInContext('api("/api/status")', context);
+  const write = vm.runInContext('api("/api/analyze", {requested: true})', context);
+  assert.deepEqual(calls.map(call => call.path), ['/api/session'], 'API operations wait for the operator handshake');
+  assert.equal(calls[0].init.headers, undefined, 'the session bootstrap does not forward a stored capability');
+  completeSession({ ok: true, json: async () => ({ token }) });
+  await Promise.all([read, write]);
+  assert.deepEqual(calls.map(call => call.path), ['/api/session', `/api/workspace/${workspace}/status`, `/api/workspace/${workspace}/analyze`]);
+  for (const call of calls) {
+    assert.equal(call.init.cache, 'no-store');
+    assert.equal(call.init.credentials, 'omit');
+    assert.equal(call.init.redirect, 'error');
+    assert.equal(call.path.includes(token), false);
+  }
+  for (const call of calls.slice(1)) assert.equal(call.init.headers['X-KFM-Session'], token);
+  assert.equal(calls[1].init.method, undefined);
+  assert.equal(calls[2].init.method, 'POST');
+  assert.equal(calls[2].init.body, '{"requested":true}');
+  assert.equal(env.saved.size, 0, 'the operator handshake does not persist its capability');
 });

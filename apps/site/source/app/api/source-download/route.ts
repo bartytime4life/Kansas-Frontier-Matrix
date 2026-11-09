@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   if (extension === "geojson" && (json?.data?.type !== "FeatureCollection" || !Array.isArray(json.data.features))) return Response.json({ error: "The source did not return a valid feature collection." }, { status: 502, headers: { "Cache-Control": "no-store" } });
   const imageDay = source === "nasa-gibs-fire-points" ? json.sourceDay : null;
   if (source === "nasa-gibs-fire-points" && (typeof imageDay !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(imageDay))) return Response.json({ error: "The fire source did not provide a valid image day." }, { status: 502, headers: { "Cache-Control": "no-store" } });
-  const result = source === "usgs-streamflow" ? json : { ...json.data, kfm: { source: json.source, requestedDay: day ?? undefined, sourceDay: imageDay ?? undefined, retrievedAt: json.retrievedAt, sourceTime: json.upstreamUpdatedAt, state: json.state, limitation: json.limitation } };
+  const result = source === "usgs-streamflow" ? json : { ...json.data, kfm: { source: json.source, requestedDay: day ?? undefined, sourceDay: imageDay ?? undefined, retrievedAt: json.retrievedAt, sourceTime: json.upstreamUpdatedAt, state: json.state, featureCount: json.featureCount, truncated: json.truncated, limitation: json.limitation } };
   // The downloaded body differs from the upstream envelope; remove its body metadata.
   for (const name of ["Content-Length", "Content-Encoding", "ETag"]) headers.delete(name);
   headers.set("Content-Disposition", `attachment; filename="kfm-${source}-${imageDay ?? day ?? new Date().toISOString().slice(0,10)}.${extension}"`);

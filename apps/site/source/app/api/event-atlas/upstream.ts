@@ -3,29 +3,50 @@ export async function boundedFetch(url: string, limit: number, options: { timeou
   const parsed = new URL(url);
   if (!ORIGINS.has(parsed.origin) || parsed.username || parsed.password || parsed.hash) throw new Error("Non-allowlisted source.");
   const controller = new AbortController();
-  const abort = () => controller.abort();
+  const abort = () => controller.abort(options.signal?.reason);
   options.signal?.throwIfAborted();
   options.signal?.addEventListener("abort", abort, { once: true });
+  let response: Response | undefined;
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  let complete = false;
+  // A fetch adapter may deliver headers before its body is linked to the fetch
+  // signal. Cancel the reader explicitly so stalled reads still honor aborts.
+  const cancelRead = () => { void reader?.cancel(controller.signal.reason).catch(() => undefined); };
+  controller.signal.addEventListener("abort", cancelRead, { once: true });
   const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 18_000);
   try {
     // Workers implements manual/follow, but rejects redirect:"error" before I/O.
     // Manual keeps redirects inside the same fail-closed source boundary.
-    const response = await fetch(parsed, { signal: controller.signal, redirect: "manual", cache: options.cache, headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
-    if (response.status === 204) return { bytes: new Uint8Array(), text: () => "", headers: response.headers };
+    response = await fetch(parsed, { signal: controller.signal, redirect: "manual", cache: options.cache, headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
+    controller.signal.throwIfAborted();
+    if (response.status === 204) { complete = true; return { bytes: new Uint8Array(), text: () => "", headers: response.headers }; }
     if (!response.ok) throw new Error(`Source unavailable (HTTP ${response.status}).`);
     if (!response.body) throw new Error("Source response body was missing.");
     if (Number(response.headers.get("content-length")) > limit) throw new Error("Source exceeded the response budget.");
-    const reader = response.body.getReader();
+    reader = response.body.getReader();
     const chunks: Uint8Array[] = []; let total = 0;
     while (true) {
-      const { value, done } = await reader.read(); if (done) break;
+      controller.signal.throwIfAborted();
+      const { value, done } = await reader.read();
+      controller.signal.throwIfAborted();
+      if (done) break;
       total += value.byteLength;
-      if (total > limit) { controller.abort(); await reader.cancel(); throw new Error("Source exceeded the response budget."); }
+      if (total > limit) throw new Error("Source exceeded the response budget.");
       chunks.push(value);
     }
     const bytes = new Uint8Array(total); let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+    complete = true;
     return { bytes, text: () => new TextDecoder().decode(bytes), headers: response.headers };
-  } finally { clearTimeout(timer); options.signal?.removeEventListener("abort", abort); }
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", abort);
+    if (!complete) {
+      controller.abort();
+      if (!reader) void response?.body?.cancel().catch(() => undefined);
+    }
+    controller.signal.removeEventListener("abort", cancelRead);
+    reader?.releaseLock();
+  }
 }
 export const jsonHeaders = { "Cache-Control": "public, max-age=120", "X-Content-Type-Options": "nosniff" };
