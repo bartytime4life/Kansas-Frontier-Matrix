@@ -3,6 +3,7 @@ const CACHE = 'kfm-recovery-shell-v2';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
 self.addEventListener('message', event => {
+  if (event.origin !== self.location.origin) return;
   let sourceUrl;
   try {
     sourceUrl = typeof event.source?.url === 'string' ? new URL(event.source.url) : null;
