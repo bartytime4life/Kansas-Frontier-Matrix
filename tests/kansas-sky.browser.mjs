@@ -216,6 +216,12 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
 test('Kansas Sky basemap warning lifecycle records first failure and preserves real failures across resizing', {timeout:120000}, async t=>{
   const b=await browser(t),p=await pageSession(b,{width:1440,height:900,touch:false,motion:'no-preference',basemapTrace:true});
   const warning=`[...document.querySelectorAll('.runtime-degraded-banner')].some(e=>/basemap tiles are unavailable|basemap source reported an error/i.test(e.textContent))`;
+  const snapshot=()=>p.evaluate(`({fixture:'SYNTHETIC',trace:window.__kfmBasemapTrace?.snapshot()??null,style:{name:window.__skyMap?.getStyle()?.name??null,loaded:window.__skyMap?.isStyleLoaded()??false,relief:!!window.__skyMap?.getSource('basemap-relief-dem'),fixtureBackground:!!window.__skyMap?.getLayer('layout-test-background')},selected:document.querySelector('select[aria-label="Appearance basemap"]')?.value??null,banners:[...document.querySelectorAll('.runtime-degraded-banner')].map(e=>e.textContent),errors:window.__skyErrors??[]})`);
+  b.checks.unshift(async()=>{
+    const state=await snapshot();
+    t.diagnostic(JSON.stringify({...state,trace:state.trace?{...state.trace,events:state.trace.events.slice(-15)}:null}));
+    if(process.env.KFM_SKY_SCREENSHOTS){await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,'basemap-warning-final-or-failure.json'),JSON.stringify({...state,network:p.networkSnapshot()},null,2));}
+  });
   await p.wait(`window.__skyMap?.getSource('basemap-relief-dem') && window.__kfmBasemapTrace`, 'diagnostics attached to running Midnight map');
   await p.wait(warning,'actual deliberately blocked relief source remains visibly warned');
   const first=await p.evaluate(`window.__kfmBasemapTrace.snapshot().firstFailure`);
