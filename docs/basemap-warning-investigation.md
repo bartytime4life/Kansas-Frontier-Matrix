@@ -41,7 +41,7 @@ printing them to the console. The later governed catalog 503 stays separate.
 
 ## Opt-in browser-local trace
 
-For an approved local candidate or read-only public inspection, add
+On a build that includes this change, for local or read-only inspection, add
 `basemapTrace=1` to the existing URL **before** opening the map. The query
 enables no source, upload, data admission, model, archive or publication.
 The trace is available locally as:
@@ -98,6 +98,11 @@ visible through 375-to-1440 resizing. Its network listener starts before
 initial navigation, exports finite provider/catalog lanes, and the map trace
 retains the first failure. These are **synthetic loopback** results, not live
 provider, real-flight, installed-machine or physical-GPU acceptance.
+
+The healthy cross-origin style fixture includes its required CORS permission.
+Native replay dragging waits for the actual unobstructed canvas before input;
+its two endpoint assertions and native-gesture Follow-release assertion stay
+unchanged. This uses the existing bounded wait, not a longer deadline or skip.
 
 To resolve #5779, capture the unchanged release from the beginning on a
 WebGL2-capable browser. Attempt Aviation chart / globe / AAL1179 / Follow /

@@ -305,6 +305,11 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow camera enabled');
     const canvas=await p.rect('.maplibregl-canvas');
     const x=Math.min(layout.width-20,canvas.x+canvas.width*.9),y=canvas.y+canvas.height*.55;
+    // Follow can move into still-pending delayed fixture tiles. Wait for the
+    // real input surface, as the earlier aircraft click does, instead of
+    // dispatching a gesture into a transient loading overlay. Keep both hit
+    // assertions and the real native-drag release assertion below.
+    await p.wait(`(()=>{const canvas=window.__skyMap.getCanvas();return document.elementFromPoint(${x},${y})===canvas&&document.elementFromPoint(${x-35},${y+10})===canvas;})()`,'native drag canvas is unobstructed after Follow');
     // Retain actual delivery and camera state around the unchanged native drag.
     // This trace never drives the camera or substitutes for the release assertion.
     const gestureHits=await p.evaluate(`(()=>{
