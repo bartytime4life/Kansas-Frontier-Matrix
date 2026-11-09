@@ -81,7 +81,7 @@ function StorySheet({ held, onOpen, onClose, labOpen }) {
   return createPortal(<div className="story-sheet" ref={dialog} role="dialog" aria-modal="true" aria-labelledby="story-sheet-title">
     <header className="story-sheet-head"><div><span className="story-kicker">KANSAS FRONTIER MATRIX</span><h2 id="story-sheet-title" tabIndex={-1}>The Kansas record</h2></div>
       <button type="button" className="story-icon-button" aria-label="Close The Kansas record" onClick={onClose}>×</button></header>
-    <p className="story-section-lede">{STORIES.length} stories built from the public record. Choose one to open its lab.</p>
+    <p className="story-section-lede">{STORIES.filter(entry => entry.status === 'ready').length} instruments and {STORIES.filter(entry => entry.status === 'planned').length} planned stories. Source availability is shown separately.</p>
     <StoryGroups held={held} onOpen={onOpen} root={dialog}/>
   </div>, document.querySelector('.site-root') || document.body);
 }
@@ -109,7 +109,7 @@ export default function StorySection({ paused = false, reduced = false, modal = 
       ? <button type="button" ref={launcher} className="story-launcher" aria-label={`Open The Kansas record: ${STORIES.length} data stories`} onClick={() => setSheet(true)}><i aria-hidden="true"/>The Kansas record</button>
       : <section className="story-section" aria-labelledby="story-section-title">
         <header className="story-section-head"><h2 id="story-section-title">The Kansas record</h2>
-          <p className="story-section-lede">{STORIES.length} stories built from the public record, each with a lab of its own. {liveCount} are ready to explore; the rest show what is on the way.</p></header>
+          <p className="story-section-lede">{liveCount} research instruments; {STORIES.length - liveCount} more stories are planned. Each card shows whether a source snapshot is available.</p><a className="story-atlas-link" href="/labs">Open the research atlas ↗</a></header>
         <StoryGroups held={held} onOpen={open}/>
       </section>}
     {sheetOpen && <StorySheet held={held} onOpen={open} onClose={closeSheet} labOpen={Boolean(labId)}/>}

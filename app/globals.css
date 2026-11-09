@@ -2581,7 +2581,10 @@ body { font-size: 14px; }
 .header-overflow-menu[open] > summary { border-color: rgba(224, 186, 109, .62); color: var(--gold-soft); }
 .header-overflow-panel { position: absolute; z-index: 180; top: calc(100% + 6px); right: 0; display: grid; width: 190px; border: 1px solid rgba(115, 199, 210, .4); border-radius: 9px; background: rgba(5, 27, 32, .99); padding: 6px; box-shadow: 0 20px 56px rgba(0, 0, 0, .48); }
 .header-overflow-workspaces { display: grid; border-bottom: 1px solid var(--line); padding-bottom: 5px; margin-bottom: 5px; }
-.header-overflow-workspaces > button { justify-content: flex-start; width: 100%; min-height: 44px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); padding: 8px 10px; text-align: left; }
+.header-overflow-workspaces > a,
+.header-overflow-workspaces > button { display:flex;align-items:center;text-decoration:none;justify-content: flex-start; width: 100%; min-height: 44px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); padding: 8px 10px; text-align: left; }
+.header-overflow-workspaces > a:hover,
+.header-overflow-workspaces > a:focus-visible,
 .header-overflow-workspaces > button:hover,
 .header-overflow-workspaces > button:focus-visible,
 .header-overflow-workspaces > button[aria-current="page"] { background: rgba(115, 199, 210, .09); color: var(--gold-soft); }

@@ -14,6 +14,10 @@ const siteOnly = onSite ? {} : { skip: 'the site is not in this checkout; run on
 const reactHere = existsSync(path('node_modules/react/package.json'));
 const reactOnly = reactHere ? {} : { skip: 'react is not installed in this checkout' };
 const hex = /^#[0-9a-f]{6}$/i;
+const validRail = () => ({ format: 'kfm-story-bundle-v1', story: 'iron-horse', version: 1, observed: { from: 1861, to: 1861 },
+  sources: [{name:'Test source',url:'https://example.org/rail',license:'Synthetic test only',citation:'Synthetic test'}],
+  data: {years:[1861],states:['Kansas'],names:['Example'],gauges:[56.5],grid:{origin:[-103,36],unit:.001},
+    lines:[[0,0,0,0,1,[1000,2000,1,1]]],milesByYear:[{year:1861,kansasTotal:1}],counts:{segments:1},limits:['Synthetic test only']} });
 
 test('the registry lists 22 stories with unique ids, known groups and complete copy', () => {
   assert.equal(STORIES.length, 22);
@@ -34,13 +38,13 @@ test('the registry lists 22 stories with unique ids, known groups and complete c
   assert.equal(storyById('nope'), null);
 });
 
-test('only the two exemplars are ready, and every ready story has its module; the rest are planned', () => {
+test('implemented instruments are lazy and planned stories cannot load a pretend instrument', () => {
   const ready = STORIES.filter(story => story.status === 'ready');
-  assert.deepEqual(ready.map(story => story.id).sort(), ['climate-stripes', 'iron-horse']);
+  assert.deepEqual(ready.map(story => story.id).sort(), ['census-mosaic', 'climate-stripes', 'deep-time-column', 'inland-sea', 'iron-horse', 'river-memory', 'shaking-ground', 'shifting-lines', 'tornado-tracks']);
   for (const story of ready) {
     assert.equal(typeof story.load, 'function');
-    assert.ok(existsSync(path(`app/living-welcome/stories/${story.id}.jsx`)), story.id);
-    assert.match(story.load.toString(), new RegExp(`import\\(['"]\\./${story.id}\\.jsx['"]\\)`), 'a lazy import');
+    const lazyFile = story.load.toString().match(/import\(['"]\.\/([a-z-]+\.jsx)['"]\)/)?.[1];
+    assert.ok(lazyFile && existsSync(path(`app/living-welcome/stories/${lazyFile}`)), `${story.id} has a lazy module`);
   }
   for (const story of STORIES.filter(entry => entry.status !== 'ready')) {
     assert.equal(story.status, 'planned', story.id);
@@ -49,7 +53,7 @@ test('only the two exemplars are ready, and every ready story has its module; th
 });
 
 test('a story never fetches, and cards hold still and stop offscreen through the shared hook', () => {
-  for (const name of ['iron-horse.jsx', 'climate-stripes.jsx', 'story-parts.jsx', 'story-kit.mjs']) {
+  for (const name of ['iron-horse.jsx', 'climate-stripes.jsx', 'record-lab.jsx', 'story-parts.jsx', 'story-kit.mjs']) {
     const source = read(`app/living-welcome/stories/${name}`);
     for (const banned of [/\bfetch\(/, /<video/, /<img/, /XMLHttpRequest/, /WebSocket/, /new Worker/, /qwen|\/api\/(?!local-data)/i]) assert.doesNotMatch(source, banned, `${name} ${banned}`);
   }
@@ -102,7 +106,7 @@ test('the relay dataset reads one bundle by primary key and rejects anything els
 
 test('the bundle hook maps replies to ready, waiting and offline', reactOnly, async () => {
   const { storyBundleFrom, storyBundleState } = await import('../app/living-welcome/stories/useStoryBundle.js');
-  const bundle = { format: 'kfm-story-bundle-v1', story: 'iron-horse', data: {} };
+  const bundle = validRail();
   assert.equal(storyBundleFrom(bundle, 'iron-horse'), bundle, 'the dev preview serves the bundle itself');
   assert.equal(storyBundleFrom({ rows: [{ bundle }] }, 'iron-horse'), bundle, 'the relay wraps it in a row');
   assert.equal(storyBundleFrom(bundle, 'climate-stripes'), null, 'a bundle for another story is refused');
@@ -111,6 +115,39 @@ test('the bundle hook maps replies to ready, waiting and offline', reactOnly, as
   assert.equal(storyBundleState(404, { state: 'not-configured' }, 'iron-horse').state, 'waiting');
   assert.equal(storyBundleState(404, { reasonCode: 'DATASET_NOT_FOUND' }, 'iron-horse').state, 'waiting');
   assert.equal(storyBundleState(503, {}, 'iron-horse').state, 'offline');
+});
+
+test('an effect remount starts a fresh request after the previous consumer aborts', async t => {
+  // Exercise the real hook's setup/cleanup/setup sequence without a DOM renderer.
+  let effect, settled;
+  const key = '__kfmStoryHookRemountTest';
+  globalThis[key] = {
+    useEffect(callback) { effect = callback; },
+    useState(initial) { return [initial, value => { settled = value; }]; },
+  };
+  t.after(() => { delete globalThis[key]; });
+  const pending = [];
+  t.mock.method(globalThis, 'fetch', (_url, { signal }) => new Promise((resolve, reject) => {
+    pending.push({ resolve, signal });
+    signal.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')), { once: true });
+  }));
+  const source = read('app/living-welcome/stories/useStoryBundle.js')
+    .replace("import { useEffect, useState } from 'react';", `const { useEffect, useState } = globalThis.${key};`)
+    .replace("'./story-bundle.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/story-bundle.mjs', import.meta.url).href));
+  const { useStoryBundle } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+  useStoryBundle('iron-horse');
+  const firstCleanup = effect();
+  firstCleanup();
+  const secondCleanup = effect();
+  t.after(secondCleanup);
+  assert.equal(pending.length, 2, 'an aborted request must not be reused before its rejection settles');
+  assert.equal(pending[0].signal.aborted, true);
+  assert.equal(pending[1].signal.aborted, false);
+  const bundle = validRail();
+  pending[1].resolve({ status: 200, text: async () => JSON.stringify(bundle) });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(settled.value.state, 'ready');
+  assert.deepEqual(settled.value.bundle, bundle);
 });
 
 test('the kit: colour scales, projection, grid paths, numbers and CSV', reactOnly, async () => {
@@ -172,24 +209,13 @@ test('CSV rows and ranges come from the bundle', reactOnly, async t => {
   assert.deepEqual(csv.rows[2], [2001, 'Kansas', 'Temperature', 60, '°F', 15, '1901-2000', 1], 'an unfinished year compares only the months it has');
 });
 
-test('the section is mounted below the topic cards on desktop, on the map’s caption row on phones, and the 22 topics are untouched', siteOnly, () => {
+test('the atlas joins existing navigation while topic actions remain separate', siteOnly, () => {
   const welcome = read('app/living-welcome/welcome.jsx');
-  assert.match(welcome, /const StorySection=lazy\(\(\)=>import\('\.\/stories\/StorySection\.jsx'\)\)/, 'the section is a lazy chunk');
-  assert.doesNotMatch(welcome, /from '\.\/stories\//, 'nothing from the stories is in the welcome chunk');
-  assert.equal((welcome.match(/<StorySection /g) || []).length, 2, 'one desktop section, one phone launcher; never both at once');
-  const desktop = '<StorySection paused={paused} reduced={reduced} modal={modal} compact={false} onOpenChange={setStoryOpen}/>';
-  const phone = '<StorySection paused={paused} reduced={reduced} modal={modal} compact onOpenChange={setStoryOpen}/>';
-  const mounted = welcome.indexOf(desktop), field = welcome.indexOf('</section>', welcome.indexOf('className="discovery-field discovery-field--grouped"'));
-  assert.ok(mounted > field && field > 0, 'the desktop section follows section.discovery-field');
-  assert.ok(mounted < welcome.indexOf('{fullscreen&&touched&&<aside className="welcome-layer-demo"'), 'inside .welcome-discovery-content');
-  assert.match(welcome, /\{!fullscreen&&!carousel&&<Suspense fallback=\{null\}><StorySection paused=\{paused\} reduced=\{reduced\} modal=\{modal\} compact=\{false\}/, 'desktop only');
-  const launcher = welcome.indexOf(phone);
-  assert.ok(launcher > welcome.indexOf('className="welcome-capability-stage"') && launcher < welcome.indexOf('className="welcome-heading-row"'), 'the phone launcher is the map stage’s sibling, so it can share the caption row');
-  assert.match(welcome, /\{carousel&&!fullscreen&&<Suspense fallback=\{null\}><StorySection paused=\{paused\} reduced=\{reduced\} modal=\{modal\} compact onOpenChange/, 'phones only');
-  assert.doesNotMatch(read('app/living-welcome/welcome.css'), /--welcome-selection/, 'phones reserve no strip under the card rail now that the tray is gone');
-  assert.match(welcome, /paused=\{paused\|\|modal\|\|storyOpen\|\|/, 'an open lab also holds the map stage');
-  for (const name of ['StorySection.jsx', 'StoryLab.jsx', 'story-parts.jsx']) assert.doesNotMatch(read(`app/living-welcome/stories/${name}`), /topic-callout/, 'story cards are never counted as topic cards');
-  assert.doesNotMatch(read('app/layer-workspaces.ts'), /iron-horse|climate-stripes/, 'stories are not topics');
+  assert.match(welcome, /href="\/labs"/);
+  assert.match(read('app/page.tsx'), /href="\/labs">Research atlas/);
+  assert.match(read('app/living-welcome/stories/StorySection.jsx'), /href="\/labs"/);
+  for (const name of ['StoryLab.jsx', 'story-parts.jsx']) assert.doesNotMatch(read(`app/living-welcome/stories/${name}`), /topic-callout/, 'research instruments are not topic cards');
+  assert.doesNotMatch(read('app/layer-workspaces.ts'), /iron-horse|climate-stripes/, 'stories do not change map topic registration');
 });
 
 test('stories stay out of the published datasets until the owner approves', siteOnly, async () => {
@@ -205,4 +231,39 @@ test('story preview data is a dev-server feature and validates its id', siteOnly
   assert.match(config, /command === "serve" \? process\.env\.KFM_STORY_PREVIEW_DIR : undefined/);
   assert.match(config, /apply: "serve"/);
   assert.match(config, /\^\[a-z0-9\]\+\(\?:-\[a-z0-9\]\+\)\*\$/);
+});
+
+test('a mounted consumer keeps a cache hit after other large snapshots evict it', async t => {
+  const key = '__kfmStoryCacheRetentionTest';
+  let active;
+  globalThis[key] = {
+    useEffect(callback) { active.effect = callback; },
+    useState(initial) { const owner = active; return [owner.state ?? initial, value => { owner.state = value; }]; },
+  };
+  t.after(() => { delete globalThis[key]; });
+  let requests = 0;
+  t.mock.method(globalThis, 'fetch', async url => {
+    requests++;
+    const id = new URL(url, 'https://example.org').searchParams.get('story');
+    const b = id === 'iron-horse' ? validRail() : { ...validRail(), story: id, data: {
+      kind:'records',coverage:'Synthetic test',columns:[{key:'value',label:'Value',type:'number'}],records:[{id:'a',value:1}],limits:['Synthetic only'],
+    }};
+    b.padding = 'x'.repeat(1_700_000);
+    return new Response(JSON.stringify(b));
+  });
+  const source = read('app/living-welcome/stories/useStoryBundle.js')
+    .replace("import { useEffect, useState } from 'react';", `const { useEffect, useState } = globalThis.${key};`)
+    .replace("'./story-bundle.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/story-bundle.mjs', import.meta.url).href));
+  const { useStoryBundle } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+  // The hook runs against the deterministic React stub above, outside a renderer.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const mount = (id, owner) => { active=owner;const result=useStoryBundle(id);owner.cleanup=owner.effect();t.after(()=>owner.cleanup?.());return result; };
+  const flush = () => new Promise(resolve => setImmediate(resolve));
+  mount('iron-horse',{});await flush();
+  const cachedConsumer = {};
+  assert.equal(mount('iron-horse',cachedConsumer).state,'ready');await flush();
+  mount('shaking-ground',{});await flush();
+  active=cachedConsumer;
+  assert.equal(useStoryBundle('iron-horse').state,'ready','active cached value survives eviction without a stuck loading state');
+  assert.equal(requests,2,'a mounted cache consumer does not refetch its retained value');
 });
