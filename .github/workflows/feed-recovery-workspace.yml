@@ -1,0 +1,50 @@
+name: feed-recovery-workspace
+
+"on":
+  pull_request:
+    paths:
+      - "apps/review-console/**"
+      - ".github/workflows/feed-recovery-workspace.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/review-console/**"
+      - ".github/workflows/feed-recovery-workspace.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feed-recovery-workspace-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review-client:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/review-console/recovery
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/review-console/recovery/package-lock.json
+      - name: Install locked client dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Validate types, evidence model and static build
+        run: |
+          npm run typecheck
+          npm test
+          npm run build
+      - name: State validation boundary
+        if: always()
+        run: |
+          echo 'Client-only validation. No KFM provider, installed release, operational database or ingestion process is contacted or changed by these tests; no deployment or recovery authority is granted.' >> "$GITHUB_STEP_SUMMARY"

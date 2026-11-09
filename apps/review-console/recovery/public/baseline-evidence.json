@@ -1,0 +1,80 @@
+{
+  "artifact": "KFM feed recovery workspace source snapshot",
+  "authority": "Working review reference; not source admission, release approval, installation or recovery proof",
+  "checkedOn": "2026-11-08",
+  "timeZone": "America/Chicago",
+  "evidenceSource": {
+    "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5751",
+    "method": "GitHub connector get_pr_info and get_pr_diff",
+    "scope": "Pull request metadata and changed source, not machine journals or providers"
+  },
+  "source": {
+    "state": "CONFIRMED_MERGED",
+    "number": 5751,
+    "title": "Wait out provider rate limits in the IEM, USGS and Wikidata SQL feeds",
+    "mergedAt": "2026-11-06T21:56:45Z",
+    "base": "0f6b07c5b6c96cddadfa5030e9356e37f1d4802a",
+    "head": "ca9995a02cb42629150a8e9f9dd5ce0766b1f893",
+    "merge": "205e344ea8d05077414d3a0f8606512b66272be5",
+    "changedFiles": 7
+  },
+  "historicalJournal": {
+    "state": "AUTHOR_REPORTED_NOT_INDEPENDENTLY_INSPECTED",
+    "since": "2026-11-03",
+    "release": "sql-feeds-1cfcb3fb72",
+    "feeds": [
+      {
+        "feed": "iem-wind",
+        "done": 0,
+        "failed": 3,
+        "reason": "HTTP_429",
+        "duration": "within 3 seconds"
+      },
+      {
+        "feed": "usgs-daily",
+        "done": 0,
+        "failed": 5,
+        "reason": "USGS_RATE_LIMITED",
+        "duration": "about 5 minutes per-series backfill"
+      },
+      {
+        "feed": "wikidata-kansas",
+        "done": 0,
+        "failed": 3,
+        "reason": "WIKIDATA_RATE_LIMITED",
+        "duration": "221 seconds"
+      }
+    ]
+  },
+  "tests": {
+    "state": "AUTHOR_REPORTED_NOT_RERUN",
+    "newOfflineTests": 9,
+    "passed": 838,
+    "skipped": 6,
+    "subtestsPassed": 571,
+    "failed": 1,
+    "failure": "tests/local_data/test_intake_studio.py::Tests::test_http_boundaries / NetworkAccessDenied",
+    "baseComparison": "Author reported same failure on main (829 passed, 1 failed)"
+  },
+  "mergedBehavior": {
+    "state": "SOURCE_BEHAVIOR_NOT_MACHINE_OBSERVATION",
+    "retryAfter": "Seconds or HTTP date; do not shorten provider wait to fit budget",
+    "fallbackSeconds": 60,
+    "maxFallbackSeconds": 900,
+    "totalWaitBudgetSeconds": 2700,
+    "journalEvent": "feed_throttled",
+    "iem": "Monthly windows, 16 stations per batch, 5 seconds apart, 12 backfill months per run",
+    "usgs": "25-year record spans from year before period_begin (EARLIEST fallback), 5 seconds between series",
+    "wikidata": "Retry query within wait budget; repeated queries count against 400-query cap"
+  },
+  "gaps": [
+    "Current installed release and actual pin",
+    "Preserved operational database schema, table counts and provenance",
+    "Read-only status and journal capture",
+    "Actual after-PR provider execution",
+    "Resume/backfill receipts and retest",
+    "Scoped reviewer decision",
+    "IEM scope: PR describes 67 stations; older runbook lists 68"
+  ],
+  "operationsPerformed": "No feed execution, installation, timer/service changes, operational database access, or ingestion restart by this Site task"
+}

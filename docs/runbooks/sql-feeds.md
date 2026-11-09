@@ -1,5 +1,11 @@
 # SQL feeds on the pipeline PC
 
+## Record recovery evidence without running a feed
+
+The [browser-local recovery desk](../../apps/review-console/recovery-desk.md) records IEM wind, USGS daily and Wikidata Kansas recovery evidence. Its PR #5751 baseline is a dated source snapshot, with historical journal and test totals labelled author-reported. Current installed identity, preserved database state and after-change outcomes require separate evidence. The desk never starts ingestion, installs a release, fetches a provider or connects to operational tables. Export/import moves local working notes and preserves history; imported claims need fresh review.
+
+A merged source change, a passing client test and an accepted local reviewer note each have narrower scope than installed-machine or actual feed recovery. Follow the guide to record observations already obtained under separate owner authorization.
+
 `tools/local_data/sql_feeds.py` keeps the pipeline PC's local SQL database
 (`observations.sqlite`, beside the TIGER and NWM GeoPackages) growing from new
 public source data.

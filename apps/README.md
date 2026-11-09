@@ -126,7 +126,7 @@ The current root contains eight direct lanes:
 - [`governed-api/`](governed-api/README.md) — bounded executable public trust membrane;
 - [`site/`](site/README.md) — GPT Site v74-derived source mirror under `site/source/` for local hosting;
 - [`public-site/`](public-site/README.md) — static public front door for kansasfrontiermatrix.com on GoDaddy hosting, built from repository facts and illustrative artwork;
-- [`review-console/`](review-console/README.md) — role-gated steward review surface;
+- [`review-console/`](review-console/README.md) — browser-local feed recovery evidence desk; the authenticated steward review service remains a scaffold;
 - the operator CLI lives in [`packages/kfm-cli`](../packages/kfm-cli/README.md) (the former `apps/cli/` scaffold was removed);
 - [`workers/`](workers/README.md) — non-publishing background runner lane;
 - [`admin/`](admin/README.md) — restricted administrative surface;
