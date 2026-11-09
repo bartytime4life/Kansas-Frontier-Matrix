@@ -264,7 +264,7 @@ test("global Escape honors a nested panel's transition and handles the next uncl
   assert.deepEqual(closed, ["chat"], "a separate Escape retains normal chat close behavior");
 });
 
-test("both real drawer resize callbacks preserve the first tap at unchanged size and invalidate it on actual resizing", async () => {
+test("all drawer resize callbacks preserve unchanged ordinary and surface maps and honor actual resizing", async () => {
   const { resizeMapAfterLayout } = await import(toUrl(transpile(await read("app/cutaway-locator.ts"))));
   const effect = nodesMatching(home.body, (node) => ts.isCallExpression(node) && node.expression.getText(pageTree) === "useEffect" && node.arguments[0]?.getText(pageTree).includes("resizeMapAfterLayout"))[0];
   const runtimeTree = ts.createSourceFile("runtime.ts", await read("app/terrain-drawing-runtime.ts"), ts.ScriptTarget.Latest, true);
@@ -283,14 +283,13 @@ test("both real drawer resize callbacks preserve the first tap at unchanged size
   for (const surface of ["slope", "aspect", "off", undefined]) for (const enabled of [false, true]) {
     const f = fixture({ enabled, surface });
     for (const phase of ["raf", "delayed"]) f.tasks.get(phase)();
-    const protectedSurface = enabled && (surface === "slope" || surface === "aspect");
-    assert.equal(f.resizes(), protectedSurface ? 0 : 2, `enabled=${enabled}, surface=${surface}`);
-    assert.equal(f.reading(), protectedSurface ? f.sample : null, "both drawer-settling callbacks leave a valid first-tap reading alone");
+    assert.equal(f.resizes(), 0, `enabled=${enabled}, surface=${surface}: unchanged dimensions need no map resize`);
+    assert.equal(f.reading(), f.sample, "both drawer-settling callbacks leave a valid first-tap reading alone");
     f.move(); assert.equal(f.reading(), null, "real movement retains renderer invalidation");
     f.cleanup(); assert.equal(f.tasks.size, 0);
   }
-  for (const changedPhase of ["raf", "delayed"]) {
-    const f = fixture({ enabled: true, surface: "slope" });
+  for (const enabled of [false, true]) for (const changedPhase of ["raf", "delayed"]) {
+    const f = fixture({ enabled, surface: enabled ? "slope" : "off" });
     for (const phase of ["raf", "delayed"]) {
       if (phase === changedPhase) f.container.clientHeight = 700;
       f.tasks.get(phase)();
@@ -302,8 +301,13 @@ test("both real drawer resize callbacks preserve the first tap at unchanged size
   switched.tasks.get("raf")();
   switched.context.terrainDrawingConfigRef.current = { enabled: true, surface: "off" };
   switched.tasks.get("delayed")();
-  assert.equal(switched.resizes(), 1, "deferred callbacks read the current lens choice, not stale render state");
+  assert.equal(switched.resizes(), 0, "closing a surface lens does not force an unchanged-size resize");
   switched.cleanup();
+  const changing = fixture({ enabled: false, surface: "off" });
+  changing.container.clientWidth = 1200; changing.tasks.get("raf")();
+  changing.container.clientHeight = 700; changing.tasks.get("delayed")();
+  assert.equal(changing.resizes(), 2, "both stages of a real layout transition remain observable");
+  changing.cleanup(); assert.equal(changing.tasks.size, 0);
 });
 
 test('context loss suspends real overlay effects until the replacement style is synchronized', () => {

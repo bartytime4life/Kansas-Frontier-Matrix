@@ -482,3 +482,43 @@ deadlines, strict protocol checks and all original matrix cases remain. This
 improves failure evidence; it does not establish a graphics repair or permit
 publication. Current-head native execution is required before any acceptance
 claim. The public deployment has not been changed by this work.
+
+## Covered-map motion and panel resize work — November 8, 2026
+
+Two source-level repetitions were reproduced before correction. After opening
+Reports, Stories or welcome over an already initialized Explorer, the shared
+curtain/star/water animation still scheduled map repaints. Its eligibility now
+requires the Map workspace with welcome closed. Covering the map cancels that
+loop and pauses its presentation clocks; returning starts one loop with the
+visitor's existing effect choices. Visible cadence, pixel density, data layers,
+and the hidden-tab, reduced-motion and Battery saver rules are unchanged. This
+does not claim to stop every application task behind an overlay.
+
+Ordinary panel transitions also called `map.resize()` twice even when the canvas
+dimensions were unchanged. Both existing transition checks now use the existing
+public canvas-size guard. A dimension change at either check still resizes;
+changes at both checks still resize twice. The container ResizeObserver and
+cutaway positioning remain in place. This avoids synthetic camera movement and
+preserves surface samples when a panel merely overlays the map.
+
+The regressions execute the actual page callbacks, including the motion effect's
+dependency list. Before the fix they failed with one animation frame still
+scheduled behind Reports and two unwanted ordinary-map resizes. Local baseline
+evidence is retained as `kfm-cinematic-map-work-baseline.log` in the task's
+external outputs directory. After correction, 60 focused checks passed:
+
+```sh
+node --test tests/scene-studio.test.mjs tests/scene-surface-integration.test.mjs \
+  tests/map-resize-pacing.test.mjs tests/cutaway-locator.test.mjs \
+  tests/map-startup-demand.test.mjs tests/workspace-map-navigation.test.mjs \
+  tests/workspace-help-navigation.test.mjs
+```
+
+Coverage includes pause/resume for all three effects, preference retention,
+single-clock ownership, ordinary and surface size changes, resize cleanup,
+startup and panel focus navigation. These are executable source/lifecycle
+checks, not browser timing, provider throughput, GPU or physical-device evidence.
+Build and browser acceptance remain separate. Placement uses the existing
+`app/`, `tests/` and `docs/` responsibilities; no schema, source or release home
+changes. Rollback is limited to these two page effects and their associated
+tests/documentation, preserving unrelated flight and navigation work.

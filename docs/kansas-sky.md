@@ -6,6 +6,26 @@ Aviation glimpse remains zones-only. Water-animation defaults are unchanged.
 Clicking a map aircraft opens Layers → On map and focuses its instruments;
 the aircraft list provides the same selection without requiring a pointer.
 
+## Explore a retained flight
+
+1. Open **Map layers**, choose **Aviation & airspace**, and enable the aviation layer.
+2. Expand **Airspace shells, drone zones, weather & controls**, then choose
+   **Recorded flights** in Kansas Sky.
+3. Choose a recording day and flight, then **Open retained journey**. Only the
+   available published recordings appear; an empty date is not proof of no traffic.
+4. Use **Whole path** for the retained regional segments, **Follow** to travel with
+   the aircraft, or **Orbit** to look around it. **Play flight**, the timeline and
+   1×/4×/16× controls share one replay clock. Panning or zooming releases tracking;
+   choose Follow again to resume it.
+5. Open **Aircraft brief** for source-backed fields and the estimated-position
+   explanation; **Profile & view** shows height references, gaps and path controls.
+
+Gold is the elapsed recorded route; cyan is later **recorded** observations, not
+an expected future route. A missing segment stays missing. Aircraft symbols are
+schematic, heights are approximate, and current map context is not historical
+weather or airspace reconstruction. See the position-model section below for
+what interpolation can and cannot establish.
+
 ## Observation and time contract
 
 The existing Kansas center/250 NM request and regional bounds are retained.
@@ -104,8 +124,10 @@ The map overlay keeps Play/Pause, Orbit/Follow, and the recorded-flight timeline
 available with Layers closed. Source-backed times, missing observations and the
 REPLAY label remain visible. Playback uses the existing chosen speed; the overlay
 does not start playback automatically. A panel resize does not release the
-camera. Manual map input or another camera navigation does; disabling the layer,
-hiding the tab or unmounting also releases its elevation/ground-clamping settings.
+camera. Manual map input or another camera navigation stops Follow/Orbit while
+keeping the dock and its presentation lease available for exploration. Closing
+the flight view, disabling the layer, hiding the tab or unmounting releases its
+elevation/ground-clamping settings.
 Reduced motion permits a static framed view and explicit playback, without
 Follow or Orbit. No new source, collector, service or application is introduced.
 
@@ -330,3 +352,202 @@ Review exact-head CI and its screenshots before merging. A merge, Preview
 deployment, public publication and governed data activation are separate actions.
 Publication remains on hold. Rollback targets the relevant source commit;
 no database rollback is necessary. Volumetric historical weather is deferred.
+
+
+## Cinematic flight view — 2026-11-08
+
+The existing map now emphasizes observed three-dimensional routes with a thin,
+feathered cyan line for recorded-ahead history and amber for elapsed history.
+Independent segment quads preserve source breaks; a soft selected-position ring
+and enlarged ivory aircraft make the current sample easy to find. The stroke
+shader is optional: if it fails, the same selected route remains as basic lines
+and a diagnostic remains visible. Straight-alpha blending preserves destination
+alpha. These are presentation changes, not reconstructed missing observations.
+
+The compact dock exposes replay speed, restart, Follow, Orbit and whole-path
+framing directly. Aircraft brief and profile start collapsed. The phone view
+keeps optional focus and legend controls inside **Profile & view**. Manual map
+movement keeps the dock open and switches to free exploration; selecting Follow
+resumes tracking. Explicit static framing remains available under reduced motion.
+Within an actual observation gap, **Next observed segment** explicitly seeks and
+pauses at the next retained timestamp. It never silently fast-forwards playback,
+loads another part, or draws a connecting route through the missing span.
+
+Flight focus is enabled on entry and reversibly subdues chart/raster context.
+The decorative Kansas aurora border has a separate reference-counted visibility
+lease: active focus suppresses its drawing and shared repaint eligibility;
+cleanup restores the current scene preference and efficiency mode. It does not
+rewrite preferences, source state, airspace restrictions or TFR styling. Style
+replacement and overlapping owners retain the suppression until the last lease
+ends. Chart paint restores only values still owned by flight focus.
+
+A crowded-source regression established a distinct display defect. Splitting
+continuous source tracks and then thinning to the 20,000-point display limit
+created sample intervals over 60 seconds. The renderer incorrectly interpreted
+those display intervals as new acquisition gaps. Continuity and height-reference
+segments are now established from raw observations before thinning and retained
+through rendering. The actual renderer transformation for 3,000 aircraft with
+31 continuous observations each previously produced zero visible paths; the
+corrected transformation retains a path for every aircraft within the same
+20,000-point cap. Separate checks preserve real gaps, provider/method changes,
+ground transitions and height-reference breaks. This does not establish the
+cause of historical intermittent browser failures with different inputs.
+
+Camera layout measurements are cached outside animation callbacks and refreshed
+on map or dock resize/content changes. A 600-call source regression observes two
+initial element measurements, then two on explicit refresh, instead of measuring
+on every frame. Camera-mode changes retain a single presentation lease rather
+than briefly restoring regional constraints during manual exploration. Shared
+symbol meshes and scalar buffer writes reduce per-vertex temporary allocations.
+
+The retained synthetic Node24 benchmark uses 3,000 aircraft, 100,000 retained
+points and 20,000 display points. Trail construction median changed from 3.441ms
+to 3.584ms; p95 changed from 6.857ms to 6.342ms. These CPU-only measurements do not
+establish a meaningful speed improvement, GPU frame rate, physical-device
+capacity or production reliability. Browser captures, production-preview
+profiling, hosted acceptance and release approval remain separate evidence.
+Rollback reverts the application and focused test changes; no production data,
+collection state, external imagery, provider or persisted preference is changed.
+
+
+A separate terrain-cache regression showed stationary ground markers and guide
+bases retaining an earlier finite height after ordinary DEM tile completion.
+Such events can omit a source subtype and arrive while other source tiles are
+still loading. The renderer now invalidates both caches only for the active DEM
+source, and on terrain option changes. Multiple events before one draw coalesce
+into one query per retained location; unrelated sources do not trigger uploads
+or queries. Disposing the layer removes both subscriptions. The source test
+fails at the old 0m cached height and passes with the new 333m value; it also
+checks terrain exaggeration, terrain removal, cache reuse and cleanup. This is
+cache-lifecycle evidence, not validation of DEM accuracy or flight clearance.
+
+## Position model and relative geometry — 2026-11-08
+
+Aircraft positions are observations at their own reported times, not a prediction
+of destination or a filed route. Ordinary live mode can contain different
+observation ages. The optional delayed live view and replay evaluate eligible
+aircraft at one common cursor; an aircraft without a valid bracket is absent at
+that time. Neither mode extrapolates beyond the last received position.
+
+Between continuous airborne observations, the position model uses a cubic
+Hermite curve in local east/north metres. Endpoint derivatives come from
+reported ground speed and true ground track, with knots converted to metres per
+second. Local curvature uses the
+[WGS84 ellipsoid parameters](https://earth-info.nga.mil/index.php?action=wgs84&dir=wgs84).
+This is an estimate inside an observed interval, not an aerodynamic simulation.
+Wind, intention, actual acceleration and unreported turns remain unknown.
+
+The model accepts a curve only when both endpoint speeds are between one half
+and twice the observed chord speed, the Bezier control polygon progresses
+monotonically along the chord, and each transverse control displacement is at
+most one quarter of the chord length. Finite accepted speed/track ranges and
+the existing 60-second continuity limit also apply. These are explicit rendering
+guards, not certified aircraft dynamics limits. A rejected curve uses bounded
+spherical great-circle interpolation. Exact observation positions stay exact.
+Rendered motion bearing is separate from reported ground track and true heading;
+it cannot establish the aircraft's physical nose direction or wind correction.
+
+A height-reference transition now disconnects interpolation as well as the
+profile and trail. No WGS84-to-pressure conversion is invented. A conservative
+horizontal continuity limit is 1,500 knots times the elapsed seconds plus a
+two-second allowance, then an additional 1,000 metres. It rejects a connecting
+animation across a gross positional jump while preserving each raw observation.
+The allowances accommodate timing and coordinate uncertainty; they are not
+evidence that any individual report is accurate. Source, method, ground/air,
+explicit-break and ordinary time-gap boundaries remain in force.
+
+The brief distinguishes evaluated time, bounding observation times and the
+interpolation model. Reported speed/ground track retain their source values;
+estimated positions and interpolated instruments are not new measurements.
+The readsb trace field used for airborne ground track means **true heading on
+the ground**. New offline preparation preserves that distinction; existing
+released files are not rewritten. The source contract is documented in the
+[readsb trace specification](https://github.com/wiedehopf/readsb/blob/dev/README-json.md).
+
+An offline withheld-observation comparison used 553 interior reports from two
+selected November 3 records. Median horizontal error against those retained
+reports changed from 7.07m with latitude/longitude interpolation to 5.10m with
+the bounded curve; p95 changed from 23.57m to 15.53m. This small retrospective
+comparison does not establish physical accuracy or generalization to other
+traffic. Some estimates became worse, and short-interval derivative agreement
+with reported instruments did not consistently improve. The dense actual
+recordings move by roughly one metre at the median relative to the old model;
+large cinematic corrections would misrepresent this evidence.
+
+Projection fixes follow the installed MapLibre 6.9.0 custom-layer contract and
+its [3D projection interface](https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/CustomRenderMethodInput/).
+The actual shader variant, rather than the requested map projection name,
+determines the path through globe/Mercator transitions. Height units and depth
+must agree with other 3D layers. Symbol size remains deliberately schematic;
+terrain scale and datum differences cannot establish aircraft ground clearance.
+Slower instrument updates must not replace a newer animation-frame position.
+Opaque aircraft establish their own depth before transparent paths and glow.
+Flight focus temporarily displays terrain at 1× and restores the latest requested
+terrain source/scale when released. This presentation lease never changes the
+aircraft's reported height or stored scene preference.
+
+Globe camera aiming needs its own correction: MapLibre's globe camera keeps its
+target on the sea-level sphere even when center elevation is supplied. Follow
+and Orbit shift only the public camera center so its viewing ray passes through
+the elevated aircraft. The actual rendered projection transition weights this
+correction; Mercator receives no extra offset. A distance-based zoom bound keeps
+the target in front of the camera. Phone framing reserves measured top controls
+and the flight deck, including while paused. These camera changes never alter
+aircraft coordinates or heights. Installed-matrix checks cover 60 projection,
+bearing and zoom combinations; browser framing is a separate acceptance check.
+
+Detailed trajectories sample the same bounded curve as aircraft. Under crowding,
+historical geometry thins original observations instead of constructing extra
+estimated vertices. A single weakly owned selected-route cache remains within
+the existing 20,000-point budget. An initial 3,000-aircraft CPU trial exposed a
+32.81ms median regional-trail build; removing per-vertex measurement receipts and
+caching selected geometry reduced that trial to 6.38ms. The preceding source was
+still faster at 4.17ms. Sampling increased from 1.21ms to 3.49ms median, while a
+cached selected journey took 0.053ms. These synthetic Node24 measurements expose
+the extra mathematics cost; they establish neither browser FPS nor device capacity.
+
+This refinement stays in the existing app, scripts, tests and docs responsibility
+roots under Directory Rules / ADR-0029. It does not modify prepared public data,
+activate collection, change source admission or publish a deployment. Revert
+the source candidate to restore preceding behavior; retain source observations
+and diagnostic receipts. Focused source failures, local browser verification,
+CI, merged code and target-environment behavior remain separate evidence states.
+None of these newly reproduced defects establishes the cause of issue #5737.
+
+## Validation and review checkpoint — 2026-11-08
+
+The cinematic and motion candidate is proposed for the existing Node composition
+on `a0-hosted-ai-web-20261017`. This dated record documents source and local
+verification; GitHub review, merge and deployment remain separate transitions.
+
+| Evidence state | Recorded result and boundary |
+| --- | --- |
+| Source inspected and tested | `017527fbfbc5a4a883a49af57846f2239f094cd0`; preceding cinematic commits `d7abf60103696f19142ac6b2b95b2858ca9675d1` and `9d8f757fb104a35bf0ec7708bdcf1fe4475e597f`. |
+| Application input identity | `sha256:8eb7cf2a88121547ac5c9981c145ae8cd6288ef573026d6006eb81400fc2622d`, 1,229 inputs. Documentation-only follow-up does not change these application bytes. |
+| Automated checks | Node 24.11.1 production build, TypeScript and scoped ESLint passed. Full suite: 2,725 passed, zero failed, 25 existing skips, 2,750 total. Run `kfm-motion-20261108-final-checks`. |
+| Failed-before diagnostics | Retained math, projection, animation-clock, globe-framing and phone-layout failures demonstrate the corresponding bounded corrections. A separate build/test overlap run failed four build-dependent checks; unchanged tests passed after the build completed. |
+| Local browser | Root-operated in-app browser checks covered 375×812, 390×844, 768×1024 and 1440×900; Follow/Orbit, playback, manual zoom release, projection changes and brief expansion. Exact browser binary version was unavailable through the exposed capability. |
+| Visual review | Independent image review passed round 2; the evaluator could not connect its browser. This is not an independent interaction test. |
+| Remaining browser diagnostics | Ten captured external map-font 404 warnings used local fallback; zero captured error entries. This is not a whole-application no-error claim. |
+| GitHub, target and physical behavior | Read current PR/check records for hosted status. This checkpoint establishes neither merge/deployment, hosted archive activation, physical-device acceptance nor production reliability. |
+
+The exported `kfm-motion-evidence.zip` and its hash inventory remain in the
+owner's local evidence outputs, outside application deployment assets. Preserve
+the bundle, source observations and original failed diagnostics before temporary
+CI/browser artifacts expire. Reproduce source checks with `npm test` (which
+builds first); do not run checks of generated assets concurrently with a build.
+
+The earlier [intermittent layer-absence issue #5737](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5737)
+remains open and causally unresolved. Its failed desktop run `42104888741` and
+passing rerun `42105300252` used identical tree
+`ae417eb8c50dd6f09dbf46496bc858d7d730fd47` and Chrome `156.0.8078.79`.
+Its retained artifact `13450569646` expires November 19, 2026, according to the
+issue record checked on November 8. Preserve it before expiry. Application
+behavior, map-style lifecycle and browser-test synchronization remain alternatives;
+this candidate's newly reproduced corrections do not retrospectively prove which
+caused that incident. Do not substitute longer timeouts, skips or weaker assertions.
+
+The daily regional archive remains prepared but inactive on the hosted service.
+No production data, source admission, release or publishing setting changed.
+Rollback uses a reviewed revert of the flight candidate while retaining source
+observations and evidence; a later merge or deployment requires its own receipt.

@@ -4815,6 +4815,17 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .atlas-studio { --topbar: 110px; }
 .atlas-studio .topbar { grid-template-areas: "brand search map actions" "features features features features"; grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-rows: 54px 56px; gap: 0 12px; }
 .atlas-studio .topbar > .welcome-feature-guide { grid-area: features; align-self:stretch; border-top:1px solid #365361; }
+/* The active topic strip occupies the same desktop row as the discovery guide. */
+@media (min-width:701px) {
+ .atlas-studio .topbar > .map-topic-bar { grid-area:features;display:flex;align-items:center;gap:12px;min-width:0;border-top:1px solid #365361; }
+ .map-topic-bar > button { display:inline-flex;align-items:center;gap:16px;min-height:44px;padding:8px 12px;border:1px solid #486875;border-radius:4px;background:#102c38;color:#dceae6;font:inherit;font-size:12px;line-height:1.3;cursor:pointer; }
+ .map-topic-bar > .map-topic-edit { min-width:0;border-color:transparent;background:transparent;text-align:left; }
+ .map-topic-edit strong { font-size:14px;font-weight:600;color:#edf4ee; }
+ .map-topic-edit span { padding-left:16px;border-left:1px solid #486875;color:#c8dfdf;white-space:nowrap; }
+ .map-topic-bar > button:hover { border-color:#88a9b1;background:#1c3c48; }
+ .map-topic-bar > button:focus-visible { outline:3px solid #f4d198;outline-offset:2px; }
+}
+
 .atlas-studio .qwen-header-entry { flex:none; }
 .atlas-studio .topbar .atlas-scope-strip { flex-wrap:nowrap;gap:8px; }
 .atlas-studio .topbar .welcome-header-find { flex:none; }

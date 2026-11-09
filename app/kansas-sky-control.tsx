@@ -3,10 +3,11 @@ import { useCallback, useId, useEffect, useMemo, useRef, useState, useSyncExtern
 import { createPortal } from "react-dom";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { freshAircraft, type Aircraft, type TrafficEnvelope } from "./aviation-traffic";
-import { SkyBuffer, animateSkyReplay, animateSkyBuffered, bufferedSkySamples, SKY_LIVE_DELAY_MS, samplesAt, trailSegments, selectedJourney, skyPartNeighbors, type SkyPoint } from "./kansas-sky";
+import { SkyBuffer, animateSkyReplay, animateSkyBuffered, bufferedSkySamples, SKY_LIVE_DELAY_MS, samplesAt, trailSegments, selectedJourney, skyPartNeighbors, nextSkyObservationAfterGap, type SkyPoint } from "./kansas-sky";
 import { attachKansasSky, attachKansasSkyFocus } from "./kansas-sky-layer";
 import { SkyAircraftBrief, SkyAircraftDossier, SkyAltitudeProfile } from "./kansas-sky-details";
 import { leaseProjectionNavigation } from "./globe-context";
+import { leaseBorderCurtainSuppression } from "./scene-effects";
 import "./kansas-sky.css";
 
 type CatalogFlight = { id:string;title:string;start:string;end:string;url:string;sha256:string;provider:string;license:string;sourceUrl:string;hex?:string;day?:string;pointCount?:number;segmentCount?:number;coverage?:"selected-recordings"|"provider-day-processed";part?:number;partCount?:number };
@@ -18,23 +19,54 @@ const label=(a:Pick<Aircraft,"callsign"|"registration"|"hex">)=>a.callsign??a.re
 const measure=(n:number|null|undefined,unit:string)=>n===null||n===undefined?"Unavailable":`${Math.round(n).toLocaleString("en-US")} ${unit}`;
 const isObject=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==="object"&&!Array.isArray(v);
 const external=(value:unknown)=>typeof value==="string"&&/^https:\/\/[^\s]+$/.test(value);
+const clock=(time:number)=>new Date(time).toISOString().slice(11,19);
+const cameraBearing=(current:number,target:number,elapsed:number)=>current+((target-current+540)%360-180)*(1-Math.exp(-Math.max(0,elapsed)/450));
+function FlightIcon({kind}:{kind:"play"|"pause"|"path"|"follow"|"orbit"|"restart"|"brief"|"profile"}){
+  const shapes={play:"M8 5l10 7-10 7Z",pause:"M8 5v14M16 5v14",path:"M4 18l5-9 6 5 5-10M4 21v-3M9 12v7M15 17v3M20 7v14",follow:"M12 3v4M12 17v4M3 12h4M17 12h4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0",orbit:"M19 5l2 4-4 1M21 9a9 9 0 1 0-1 8M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",restart:"M5 5v14M18 5l-10 7 10 7Z",brief:"M5 3h10l4 4v14H5ZM9 11h6M9 15h6M9 7h2",profile:"M3 19h18M4 15l4-5 4 3 5-9 3 3"};
+  return <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={shapes[kind]}/></svg>;
+}
 // Matches the renderer's approximate height, not an MSL conversion.
 const cameraElevation=(map:MapLibreMap,plane:Aircraft)=>plane.onGround||plane.altGeomFt===null&&plane.altBaroFt===null
   ? map.queryTerrainElevation([plane.lon,plane.lat])??0
   : Math.max(0,plane.altGeomFt??plane.altBaroFt??0)*.3048;
-const flightPadding=(map:MapLibreMap)=>{
+const flightPadding=(()=>{const cache=new WeakMap<MapLibreMap,{top:number;bottom:number;left:number;right:number}>();return(map:MapLibreMap,refresh=false)=>{
+  const cached=cache.get(map);if(cached&&!refresh)return cached;
   const canvas=map.getCanvas(),narrow=canvas.clientWidth<=760;
-  const canvasRect=canvas.getBoundingClientRect?.(),dock=map.getContainer?.().querySelector(".kansas-sky-flight-deck")?.getBoundingClientRect();
-  return narrow?{top:110,bottom:Math.max(0,Math.min(canvas.clientHeight-230,dock&&canvasRect?canvasRect.bottom-dock.top+24:Math.min(410,canvas.clientHeight*.55))),left:35,right:35}
+  const canvasRect=canvas.getBoundingClientRect?.(),container=map.getContainer?.(),dock=container?.querySelector(".kansas-sky-flight-deck")?.getBoundingClientRect();
+  let top=95;
+  if(narrow&&canvasRect)for(const overlay of container?.querySelectorAll?.(".kansas-sky-map-status[data-flight-view=true],.maplibregl-ctrl-top-right")??[]){const rect=overlay.getBoundingClientRect();if(rect.width>0&&rect.height>0)top=Math.max(top,rect.bottom-canvasRect.top+24);}
+  top=Math.min(top,Math.max(0,canvas.clientHeight-80));
+  const padding=narrow?{top,bottom:Math.max(0,Math.min(canvas.clientHeight-top-80,dock&&canvasRect?canvasRect.bottom-dock.top+24:Math.min(410,canvas.clientHeight*.55))),left:35,right:35}
     :{top:55,bottom:75,left:55,right:Math.min(canvas.clientWidth-240,dock&&canvasRect?canvasRect.right-dock.left+40:430)};
-};
+  cache.set(map,padding);return padding;
+};})();
+function flightCamera(map:MapLibreMap,plane:Aircraft,bearing:number,phase:number,zoom=map.getZoom()){
+  const elevation=cameraElevation(map,plane),pitch=60,rad=Math.PI/180,radius=6371008.8;
+  let center:[number,number]=[plane.lon,plane.lat];
+  // Globe aims at the sea-level sphere even when centerElevation is set. Aim
+  // the camera ray through the elevated aircraft; observed geometry never moves.
+  // The phase comes from the actual custom-layer frame, including Mercator fallback.
+  if(phase>0&&elevation>0){
+    const p=pitch*rad,b=bearing*rad,delta=phase*(p-Math.asin(Math.sin(p)*radius/(radius+elevation))),c=Math.cos(delta),s=Math.sin(delta),a=Math.hypot(c,s*Math.cos(b));
+    const latitude=Math.asin(Math.max(-1,Math.min(1,Math.sin(plane.lat*rad)/a)))+Math.atan2(s*Math.cos(b),c);
+    const longitude=plane.lon*rad+Math.atan2(s*Math.sin(b),c*Math.cos(latitude)+s*Math.cos(b)*Math.sin(latitude));
+    center=[longitude/rad,latitude/rad];
+    // Keep the elevated target in front of the camera at close zoom. At least
+    // half the camera-to-surface ray remains beyond the elevated intersection.
+    const distance=elevation*(2*radius+elevation)/(Math.sqrt((radius*Math.cos(p))**2+elevation*(2*radius+elevation))+radius*Math.cos(p));
+    const cameraPixels=map.getCanvas().clientHeight/(2*Math.tan(map.getVerticalFieldOfView()*rad/2));
+    const maximumZoom=Math.log2(cameraPixels*2*Math.PI*Math.cos(latitude)*radius/(512*2*distance*phase));
+    zoom=Math.min(zoom,maximumZoom);
+  }
+  return {center,zoom,pitch,bearing,elevation,padding:flightPadding(map)};
+}
 function fitSkyJourney(map:MapLibreMap,points:readonly SkyPoint[],flat:boolean){
   if(!points.length)return;
   const lons=points.map(point=>point.lon),lats=points.map(point=>point.lat);
   // Reserve the dock once. MapLibre cameraForBoxAndBearing adds fitBounds'
   // requested padding to transform.padding; supplying both twice can make the
   // available mobile height negative and leave the old camera unchanged.
-  map.setPadding(flightPadding(map));map.setCenterElevation(0);
+  map.setPadding(flightPadding(map,true));map.setCenterElevation(0);
   // Height is approximate; leave room above the ground footprint for the curtain.
   const height=flat?0:Math.max(...points.map(point=>Math.max(0,point.altGeomFt??point.altBaroFt??0)))*.3048;
   const heightMargin=height*1.5/111320;
@@ -78,6 +110,8 @@ function archive(value:unknown,entry:CatalogFlight):ReadonlyMap<string,readonly 
   for(const p of value.points){
     if(!isObject(p)||typeof p.hex!=="string"||!/^~?[a-f0-9]{6}$/.test(p.hex)||typeof p.observedAt!=="number"||!Number.isFinite(p.observedAt)||p.observedAt<previous||p.observedAt<Date.parse(entry.start)||p.observedAt>Date.parse(entry.end)||typeof p.lon!=="number"||!Number.isFinite(p.lon)||p.lon< -103.2||p.lon> -93.6||typeof p.lat!=="number"||!Number.isFinite(p.lat)||p.lat<36.2||p.lat>40.9||typeof p.providerId!=="string"||!p.providerId||typeof p.onGround!=="boolean")throw new Error("Recorded-flight samples are invalid.");
     if(entry.hex&&p.hex!==entry.hex)throw new Error("Recorded aircraft does not match the catalog.");
+    if(p.interpolated===true||p.sampledAt!==undefined||p.interpolation!==undefined||p.renderedTrackDeg!==undefined)throw new Error("Recorded files must contain observations, not calculated motion metadata.");
+    if(p.trueHeadingDeg!==undefined&&p.trueHeadingDeg!==null&&(typeof p.trueHeadingDeg!=="number"||!Number.isFinite(p.trueHeadingDeg)||p.trueHeadingDeg<0||p.trueHeadingDeg>360))throw new Error("Recorded true heading is invalid.");
     if(p.breakBefore!==undefined&&typeof p.breakBefore!=="boolean")throw new Error("Recorded-flight break marker is invalid.");
     for(const key of ["altGeomFt","altBaroFt","groundSpeedKt","trackDeg","verticalRateFpm"]){if(p[key]!==null&&(typeof p[key]!=="number"||!Number.isFinite(p[key])))throw new Error("Recorded-flight measurements are invalid.");}
     for(const key of ["rollDeg","indicatedAirSpeedKt","mach","traceFlags"]){if(p[key]!==null&&p[key]!==undefined&&(typeof p[key]!=="number"||!Number.isFinite(p[key])))throw new Error("Recorded-flight measurements are invalid.");}
@@ -109,15 +143,17 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   const [reduced,setReduced]=useState(false),[hidden,setHidden]=useState(false),[flights,setFlights]=useState<CatalogFlight[]>([]),[catalogState,setCatalogState]=useState("idle");
   const [recorded,setRecorded]=useState<ReadonlyMap<string,readonly SkyPoint[]>>(new Map()),[entry,setEntry]=useState<CatalogFlight|null>(null),[archiveState,setArchiveState]=useState("idle"),[error,setError]=useState("");
   const [renderError,setRenderError]=useState("");
+  const [projectionPhase,setProjectionPhase]=useState<number|null>(null);
   const [flightView,setFlightView]=useState(false),[frameRequest,setFrameRequest]=useState(0),[overview,setOverview]=useState(false);
   const [aircraftFilter,setAircraftFilter]=useState(""),[recordingFilter,setRecordingFilter]=useState("");
-  const [flightExtra,setFlightExtra]=useState<"profile"|"brief"|null>(null),[focusFlight,setFocusFlight]=useState(false);
+  const [flightExtra,setFlightExtra]=useState<"profile"|"brief"|null>(null),[focusFlight,setFocusFlight]=useState(true);
   const [showPaths,setShowPaths]=useState(true),[showGuides,setShowGuides]=useState(true),[historyOpen,setHistoryOpen]=useState(false);
   const dayIndexLoaded=useRef(false),catalogCache=useRef(new Map<string,CatalogFlight[]>());
   const [days,setDays]=useState<ArchiveDay[]>([]),[day,setDay]=useState(""),[dayState,setDayState]=useState("idle");
   const [renderMetrics,setRenderMetrics]=useState({aircraft:0,trailVertices:0,heightGuides:0,terrainQueries:0});
   const motionCursor=useRef(cursor),motionState=useRef({tracks:new Map<string,readonly SkyPoint[]>() as ReadonlyMap<string,readonly SkyPoint[]>,envelope:null as (TrafficEnvelope&{receivedAt:number})|null,feedState,selected:null as string|null,camera:"free" as Camera,flat,reduced,enabled,hidden});
   const rangeId=useId(),flightExtraId=useId(), ownCameraMove=useRef(false), latestPicked=useRef<Aircraft|undefined>(undefined);
+  const framedRequest=useRef(-1),cameraLeaseActive=flightView||camera!=="free";
   const layer=useRef<ReturnType<typeof attachKansasSky>|null>(null),request=useRef<AbortController|null>(null),catalogRequest=useRef<AbortController|null>(null);
   useEffect(()=>{const media=matchMedia("(prefers-reduced-motion: reduce)");const update=()=>{setReduced(media.matches);if(media.matches){setCamera("free");setPlaying(false);}};update();media.addEventListener("change",update);const visibility=()=>{setHidden(document.hidden);if(document.hidden){setPlaying(false);setCamera("free");setFlightView(false);}};visibility();document.addEventListener("visibilitychange",visibility);return()=>{media.removeEventListener("change",update);document.removeEventListener("visibilitychange",visibility);};},[]);
   useEffect(()=>{if(envelope&&enabled)store.ingest(envelope);},[envelope,enabled,store]);
@@ -133,8 +169,16 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   const range=useMemo(()=>{let start=Infinity,end=-Infinity;for(const points of tracks.values()){if(points.length){start=Math.min(start,points[0].observedAt);end=Math.max(end,points[points.length-1].observedAt);}}return Number.isFinite(start)?[start,end] as const:null;},[tracks]);
   const effectiveCursor=currentFeed||!range?cursor:Math.max(range[0],Math.min(range[1],cursor));
   useEffect(()=>{if(!enabled||hidden)return;const tick=()=>{const now=Date.now();setLiveNow(now);if(mode==="live")setCursor(now);};const timer=setInterval(tick,1000);return()=>clearInterval(timer);},[enabled,hidden,mode]);
-  useEffect(()=>{if(!playing)motionCursor.current=effectiveCursor;},[effectiveCursor,playing]);
+  useEffect(()=>{if(!playing&&mode!=="buffered")motionCursor.current=effectiveCursor;},[effectiveCursor,playing,mode]);
   useEffect(()=>{motionState.current={tracks,envelope,feedState,selected,camera,flat,reduced,enabled,hidden};},[tracks,envelope,feedState,selected,camera,flat,reduced,enabled,hidden]);
+  useEffect(()=>{const map=mapRef.current;if(!map||!enabled)return;
+    // Layout changes refresh this cache; follow/orbit frames only read it.
+    const refresh=()=>{const padding=flightPadding(map,true);if(cameraLeaseActive){ownCameraMove.current=true;try{map.jumpTo({padding,elevation:map.getCenterElevation()});}finally{ownCameraMove.current=false;}}};refresh();map.on("resize",refresh);
+    const observer=typeof ResizeObserver!=="undefined"?new ResizeObserver(refresh):null;
+    observer?.observe(map.getCanvas());const dock=map.getContainer().querySelector(".kansas-sky-flight-deck");if(dock)observer?.observe(dock);
+    for(const overlay of map.getContainer().querySelectorAll?.(".kansas-sky-map-status,.maplibregl-ctrl-top-right")??[])observer?.observe(overlay);
+    return()=>{map.off("resize",refresh);observer?.disconnect();};
+  },[mapRef,enabled,styleReady,flightView,flightExtra,mapStatusHost,cameraLeaseActive]);
   useEffect(()=>{
     if(!enabled||hidden||!replaying||!playing||!range||range[0]===range[1])return;
     let previous=performance.now();
@@ -143,8 +187,8 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
         const next=samplesAt(state.tracks,at);layer.current?.updateAircraft(next);
         const plane=next.find(a=>a.hex===state.selected);latestPicked.current=plane;
         const now=performance.now(),elapsed=Math.min(100,now-previous);previous=now;
-        const map=mapRef.current;if(map&&plane&&!state.reduced&&!state.flat&&state.camera!=="free"){
-          ownCameraMove.current=true;try{map.jumpTo({center:[plane.lon,plane.lat],pitch:60,bearing:state.camera==="orbit"?map.getBearing()+elapsed*.006:plane.trackDeg??map.getBearing(),elevation:cameraElevation(map,plane),padding:flightPadding(map)});}finally{ownCameraMove.current=false;}
+        const map=mapRef.current,phase=layer.current?.projection();if(map&&plane&&phase!=null&&!state.reduced&&!state.flat&&state.camera!=="free"){
+          ownCameraMove.current=true;try{map.jumpTo(flightCamera(map,plane,state.camera==="orbit"?map.getBearing()+elapsed*.006:cameraBearing(map.getBearing(),plane.renderedTrackDeg??plane.trackDeg??map.getBearing(),elapsed),phase));}finally{ownCameraMove.current=false;}
         }
       },readout:setCursor,ended:()=>setPlaying(false)});
   },[enabled,hidden,replaying,playing,range,speed,reduced,mapRef]);
@@ -152,11 +196,11 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
     if(!enabled||hidden||mode!=="buffered"||reduced)return;
     let previous=performance.now();
     return animateSkyBuffered({requestFrame:callback=>requestAnimationFrame(callback),cancelFrame:id=>cancelAnimationFrame(id),now:()=>performance.now(),wallTime:Date.now,
-      render:at=>{const state=motionState.current;if(!state.enabled||state.hidden||state.reduced||document.hidden)return;
+      render:at=>{motionCursor.current=at;const state=motionState.current;if(!state.enabled||state.hidden||state.reduced||document.hidden)return;
         const eligible=new Set(state.feedState==="ready"?freshAircraft(state.envelope,Date.now()).map(plane=>plane.hex):[]),next=bufferedSkySamples(state.tracks,at,eligible);
         layer.current?.updateAircraft(next);const plane=next.find(a=>a.hex===state.selected);latestPicked.current=plane;
         const now=performance.now(),elapsed=Math.min(100,now-previous);previous=now;const map=mapRef.current;
-        if(map&&plane&&!state.flat&&state.camera!=="free"){ownCameraMove.current=true;try{map.jumpTo({center:[plane.lon,plane.lat],pitch:60,bearing:state.camera==="orbit"?map.getBearing()+elapsed*.006:plane.trackDeg??map.getBearing(),elevation:cameraElevation(map,plane),padding:flightPadding(map)});}finally{ownCameraMove.current=false;}}
+        const phase=layer.current?.projection();if(map&&plane&&phase!=null&&!state.flat&&state.camera!=="free"){ownCameraMove.current=true;try{map.jumpTo(flightCamera(map,plane,state.camera==="orbit"?map.getBearing()+elapsed*.006:cameraBearing(map.getBearing(),plane.renderedTrackDeg??plane.trackDeg??map.getBearing(),elapsed),phase));}finally{ownCameraMove.current=false;}}
       },readout:setCursor});
   },[enabled,hidden,mode,reduced,mapRef]);
   const aircraft=useMemo(()=>mode==="live"?freshAircraft(envelope,effectiveCursor):mode==="buffered"?reduced||feedState!=="ready"?[]:bufferedSkySamples(tracks,effectiveCursor,new Set(freshAircraft(envelope,liveNow).map(plane=>plane.hex))):samplesAt(tracks,effectiveCursor),[mode,envelope,tracks,effectiveCursor,liveNow,reduced,feedState]);
@@ -171,13 +215,19 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   useEffect(()=>{if(!playing&&mode!=="buffered")latestPicked.current=picked;},[picked,playing,mode]);
   const selectedSource=useMemo(()=>{const points=selected?tracks.get(selected):undefined;return points?.findLast(point=>point.observedAt<=effectiveCursor)?.providerId??null;},[tracks,selected,effectiveCursor]);
   const sourceIds=useMemo(()=>[...new Set([...tracks.values()].flatMap(points=>points.map(point=>point.providerId)))].join(", "),[tracks]);
-  useEffect(()=>{const map=mapRef.current;if(!map||!styleReady||!enabled||hidden)return;try{layer.current=attachKansasSky(map,hex=>{setSelected(hex);setCamera("free");inspectCallback.current?.();},setRenderError);}catch{queueMicrotask(()=>setRenderError("Aircraft renderer unavailable; use the aircraft list."));}return()=>{layer.current?.dispose();layer.current=null;};},[mapRef,styleReady,enabled,hidden]);
-  useEffect(()=>{layer.current?.update(aircraft,trails,selected,flat,showPaths,showGuides);},[aircraft,trails,selected,enabled,hidden,styleReady,flat,showPaths,showGuides]);
+  useEffect(()=>{const map=mapRef.current;if(!map||!styleReady||!enabled||hidden)return;try{layer.current=attachKansasSky(map,hex=>{setSelected(hex);setCamera("free");inspectCallback.current?.();},setRenderError,setProjectionPhase);}catch{queueMicrotask(()=>setRenderError("Aircraft renderer unavailable; use the aircraft list."));}return()=>{layer.current?.dispose();layer.current=null;};},[mapRef,styleReady,enabled,hidden]);
+  useEffect(()=>{
+    // Readouts/trails refresh more slowly than the shared animation clock.
+    // Re-evaluate at its latest instant instead of rewinding an emitted frame.
+    const displayed=replaying&&playing?samplesAt(tracks,motionCursor.current):mode==="buffered"&&!reduced
+      ?bufferedSkySamples(tracks,motionCursor.current,new Set(feedState==="ready"?freshAircraft(envelope,Date.now()).map(plane=>plane.hex):[])):aircraft;
+    layer.current?.update(displayed,trails,selected,flat,showPaths,showGuides);
+  },[aircraft,trails,selected,enabled,hidden,styleReady,flat,showPaths,showGuides,replaying,playing,mode,reduced,tracks,feedState,envelope]);
   useEffect(()=>{if(!enabled||hidden)return;const timer=setInterval(()=>{const metrics=layer.current?.metrics();if(metrics)setRenderMetrics(metrics);},1000);return()=>clearInterval(timer);},[enabled,hidden]);
   useEffect(()=>{
     const map=mapRef.current;if(!map||!enabled)return;
     let active=true,resizeVersion=0;
-    const release=()=>{setCamera("free");setFlightView(false);};
+    const release=()=>{setCamera("free");setOverview(false);};
     // MapLibre resize emits movestart even when only the Layers panel closed.
     // A resize in this synchronous event batch is not camera navigation.
     const resize=()=>{resizeVersion++;};
@@ -192,23 +242,28 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   // Restore map ownership on manual movement, hide, disable or unmount.
   useEffect(()=>{
     const map=mapRef.current;
-    if(!map||!enabled||hidden||flat||(!flightView&&camera==="free"))return;
+    if(!map||!enabled||hidden||flat||!cameraLeaseActive)return;
     const clamped=map.getCenterClampedToGround(),elevation=map.getCenterElevation(),padding=map.getPadding();
     ownCameraMove.current=true;let releaseNavigation:()=>void;try{releaseNavigation=leaseProjectionNavigation(map);map.setCenterClampedToGround(false);}finally{ownCameraMove.current=false;}
-    const reserve=()=>{ownCameraMove.current=true;try{map.setPadding(flightPadding(map));}finally{ownCameraMove.current=false;}};
+    const reserve=()=>{ownCameraMove.current=true;try{map.jumpTo({padding:flightPadding(map,true),elevation:map.getCenterElevation()});}finally{ownCameraMove.current=false;}};
     reserve();map.on("resize",reserve);
-    const plane=latestPicked.current;
-    if(flightView&&plane&&!overview){ownCameraMove.current=true;try{map.jumpTo({center:[plane.lon,plane.lat],zoom:10.5,pitch:60,bearing:plane.trackDeg??map.getBearing(),elevation:cameraElevation(map,plane),padding:flightPadding(map)});}finally{ownCameraMove.current=false;}}
     return()=>{map.off("resize",reserve);ownCameraMove.current=true;try{map.setCenterClampedToGround(clamped);map.setCenterElevation(elevation);map.setPadding(padding);releaseNavigation();}finally{ownCameraMove.current=false;}};
-  },[mapRef,enabled,hidden,flat,flightView,camera,frameRequest,overview]);
-  useEffect(()=>{const map=mapRef.current;if(!map||!enabled||hidden||!flightView||!focusFlight)return;return attachKansasSkyFocus(map);},[mapRef,enabled,hidden,flightView,focusFlight,styleReady]);
+  },[mapRef,enabled,hidden,flat,cameraLeaseActive]);
+  useEffect(()=>{const map=mapRef.current,plane=latestPicked.current,phase=layer.current?.projection();
+    if(!map||!enabled||hidden||flat||!flightView||frameRequest===framedRequest.current||phase==null)return;
+    framedRequest.current=frameRequest;if(!plane||overview)return;
+    // Explicit entry is allowed with reduced motion: a single static framing.
+    // Manual gestures do not issue a new framing request or release/reacquire the lease.
+    ownCameraMove.current=true;try{map.jumpTo(flightCamera(map,plane,map.getBearing(),phase,9.7));}finally{ownCameraMove.current=false;}
+  },[mapRef,enabled,hidden,flat,flightView,frameRequest,overview,projectionPhase]);
+  useEffect(()=>{const map=mapRef.current;if(!map||!enabled||hidden||!flightView||!focusFlight)return;ownCameraMove.current=true;let restoreCurtain:()=>void,restorePaint:()=>void;try{restoreCurtain=leaseBorderCurtainSuppression(map);restorePaint=attachKansasSkyFocus(map);}finally{ownCameraMove.current=false;}return()=>{ownCameraMove.current=true;try{restorePaint();restoreCurtain();}finally{ownCameraMove.current=false;}};},[mapRef,enabled,hidden,flightView,focusFlight,styleReady]);
   const openFlightView=()=>{
     if(!mapRef.current||!picked||flat)return;
-    setOverview(false);setFlightView(true);setFrameRequest(value=>value+1);setCamera(reduced?"free":"follow");
+    setFlightExtra(null);setOverview(false);setFlightView(true);setFrameRequest(value=>value+1);setCamera(reduced?"free":"follow");
   };
-  useEffect(()=>{const map=mapRef.current;if(!map||!picked||camera!=="follow"||reduced||flat||hidden||!enabled||playing||mode==="buffered")return;ownCameraMove.current=true;try{map.jumpTo({center:[picked.lon,picked.lat],pitch:60,bearing:picked.trackDeg??map.getBearing(),elevation:cameraElevation(map,picked),padding:flightPadding(map)});}finally{ownCameraMove.current=false;}},[mapRef,picked,camera,reduced,flat,hidden,enabled,playing,mode]);
+  useEffect(()=>{const map=mapRef.current,phase=layer.current?.projection();if(!map||!picked||camera!=="follow"||reduced||flat||hidden||!enabled||playing||mode==="buffered"||phase==null)return;ownCameraMove.current=true;try{map.jumpTo(flightCamera(map,picked,picked.renderedTrackDeg??picked.trackDeg??map.getBearing(),phase));}finally{ownCameraMove.current=false;}},[mapRef,picked,camera,reduced,flat,hidden,enabled,playing,mode,projectionPhase]);
   useEffect(()=>{const map=mapRef.current;if(!map||camera!=="orbit"||reduced||flat||hidden||!enabled||playing||mode==="buffered")return;
-    let active=true,frame=0,last=performance.now();const orbit=(now:number)=>{if(!active)return;const elapsed=Math.min(100,now-last);last=now;const plane=latestPicked.current;if(plane&&!document.hidden){ownCameraMove.current=true;try{map.jumpTo({center:[plane.lon,plane.lat],pitch:60,bearing:map.getBearing()+elapsed*.006,elevation:cameraElevation(map,plane),padding:flightPadding(map)});}finally{ownCameraMove.current=false;}}frame=requestAnimationFrame(orbit);};frame=requestAnimationFrame(orbit);return()=>{active=false;cancelAnimationFrame(frame);};
+    let active=true,frame=0,last=performance.now();const orbit=(now:number)=>{if(!active)return;const elapsed=Math.min(100,now-last);last=now;const plane=latestPicked.current,phase=layer.current?.projection();if(plane&&phase!=null&&!document.hidden){ownCameraMove.current=true;try{map.jumpTo(flightCamera(map,plane,map.getBearing()+elapsed*.006,phase));}finally{ownCameraMove.current=false;}}frame=requestAnimationFrame(orbit);};frame=requestAnimationFrame(orbit);return()=>{active=false;cancelAnimationFrame(frame);};
   },[mapRef,camera,reduced,flat,hidden,enabled,playing,mode]);
   useEffect(()=>{if(!enabled||mode!=="recorded"&&!historyOpen)return;const abort=new AbortController();catalogRequest.current=abort;queueMicrotask(()=>{if(!abort.signal.aborted)setCatalogState("loading");});
     const url=day?`/data/aviation/replays/days/${day}/index.json`:"/data/aviation/replays/index.json";
@@ -237,10 +292,12 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   },[mapRef,enabled,hidden,flightView,overview,selectedPoints,flat,frameRequest]);
   const retainedDetail=useMemo(()=>{const point=selectedPoints.findLast(p=>p.observedAt<=effectiveCursor)??selectedPoints[0];return point?{...point,observedAt:new Date(point.observedAt).toISOString(),interpolated:false}:undefined;},[selectedPoints,effectiveCursor]);
   const detailAircraft=picked??retainedDetail;
+  const nextObservedSegment=replaying?nextSkyObservationAfterGap(selectedPoints,effectiveCursor):null;
   const filteredFlights=useMemo(()=>{const query=recordingFilter.trim().toLowerCase();return flights.filter(f=>!query||`${f.title} ${flightHex(f)??""}`.toLowerCase().includes(query));},[flights,recordingFilter]);
   const historyFlights=useMemo(()=>selected?filteredFlights.filter(f=>flightHex(f)===selected):filteredFlights,[filteredFlights,selected]);
   const listedFlights=filteredFlights.slice(0,200);if(entry&&!listedFlights.some(f=>f.id===entry.id))listedFlights.unshift(entry);
-  const seek=(at:number)=>{setPlaying(false);setCursor(at);};
+  const seek=(at:number)=>{motionCursor.current=at;setPlaying(false);setCursor(at);};
+  const togglePlayback=()=>{if(playing){setCursor(motionCursor.current);setPlaying(false);return;}if(range){if(cursor>=range[1]||cursor<range[0]){motionCursor.current=range[0];setCursor(range[0]);}}setPlaying(true);};
   const overviewJourney=()=>{
     const map=mapRef.current;if(!map||!selectedPoints.length)return;
     setCamera("free");setOverview(true);setFlightView(true);setFrameRequest(value=>value+1);
@@ -256,25 +313,29 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   return <>{mapStatusHost&&createPortal(<aside className="kansas-sky-map-status" aria-label="Kansas Sky map time and source status" aria-live="off" data-state={status} data-flight-view={flightView}>
     <strong>{status}</strong><span>Kansas Sky</span>{mode==="buffered"&&envelope&&<small>Receiver checked · {utc(receiverTime)}</small>}
     {Number.isFinite(mapTime)?<time dateTime={new Date(mapTime).toISOString()}>{mode==="buffered"?(reduced?"Displayed · paused · ":"Displayed · 30 s delay · "):mode==="live"?"Receiver checked · ":""}{utc(mapTime)}</time>:<small>{currentFeed?"No receiver timestamp":"No replay observations"}</small>}
-  </aside>,mapStatusHost)}{mapStatusHost&&flightView&&createPortal(<section className="kansas-sky-flight-deck" aria-label="Flight view controls" onPointerDown={event=>event.stopPropagation()} onClick={event=>event.stopPropagation()} onDoubleClick={event=>event.stopPropagation()} onWheel={event=>event.stopPropagation()} onKeyDown={event=>event.stopPropagation()}>
-    <header><div><small>{mode==="buffered"?"SMOOTH LIVE · 30 S DELAY":mode==="live"?"OBSERVED AIRCRAFT":"RECORDED FLIGHT · REPLAY"}</small><strong>{detailAircraft?label(detailAircraft):"Select an aircraft"}</strong>{!picked&&<small className="sky-flight-gap">Observation gap · no position drawn</small>}</div><button type="button" aria-label="Close flight view" onClick={()=>{setFlightView(false);setCamera("free");}}>×</button></header>
-    <div className="kansas-sky-flight-readout"><span>{measure(picked?.altGeomFt??picked?.altBaroFt,"ft")}<small>approximate height</small></span><span>{measure(picked?.groundSpeedKt,"kt")}<small>{picked?.interpolated?"interpolated speed":"reported speed"}</small></span></div>
-    <div className="kansas-sky-flight-actions">{replaying&&<button type="button" disabled={!range||range[0]===range[1]} aria-pressed={playing} onClick={()=>{if(range&&cursor>=range[1])setCursor(range[0]);setPlaying(value=>!value);}}>{playing?"Pause flight":"Play flight"}</button>}<button type="button" disabled={!picked||reduced||flat} aria-pressed={camera==="orbit"} onClick={()=>setCamera(camera==="orbit"?"follow":"orbit")}>{camera==="orbit"?"Follow aircraft":"Orbit aircraft"}</button></div>
-    {replaying&&range&&<label className="sky-dock-timeline">Journey time <time dateTime={new Date(effectiveCursor).toISOString()}>{utc(effectiveCursor)}</time><input type="range" aria-label="Flight view timeline" min={range[0]} max={range[1]} step={100} value={effectiveCursor} aria-valuetext={utc(effectiveCursor)} onChange={event=>{setPlaying(false);setCursor(Number(event.target.value));}}/></label>}
+  </aside>,mapStatusHost)}{mapStatusHost&&flightView&&createPortal(<section className="kansas-sky-flight-deck" data-extra={flightExtra??"none"} aria-label="Flight view controls" onPointerDown={event=>event.stopPropagation()} onClick={event=>event.stopPropagation()} onDoubleClick={event=>event.stopPropagation()} onWheel={event=>event.stopPropagation()} onKeyDown={event=>event.stopPropagation()}>
+    <header><div><small>{mode==="buffered"?"SMOOTH LIVE · 30 S DELAY":mode==="live"?"OBSERVED AIRCRAFT":"KANSAS SKY / RECORDED JOURNEY"}</small><strong>{detailAircraft?label(detailAircraft):"Select an aircraft"}<span>{detailAircraft?.type??"Type unavailable"}</span></strong><span className="sky-flight-source">{mode==="recorded"?`${entry?.day??entry?.start.slice(0,10)??""} · ${entry?.provider??"Source unavailable"} · REPLAY`:mode==="session"?"Session observations · REPLAY":envelope?.provider.title??"Source unavailable"}</span>{!picked&&<small className="sky-flight-gap">Observation gap · no position drawn</small>}</div><button type="button" className="sky-flight-close" aria-label="Close flight view" onClick={()=>{setFlightView(false);setCamera("free");}}>×</button></header>
+    <div className="kansas-sky-flight-readout"><span>{measure(picked?.altGeomFt??picked?.altBaroFt,"ft")}<small>{picked?.altGeomFt!=null?"WGS84 · approximate":"Pressure · approximate"}</small></span><span>{measure(picked?.groundSpeedKt,"kt")}<small>{"Reported ground speed"}</small></span></div>
+    {replaying&&range&&<label className="sky-dock-timeline"><span>JOURNEY TIME</span><time dateTime={new Date(effectiveCursor).toISOString()}>{clock(effectiveCursor)} <small>UTC</small></time><input type="range" aria-label="Flight view timeline" min={range[0]} max={range[1]} step={100} value={effectiveCursor} aria-valuetext={utc(effectiveCursor)} onChange={event=>seek(Number(event.target.value))}/><span className="sky-timeline-ends"><span>{clock(range[0])}</span><span>{clock(range[1])}</span></span></label>}
+    {replaying&&<div className="kansas-sky-flight-actions"><button type="button" className="sky-restart" aria-label={parts.multipart?"Fly this part from start":"Fly from start"} title="Fly from the first retained observation" disabled={!range||range[0]===range[1]} onClick={replayJourney}><FlightIcon kind="restart"/></button><button type="button" className="sky-play" disabled={!range||range[0]===range[1]} aria-pressed={playing} onClick={togglePlayback}><FlightIcon kind={playing?"pause":"play"}/>{playing?"Pause flight":"Play flight"}</button><label className="sky-speed"><span className="sr-only">Flight view playback speed</span><select aria-label="Flight view playback speed" value={speed} onChange={event=>setSpeed(Number(event.target.value))}>{[1,4,16].map(value=><option key={value} value={value}>{value}×</option>)}</select></label></div>}
+    {nextObservedSegment!==null&&<button type="button" className="sky-gap-jump" onClick={()=>{motionCursor.current=nextObservedSegment;latestPicked.current=samplesAt(tracks,nextObservedSegment).find(plane=>plane.hex===selected);seek(nextObservedSegment);}}>Next observed segment · {clock(nextObservedSegment)} UTC →</button>}
+    <div className="sky-camera-choices" role="group" aria-label="Flight view camera">{replaying&&<button type="button" disabled={!selectedPoints.length} aria-pressed={overview} onClick={overviewJourney}><FlightIcon kind="path"/>{parts.multipart?"This part":"Whole path"}</button>}<button type="button" disabled={!picked||reduced||flat} aria-pressed={camera==="follow"} onClick={()=>{setOverview(false);setCamera("follow");setFrameRequest(value=>value+1);}}><FlightIcon kind="follow"/>Follow</button><button type="button" disabled={!picked||reduced||flat} aria-pressed={camera==="orbit"} onClick={()=>{setOverview(false);setCamera(camera==="orbit"?"free":"orbit");}}><FlightIcon kind="orbit"/>Orbit</button></div>
     {archiveState==="loading"&&mode==="recorded"&&<small role="status">Verifying the selected part…</small>}{error&&mode==="recorded"&&<small role="alert">{error}</small>}
-    <div className="kansas-sky-flight-menu">{replaying&&<button type="button" disabled={!selectedPoints.length} onClick={overviewJourney}>{parts.multipart?"This part":"Whole path"}</button>}<button type="button" disabled={!detailAircraft} aria-expanded={flightExtra==="brief"} aria-controls={flightExtraId} onClick={()=>setFlightExtra(value=>value==="brief"?null:"brief")}>Aircraft brief</button><button type="button" aria-expanded={flightExtra==="profile"} aria-controls={flightExtraId} onClick={()=>setFlightExtra(value=>value==="profile"?null:"profile")}>Profile & view</button></div>
-    <div className="sky-flight-focus"><label><input type="checkbox" checked={focusFlight} onChange={event=>setFocusFlight(event.target.checked)}/> Focus on flight</label><span>{focusFlight?"Aviation chart dimmed · restrictions retained":"Full map context"}</span></div>
+    <div className="kansas-sky-flight-menu"><button type="button" disabled={!detailAircraft} aria-expanded={flightExtra==="brief"} aria-controls={flightExtraId} onClick={()=>setFlightExtra(value=>value==="brief"?null:"brief")}><FlightIcon kind="brief"/>Aircraft brief<span aria-hidden="true">{flightExtra==="brief"?"−":"+"}</span></button><button type="button" aria-expanded={flightExtra==="profile"} aria-controls={flightExtraId} onClick={()=>setFlightExtra(value=>value==="profile"?null:"profile")}><FlightIcon kind="profile"/>Profile & view<span aria-hidden="true">{flightExtra==="profile"?"−":"+"}</span></button></div>
+    <div className="sky-flight-focus"><label><input type="checkbox" checked={focusFlight} onChange={event=>setFocusFlight(event.target.checked)}/> Focus on flight</label><span>{camera==="free"&&!overview?"Free explore · resume Follow":focusFlight?"Terrain 1× · restrictions retained":"Full map context"}</span></div>
     {mode==="recorded"&&parts.multipart&&<small className="sky-flight-part-badge">Part {entry?.part}/{entry?.partCount} · this file only</small>}
     <div className="sky-flight-legend" aria-label="Flight path legend"><span className="sky-legend-past">Elapsed route</span>{mode==="recorded"&&<span className="sky-legend-ahead">Recorded ahead</span>}<span className="sky-legend-ground">Terrain guides</span></div>
     {flightExtra&&<div className="sky-flight-expanded" id={flightExtraId}>
       {flightExtra==="profile"?<>{partControls}{replaying&&<button type="button" className="sky-fly-start" disabled={!range||range[0]===range[1]} onClick={replayJourney}>{parts.multipart?"Fly this part from start":"Fly from start"}</button>}{selectedPoints.length>0&&<SkyAltitudeProfile points={selectedPoints} cursor={effectiveCursor} canSeek={replaying} onSeek={seek} compact showRange={false}/>}
         <div className="kansas-sky-guide-toggles"><label><input type="checkbox" checked={showPaths} onChange={event=>setShowPaths(event.target.checked)}/> Flight paths</label><label><input type="checkbox" checked={showGuides} disabled={flat||!showPaths} onChange={event=>setShowGuides(event.target.checked)}/> Height guides</label></div>
-        <small>Enlarged aircraft symbol · height approximate. {replaying?"Replay aircraft over current map context. Recorded-ahead paths are observations, not predictions.":mode==="buffered"?"Only bracketed observations are animated, 30 seconds behind now.":"Positions stop at the last observation."}</small></>:
-        detailAircraft&&<><SkyAircraftBrief aircraft={detailAircraft} observationCount={selectedPoints.length} gap={!picked}/><SkyAircraftDossier aircraft={detailAircraft} source={currentFeed?envelope?.provider.title??"Unavailable":selectedSource??"Unavailable"} expanded/></>}
+        <small>Enlarged schematic symbol · height approximate, not clearance. {replaying?"Replay aircraft over current map context. Recorded-ahead paths are observations, not predictions.":mode==="buffered"?"Only bracketed observations are animated, 30 seconds behind now.":"Positions stop at the last observation."}</small></>:
+        detailAircraft&&<><SkyAircraftBrief aircraft={detailAircraft} observationCount={selectedPoints.length} gap={!picked}/><SkyAircraftDossier aircraft={detailAircraft} source={currentFeed?envelope?.provider.title??"Unavailable":selectedSource??"Unavailable"}/>{entry&&<p className="sky-brief-provenance"><a href={entry.sourceUrl} target="_blank" rel="noreferrer">Original flight source ↗</a><span>{entry.license} · {archiveState==="ready"?"File SHA-256 verified":"File verification pending"}</span></p>}</>}
     </div>}
   </section>,mapStatusHost)}<section className="kansas-sky" aria-label="Kansas Sky aircraft and replay" data-projection={flat?"2d":"3d"}>
     <header><div><span className="kansas-sky-eyebrow">Aviation · observed tracks</span><h4>Kansas Sky</h4></div><strong className="kansas-sky-badge">{status}</strong></header>
     <div className="kansas-sky-modes" role="group" aria-label="Flight time mode">{([["live","Live"],["session","Replay this session"],["recorded","Recorded flights"],["buffered","Smooth live · 30 s delay"]] as const).map(([id,title])=><button type="button" key={id} aria-pressed={mode===id} disabled={id==="buffered"&&reduced} onClick={()=>changeMode(id)}>{title}</button>)}</div>
+    {mode==="recorded"&&<div className="sky-recording-intro"><strong>A journey through Kansas</strong><p>Choose an aircraft. Trace its retained route, explore its height, or follow it through the sky.</p><small>{archiveDay?`${archiveDay.day} UTC · ${archiveDay.aircraftCount.toLocaleString()} aircraft · ${archiveDay.coverage==="selected-recordings"?"Selected recordings only":"Provider day processed; coverage limits remain"}`:"Prepared source observations · gaps remain visible"}</small></div>}
+    {mode==="recorded"&&days.length>0&&<label>Recording day<select aria-label="Recording day" value={day} onChange={event=>setDay(event.target.value)}><option value="">Original prepared recordings</option>{days.map(item=><option key={item.day} value={item.day}>{item.day} · {item.aircraftCount} aircraft</option>)}</select></label>}
     {mode==="recorded"&&<label>Find a prepared flight<input type="search" aria-label="Find a prepared flight" value={recordingFilter} onChange={event=>setRecordingFilter(event.target.value)} placeholder="Callsign, hex or date"/></label>}{mode==="recorded"&&<label>Recorded flight<select aria-label="Recorded flight" value={entry?.id??""} onChange={e=>void loadRecorded(e.target.value)}><option value="">Choose a dated flight</option>{listedFlights.map(f=><option key={f.id} value={f.id}>{f.title}</option>)}</select></label>}
     {mode==="recorded"&&partControls}
     {mode==="recorded"&&filteredFlights.length>200&&<small>Showing 200 of {filteredFlights.length.toLocaleString()} matching prepared paths. Search to narrow the list.</small>}
@@ -282,13 +343,14 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
     {mode==="recorded"&&catalogState==="ready"&&!flights.length&&<p>No recorded flights are available yet.</p>}
     {mode==="recorded"&&catalogState==="error"&&<p role="alert">The recorded-flight catalog is unavailable.</p>}
     {mode==="recorded"&&archiveState==="loading"&&<p role="status">Verifying source identity and flight digest…</p>}
+    {mode==="recorded"&&archiveState==="ready"&&entry&&<div className="sky-recording-selection"><strong>{detailAircraft?label(detailAircraft):entry.title}</strong><small>{selectedPoints.length.toLocaleString()} retained observations · {parts.multipart?`Part ${entry.part} of ${entry.partCount}`:"This recorded file"}</small><small>{clock(Date.parse(entry.start))} → {clock(Date.parse(entry.end))} UTC · {entry.provider}</small><button type="button" onClick={overviewJourney} disabled={!selectedPoints.length}>{parts.multipart?"Open this journey part":"Open retained journey"} ↗</button></div>}
     {error&&<p role="alert">{error}</p>}
     <time className="kansas-sky-clock" dateTime={new Date(effectiveCursor).toISOString()}>{utc(effectiveCursor)}</time>
-    {mode==="live"&&<small className="kansas-sky-retained">Latest observations; receiver refresh every 20 seconds. {range?`Retained ${utc(range[0])} → ${utc(range[1])}`:"No session observations retained yet."}</small>}
+    {mode==="live"&&<small className="kansas-sky-retained">Latest reports have different observation times; they are not a simultaneous snapshot. Receiver refresh every 20 seconds. {range?`Retained ${utc(range[0])} → ${utc(range[1])}`:"No session observations retained yet."}</small>}
     {mode==="buffered"&&<p className="kansas-sky-context">{reduced?"Smooth live is paused for reduced motion. Choose Latest observations for current reports.":"One shared clock, 30 seconds behind now."} {aircraft.length?`${aircraft.length} eligible aircraft have observations on both sides of this instant.`:"Waiting for observations on both sides of the delayed clock; missing spans remain empty."} Latest-feed freshness is checked separately. No extrapolation or mixed-time aircraft.</p>}
     {flat&&<p className="kansas-sky-context">2D chart: aircraft and trails are flattened to their geographic positions. All reported heights remain available; no MSL slice membership is inferred.</p>}
-    {replaying&&<><div className="kansas-sky-transport"><button type="button" disabled={!range||range[0]===range[1]||archiveState==="loading"&&mode==="recorded"} aria-pressed={playing} onClick={()=>{if(range){if(cursor>=range[1])setCursor(range[0]);else if(cursor<range[0])setCursor(range[0]);}setPlaying(v=>!v);}}>{playing?"Pause":"Play"}</button><label>Speed<select aria-label="Replay speed" value={speed} onChange={e=>setSpeed(Number(e.target.value))}>{[1,4,16].map(v=><option value={v} key={v}>{v}×</option>)}</select></label><button type="button" onClick={()=>changeMode("live")}>Return to live</button></div>
-      <label>Flight timeline<input type="range" aria-label="Flight timeline" aria-valuetext={utc(effectiveCursor)} aria-describedby={rangeId} min={range?.[0]??0} max={range?.[1]??1} step={100} value={range?effectiveCursor:0} disabled={!range||range[0]===range[1]} onChange={e=>{setPlaying(false);setCursor(Number(e.target.value));}} /></label>
+    {replaying&&<><div className="kansas-sky-transport"><button type="button" disabled={!range||range[0]===range[1]||archiveState==="loading"&&mode==="recorded"} aria-pressed={playing} onClick={togglePlayback}>{playing?"Pause":"Play"}</button><label>Speed<select aria-label="Replay speed" value={speed} onChange={e=>setSpeed(Number(e.target.value))}>{[1,4,16].map(v=><option value={v} key={v}>{v}×</option>)}</select></label><button type="button" onClick={()=>changeMode("live")}>Return to live</button></div>
+      <label>Flight timeline<input type="range" aria-label="Flight timeline" aria-valuetext={utc(effectiveCursor)} aria-describedby={rangeId} min={range?.[0]??0} max={range?.[1]??1} step={100} value={range?effectiveCursor:0} disabled={!range||range[0]===range[1]} onChange={e=>seek(Number(e.target.value))} /></label>
       <small id={rangeId}>{range?`${utc(range[0])} → ${utc(range[1])}`:"No retained observations in this view."}</small>
       {range&&cursor<range[0]&&<small>Earlier session history expired. Clock, aircraft and timeline now show the earliest retained instant.</small>}
       <p className="kansas-sky-context">Replay aircraft only. Airspace, terrain, weather and restrictions elsewhere on the map are current context, not a reconstruction of this flight’s conditions.</p></>}
@@ -302,7 +364,7 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
     <small>{flat?"Choose 3D volumes above to view the flight in space.":"Frame the selected aircraft above the map. Playback and camera controls stay on the map when Layers is closed."}</small>
     <div className="kansas-sky-camera" role="group" aria-label="Aircraft camera">{(["free","follow","orbit"] as const).map(view=><button type="button" key={view} aria-pressed={camera===view} disabled={view!=="free"&&(!picked||reduced||flat)} onClick={()=>setCamera(view)}>{view==="free"?"Free map":view==="follow"?"Follow":"Orbit"}</button>)}</div>
     {reduced&&<small>Reduced motion: camera movement is off. Replay advances only when you press Play.</small>}
-    {picked?<><dl className="kansas-sky-instruments"><div><dt>Pressure altitude</dt><dd>{measure(picked.altBaroFt,"ft")}</dd></div><div><dt>Geometric · WGS84</dt><dd>{measure(picked.altGeomFt,"ft")}</dd></div><div><dt>Ground speed</dt><dd>{measure(picked.groundSpeedKt,"kt")}</dd></div><div><dt>Vertical rate</dt><dd>{measure(picked.verticalRateFpm,"ft/min")}</dd></div><div><dt>Track</dt><dd>{measure(picked.trackDeg,"°")}</dd></div><div><dt>Reported roll</dt><dd>{measure(picked.rollDeg,"°")}</dd></div></dl>{picked.emergency&&<p role="status">Reported emergency: {picked.emergency}{picked.squawk?` · squawk ${picked.squawk}`:""}</p>}<small>Source: {currentFeed?envelope?.provider.title??"Unavailable":selectedSource??"Unavailable"} · Position: {picked.positionMethod??"method unavailable"} · {picked.interpolated?"between recorded observations":"reported observation"}. {picked.observedAt?`${picked.timestampBasis==="retrieval-estimate"?"Estimated observation time":"Observed"} ${typeof picked.observedAt==="number"?utc(picked.observedAt):picked.observedAt}`:"Observation time unavailable"}</small>{picked.altGeomFt===null&&picked.altBaroFt===null&&<p>Height unknown: the ground-level marker is a locator, not an observed surface position.</p>}</>:<p role="status">{selected?"No observation for this aircraft at the selected time. Gaps are not filled.":currentFeed?(feedState==="error"?"Live feed unavailable. No stale positions are drawn.":feedState==="ready"?`${aircraft.length} observed aircraft. Select one to inspect or follow.`:"Waiting for aircraft observations…"):"Choose a retained aircraft to inspect its measurements."}</p>}
+    {picked?<><dl className="kansas-sky-instruments"><div><dt>Pressure altitude</dt><dd>{measure(picked.altBaroFt,"ft")}</dd></div><div><dt>Geometric · WGS84</dt><dd>{measure(picked.altGeomFt,"ft")}</dd></div><div><dt>Ground speed</dt><dd>{measure(picked.groundSpeedKt,"kt")}</dd></div><div><dt>Vertical rate</dt><dd>{measure(picked.verticalRateFpm,"ft/min")}</dd></div><div><dt>Track</dt><dd>{measure(picked.trackDeg,"°")}</dd></div><div><dt>{picked.interpolated?"Interpolated roll":"Reported roll"}</dt><dd>{measure(picked.rollDeg,"°")}</dd></div></dl>{picked.emergency&&<p role="status">Reported emergency: {picked.emergency}{picked.squawk?` · squawk ${picked.squawk}`:""}</p>}<small>Source: {currentFeed?envelope?.provider.title??"Unavailable":selectedSource??"Unavailable"} · Position: {picked.positionMethod??"method unavailable"} · {picked.interpolated?"between recorded observations":"reported observation"}. {picked.observedAt?`${picked.timestampBasis==="retrieval-estimate"?"Estimated observation time":"Observed"} ${typeof picked.observedAt==="number"?utc(picked.observedAt):picked.observedAt}`:"Observation time unavailable"}</small>{picked.altGeomFt===null&&picked.altBaroFt===null&&<p>Height unknown: the ground-level marker is a locator, not an observed surface position.</p>}</>:<p role="status">{selected?"No observation for this aircraft at the selected time. Gaps are not filled.":currentFeed?(feedState==="error"?"Live feed unavailable. No stale positions are drawn.":feedState==="ready"?`${aircraft.length} observed aircraft. Select one to inspect or follow.`:"Waiting for aircraft observations…"):"Choose a retained aircraft to inspect its measurements."}</p>}
     <div className="kansas-sky-guide-toggles"><label><input type="checkbox" checked={showPaths} onChange={event=>setShowPaths(event.target.checked)}/> Flight paths</label><label><input type="checkbox" checked={showGuides} disabled={flat||!showPaths} onChange={event=>setShowGuides(event.target.checked)}/> Height guides</label></div>
     <small>{renderMetrics.aircraft} aircraft drawn · {renderMetrics.heightGuides} terrain guides. Rendering may thin historical geometry or reduce redraw frequency before removing aircraft. Terrain endpoints are map context; aircraft heights remain approximate.</small>
     {selectedPoints.length>0&&<SkyAltitudeProfile points={selectedPoints} cursor={effectiveCursor} canSeek={replaying} onSeek={seek}/>}

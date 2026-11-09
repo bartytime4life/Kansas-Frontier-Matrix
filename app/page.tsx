@@ -8130,7 +8130,8 @@ export default function Home() {
   // allowed; otherwise they hold still.
   useEffect(() => {
     const map = mapRef.current;
-    const motionAllowed = runtime.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget(renderQuality).efficient;
+    const motionAllowed = primaryWorkspace === "map" && guideOpen === false
+      && runtime.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget(renderQuality).efficient;
     const shimmer = motionAllowed && sceneEffects.curtain;
     const twinkle = motionAllowed && sceneEffects.stars;
     const flowing = motionAllowed && sceneEffects.waterFlow;
@@ -8151,7 +8152,7 @@ export default function Home() {
     };
     frame = window.requestAnimationFrame(tick);
     return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); setWaterFlowMotion(false); };
-  }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars, sceneEffects.waterFlow]);
+  }, [primaryWorkspace, guideOpen, dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars, sceneEffects.waterFlow]);
 
   // The Scene panel reports what the flowing-water layer could draw.
   const [waterFlowState, setWaterFlowState] = useState<WaterFlowStatus | null>(null);
@@ -8280,10 +8281,9 @@ export default function Home() {
     const map = mapRef.current;
     if (!map) return;
     const resize = () => {
-      const config = terrainDrawingConfigRef.current;
-      // A provider drawer overlays this map. Avoid synthetic movement clearing
-      // its tapped surface sample when the canvas dimensions did not change.
-      runMapMutation("Map resize", () => { resizeMapAfterLayout(map, config.enabled && (config.surface ?? "off") !== "off"); });
+      // Overlay panels often leave the canvas size unchanged. Both transition
+      // checks still resize for real layout changes without synthetic movement.
+      runMapMutation("Map resize", () => { resizeMapAfterLayout(map, true); });
     };
     const first = window.requestAnimationFrame(resize);
     const second = window.setTimeout(resize, 260);

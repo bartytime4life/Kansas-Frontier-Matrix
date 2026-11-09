@@ -50,7 +50,7 @@ def prepare(raw, source_url, member, all_segments=False, utc_day=None):
         point = {'hex':hex_id, 'callsign':callsign, 'registration':text(data.get('r'), r'[A-Za-z0-9-]{1,10}'),
           'type':text(data.get('t'), r'[A-Za-z0-9]{2,4}'), 'category':text(extra.get('category'), r'[A-D][0-7]'),
           'lat':lat, 'lon':lon, 'onGround':ground, 'altBaroFt':baro, 'altGeomFt':geometric,
-          'groundSpeedKt':number(row[4],0,1500), 'trackDeg':number(row[5],0,360), 'verticalRateFpm':number(row[7],-20000,20000),
+          'groundSpeedKt':number(row[4],0,1500), 'trackDeg':None if ground else number(row[5],0,360), 'verticalRateFpm':number(row[7],-20000,20000),
           'squawk':text(extra.get('squawk'),r'[0-7]{4}'), 'emergency':None, 'military':bool((data.get('dbFlags') or 0) & 1),
           'positionAgeS':0, 'observedAt':at, 'timestampBasis':'provider', 'positionMethod':method,
           'rollDeg':number(row[13],-180,180) if len(row)>13 else None,
@@ -58,6 +58,9 @@ def prepare(raw, source_url, member, all_segments=False, utc_day=None):
           'providerId':'adsb-lol', 'interpolated':False, 'traceFlags':flags, 'breakBefore':not segment,
           'verticalRateReference':'geometric' if flags & 4 else 'barometric',
           'positionQuality':{'nic':number(extra.get('nic'),0,11),'nacP':number(extra.get('nac_p'),0,11),'sil':number(extra.get('sil'),0,3),'rcM':number(extra.get('rc'),0,100000),'rssi':number(extra.get('rssi'),-100,0)}}
+        # readsb's ground trace slot is true heading, not direction of travel.
+        # Omit the additive field for airborne traces: retained released bytes stay reproducible.
+        if ground: point['trueHeadingDeg'] = number(row[5],0,360)
         segment.append(point); previous=point
     if segment: segments.append(segment)
     points = [point for part in segments for point in part] if all_segments else max(segments, key=lambda part: part[-1]['observedAt']-part[0]['observedAt'], default=[])

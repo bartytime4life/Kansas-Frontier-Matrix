@@ -20,6 +20,7 @@ export const TRAFFIC_PROVIDERS: readonly TrafficProvider[] = Object.freeze([
 ]);
 export const TRAFFIC_MAX_POSITION_AGE_S = 60;
 export const TRAFFIC_MAX_AIRCRAFT = 3000;
+export const TRAFFIC_MAX_SPEED_KT = 1500;
 
 export type Aircraft = Readonly<{
   hex: string; callsign: string | null; registration: string | null; type: string | null; category: string | null;
@@ -29,6 +30,11 @@ export type Aircraft = Readonly<{
   observedAt?: string; timestampBasis?: "provider" | "retrieval-estimate";
   positionMethod?: string | null; rollDeg?: number | null; indicatedAirSpeedKt?: number | null;
   mach?: number | null; interpolated?: boolean;
+  trueHeadingDeg?: number | null;
+  /** Display calculations stay separate from the earlier source observation. */
+  sampledAt?: string;
+  renderedTrackDeg?: number | null;
+  interpolation?: Readonly<{ fromObservedAt: string; toObservedAt: string; model: "bounded-hermite" | "great-circle" }>;
   verticalRateReference?: "barometric" | "geometric" | null;
   positionQuality?: Readonly<{ nic: number | null; nacP: number | null; sil: number | null; rcM: number | null; rssi: number | null }>;
   traceFlags?: number;
@@ -69,7 +75,7 @@ export function parseTraffic(value: unknown, retrievedAt = Date.now()): Readonly
     records.push(Object.freeze({ hex: hex.toLowerCase(), callsign: str(item.flight, /^[A-Z0-9-]{1,8}$/i)?.toUpperCase() ?? null,
       registration: str(item.r, /^[A-Z0-9-]{1,10}$/i), type: str(item.t, /^[A-Z0-9]{2,4}$/i), category: str(item.category, /^[A-D][0-7]$/),
       lon, lat, onGround, altBaroFt: onGround ? 0 : num(item.alt_baro, -1500, 70000), altGeomFt: num(item.alt_geom, -1500, 70000),
-      groundSpeedKt: num(item.gs, 0, 1500), trackDeg: num(item.track, 0, 360), verticalRateFpm: num(item.baro_rate, -20000, 20000) ?? num(item.geom_rate, -20000, 20000),
+      groundSpeedKt: num(item.gs, 0, TRAFFIC_MAX_SPEED_KT), trackDeg: num(item.track, 0, 360), trueHeadingDeg: num(item.true_heading, 0, 360), verticalRateFpm: num(item.baro_rate, -20000, 20000) ?? num(item.geom_rate, -20000, 20000),
       squawk, emergency: declared ?? (squawk ? EMERGENCY_SQUAWKS[squawk] ?? null : null), positionAgeS: age + Math.max(0, (retrievedAt - snapshot) / 1000),
       observedAt: new Date(snapshot - age * 1000).toISOString(), timestampBasis: providerNow === null ? "retrieval-estimate" : "provider",
       positionMethod: str(item.type, /^[a-z0-9_]{1,32}$/), rollDeg: num(item.roll, -180, 180),
