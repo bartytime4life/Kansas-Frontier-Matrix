@@ -137,9 +137,5 @@ test('every surface that whitelists basemaps accepts the category basemaps',asyn
  assert.match(report,/draft\.snapshot\.basemap === "standard" \|\| isCategoryBasemapKey\(draft\.snapshot\.basemap\)/);
 });
 
-test('a category basemap tile failure after the one local fallback degrades the map instead of stopping it',async()=>{
- const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/basemapStyle\.sources\[sourceId\]\?\.type === "raster" \|\| basemapStyle\.sources\[sourceId\]\?\.type === "raster-dem" \|\| VECTOR_BASEMAPS\.has\(basemapRef\.current\) && Object\.hasOwn\(basemapStyle\.sources, sourceId\)/);
- const fallback=page.indexOf('VECTOR_BASEMAPS.has(basemapRef.current) && !styleFallbackAttempted'),degrade=page.indexOf('VECTOR_BASEMAPS.has(basemapRef.current) && Object.hasOwn(basemapStyle.sources, sourceId)');
- assert.ok(fallback>0&&degrade>fallback,'the local-style fallback is tried first');
-});
+// The former source-regex assertion is exercised as real handler behavior in
+// basemap-warning-lifecycle.test.mjs, including fallback ordering and recovery.

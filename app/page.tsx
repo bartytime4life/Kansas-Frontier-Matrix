@@ -142,6 +142,8 @@ import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth
 import { useEarthEngineContext } from "./earth-engine-context-client";
 import { EARTH_ENGINE_CONTEXT_LAYERS } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
+import { classifyBasemapError, createBasemapHealth } from "./basemap-health";
+import { installBasemapDiagnostics } from "./basemap-diagnostics";
 import { browserRenderBudget, controlOwnsMapSourceErrors, createMapStyleReadyCheck, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import { webgl2Available } from "./webgl-support";
 import { sameRecord, sameValues } from "./state-equality";
@@ -1289,6 +1291,7 @@ export default function Home() {
   const styleGenerationReadyRef = useRef(false);
   // Set on each style.load and cleared by setStyle: overlays attach only after it.
   const styleDocumentLoadedRef = useRef(false);
+  const basemapHealthRef = useRef<ReturnType<typeof createBasemapHealth> | null>(null);
   const mapMutationErrorRef = useRef<string | null>(null);
   const scaleControlRef = useRef<ScaleControl | null>(null);
   const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
@@ -6621,6 +6624,7 @@ export default function Home() {
     let cancelHoverSample = () => {};
     let cancelSettledViewCommit = () => {};
     let stopStormDeskProbe = () => {};
+    let stopBasemapDiagnostics = () => {};
     let stopStyleReadyCheck = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
@@ -6641,6 +6645,9 @@ export default function Home() {
           setRuntime({ kind: "unsupported", message: "WebGL2 is unavailable in this browser. The Layer Catalog and trust metadata remain readable, but the interactive map cannot start." });
           return;
         }
+        const basemapHealth = createBasemapHealth();
+        basemapHealth.beginStyle();
+        basemapHealthRef.current = basemapHealth;
         const initialView = pendingViewRef.current ?? KANSAS_VIEW;
         const renderBudget = browserRenderBudget();
         const map = new mapLibre.Map({ transformRequest: basemapCacheRequest,
@@ -6686,6 +6693,7 @@ export default function Home() {
           },
         });
         mapRef.current = map;
+        stopBasemapDiagnostics = installBasemapDiagnostics(map, () => ({ generation: basemapHealth.generation(), basemap: basemapRef.current }));
         stopStormDeskProbe = installStormDeskPerformanceProbe(map);
         terrainDrawingRef.current = createTerrainDrawing(map, (status) => {
           if (!disposed && mapRef.current === map) setTerrainDrawingStatus(status);
@@ -6702,6 +6710,7 @@ export default function Home() {
           // or terrain update, so those effects cannot touch the lost style.
           styleDocumentLoadedRef.current = false;
           styleGenerationReadyRef.current = false;
+          basemapHealth.beginStyle();
           setStyleReady(false);
           setMaplibreProbe((current) => ({ ...current, canvasReady: false, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0, error: "WebGL context lost" }));
           setRuntime({ kind: "degraded", message: "The browser paused the map renderer. Data controls remain available while MapLibre restores the canvas." });
@@ -7333,13 +7342,19 @@ export default function Home() {
           const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
           const affectedOfficialContext = officialContextForMapSource(sourceId);
+          const basemapStyle = BASEMAPS[basemapRef.current].style;
+          const basemapSource = sourceId && typeof basemapStyle !== "string" && Object.hasOwn(basemapStyle.sources, sourceId) ? map.getSource(sourceId) : undefined;
+          const basemapInput = sourceId && typeof basemapStyle !== "string" && Object.hasOwn(basemapStyle.sources, sourceId)
+            ? { sourceId, sourceInstance: basemapSource, sourceSpec: basemapSource?.serialize() ?? basemapStyle.sources[sourceId], event } : null;
+          const basemapKind = basemapInput ? classifyBasemapError(basemapInput) : null;
+          if (basemapKind === "stale" || basemapKind === "cancelled") return;
           if (VECTOR_BASEMAPS.has(basemapRef.current) && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext), styleDocumentLoadedRef.current)) {
             styleFallbackAttempted = true;
             runtimeError = null;
-            degradedReason = `${BASEMAPS[basemapRef.current].title} basemap unavailable; switched to the local MapLibre style. ${message}`;
+            const fallbackMessage = `${BASEMAPS[basemapRef.current].title} basemap unavailable; switched to the local MapLibre style. ${message}`;
             basemapRef.current = "midnight";
             setBasemap("midnight");
-            setRuntime({ kind: "degraded", message: degradedReason });
+            setRuntime({ kind: "degraded", message: fallbackMessage });
             return;
           }
           if (affectedOfficialContext?.id === "nws-radar") {
@@ -7398,11 +7413,14 @@ export default function Home() {
           // A missing display basemap tile must not block cutaway navigation or records.
           // That covers raster carriers and, once the one local fallback has been used,
           // the category basemaps' own vector and relief tiles.
-          const basemapStyle = BASEMAPS[basemapRef.current].style;
-          if (sourceId && typeof basemapStyle !== "string" && (basemapStyle.sources[sourceId]?.type === "raster" || basemapStyle.sources[sourceId]?.type === "raster-dem" || VECTOR_BASEMAPS.has(basemapRef.current) && Object.hasOwn(basemapStyle.sources, sourceId))) {
-            degradedReason = "Some basemap tiles are unavailable. Gaps are unknown; choose another basemap or retry. Map controls and records remain available.";
-            setRuntime({ kind: "degraded", message: degradedReason });
-            return;
+          if (basemapInput) {
+            const kind = basemapHealth.error(basemapInput);
+            if (kind === "tile" || kind === "source") {
+              setRuntime({ kind: "degraded", message: basemapHealth.warning()! });
+              return;
+            }
+            // Local GeoJSON/renderer errors still reach their meaningful error
+            // path; membership in a basemap does not make them tile outages.
           }
           // Handled before the error is recorded, so a fallback that loads leaves no failure behind.
           // MapLibre includes the originating source specification on the event.
@@ -7477,6 +7495,11 @@ export default function Home() {
           }
         });
         map.on("sourcedata", (event) => {
+          const basemapStyle = BASEMAPS[basemapRef.current].style;
+          if (event.sourceId && typeof basemapStyle !== "string" && Object.hasOwn(basemapStyle.sources, event.sourceId)) {
+            const source = map.getSource(event.sourceId);
+            basemapHealth.loaded({ sourceId: event.sourceId, sourceInstance: source, sourceSpec: source?.serialize() ?? basemapStyle.sources[event.sourceId], event });
+          }
           if (event.sourceId === TERRAIN_SOURCE_ID && event.isSourceLoaded
             && scenePresetRef.current === "elevation-3d" && map.getTerrain()?.source === TERRAIN_SOURCE_ID
             && map.getSource(TERRAIN_SOURCE_ID) && map.isSourceLoaded(TERRAIN_SOURCE_ID)
@@ -7528,6 +7551,7 @@ export default function Home() {
             }
             const probe = refreshMaplibreProbe();
             const mutationError = mapMutationErrorRef.current;
+            const basemapWarning = basemapHealth.warning();
             const ready = probe.styleLoaded
               && probe.canvasReady
               && probe.tilesLoaded
@@ -7536,10 +7560,11 @@ export default function Home() {
               && probe.failedChecks.length === 0
               && !runtimeError
               && !degradedReason
+              && !basemapWarning
               && !mutationError;
             if (!ready) {
               const failedCheckMessage = probe.failedChecks.length ? `Map health checks need attention: ${probe.failedChecks.join(", ")}.` : null;
-              const next: RuntimeState = { kind: runtimeError || degradedReason || mutationError || failedCheckMessage ? "degraded" : "loading", message: failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") };
+              const next: RuntimeState = { kind: runtimeError || degradedReason || basemapWarning || mutationError || failedCheckMessage ? "degraded" : "loading", message: failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? basemapWarning ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") };
               setRuntime((current) => sameValues(current, next) ? current : next);
               return;
             }
@@ -7579,6 +7604,8 @@ export default function Home() {
       terrainDrawingRef.current?.destroy();
       terrainDrawingRef.current = null;
       stopStormDeskProbe();
+      stopBasemapDiagnostics();
+      basemapHealthRef.current = null;
       stopStyleReadyCheck();
       mapRef.current?.remove();
       mapRef.current = null;
@@ -7961,6 +7988,9 @@ export default function Home() {
     noaaRadarFrameLoadCleanupRef.current = null;
     noaaRadarFrameFailureRef.current = null;
     if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
+    // Start the new failure scope before setStyle can emit a source event.
+    // A style load/idle alone never clears a current failed tile.
+    basemapHealthRef.current?.beginStyle();
     if (!runMapMutation("Basemap style update", () => map.setStyle(hiDpiBasemapStyle(BASEMAPS[basemap].style, map.getPixelRatio()), { diff: false }))) return;
     styleDocumentLoadedRef.current = false;
     styleGenerationReadyRef.current = false;

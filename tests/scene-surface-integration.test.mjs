@@ -315,9 +315,10 @@ test('context loss suspends real overlay effects until the replacement style is 
   const overlay = nodesMatching(home.body, n => ts.isCallExpression(n) && n.expression.getText(pageTree) === 'useEffect' && n.arguments[1]?.getText(pageTree).includes('structures3DState') && n.arguments[0]?.getText(pageTree).includes('syncSceneOverlays'))[0]?.arguments[0];
   assert.ok(handler('webglcontextlost')); assert.ok(handler('webglcontextrestored')); assert.ok(overlay);
   for (const disposed of [false, true]) {
-    let calls = 0, resizes = 0, prevented = 0, ready = true;
+    let calls = 0, resizes = 0, prevented = 0, retiredStyles = 0, ready = true;
     let probe = { canvasReady: true, styleLoaded: true, idle: true, tilesLoaded: true, sourcesReady: 27 }, runtime = {kind:'ready'};
     const scope = { disposed, map: {resize(){resizes++;}}, styleDocumentLoadedRef:{current:true}, styleGenerationReadyRef:{current:true},
+      basemapHealth:{beginStyle(){retiredStyles++;}},
       setStyleReady:value=>{ready=value;}, setMaplibreProbe:update=>{probe=update(probe);}, setRuntime:value=>{runtime=value;}, runMapMutation:(_name,fn)=>{fn();return true;},
       atmospherePresetRef:{current:'night'}, lightAzimuthRef:{current:210}, renderEfficientRef:{current:false},
       syncSceneOverlays(){calls++;},
@@ -325,11 +326,11 @@ test('context loss suspends real overlay effects until the replacement style is 
     scope.mapRef={current:scope.map};
     evaluate(handler('webglcontextlost'),scope)({preventDefault(){prevented++;}});
     if(disposed){
-      assert.equal(prevented,0);assert.equal(ready,true);assert.equal(probe.canvasReady,true);assert.equal(runtime.kind,'ready');
+      assert.equal(prevented,0);assert.equal(ready,true);assert.equal(probe.canvasReady,true);assert.equal(runtime.kind,'ready');assert.equal(retiredStyles,0);
       continue;
     }
     evaluate(overlay,scope)();
-    assert.equal(calls,0,'a queued payload/terrain render cannot mutate the discarded style');assert.equal(prevented,1);assert.equal(ready,false);
+    assert.equal(calls,0,'a queued payload/terrain render cannot mutate the discarded style');assert.equal(prevented,1);assert.equal(ready,false);assert.equal(retiredStyles,1,'lost style retires its basemap failure scope');
     assert.equal(scope.styleDocumentLoadedRef.current,false);assert.equal(scope.styleGenerationReadyRef.current,false);
     assert.deepEqual({...probe},{canvasReady:false,styleLoaded:false,idle:false,tilesLoaded:false,sourcesReady:0,error:'WebGL context lost'});
     assert.equal(runtime.kind,'degraded');
