@@ -1,7 +1,7 @@
 // Private WORK-package browser. Store text is always rendered as text, never HTML.
 (() => {
   "use strict";
-  const KEY = "kfm-review-selection";
+  const KEY = "kfm-review-selection" + (WORKSPACE ? "-" + WORKSPACE : "");
   let packages = [], selected = null, request = 0, imageUrl = null, controller = null;
   const current = () => packages.find((p) => p.id === $("review-package").value);
 
@@ -42,7 +42,8 @@
       const base = `/api/reviews/${collection.id}/${member.id}`;
       if (member.kind === "image") {
         controller = new AbortController();
-        const response = await fetch(base, { cache: "no-store", credentials: "omit", redirect: "error",
+        await SESSION;
+        const response = await fetch(workspacePath(base), { cache: "no-store", credentials: "omit", redirect: "error",
           headers: { "X-KFM-Session": TOKEN }, signal: controller.signal });
         if (!response.ok || !["image/png", "image/jpeg"].includes(response.headers.get("Content-Type"))) throw new Error("Image could not be verified.");
         const blob = await response.blob();

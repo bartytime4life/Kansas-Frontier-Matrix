@@ -18,10 +18,15 @@ truth_posture: CONFIRMED targeted local regressions; NEEDS VERIFICATION camera a
 Run `./tools/local_data/intake_studio/start-local.sh` from the repository root.
 See the [setup, review and handoff runbook](../../../docs/runbooks/local-intake-studio.md).
 
-This Linux loopback operator prepares private held proposals before existing KFM
-capture. `intake_server.py` owns storage and review, `intake_worker.py` performs
+This Linux loopback operator prepares private held proposals and can explicitly
+send a saved ready review into private Working Data capture and indexing.
+`handoff.py` preserves original bytes, review history and sharing holds using
+the established capture and intake primitives. `intake_server.py` owns storage
+and review, `intake_worker.py` performs
 sandboxed extraction, and `local-web/` supplies the local client. The launcher is
 on demand; it does not install packages, services or public routes.
+`workspace.py` mounts the existing Working Data and read-only Library desks
+inside the same sidebar and loopback origin when their roots are configured.
 
 Owning root: `tools/`, following the adjacent local-data operators and desk.
 No registry, contract, policy or proof authority lives here. Originals and state

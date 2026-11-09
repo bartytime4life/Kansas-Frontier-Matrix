@@ -3,7 +3,9 @@
 "use strict";
 
 // Only the operator's terminal supplies this capability; the public shell has none.
-const TOKEN = (() => {
+const WORKSPACE = document.body.dataset.kfmWorkspace || "";
+const workspacePath = path => WORKSPACE ? `/api/workspace/${WORKSPACE}${path.slice(4)}` : path;
+let TOKEN = (() => {
   const params = new URLSearchParams(location.hash.slice(1));
   const values = params.getAll("kfm-intake");
   const key = "kfm-intake-session";
@@ -18,6 +20,9 @@ const TOKEN = (() => {
   }
   return token.length === 43 && /^[A-Za-z0-9_-]{43}$/.test(token) ? token : "";
 })();
+const SESSION = WORKSPACE ? fetch("/api/session", {cache:"no-store",credentials:"omit",redirect:"error"})
+  .then(async response => { if (!response.ok) throw new Error("Could not connect to the local workspace."); TOKEN = (await response.json()).token; })
+  : Promise.resolve();
 const PAGE = 50;
 const VIEW = { lon0: -102.6, lon1: -94.0, lat0: 36.55, lat1: 40.45, w: 800, h: 420 };
 // Approximate Kansas outline (WGS84); the north-east edge follows the Missouri River coarsely.
@@ -38,7 +43,7 @@ const HOLD_TEXT = {
 };
 
 const $ = (id) => document.getElementById(id);
-const state = { offset: 0, total: 0, bbox: null, selected: null, items: [], timer: null, running: false, catalogOnly: false, reviewAllowed: false, reviewDomains: [], itemsRequest: 0, mapRequest: 0 };
+const state = { offset: 0, total: 0, bbox: null, selected: null, items: [], timer: null, running: false, catalogOnly: false, reviewDirty: false, reviewAllowed: false, reviewDomains: [], itemsRequest: 0, mapRequest: 0 };
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -69,10 +74,11 @@ function toast(message) {
   toast.timer = setTimeout(() => { node.hidden = true; }, 5000);
 }
 async function api(path, body) {
+  await SESSION;
   if (!TOKEN) throw new Error("Open the private connection link printed by Intake Desk in your terminal.");
   const options = body === undefined ? { cache: "no-store", credentials: "omit", redirect: "error", headers: { "X-KFM-Session": TOKEN } }
     : { method: "POST", cache: "no-store", credentials: "omit", redirect: "error", headers: { "Content-Type": "application/json", "X-KFM-Session": TOKEN }, body: JSON.stringify(body) };
-  const response = await fetch(path, options);
+  const response = await fetch(workspacePath(path), options);
   const value = await response.json().catch(() => ({ error: "INVALID_RESPONSE" }));
   if (!response.ok) throw new Error(value.error === "LIBRARY_SEARCH_MINIMUM_3_CHARACTERS" ? "Type at least 3 characters to search the imported library." : value.error || `HTTP_${response.status}`);
   return value;
@@ -360,7 +366,7 @@ function reviewForm(item) {
   section.append(el("h3", { text: "Review this file" }));
   if (!state.reviewAllowed) {
     section.append(el("p", { class: "fine", text: "This library is read-only. Review captured files in the Working Data desk." }),
-      el("a", { href: "http://127.0.0.1:8770/", text: "Open KFM Dashboard →" }));
+      el("a", { href: WORKSPACE ? "/working-data" : "http://127.0.0.1:8770/", text: WORKSPACE ? "Open Working Data →" : "Open KFM Dashboard →" }));
     return section;
   }
   if (!item.sha256 || item.lane === "inbox" || !item.present || item.decision.blocking_issues.length) {
@@ -409,6 +415,7 @@ function reviewForm(item) {
       await api("/api/review", { id: item.id, sha256: item.sha256, revision: item.review_history?.[0]?.revision || 0,
         decision: decision.value, domain: domain.value, rights: rights.value, sensitivity: sensitivity.value,
         reference: reference.value, reviewer: reviewer.value, note: note.value, confirmed: confirm.checked });
+      state.reviewDirty = false;
       await refresh();
       if (state.selected === item.id) await openItem(item.id);
       toast("Review saved. Status and routing have been updated.");
@@ -515,8 +522,24 @@ async function boot() {
       $("desk-subtitle").textContent = "Inspect selected local collections, their source evidence and pending review.";
       return;
     }
-    refresh(); poll();
-  } catch (error) { $("job").textContent = `Service unavailable (${error.message})`; }
+    if (WORKSPACE) {
+      $("workspace-connection").textContent = "● Local only · Connected";
+      if (!state.catalogOnly) document.querySelector(".data-workspace .brand strong").textContent = "Working Data";
+    }
+    await refresh(); poll();
+    const requested = new URLSearchParams(location.search).get("item");
+    if (WORKSPACE === "working" && requested && /^[a-f0-9]{32}$/.test(requested)) await openItem(requested);
+  } catch (error) { $("job").textContent = `Service unavailable (${error.message})`; if (WORKSPACE) $("workspace-connection").textContent = "Connection unavailable"; }
+}
+if (WORKSPACE) {
+  for (const type of ["input","change"]) document.addEventListener(type,event=>{
+    if (event.target.closest(".review-form")) state.reviewDirty=true;
+  });
+  document.querySelectorAll("aside.sidebar a").forEach(link=>link.addEventListener("click",event=>{
+    if (state.reviewDirty && !confirm("This file review has unsaved changes. Leave and discard them?")) event.preventDefault();
+    else state.reviewDirty=false;
+  }));
+  window.addEventListener("beforeunload",event=>{if(state.reviewDirty){event.preventDefault();event.returnValue="";}});
 }
 boot();
 setInterval(() => { if (document.visibilityState === "visible" && !state.catalogOnly) void loadPipelineHealth(); }, 60000);

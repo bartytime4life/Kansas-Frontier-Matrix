@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-runbooks-local-intake-studio
 title: Local photo and PDF intake review
 type: runbook
-version: v1.1
+version: v1.2
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
-updated: 2026-11-06
+updated: 2026-11-07
 policy_label: public
 owning_root: docs/
 responsibility: Explain private preparation and governed capture handoff.
@@ -18,6 +18,10 @@ truth_posture: CONFIRMED targeted local regressions and synthetic Chromium revie
 **Status:** repository implementation candidate, locally tested on Linux. This
 studio prepares private placement proposals. It does not embed content in the
 Explorer, admit sources, activate data, or publish the website.
+An explicitly configured **Send to KFM** action captures reviewed originals and
+review snapshots into the private Working Data store and indexes them there.
+The same local workspace can also host the existing **Working Data** and
+read-only **Data Library** interfaces in its sidebar, under one address.
 
 ## Start here
 
@@ -37,6 +41,13 @@ separate-port trial below. The desktop sidebar shows a short local version;
 `/api/session` reports the full `sourceFingerprint`. This identifies bundled
 server, worker, launcher and client bytes, not OCR dependencies, approval or
 public readiness. A running server retains its startup fingerprint.
+
+When configured, **Working Data** at `/working-data` provides the existing
+catalog, geographic filters, file details, analysis and local review controls.
+**Data Library** at `/library` browses the immutable imported catalog. These are
+native pages in Studio's shared sidebar and origin; no separate tab, capability
+fragment or embedded external site is required. **Send to KFM** links directly
+to the captured item's details inside this workspace.
 
 For a separately testable foreground instance, with a disposable private inbox:
 
@@ -63,10 +74,11 @@ PID must not be treated as authority to stop an unrelated process.
    Unknown/restricted rights, unknown/nonpublic sensitivity, missing provenance,
    failed extraction, or sensitivity flags prevent a ready decision. Changing
    previously ready inputs reopens review.
-5. Export a private ZIP containing the original, extracted text, preview, review
-   history and SHA-256 checksums. The proposal explicitly retains the release hold.
+5. Choose **Send to KFM** to capture a saved ready review into Working Data.
+   Optional ZIP exports still include the original, extracted text, preview,
+   review history and SHA-256 checksums.
 
-A destination is a suggestion, not a working import route. Keyword matching is
+A proposed product destination remains a suggestion after private capture. Keyword matching is
 not AI verification, geolocation, identification of people, or scene recognition.
 The domain inventory follows KFM's **PROPOSED** domain-lane projection, not a new
 adopted registry. Inspect the original before relying on OCR numbers or names.
@@ -119,18 +131,58 @@ inside Git, a public directory, a shared folder or the governed store.
 
 ### Handoff to the existing governed workflow
 
-1. Export and inspect the held proposal and verify its `checksums.json`.
-2. Select the original into a private source-first downloads folder. Preserve the
-   ZIP review history separately; do not treat extracted text as original truth.
-3. Follow [Add downloaded maps, pictures, and documents](local-pc-data-store.md#add-downloaded-maps-pictures-and-documents)
-   using `manage.py describe`, explicit manifest review, `plan`, `sync`, and
-   `verify`. This is a separate owner action; the studio never calls these tools.
-4. Use [raw-data intake](raw-data-intake.md) to profile captured material and
-   review placement. Existing source-directory **and** digest bindings remain
-   required. No digest-only rights inheritance or direct ZIP importer is added.
-5. Subsequent WORK staging, evidence linkage, rights/sensitivity checks, review,
-   release and public use remain governed transitions. A local pass proves none
-   of those transitions. The public Explorer must never fetch this private inbox.
+1. Complete source, rights, sensitivity, reviewer, domain and destination fields.
+   Save **Ready for integration review**. Unsaved edits, missing context, failed
+   extraction and sensitivity holds prevent sending.
+2. Click **Send to KFM**. The server checks the saved revision and original hash,
+   captures the original using `manage.sync_store`, verifies the capture, and
+   profiles/indexes just that file using the existing intake primitives. Other
+   catalog entries remain intact. The preparation record stays in Studio.
+3. The original becomes a source-bound quarantine object. The exact review,
+   history, extracted text, optional preview, manifest and receipt are preserved
+   under `data/work/intake-studio/RECORD_ID/REVIEW_SHA256/`. Sharing rights remain
+   unknown in the capture declaration; the Studio rights assertion stays in the
+   review snapshot. Sending does not approve redistribution or publication.
+4. Open **Working Data** from the success message. Repeated clicks and retries
+   after interrupted capture/index/save reuse the same saved-revision capture.
+   Different uploads retain separate source provenance. Editing a sent review
+   reopens review; a later approved send creates a separate immutable snapshot.
+
+Operators enable the action with an explicit initialized private store:
+
+```bash
+/usr/bin/python3 tools/local_data/intake_studio/intake_server.py \
+  --store "$HOME/.local/share/kfm-intake-studio" \
+  --kfm-root "$KFM_DATA_ROOT" \
+  --library-root /private/KFM-library \
+  --archive-root /private/kfm-imports/original-archive \
+  --raster-python /private/atlas/bin/python \
+  --inbox "$HOME/Downloads/KFM" \
+  --pipeline-lock /private/pipeline.lock \
+  --store-check /private/check-data-mount.py \
+  --working-connection /private/working-data.json
+```
+
+The roots, lock, trusted Python volume-check script, and private connection JSON are
+operator configuration, never browser inputs. The connection JSON comes from
+`intake_service.py --connection-file` and is retained for legacy configurations;
+configured Working Data uses the internal workspace route.
+Configure the same pipeline lock used by feeds and scheduled analysis. With no
+`--kfm-root`, the button explains that Working Data is not connected; uploads,
+reviews and ZIP exports remain available.
+
+The mounted views reuse `intake_service.Desk` and its existing HTTP handlers,
+with Studio's current capability and strict same-origin boundary. Library keeps
+catalog-only restrictions and immutable SQLite reads. Dedicated old loopback
+services may remain for compatibility with existing operational checks; user
+launchers can route all views to Studio. Catalogs and uploads are not merged,
+copied or migrated as part of combining these interfaces.
+
+Exporting a ZIP remains an optional manual handoff. The existing
+[local capture procedure](local-pc-data-store.md#add-downloaded-maps-pictures-and-documents)
+still works for other files. Subsequent WORK staging, evidence linkage, release
+and public use remain separate governed transitions. The public Explorer must
+never fetch this private inbox.
 
 ## Integrity and recovery
 
@@ -231,6 +283,18 @@ Installed Linux extraction regressions (actual sandbox, Pillow, PDF and OCR):
 
 ```bash
 KFM_INTAKE_NATIVE_TESTS=1 /usr/bin/python3 -m unittest tests.local_data.test_intake_studio -v
+```
+
+Capture/index handoff regressions, including retry and provenance isolation:
+
+```bash
+/usr/bin/python3 -m unittest tests.local_data.test_intake_studio_handoff -v
+```
+
+Combined workspace routes and read-only boundary regressions:
+
+```bash
+/usr/bin/python3 -m unittest tests.local_data.test_intake_workspace -v
 ```
 
 Use `KFM_INTAKE_TEST_RUNTIME` for a nondefault runtime. Tests cover provenance

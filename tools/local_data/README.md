@@ -24,7 +24,9 @@ truth_posture: CONFIRMED b194938f9e8a baseline and targeted local tests; PROPOSE
 For new photos and PDFs, the [Local Intake Studio](../../docs/runbooks/local-intake-studio.md)
 adds manual upload, explicit camera capture, sandboxed local OCR and held
 placement proposals on port 8776. Its private preparation inbox does not replace
-the governed store or existing Intake Desk. Capture remains a separate action.
+the governed store or existing Intake Desk. **Send to KFM** captures a saved ready
+review into an explicitly configured private Working Data store, preserves its
+review snapshot and indexes the original. Publication remains a separate action.
 
 The GitHub-hosted budget includes Site files in repository history, release
 assets, and recorded Actions artifacts/caches. It does not cap local PC storage
