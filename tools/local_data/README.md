@@ -28,6 +28,11 @@ the governed store or existing Intake Desk. **Send to KFM** captures a saved rea
 review into an explicitly configured private Working Data store, preserves its
 review snapshot and indexes the original. Publication remains a separate action.
 
+The combined Working Data view offers [local Qwen smart acceptance](../../docs/runbooks/local-qwen-acceptance.md):
+an explicit admin batch action generates descriptions and credited reviews,
+accepts eligible files for private use, and retains uncertain cases for review.
+Progress, pause/resume, exact model attribution and sharing holds are preserved.
+
 The GitHub-hosted budget includes Site files in repository history, release
 assets, and recorded Actions artifacts/caches. It does not cap local PC storage
 and is not a provider quota. Keep actual GitHub file/push/LFS limits separate.

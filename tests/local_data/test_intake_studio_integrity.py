@@ -7,6 +7,7 @@ import threading
 import urllib.request
 import urllib.error
 import unittest
+import shutil
 from pathlib import Path
 from unittest.mock import patch
 
@@ -44,6 +45,26 @@ class IntegrityTests(unittest.TestCase):
 
 
 class LauncherTests(unittest.TestCase):
+    def test_source_fingerprint_tracks_workspace_qwen_and_desk_changes(self):
+        from tools.local_data.intake_studio import intake_server
+
+        with tempfile.TemporaryDirectory() as directory:
+            local_data = Path(directory) / "local_data"
+            shutil.copytree(intake_server.APP.parent, local_data,
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            expected = intake_server.source_fingerprint()
+            with patch.object(intake_server, "APP", local_data / "intake_studio"):
+                self.assertEqual(intake_server.source_fingerprint(), expected)
+                for relative in ("ai_acceptance.py", "text_sample.py", "grounded_review.py",
+                                 "intake_studio/workspace.py", "intake_studio/handoff.py",
+                                 "intake_desk/ai-review.js"):
+                    with self.subTest(relative=relative):
+                        path = local_data / relative
+                        original = path.read_bytes()
+                        path.write_bytes(original + b"\n")
+                        self.assertNotEqual(intake_server.source_fingerprint(), expected)
+                        path.write_bytes(original)
+
     def test_older_instance_is_preserved_and_cannot_be_mistaken_for_this_copy(self):
         from tools.local_data.intake_studio import launch_local
 

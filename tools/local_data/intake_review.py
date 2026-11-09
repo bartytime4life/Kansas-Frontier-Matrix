@@ -2,7 +2,6 @@
 from copy import deepcopy
 import hashlib
 import json
-import os
 from pathlib import Path
 import re
 import uuid
@@ -32,6 +31,14 @@ def basis(item, profile):
     declared = {k: v for k, v in (item.get("declared") or {}).items() if k != "binding_count"}
     return hashlib.sha256(canonical({"declared": declared, "profile": {k: profile.get(k) for k in
         ("analyzer_version", "format", "hints", "issues")}})).hexdigest()
+
+
+def context(item):
+    """Bind an asynchronous review to the complete profiled context and revision."""
+    return hashlib.sha256(canonical({"sha256": item.get("sha256"),
+        "declared": {k:v for k,v in (item.get("declared") or {}).items() if k != "binding_count"},
+        "profile": {k:v for k,v in item["profile"].items() if k != "profiled_at"},
+        "revision": item.get("review_history", [{}])[0].get("revision", 0) if item.get("review_history") else 0})).hexdigest()
 
 
 def history(conn, identity):
@@ -94,7 +101,7 @@ def decision(conn, item, profile, budget):
         return intake_route.decide(item, profile, budget)
 
 
-def save(root: Path, value: dict, budget):
+def save(root: Path, value: dict, budget, *, ai_attribution=None, expected_context=None):
     from tools.local_data import intake
 
     if not isinstance(value, dict) or set(value) != FIELDS:
@@ -118,10 +125,25 @@ def save(root: Path, value: dict, budget):
         raise ValueError("REVIEW_PUBLIC_DETAILS_REQUIRED")
     with intake.writer_lock(root):
         item = intake.get_item(root, identity)
+        if expected_context is not None and context(item) != expected_context:
+            raise ValueError("REVIEW_STALE_CONTEXT")
+        if ai_attribution is not None:
+            if (value["decision"] != "local" or not isinstance(ai_attribution, dict)
+                    or ai_attribution.get("kind") != "local-ai" or not ai_attribution.get("model_digest")
+                    or not ai_attribution.get("requested_by")):
+                raise ValueError("AI_REVIEW_ATTRIBUTION_INVALID")
         if not item["present"] or item["lane"] == "inbox" or not item.get("store_path"):
             raise ValueError("REVIEW_CAPTURE_REQUIRED")
         if item["sha256"] != value["sha256"]:
             raise ValueError("REVIEW_STALE_FILE")
+        if ai_attribution is not None:
+            declared = item.get("declared") or {}
+            if (value["rights"] != (declared.get("rights") or {}).get("redistribution","unknown")
+                    or value["sensitivity"] != declared.get("sensitivity","unknown")
+                    or item["decision"].get("review_flags") or item["decision"].get("blocking_issues")
+                    or (declared.get("rights") or {}).get("redistribution") in {"restricted","denied"}
+                    or declared.get("sensitivity") in {"restricted","controlled"}):
+                raise ValueError("AI_REVIEW_HUMAN_DECISION_REQUIRED")
         source = item["store_path"]
         if (not source.startswith(("data/raw/", "data/quarantine/"))
                 or ".." in Path(source).parts):
@@ -137,6 +159,8 @@ def save(root: Path, value: dict, budget):
                   for k in ("decision", "domain", "rights", "sensitivity", "reference", "reviewer", "note")}
         review.update(schema="kfm-intake-operator-review/v1", item_id=identity, sha256=digest, reviewed_at=utc_now(),
                       authority={"source_admission": False, "release": False, "publication": False})
+        if ai_attribution is not None:
+            review["ai_attribution"] = dict(ai_attribution)
         with intake.open_index(root) as conn:
             previous = history(conn, identity)
             if value["revision"] != (previous[0]["revision"] if previous else 0):

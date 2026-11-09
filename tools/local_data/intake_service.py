@@ -32,6 +32,7 @@ SITE_ORIGINS = {"http://127.0.0.1:4173", "https://kansas-frontier-matrix-explore
 ORIGINS = SITE_ORIGINS | {SELF_ORIGIN}
 DESK = Path(__file__).resolve().parent / "intake_desk"
 ASSETS = {"/": ("index.html", "text/html; charset=utf-8"), "/desk.js": ("desk.js", "text/javascript; charset=utf-8"),
+          "/ai-review.js": ("ai-review.js", "text/javascript; charset=utf-8"),
           "/reviews.js": ("reviews.js", "text/javascript; charset=utf-8"),
           "/desk.css": ("desk.css", "text/css; charset=utf-8")}
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data: blob:; "
