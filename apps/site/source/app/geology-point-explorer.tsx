@@ -25,12 +25,6 @@ export function geologyPointFrame(center: [number, number], span: [number, numbe
 
 export default function GeologyPointExplorer({ map, enabled, redacted, monitoringVisible }: { map: MapLibreMap | null; enabled: boolean; redacted: boolean; monitoringVisible: boolean }) {
   const [frame, setFrame] = useState<AreaBounds | null>(null);
-  const [sources, setSources] = useState<Record<ResourceKind, SourceState>>({ oilgas: EMPTY, minerals: EMPTY });
-  const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState("");
-  const frameKey = frame?.join(",") ?? "";
-  const rows = useMemo(() => [...sources.oilgas.rows, ...sources.minerals.rows], [sources]);
-  const selectedRow = rows.find(row => row.id === selected);
 
   useEffect(() => {
     if (!map || !enabled || redacted) return;
@@ -44,12 +38,22 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
     return () => { map.off("moveend", update); };
   }, [map, enabled, redacted]);
 
+  if (!enabled || redacted || !map || !frame) return null;
+  const frameKey = frame.join(",");
+  // A different frame owns different requests, markers and selection. React
+  // resets them together instead of resetting state from the loading effect.
+  return <GeologyPointSample key={frameKey} map={map} frameKey={frameKey} monitoringVisible={monitoringVisible} />;
+}
+
+function GeologyPointSample({ map, frameKey, monitoringVisible }: { map: MapLibreMap; frameKey: string; monitoringVisible: boolean }) {
+  const [sources, setSources] = useState<Record<ResourceKind, SourceState>>({ oilgas: EMPTY, minerals: EMPTY });
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState("");
+  const rows = useMemo(() => [...sources.oilgas.rows, ...sources.minerals.rows], [sources]);
+  const selectedRow = rows.find(row => row.id === selected);
+
   useEffect(() => {
-    if (!enabled || redacted || !frameKey) return;
     const controller = new AbortController();
-    setLoading(true);
-    setSelected("");
-    setSources({ oilgas: EMPTY, minerals: EMPTY });
     const load = async (kind: ResourceKind): Promise<SourceState> => {
       try {
         const response = await fetch(`/api/subsurface/resources?${new URLSearchParams({ kind, bounds: frameKey })}`, { signal: controller.signal, cache: "no-store" });
@@ -63,10 +67,9 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       if (!controller.signal.aborted) { setSources({ oilgas, minerals }); setLoading(false); }
     });
     return () => controller.abort();
-  }, [enabled, redacted, frameKey]);
+  }, [frameKey]);
 
   useEffect(() => {
-    if (!map || !enabled || redacted) return;
     const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: rows.map(row => ({
       type: "Feature", geometry: { type: "Point", coordinates: row.coordinates },
       properties: { id: row.id, kind: row.id.startsWith("oilgas:") ? "oilgas" : "minerals", selected: row.id === selected },
@@ -93,9 +96,8 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
       map.off("styledata", draw); map.off("click", click);
       try { if (map.getLayer(GEOLOGY_POINT_LAYER_ID)) map.removeLayer(GEOLOGY_POINT_LAYER_ID); if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID); } catch { /* Style may already be gone. */ }
     };
-  }, [map, enabled, redacted, rows, selected]);
+  }, [map, rows, selected]);
 
-  if (!enabled || redacted || !map) return null;
   return <aside className={s.card} aria-label="Geology source points">
     <strong>2D SOURCE POINTS · LOCAL SAMPLE</strong>
     <div className={s.key}>{monitoringVisible && <span><i className={s.monitoring} /> Monitoring wells</span>}<span><i className={s.well} /> Oil &amp; gas · {sources.oilgas.rows.length}</span><span><i className={s.mine} /> Mines · {sources.minerals.rows.length}</span></div>

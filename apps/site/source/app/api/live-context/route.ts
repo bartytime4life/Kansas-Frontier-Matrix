@@ -592,8 +592,21 @@ const nifcFireReports = async () => {
   url.searchParams.set("f", "geojson");
   const payload = await fetchBoundedJson(url.toString(), 12_000);
   if (!Array.isArray(payload.features)) throw new UpstreamError("NIFC incident response had no feature array.");
+  // ArcGIS GeoJSON can report a provider-side limit independently of this
+  // adapter's display cap, including when fewer than 250 records are returned.
+  const transferFlags = [payload.exceededTransferLimit, isRecord(payload.properties) ? payload.properties.exceededTransferLimit : undefined];
+  if (transferFlags.some(flag => flag !== undefined && typeof flag !== "boolean")) throw new UpstreamError("NIFC incident response had invalid transfer-limit metadata.");
+  const providerLimited = transferFlags.includes(true);
   const features: Feature<Geometry, GeoJsonProperties>[] = [];
   let skipped = 0;
+  let invalidOptionalDates = 0;
+  const optionalDate = (value: unknown): string | null => {
+    if (value === undefined || value === null) return null;
+    const milliseconds = asNumber(value);
+    const date = milliseconds === null ? null : new Date(milliseconds);
+    if (!date || !Number.isFinite(date.getTime())) { invalidOptionalDates += 1; return null; }
+    return date.toISOString();
+  };
   let newestTimestamp: string | null = null;
   for (const candidate of payload.features) {
     if (features.length >= MAX_NIFC_INCIDENTS) break;
@@ -605,12 +618,10 @@ const nifcFireReports = async () => {
     const category = asString(properties.IncidentTypeCategory);
     const discoveryMs = asNumber(properties.FireDiscoveryDateTime);
     if (longitude === null || latitude === null || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2] || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3]
-      || !identifier || !["WF", "RX", "CX"].includes(category ?? "") || discoveryMs === null || discoveryMs < Date.parse(windowStart) - 86_400_000 || discoveryMs > Date.now()) { skipped += 1; continue; }
-    const modifiedMs = asNumber(properties.ModifiedOnDateTime_dt);
-    const outMs = asNumber(properties.FireOutDateTime);
+      || asString(properties.POOState) !== "US-KS" || !identifier || !["WF", "RX", "CX"].includes(category ?? "") || discoveryMs === null || discoveryMs < Date.parse(windowStart) - 86_400_000 || discoveryMs > Date.now()) { skipped += 1; continue; }
     const discoveryAt = new Date(discoveryMs).toISOString();
-    const modifiedAt = modifiedMs === null ? null : new Date(modifiedMs).toISOString();
-    const reportedOutAt = outMs === null ? null : new Date(outMs).toISOString();
+    const modifiedAt = optionalDate(properties.ModifiedOnDateTime_dt);
+    const reportedOutAt = optionalDate(properties.FireOutDateTime);
     const featureId = `nifc-${identifier}`;
     const name = asString(properties.IncidentName)?.trim().slice(0, 120) || "Unnamed incident";
     features.push({ type: "Feature", id: featureId, geometry: { type: "Point", coordinates: [longitude, latitude] }, properties: {
@@ -623,13 +634,14 @@ const nifcFireReports = async () => {
       irwinId: asString(properties.IrwinID), latitude, longitude, retrievedAt,
       dataRole: "NIFC WFIGS/IRWIN working incident report", evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     } });
-    if (!newestTimestamp || modifiedAt && modifiedAt > newestTimestamp) newestTimestamp = modifiedAt;
+    if (modifiedAt && (!newestTimestamp || modifiedAt > newestTimestamp)) newestTimestamp = modifiedAt;
   }
-  const truncated = payload.features.length > MAX_NIFC_INCIDENTS;
+  const capped = payload.features.length > MAX_NIFC_INCIDENTS;
+  const truncated = capped || providerLimited;
   return envelope("nifc-fire-reports", { type: "FeatureCollection", features },
     "NIFC WFIGS Wildland Fire Incident Locations Year to Date · IRWIN working records",
-    `Interagency reports discovered in the last 30 days in Kansas; ${skipped} invalid or out-of-bounds records withheld${truncated ? `; capped at ${MAX_NIFC_INCIDENTS}` : ""}. A report establishes that an incident was recorded by the provider, not its current activity, exact perimeter, location precision, independent satellite confirmation, or KFM evidence. The absence of a report is not an all-clear. IRWIN working records may change; certified occurrence data are separate.`,
-    retrievedAt, newestTimestamp, skipped > 0 || truncated, truncated);
+    `Interagency reports discovered in the last 30 days in Kansas; ${skipped} record${skipped === 1 ? "" : "s"} withheld because required fields, Kansas scope or discovery times did not match; ${invalidOptionalDates} invalid optional date value${invalidOptionalDates === 1 ? "" : "s"} withheld${capped ? `; capped at ${MAX_NIFC_INCIDENTS}` : ""}${providerLimited ? "; the provider reported a transfer limit, so additional records may be missing" : ""}. A report establishes that an incident was recorded by the provider, not its current activity, exact perimeter, location precision, independent satellite confirmation, or KFM evidence. The absence of a report is not an all-clear. IRWIN working records may change; certified occurrence data are separate.`,
+    retrievedAt, newestTimestamp, skipped > 0 || invalidOptionalDates > 0 || truncated, truncated);
 };
 
 const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600 };

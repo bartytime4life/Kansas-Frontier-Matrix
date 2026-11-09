@@ -1070,13 +1070,13 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert lock["packages"]["node_modules/minimatch"]["version"] == "3.1.5"
     assert "minimatch" not in manifest["overrides"]  # Legacy ESLint plugins need the callable API.
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 901
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 911
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
-    assert result["file_states"]["inherited_repository_overlay"] == 60
-    assert result["file_states"]["repository_only_overlay"] == 39
-    assert result["file_states"]["repository_safety_overlay"] == 19
+    assert result["file_states"]["inherited_repository_overlay"] == 69
+    assert result["file_states"]["repository_only_overlay"] == 49
+    assert result["file_states"]["repository_safety_overlay"] == 22
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
@@ -1754,6 +1754,7 @@ AVIATION_BROWSER_CHANGED = {"app/aviation-airspace.ts", "app/aviation-control.ts
 
 def test_historical_receipt_binds_only_aviation_browser_corrections() -> None:
     path = ROOT / "data/receipts/generated/site-v268-aviation-browser-qualification-20261025.json"
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == "1da1813c6447b60447cde5aa7fd71693577680fa7aea2faf225ee223e6b9f234"
     receipt = json.loads(path.read_text())
     expected = {name: "sha256:" + entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
@@ -1767,7 +1768,9 @@ def test_historical_receipt_binds_only_aviation_browser_corrections() -> None:
     assert set(declarations) == delta
     for name in delta:
         entry, before = receipt["comparison"][name], previous["comparison"][name]
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # This immutable receipt predates later source edits. Current bytes are
+        # checked by the selected successor, not by this historical declaration.
+        digest = declarations[name]["mirror_sha256"]
         assert expected[name] == "sha256:" + digest == "sha256:" + declarations[name]["mirror_sha256"]
         assert entry["site_sha256"] == before["site_sha256"]
         assert declarations[name]["previous_receipt_sha256"] == before["mirror_sha256"]
@@ -1779,6 +1782,7 @@ def test_historical_receipt_binds_only_aviation_browser_corrections() -> None:
 
 def test_history_hold_receipt_withholds_carriers_without_restoring_or_releasing_them(monkeypatch) -> None:
     monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-history-catalogue-hold-20261027.json")
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "d2045f07d743262f6ad18d5c904e91479f533df7f94b87631bcdb3536c95abb4"
     receipt, expected = TOOL.reviewed_receipt()
     assert TOOL.RECEIPT.name == "site-v268-history-catalogue-hold-20261027.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
@@ -1797,7 +1801,9 @@ def test_history_hold_receipt_withholds_carriers_without_restoring_or_releasing_
     changed = {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"].get(name)}
     assert set(declarations) == changed | removed
     for name in changed:
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # Preserve the historical containment declaration. The active receipt
+        # separately checks current source and still rejects withheld carriers.
+        digest = declarations[name]["after_sha256"]
         assert declarations[name]["after_sha256"] == receipt["comparison"][name]["mirror_sha256"] == digest
         assert receipt["comparison"][name]["state"] == "repository_safety_overlay"
     for name in set(previous["comparison"]) - changed - removed:
@@ -1808,3 +1814,55 @@ def test_history_hold_receipt_withholds_carriers_without_restoring_or_releasing_
     assert receipt["history_research_containment"]["hosted_verification"] == "NOT_PERFORMED"
     inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def test_explorer_successor_preserves_history_and_distinguishes_proposed_overlays() -> None:
+    directory = ROOT / 'data/receipts/generated'
+    predecessor = directory / 'site-v268-minimatch-security-overlay-20261101.json'
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == '2a711fde2878b6898c11d0dd8c76a46fb05b9f867da98bf4cb15ce467e584dc6'
+    previous = json.loads(predecessor.read_text())
+    current = json.loads((directory / 'site-v268-explorer-recovery-overlay-20261109.json').read_text())
+    assert TOOL.RECEIPT.name == 'site-v268-explorer-recovery-overlay-20261109.json'
+    assert current['predecessor_receipt'] == predecessor.name
+    assert current['predecessor_receipt_sha256'] == hashlib.sha256(predecessor.read_bytes()).hexdigest()
+    for name in ('site_candidate_commit', 'site_project_id', 'site_version_id', 'site_audience',
+                 'site_archive_sha256', 'authoritative_site_source_paths', 'canonical_document_mappings',
+                 'canonical_tool_mappings', 'overlay', 'review', 'status'):
+        assert current[name] == previous[name], name
+    assert current['status'] == 'REVIEW_ONLY'
+    assert current['review']['source_and_overlay_review'] == 'PENDING'
+    assert current['review']['human_acceptance'] is current['review']['hosted_equivalence'] is False
+    assert current['counts']['repository_withheld'] == previous['counts']['repository_withheld'] == 262
+    before, after = previous['comparison'], current['comparison']
+    assert set(before) <= set(after)
+    assert set(after) - set(before) == {
+        'app/geology-point-explorer.module.css', 'app/geology-point-explorer.tsx',
+        'docs/explorer-improvements-2026-11-09.md', 'docs/explorer-followup-2026-11-09.md',
+        'tests/connections-status-recovery.test.mjs', 'tests/live-earthquake-context.test.mjs',
+        'tests/recovery-navigation.test.mjs', 'tests/geology-point-lifecycle.test.mjs',
+        'tests/live-fire-context.test.mjs', 'tests/daily-archive-recovery.test.mjs',
+    }
+    delta = {name for name in after if after[name] != before.get(name)}
+    declarations = {entry['path']: entry for entry in current['repository_reconciliation']['changes']}
+    assert set(declarations) == delta and len(delta) == 25
+    proposed = {name for name, entry in declarations.items() if entry['proposed_in_this_change']}
+    assert proposed == {
+        'app/api/live-context/route.ts', 'app/daily-archive/workspace.tsx', 'app/geology-point-explorer.tsx',
+        'docs/explorer-followup-2026-11-09.md', 'tests/daily-archive.test.mjs',
+        'tests/daily-archive-recovery.test.mjs', 'tests/geology-point-lifecycle.test.mjs',
+        'tests/live-fire-context.test.mjs',
+    }
+    assert current['repository_reconciled_base'] == current['repository_reconciliation']['base_commit'] == 'a8e6fee3acc05608b57239898a9d1e949dbb9c9c'
+    assert current['repository_reconciliation']['authority'] == 'CONTENT_PARITY_ONLY'
+    assert current['repository_reconciliation']['restored_recorded_paths'] == []
+    for name in delta:
+        entry, declaration, old = after[name], declarations[name], before.get(name)
+        assert declaration['previous_receipt_sha256'] == (old['mirror_sha256'] if old else None)
+        assert entry['site_sha256'] == (old['site_sha256'] if old else None)
+        assert entry['state'] == declaration['state'] != 'identical'
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert declaration['mirror_sha256'] == entry['mirror_sha256'] == digest
+        assert declaration['proposed_in_this_change'] == (declaration['repository_base_sha256'] != digest)
+    inventory = {name: entry['mirror_sha256'] for name, entry in after.items()}
+    assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')
