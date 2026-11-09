@@ -71,6 +71,92 @@ test("bounded upstream responses preserve empty tiles and reject oversized bodie
   } finally { globalThis.fetch = original; }
 });
 
+test("rejected upstream responses cancel their unread bodies", async () => {
+  const original = globalThis.fetch;
+  try {
+    for (const init of [
+      { status: 302, headers: { Location: "https://untrusted.test/data" } },
+      { headers: { "Content-Length": "1001" } },
+    ]) {
+      let canceled = false;
+      const response = new Response(new ReadableStream({ cancel() { canceled = true; } }), init);
+      globalThis.fetch = async () => response;
+      await assert.rejects(upstream.boundedFetch("https://tigerweb.geo.census.gov/query", 1000), /HTTP 302|response budget/);
+      assert.equal(canceled, true);
+      assert.equal(response.body.locked, false);
+    }
+  } finally { globalThis.fetch = original; }
+});
+
+test("streamed upstream bodies cancel at the byte cap and release their reader", async () => {
+  const original = globalThis.fetch;
+  let canceled = false;
+  let pulls = 0;
+  const response = new Response(new ReadableStream({
+    pull(controller) { pulls++; controller.enqueue(new Uint8Array(600)); },
+    cancel() { canceled = true; },
+  }));
+  globalThis.fetch = async () => response;
+  try {
+    await assert.rejects(upstream.boundedFetch("https://tigerweb.geo.census.gov/query", 1000), /response budget/);
+    assert.equal(canceled, true);
+    assert.ok(pulls <= 3);
+    assert.equal(response.body.locked, false);
+  } finally { globalThis.fetch = original; }
+});
+
+test("caller abort after upstream headers cancels a stalled body without returning partial bytes", { timeout: 1000 }, async () => {
+  const original = globalThis.fetch;
+  const controller = new AbortController();
+  const reason = new DOMException("The viewer canceled the request.", "AbortError");
+  let reading;
+  const started = new Promise(resolve => { reading = resolve; });
+  let cancelReason;
+  let pulls = 0;
+  const response = new Response(new ReadableStream({
+    pull(stream) {
+      if (pulls++ === 0) stream.enqueue(new TextEncoder().encode("incomplete payload"));
+      else reading();
+    },
+    cancel(value) { cancelReason = value; },
+  }));
+  globalThis.fetch = async () => response;
+  try {
+    const pending = upstream.boundedFetch("https://tigerweb.geo.census.gov/query", 1000, { signal: controller.signal });
+    await started;
+    assert.equal(response.body.locked, true);
+    controller.abort(reason);
+    await assert.rejects(pending, error => error === reason);
+    assert.equal(cancelReason, reason);
+    assert.equal(response.body.locked, false);
+  } finally { globalThis.fetch = original; }
+});
+
+test("upstream timeout after headers cancels a stalled body", { timeout: 1000 }, async () => {
+  const original = globalThis.fetch;
+  let canceled = false;
+  const response = new Response(new ReadableStream({ cancel() { canceled = true; } }));
+  globalThis.fetch = async () => response;
+  try {
+    await assert.rejects(upstream.boundedFetch("https://tigerweb.geo.census.gov/query", 1000, { timeoutMs: 15 }), { name: "AbortError" });
+    assert.equal(canceled, true);
+    assert.equal(response.body.locked, false);
+  } finally { globalThis.fetch = original; }
+});
+
+test("successful upstream reads preserve their bytes and release their reader", async () => {
+  const original = globalThis.fetch;
+  const response = new Response("Kansas · 水", { headers: { "X-Source": "fixture" } });
+  globalThis.fetch = async () => response;
+  try {
+    const result = await upstream.boundedFetch("https://tigerweb.geo.census.gov/query", 1000);
+    assert.deepEqual(result.bytes, new TextEncoder().encode("Kansas · 水"));
+    assert.equal(result.text(), "Kansas · 水");
+    assert.equal(result.headers.get("X-Source"), "fixture");
+    assert.equal(response.body.locked, false);
+  } finally { globalThis.fetch = original; }
+});
+
 test("NOAA smoke archive paths accept only exact calendar days", () => {
   assert.equal(eventAtlas.smokeUrl("2026-09-26"), "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/2026/09/hms_smoke20260926.kml");
   for (const day of ["2026-02-30", "2026-09-26/../../private", "2026-09-26%2Fprivate", "//other.test"]) {

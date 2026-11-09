@@ -202,11 +202,20 @@ const recentEarthquakes = async (day: string | null = null) => {
   url.searchParams.set("minlongitude", "-102.1");
   url.searchParams.set("maxlongitude", "-94.5");
   url.searchParams.set("orderby", "time");
-  url.searchParams.set("limit", String(MAX_EARTHQUAKE_FEATURES));
+  // One lookahead record distinguishes an exact 250-event response from a
+  // capped response without claiming the provider's count is a total inventory.
+  url.searchParams.set("limit", String(MAX_EARTHQUAKE_FEATURES + 1));
   const payload = await fetchBoundedJson(url.toString(), 15_000);
   let newestTimestamp: string | null = null;
   const catalogFeatures = collectionFeatures(payload);
-  const features: Feature<Geometry, GeoJsonProperties>[] = catalogFeatures.slice(0, MAX_EARTHQUAKE_FEATURES).flatMap((candidate) => {
+  const candidates = catalogFeatures.slice(0, MAX_EARTHQUAKE_FEATURES);
+  const sourceTimestamp = (value: unknown): string | null => {
+    const milliseconds = asNumeric(value);
+    if (milliseconds === null) return null;
+    const date = new Date(milliseconds);
+    return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+  };
+  const features: Feature<Geometry, GeoJsonProperties>[] = candidates.flatMap((candidate) => {
     if (!isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) return [];
     const coordinates = candidate.geometry.coordinates;
     const longitude = asNumeric(coordinates[0]);
@@ -215,9 +224,8 @@ const recentEarthquakes = async (day: string | null = null) => {
     if (longitude === null || latitude === null || longitude < -102.1 || longitude > -94.5 || latitude < 36.9 || latitude > 40.1) return [];
     const properties = isRecord(candidate.properties) ? candidate.properties : {};
     const eventId = asString(candidate.id) ?? asString(properties.code);
-    const observedMilliseconds = asNumeric(properties.time);
-    if (!eventId || observedMilliseconds === null) return [];
-    const observedAt = new Date(observedMilliseconds).toISOString();
+    const observedAt = sourceTimestamp(properties.time);
+    if (!eventId || observedAt === null) return [];
     if (observedAt < start || observedAt >= end) return [];
     if (!newestTimestamp || observedAt > newestTimestamp) newestTimestamp = observedAt;
     const magnitude = asNumeric(properties.mag);
@@ -233,7 +241,7 @@ const recentEarthquakes = async (day: string | null = null) => {
         magnitudeType: asString(properties.magType),
         depthKilometers,
         observedAt,
-        updatedAt: asNumeric(properties.updated) === null ? null : new Date(asNumeric(properties.updated)!).toISOString(),
+        updatedAt: sourceTimestamp(properties.updated),
         reviewStatus: asString(properties.status),
         eventType: asString(properties.type),
         detailUrl: asString(properties.url),
@@ -246,15 +254,16 @@ const recentEarthquakes = async (day: string | null = null) => {
   });
   const metadata = isRecord(payload.metadata) ? payload.metadata : {};
   const totalCount = asNumeric(metadata.count);
-  const truncated = (totalCount ?? catalogFeatures.length) > features.length;
+  const skipped = candidates.length - features.length;
+  const truncated = catalogFeatures.length > MAX_EARTHQUAKE_FEATURES || (totalCount !== null && totalCount > catalogFeatures.length);
   return envelope(
     "usgs-earthquakes",
     { type: "FeatureCollection", features },
     url.toString(),
-    `${features.length} USGS catalog event${features.length === 1 ? "" : "s"} returned for the Kansas bounding window for ${start} through ${end} (end excluded). Locations, depths, magnitudes, and review status may change. This is not an earthquake alert, hazard forecast, or KFM evidence.`,
+    `${features.length} USGS catalog event${features.length === 1 ? "" : "s"} returned for the Kansas bounding window for ${start} through ${end} (end excluded). ${skipped} invalid or outside-window returned record${skipped === 1 ? "" : "s"} withheld.${truncated ? ` This bounded view considers at most ${MAX_EARTHQUAKE_FEATURES} returned records; additional catalog records were omitted, so the view is partial.` : ""} Locations, depths, magnitudes, and review status may change. This is not an earthquake alert, hazard forecast, or KFM evidence.`,
     retrievedAt,
     newestTimestamp,
-    false,
+    skipped > 0 || truncated,
     truncated,
   );
 };
