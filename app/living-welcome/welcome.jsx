@@ -242,6 +242,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
             <button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button>
             <label className="welcome-tool"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Don’t show on start</label>
             <button type="button" className="welcome-map-notes" onClick={()=>{onSources?.();openPanel('credits');}}>Map notes</button>
+            <a className="welcome-tool" href="/labs">Research atlas ↗</a>
             <button type="button" onClick={()=>run(()=>onAction('qwen'))}>Ask the atlas</button>
           </div></details>
           <button type="button" className="welcome-skip" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button>

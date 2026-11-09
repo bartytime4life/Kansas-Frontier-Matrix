@@ -10,19 +10,42 @@ import { useStoryBundle } from './useStoryBundle.js';
 const SPEEDS = [{ id: .5, label: '½×' }, { id: 1, label: '1×' }, { id: 2, label: '2×' }];
 
 function WaitingPanel({ story, state }) {
-  const text = story.status === 'planned' ? 'This story is in the works.' : state === 'offline' ? 'The record cannot be reached right now.' : state === 'loading' ? 'Looking for the record…' : 'Its data is on the way.';
+  const text = story.status === 'planned' ? 'This story is in the works.' : state === 'offline' ? 'The record cannot be reached right now.' : state === 'loading' ? 'Looking for the record…' : 'No released source snapshot is available here.';
   return <div className="story-waiting">
     <div className="story-waiting-sketch"><WaitingSketch story={story} held/></div>
     <div className="story-panel"><p className="story-kicker">{story.kicker}</p><p role="status"><strong>{text}</strong></p><p>{story.summary}</p><p><strong>In the lab:</strong> {story.try}</p></div>
   </div>;
 }
 
-function Sources({ story, bundle }) {
+function downloadJSON(filename, value) {
+  const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json' }));
+  const link = document.createElement('a');
+  link.href = url; link.download = filename; document.body.append(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function Sources({ story, bundle, controls, time }) {
   const sources = bundle?.sources || story.sources.map(name => ({ name }));
   const observed = bundle?.observed;
+  const observedText = value => bundle?.data?.timeUnit === 'Ma' && Number.isFinite(Number(value))
+    ? `${Math.abs(Number(value))} Ma` : String(value).replace(/T.*$/, '');
   return <footer className="story-lab-foot" aria-label="Sources and limits">
     <div><h3>Sources</h3><ul>{sources.map(source => <li key={source.name}>{source.url ? <a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}</a> : source.name}{source.license ? <span> · {source.license}</span> : null}</li>)}</ul>
-      {observed?.from != null && <p className="story-num">Observed {observed.from} to {observed.to}{bundle.built_at ? ` · built ${bundle.built_at.slice(0, 10)}` : ''}</p>}</div>
+      {observed?.from != null && <p className="story-num">{bundle.data.timeUnit === 'Ma' ? 'Age midpoint coverage' : 'Observed'} {observedText(observed.from)} to {observedText(observed.to)}{bundle.built_at ? ` · built ${bundle.built_at.slice(0, 10)}` : ''}</p>}
+      {bundle && <details className="story-provenance"><summary>Snapshot & reproducibility</summary>
+        <p>{bundle.data.sourceSnapshot?.retrievedAt ? `Retrieved ${bundle.data.sourceSnapshot.retrievedAt}. ` : ''}This source snapshot carries its own dates, rights and limits. Display and export do not establish admission or release approval.</p>
+        {sources.map(source => <p key={source.name}>{source.citation}</p>)}
+        <div className="story-export-actions">
+          <button type="button" className="story-tool" onClick={() => downloadJSON(`${story.id}-snapshot.json`, bundle)}>Download source snapshot</button>
+          <button type="button" className="story-tool" onClick={() => downloadJSON(`${story.id}-view-receipt.json`, {
+            format: 'kfm-local-lab-view-v1', story: story.id, exportedAt: new Date().toISOString(),
+            snapshotBuiltAt: bundle.built_at, sourceSnapshot: bundle.data.sourceSnapshot || null,
+            sourceSnapshots: bundle.data.sourceSnapshots || (bundle.data.sourceSnapshot ? [bundle.data.sourceSnapshot] : []),
+            observed: bundle.observed, sources: bundle.sources, controls, time,
+            interpretation: 'View settings and source metadata; not a release or admission receipt.',
+          })}>Save view receipt</button>
+        </div>
+      </details>}</div>
     <div><h3>Limits</h3><ul>{(bundle?.data?.limits || [story.limit]).map(limit => <li key={limit}>{limit}</li>)}</ul><p className="story-note">{KANSAS_OUTLINE_CREDIT}</p></div>
   </footer>;
 }
@@ -36,7 +59,7 @@ function LabContent({ story, paused, reduced }) {
   const [time, setTime] = useState(null), [controls, setControls] = useState({}), [playRequested, setPlaying] = useState(false), [speed, setSpeed] = useState(1);
   const motionHeld = Boolean(paused || reduced), playing = playRequested && !motionHeld && Boolean(range);
   const shownTime = time ?? range?.max ?? null;
-  const rangeMin = range?.min, rangeMax = range?.max, rangeRate = range?.rate;
+  const rangeMin = range?.min, rangeMax = range?.max, rangeRate = range?.rate, rangeStep = range?.step || 1;
 
   // Playback advances the shared time only while the tab is visible and motion is allowed.
   const startFrom = useRef(null);
@@ -50,7 +73,7 @@ function LabContent({ story, paused, reduced }) {
       value += (now - (last ?? now)) / 1000 * (rangeRate || 4) * speed;
       last = now;
       if (value >= rangeMax) { setTime(rangeMax); setPlaying(false); return; }
-      setTime(Math.floor(value));
+      setTime(Math.max(rangeMin, Math.min(rangeMax, Math.round(value / rangeStep) * rangeStep)));
       frame = requestAnimationFrame(tick);
     };
     const visibility = () => {
@@ -60,7 +83,7 @@ function LabContent({ story, paused, reduced }) {
     frame = requestAnimationFrame(tick);
     document.addEventListener('visibilitychange', visibility);
     return () => { if (frame) cancelAnimationFrame(frame); document.removeEventListener('visibilitychange', visibility); };
-  }, [playing, speed, rangeMin, rangeMax, rangeRate]);
+  }, [playing, speed, rangeMin, rangeMax, rangeRate, rangeStep]);
 
   const reset = () => { setPlaying(false); setTime(null); setControls({}); };
   const download = () => { const result = storyModule.toCSV(bundle, { time: shownTime, controls }); if (result) downloadCSV(result.filename, result.rows); };
@@ -72,7 +95,7 @@ function LabContent({ story, paused, reduced }) {
           ? <Visual bundle={bundle} mode="lab" paused={paused} reduced={reduced} time={shownTime} onTime={value => { setPlaying(false); setTime(value); }} controls={controls} onControls={setControls}/>
           : <WaitingPanel story={story} state={story.status === 'planned' ? 'planned' : state}/>}
       </StoryBoundary>
-      <Sources story={story} bundle={state === 'ready' ? bundle : null}/>
+      <Sources story={story} bundle={state === 'ready' ? bundle : null} controls={controls} time={shownTime}/>
     </div>
     {Visual && <div className="story-lab-bar" role="group" aria-label="Lab controls">
       {range && <>

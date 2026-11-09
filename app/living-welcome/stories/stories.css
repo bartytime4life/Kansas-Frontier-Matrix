@@ -94,6 +94,10 @@
 .story-lab-foot ul{display:grid;gap:4px;margin:0 0 6px;padding:0 0 0 15px}
 .story-lab-foot p{margin:0}
 .story-lab-foot a{color:#ffe9b5;text-underline-offset:2px}
+.story-provenance{margin-top:12px;overflow-wrap:anywhere}
+.story-provenance summary{cursor:pointer;color:#ffe9b5;font-weight:650;min-height:28px}
+.story-provenance p{margin:8px 0}
+.story-export-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .story-lab-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:9px 20px calc(9px + env(safe-area-inset-bottom));border-top:1px solid #ffffff17;background:#07202dee;flex:none}
 .story-lab .story-tool{min-height:44px;min-width:44px;padding:6px 14px;border:1px solid #6b8794;border-radius:11px;background:#0a2d3d;font-size:13px;font-weight:600;cursor:pointer}
 .story-lab .story-tool[aria-pressed=true]{border-color:#efd395;color:#ffe9b5}
@@ -116,3 +120,6 @@
  .story-lab .story-speed{gap:2px}
  .story-lab .story-speed button{padding:2px;font-size:12px}
 }
+
+.story-atlas-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 0;color:#ffe9b5;text-underline-offset:4px;font-size:13px;font-weight:650}
+.story-atlas-link:focus-visible{outline:2px solid #ffe9b5;outline-offset:4px}

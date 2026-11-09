@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { boundedStoryText, validStoryBundle } from './story-bundle.mjs';
 
-// Bundles are the only thing a story fetches. A small cache keeps the ones in use so that a card and its lab share
-// one copy; older ones are dropped by size, because 22 parsed bundles would not fit the welcome's heap budget.
+// Bundles are the only thing a story fetches. A small LRU shares reusable snapshots. Mounted consumers retain
+// their active value until disabled/unmounted; the cache limit is not a bound on all mounted consumers.
 const CACHE_BYTES = 3_000_000;
 const WAITING_MS = 5 * 60_000;
 const cache = new Map();   // id -> { value, bytes, at }
@@ -35,7 +36,7 @@ function cached(id) {
 /** The relay wraps a stored bundle as rows[0].bundle; the dev preview serves the bundle itself. */
 export function storyBundleFrom(reply, id) {
   const bundle = reply?.format === 'kfm-story-bundle-v1' ? reply : reply?.rows?.[0]?.bundle;
-  return bundle?.format === 'kfm-story-bundle-v1' && bundle.story === id && bundle.data ? bundle : null;
+  return validStoryBundle(bundle, id) ? bundle : null;
 }
 /** What a reply means for the card. Anything short of a bundle reads as waiting, or as offline for a gateway outage. */
 export function storyBundleState(status, reply, id) {
@@ -48,11 +49,12 @@ export function storyBundleState(status, reply, id) {
 
 function request(id) {
   const running = inflight.get(id);
-  if (running) { running.users += 1; return running; }
+  // A remount can arrive before an aborted request's finally handler removes it.
+  if (running && !running.controller.signal.aborted) { running.users += 1; return running; }
   const controller = new AbortController();
   const promise = fetch(`/api/local-data/stories?story=${encodeURIComponent(id)}`, { signal: controller.signal, headers: { Accept: 'application/json' } })
     .then(async response => {
-      const text = await response.text();
+      const text = await boundedStoryText(response);
       let reply = null;
       try { reply = JSON.parse(text); } catch { reply = null; }
       const value = storyBundleState(response.status, reply, id);
@@ -71,19 +73,22 @@ export function useStoryBundle(id, { enabled = true } = {}) {
   const key = enabled ? id : null;
   const [settled, setSettled] = useState({ key: null, value: IDLE });
   useEffect(() => {
-    if (!key || cached(key)) return undefined;
+    if (!key) return undefined;
     let live = true;
-    const entry = request(key);
-    entry.promise.then(value => { if (live) setSettled({ key, value }); }, error => {
+    const hit = cached(key), entry = hit ? null : request(key);
+    // Keep an already-cached value in this mounted consumer too. Later LRU eviction must not strand it
+    // in loading with an unchanged effect key.
+    (hit ? Promise.resolve(hit) : entry.promise).then(value => { if (live) setSettled({ key, value }); }, error => {
       if (live && error?.name !== 'AbortError') setSettled({ key, value: OFFLINE });
     });
     return () => {
       live = false;
+      if (!entry) return;
       entry.users -= 1;
       if (entry.users <= 0) entry.controller.abort();
     };
   }, [key]);
   if (!key) return id && known.has(id) ? { ...IDLE, known: known.get(id) } : IDLE;
-  // The cache comes first: a bundle dropped from it stops being held here, too.
+  // Active consumers remain usable when other instruments evict their shared cache entry.
   return cached(key) || (settled.key === key ? settled.value : LOADING);
 }

@@ -10,35 +10,37 @@
 //   sources   source names shown while the card waits for its data
 //   tables    the feed tables the builder reads; feeds lists the feeds that fill them
 //   db        the story's main database, 'observations' or 'bulk'; its builder reads tables in the other one as other.<table>
-//   status    'ready' has load: () => import('./<id>.jsx'); 'planned' has load: null
+//   status    'ready' has a lazy visual module; actual data availability is verified by the bundle hook.
 //
-// Making a story real: build the visual and the builder, then change only that story's entry from planned({...})
-// to ready({..., load: () => import('./<id>.jsx')}).
+// Ready means an instrument exists, not that source admission or publication has occurred.
+// The shared record lab supports bounded source snapshots; dataset gates remain independent.
 export const STORY_GROUPS = Object.freeze(['Deep time', 'Frontier & settlement', 'People', 'Living record', 'Data to come']);
 
 const planned = entry => Object.freeze({ db: 'observations', ...entry, status: 'planned', load: null });
 const ready = entry => Object.freeze({ db: 'observations', ...entry, status: 'ready' });
 
 export const STORIES = Object.freeze([
-  planned({
-    id: 'deep-time-column', group: 'Deep time', title: 'Deep Time Column', kicker: 'ROCKS & FOSSILS',
-    summary: 'Rock layers under Kansas through 540 million years, with fossil counts for each interval.',
-    try: 'Zoom the time axis, pick a column, and select an interval to list its taxa.',
-    limit: 'Macrostrat columns generalize units, and fossil counts follow where people collected.',
+  ready({
+    id: 'deep-time-column', group: 'Deep time', title: "Deep Time & Fossils", kicker: 'ROCKS & FOSSILS',
+    summary: "Kansas fossil collections through geological time, with age ranges, formations and recorded occurrences.",
+    try: "Explore approximate collection locations, filter geological intervals, and compare recorded occurrences.",
+    limit: "Collection and publication effort shape coverage; age midpoints are illustrative and locations are generalized.",
     palette: ['#14181f', '#c7a26b', '#6fa8a0'],
-    sources: ['Macrostrat', 'Paleobiology Database', 'iDigBio'],
+    sources: ["Paleobiology Database"],
     tables: ['kfm_macrostrat_columns', 'kfm_macrostrat_units', 'kfm_pbdb_occurrences', 'kfm_pbdb_collections', 'kfm_idigbio_fossils'],
     feeds: ['macrostrat', 'pbdb', 'idigbio-fossils'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
+  ready({
     id: 'inland-sea', group: 'Deep time', title: 'Inland Sea', kicker: 'CRETACEOUS SEAWAY',
-    summary: 'Where the sea creatures of the Western Interior Seaway were found in Kansas rock.',
-    try: 'Move through the stages from Albian to Maastrichtian and switch fossil groups on and off.',
-    limit: 'Age bins are wide, and finds record where rock is exposed and collected.',
+    summary: "Cretaceous fossil collections in Kansas, from the age of the Western Interior Seaway.",
+    try: "Explore collection ages and formations, inspect source references, and compare intervals.",
+    limit: "Cretaceous age does not prove a marine environment. Collection locations are generalized and age ranges remain approximate.",
     palette: ['#071c2c', '#6fc3d0', '#e7d7a8'],
-    sources: ['Paleobiology Database', 'iDigBio'],
+    sources: ["Paleobiology Database"],
     tables: ['kfm_pbdb_occurrences', 'kfm_pbdb_collections', 'kfm_idigbio_fossils'],
     feeds: ['pbdb', 'idigbio-fossils'],
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'ice-age-prairie', group: 'Deep time', title: 'Ice Age to Prairie', kicker: 'POLLEN & RADIOCARBON',
@@ -70,15 +72,16 @@ export const STORIES = Object.freeze([
     tables: ['kfm_blevins_post_offices', 'kfm_gnis_names_2021', 'kfm_gnis_historical_features'],
     feeds: ['post-offices', 'gnis-names'],
   }),
-  planned({
+  ready({
     id: 'shifting-lines', group: 'Frontier & settlement', title: 'Shifting Lines', kicker: 'COUNTY BOUNDARIES',
-    summary: 'County borders redraw themselves from Kansas Territory to the modern state.',
-    try: 'Scrub the date, read the chronology, and select a county to see its lineage.',
-    limit: 'Boundaries are the Newberry atlas’s legal reading; much of the early map was unsettled on the ground.',
+    summary: "Historical county boundaries changing from predecessor territories to the twentieth century.",
+    try: "Move the timeline to view active boundaries, inspect a change, and search the source chronology.",
+    limit: "Newberry’s administrative history is not land title or Indigenous sovereignty; this snapshot ends in 2000.",
     palette: ['#14161c', '#d8c58f', '#7fa3b8'],
     sources: ['Newberry Atlas of Historical County Boundaries'],
     tables: ['kfm_ahcb_county_versions', 'kfm_ahcb_changes', 'kfm_ahcb_chronology'],
     feeds: ['county-boundaries'],
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'treaty-lands', group: 'Frontier & settlement', title: 'Treaty Lands', kicker: 'LAND CESSIONS',
@@ -110,15 +113,16 @@ export const STORIES = Object.freeze([
     tables: ['kfm_wikidata_people', 'kfm_wikidata_places', 'kfm_congress_legislators', 'kfm_congress_terms'],
     feeds: ['wikidata-kansas', 'congress-kansas'],
   }),
-  planned({
-    id: 'census-mosaic', group: 'People', title: 'Census Mosaic', kicker: 'EVERY KANSAN, 2020',
-    summary: 'A dot map of the 2020 census with community profiles alongside.',
-    try: 'Toggle groups, compare a county’s age pyramid with the state, and map median income.',
-    limit: 'Dots are placed at random inside their areas, and the ACS values are estimates.',
+  ready({
+    id: 'census-mosaic', group: 'People', title: "County Pulse", kicker: "POPULATION & CHANGE",
+    summary: "Six years of population estimates, births, deaths and migration across all 105 Kansas counties.",
+    try: "Change the year and measure, compare counties, and inspect the components of population change.",
+    limit: "July 1 estimates, 2020–2025. The 2020 components cover a partial year; geometries are contemporary.",
     palette: ['#10131a', '#7ee0c3', '#f7b267'],
-    sources: ['U.S. Census 2020', 'American Community Survey', 'TIGER'],
+    sources: ["U.S. Census Population Estimates, Vintage 2025","Census TIGERweb"],
     tables: ['kfm_census_decennial_values', 'kfm_census_decennial_geographies', 'kfm_census_acs_values'],
     feeds: ['census-decennial', 'census-acs'],
+    load: () => import('./record-lab.jsx'),
   }),
   ready({
     id: 'climate-stripes', group: 'Living record', title: 'Climate Stripes', kicker: 'TEMPERATURE & DROUGHT',
@@ -130,33 +134,36 @@ export const STORIES = Object.freeze([
     tables: ['kfm_climdiv_monthly', 'kfm_climdiv_normals'], feeds: ['climdiv'],
     load: () => import('./climate-stripes.jsx'),
   }),
-  planned({
+  ready({
     id: 'river-memory', group: 'Living record', title: 'River Memory', kicker: 'STREAMFLOW & FLOODS',
-    summary: 'River flow as colour stripes, day by year, with the record floods marked.',
-    try: 'Pick a long-record gauge, read the raster, and compare the flow duration curve.',
-    limit: 'Gauges start and stop, and dams and withdrawals change what a stripe means over time.',
+    summary: "Daily streamflow at three Kansas gauges, from 2020 through the downloaded 2026 record.",
+    try: "Compare gauges and periods, inspect daily values, and export the filtered series with its qualifiers.",
+    limit: "Three gauges are a selected comparison, not statewide coverage. Discharge is daily mean flow, not a flood forecast.",
     palette: ['#071a24', '#5ec4e8', '#f0c75e'],
-    sources: ['USGS daily values', 'USGS peak streamflow'],
+    sources: ["USGS daily mean discharge"],
     tables: ['kfm_usgs_daily_values', 'kfm_usgs_series', 'kfm_usgs_sites', 'kfm_usgs_peaks'],
     feeds: ['usgs-daily', 'usgs-peaks'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
+  ready({
     id: 'tornado-tracks', group: 'Living record', title: 'Tornado Tracks', kicker: 'SINCE 1950',
-    summary: 'Every recorded Kansas tornado streaks across the state, brighter and wider by strength.',
-    try: 'Filter by scale, read the season clock, and open the deadliest storms from the data.',
-    limit: 'Reporting changed through the 1990s, so rising counts are partly better reporting.',
+    summary: "Whole tornado tracks starting in Kansas since 1950, with reported endpoints, ratings and impacts.",
+    try: "Filter ratings and dates, compare periods, and inspect path length, width, injuries and fatalities.",
+    limit: "Some whole tracks cross state borders. Straight lines join reported endpoints; they are not damage footprints.",
     palette: ['#10131c', '#c9d6df', '#e4572e'],
     sources: ['NOAA Storm Prediction Center'],
     tables: ['kfm_spc_tornadoes'], feeds: ['tornadoes'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
+  ready({
     id: 'shaking-ground', group: 'Living record', title: 'Shaking Ground', kicker: 'EARTHQUAKES',
-    summary: 'Pulsing rings by magnitude, replaying the 2013–2016 swarm in south-central Kansas.',
-    try: 'Scrub the time, read the depth section, and see the frequency–magnitude fit with its calculation.',
-    limit: 'Detection improved over time, and nearby injection activity does not establish cause.',
+    summary: "A catalog of magnitude 1 and larger earthquakes around Kansas, 2010–2026.",
+    try: "Explore epicentres, filter magnitude and dates, compare periods, and inspect depth and source records.",
+    limit: "The query includes nearby states. Detection varies, magnitude scales differ, and occurrence does not establish cause.",
     palette: ['#14121a', '#ff9f68', '#a78bfa'],
-    sources: ['USGS ComCat', 'Kansas Geological Survey'],
+    sources: ["USGS ComCat"],
     tables: ['kfm_usgs_earthquakes', 'kfm_kgs_wells'], feeds: ['earthquakes', 'kgs-oil-gas'],
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'black-gold', group: 'Living record', title: 'Black Gold', kicker: 'OIL & GAS',
