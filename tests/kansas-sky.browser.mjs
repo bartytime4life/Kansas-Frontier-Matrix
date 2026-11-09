@@ -111,7 +111,7 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
     const request=requests.get(e.requestId);if(!request)return;
     if(network.length===512){network.shift();droppedNetworkEvents++;}
     const row={...request,event:message.method,at:e.timestamp,wallTime:e.wallTime??null,
-      status:e.response?.status??null,cancelled:e.canceled===true||e.errorText==='net::ERR_ABORTED'};
+      status:e.response?.status??null,cancelled:e.canceled===true||e.errorText==='net::ERR_ABORTED',cors:e.corsErrorStatus?.corsError==='MissingAllowOriginHeader'?'MISSING_ALLOW_ORIGIN':e.corsErrorStatus?'CORS_OTHER':null};
     if(!firstNetworkFailure&&!row.cancelled&&(row.status>=400||message.method==='Network.loadingFailed'))firstNetworkFailure=row;
     network.push(row);
   };
@@ -149,7 +149,9 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
       : url.pathname === '/api/live-context' && url.searchParams.get('feed') === 'census-counties' ? JSON.stringify(counties) : null;
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
-        ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
+        // The recovery scenario intentionally needs a successful cross-origin style,
+        // unlike the existing unavailable-provider fixtures.
+        ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, ...(basemapTrace ? [{name:'Access-Control-Allow-Origin',value:'*'}] : [])], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
         : (tileErrorDelay ? pause(tileErrorDelay).then(()=>call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })) : call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })))
       : url.pathname.startsWith('/api/') && !['/api/build', '/api/aviation/airports'].includes(url.pathname)
         ? call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Layout test: unrelated source unavailable"}').toString('base64') })
