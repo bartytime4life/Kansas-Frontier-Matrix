@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-governed-api-zlib-4376678cb83d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "infra/docker/Dockerfile.governed-api",
+    "infra/docker/README.md"
+  ],
+  "artifact_hashes": {
+    "infra/docker/Dockerfile.governed-api": "sha256:4376678cb83d082f2824ad104e5d32cd2562874d9ccc936342a920862e3c1e08",
+    "infra/docker/README.md": "sha256:1f0258db433819d6af2da3ef3a4f4995286bf2e8639e19591133a2214060b0dc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact model version unavailable to emitter"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub connector",
+      "disposable Docker build",
+      "Trivy 0.73.0",
+      "no-network focused validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ae24abbfc78667d9fa1c30cad22983ac3ae28589b65a1ea837bce21454bc3e25",
+      "sha256:2928ab6d763bba3f6032bab8a8a536efd7aba9a56af69351b68d8ef461ec1cb6",
+      "sha256:eed9b70206dae0ceb9c880b44b428845b42c3a2349e0d4dc0b220c08965c3005"
+    ],
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "repo:main@fb91ef331f7198101d53da6451cc6b2182071709",
+      "repo:main@5815a56252ff1c4633d299ed1447116f69502f45",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/42549803466/job/128942601284",
+      "https://lists.debian.org/debian-security-announce/2026/msg00532.html",
+      "https://security-tracker.debian.org/tracker/CVE-2026-76844",
+      "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+    ]
+  },
+  "truth_labels": {
+    "infra/docker/Dockerfile.governed-api": "PROPOSED",
+    "infra/docker/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "approved-patch-byte-match",
+      "outcome": "PASS",
+      "reason": "The two source-file changes exactly match the owner-reviewed patch SHA256; refreshed main only changes an unrelated recovery service worker."
+    },
+    {
+      "gate": "disposable-container-build-and-scan",
+      "outcome": "PASS",
+      "reason": "At main 5815a562, unmodified image reproduced two HIGH findings (exit 1). Candidate fixed package passed unchanged HIGH/CRITICAL, OS/library, vuln/secret Trivy 0.73.0 scan (exit 0) using the same database. Image inputs and changed bytes are unchanged on refreshed main fb91ef33."
+    },
+    {
+      "gate": "fail-closed-package-floor",
+      "outcome": "PASS",
+      "reason": "Actual negative build retaining the new floor but omitting the zlib upgrade failed at the stale package comparison. Extracted assertion rejects old and missing versions and accepts fixed and successor versions."
+    },
+    {
+      "gate": "legitimate-container-controls",
+      "outcome": "PASS",
+      "reason": "Disposable candidate compression roundtrips, shared-library linkage, UID 10001, installer removal and locked build-tool versions passed. This is review-image evidence only."
+    },
+    {
+      "gate": "focused-current-base-validation",
+      "outcome": "PASS",
+      "reason": "All three tests/infra unittest methods, Compose configuration rendering, changed README local links and diff whitespace checks passed after refreshing to fb91ef33."
+    },
+    {
+      "gate": "hosted-candidate-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted candidate execution begins after branch and draft PR publication; prior results are not exact-head hosted evidence."
+    },
+    {
+      "gate": "full-repository-suite",
+      "outcome": "SKIPPED",
+      "reason": "Bounded package-floor correction; unrelated Site-mirror water-conformance failures remain visible. No receipt, baseline or security gate was relaxed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Owner authorized applying the reviewed patch and opening a draft PR. Formal PR review, merge, release and deployment remain separate and pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "debian-zlib-advisory",
+      "validated": true,
+      "evidence_ref": "https://lists.debian.org/debian-security-announce/2026/msg00532.html"
+    },
+    {
+      "id": "debian-cve-76844",
+      "validated": true,
+      "evidence_ref": "https://security-tracker.debian.org/tracker/CVE-2026-76844"
+    },
+    {
+      "id": "debian-cve-85091",
+      "validated": true,
+      "evidence_ref": "https://security-tracker.debian.org/tracker/CVE-2026-85091"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-09T19:47:02Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Provenance for the two-file package-floor correction only. Contract hash binds the checked-in AI build operating contract, not prompt contents. Evidence hashes bind the reviewed source patch and local baseline/candidate JSON scan records, retained outside the repository. Trivy database SHA256 df53926a9cc6a579932e4163f52e8a9441d09b0e7d7aab06e09c7dc7a0c72723. Package attribution and scanner-title limitations are documented without asserting application exploitability or deployed exposure. This receipt is not approval, a governed PolicyDecision, release authority, or proof of application security."
+}

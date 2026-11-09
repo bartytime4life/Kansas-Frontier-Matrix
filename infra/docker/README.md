@@ -26,6 +26,25 @@ enabled; no unauthenticated-package, insecure-repository or scan exception is
 introduced. A transient acquisition failure fails the build instead of retrying.
 These package floors are build assertions, not substitutes for the image scan.
 
+The bounded upgrade also includes `zlib1g`, with a build-time minimum of
+`1:1.3.dfsg+really1.3.1-1+deb13u1`. Debian's
+[DSA-6613-1](https://lists.debian.org/debian-security-announce/2026/msg00532.html)
+fixes CVE-2026-76844 and CVE-2026-85091 in that trixie security update. The floor
+uses Debian package ordering, including its epoch and security revision; the
+upstream zlib version string alone does not identify a backported fix. A stale
+package or unavailable security update fails the build. The Python base digest,
+APT signature checks, bootstrap retry restriction, and scan thresholds remain
+unchanged.
+
+Trivy's displayed title is not package-attribution evidence by itself. For the
+2026-11-09 findings, its JSON identifies the Debian `zlib1g` package and Debian
+Security Tracker source; CVE-2026-76844 has an unrelated webpack title but a zlib
+description. Debian lists both CVEs against the old trixie source package and
+backports the same upstream fix. CVE-2026-85091's published upstream range starts
+at 1.3.1.2, so that narrower non-blocking trigger must not be asserted for 1.3.1
+without qualification. These package findings do not establish an attacker path,
+application exposure, or exploitation of this payload-free review image.
+
 From the repository root:
 
 ```bash
