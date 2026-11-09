@@ -110,6 +110,38 @@ test("tile address allowlist rejects invalid view, day, duplicate query, and out
   assert.throws(() => server.parseTileRequest(duplicate.href));
 });
 
+test("tile view selectors reject prototype names before any provider dispatch and retain all four fixed views", async () => {
+  let availabilityCalls = 0;
+  const tileCalls = [], bytes = Uint8Array.of(137, 80, 78, 71, 13, 10, 26, 10);
+  const route = await compile("api/soil-moisture/tile/route", {
+    "../../../soil-moisture-server": {
+      ...server,
+      soilAvailability: async () => { availabilityCalls++; return { value: { availableDays: ["2026-09-27"] } }; },
+      soilTileBytes: async (...args) => { tileCalls.push(args); return bytes; },
+    },
+  });
+  const request = view => new Request(`https://example.test/api/soil-moisture/tile?view=${view}&day=2026-09-27&z=6&x=14&y=24`);
+  for (const view of ["constructor", "__proto__", "toString", "hasOwnProperty"]) {
+    assert.throws(() => server.parseTileRequest(request(view).url), { code: "INVALID_TILE_REQUEST" });
+    const response = await route.GET(request(view));
+    assert.equal(response.status, 400);
+    assert.equal((await response.json()).code, "INVALID_TILE_REQUEST");
+    assert.equal(response.headers.get("cache-control"), "no-store");
+  }
+  assert.equal(availabilityCalls, 0);
+  assert.deepEqual(tileCalls, []);
+  for (const view of Object.keys(soil.SOIL_VIEWS)) {
+    assert.equal(server.parseTileRequest(request(view).url).view, view);
+    const response = await route.GET(request(view));
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("content-type"), "image/png");
+    assert.equal(response.headers.get("x-soil-source-day"), "2026-09-27");
+    assert.deepEqual(new Uint8Array(await response.arrayBuffer()), bytes);
+  }
+  assert.equal(availabilityCalls, 4);
+  assert.deepEqual(tileCalls, Object.keys(soil.SOIL_VIEWS).map(view => [view, "2026-09-27", 6, 14, 24]));
+});
+
 test("provider redirect and oversized responses are rejected before reading", async () => {
   const original = global.fetch;
   try {

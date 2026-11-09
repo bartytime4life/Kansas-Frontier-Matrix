@@ -99,6 +99,8 @@ export default function EventObservatory() {
   const urls = useRef(new Map<string, string>()), frameGeneration = useRef(0);
   const radarSourceTime = useRef<string | null>(null), sourceFailures = useRef(new Set<string>());
   const scienceProbeActiveRef = useRef(false);
+  const scienceLabTriggerRef = useRef<HTMLButtonElement>(null), scienceProbeCenterButtonRef = useRef<HTMLButtonElement>(null), scienceProbeReadoutRef = useRef<HTMLElement>(null);
+  const scienceProbeFocusOriginRef = useRef<HTMLButtonElement | null>(null);
   const [geologyLegend, setGeologyLegend] = useState<{ label: string; image: string }[]>([]);
   const [mapReady, setMapReady] = useState(false), [mapMessage, setMapMessage] = useState("Opening the Kansas map…");
   const [start, setStart] = useState(currentDayStart), [hours, setHours] = useState(24), [station, setStation] = useState("USGS-06889000");
@@ -128,6 +130,7 @@ export default function EventObservatory() {
   const [calendarOpen, setCalendarOpen] = useState(false), [chartsOpen, setChartsOpen] = useState(false), [scienceOpen, setScienceOpen] = useState(false);
   const [scienceFilter, setScienceFilter] = useState<"all" | "connected" | "archives" | "method">("all");
   const [scienceProbeActive, setScienceProbeActive] = useState(false), [scienceProbePoints, setScienceProbePoints] = useState<readonly [number, number][]>([]);
+  const [scienceProbeCenter, setScienceProbeCenter] = useState<[number, number] | null>(null);
   const [resourceEdition, setResourceEdition] = useState("1984"), [resourceData, setResourceData] = useState<GeoJSON.FeatureCollection | null>(null), [resourceMessage, setResourceMessage] = useState("Not loaded");
   const [calendarAnchor, setCalendarAnchor] = useState(currentUtcDay);
   const [calendarLedger, setCalendarLedger] = useState<Record<string, ArchiveDayLedger>>({});
@@ -222,12 +225,28 @@ export default function EventObservatory() {
     if (all && map.getLayer("ea-satellite")) map.setLayoutProperty("ea-satellite", "visibility", "none");
   }, []);
 
+  const readScienceProbeCenter = useCallback((): [number, number] | null => {
+    try {
+      const center = mapRef.current?.getCenter();
+      return center && Number.isFinite(center.lng) && Number.isFinite(center.lat) && Math.abs(center.lng) <= 180 && Math.abs(center.lat) <= 90 ? [center.lng, center.lat] : null;
+    } catch { return null; }
+  }, []);
+  const appendScienceProbePoint = useCallback((coordinate: [number, number]) => {
+    if (!scienceProbeActiveRef.current) return;
+    setPlaying(false);
+    setScienceProbePoints((current) => current.length >= 2 ? [coordinate] : [...current, coordinate]);
+  }, []);
+  const restoreScienceProbeFocus = useCallback(() => {
+    const active = document.activeElement;
+    if ((scienceProbeReadoutRef.current?.contains(active) || active === mapRef.current?.getCanvas()) && scienceLabTriggerRef.current?.isConnected) scienceLabTriggerRef.current.focus({ preventScroll: true });
+  }, []);
+
   useEffect(() => {
     let disposed = false;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const change = () => { setReduced(media.matches); setPlaying(false); }; change(); media.addEventListener("change", change);
     const stop = () => { if (document.hidden) setPlaying(false); };
-    const key = (event: KeyboardEvent) => { if (event.key === "Escape") { setPlaying(false); setLayersOpen(false); setCalendarOpen(false); setDetailsOpen(false); setScienceOpen(false); setScienceProbeActive(false); scienceProbeActiveRef.current = false; } };
+    const key = (event: KeyboardEvent) => { if (event.key === "Escape") { if (scienceProbeActiveRef.current) restoreScienceProbeFocus(); scienceProbeFocusOriginRef.current = null; setPlaying(false); setLayersOpen(false); setCalendarOpen(false); setDetailsOpen(false); setScienceOpen(false); setScienceProbeActive(false); scienceProbeActiveRef.current = false; } };
     document.addEventListener("visibilitychange", stop); window.addEventListener("keydown", key);
     queueMicrotask(() => {
       if (disposed) return;
@@ -246,7 +265,7 @@ export default function EventObservatory() {
       if (p.has("opacity")) { const values = p.get("opacity")!.split(",").map(Number); if (values.length === TRACKS.length - 1) values.unshift(1); if (values.length === TRACKS.length && values.every((v) => Number.isFinite(v) && v >= 0 && v <= 1)) setOpacity(Object.fromEntries(TRACKS.map((t,i) => [t.id,values[i]])) as Record<TrackId,number>); }
     });
     return () => { disposed = true; media.removeEventListener("change", change); document.removeEventListener("visibilitychange", stop); window.removeEventListener("keydown", key); };
-  }, [updateStart, updateStation]);
+  }, [updateStart, updateStation, restoreScienceProbeFocus]);
 
   useEffect(() => { const id = requestAnimationFrame(() => mapRef.current?.resize()); return () => cancelAnimationFrame(id); }, [layersOpen, detailsOpen, chartsOpen, scienceOpen]);
   useEffect(() => {
@@ -256,6 +275,16 @@ export default function EventObservatory() {
     map.getCanvas().style.cursor = scienceProbeActive ? "crosshair" : "";
     updateGeoJSON(map.getSource("ea-science-probe-data") as GeoJSONSource, scienceProbeGeoJSON(scienceProbePoints));
   }, [mapReady, scienceProbeActive, scienceProbePoints]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!mapReady || !scienceProbeActive || !map) return;
+    const updateCenter = () => setScienceProbeCenter(readScienceProbeCenter());
+    map.on("moveend", updateCenter);
+    const origin = scienceProbeFocusOriginRef.current;
+    scienceProbeFocusOriginRef.current = null;
+    if (origin && (document.activeElement === origin || !origin.isConnected && document.activeElement === document.body)) scienceProbeCenterButtonRef.current?.focus({ preventScroll: true });
+    return () => { map.off("moveend", updateCenter); };
+  }, [mapReady, scienceProbeActive, readScienceProbeCenter]);
   useEffect(() => { const timer = window.setInterval(() => setCalendarNow(Date.now()), 60_000); return () => clearInterval(timer); }, []);
   useEffect(() => {
     opacityRef.current = opacity;
@@ -341,9 +370,7 @@ export default function EventObservatory() {
         map.addLayer({ id: "ea-science-probe-points", source: "ea-science-probe-data", type: "circle", filter: ["==", ["get", "kind"], "vertex"], paint: { "circle-radius": 6, "circle-color": "#fff0ae", "circle-stroke-color": "#173237", "circle-stroke-width": 2 } });
         map.on("click", (event) => {
           if (scienceProbeActiveRef.current) {
-            setPlaying(false);
-            const coordinate: [number, number] = [event.lngLat.lng, event.lngLat.lat];
-            setScienceProbePoints((current) => current.length >= 2 ? [coordinate] : [...current, coordinate]);
+            appendScienceProbePoint([event.lngLat.lng, event.lngLat.lat]);
             return;
           }
           const features = map.queryRenderedFeatures(event.point, { layers: ["ea-storm-cells", "ea-storm-rotation-glow", "ea-storm-radars", "ea-weather", "ea-earthquakes", "ea-shake", "ea-counties", "ea-river"].filter((id) => map.getLayer(id)) });
@@ -369,7 +396,7 @@ export default function EventObservatory() {
       map.on("dragstart", () => setPlaying(false)); map.on("zoomstart", () => setPlaying(false));
     }).catch(() => setMapMessage("Map unavailable. WebGL2 and the map runtime are required; the source notes remain readable."));
     return () => { disposed = true; requestRef.current?.abort(); frameRequest.current?.abort(); mapRef.current?.remove(); mapRef.current = null; for (const url of cachedUrls.values()) URL.revokeObjectURL(url); cachedUrls.clear(); };
-  }, []);
+  }, [appendScienceProbePoint]);
 
   useEffect(() => {
     if (selectedTrack !== "geology" || geologyLegend.length) return;
@@ -818,12 +845,21 @@ export default function EventObservatory() {
   const nextCalendarAnchor = advanceEventDay(calendarAnchor, 7);
   const canMoveToPreviousWeek = Boolean(previousCalendarAnchor && eventWeekDays(previousCalendarAnchor).some((day) => day >= EVENT_EARLIEST_DAY));
   const canMoveToNextWeek = Boolean(nextCalendarAnchor && eventWeekDays(nextCalendarAnchor).some((day) => day <= calendarToday));
-  const beginScienceProbe = () => {
+  const beginScienceProbe = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!mapReady || !mapRef.current) return;
+    scienceProbeFocusOriginRef.current = event.detail === 0 ? event.currentTarget : null;
+    setScienceProbeCenter(readScienceProbeCenter());
     scienceProbeActiveRef.current = true;
     setScienceProbeActive(true); setScienceOpen(false); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); setPlaying(false);
   };
-  const finishScienceProbe = () => { scienceProbeActiveRef.current = false; setScienceProbeActive(false); };
-  const clearScienceProbe = () => { scienceProbeActiveRef.current = false; setScienceProbeActive(false); setScienceProbePoints([]); };
+  const addScienceProbeCenter = () => {
+    if (!mapReady || !scienceProbeActiveRef.current) return;
+    const coordinate = readScienceProbeCenter();
+    if (coordinate) appendScienceProbePoint(coordinate);
+  };
+  const panScienceProbeMap = () => { if (mapReady && scienceProbeActiveRef.current) mapRef.current?.getCanvas().focus({ preventScroll: true }); };
+  const finishScienceProbe = (returnFocus = false) => { if (returnFocus) restoreScienceProbeFocus(); scienceProbeFocusOriginRef.current = null; scienceProbeActiveRef.current = false; setScienceProbeActive(false); };
+  const clearScienceProbe = () => { restoreScienceProbeFocus(); scienceProbeFocusOriginRef.current = null; scienceProbeActiveRef.current = false; setScienceProbeActive(false); setScienceProbePoints([]); };
   const openScienceTrack = (id: ScienceTrackId) => {
     const track = id as TrackId;
     setVisible((current) => ({ ...current, [track]: true })); setSelectedTrack(track); setScienceOpen(false); setDetailsOpen(true); setLayersOpen(false); setCalendarOpen(false); setPlaying(false);
@@ -866,7 +902,7 @@ export default function EventObservatory() {
     {radarReplayMode && <p className="event-radar-replay-note" role="status">RADAR ARCHIVE REPLAY · NOAA/NWS mosaics served by Iowa State IEM. This UTC day plays only verified five-minute mosaic artifacts. It is separate from the live nowCOAST loop; gaps and unavailable dates are not clear weather.</p>}
     {radarReplayMode && <section className="event-radar-download" aria-label="Save radar frames for this map"><div><strong>Save exact frames for replay</strong><br /><small>Private browser map directory · {mapCachePath("radar", start.slice(0, 10))}</small></div><label>Maximum download (MiB)<input type="number" min="1" max="500" step="1" value={radarDownloadMaxMiB} onChange={event => setRadarDownloadMaxMiB(Number(event.target.value))} /></label><label>Radar image display<select aria-label="Archive radar image display" value={radarSmooth ? "smooth" : "exact"} onChange={event => setRadarSmooth(event.target.value === "smooth")}><option value="exact">Exact pixels</option><option value="smooth">Smooth image</option></select></label><button type="button" disabled={!manifest?.radar.scans.length || radarDownloadBusy || !Number.isInteger(radarDownloadMaxMiB) || radarDownloadMaxMiB < 1 || radarDownloadMaxMiB > 500} onClick={() => void downloadRadarForMap()}>{radarDownloadBusy ? "Downloading…" : `Download ${manifest?.radar.scans.length ?? 0} listed frames`}</button><output role="status">{radarDownloadStatus || "Only listed exact mosaic times are downloaded. The map reads saved frames on this browser; this is separate from the PC's KFM_DATA_ROOT and KFM evidence."} Smoothing affects drawn pixels only; source scans and times stay exact.</output></section>}
     <div className="event-record-range"><span>{riverCoverage ? `${riverResolution === "daily" ? "Daily means" : "Continuous"}: ${riverCoverage[riverResolution]?.start.slice(0,10) ?? "no declared record"} → ${riverCoverage[riverResolution]?.end.slice(0,10) ?? "—"}${riverCoverage.partial ? " · partial metadata" : ""}` : coverageMessage || "Choose a station to discover its record"}</span><button type="button" disabled={!riverCoverage?.daily || loading} onClick={() => { const day = riverCoverage?.daily?.start.slice(0,10); if (!day) return; setRiverResolution("daily"); updateStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"daily"); }}>Oldest daily record</button><button type="button" disabled={!riverCoverage?.continuous || loading} onClick={() => { const day = riverCoverage?.continuous?.start.slice(0,10); if (!day) return; setRiverResolution("continuous"); updateStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"continuous"); }}>Oldest continuous</button><button type="button" disabled={loading} onClick={loadToday}>{followToday ? "Following today · refreshes every 5 min" : "Follow today / latest"}</button></div>
-    <nav className="event-map-toolbar" aria-label="Map panels"><button type="button" aria-expanded={layersOpen} onClick={() => { setLayersOpen(!layersOpen); setDetailsOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Layers · {Object.values(visible).filter(Boolean).length}</button><button type="button" aria-expanded={calendarOpen} aria-controls="archive-calendar" onClick={() => { setCalendarOpen(!calendarOpen); setLayersOpen(false); setDetailsOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Calendar</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, -1); if (day && day >= EVENT_EARLIEST_DAY) selectCalendarSlot(day); }} disabled={selectedCalendarDay <= EVENT_EARLIEST_DAY}>← Day</button><button type="button" onClick={() => selectCalendarSlot(selectedCalendarDay)}>Load full 24 hours</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, 1); if (day && day <= calendarToday) selectCalendarSlot(day); }} disabled={selectedCalendarDay >= calendarToday}>Day →</button><button type="button" aria-expanded={scienceOpen} aria-controls="science-lab" onClick={() => { setScienceOpen(!scienceOpen); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); finishScienceProbe(); }}>Science lab · {SCIENCE_EVENTS.length}</button><span /><button type="button" aria-expanded={chartsOpen} onClick={() => { setChartsOpen(!chartsOpen); setScienceOpen(false); }}>Timeline lanes</button><button type="button" aria-expanded={detailsOpen} onClick={() => { setDetailsOpen(!detailsOpen); setLayersOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Sources & quality</button></nav>
+    <nav className="event-map-toolbar" aria-label="Map panels"><button type="button" aria-expanded={layersOpen} onClick={() => { setLayersOpen(!layersOpen); setDetailsOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Layers · {Object.values(visible).filter(Boolean).length}</button><button type="button" aria-expanded={calendarOpen} aria-controls="archive-calendar" onClick={() => { setCalendarOpen(!calendarOpen); setLayersOpen(false); setDetailsOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Calendar</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, -1); if (day && day >= EVENT_EARLIEST_DAY) selectCalendarSlot(day); }} disabled={selectedCalendarDay <= EVENT_EARLIEST_DAY}>← Day</button><button type="button" onClick={() => selectCalendarSlot(selectedCalendarDay)}>Load full 24 hours</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, 1); if (day && day <= calendarToday) selectCalendarSlot(day); }} disabled={selectedCalendarDay >= calendarToday}>Day →</button><button ref={scienceLabTriggerRef} type="button" aria-expanded={scienceOpen} aria-controls="science-lab" onClick={() => { setScienceOpen(!scienceOpen); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); finishScienceProbe(); }}>Science lab · {SCIENCE_EVENTS.length}</button><span /><button type="button" aria-expanded={chartsOpen} onClick={() => { setChartsOpen(!chartsOpen); setScienceOpen(false); }}>Timeline lanes</button><button type="button" aria-expanded={detailsOpen} onClick={() => { setDetailsOpen(!detailsOpen); setLayersOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Sources & quality</button></nav>
     <section className="event-body" data-layers-open={layersOpen} data-details-open={detailsOpen}>
       <aside className="event-mixer" hidden={!layersOpen} aria-label="Animation layer mixer"><div className="event-panel-heading"><strong>Layers & opacity</strong><button type="button" onClick={() => setLayersOpen(false)} aria-label="Close layers">×</button></div><div className="event-section-heading"><span>LAYER MIXER</span><small>Top row draws on top</small></div>
         {order.map((id, position) => { const track = TRACKS.find((t) => t.id === id)!; return <article key={id} className="event-track" data-selected={selectedTrack === id} style={{ "--track-color": track.color } as React.CSSProperties}>
@@ -888,12 +924,24 @@ export default function EventObservatory() {
         {radarReplayMode && manifest && !loading && frames.length === 0 && <div className="event-error" role="status">No archived radar mosaics were verified for this interval. Choose another date; no image was substituted.</div>}
         {!manifest && !loading && <div className="event-intro"><span>THE PAST, IN MOTION</span><h2>Layer an event.<br />See what changed.</h2><p>Choose a date or start with a Kansas archive window. Every layer states the time it actually represents.</p>{PRESETS.map((preset) => <button key={preset.start} type="button" disabled={!mapReady} onClick={() => { updateStart(preset.start); setHours(preset.hours); void load(preset.start,preset.hours); }}>{preset.label} <span>↗</span></button>)}</div>}
         <div className="event-map-legend"><span><i style={{background:"#70e0ef"}} />Discharge radius: log-scaled · color: sample trend</span><span><i style={{background:"#dca261"}} />HMS: light → medium → heavy · gray unknown</span><span>Radar colors: source reflectivity · <a href="https://mesonet.agron.iastate.edu/docs/nexrad_composites/" target="_blank" rel="noreferrer">product legend ↗</a></span></div>
-        {(scienceProbeActive || scienceProbePoints.length > 0) && <aside className="event-science-probe-readout" role="status" aria-live="polite"><span>DISTANCE / BEARING · {scienceProbePoints.length}/2 POINTS</span><strong>{probeMeasurement ? `${probeMeasurement.miles.toFixed(2)} mi · ${probeMeasurement.kilometers.toFixed(2)} km · ${probeMeasurement.bearing.toFixed(0)}° ${compassPoint(probeMeasurement.bearing)}` : scienceProbeActive ? "Click two map locations" : "Probe paused"}</strong><small>Great-circle screen measurement · approximate, not survey or evidence. A third click starts a new line.</small><div>{scienceProbeActive ? <button type="button" onClick={finishScienceProbe}>Done</button> : <button type="button" onClick={beginScienceProbe}>Edit</button>}<button type="button" onClick={clearScienceProbe}>Clear</button></div></aside>}
+        {(scienceProbeActive || scienceProbePoints.length > 0) && <aside ref={scienceProbeReadoutRef} className="event-science-probe-readout" aria-label="Distance and bearing probe">
+          <span>DISTANCE / BEARING · {scienceProbePoints.length}/2 POINTS</span>
+          <strong role="status" aria-live="polite">{probeMeasurement ? `${probeMeasurement.miles.toFixed(2)} mi · ${probeMeasurement.kilometers.toFixed(2)} km · ${probeMeasurement.bearing.toFixed(0)}° ${compassPoint(probeMeasurement.bearing)}` : scienceProbeActive ? `Choose point ${scienceProbePoints.length === 1 ? "B" : "A"}` : "Probe paused"}</strong>
+          {scienceProbePoints.map((point, index) => <small key={index}>Point {index === 0 ? "A" : "B"}: latitude {point[1].toFixed(4)}, longitude {point[0].toFixed(4)}</small>)}
+          {scienceProbeActive && <small id="science-probe-center">{scienceProbeCenter ? `Map center: latitude ${scienceProbeCenter[1].toFixed(4)}, longitude ${scienceProbeCenter[0].toFixed(4)}` : "Map center is unavailable."}</small>}
+          <small id="science-probe-instructions">Choose the map center or click a map location. Pan map with keyboard focuses the map; use arrow keys to move, then Tab back to choose a point. A third point starts a new line.</small>
+          <small>Great-circle screen measurement · approximate, not survey or evidence.</small>
+          <div style={{ flexWrap: "wrap" }}>
+            {scienceProbeActive && <><button ref={scienceProbeCenterButtonRef} type="button" disabled={!mapReady || !scienceProbeCenter} aria-describedby="science-probe-center science-probe-instructions" onClick={addScienceProbeCenter}>{scienceProbePoints.length >= 2 ? "Use map center for new point A" : `Use map center for point ${scienceProbePoints.length === 1 ? "B" : "A"}`}</button><button type="button" disabled={!mapReady} onClick={panScienceProbeMap}>Pan map with keyboard</button></>}
+            {scienceProbeActive ? <button type="button" onClick={() => finishScienceProbe(true)}>Done</button> : <button type="button" disabled={!mapReady} onClick={beginScienceProbe}>Edit</button>}
+            <button type="button" onClick={clearScienceProbe}>Clear</button>
+          </div>
+        </aside>}
       </section>
       {scienceOpen && <aside id="science-lab" className="event-science-lab" aria-label="Science event workbench">
         <div className="event-panel-heading"><div><span className="event-kicker">SCIENCE EVENT WORKBENCH</span><strong>One map, honest clocks</strong></div><button type="button" onClick={() => setScienceOpen(false)} aria-label="Close science lab">×</button></div>
         <p className="event-science-intro">Every phenomenon has a symbol, temporal rule, measurable quantity, source path and limitation. Connected records can be opened now; archives, steward inputs and derived products stay visible without being fabricated.</p>
-        <section className="event-science-tools" aria-labelledby="science-tools-title"><header><span>TOOLS</span><strong id="science-tools-title">Measure and compare</strong></header><div><button type="button" onClick={beginScienceProbe}><b>↔ Distance + bearing</b><small>Two map points · miles and km</small></button><button type="button" disabled={!manifest} onClick={() => { setChartsOpen(true); setScienceOpen(false); }}><b>≋ Compare timeline support</b><small>{manifest ? "Open exact intervals and gaps" : "Load an interval first"}</small></button><Link href="/?scene=elevation-3d&mapui=open&maptab=scene"><b>△ Elevation + 3D profile</b><small>Physical 1× relief and transect</small></Link><Link href="/data"><b>＋ Propose science data</b><small>Dates, units, rights and files</small></Link></div></section>
+        <section className="event-science-tools" aria-labelledby="science-tools-title"><header><span>TOOLS</span><strong id="science-tools-title">Measure and compare</strong></header><div><button type="button" disabled={!mapReady} onClick={beginScienceProbe}><b>↔ Distance + bearing</b><small>{mapReady ? "Map center or pointer · miles and km" : "Wait for the map to become available"}</small></button><button type="button" disabled={!manifest} onClick={() => { setChartsOpen(true); setScienceOpen(false); }}><b>≋ Compare timeline support</b><small>{manifest ? "Open exact intervals and gaps" : "Load an interval first"}</small></button><Link href="/?scene=elevation-3d&mapui=open&maptab=scene"><b>△ Elevation + 3D profile</b><small>Physical 1× relief and transect</small></Link><Link href="/data"><b>＋ Propose science data</b><small>Dates, units, rights and files</small></Link></div></section>
         <section className="event-science-clock" aria-label="Science timeline rules"><span><b>{timestamp(committed)}</b><small>shared event cursor</small></span><span><b>Ticks</b><small>instant events</small></span><span><b>Bands</b><small>supported intervals</small></span><span><b>Pins</b><small>daily / annual / edition context</small></span></section>
         <div className="event-science-filters" role="group" aria-label="Filter science phenomena"><button type="button" aria-pressed={scienceFilter === "all"} onClick={() => setScienceFilter("all")}>All {SCIENCE_EVENTS.length}</button><button type="button" aria-pressed={scienceFilter === "connected"} onClick={() => setScienceFilter("connected")}>Connected</button><button type="button" aria-pressed={scienceFilter === "archives"} onClick={() => setScienceFilter("archives")}>Archives</button><button type="button" aria-pressed={scienceFilter === "method"} onClick={() => setScienceFilter("method")}>Methods</button></div>
         <div className="event-science-catalog">{visibleScienceEvents.map((event) => <article className="event-science-card" key={event.id} data-support={event.support}>

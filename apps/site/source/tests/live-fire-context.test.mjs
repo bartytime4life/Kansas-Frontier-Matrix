@@ -1,11 +1,22 @@
 import assert from "node:assert/strict";
 import "./cloudflare-register.mjs";
-import test from "node:test";
+import test, { after } from "node:test";
 
+const blockedRequests = [];
+const denyFetch = async input => { blockedRequests.push(String(input)); throw new Error("Unexpected transport outside a fire fixture."); };
+// Import and first-request initialization must never replace a fixture with
+// a transport capable of reaching a real provider.
+globalThis.fetch = denyFetch;
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `fire-context-${process.pid}`);
 const { default: worker } = await import(workerUrl.href);
 const context = { waitUntil() {}, passThroughOnException() {} };
+const primed = await worker.fetch(new Request("http://localhost/api/live-context?feed=unsupported-test-fixture"), {}, context);
+assert.equal(primed.status, 400);
+await primed.arrayBuffer();
+assert.deepEqual(blockedRequests, []);
+globalThis.fetch = denyFetch;
+after(() => assert.deepEqual(blockedRequests, [], "all provider access must belong to an explicit fixture"));
 const now = Date.now();
 const discovery = now - 3_600_000;
 const modified = now - 1_000;
@@ -20,7 +31,9 @@ const request = (path = "/api/live-context?feed=nifc-fire-reports") =>
 
 async function withCatalog(payload, run) {
   const originalFetch = globalThis.fetch;
+  let calls = 0;
   globalThis.fetch = async (input, init) => {
+    calls += 1;
     const url = new URL(input);
     assert.equal(url.origin, "https://services3.arcgis.com");
     assert.match(url.pathname, /WFIGS_Incident_Locations_YearToDate\/FeatureServer\/0\/query$/);
@@ -30,7 +43,8 @@ async function withCatalog(payload, run) {
     assert.equal(init.redirect, "manual");
     return Response.json({ type: "FeatureCollection", ...payload });
   };
-  try { await run(); } finally { globalThis.fetch = originalFetch; }
+  try { await run(); assert.equal(calls, 1, "the fixture serves exactly one bounded incident request"); }
+  finally { globalThis.fetch = originalFetch; }
 }
 
 test("NIFC keeps the 250-incident display bound and distinguishes empty, complete and capped responses", async () => {
@@ -158,8 +172,8 @@ test("NIFC downloads retain provider-limit provenance and exact returned counts"
 });
 
 test("unavailable NIFC upstreams remain errors instead of empty incident lists", async () => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => new Response("Unavailable", { status: 503 });
+  const originalFetch = globalThis.fetch, calls = [];
+  globalThis.fetch = async input => { calls.push(new URL(input)); return new Response("Unavailable", { status: 503 }); };
   try {
     const response = await request();
     assert.equal(response.status, 502);
@@ -168,5 +182,8 @@ test("unavailable NIFC upstreams remain errors instead of empty incident lists",
     assert.equal(body.state, "error");
     assert.equal("data" in body, false);
     assert.match(body.fallback, /No fallback inference/);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].origin, "https://services3.arcgis.com");
+    assert.match(calls[0].pathname, /WFIGS_Incident_Locations_YearToDate\/FeatureServer\/0\/query$/);
   } finally { globalThis.fetch = originalFetch; }
 });

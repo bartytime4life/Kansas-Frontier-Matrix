@@ -19,6 +19,7 @@ const NIFC_INCIDENT_URL = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/
 const FEMA_DECLARATIONS_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
+const MAX_STREAMFLOW_RECORDS = 1000;
 const MAX_NWS_ZONE_REQUESTS = 36;
 const MAX_NWS_FEATURES = 160;
 const MAX_EARTHQUAKE_FEATURES = 250;
@@ -123,30 +124,57 @@ const recentFemaDeclarations = async () => {
 };
 
 const latestStreamflow = async () => {
-  const retrievedAt = new Date().toISOString();
-  const start = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const endMs = Date.now();
+  const retrievedAt = new Date(endMs).toISOString();
+  const startMs = endMs - 24 * 60 * 60 * 1000;
+  const start = new Date(startMs).toISOString();
+  // Require a complete RFC3339 clock, validate its calendar before applying
+  // the explicit offset, then compare observations as instants rather than text.
+  const observationTime = (value: unknown): string | null => {
+    if (typeof value !== "string") return null;
+    const match = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/i.exec(value);
+    if (!match) return null;
+    const local = `${match[1]}T${match[2]}.${(match[3] ?? "").padEnd(3, "0").slice(0, 3)}Z`;
+    const localMs = Date.parse(local);
+    if (!Number.isFinite(localMs) || new Date(localMs).toISOString() !== local) return null;
+    const hours = Number(match[6] ?? 0), minutes = Number(match[7] ?? 0);
+    if (hours > 23 || minutes > 59) return null;
+    const offsetMs = (match[5] === "-" ? -1 : 1) * (hours * 60 + minutes) * 60_000;
+    const utc = new Date(localMs - offsetMs).toISOString();
+    // Offsets are whole minutes, so the finer-than-millisecond remainder is
+    // unchanged. Retain it instead of letting Date discard source precision.
+    return (match[3]?.length ?? 0) > 3 ? utc.replace(/Z$/, `${match[3].slice(3)}Z`) : utc;
+  };
+  const instantKey = (time: string): string => time.replace(/\.(\d+)Z$/, (_match, fraction: string) => `.${fraction.padEnd(9, "0")}Z`);
+  const startKey = instantKey(start), endKey = instantKey(retrievedAt);
   const url = new URL(USGS_URL);
   url.searchParams.set("f", "json");
-  url.searchParams.set("limit", "1000");
+  url.searchParams.set("limit", String(MAX_STREAMFLOW_RECORDS));
   url.searchParams.set("state_code", "20");
   url.searchParams.set("agency_code", "USGS");
   url.searchParams.set("site_type_code", "ST");
   url.searchParams.set("parameter_code", "00060");
-  url.searchParams.set("datetime", `${start}/..`);
+  url.searchParams.set("datetime", `${start}/${retrievedAt}`);
   const payload = await fetchBoundedJson(url.toString(), 15_000, { headers: { ...((env as { USGS_WATER_API_KEY?: string }).USGS_WATER_API_KEY ? { "X-Api-Key": String(env.USGS_WATER_API_KEY) } : {}) } });
+  if (!Array.isArray(payload.features)) throw new UpstreamError("USGS latest response had no feature array.");
+  const capped = payload.features.length > MAX_STREAMFLOW_RECORDS;
+  const candidates = payload.features.slice(0, MAX_STREAMFLOW_RECORDS);
   const newest = new Map<string, Feature<Geometry, GeoJsonProperties>>();
   let newestTimestamp: string | null = null;
+  let newestKey: string | null = null;
+  let skipped = 0;
 
-  for (const candidate of collectionFeatures(payload)) {
-    if (!isRecord(candidate.geometry) || candidate.geometry.type !== "Point") continue;
+  for (const candidate of candidates) {
+    if (!isRecord(candidate) || !isRecord(candidate.geometry) || candidate.geometry.type !== "Point") { skipped += 1; continue; }
     const properties = isRecord(candidate.properties) ? candidate.properties : {};
     const monitoringLocationId = asString(properties.monitoring_location_id);
-    const observedAt = asString(properties.time);
-    if (!monitoringLocationId || !observedAt) continue;
+    const observedAt = observationTime(properties.time);
+    const observedKey = observedAt === null ? "" : instantKey(observedAt);
+    if (!monitoringLocationId || observedAt === null || observedKey < startKey || observedKey > endKey) { skipped += 1; continue; }
     const value = asNumber(properties.value);
     const unit = asString(properties.unit_of_measure) ?? "unknown unit";
     const current = newest.get(monitoringLocationId);
-    if (current && String(current.properties?.observedAt ?? "") >= observedAt) continue;
+    if (current && instantKey(String(current.properties?.observedAt)) >= observedKey) continue;
     const feature: Feature<Geometry, GeoJsonProperties> = {
       type: "Feature",
       id: monitoringLocationId,
@@ -156,6 +184,7 @@ const latestStreamflow = async () => {
         name: monitoringLocationId,
         monitoringLocationId,
         observedAt,
+        sourceObservedAt: asString(properties.time),
         value,
         displayValue: value === null ? "not reported" : `${value.toLocaleString("en-US")} ${unit}`,
         unit,
@@ -170,20 +199,21 @@ const latestStreamflow = async () => {
       },
     };
     newest.set(monitoringLocationId, feature);
-    if (!newestTimestamp || observedAt > newestTimestamp) newestTimestamp = observedAt;
+    if (newestKey === null || observedKey > newestKey) { newestKey = observedKey; newestTimestamp = observedAt; }
   }
 
   const links = Array.isArray(payload.links) ? payload.links.filter(isRecord) : [];
-  const truncated = links.some((link) => asString(link.rel) === "next");
+  const nextPage = links.some((link) => asString(link.rel) === "next");
+  const truncated = capped || nextPage;
   const features = [...newest.values()];
   return envelope(
     "usgs-streamflow",
     { type: "FeatureCollection", features },
     url.toString(),
-    `${truncated ? "The OGC API advertised another page; this bounded view is partial. " : ""}Latest Kansas USGS streamflow values within a rolling 24-hour request window; provisional, delayed, revised, or incomplete values remain possible. Not flood guidance or KFM evidence.`,
+    `${nextPage ? "The OGC API advertised another page; this bounded view is partial. " : ""}${capped ? `The provider returned more than ${MAX_STREAMFLOW_RECORDS} records; only the first ${MAX_STREAMFLOW_RECORDS} were considered, so this view is partial. ` : ""}Latest Kansas USGS streamflow values within the rolling 24-hour request window ${start} through ${retrievedAt} (inclusive). ${skipped} invalid or outside-window returned observation${skipped === 1 ? "" : "s"} withheld. Provisional, delayed, revised, or incomplete values remain possible. Not flood guidance or KFM evidence.`,
     retrievedAt,
     newestTimestamp,
-    truncated,
+    skipped > 0 || truncated,
     truncated,
   );
 };
@@ -279,11 +309,39 @@ const allowedZoneUrl = (value: unknown): string | null => {
   }
 };
 
+/** Keep unusable source polygons out of the map and out of complete-coverage claims. */
+const alertGeometry = (value: unknown): Geometry | null => {
+  if (!isRecord(value) || !Array.isArray(value.coordinates)) return null;
+  const position = (point: unknown): point is number[] => Array.isArray(point) && point.length >= 2 && point.length <= 3
+    && point.every(coordinate => typeof coordinate === "number" && Number.isFinite(coordinate))
+    && Math.abs(point[0]) <= 180 && Math.abs(point[1]) <= 90;
+  const ring = (value: unknown): boolean => Array.isArray(value) && value.length >= 4 && value.every(position)
+    && value[0].length === value[value.length - 1].length && value[0].every((coordinate: number, index: number) => coordinate === value[value.length - 1][index]);
+  const polygon = (value: unknown): boolean => Array.isArray(value) && value.length > 0 && value.every(ring);
+  if (value.type === "Polygon" && polygon(value.coordinates)
+      || value.type === "MultiPolygon" && value.coordinates.length > 0 && value.coordinates.every(polygon)) return value as unknown as Geometry;
+  return null;
+};
+
 const activeNwsAlerts = async () => {
   const retrievedAt = new Date().toISOString();
   const headers = { Accept: "application/geo+json, application/json", "User-Agent": NWS_USER_AGENT };
   const payload = await fetchBoundedJson(NWS_ALERTS_URL, 15_000, { headers });
   const alerts = collectionFeatures(payload);
+  // Only inspect pagination metadata. The bounded adapter never follows a
+  // provider-supplied continuation URL or spends another page's request budget.
+  let nextPage = false, paginationUnverified = false;
+  if (payload.pagination !== undefined) {
+    if (!isRecord(payload.pagination)) paginationUnverified = true;
+    else if (payload.pagination.next !== undefined && payload.pagination.next !== null) {
+      try {
+        if (typeof payload.pagination.next !== "string") throw new Error();
+        const next = new URL(payload.pagination.next);
+        if (next.origin !== "https://api.weather.gov" || next.username || next.password || next.hash || !/^\/alerts(?:\/active)?$/.test(next.pathname)) throw new Error();
+        nextPage = true;
+      } catch { paginationUnverified = true; }
+    }
+  }
   const zoneUrls = [...new Set(alerts.flatMap((alert) => {
     const properties = isRecord(alert.properties) ? alert.properties : {};
     return Array.isArray(properties.affectedZones) ? properties.affectedZones.map(allowedZoneUrl).filter((value): value is string => Boolean(value)) : [];
@@ -293,7 +351,7 @@ const activeNwsAlerts = async () => {
   const zones = new Map<string, JsonRecord>();
   let failedZoneCount = 0;
   for (const result of zoneResults) {
-    if (result.status === "rejected") {
+    if (result.status === "rejected" || !alertGeometry(result.value.payload.geometry)) {
       failedZoneCount += 1;
       continue;
     }
@@ -302,7 +360,9 @@ const activeNwsAlerts = async () => {
 
   const features: Feature<Geometry, GeoJsonProperties>[] = [];
   let newestTimestamp: string | null = null;
+  let unmappedAlerts = 0, invalidAlertPolygons = 0;
   for (const [alertIndex, alert] of alerts.entries()) {
+    const before = features.length;
     const properties = isRecord(alert.properties) ? alert.properties : {};
     const alertId = asString(properties.id) ?? asString(alert.id) ?? `alert-${alertIndex}`;
     const safe = {
@@ -310,32 +370,37 @@ const activeNwsAlerts = async () => {
       headline: asString(properties.headline), areaDesc: asString(properties.areaDesc), effective: asString(properties.effective), expires: asString(properties.expires), senderName: asString(properties.senderName),
     };
     if (safe.effective && (!newestTimestamp || safe.effective > newestTimestamp)) newestTimestamp = safe.effective;
-    if (isRecord(alert.geometry) && (alert.geometry.type === "Polygon" || alert.geometry.type === "MultiPolygon")) {
-      features.push({ type: "Feature", id: `${alertId}-geometry`, geometry: alert.geometry as unknown as Geometry, properties: { featureId: `nws-alert-${alertId}-geometry`, ...safe, zoneName: null, zoneExpirationDate: null, sourceOrganization: "NOAA National Weather Service", evidenceRole: "EXTERNAL_CONTEXT_ONLY", retrievedAt } });
+    const ownGeometry = alertGeometry(alert.geometry);
+    if (ownGeometry) {
+      features.push({ type: "Feature", id: `${alertId}-geometry`, geometry: ownGeometry, properties: { featureId: `nws-alert-${alertId}-geometry`, ...safe, zoneName: null, zoneExpirationDate: null, sourceOrganization: "NOAA National Weather Service", evidenceRole: "EXTERNAL_CONTEXT_ONLY", retrievedAt } });
+    } else if (alert.geometry !== undefined && alert.geometry !== null) {
+      invalidAlertPolygons += 1;
     }
     const affected = Array.isArray(properties.affectedZones) ? properties.affectedZones.map(allowedZoneUrl).filter((value): value is string => Boolean(value)) : [];
     for (const zoneUrl of affected) {
       const zone = zones.get(zoneUrl);
-      const geometry = zone && isRecord(zone.geometry) && (zone.geometry.type === "Polygon" || zone.geometry.type === "MultiPolygon") ? zone.geometry as unknown as Geometry : null;
+      const geometry = zone ? alertGeometry(zone.geometry) : null;
       if (!geometry) continue;
       const zoneProperties = isRecord(zone?.properties) ? zone.properties : {};
       const zoneCode = new URL(zoneUrl).pathname.split("/").at(-1) ?? "zone";
       features.push({ type: "Feature", id: `${alertId}-${zoneCode}`, geometry, properties: { featureId: `nws-alert-${alertId}-${zoneCode}`, ...safe, zoneName: asString(zoneProperties.name), zoneExpirationDate: asString(zoneProperties.expirationDate), sourceOrganization: "NOAA National Weather Service", evidenceRole: "EXTERNAL_CONTEXT_ONLY", retrievedAt } });
     }
+    if (features.length === before) unmappedAlerts += 1;
   }
 
   const capped = features.length > MAX_NWS_FEATURES;
   const data = { type: "FeatureCollection" as const, features: features.slice(0, MAX_NWS_FEATURES) };
-  const partial = failedZoneCount > 0 || zoneUrls.length > MAX_NWS_ZONE_REQUESTS || capped;
+  const truncated = zoneUrls.length > MAX_NWS_ZONE_REQUESTS || capped || nextPage || paginationUnverified;
+  const partial = failedZoneCount > 0 || unmappedAlerts > 0 || invalidAlertPolygons > 0 || truncated;
   return envelope(
     "nws-alerts",
     data,
     NWS_ALERTS_URL,
-    `${alerts.length} active Kansas alert record${alerts.length === 1 ? "" : "s"} returned at retrieval; ${failedZoneCount} selected zone lookup${failedZoneCount === 1 ? "" : "s"} failed. Zero mapped features is never an all-clear. This bounded display is not a warning-delivery service or KFM evidence.`,
+    `${alerts.length} active Kansas alert record${alerts.length === 1 ? "" : "s"} returned at retrieval; ${failedZoneCount} selected zone lookup${failedZoneCount === 1 ? "" : "s"} failed or returned unusable geometry; ${unmappedAlerts} returned alert${unmappedAlerts === 1 ? "" : "s"} could not be mapped; ${invalidAlertPolygons} supplied alert polygon${invalidAlertPolygons === 1 ? "" : "s"} withheld as unusable.${nextPage ? " Another alert page was advertised; only this first page was checked." : ""}${paginationUnverified ? " Pagination metadata could not be verified; additional alerts may be missing." : ""}${zoneUrls.length > MAX_NWS_ZONE_REQUESTS ? ` Zone lookups were bounded to ${MAX_NWS_ZONE_REQUESTS}.` : ""}${capped ? ` Mapped features were capped at ${MAX_NWS_FEATURES}.` : ""} Zero mapped features is never an all-clear. This bounded display is not a warning-delivery service or KFM evidence.`,
     retrievedAt,
     newestTimestamp,
     partial,
-    capped || zoneUrls.length > MAX_NWS_ZONE_REQUESTS,
+    truncated,
   );
 };
 
