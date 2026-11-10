@@ -7,6 +7,7 @@ import { shouldRefreshFollowToday } from "./follow-today";
 import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, geoJSONHasData, updateGeoJSON, uploadedGeoJSON } from "../map-performance";
 import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
+import { committedInspection, type InspectionFrame } from "./inspection";
 import type { FeatureCollection } from "geojson";
 import { DataNotices } from "../map-toolbar";
 import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
@@ -139,7 +140,8 @@ export default function EventObservatory() {
   const [contextData, setContextData] = useState<Partial<Record<ContextTrack, ContextRecord>>>({});
   const [contextMessages, setContextMessages] = useState<Partial<Record<ContextTrack, { date: string; message: string }>>>({});
   const [countyEdition, setCountyEdition] = useState("2020");
-  const [inspectedFeature, setInspectedFeature] = useState<{ track: TrackId; properties: Record<string, unknown> } | null>(null);
+  const [inspectionSelection, setInspectedFeature] = useState<{ track: TrackId; properties: Record<string, unknown> } | null>(null);
+  const [inspectionFrame, setInspectionFrame] = useState<InspectionFrame | null>(null);
   const [riverResolution, setRiverResolution] = useState<"continuous" | "daily">("continuous");
   const [loadedRiverResolution, setLoadedRiverResolution] = useState<"continuous" | "daily">("continuous");
   const [riverCoverage, setRiverCoverage] = useState<RiverCoverage | null>(null), [coverageMessage, setCoverageMessage] = useState("");
@@ -187,6 +189,10 @@ export default function EventObservatory() {
     if (cursor) { const position = frames.findIndex((time) => time >= cursor); if (position >= 0 && position !== index) setIndex(position); }
   }
   const requested = cursor ?? frames[index] ?? null;
+  const inspectedFeature = committedInspection(inspectionSelection, inspectionFrame, {
+    requested, committed, ready: !loading && !buffering,
+    visible: Boolean(inspectionSelection && visible[inspectionSelection.track]),
+  });
   const activeRadar = manifest && committed ? radarAt(manifest.radar.scans, committed) : null;
   const activeSmoke = useMemo(() => manifest && committed ? smokeAt(manifest.smoke.data, committed) : EMPTY, [manifest, committed]);
   const riverFrame = useMemo(() => river && committed ? riverAt(river, committed, loadedRiverResolution) : null, [river, committed, loadedRiverResolution]);
@@ -584,7 +590,7 @@ export default function EventObservatory() {
     if (!map || !mapReady || !manifest || !requested || loading) return;
     const token = ++frameGeneration.current;
     frameRequest.current?.abort(); const controller = new AbortController(); frameRequest.current = controller;
-    setBuffering(true); setError("");
+    setBuffering(true); setError(""); setInspectionFrame(null);
     const scan = visible.radar ? radarAt(manifest.radar.scans, requested) : null;
     const day = requested.slice(0,10), year = day.slice(0,4);
     // This frame's local data. Content-equal frames reuse the collection the
@@ -662,7 +668,9 @@ export default function EventObservatory() {
       // Keep dynamic pixels hidden until the exact image source is ready. No
       // old frame is presented under the newly requested time while buffering.
       await new Promise<void>((resolve, reject) => {
-        const sourceIds = ["ea-smoke", "ea-river-data", "ea-resource-data", "ea-storms-data", ...(imageUrl ? ["ea-radar-image"] : [])];
+        const sourceIds = ["ea-smoke", "ea-river-data", "ea-resource-data", "ea-storms-data",
+          ...(["counties", "weather", "earthquakes", "shake"] as const).filter((id) => visible[id]).map((id) => `ea-${id}-data`),
+          ...(imageUrl ? ["ea-radar-image"] : [])];
         const check = () => { if (sourceIds.some((id) => sourceFailures.current.has(id))) finish(new Error("A requested source failed; the frame was withheld.")); else if (sourceIds.every((id) => map.isSourceLoaded(id))) finish(); };
         const fail = () => finish(new Error("Radar image loading was cancelled."));
         const timer = window.setTimeout(() => finish(new Error("The requested map sources did not finish loading.")), 15_000);
@@ -689,6 +697,14 @@ export default function EventObservatory() {
       }
       if (map.getLayer("ea-science-probe-line")) map.moveLayer("ea-science-probe-line");
       if (map.getLayer("ea-science-probe-points")) map.moveLayer("ea-science-probe-points");
+      setInspectionFrame({ time: requested, data: {
+        river: gauges,
+        weather: frameData.get("ea-weather-data")!,
+        counties: frameData.get("ea-counties-data")!,
+        earthquakes: frameData.get("ea-earthquakes-data")!,
+        shake: frameData.get("ea-shake-data")!,
+        storms: storms ? { type: "FeatureCollection", features: [...storms.data.features, ...stormRadarSites().features] } : EMPTY,
+      } });
       setCommitted(requested); setBuffering(false);
       setStormFrame(storms);
       setSourceErrors((current) => { const next = { ...current }; if (stormFailure) next["ea-storms"] = stormFailure; else delete next["ea-storms"]; return next; });
@@ -972,6 +988,7 @@ export default function EventObservatory() {
       </aside>}
       <aside className="event-inspector" hidden={!detailsOpen}><div className="event-panel-heading"><strong>Sources & quality</strong><button type="button" onClick={() => setDetailsOpen(false)} aria-label="Close sources">×</button></div><select aria-label="Inspect a source" value={selectedTrack} onChange={(event) => setSelectedTrack(event.target.value as TrackId)}>{TRACKS.map((track) => <option key={track.id} value={track.id}>{track.name}</option>)}</select><span className="event-kicker">LAYER PASSPORT</span><h2>{chosen.name}</h2><p>{chosen.detail}</p><dl><div><dt>Clock</dt><dd>{chosen.axis}</dd></div><div><dt>Current support</dt><dd>{trackStatus(chosen.id)}</dd></div><div><dt>Archive query</dt><dd>{manifest ? `${timestamp(manifest.start)} → ${timestamp(manifest.end)} (end excluded)` : "Not loaded"}</dd></div><div><dt>Retrieved</dt><dd>{manifest ? timestamp(manifest.retrievedAt) : "Not yet"}</dd></div></dl><a href={chosen.source} target="_blank" rel="noreferrer">Inspect source & method ↗</a>
 {contextData[chosen.id as ContextTrack] && <p>{contextData[chosen.id as ContextTrack]?.message}</p>}
+        {inspectionSelection?.track === chosen.id && !inspectedFeature && <p role="status">{loading || buffering ? "Updating the selected record for the replay time…" : !visible[chosen.id] ? "This layer is hidden. Enable it to inspect the selected record." : "The selected record is unavailable at this replay time. Select a visible feature to inspect another record."}</p>}
         {chosen.id === "river" && <p>{loadedRiverResolution === "daily" ? "Daily mean is pinned to its source date. It does not describe changes within the day." : "Continuous samples are held at most 30 minutes. Gaps stay empty."}</p>}
         {inspectedFeature?.track === chosen.id && chosen.id !== "storms" && <section className="event-feature-values"><h3>{String(inspectedFeature.properties.name ?? inspectedFeature.properties.stationName ?? "Selected record")}</h3><dl>{Object.entries(chosen.id === "weather" ? { maximumF: null, minimumF: null, precipitationInches: null, snowfallInches: null, snowDepthInches: null, ...inspectedFeature.properties } : inspectedFeature.properties).filter(([key]) => ["geoid", "population", "housingUnits", "landSquareMiles", "waterSquareMiles", "vintage", "station", "network", "startTime", "endTime", "day", "maximumF", "minimumF", "precipitationInches", "snowfallInches", "snowDepthInches", "magnitude", "observedAt", "depthKilometers", "approvalStatus"].includes(key)).map(([key,value]) => <div key={key}><dt>{({ geoid: "County FIPS", population: "Population", housingUnits: "Housing units", landSquareMiles: "Land · sq mi", waterSquareMiles: "Water · sq mi", maximumF: "Daily max · °F", minimumF: "Daily min · °F", precipitationInches: "Daily rain · in", snowfallInches: "Daily snowfall · in", snowDepthInches: "Snow depth · in", vintage: "Census edition", startTime: "Station epoch start", endTime: "Station epoch end", observedAt: "Observation time", depthKilometers: "Depth · km" } as Record<string,string>)[key] ?? key}</dt><dd>{chosen.id === "weather" ? weatherReadingText(inspectedFeature.properties, key, value) : value === null ? "Not supplied" : typeof value === "number" ? value.toLocaleString("en-US", { maximumFractionDigits: 2 }) : String(value)}</dd></div>)}</dl></section>}
         {chosen.id === "storms" && <StormDetails frame={stormFrame} selected={inspectedFeature?.track === "storms" ? inspectedFeature.properties : null} />}
