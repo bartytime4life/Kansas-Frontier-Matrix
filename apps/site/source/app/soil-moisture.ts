@@ -20,7 +20,7 @@ export function restoreSoilMapState(params: URLSearchParams): SoilMapState {
   const value = params.get("soil");
   if (!value) return DEFAULT_SOIL_MAP_STATE;
   const [visible, view, day, opacity, ...extra] = value.split("|");
-  if (extra.length || (visible !== "0" && visible !== "1") || !Object.hasOwn(SOIL_VIEWS, view)
+  if (extra.length || typeof opacity !== "string" || (visible !== "0" && visible !== "1") || !Object.hasOwn(SOIL_VIEWS, view)
     || (day !== "" && !isSoilCalendarDay(day)) || opacity.trim() === "" || !Number.isFinite(Number(opacity))) return DEFAULT_SOIL_MAP_STATE;
   return { visible: visible === "1", view: view as SoilView, day, opacity: Math.max(0, Math.min(1, Number(opacity))) };
 }
