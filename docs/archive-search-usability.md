@@ -1,8 +1,9 @@
 # Archive search: query identity and recovery
 
 This candidate targets the public Explorer composition at
-`a0-hosted-ai-web-20261017`, base `ca58af6a6282c7cbb3ac9026714e2fd8106b749e`.
-Its changes are independent of the welcome topic-discovery PR #5799.
+`a0-hosted-ai-web-20261017`, with integration base
+`d80a3e351a1c4e63caca08808df5e4ffcda80819` (merged welcome PR #5799).
+The archive-search scope remains independent of that welcome change.
 
 ## Problem and resulting behavior
 
@@ -50,7 +51,9 @@ Production build and TypeScript checks passed. The component suite has nine
 passing regressions covering submitted-query labels and facets, short pages,
 the 1,000-hit boundary, invalid years, cancellation/focus, retry, stale responses,
 deep links, empty pages and timeout recovery. The full suite completed with
-**2,810 passed, 25 existing skips and zero failures** (2,835 cases).
+**2,816 passed, 25 existing skips and zero failures** (2,841 cases),
+including the merged welcome regressions. The standalone archive-search pass
+also completed with 2,810 passed, 25 skipped and zero failures.
 
 Chromium checks at 1280×900, 390×900 and 320×900 exercised the hydrated library
 with synthetic archive responses, partial pages, held requests and a service
