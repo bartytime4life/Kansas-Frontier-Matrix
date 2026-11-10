@@ -10,6 +10,7 @@ import { centeredCard, centeredScrollLeft } from './card-carousel.mjs';
 import { welcomeView } from '../welcome-map-view';
 import { RECORD_COUNTS, recordLinksFor, newspaperSearchUrl, librarySearchUrl } from './record-links.mjs';
 import { isolateModalBackground, modalFocusableElements } from '../modal-background';
+import { filterTopics } from './topic-search.mjs';
 
 // "The Kansas record" is a separate section with its own lazy chunks, not a map topic.
 const StorySection=lazy(()=>import('./stories/StorySection.jsx'));
@@ -47,7 +48,12 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
   const selection=combineCategoryMaps(selectedTopics);
-  const filteredTopics=TOPICS.filter(t=>(topicGroup==='All'||t.group===topicGroup)&&`${t.title} ${t.short} ${t.description}`.toLowerCase().includes(topicQuery.trim().toLowerCase()));
+  const filteredTopics=filterTopics(TOPICS,topicQuery,topicGroup),hasTopicFilters=Boolean(topicQuery.trim()||topicGroup!=='All');
+  function clearTopicFilters(){
+    setTopicQuery('');setTopicGroup('All');
+    const finder=root.current?.querySelector('.topic-filters');
+    finder?.querySelector(finder.open?'input':'summary')?.focus({preventScroll:true});
+  }
   const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
   const [recordQuery,setRecordQuery]=useState(''),[recordScope,setRecordScope]=useState('newspapers');
   // One search box for the whole record: a place opens the map; newspapers, texts and collections open the data library.
@@ -64,7 +70,10 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [storyOpen,setStoryOpen]=useState(false);
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true),[aviationMode,setAviationMode]=useState('3d');
   const motion=onMotionChange?motionEnabled:localMotion;
-  const paused=!motion||reduced||hidden,engaged=pinned||(carousel&&!fullscreen?centered:active),control=engaged||last;
+  const paused=!motion||reduced||hidden,requested=pinned||(carousel&&!fullscreen?centered:active);
+  // Filtering must keep the backdrop, chosen-map panel and visible results in
+  // agreement. Full-screen previews retain their independent category rail.
+  const engaged=hasTopicFilters&&!fullscreen&&!filteredTopics.some(t=>t.id===requested)?filteredTopics[0]?.id||null:requested,control=engaged||last;
   const atlas=desktop&&!carousel&&!fullscreen,atlasTopic=TOPICS.find(t=>t.id===control),atlasIndex=TOPICS.findIndex(t=>t.id===control),record=atlas?recordLinksFor(control):null;
   // One owned frame; held/reduced-motion views do not keep repainting card
   // highlights, and a dismissed welcome cannot write to a detached card.
@@ -192,6 +201,10 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       if(!root.current?.contains(event.target)&&!dialog.current?.contains(event.target))return;
       if(event.key==='Escape'){
         event.preventDefault();event.stopImmediatePropagation();
+        if(!modal){
+          const disclosure=event.target?.closest?.('details[open]')||root.current?.querySelector('.welcome-preferences[open],.topic-filters[open]');
+          if(disclosure){disclosure.open=false;disclosure.querySelector('summary')?.focus({preventScroll:true});return;}
+        }
         if(modal)closePanel();else if(fullscreen){returnToCategories();}else if(pinned){setPinned(null);setActive(null);}else onClose(remember);
       }
       if(event.key==='Tab'&&modal){
@@ -237,6 +250,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         <div className="welcome-toolbar" role="group" aria-label="Welcome options">
           {/* There is no selection tray: cards and the focus panel tick topics, and this opens the ticked set. The phone toolbar has room for one primary, so there it stands in for Explore freely while topics are ticked. */}
           {selection&&<button type="button" className="welcome-primary selection-open" aria-label={`Open my map with ${selectedTopics.length} selected ${selectedTopics.length===1?'topic':'topics'}`} onClick={openSelection}>Open my map <span className="selection-count" aria-hidden="true">{selectedTopics.length}</span><span aria-hidden="true">→</span></button>}
+          <span className="sr-only" role="status">{selectedTopics.length?`${selectedTopics.length} ${selectedTopics.length===1?'topic':'topics'} selected for your combined map.`:'No topics selected for your combined map.'}</span>
           {!(carousel&&selection)&&<button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>}
           <details className="welcome-preferences"><summary>Options</summary><div>
             <button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button>
@@ -259,7 +273,14 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         </div>
       </div>
       <div className="welcome-discovery-layout"><div className="welcome-discovery-content">
-        <details className="topic-filters"><summary>Find a topic</summary><div className="topic-finder"><label><span className="sr-only">Filter topics</span><input type="search" value={topicQuery} onChange={e=>setTopicQuery(e.target.value)} placeholder="Find topics: water, roads, history…"/></label><label><span className="sr-only">Topic group</span><select value={topicGroup} onChange={e=>setTopicGroup(e.target.value)}><option value="All">All topics</option>{TOPIC_GROUPS.map(group=><option key={group}>{group}</option>)}</select></label></div></details>
+        <div className="topic-search-tools">
+          <details className="topic-filters"><summary>{hasTopicFilters?'Topics':'Find a topic'}{hasTopicFilters&&<span className="topic-result-count">{filteredTopics.length} / {TOPICS.length}</span>}</summary><div className="topic-finder">
+            <label><span>Filter topics</span><input type="search" value={topicQuery} onChange={e=>setTopicQuery(e.target.value)} placeholder="Water, roads, history…" maxLength={200} aria-describedby="topic-search-results"/></label>
+            <label><span>Topic group</span><select value={topicGroup} onChange={e=>setTopicGroup(e.target.value)} aria-describedby="topic-search-results"><option value="All">All topics</option>{TOPIC_GROUPS.map(group=><option key={group}>{group}</option>)}</select></label>
+            <p id="topic-search-results" role="status">{hasTopicFilters?`${filteredTopics.length} of ${TOPICS.length} topics match.`:`Browse all ${TOPICS.length} topics.`}{selectedTopics.length>0?' Your combined map stays selected.':''}</p>
+          </div></details>
+          {hasTopicFilters&&<button type="button" className="topic-clear" aria-label="Clear topic filters" onClick={clearTopicFilters}>Clear</button>}
+        </div>
         <p className="discovery-hint"><strong>Choose your map</strong><span>Tap a card to open · + to combine</span></p>
         {carousel&&<nav className="welcome-carousel-nav" aria-label="Browse map previews"><button type="button" aria-label="Previous map preview" disabled={filteredTopics.findIndex(t=>t.id===centered)<=0} onClick={()=>moveCarousel(-1)}>←</button><span aria-live="polite">{filteredTopics.length?filteredTopics.findIndex(t=>t.id===centered)+1:0} / {filteredTopics.length}</span><button type="button" aria-label="Next map preview" disabled={!filteredTopics.length||filteredTopics.findIndex(t=>t.id===centered)>=filteredTopics.length-1} onClick={()=>moveCarousel(1)}>→</button></nav>}
         <section className="discovery-field discovery-field--grouped" ref={carouselList} aria-label={carousel?'Swipe to preview maps; tap a card to open':'Choose exploration topics'} aria-roledescription={carousel?'carousel':undefined} onScroll={settleCarousel} onPointerDown={event=>{carouselPointer.current={x:event.clientX,y:event.clientY};carouselDragged.current=false;}} onPointerMove={event=>{const start=carouselPointer.current;if(start&&Math.hypot(event.clientX-start.x,event.clientY-start.y)>8)carouselDragged.current=true;}} onPointerUp={()=>{carouselPointer.current=null;}} onPointerCancel={()=>{carouselPointer.current=null;}} onClickCapture={event=>{if(carousel&&carouselDragged.current&&event.detail!==0){event.preventDefault();event.stopPropagation();}}}>{TOPIC_GROUPS.filter(group=>filteredTopics.some(t=>t.group===group)).map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{filteredTopics.filter(t=>t.group===group).map(t=><div className="topic-choice" data-carousel-topic={t.id} data-centered={carousel&&centered===t.id} data-selected={selectedTopics.includes(t.id)} key={t.id} style={swatch(t.look)}>
@@ -267,15 +288,15 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
             <span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look?.name}</span><span className="topic-demo-label">Open map →</span></span>
           </button><div className="topic-card-actions"><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button><button type="button" className="topic-add" data-topic={t.id} aria-label={`${selectedTopics.includes(t.id)?'Remove':'Add'} ${t.title} ${selectedTopics.includes(t.id)?'from':'to'} combined map`} aria-pressed={selectedTopics.includes(t.id)} onClick={()=>toggleTopic(t.id)}><span aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span></button></div>
         </div>)}</div>)}</section>
+        {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try fewer words or another group.{selectedTopics.length>0?' Your combined map stays selected.':''}</p><button type="button" onClick={clearTopicFilters}>Show all topics</button></div>}
         {atlas&&<nav className="welcome-record-rail" aria-label="The public record">
           <p className="discovery-group-title">The record</p>
           <a href="/data-library"><strong>Public data library</strong><small>{RECORD_COUNTS.collections} collections · {RECORD_COUNTS.mapped} with map geometry · every field, every source</small></a>
           <a href={newspaperSearchUrl('tornado')}><strong>Newspaper &amp; text archive</strong><small>Search the digitised Kansas pages, 1864–1960, and public-domain texts</small></a>
         </nav>}
         {!fullscreen&&!carousel&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact={false} onOpenChange={setStoryOpen}/></Suspense>}
-        {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
-      {atlas&&atlasTopic&&<aside className="welcome-focus" aria-label="Chosen map" data-topic={control} key={control}>
+      {atlas&&atlasTopic&&filteredTopics.length>0&&<aside className="welcome-focus" aria-label="Chosen map" data-topic={control} key={control}>
         <span className="welcome-kicker">{atlasTopic.group} · {String(atlasIndex+1).padStart(2,'0')} / {TOPICS.length}</span>
         <h2>{atlasTopic.title}</h2>
         {atlasTopic.look&&<p className="welcome-focus-map" style={swatch(atlasTopic.look)}><i aria-hidden="true"/><strong>{atlasTopic.look.name}</strong><span>{categorySceneLabel(atlasTopic.look.scene)}</span></p>}

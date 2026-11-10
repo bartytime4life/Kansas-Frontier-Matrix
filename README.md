@@ -1,3 +1,5 @@
+> **Topic discovery candidate — 2026-11-10:** Search topics in any word order, keep the preview aligned with matching results, and clear filters without losing combined-map choices. Keyboard dismissal and phone empty-result recovery are improved. [Behavior and local verification](docs/explorer-topic-finder.md). Not deployed.
+
 > **Kansas Sky flight candidate — 2026-11-08:** Explore retained aircraft journeys in the existing Aviation layer with Follow/Orbit, source-backed briefs, guarded motion, cinematic paths and projection-aware framing. [Usage, mathematics and validation](docs/kansas-sky.md) distinguish local evidence from GitHub review, deployment and hosted archive activation.
 
 > **Living welcome candidate — 2026-10-20:** Eight map topics and 30 credited motion scenes now connect to the existing Find, Ask and source tools. Kansas history, source locations, reduced motion and pending-data boundaries are preserved. See [integration and maintenance](docs/living-welcome.md). Repository candidate; publication is separate.
