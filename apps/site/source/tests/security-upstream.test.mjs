@@ -5,8 +5,12 @@ import test from "node:test";
 import ts from "typescript";
 
 const noaaSource = await readFile(new URL("../app/api/hydrology/noaa/route.ts", import.meta.url), "utf8");
+const boundedJavaScript = ts.transpileModule(await readFile(new URL("../app/bounded-json.ts", import.meta.url), "utf8"), {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+}).outputText;
+const boundedUrl = `data:text/javascript;base64,${Buffer.from(boundedJavaScript).toString("base64")}`;
 const shim = "data:text/javascript,export const NextResponse={json:(body,init)=>Response.json(body,init)}";
-const noaaJavaScript = ts.transpileModule(noaaSource.replace('from "next/server"', `from "${shim}"`), {
+const noaaJavaScript = ts.transpileModule(noaaSource.replace('from "next/server"', `from "${shim}"`).replace('from "../../../bounded-json"', `from ${JSON.stringify(boundedUrl)}`), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 }).outputText;
 const { GET: noaaGet } = await import(`data:text/javascript;base64,${Buffer.from(noaaJavaScript).toString("base64")}`);

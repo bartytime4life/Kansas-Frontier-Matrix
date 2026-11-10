@@ -162,6 +162,67 @@ test("tile adapter rejects time snapping and converts 204 into truly transparent
   } finally {globalThis.fetch=previous;}
 });
 
+test("GBIF blank successes and partial images are unavailable, never confirmed no-records tiles", async t => {
+  const { GET } = await import(await moduleUrl("../app/api/event-atlas/tile/route.ts"));
+  const png = Uint8Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=", "base64"));
+  const cases = [
+    { status: 200, bytes: new Uint8Array(), type: "image/png" },
+    { status: 200, bytes: new Uint8Array(), type: "text/html" },
+    { status: 206, bytes: new Uint8Array(), type: "image/png" },
+    { status: 206, bytes: png, type: "image/png" },
+  ];
+  let fixture; const calls = [];
+  t.mock.method(globalThis, "fetch", async (input, init) => {
+    const url = new URL(input); assert.equal(url.origin, "https://api.gbif.org"); assert.equal(init.redirect, "manual");
+    calls.push(url); return new Response(fixture.bytes, { status: fixture.status, headers: { "Content-Type": fixture.type } });
+  });
+  for (const kind of ["flora", "fauna"]) for (const next of cases) {
+    fixture = next;
+    const response = await GET(new Request(`https://app.test/api/event-atlas/tile?kind=${kind}&date=2023-06-07&z=6&x=14&y=24`));
+    assert.equal(response.status, 502, `${kind} HTTP ${fixture.status} ${fixture.type} length ${fixture.bytes.length}`);
+    assert.equal(response.headers.has("x-aggregate-state"), false);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    assert.match((await response.json()).message, /unavailable/);
+  }
+  assert.equal(calls.length, 8);
+});
+
+test("complete GBIF images and source-confirmed 204 empties preserve taxon, year and coarse provenance", async t => {
+  const { GET } = await import(await moduleUrl("../app/api/event-atlas/tile/route.ts"));
+  const png = Uint8Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=", "base64"));
+  let status = 200; const calls = [];
+  t.mock.method(globalThis, "fetch", async (input, init) => {
+    const url = new URL(input); calls.push(url);
+    assert.equal(url.origin, "https://api.gbif.org"); assert.equal(url.pathname, "/v2/map/occurrence/density/6/14/24@1x.png");
+    assert.equal(url.searchParams.get("year"), "2023,2023"); assert.equal(url.searchParams.get("country"), "US");
+    assert.equal(url.searchParams.get("bin"), "hex"); assert.equal(url.searchParams.get("hexPerTile"), "20");
+    assert.equal(init.redirect, "manual");
+    return new Response(status === 204 ? null : png, { status, headers: { "Content-Type": "image/png" } });
+  });
+  for (const kind of ["flora", "fauna"]) for (const next of [200, 204]) {
+    status = next;
+    const response = await GET(new Request(`https://app.test/api/event-atlas/tile?kind=${kind}&date=2023-06-07&z=6&x=14&y=24`));
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("x-aggregate-state"), status === 204 ? "no-records" : "source-image");
+    assert.equal(response.headers.get("x-temporal-support"), "2023"); assert.equal(response.headers.get("content-type"), "image/png");
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.deepEqual(new Uint8Array(await response.arrayBuffer()), png);
+    assert.equal(calls.at(-1).searchParams.get("taxonKey"), kind === "flora" ? "6" : "1");
+  }
+  assert.equal(calls.length, 4);
+});
+
+test("satellite 204 is unavailable even with a matching date header", async t => {
+  const { GET } = await import(await moduleUrl("../app/api/event-atlas/tile/route.ts"));
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async (input, init) => {
+    assert.equal(new URL(input).origin, "https://gibs.earthdata.nasa.gov"); assert.equal(init.redirect, "manual"); calls++;
+    return new Response(null, { status: 204, headers: { "layer-time-actual": "2023-06-07T00:00:00Z" } });
+  });
+  const response = await GET(new Request("https://app.test/api/event-atlas/tile?kind=satellite&date=2023-06-07&z=6&x=14&y=24"));
+  assert.equal(response.status, 502); assert.equal(response.headers.has("x-aggregate-state"), false); assert.equal(calls, 1);
+});
+
 test("county resources never request precise source geometry and reject unmatched counties", async () => {
   const {GET}=await import(await moduleUrl("../app/api/event-atlas/resources/route.ts"));
   const previous=globalThis.fetch;const seen=[];

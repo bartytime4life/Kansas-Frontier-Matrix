@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { JsonLimitError, readBoundedBytes } from "../../../bounded-json";
 
 export const dynamic = "force-dynamic";
 
@@ -71,35 +72,15 @@ const recordAt = (value: unknown, key: string) => isRecord(value) && isRecord(va
 
 const arrayAt = (value: unknown, key: string) => isRecord(value) && Array.isArray(value[key]) ? value[key] as unknown[] : [];
 
-const readBoundedBody = async (response: Response, maxBytes: number) => {
-  const declaredLength = Number(response.headers.get("content-length") ?? "0");
-  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
-    throw new AdapterError("NOAA response exceeded the adapter byte limit.", "NOAA_RESPONSE_TOO_LARGE");
+const readBoundedBody = async (response: Response, maxBytes: number, signal: AbortSignal) => {
+  try {
+    const body = await readBoundedBytes(response, maxBytes, signal);
+    return new TextDecoder().decode(body);
+  } catch (error) {
+    if (error instanceof JsonLimitError) throw new AdapterError("NOAA response exceeded the adapter byte limit.", "NOAA_RESPONSE_TOO_LARGE");
+    if (error instanceof SyntaxError && !response.body) throw new AdapterError("NOAA response did not include a body.", "NOAA_EMPTY_RESPONSE");
+    throw error;
   }
-  if (!response.body) throw new AdapterError("NOAA response did not include a body.", "NOAA_EMPTY_RESPONSE");
-
-  const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (!value) continue;
-    total += value.byteLength;
-    if (total > maxBytes) {
-      await reader.cancel();
-      throw new AdapterError("NOAA response exceeded the adapter byte limit.", "NOAA_RESPONSE_TOO_LARGE");
-    }
-    chunks.push(value);
-  }
-
-  const body = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    body.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return new TextDecoder().decode(body);
 };
 
 type NwpsEndpoint =
@@ -126,8 +107,9 @@ const fetchFixedJson = async (endpoint: NwpsEndpoint, maxBytes: number): Promise
   const parsedUrl = fixedNwpsUrl(endpoint);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  let response: Response | undefined;
   try {
-    const response = await fetch(parsedUrl, {
+    response = await fetch(parsedUrl, {
       cache: "no-store",
       redirect: "manual",
       signal: controller.signal,
@@ -143,7 +125,7 @@ const fetchFixedJson = async (endpoint: NwpsEndpoint, maxBytes: number): Promise
     if (!contentType.includes("json")) {
       throw new AdapterError("NOAA returned an unexpected media type.", "NOAA_MEDIA_TYPE");
     }
-    const text = await readBoundedBody(response, maxBytes);
+    const text = await readBoundedBody(response, maxBytes, controller.signal);
     let parsed: unknown;
     try {
       parsed = JSON.parse(text) as unknown;
@@ -162,6 +144,7 @@ const fetchFixedJson = async (endpoint: NwpsEndpoint, maxBytes: number): Promise
     throw new AdapterError("NOAA request failed.", "NOAA_UNAVAILABLE");
   } finally {
     clearTimeout(timeout);
+    void response?.body?.cancel().catch(() => undefined);
   }
 };
 

@@ -1,4 +1,5 @@
 import { encodeStreamflowTransport } from "../../../streamflow-transport";
+import { JsonLimitError, readBoundedBytes } from "../../../bounded-json";
 import { env } from "cloudflare:workers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -238,35 +239,60 @@ const readBoundedBody = async (response: Response, controller: AbortController, 
   }
   if (!response.body) throw new UsgsUpstreamError("USGS response did not contain a body.");
 
-  const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (budget && (Date.now() >= budget.deadline || value.byteLength > budget.remainingBytes)) {
-      budget.exhausted = true;
-      controller.abort();
-      await reader.cancel().catch(() => undefined);
-      throw new NetworkBudgetExceeded("USGS network request reached its aggregate work budget.");
+  if (!budget) {
+    try {
+      const bytes = await readBoundedBytes(response, RESPONSE_BYTE_LIMIT, controller.signal);
+      return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    } catch (error) {
+      if (error instanceof JsonLimitError) {
+        controller.abort();
+        throw new UsgsUpstreamError("USGS response exceeded the 12 MB adapter limit.");
+      }
+      throw error;
     }
-    if (budget) budget.remainingBytes -= value.byteLength;
-    total += value.byteLength;
-    if (total > RESPONSE_BYTE_LIMIT) {
-      controller.abort();
-      await reader.cancel().catch(() => undefined);
-      throw new UsgsUpstreamError("USGS response exceeded the 12 MB adapter limit.");
-    }
-    chunks.push(value);
   }
 
-  const bytes = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    bytes.set(chunk, offset);
-    offset += chunk.byteLength;
+  // Concurrent network reads share this budget, so charge each chunk before
+  // retaining it rather than reserving a full response allowance per request.
+  const reader = response.body.getReader();
+  const cancelRead = () => { void reader.cancel(controller.signal.reason).catch(() => undefined); };
+  controller.signal.addEventListener("abort", cancelRead, { once: true });
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    while (true) {
+      controller.signal.throwIfAborted();
+      const { done, value } = await reader.read();
+      controller.signal.throwIfAborted();
+      if (done) break;
+      if (Date.now() >= budget.deadline || value.byteLength > budget.remainingBytes) {
+        budget.exhausted = true;
+        controller.abort();
+        throw new NetworkBudgetExceeded("USGS network request reached its aggregate work budget.");
+      }
+      budget.remainingBytes -= value.byteLength;
+      total += value.byteLength;
+      if (total > RESPONSE_BYTE_LIMIT) {
+        controller.abort();
+        throw new UsgsUpstreamError("USGS response exceeded the 12 MB adapter limit.");
+      }
+      chunks.push(value);
+    }
+
+    const bytes = new Uint8Array(total);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch (error) {
+    void reader.cancel(controller.signal.aborted ? controller.signal.reason : error).catch(() => undefined);
+    throw error;
+  } finally {
+    controller.signal.removeEventListener("abort", cancelRead);
+    reader.releaseLock();
   }
-  return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 };
 
 const parseCollection = (value: unknown): Collection => {
@@ -299,8 +325,9 @@ const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collec
   }
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), budget ? Math.max(1, Math.min(REQUEST_TIMEOUT_MS, budget.deadline - Date.now())) : REQUEST_TIMEOUT_MS);
+  let response: Response | undefined;
   try {
-    const response = await fetch(url, {
+    response = await fetch(url, {
       cache: "no-store",
       redirect: "manual",
       signal: controller.signal,
@@ -341,6 +368,7 @@ const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collec
     throw new UsgsUpstreamError(error instanceof Error ? error.message : "USGS Water Data request failed.");
   } finally {
     clearTimeout(timeout);
+    void response?.body?.cancel().catch(() => undefined);
   }
 };
 
