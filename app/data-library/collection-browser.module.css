@@ -1,0 +1,16 @@
+.filters{display:grid;gap:8px}
+.filterTools{display:flex;align-items:end;gap:8px;min-width:0}
+.filterTools label{flex:1;min-width:0}
+.filterTools input{width:100%;min-width:0}
+.filters .mapFilter{display:flex;align-items:center;gap:9px;min-height:44px;cursor:pointer}
+.filters .mapFilter input{flex:none;width:20px;min-height:20px;height:20px;padding:0;accent-color:#eed39d}
+.hint{margin:0;color:#bfd0d0;font-size:12px;line-height:1.5}
+.empty{margin:8px 0;padding:16px;border:1px solid #48636b;border-radius:10px;background:#122b35}
+.empty strong{display:block}
+.empty p{margin:6px 0 12px}
+.back{margin:4px 0 16px}
+.heading{scroll-margin-block:24px}
+
+/* Keep selected-map actions in the document, leaving record controls uncovered. */
+.selectionTray.selectionTray{position:static;margin:0 0 24px;box-shadow:none}
+.mapLink{display:inline-flex;align-items:center;min-height:44px;padding:10px 0}

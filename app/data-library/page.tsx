@@ -1,11 +1,13 @@
 'use client';
 import Link from 'next/link';
-import {useEffect,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {RECOVERED_COLLECTIONS,recoveredCollection,recoveredMapUrl} from '../recovered-collections';
 import {fetchArchive,rowLabel,textValue,type ArchiveAnswer} from '../archive-layer-data';
 import ArchiveSearch from './search';
 import {fetchCatalogFreshness,freshnessLine,loadedThrough,type CatalogFreshness} from './freshness';
 import styles from './library.module.css';
+import {collectionLocation,matchingCollections} from './collection-browser';
+import browserStyles from './collection-browser.module.css';
 
 function RecordField({value,id,database,record,field}:{value:unknown;id:string;database:string;record:string;field:string}){
  const [part,setPart]=useState<ArchiveAnswer|null>(null),[message,setMessage]=useState(''),[busy,setBusy]=useState(false);
@@ -24,16 +26,25 @@ function RecordField({value,id,database,record,field}:{value:unknown;id:string;d
 }
 
 export default function DataLibrary(){
- const [search,setSearch]=useState(''),[id,setId]=useState(''),[selected,setSelected]=useState<string[]>([]);
+ const [search,setSearch]=useState(''),[mappedOnly,setMappedOnly]=useState(false),[id,setId]=useState(''),[selected,setSelected]=useState<string[]>([]),[selectionVisit,setSelectionVisit]=useState(0);
  const [answer,setAnswer]=useState<ArchiveAnswer|null>(null),[status,setStatus]=useState('Choose a collection to read its records.');
  const [busy,setBusy]=useState(false),[page,setPage]=useState(1);
  // When the PC last loaded each collection, from the public catalog; absent until the PC has answered.
  const [fresh,setFresh]=useState<CatalogFreshness|null>(null);
  const request=useRef<AbortController|null>(null),generation=useRef(0);
+ const finder=useRef<HTMLInputElement>(null),collectionHeading=useRef<HTMLHeadingElement>(null);
  const collection=recoveredCollection(id);
- const matching=RECOVERED_COLLECTIONS.filter(c=>(c.title+' '+c.database).toLowerCase().includes(search.toLowerCase()));
+ const matching=matchingCollections(RECOVERED_COLLECTIONS,search,mappedOnly),hasFilters=Boolean(search.trim()||mappedOnly);
+ function syncLocation(nextId=id,find=search,mapped=mappedOnly){
+  try{history.replaceState(history.state,'',collectionLocation(location.search,location.hash,nextId,find,mapped));}
+  catch{/* Browsing remains usable when the browser cannot update history. */}
+ }
+ function clearFilters(){setSearch('');setMappedOnly(false);syncLocation(id,'',false);finder.current?.focus();}
+ // A deliberate collection choice owns focus after its content has committed.
+ // Filtering and background freshness updates leave the reader's focus alone.
+ useLayoutEffect(()=>{if(selectionVisit>0){collectionHeading.current?.focus();collectionHeading.current?.scrollIntoView({block:'start',behavior:'auto'});}},[selectionVisit]);
  useEffect(()=>{
-  const token=setTimeout(()=>{const params=new URLSearchParams(location.search),value=params.get('collection'),find=(params.get('find')??'').slice(0,80);if(value&&recoveredCollection(value))setId(value);if(find.trim())setSearch(find);},0);
+  const token=setTimeout(()=>{const params=new URLSearchParams(location.search),value=params.get('collection'),find=(params.get('find')??'').slice(0,80);if(value&&recoveredCollection(value))setId(value);if(find.trim())setSearch(find);setMappedOnly(params.get('mapped')==='1');},0);
   return()=>{clearTimeout(token);request.current?.abort();};
  },[]);
  useEffect(()=>{
@@ -42,7 +53,11 @@ export default function DataLibrary(){
   return()=>{clearTimeout(timer);controller.abort();};
  },[]);
  const collectionFreshness=(collectionId:string)=>fresh?.collections.get(collectionId)??null;
- function choose(next:string){request.current?.abort();generation.current++;setId(next);setAnswer(null);setPage(1);setBusy(false);setStatus('Ready to read this collection.');history.replaceState(null,'',`/data-library?collection=${encodeURIComponent(next)}`);}
+ function choose(next:string){
+  if(!recoveredCollection(next))return;
+  request.current?.abort();generation.current++;setSelectionVisit(n=>n+1);setId(next);setAnswer(null);setPage(1);setBusy(false);setStatus('Ready to read this collection.');
+  syncLocation(next);
+ }
  async function read(after?:string){
   if(!collection)return;
   request.current?.abort();const controller=new AbortController();request.current=controller;const version=++generation.current;
@@ -60,16 +75,22 @@ export default function DataLibrary(){
   <header><Link href="/?panel=layers">← Back to the map</Link><span>KANSAS FRONTIER MATRIX</span><h1>Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
   <div className={styles.summary}><strong>{RECOVERED_COLLECTIONS.length} record collections</strong><span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} map options · availability shown on read</span><span>Full-text search of newspaper pages and archive texts</span><span>Public source data · archived editions</span>{fresh&&<span>Load dates as of {fresh.at.slice(0,16).replace('T',' ')} UTC{fresh.state==='stale'?' (PC away; last known)':''}</span>}</div>
   <ArchiveSearch loadedThrough={{newspapers:loadedThrough(collectionFreshness('bulk-newspaper-pages')),texts:loadedThrough(fresh?.datasets.get('archive-search')?.freshness)}}/>
+  {selected.length>0&&<aside className={`${styles.tray} ${browserStyles.selectionTray}`} aria-label="Selected archive map collections"><div><strong>{selected.length} {selected.length===1?'collection':'collections'} selected</strong><small>Map their first record pages; load further pages in Layers.</small></div><Link href={recoveredMapUrl(selected)}>Open together on map →</Link><button type="button" onClick={()=>setSelected([])}>Clear</button></aside>}
   <div className={styles.layout}>
    <section className={styles.catalog} aria-label="Find a collection">
-    <label>Find a collection<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Wells, newspapers, Census, schools…"/></label>
-    <p>{matching.length} collections · names and source families</p>
+    <div className={browserStyles.filters}>
+     <div className={browserStyles.filterTools}><label>Find a collection<input ref={finder} type="search" value={search} onChange={e=>{setSearch(e.target.value);syncLocation(id,e.target.value,mappedOnly);}} maxLength={80} placeholder="Wells, Census, wind speed…" aria-describedby="collection-results-summary"/></label>{hasFilters&&<button type="button" aria-label="Clear collection filters" onClick={clearFilters}>Clear</button>}</div>
+     <label className={browserStyles.mapFilter}><input type="checkbox" checked={mappedOnly} onChange={e=>{setMappedOnly(e.target.checked);syncLocation(id,search,e.target.checked);}}/>With map geometry</label>
+     <p className={browserStyles.hint}>Search names, sources and field names. Record availability is checked when you read a collection.</p>
+    </div>
+    <p id="collection-results-summary" role="status" aria-live="polite" aria-atomic="true">{matching.length} of {RECOVERED_COLLECTIONS.length} collections</p>
     <div className={styles.results}>{matching.map(c=>{const through=loadedThrough(collectionFreshness(c.id));return <button type="button" key={c.id} aria-pressed={c.id===id} onClick={()=>choose(c.id)}><strong>{c.title}</strong><small>{c.geometry?'Records + map geometry':'Records & reference tables'} · {c.database==='bulk'?'bulk archive':'observation archive'}{through?` · loaded ${through}`:''}</small></button>;})}</div>
+    {!matching.length&&<div className={browserStyles.empty}><strong>No matching collections</strong><p>{mappedOnly?'Try fewer words or include collections without map geometry.':'Try fewer words, a source family or a field name.'}{collection?' Your collection choice and map selection are unchanged.':''}</p><button type="button" onClick={clearFilters}>Show all collections</button></div>}
    </section>
    <section className={styles.content} aria-label="Collection records">
-    {collection?<><h2>{collection.title}</h2><p>Original codes, units, missing values and quality flags are preserved. Each record keeps its own date; editions can overlap. These pages are ordered by record identity, not map position.</p>
+    {collection?<><h2 ref={collectionHeading} className={browserStyles.heading} tabIndex={-1}>{collection.title}</h2><button type="button" className={browserStyles.back} onClick={()=>finder.current?.focus()}>Back to collection finder</button><p>Original codes, units, missing values and quality flags are preserved. Each record keeps its own date; editions can overlap. These pages are ordered by record identity, not map position.</p>
      {fresh&&<p className={styles.note}>On the PC: {freshnessLine(collectionFreshness(id))} A record missing here may simply not be loaded yet.</p>}
-     <div className={styles.actions}><button type="button" disabled={busy} onClick={()=>void read()}>Read first page</button>{collection.geometry&&<button type="button" aria-pressed={selected.includes(id)} onClick={()=>setSelected(current=>current.includes(id)?current.filter(v=>v!==id):[...current,id])}>{selected.includes(id)?'Remove from map selection':'Add to map selection'}</button>}</div>
+     <div className={styles.actions}><button type="button" disabled={busy} onClick={()=>void read()}>Read first page</button>{selected.length>0&&<Link className={browserStyles.mapLink} href={recoveredMapUrl(selected)}>Open selected map ({selected.length}) →</Link>}{collection.geometry&&<button type="button" aria-pressed={selected.includes(id)} onClick={()=>setSelected(current=>current.includes(id)?current.filter(v=>v!==id):[...current,id])}>{selected.includes(id)?'Remove from map selection':'Add to map selection'}</button>}</div>
      {!collection.geometry&&<p className={styles.note}>Available as source records. This table has no stored GeoJSON geometry; geographic joins require the matching place identity and edition.</p>}
      <details><summary>{collection.columns.length} available fields</summary><p className={styles.fields}>{collection.columns.join(' · ')}</p></details>
     </>:<><h2>Every collection has a place here</h2><p>Start with a collection. Measurements and text remain useful even when they have no location to draw. Geometry collections can be selected together and opened on the map.</p></>}
@@ -81,7 +102,6 @@ export default function DataLibrary(){
     </>}
    </section>
   </div>
-  {selected.length>0&&<aside className={styles.tray} aria-label="Selected archive map collections"><div><strong>{selected.length} collections selected</strong><small>Map their first record pages; load further pages in Layers.</small></div><Link href={recoveredMapUrl(selected)}>Open together on map →</Link><button type="button" onClick={()=>setSelected([])}>Clear</button></aside>}
   <footer><Link href="/?panel=layers">Map layers &amp; dated observation tools</Link><p>Record counts are page counts. A partial page is not statewide coverage. Provider attribution remains with the data, including <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors · ODbL</a>.</p></footer>
  </main>;
 }
