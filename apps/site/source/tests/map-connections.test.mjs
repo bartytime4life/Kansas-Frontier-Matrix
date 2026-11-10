@@ -52,10 +52,14 @@ test("county baseline requires 105 distinct Kansas counties and preserves missin
 });
 
 test("NOAA keeps real zero rain and snow, withholds quality-flagged values, and rejects wrong-day records", async () => {
-  const row = { DATE: "1900-05-19", STATION: "USC00143527", LATITUDE: "38.85", LONGITUDE: "-99.3", TMAX: "70", TMAX_ATTRIBUTES: ",X,0", TMIN: "44", PRCP: "0.00", PRCP_ATTRIBUTES: ",,0", SNOW: "2.0", SNOW_ATTRIBUTES: ",,0", SNWD: "4", SNWD_ATTRIBUTES: ",,0" };
+  const row = { DATE: "1900-05-19", STATION: "USC00143527", LATITUDE: "38.85", LONGITUDE: "-99.3", TMAX: "70", TMAX_ATTRIBUTES: ",X,0", TMIN: "44", TMIN_ATTRIBUTES: ",,0", PRCP: "0.00", PRCP_ATTRIBUTES: ",,0", SNOW: "2.0", SNOW_ATTRIBUTES: ",,0", SNWD: "4", SNWD_ATTRIBUTES: ",,0" };
   await mock([row], async () => {
     const result = await weather.GET(new Request("https://example.test/?day=1900-05-19")), body = await result.json();
     assert.equal(result.status, 200); assert.equal(body.data.features[0].properties.maximumF, null); assert.equal(body.data.features[0].properties.precipitationInches, 0); assert.equal(body.data.features[0].properties.snowfallInches, 2); assert.equal(body.data.features[0].properties.snowDepthInches, 4);
+    const p = body.data.features[0].properties;
+    assert.equal(p.maximumFState, "quality-withheld"); assert.equal(p.maximumFRawValue, "70");
+    assert.equal(p.minimumF, 44); assert.equal(p.minimumFState, "reported"); assert.equal(p.minimumTemperatureAttributes, row.TMIN_ATTRIBUTES);
+    assert.equal(p.precipitationInchesState, "reported"); assert.equal(p.precipitationAttributes, row.PRCP_ATTRIBUTES);
   });
   await mock([{ ...row, DATE: "1900-05-20" }], async () => assert.equal((await weather.GET(new Request("https://example.test/?day=1900-05-19"))).status, 502));
   assert.equal((await weather.GET(new Request("https://example.test/?day=1900-02-29"))).status, 400);

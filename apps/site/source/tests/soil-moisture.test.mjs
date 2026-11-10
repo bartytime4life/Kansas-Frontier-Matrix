@@ -27,6 +27,97 @@ const now = new Date("2026-09-29T13:00:00Z");
 const layer = (name, ranges) => `<Layer><ows:Identifier>${name}</ows:Identifier><Dimension><ows:Identifier>Time</ows:Identifier>${ranges.map(range => `<Value>${range}</Value>`).join("")}</Dimension><TileMatrixSetLink><TileMatrixSet>GoogleMapsCompatible_Level6</TileMatrixSet></TileMatrixSetLink></Layer>`;
 const capabilities = overrides => `<Capabilities>${Object.entries(soil.SOIL_VIEWS).map(([view, spec]) => layer(spec.layer, overrides?.[view] ?? ["2026-09-25/2026-09-27/P1D"])).join("")}</Capabilities>`;
 
+test("soil URL restoration rejects incomplete and malformed fields without throwing", () => {
+  const invalid = new Set(["", "1|surface||", "1|surface|| ", "1|surface||NaN", "1|surface||Infinity", "1|surface||0.5|extra", "2|surface||0.5", "1|constructor||0.5", "1|__proto__||0.5", "1|surface|2026-02-30|0.5"]);
+  for (const view of Object.keys(soil.SOIL_VIEWS)) for (const visible of ["0", "1"]) for (const day of ["", "2026-09-28"]) {
+    const fields = [visible, view, day, "0.65"];
+    for (let count = 0; count < 4; count++) invalid.add(fields.slice(0, count).join("|"));
+  }
+  for (const value of invalid) assert.deepEqual(soil.restoreSoilMapState(new URLSearchParams({ soil: value })), soil.DEFAULT_SOIL_MAP_STATE, value);
+  assert.deepEqual(soil.restoreSoilMapState(new URLSearchParams()), soil.DEFAULT_SOIL_MAP_STATE);
+});
+
+test("the existing four-field soil URL format retains every view, visibility, day and bounded opacity", () => {
+  for (const view of Object.keys(soil.SOIL_VIEWS)) for (const visible of [false, true]) for (const day of ["", "2015-03-31", "2024-02-29"]) {
+    const expected = { visible, view, day, opacity: 0.73 }, params = new URLSearchParams();
+    soil.serializeSoilMapState(params, expected);
+    assert.deepEqual(soil.restoreSoilMapState(params), expected);
+  }
+  for (const [value, expected] of [["-1", 0], ["0", 0], ["1", 1], ["2", 1]]) {
+    assert.equal(soil.restoreSoilMapState(new URLSearchParams({ soil: `1|root||${value}` })).opacity, expected);
+  }
+});
+
+// Execute the actual complete page callback and its initialization/popstate
+// registration. The renderer and public registries are empty fixtures; every
+// provider dispatch is forbidden, and no browser/private state is read.
+const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+const pageTree = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
+let restoreCallback, restoreEffect;
+function findRestore(node) {
+  if (ts.isVariableDeclaration(node) && node.name.getText(pageTree) === "restoreExplorerFromUrl") restoreCallback = node.initializer.arguments[0].getText(pageTree);
+  if (ts.isCallExpression(node) && node.expression.getText(pageTree) === "useEffect" && node.arguments[0]?.getText(pageTree).includes("const handlePopState = () => restoreExplorerFromUrl();")) restoreEffect = node.arguments[0].getText(pageTree);
+  ts.forEachChild(node, findRestore);
+}
+findRestore(pageTree); assert.ok(restoreCallback && restoreEffect);
+const evaluateRestore = code => ts.transpileModule(`return (${code});`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+const restoreCode = evaluateRestore(restoreCallback), effectCode = evaluateRestore(restoreEffect);
+function soilRestoreFixture(initialSoil, mapReady) {
+  const state = {}, refs = {}, timers = new Map(), listeners = new Map(), jumps = []; let timerId = 0, providerCalls = 0;
+  const denied = () => { providerCalls++; assert.fail("URL parsing must not dispatch a provider in this fixture"); };
+  const map = { jumpTo: view => jumps.push(view), setMaxPitch() {}, isStyleLoaded: () => true };
+  const window = { location: { search: new URLSearchParams({ soil: initialSoil, units: "metric", t: "2026", c: "-97,39" }).toString() }, history: { state: null },
+    setTimeout(fn) { const id = ++timerId; timers.set(id, fn); return id; }, clearTimeout: id => timers.delete(id),
+    addEventListener(type, fn) { assert.equal(type, "popstate"); listeners.set(type, fn); }, removeEventListener(type, fn) { assert.equal(listeners.get(type), fn); listeners.delete(type); },
+  };
+  const bindings = {
+    window, URLSearchParams, Number, Object, Set, Date, Boolean, Math,
+    explorerHistoryParams: search => new URLSearchParams(search), restoreTopic: () => "all",
+    restoreDaylightView: () => ({ day: "2026-09-29", throughDay: "2026-09-29", instantMs: Date.parse("2026-09-29T12:00:00Z"), enabled: false, playing: false }),
+    currentKansasCalendarDay: () => "2026-09-29", currentUtcDay: () => "2026-09-29",
+    mapRef: { current: mapReady ? map : null }, KANSAS_VIEW: { center: [-98, 38], zoom: 6, bearing: 0, pitch: 0 },
+    SUPPORTED_CONTEXT_BOUNDS: { west: -104.8, east: -92, south: 34.8, north: 42.2 },
+    parseNumber: (value, fallback) => value === null || value.trim() === "" || !Number.isFinite(Number(value)) ? fallback : Number(value), clamp: (value, min, max) => Math.min(max, Math.max(min, value)),
+    LAYER_REGISTRY: [], OFFICIAL_CONTEXT_SOURCES: [], defaultVisibility: {}, defaultOpacity: {}, defaultOfficialVisibility: {}, defaultOfficialOpacity: {}, defaultOrder: [],
+    preferredContextIds: () => [], readContextPreference: () => null, restoreArchiveViewDays: () => ({}), restoreSoilMapState: soil.restoreSoilMapState,
+    normalizeUsgsStationId: () => null, restoreStreamflowArchiveDay: () => null, KNOWN_TEMPORAL_FRAMES: new Set([1910, 2026]), OFFICIAL_CONTEXT_PRESENT_FRAME: 2026, TIME_STEPS: [1910, 2026], evidenceLabels: {},
+    officialArchiveDaysRef: { current: {} }, officialRequestsRef: { current: new Map() }, officialPayloadsRef: { current: {} }, officialArchivePayloadsRef: { current: {} },
+    applyProjectionNavigationLimits() {}, updateAnalysisAreaSource() {}, setDaylightMapLayer() {},
+    loadOfficialArchiveDay: denied, refreshOfficialContext: denied, refreshNoaaRadarManifest: denied, refreshStreamflow: denied, refreshNoaaHydrologyNetwork: denied,
+  };
+  const scope = new Proxy(bindings, { has: () => true, get(target, key) {
+    if (key === Symbol.unscopables) return undefined;
+    if (Object.hasOwn(target, key)) return target[key];
+    if (typeof key === "string" && key.startsWith("set")) return value => { state[key] = value; };
+    if (typeof key === "string" && key.endsWith("Ref")) return refs[key] ??= { current: null };
+    throw new Error(`Missing URL fixture binding: ${String(key)}`);
+  } });
+  const restore = new Function("scope", `with (scope) { ${restoreCode} }`)(scope);
+  bindings.restoreExplorerFromUrl = restore;
+  const cleanup = new Function("scope", `with (scope) { ${effectCode} }`)(scope)();
+  return { state, refs, jumps,
+    initialize() { assert.equal(timers.size, 1); const [id, fn] = [...timers][0]; timers.delete(id); fn(); },
+    navigate(soilValue) { window.location.search = new URLSearchParams({ soil: soilValue, units: "imperial", t: "1910", c: "-96,37" }).toString(); listeners.get("popstate")(); },
+    dispose() { cleanup(); assert.equal(timers.size, 0); assert.equal(listeners.size, 0); assert.equal(providerCalls, 0); },
+  };
+}
+
+test("malformed soil links finish initialization and popstate restoration instead of leaving a partial map setup", () => {
+  for (const mapReady of [false, true]) for (const value of ["1|surface|", "1|root|2026-09-28", "0|surface-uncertainty|", "1|root-uncertainty||bad"]) {
+    const f = soilRestoreFixture(value, mapReady);
+    f.initialize(); assert.deepEqual(f.state.setSoilMapState, soil.DEFAULT_SOIL_MAP_STATE);
+    assert.equal(f.state.setLayerPreferencesReady, true); assert.equal(f.refs.explorerRestoredRef.current, true);
+    assert.equal(f.state.setMeasureUnit, "metric"); assert.equal(f.state.setYear, 2026);
+    assert.deepEqual(f.state.setView.center, [-97, 39]); assert.equal(f.jumps.length, Number(mapReady));
+    f.navigate("1|root|2026-09-28|0.73"); assert.deepEqual(f.state.setSoilMapState, { visible: true, view: "root", day: "2026-09-28", opacity: 0.73 });
+    f.state.setLayerPreferencesReady = false; f.refs.explorerRestoredRef.current = false;
+    f.navigate(value); assert.deepEqual(f.state.setSoilMapState, soil.DEFAULT_SOIL_MAP_STATE);
+    assert.equal(f.state.setLayerPreferencesReady, true); assert.equal(f.refs.explorerRestoredRef.current, true);
+    assert.equal(f.state.setMeasureUnit, "imperial"); assert.equal(f.state.setYear, 1910); assert.deepEqual(f.state.setView.center, [-96, 37]);
+    f.dispose();
+  }
+});
+
 test("four fixed views share only exact available UTC days and preserve gaps", () => {
   const parsed = soil.parseSoilAvailability(capabilities({ root: ["2026-09-25/2026-09-25/P1D", "2026-09-27/2026-09-27/P1D"] }), now);
   assert.deepEqual(soil.commonSoilDays(parsed), ["2026-09-27", "2026-09-25"]);

@@ -2770,6 +2770,7 @@ export default function Home() {
     params.set("base", basemap);
     params.set("proj", projection);
     params.set("scene", scenePreset);
+    params.set("dem", terrainProvider);
     params.set("zscale", verticalExaggeration.toFixed(1));
     params.set("sky", atmospherePreset);
     params.set("light", String(Math.round(lightAzimuth)));
@@ -2794,7 +2795,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, officialWorkspace, layerCatalogView, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, officialWorkspace, layerCatalogView, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, terrainProvider, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4989,6 +4990,15 @@ export default function Home() {
       const nextScenePreset: ScenePresetId = restoredScene === "overview-2d" || restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
       scenePresetRef.current = nextScenePreset;
       setScenePreset(nextScenePreset);
+      const nextTerrainProvider: TerrainProvider = params.get("dem") === "usgs-3dep" ? "usgs-3dep" : "mapzen";
+      if (terrainProviderRef.current !== nextTerrainProvider) {
+        attachedTerrainProviderRef.current = null;
+        setTerrainElevationReading(null);
+        setTerrainElevationUnavailable(null);
+        setTerrainState(nextScenePreset === "elevation-3d" ? "LOADING" : "OFF");
+      }
+      terrainProviderRef.current = nextTerrainProvider;
+      setTerrainProvider(nextTerrainProvider);
       const nextVerticalExaggeration = nextScenePreset === "elevation-3d" ? terrainDepth(parseNumber(params.get("zscale"), DEFAULT_TERRAIN_DEPTH)) : clamp(parseNumber(params.get("zscale"), 1), 0, 2);
       verticalExaggerationRef.current = nextVerticalExaggeration;
       setVerticalExaggeration(nextVerticalExaggeration);
