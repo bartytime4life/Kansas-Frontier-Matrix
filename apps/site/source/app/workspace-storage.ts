@@ -8,6 +8,7 @@ import { validResearchContext } from "./research-context";
 
 export const REPORT_STORAGE_KEY = "kfm-report-draft-v2";
 export const STORY_STORAGE_KEY = "kfm-story-draft-v2";
+const MAX_DRAFT_CHARACTERS = 2000000;
 const object = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === "object" && !Array.isArray(value);
 const text = (value: unknown): value is string => typeof value === "string" && value.length <= 24000;
 const strings = (value: unknown): value is string[] => Array.isArray(value) && value.length <= 1000 && value.every(text);
@@ -80,12 +81,25 @@ export function readDraft(key: string): ReportDraft | StoryDraft | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(key);
-    if (!raw || raw.length > 2000000) return null;
+    if (!raw || raw.length > MAX_DRAFT_CHARACTERS) return null;
     const value: unknown = JSON.parse(raw);
     if (key === REPORT_STORAGE_KEY && validReportDraft(value)) return value;
     if (key === STORY_STORAGE_KEY && validStoryDraft(value)) return value;
   } catch { /* Storage denial or invalid drafts cannot block the map. */ }
   return null;
+}
+
+export function writeDraft(key: string, draft: ReportDraft | StoryDraft): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const valid = key === REPORT_STORAGE_KEY ? validReportDraft(draft) : key === STORY_STORAGE_KEY && validStoryDraft(draft);
+    if (!valid) return false;
+    const raw = JSON.stringify(draft);
+    if (raw.length > MAX_DRAFT_CHARACTERS) return false;
+    window.localStorage.setItem(key, raw);
+    return true;
+  } catch { /* A failed save must leave the previous device-local draft intact. */ }
+  return false;
 }
 
 export function readDraftSnapshot(mode: "reports" | "stories"): MapSnapshot | null {

@@ -45,6 +45,28 @@ test("evidence binds every part of the selected month to its records in the same
   assert.equal(helpers.stormExportMatchesSelection(year, evidence, MAY), false);
 });
 
+test("storm evidence requires valid local clocks in the matching numeric catalog year", () => {
+  const { layers, evidence } = month(MAY);
+  for (const begin of ["1999-05-19T18:40", "2025-05-99T18:40", "2025-05-19T24:00", "2025-05-19T18:60", "2025-05-19T18:40Z", "2025-05-19T18:40:00"]) {
+    const bad = structuredClone(layers); bad.data.observations[0].begin_local = begin;
+    assert.equal(helpers.stormEvidenceMatchesSelection(bad, evidence, MAY), false, begin);
+    assert.equal(helpers.stormExportMatchesSelection(bad, evidence, MAY), false, begin);
+  }
+  for (const end of ["2025-05-19T18:39", "2025-05-99T19:00"]) {
+    const bad = structuredClone(layers); bad.data.observations[0].end_local = end;
+    assert.equal(helpers.stormExportMatchesSelection(bad, evidence, MAY), false);
+  }
+  for (const year of [undefined, "2025", 2024, 0]) {
+    const bad = structuredClone(evidence); bad.data.data_year = year;
+    assert.equal(helpers.stormExportMatchesSelection(layers, bad, MAY), false);
+  }
+  const fullYear = structuredClone(full); fullYear.data.approval_expires_at = layers.data.approval_expires_at;
+  assert.equal(helpers.stormEvidenceMatchesSelection(fullYear, evidence, MAY), true);
+  const crossingYear = structuredClone(layers); crossingYear.data.observations[0].end_local = "2026-01-01T00:00";
+  assert.equal(helpers.stormExportMatchesSelection(crossingYear, evidence, MAY), true, "the source contract scopes by begin year and permits a later end year");
+  assert.equal(helpers.stormExportMatchesSelection(layers, evidence, MAY), true);
+});
+
 test("responses classify without stations, and damage is never shown as zero when unreported", () => {
   assert.equal(helpers.stormBrowserStateForResponse(full, true), "received");
   assert.equal(helpers.stormBrowserStateForResponse({ envelope: { outcome: "ANSWER" }, data: { months: [5] } }, true), "received");
@@ -139,4 +161,16 @@ test("a full-year response cannot be exported as one month", async () => {
   h.requests[1].resolve(evidence); await settle();
   assert.deepEqual(h.downloads, []);
   assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
+
+test("the storm export withholds wrong-year, impossible-date and mismatched-year evidence", async () => {
+  for (const mutate of [
+    ({ layers }) => { layers.data.observations[0].begin_local = "1999-05-19T18:40"; },
+    ({ layers }) => { layers.data.observations[0].begin_local = "2025-05-99T18:40"; },
+    ({ evidence }) => { evidence.data.data_year = 2024; },
+  ]) {
+    const initial = month(MAY), fresh = month(MAY), h = harness(initial.layers); mutate(fresh); h.start();
+    h.requests[0].resolve(fresh.layers); await settle(); h.requests[1].resolve(fresh.evidence); await settle();
+    assert.equal(h.requests.length, 2); assert.deepEqual(h.downloads, []); assert.match(h.statuses.at(-1), /^Export withheld:/);
+  }
 });

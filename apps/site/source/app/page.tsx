@@ -488,7 +488,7 @@ type SelectedContext = {
   externalAttributes?: readonly DrawerAttribute[];
 };
 
-type StageDrawerLoad = { stationId: string; status: "loading" | "ready" | "error"; detail?: UsgsStageDetail };
+type StageDrawerLoad = { stationId: string; attempt: number; status: "loading" | "ready" | "error"; detail?: UsgsStageDetail; message?: string };
 
 const officialContextIdForSelection = (selection: SelectedContext | null): OfficialContextId | null => {
   if (!selection?.featureId.startsWith("official-context:")) return null;
@@ -1363,6 +1363,7 @@ export default function Home() {
   const [radarArchiveDraftDay, setRadarArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowBundle, setStreamflowBundle] = useState<StreamflowBundle | null>(null);
   const [stageDrawerLoad, setStageDrawerLoad] = useState<StageDrawerLoad | null>(null);
+  const [stageDrawerAttempt, setStageDrawerAttempt] = useState(0);
   const [streamflowState, setStreamflowState] = useState<HydrologyObservatoryState>("idle");
   const [streamflowError, setStreamflowError] = useState<string | null>(null);
   const [streamflowFrameIndex, setStreamflowFrameIndex] = useState(-1);
@@ -1495,6 +1496,7 @@ export default function Home() {
   const [hoverActive, setHoverActive] = useState(false);
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
+  const [workspaceDraftRequest, setWorkspaceDraftRequest] = useState<{ freshMode: "reports" | "stories" | null; revision: number }>({ freshMode: null, revision: 0 });
   const [fireReportContext, setFireReportContext] = useState<FireReportContext | null>(null);
   const [researchReportContext, setResearchReportContext] = useState<ResearchContext | null>(null);
   const [undergroundOpen, setUndergroundOpen] = useState(false);
@@ -2612,26 +2614,35 @@ export default function Home() {
   const latestLoadedDischarge = useMemo(() => streamflowBundle && selectedOfficialContextId === "usgs-streamflow" && selected?.externalStationId
     ? streamflowBundle.observations.findLast((item) => item.stationId === selected.externalStationId && item.value !== null)
     : null, [selected?.externalStationId, selectedOfficialContextId, streamflowBundle]);
-  const selectedStageDetail = stageDrawerLoad?.stationId === selected?.externalStationId ? stageDrawerLoad : null;
+  const selectedStageDetail = selectedOfficialContextId === "usgs-streamflow" && stageDrawerLoad && stageDrawerLoad.stationId === selected?.externalStationId && stageDrawerLoad.attempt === stageDrawerAttempt ? stageDrawerLoad : null;
   useEffect(() => {
     const stationId = selectedOfficialContextId === "usgs-streamflow" && rightOpen ? selected?.externalStationId : null;
     if (!stationId) return;
-    const controller = new AbortController();
-    setStageDrawerLoad({ stationId, status: "loading" });
+    const controller = new AbortController(), attempt = stageDrawerAttempt;
+    let active = true, timedOut = false, cancel = () => {};
+    const cancelled = new Promise<never>((_, reject) => {
+      cancel = () => reject(controller.signal.reason);
+      controller.signal.addEventListener("abort", cancel, { once: true });
+    });
+    const deadline = setTimeout(() => { timedOut = true; controller.abort(); }, 15_000);
+    setStageDrawerLoad({ stationId, attempt, status: "loading" });
     const load = async () => {
-      try {
-        const path = `/api/hydrology/streamflow?mode=station&range=7d&station=${encodeURIComponent(stationId)}&parameter=00065&resolution=continuous`;
-        const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
-        if (!response.ok) throw new Error(`USGS gauge-height request returned HTTP ${response.status}.`);
-        const detail = parseUsgsStageDetail(await readBoundedJson(response, 8 * 1024 * 1024), stationId);
-        if (!controller.signal.aborted) setStageDrawerLoad({ stationId, status: "ready", detail });
-      } catch {
-        if (!controller.signal.aborted) setStageDrawerLoad({ stationId, status: "error" });
+      const path = `/api/hydrology/streamflow?mode=station&range=7d&station=${encodeURIComponent(stationId)}&parameter=00065&resolution=continuous`;
+      const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
+      if (controller.signal.aborted || !response.ok) {
+        void response.body?.cancel(controller.signal.reason).catch(() => undefined);
+        controller.signal.throwIfAborted();
+        throw new Error(`USGS gauge-height request returned HTTP ${response.status}.`);
       }
+      return parseUsgsStageDetail(await readBoundedJson(response, 8 * 1024 * 1024, controller.signal), stationId);
     };
-    void load();
-    return () => controller.abort();
-  }, [rightOpen, selected?.externalStationId, selectedOfficialContextId]);
+    void Promise.race([load(), cancelled]).then(detail => {
+      if (active && !controller.signal.aborted) setStageDrawerLoad({ stationId, attempt, status: "ready", detail });
+    }).catch(() => {
+      if (active) setStageDrawerLoad({ stationId, attempt, status: "error", message: timedOut ? "The gauge-height check timed out. Retry this station." : "Gauge-height data could not be checked. Retry this station." });
+    }).finally(() => { clearTimeout(deadline); controller.signal.removeEventListener("abort", cancel); });
+    return () => { active = false; controller.abort(); clearTimeout(deadline); controller.signal.removeEventListener("abort", cancel); };
+  }, [rightOpen, selected?.externalStationId, selectedOfficialContextId, stageDrawerAttempt]);
   const selectedLabel = selected?.properties.title ?? "Statewide Kansas";
   const selectedEvidence = selected ? evidenceLabels[selected.properties.evidenceState] : null;
   const selectedLayerHidden = Boolean(selected && !selectionCarrierIsVisible(selected, visibility, officialVisibility, temporalQuery.frame));
@@ -4645,7 +4656,10 @@ export default function Home() {
 
 
   const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null, subsurface: SubsurfaceContext | null = null) => {
-    if (freshFromMap || !workspaceSnapshot) setWorkspaceSnapshot(freshFromMap ? captureMapSnapshot() : readDraftSnapshot(mode) ?? captureMapSnapshot());
+    if (freshFromMap || primaryWorkspace === "map" || !workspaceSnapshot) {
+      setWorkspaceSnapshot(freshFromMap ? captureMapSnapshot() : readDraftSnapshot(mode) ?? captureMapSnapshot());
+      setWorkspaceDraftRequest((current) => ({ freshMode: freshFromMap ? mode : null, revision: current.revision + 1 }));
+    }
     setFireReportContext(mode === "reports" ? fireContext : null);
     setResearchReportContext(mode === "reports" ? persistableResearch(research && { ...research, capturedAt: new Date().toISOString() }, researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
     setSubsurfaceReportContext(mode === "reports" ? persistableSubsurface(subsurface && { ...subsurface, capturedAt: new Date().toISOString() }, subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
@@ -4653,8 +4667,8 @@ export default function Home() {
     setMapContextOpen(false);
     setHelpOpen(false);
     setQwenOpen(false);
-    announce(`${mode === "reports" ? "Report" : "Story"} workspace opened from the current governed map state`);
-  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, subsurfacePrivate, workspaceSnapshot]);
+    announce(`${mode === "reports" ? "Report" : "Story"} workspace ${freshFromMap ? "started from the current governed map state" : "opened"}`);
+  }, [announce, captureMapSnapshot, locationCameraRedacted, primaryWorkspace, researchLocationRedacted, subsurfacePrivate, workspaceSnapshot]);
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
@@ -9137,9 +9151,10 @@ export default function Home() {
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
-        key={workspaceSnapshot.id}
+        key={`${workspaceSnapshot.id}-${workspaceDraftRequest.revision}`}
         mode={primaryWorkspace}
         snapshot={workspaceSnapshot}
+        freshDraftMode={workspaceDraftRequest.freshMode}
         fireContext={fireReportContext}
         researchContext={researchReportContext}
         subsurfaceContext={subsurfaceReportContext}
@@ -10519,8 +10534,9 @@ export default function Home() {
                   <button type="button" onClick={() => openPrimaryWorkspace("reports", true, buildFireReportContext(selectedOfficialContextId === "nifc-fire-reports" ? "nifc-fire-reports" : "nasa-gibs-fire-points", selectedOfficialFeature || null, selectedOfficialPayload?.retrievedAt, selectedOfficialPayload?.state ?? "unavailable", selectedFireComparisonPayload?.state ?? "unavailable", selectedFireNeighbors))}>Build report from selected fire record</button>
                 </section>}
                 {selectedRiverObservation && <section className="drawer-data-block" aria-label="USGS gauge height data"><header><h3>Gauge height · USGS 00065</h3><small>Separate seven-day station request</small></header>
-                  {selectedStageDetail?.status === "loading" && <p role="status">Loading station metadata and gauge-height observations…</p>}
-                  {selectedStageDetail?.status === "error" && <p role="status">Gauge-height data are unavailable. The discharge frame and its history remain separate.</p>}
+                  {(!selectedStageDetail || selectedStageDetail.status === "loading") && <p role="status">Loading station metadata and gauge-height observations…</p>}
+                  {selectedStageDetail?.status === "error" && <p role="alert">{selectedStageDetail.message} The discharge frame and its history remain separate.</p>}
+                  <button type="button" aria-busy={!selectedStageDetail || selectedStageDetail.status === "loading"} onClick={() => setStageDrawerAttempt(attempt => attempt + 1)}>{selectedStageDetail?.status === "ready" ? "Refresh gauge height" : selectedStageDetail?.status === "error" ? "Retry gauge-height check" : "Restart gauge-height check"}</button>
                   {selectedStageDetail?.status === "ready" && selectedStageDetail.detail && <>
                     <p>{selectedStageDetail.detail.latest ? `Latest returned value: ${selectedStageDetail.detail.latest.value?.toLocaleString("en-US")} ${selectedStageDetail.detail.latest.unit} · ${drawerTimestamp(selectedStageDetail.detail.latest.observedAt)}` : "No measured gauge-height value was returned in this seven-day request."} {selectedStageDetail.detail.partial ? "The response is partial." : ""}</p>
                     <p>Checked {drawerTimestamp(selectedStageDetail.detail.queryStart)} to {drawerTimestamp(selectedStageDetail.detail.queryEnd)} · {selectedStageDetail.detail.observationCount.toLocaleString("en-US")} returned samples · retrieved {drawerTimestamp(selectedStageDetail.detail.retrievedAt)}.</p>

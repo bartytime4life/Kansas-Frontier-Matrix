@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
 import { aviationResearchPoints } from "./aviation-research";
@@ -375,8 +375,19 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
 
   // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
   const inspectorRef = useRef<HTMLDivElement | null>(null);
+  const profileRef = useRef<HTMLDivElement | null>(null);
+  const keyboardResultFocus = useRef<({ kind: "point"; value: Picked } | { kind: "side"; value: SideView }) & { trigger: HTMLButtonElement } | null>(null);
   const detailsRef = useRef<HTMLDetailsElement | null>(null);
   const focusInspector = useRef(false);
+  useLayoutEffect(() => {
+    const pending = keyboardResultFocus.current;
+    if (!pending || (pending.kind === "point" ? pending.value !== picked : pending.value !== side)) return;
+    keyboardResultFocus.current = null;
+    // The keyboard action removes its button. Transfer focus in the same commit,
+    // only while that button still owns focus or its removal returned it to body.
+    if (document.activeElement !== pending.trigger && (pending.trigger.isConnected || document.activeElement !== document.body)) return;
+    (pending.kind === "point" ? inspectorRef.current : profileRef.current)?.focus();
+  }, [picked, side]);
   useEffect(() => {
     if (!inspectRequest || !context) return;
     const map = mapRef.current;
@@ -390,7 +401,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
   }, [picked]);
 
   // Side view: two clicks, A then B. Ground at each sample uses loaded terrain where it agrees with the nearest facility.
-  const chooseSidePoint = useCallback((at: Readonly<{ lon: number; lat: number }>) => {
+  const chooseSidePoint = useCallback((at: Readonly<{ lon: number; lat: number }>, keyboardTrigger?: HTMLButtonElement) => {
       const map = mapRef.current;
       if (!map || !context) return;
       setSideError("");
@@ -404,8 +415,10 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
           if (ground.method === "TERRAIN_DEM") terrain++;
           return Object.freeze({ ...point, groundFt: ground.ft });
         });
-        setSide({ a: sideA, b: at, points, terrainShare: terrain / points.length });
-      } catch (error) { setSideError(error instanceof Error ? error.message : "The side view could not be drawn."); }
+        const result = { a: sideA, b: at, points, terrainShare: terrain / points.length };
+        if (keyboardTrigger) keyboardResultFocus.current = { kind: "side", value: result, trigger: keyboardTrigger };
+        setSide(result);
+      } catch (error) { setSideError(error instanceof Error ? error.message : "The side view could not be drawn."); return; }
       setSideStep(null); setSideA(null);
   }, [mapRef, context, sideStep, sideA]);
   useEffect(() => {
@@ -413,7 +426,8 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
     if (!map || !sideStep || !context || !visible) return;
     const clicked = (event: MapMouseEvent) => chooseSidePoint({ lon: event.lngLat.lng, lat: event.lngLat.lat });
     map.getCanvas().style.cursor = "crosshair";
-    map.once("click", clicked);
+    // An invalid B keeps A and the tool active so another click can correct it.
+    map.on("click", clicked);
     return () => { map.off("click", clicked); map.getCanvas().style.cursor = ""; };
   }, [mapRef, sideStep, context, visible, chooseSidePoint]);
 
@@ -525,13 +539,13 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
         </fieldset>
         <fieldset><legend>What can fly here, at each height</legend>
           <button type="button" disabled={!visible || !styleReady} aria-pressed={picking} onClick={() => { setSideStep(null); setSideA(null); setPicking(value => !value); }}>{picking ? "Click the map… (press again to cancel)" : "Pick a point on the map"}</button>
-          {picking && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const at = map.getCenter(); setPicked({ lon: at.lng, lat: at.lat, terrainFt: terrainFtAt(map, at.lng, at.lat), label: `${at.lat.toFixed(4)}, ${at.lng.toFixed(4)}` }); setPicking(false); }}>Inspect map center</button>}
+          {picking && <button type="button" onClick={event => { const map = mapRef.current; if (!map) return; const at = map.getCenter(); const result = { lon: at.lng, lat: at.lat, terrainFt: terrainFtAt(map, at.lng, at.lat), label: `${at.lat.toFixed(4)}, ${at.lng.toFixed(4)}` }; if (event.detail === 0 && document.activeElement === event.currentTarget) keyboardResultFocus.current = { kind: "point", value: result, trigger: event.currentTarget }; setPicked(result); setPicking(false); }}>Inspect map center</button>}
           <small>Or click an airport dot.</small>
           <button type="button" disabled={!visible || !styleReady} aria-pressed={sideStep !== null} onClick={() => { setPicking(false); setSideError(""); setSideStep(step => step ? null : "a"); setSideA(null); }}>{sideStep === "a" ? "Click point A… (press again to cancel)" : sideStep === "b" ? "Now click point B…" : "Draw a side view (A to B)"}</button>
-          {sideStep && <><p role="status">Choose {sideStep.toUpperCase()} on the map, or pan the map with its arrow keys and use the map center. Escape cancels.</p><button type="button" onClick={() => { const at = mapRef.current?.getCenter(); if (at) chooseSidePoint({ lon: at.lng, lat: at.lat }); }}>Use map center for {sideStep.toUpperCase()}</button></>}
+          {sideStep && <><p role="status">Choose {sideStep.toUpperCase()} on the map, or pan the map with its arrow keys and use the map center. Escape cancels.</p><button type="button" onClick={event => { const at = mapRef.current?.getCenter(); if (at) chooseSidePoint({ lon: at.lng, lat: at.lat }, event.detail === 0 && document.activeElement === event.currentTarget ? event.currentTarget : undefined); }}>Use map center for {sideStep.toUpperCase()}</button></>}
           {sideError && <p role="status">{sideError}</p>}
           {side && profile && <figure className="aviation-profile">
-            <div className="aviation-profile-scroll" role="region" aria-label="Scrollable aviation cross-section chart" tabIndex={0}><ProfileChart points={side.points} bands={profile.bands} aircraft={profile.aircraft} /></div>
+            <div className="aviation-profile-scroll" role="region" aria-label="Scrollable aviation cross-section chart" tabIndex={0} ref={profileRef}><ProfileChart points={side.points} bands={profile.bands} aircraft={profile.aircraft} /></div>
             <figcaption><strong>Side view A→B, {side.points[side.points.length - 1].distanceNm.toFixed(1)} NM.</strong> Shapes show each volume’s floor and ceiling over the ground; the brown profile is {side.terrainShare >= 0.99 ? "terrain elevation" : side.terrainShare > 0 ? "terrain where loaded, otherwise the nearest facility's elevation" : "the nearest facility's elevation (turn on 3D terrain for the local ground)"}; the green dashes are the 400 ft AGL drone ceiling; dots are aircraft within 5 km of the line. Unshaded areas can include hidden or unavailable volumes.
               <p>Scroll the chart horizontally or focus it and use the arrow keys. Numbered bands match the list below. Flight levels are pressure references, approximated on this MSL axis without pressure correction. AGL/surface bounds follow the sampled ground here; map forms use facility references, so their approximate positions can differ. Hidden or unavailable volumes are not evidence of clearance.</p>
               {profile.bands.length > 0 ? <ol>{profile.bands.map(band => <li key={band.key}>{profileSummary(side.points, [band]).join("; ")}</li>)}</ol> : <> No enabled, available volume or TFR crosses this sampled line.</>}

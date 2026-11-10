@@ -4,7 +4,15 @@ import type { WaterBrowserState } from "./governed-water-availability";
 /** The most records one month can carry: a package holds at most 5000 events (release.core STORM_EVENTS). */
 export const STORM_MONTH_ROWS = 5000;
 export const STORM_MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] as const;
-const monthOf = (row: StormEvent | undefined) => Number(row?.begin_local?.slice(5, 7));
+const localClock = (value: unknown): string | null => {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) return null;
+  const milliseconds = Date.parse(`${value}:00.000Z`);
+  return Number.isFinite(milliseconds) && new Date(milliseconds).toISOString().slice(0, 16) === value ? value : null;
+};
+const monthOf = (row: StormEvent | undefined): number | null => {
+  const begin = localClock(row?.begin_local), end = localClock(row?.end_local);
+  return begin && end && end >= begin ? Number(begin.slice(5, 7)) : null;
+};
 
 /** Classify a storm events response; never infer a release from a transport failure. Bootstrap lists months,
  *  layers carry observations: storm events have no stations, so the water classifier does not apply. */
@@ -19,10 +27,13 @@ export function stormEvidenceMatchesSelection(layers: StormResponse | null, evid
   const a = layers?.data, b = evidence?.data;
   if (layers?.envelope?.outcome !== "ANSWER" || evidence?.envelope?.outcome !== "ANSWER" || !a || !b
       || typeof a.package_id !== "string" || !a.package_id || a.package_id !== b.package_id
+      || typeof a.data_year !== "number" || !Number.isInteger(a.data_year) || a.data_year < 1996 || a.data_year > 2200 || a.data_year !== b.data_year
+      || !Number.isInteger(month) || month < 1 || month > 12
       || a.released_at !== b.released_at || a.reviewed_at !== b.reviewed_at
       || a.approval_expires_at !== b.approval_expires_at
       || a.correction_state !== "ACTIVE" || b.correction_state !== "ACTIVE"
       || !Array.isArray(a.observations) || !Array.isArray(b.entries) || !b.entries.length) return false;
+  if (a.observations.some(row => monthOf(row) === null || Number(row.begin_local.slice(0, 4)) !== a.data_year)) return false;
   const rows = a.observations.filter(row => monthOf(row) === month);
   if (rows.length > STORM_MONTH_ROWS) return false;
   let next = 0;

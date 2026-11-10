@@ -64,7 +64,16 @@ export type UsgsStageDetail = Readonly<{
 const object = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === "object" && !Array.isArray(value);
 const optionalText = (value: unknown, maximum = 240) => typeof value === "string" && value.length <= maximum ? value : null;
 const optionalNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) ? value : null;
-const iso = (value: unknown): value is string => typeof value === "string" && /^\d{4}-\d{2}-\d{2}T/.test(value) && Number.isFinite(Date.parse(value));
+// The station adapter returns explicit UTC instants. Pad fractions for exact
+// ordering so a source instant just outside the window cannot round into it.
+const instantKey = (value: unknown): string | null => {
+  const match = typeof value === "string" && /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?Z$/.exec(value);
+  if (!match) return null;
+  const fraction = (match[2] ?? "").padEnd(9, "0"), clock = `${match[1]}.${fraction.slice(0, 3)}Z`;
+  const milliseconds = Date.parse(clock);
+  return Number.isFinite(milliseconds) && new Date(milliseconds).toISOString() === clock ? `${match[1]}.${fraction}Z` : null;
+};
+const iso = (value: unknown): value is string => instantKey(value) !== null;
 
 /** Parse only the fixed station/00065 contract returned by the existing Site adapter. */
 export const parseUsgsStageDetail = (payload: unknown, expectedStationId: string): UsgsStageDetail => {
@@ -76,23 +85,26 @@ export const parseUsgsStageDetail = (payload: unknown, expectedStationId: string
     || typeof payload.partial !== "boolean" || typeof payload.truncated !== "boolean") {
     throw new Error("The USGS gauge-height response was invalid.");
   }
+  const start = instantKey(payload.queryStart)!, end = instantKey(payload.queryEnd)!;
+  if (start >= end || end > instantKey(payload.retrievedAt)!) throw new Error("The USGS gauge-height interval was invalid.");
   const station = payload.stations[0];
   if (!object(station) || station.stationId !== expectedStationId || station.agencyCode !== "USGS"
     || !optionalText(station.name) || optionalNumber(station.latitude) === null || optionalNumber(station.longitude) === null) {
     throw new Error("The USGS station metadata did not match the selected gauge.");
   }
   const samples: StageSample[] = payload.observations.map((item: unknown) => {
+    const observedKey = object(item) ? instantKey(item.observedAt) : null;
     if (!object(item) || item.stationId !== expectedStationId || item.parameterCode !== "00065"
-      || !iso(item.observedAt) || optionalText(item.unit, 64) === null
+      || !observedKey || observedKey < start || observedKey > end || optionalText(item.unit, 64) === null
       || item.value !== null && optionalNumber(item.value) === null
       || item.approvalStatus !== null && optionalText(item.approvalStatus, 80) === null
       || !Array.isArray(item.qualifiers) || item.qualifiers.length > 16
       || !item.qualifiers.every((qualifier: unknown) => optionalText(qualifier, 80) !== null)) {
       throw new Error("The USGS gauge-height observations were invalid.");
     }
-    return { observedAt: item.observedAt as string, value: item.value as number | null, unit: item.unit as string,
-      approvalStatus: item.approvalStatus as string | null, qualifiers: item.qualifiers as string[] };
-  }).sort((left, right) => Date.parse(right.observedAt) - Date.parse(left.observedAt));
+    return { key: observedKey, sample: { observedAt: item.observedAt as string, value: item.value as number | null, unit: item.unit as string,
+      approvalStatus: item.approvalStatus as string | null, qualifiers: item.qualifiers as string[] } };
+  }).sort((left, right) => left.key < right.key ? 1 : left.key > right.key ? -1 : 0).map(item => item.sample);
   return {
     stationId: expectedStationId, name: station.name as string,
     county: optionalText(station.county), huc: optionalText(station.huc, 40),

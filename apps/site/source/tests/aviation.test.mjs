@@ -657,7 +657,7 @@ test("drawing a side view with two map clicks renders the cross-section and its 
   const map = {
     getLayer: id => layers.get(id), removeLayer: id => { layers.delete(id); }, addLayer: layer => { layers.set(layer.id, layer); },
     getSource: id => sources.get(id), removeSource: id => { sources.delete(id); }, addSource: (id, source) => { sources.set(id, source); },
-    on() {}, off() { click = null; }, once: (type, handler) => { if (type === "click") click = handler; }, getCanvas: () => ({ style: {} }), getBearing: () => 0, easeTo() {},
+    on(type, handler) { if (type === "click" && typeof handler === "function") click = handler; }, off() { click = null; }, once: (type, handler) => { if (type === "click") click = handler; }, getCanvas: () => ({ style: {} }), getBearing: () => 0, easeTo() {},
   };
   const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
@@ -779,6 +779,8 @@ test("Inspect on an aviation dossier record opens the aviation point inspector t
 test("aviation drawing owns selection until cancelled and supports keyboard map-center points", { timeout: 15_000 }, async () => {
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
   const layers = new Map(), sources = new Map(), keys = new Map(), ownership = [], cameras = [];
+  const document = { activeElement: {} };
+  const keyboardClick = node => node.props.onClick({ detail: 0, currentTarget: document.activeElement });
   let center = { lng: -97.9, lat: 37.65 };
   const map = {
     getLayer: id => layers.get(id), removeLayer: id => layers.delete(id), addLayer: layer => layers.set(layer.id, layer),
@@ -791,7 +793,7 @@ test("aviation drawing owns selection until cancelled and supports keyboard map-
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder, Error,
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder, Error, document,
     window: { matchMedia: () => ({ matches: true }), addEventListener: (key, fn, capture) => { assert.equal(capture, true); keys.set(key, fn); }, removeEventListener: (key, fn, capture) => { assert.equal(capture, true); if (keys.get(key) === fn) keys.delete(key); } } });
   const props = { mapRef: { current: map }, styleReady: true, onPickingChange: value => ownership.push(value) };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -804,20 +806,21 @@ test("aviation drawing owns selection until cancelled and supports keyboard map-
     button(tree, "Draw a side view").props.onClick();
     tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for A")), "keyboard point A");
     assert.equal(ownership.at(-1), true);
-    button(tree, "Use map center for A").props.onClick();
+    keyboardClick(button(tree, "Use map center for A"));
     tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for B")), "keyboard point B");
     center = { lng: -96.95, lat: 37.65 };
-    button(tree, "Use map center for B").props.onClick();
+    keyboardClick(button(tree, "Use map center for B"));
     tree = await renderUntil(cycle, t => Boolean(findNode(t, n => n.props?.["aria-label"] === "Scrollable aviation cross-section chart")), "keyboard cross-section");
     assert.equal(ownership.at(-1), false);
     assert.equal(findNode(tree, n => n.props?.["aria-label"] === "Scrollable aviation cross-section chart").props.tabIndex, 0);
     button(tree, "Draw a side view").props.onClick();
     tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for A")), "another side view");
-    button(tree, "Use map center for A").props.onClick();
+    keyboardClick(button(tree, "Use map center for A"));
     tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for B")), "same-point test");
-    button(tree, "Use map center for B").props.onClick();
+    keyboardClick(button(tree, "Use map center for B"));
     tree = await renderUntil(cycle, t => JSON.stringify(t).includes("two distinct points"), "invalid-path feedback");
-    assert.equal(ownership.at(-1), false);
+    assert.equal(ownership.at(-1), true, "invalid B retains A and the active tool for correction");
+    assert.ok(button(tree, "Use map center for B"));
     button(tree, "Pick a point on the map").props.onClick();
     tree = await renderUntil(cycle, t => Boolean(button(t, "Inspect map center")), "point inspection");
     assert.equal(ownership.at(-1), true);
