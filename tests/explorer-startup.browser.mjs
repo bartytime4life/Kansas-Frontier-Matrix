@@ -1920,6 +1920,68 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
 }
 
 
+// Sharing remains usable without clipboard or history permissions. These are
+// disposable pages; no link is sent and no real clipboard write is performed.
+for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
+ test(`map sharing retains a recoverable redacted link at ${width}x${height}`,{timeout:90000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height);
+  await p.open('/?topic=all&motion=off&privacy=location-camera-redacted&c=-97.12345,39.12345&aoi=-98,38,-97,39','1');
+  await p.wait(`document.querySelector('.atlas-studio')?.dataset.startup==='ready'&&!document.querySelector('.explorer-guide')`,'map controls are ready');
+  if(width===1280){
+   await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Layers').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'background Layers is open');
+   await p.wait(`document.querySelector('.layer-panel')?.contains(document.activeElement)`,'Layers entry focus settles before the next menu action');
+  }
+  await p.evaluate(`(() => {
+   window.__denyShareCopy=true;window.__shareAttempts=[];
+   Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.__shareAttempts.push(value);if(window.__denyShareCopy)throw new DOMException('Synthetic clipboard denial','NotAllowedError');}}});
+   history.replaceState=()=>{throw new DOMException('Synthetic history denial','SecurityError');};
+  })()`);
+  const originalUrl=await p.evaluate('location.href'),entry=await p.evaluate('history.state?.kfmExplorerEntry');
+  await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.header-overflow-menu').open`,'More exposes Share current view');
+  await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('#map-share-dialog')?.open&&document.querySelector('#map-share-status')?.textContent.includes('Automatic copying is unavailable')`,'denied copying leaves a persistent manual fallback');
+  const link=await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`),params=new URL(link).searchParams;
+  assert.equal(params.get('privacy'),'location-camera-redacted');assert.notEqual(params.get('c'),'-97.12345,39.12345');assert.equal(params.has('aoi'),false);
+  assert.match(await p.evaluate(`document.querySelector('#map-share-dialog').textContent`),/Location-derived camera replaced with statewide Kansas/);
+  assert.equal(await p.evaluate('location.href'),originalUrl,'history refusal does not prevent the visible link');
+  assert.equal(await p.evaluate('history.state?.kfmExplorerEntry'),entry);
+  assert.deepEqual(await p.evaluate('window.__shareAttempts'),[link],'automatic copy receives the same redacted link');
+  assert.ok(await p.evaluate(`(() => {const field=document.querySelector('#map-share-dialog textarea');return field.readOnly&&document.activeElement===field&&field.selectionStart===0&&field.selectionEnd===field.value.length;})()`),'the complete readonly link is selected');
+  for(let i=0;i<7;i++){await p.key('Tab','Tab',9);assert.ok(await p.evaluate(`document.querySelector('#map-share-dialog').contains(document.activeElement)`),'native Tab remains within the modal');}
+  await p.evaluate(`document.querySelector('#map-share-dialog [aria-label="Close share dialog"]').focus()`);
+  for(const [key,code,keyCode] of [['l','KeyL',76],['r','KeyR',82],['/','Slash',191]])await p.key(key,code,keyCode);
+  assert.ok(await p.evaluate(`document.querySelector('#map-share-dialog').contains(document.activeElement)`),'map shortcuts do not redirect focus behind sharing');
+  const action=async text=>{
+   await p.evaluate(`([...document.querySelectorAll('#map-share-dialog button')].find(node=>node.textContent===${JSON.stringify(text)})).focus()`);await p.key('Enter','Enter',13);
+  };
+  await action('Select link');assert.ok(await p.evaluate(`document.activeElement===document.querySelector('#map-share-dialog textarea')`));
+  assert.ok(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`),'no horizontal document overflow');
+  assert.ok(await p.evaluate(`[...document.querySelectorAll('#map-share-dialog button')].every(node=>node.getBoundingClientRect().height>=44)`),'all dialog actions retain 44 px height');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+   await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+   const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`share-${width}x${height}-manual.png`),Buffer.from(shot.data,'base64'));
+  }
+  await p.evaluate('window.__denyShareCopy=false');await action('Copy link');
+  await p.wait(`document.querySelector('#map-share-status')?.textContent.trim()==='Link copied.'`,'retry succeeds without rebuilding the link');
+  assert.deepEqual(await p.evaluate('window.__shareAttempts'),[link,link]);
+  await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('#map-share-dialog')&&document.activeElement?.matches('summary[aria-label="More site actions"]')`,'Escape restores the visible More trigger');
+  if(width===1280){
+   assert.equal(await p.evaluate(`document.querySelector('.layer-panel').getAttribute('aria-hidden')`),'false','the share Escape leaves background Layers open');
+   await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.header-overflow-menu').open`,'More reopens after sharing');
+   await p.evaluate(`[...document.querySelectorAll('.header-overflow-workspaces button')].find(node=>node.textContent==='Reports').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('[data-workspace="reports"]')`,'report workspace opens');
+   await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.header-overflow-menu').open`,'Share is available from Reports');
+   await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('#map-share-dialog')?.open`,'share dialog opens above Reports');
+   await p.key('Escape','Escape',27);
+   await p.wait(`!document.querySelector('#map-share-dialog')&&!!document.querySelector('[data-workspace="reports"]')`,'Share Escape does not leave the report workspace');
+  }
+ });
+}
+
 // The welcome reuses the pinned local reference; provider/AI I/O stays isolated.
 for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones and modes at ${width}x${height}`,{timeout:90000},async t=>{
  const b=await browser(t),p=await pageSession(b,width,height);
@@ -2130,6 +2192,9 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`new URLSearchParams(location.search).get('topics')==='government'&&!document.querySelector('.header-overflow-menu').open`,'Share current view updates the address bar');
     assert.equal(await p.evaluate('history.state?.kfmExplorerEntry'),mapEntry,'sharing preserves native entry ownership');
+    await p.wait(`document.querySelector('#map-share-dialog')?.open`, 'the share link remains available');
+    await p.evaluate(`document.querySelector('#map-share-dialog [aria-label="Close share dialog"]').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('#map-share-dialog')`, 'sharing closes before returning to the chooser');
     await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);await readyWelcome(p);
     await p.evaluate(`document.querySelector('.topic-weather').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.living-welcome')&&new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='weather'`,'navigation still saves a different map after sharing');

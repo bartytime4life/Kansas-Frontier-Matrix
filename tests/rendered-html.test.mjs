@@ -1240,7 +1240,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /const closeHeaderOverflow = useCallback[\s\S]*summary\?\.focus\(\{ preventScroll: true \}\)/);
   assert.match(page, /openPrimaryWorkspace\("reports"\); closeHeaderOverflow\(event\.currentTarget\)/);
   assert.match(page, /openPrimaryWorkspace\("stories"\); closeHeaderOverflow\(event\.currentTarget\)/);
-  assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); void shareView\(\)/);
+  assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); shareView\(event\.currentTarget\)/);
   assert.match(page, /className="map-dock-context sr-only"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
   assert.match(page, /className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.doesNotMatch(page, /className="map-dock-representations"/);

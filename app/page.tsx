@@ -105,6 +105,7 @@ import { buildAvailabilityBins, timelineLabelSteps } from "./timeline-availabili
 import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
+import { MapShareDialog, copyMapLink, type MapShareRequest } from "./map-share-dialog";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import { countyResearch, researchCounties } from "./research-county";
@@ -1889,6 +1890,8 @@ export default function Home() {
   const [mapUtilityOpen, setMapUtilityOpen] = useState(false);
   const [mapUtilityFocusRequest, setMapUtilityFocusRequest] = useState(0);
   const [mapContextOpen, setMapContextOpen] = useState(false);
+  const [mapShare, setMapShare] = useState<MapShareRequest | null>(null);
+  const closeMapShare = useCallback(() => setMapShare(null), []);
   const composerRef = useRef<HTMLElement>(null);
   const mapGuideRef = useRef<HTMLElement>(null);
   const composerTriggerRef = useRef<HTMLButtonElement>(null);
@@ -10394,19 +10397,13 @@ export default function Home() {
     }
   };
 
-  const shareView = async () => {
+  const shareView = (trigger: HTMLElement) => {
     const params = buildExplorerParams();
     const sharePath = `${window.location.pathname}?${params.toString()}`;
     const shareUrl = `${window.location.origin}${sharePath}`;
-    const historyUpdated = replaceExplorerHistory(sharePath);
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      announce(locationDerivedViewRef.current
-        ? "Share link copied with the location-derived camera redacted"
-        : `Share link copied with camera, layer order, opacity, time, projection, evidence state${analysisArea ? ", and analysis area" : ""}`);
-    } catch {
-      announce(historyUpdated ? "Share state is in the address bar and ready to copy" : "Share link could not be copied; open the Site in a browser and try again");
-    }
+    replaceExplorerHistory(sharePath);
+    setMapShare({ url: shareUrl, redacted: params.get("privacy") === "location-camera-redacted",
+      initialCopy: copyMapLink(shareUrl), returnTarget: trigger });
   };
 
   const copyMapContextReceipt = async () => {
@@ -11380,7 +11377,7 @@ export default function Home() {
             </aside>}
           </div>
           <button ref={repositoryButtonRef} className="status-header-action" type="button" onClick={() => { setRepositoryView("updates"); setRepositoryOpen(true); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" title="Check Site, data, and repository connections"><span aria-hidden="true">⌁</span><span>Status</span></button>
-              <button className="share-action" type="button" onClick={(event) => { closeHeaderOverflow(event.currentTarget); void shareView(); }}>Share current view</button>
+              <button className="share-action" type="button" aria-haspopup="dialog" aria-expanded={mapShare !== null} aria-controls="map-share-dialog" onClick={(event) => { closeHeaderOverflow(event.currentTarget); shareView(event.currentTarget); }}>Share current view</button>
               <Link className="about-action" href="/about">About</Link>
               <Link className="about-action" href="/privacy">Privacy</Link>
             </div>
@@ -11412,6 +11409,8 @@ export default function Home() {
         onApplyScene={applyStoryScene}
         getCurrentSnapshot={captureMapSnapshot}
       />}
+
+      {mapShare && <MapShareDialog request={mapShare} fallbackTarget={mapContainerRef.current} onClose={closeMapShare} />}
 
       <div className="repository-overlay" hidden={!repositoryOpen} onMouseDown={(event) => { if (event.target === event.currentTarget) closeRepository(); }}>
         <aside ref={repositoryPanelRef} id="repository-briefing" className="repository-briefing" role="dialog" aria-modal="true" aria-labelledby="repository-briefing-title">
