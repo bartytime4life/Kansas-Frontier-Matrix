@@ -1920,6 +1920,102 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
 }
 
 
+for(const area of ['places','chat','tools','time','evidence']){
+ test(`responsive work area continuity for ${area}`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,1280,900);
+  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  // Keep a real competing surface open on desktop. Narrowing must retain the
+  // actively edited surface, not install two competing compact focus owners.
+  await enter('.qwen-header-entry');await p.wait(`document.activeElement===document.querySelector('#qwen-map-panel textarea')`,'chat entry focus completes');
+  let selector='#qwen-map-panel textarea',owner='chat';
+  if(area==='places'){
+   await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Places').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.layer-panel').contains(document.activeElement)`,'Places entry focus completes');selector='[aria-label="Save a place"] input';owner='left';
+  }else if(area==='tools'){
+   await p.evaluate(`document.querySelector('#map-canvas').focus()`);await p.key('r','KeyR',82);
+   await p.wait(`document.querySelector('#map-utility-panel').contains(document.activeElement)`,'tools entry focus completes');selector='[aria-label="Save a workspace"] input';owner='tools';
+  }else if(area==='time'){
+   await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Time').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');selector='[aria-label="Exact map date"]';owner='time';
+  }else if(area==='evidence'){
+   await p.evaluate(`[...document.querySelectorAll('#qwen-map-panel [aria-label="Map inspection views"] button')].find(node=>node.textContent==='Evidence').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.evidence-drawer').contains(document.activeElement)`,'evidence entry focus completes');selector='.evidence-drawer [aria-label="Map inspection views"] [aria-pressed="true"]';owner='evidence';
+  }
+  const text=['places','chat','tools'].includes(area),value=`Pending ${area} investigation`;
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+  if(text){await p.key('a','KeyA',65,2);await p.key('Backspace','Backspace',8);await p.call('Input.insertText',{text:value});await p.wait(`document.querySelector(${JSON.stringify(selector)}).value===${JSON.stringify(value)}`,'draft renders');await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).setSelectionRange(3,8)`);}
+  const initial=await p.evaluate(`(() => {window.__retainedResizeControl=document.querySelector(${JSON.stringify(selector)});const el=window.__retainedResizeControl;return {value:el.value??null,scroll:document.documentElement.scrollTop};})()`);
+  for(const [width,height] of [[1101,900],[1100,900],[768,1024],[390,844],[320,640],[844,390],[1280,900]]){
+   await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+   // Let the responsive surface transitions finish before checking geometry or
+   // capturing a frame; a closed sheet can still be animating between axes.
+   await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+   await p.evaluate(`Promise.all([...document.querySelectorAll('.layer-panel,.evidence-drawer,#map-utility-panel,#qwen-map-panel')].flatMap(node=>node.getAnimations()).map(animation=>animation.finished.catch(()=>{})))`);
+   await p.wait(`(() => {const el=window.__retainedResizeControl,r=el?.getBoundingClientRect();return el?.isConnected&&document.activeElement===el&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,`${area} retains visible focus at ${width}x${height}`);
+   assert.equal(await p.evaluate('window.__retainedResizeControl.value??null'),initial.value);
+   if(text)assert.deepEqual(await p.evaluate('[window.__retainedResizeControl.selectionStart,window.__retainedResizeControl.selectionEnd]'),[3,8]);
+   assert.equal(await p.evaluate('document.documentElement.scrollTop'),initial.scroll,'panel reveal never scrolls the page');
+   assert.ok(await p.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'no horizontal document overflow');
+   if(width<=1100){
+    const open=await p.evaluate(`({left:document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false',evidence:document.querySelector('.evidence-drawer').getAttribute('aria-hidden')==='false',chat:!document.querySelector('#qwen-map-panel').hidden,tools:document.querySelector('#map-utility-panel').dataset.open==='true',time:!!document.querySelector('#compact-time-settings')})`);
+    assert.deepEqual(Object.keys(open).filter(key=>open[key]),[owner],'only the retained work area remains open');
+    if(owner!=='left')assert.equal(await p.evaluate(`(() => {const el=document.querySelector('.layer-panel'),r=el.getBoundingClientRect(),style=getComputedStyle(el);return style.display==='none'||style.visibility==='hidden'||r.right<=0||r.bottom<=0||r.left>=innerWidth||r.top>=innerHeight;})()`),true,'dismissed Layers cannot paint over the retained work area; inert alone only suppresses hit-testing');
+   }
+   if(process.env.KFM_WORKSPACE_SCREENSHOTS&&[1100,320,844].includes(width)){
+    await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+    const geometry=await p.evaluate(`(() => {const el=window.__retainedResizeControl;return {viewport:[innerWidth,innerHeight],field:el.getBoundingClientRect().toJSON(),active:document.activeElement===el,panels:[...document.querySelectorAll('.layer-panel,.evidence-drawer,#map-utility-panel,#qwen-map-panel')].map(node=>({id:node.id,class:node.className,hidden:node.getAttribute('aria-hidden'),open:node.dataset.open,rect:node.getBoundingClientRect().toJSON(),transform:getComputedStyle(node).transform}))};})()`);
+    await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`resize-${area}-${width}x${height}.json`),JSON.stringify(geometry,null,2));
+    const shot=await p.call('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width,height,scale:1},captureBeyondViewport:false});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`resize-${area}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+   }
+  }
+  assert.equal(await p.evaluate(`document.querySelector('.topbar').inert`),false,'expanding releases modal background holds');
+  if(area==='evidence'){
+   await p.evaluate(`window.__hiddenResizeControl=document.querySelector('.evidence-drawer [aria-label="Close Evidence Drawer"]');window.__hiddenResizeControl.focus()`);
+   await p.call('Emulation.setDeviceMetricsOverride',{width:1100,height:900,deviceScaleFactor:1,mobile:false});
+   await p.wait(`document.querySelector('.evidence-drawer').getAttribute('aria-hidden')==='false'&&document.querySelector('.evidence-drawer').contains(document.activeElement)&&document.activeElement!==window.__hiddenResizeControl&&document.activeElement.getClientRects().length>0`,'a control hidden by compact styling gets a visible fallback in the same inspector');
+  }
+ });
+}
+
+test('responsive layer sheet retains map focus and a foreground share keeps its link',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Layers').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.layer-panel').contains(document.activeElement)`,'Layers entry focus completes');
+ await p.evaluate(`document.querySelector('#map-canvas').focus();window.__mapResizeFocus=document.activeElement`);
+ await p.call('Emulation.setDeviceMetricsOverride',{width:768,height:1024,deviceScaleFactor:1,mobile:false});
+ await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-modal')==='false'`,'Layers remains nonmodal');
+ assert.equal(await p.evaluate(`document.activeElement===window.__mapResizeFocus&&document.querySelector('#map-canvas').contains(document.activeElement)`),true);assert.equal(await p.evaluate(`document.querySelector('.topbar').inert`),false);
+ await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true'`,'Escape still closes Layers');
+ await p.call('Emulation.setDeviceMetricsOverride',{width:1280,height:900,deviceScaleFactor:1,mobile:false});
+ await p.evaluate(`Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}})`);
+ await enter('summary[aria-label="More site actions"]');await p.wait(`document.querySelector('.header-overflow-menu').open`,'More opens');await enter('.share-action');
+ await p.wait(`document.querySelector('#map-share-dialog')?.open&&document.activeElement===document.querySelector('#map-share-dialog textarea')`,'share entry focus completes');
+ const link=await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`);
+ for(const [width,height]of [[768,1024],[390,844],[844,390],[1280,900]]){
+  await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+  await p.wait(`document.querySelector('#map-share-dialog')?.open&&document.activeElement===document.querySelector('#map-share-dialog textarea')`,'foreground share retains focus');
+  assert.equal(await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`),link);
+ }
+ await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('#map-share-dialog')`,'share closes normally after resizing');
+ await enter('summary[aria-label="More site actions"]');await p.wait(`document.querySelector('.header-overflow-menu').open`,'More reopens');
+ await p.evaluate(`[...document.querySelectorAll('.header-overflow-workspaces button')].find(node=>node.textContent==='Reports').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.report-view-switch')`,'report workspace opens');
+ await p.wait(`document.activeElement?.id==='primary-workspace-title'`,'report entry focus completes');
+ await p.evaluate(`[...document.querySelectorAll('.report-view-switch button')].find(node=>node.textContent==='Edit report').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.report-title-field input')`,'report editor opens');
+ await p.evaluate(`document.querySelector('.report-title-field input').focus()`);await p.key('a','KeyA',65,2);await p.call('Input.insertText',{text:'Report retained during resize'});
+ await p.wait(`document.querySelector('.report-title-field input').value==='Report retained during resize'`,'report edit renders');await p.evaluate(`document.querySelector('.report-title-field input').setSelectionRange(3,8)`);
+ for(const [width,height]of [[768,1024],[390,844],[844,390],[1280,900]]){
+  await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+  await p.wait(`!!document.querySelector('[data-workspace="reports"]')&&document.activeElement===document.querySelector('.report-title-field input')`,'report retains foreground editing');
+  assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`),'Report retained during resize');
+  assert.deepEqual(await p.evaluate(`[document.activeElement.selectionStart,document.activeElement.selectionEnd]`),[3,8]);
+ }
+});
+
 for(const [width,height] of [[1280,900],[390,844],[568,320]]){
  test(`Places preserve saved stops and recover removals at ${width}x${height}`,{timeout:180000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,height);
@@ -1970,8 +2066,12 @@ for(const [width,height] of [[1280,900],[390,844],[568,320]]){
   const previous=await p.evaluate('performance.timeOrigin');await p.call('Page.reload');await p.wait(`performance.timeOrigin!==${previous}&&document.querySelector('.atlas-studio')?.dataset.startup==='ready'&&!document.querySelector('.explorer-guide')`,'new document restores the map');await openPlaces();assert.deepEqual(await stored(),replacement,'reload retains the deliberate replacement');
   if(width===1280){
    await enter('[aria-label="Close Explorer navigation"]');await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true'`,'Places closes before the utility opens');
+   // Complete the close handoff and the tool's deferred entry before editing;
+   // visible markup alone can precede either focus callback.
+   await p.wait(`document.activeElement?.closest('.map-dock-actions')`,'Places close returns to its trigger');
    await p.evaluate(`document.querySelector('#map-canvas').focus()`);await p.key('r','KeyR',82);
    const workspace='[aria-label="Save a workspace"]';await p.wait(`document.querySelector(${JSON.stringify(workspace)})?.getClientRects().length>0`,'saved workspace controls are visible');
+   await p.wait(`document.querySelector('#map-utility-panel').contains(document.activeElement)`,'utility entry focus completes before Places edits');
    assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(workspace+' button[type="submit"]')}).disabled`),true);
    await enter('.saved-workspace-list [aria-label="Delete Pending investigation"]');await waitCount(11);await p.wait(`document.activeElement?.getAttribute('aria-label')==='Undo removal of Pending investigation'`,'utility removal owns its undo focus');
    await enter(`${workspace} + div [aria-label="Undo removal of Pending investigation"]`);await waitCount(12);assert.deepEqual(await stored(),replacement);

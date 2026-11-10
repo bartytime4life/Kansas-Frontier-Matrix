@@ -59,7 +59,7 @@ test('opening Find or a suggested question gives one focus owner to the composer
     const scope={
       isCompact,HTMLElement:class {},document:{activeElement:trigger},qwenReturnRef:{current:null},
       globalSearchInputRef:{current:input},qwenPanelRef:{current:{querySelector:()=>({focus:()=>focused.push('close')})}},
-      setQwenOpen:value=>changes.push(['open',value]),setHelpOpen:()=>{},dismissMapUtilityWithoutFocus:()=>{},
+      setQwenOpen:value=>changes.push(['open',value]),setChatLayoutSuspended:()=>{},setHelpOpen:()=>{},dismissMapUtilityWithoutFocus:()=>{},
       setGuideOpen:value=>changes.push(['guide',value]),setWelcomeSourcesOpen:value=>changes.push(['sources',value]),
       setLeftOpen:()=>{},setRightOpen:()=>{},setTimelineOpen:()=>{},setPrimaryWorkspace:value=>changes.push(['workspace',value]),
       setAssistantDraftRequest:update=>changes.push(['draft',update({id:4,value:'Old request'})]),
