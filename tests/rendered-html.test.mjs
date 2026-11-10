@@ -430,7 +430,7 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   const places = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.match(page, /leftPanelMode !== "places"/);
-  assert.match(page, /<div className="place-trail-list" aria-label="Saved investigation places">/);
+  assert.match(page, /className=\{`place-trail-list \$\{[^}]+\}`\} aria-label="Saved investigation places"/);
   assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|map-tool-group-workbench|secondary-tools|More map tools/);
   assert.match(page, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
   assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /Advanced tools/);

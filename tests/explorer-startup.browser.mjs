@@ -1920,6 +1920,66 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
 }
 
 
+for(const [width,height] of [[1280,900],[390,844],[568,320]]){
+ test(`Places preserve saved stops and recover removals at ${width}x${height}`,{timeout:180000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height);
+  const key='kfm-map-workspaces-v1',form='[aria-label="Save a place"]',list='.places-trail-section';
+  const stored=()=>p.evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(key)})||'[]')`);
+  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+  const openPlaces=async()=>{
+   if(width===1280){await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Places').focus()`);await p.key('Enter','Enter',13);}
+   else{await enter('.map-dock-map-menu > summary');await p.wait(`document.querySelector('.map-dock-map-menu').open`,'Map menu opens');await p.evaluate(`[...document.querySelectorAll('.map-dock-menu-quick button')].find(node=>node.textContent.startsWith('Places')).focus()`);await p.key('Enter','Enter',13);}
+   await p.wait(`document.querySelector('.layer-panel')?.dataset.panelMode==='places'&&document.querySelector('.layer-panel').contains(document.activeElement)`,'Places and its entry focus are ready');
+  };
+  const fillName=async value=>{
+   await p.evaluate(`document.querySelector(${JSON.stringify(form+' input')}).focus()`);await p.key('a','KeyA',65,2);await p.key('Backspace','Backspace',8);await p.call('Input.insertText',{text:value});
+   await p.wait(`document.querySelector(${JSON.stringify(form+' input')}).value===${JSON.stringify(value)}`,'place name renders');
+  };
+  const waitCount=async count=>p.wait(`JSON.parse(localStorage.getItem(${JSON.stringify(key)})||'[]').length===${count}`,'saved place count '+count);
+  const remove=async name=>enter(`${list} [aria-label=${JSON.stringify('Delete '+name)}]`);
+  const undo=async name=>enter(`${form} + div [aria-label=${JSON.stringify('Undo removal of '+name)}]`);
+  const capture=async label=>{
+   if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
+   await p.evaluate(`document.querySelector(${JSON.stringify(form)}).scrollIntoView({block:'center',behavior:'instant'})`);
+   await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`places-${width}x${height}-${label}.png`),Buffer.from(shot.data,'base64'));
+  };
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'saved welcome preference permits the map');await openPlaces();
+  for(let i=1;i<=12;i++){await fillName('QA '+String(i).padStart(2,'0'));await p.key('Enter','Enter',13);await waitCount(i);}
+  const original=await stored();assert.equal(original[0].name,'QA 12');assert.equal(original.at(-1).name,'QA 01');
+  await fillName('Pending investigation');await p.key('Enter','Enter',13);
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(form+' button[type="submit"]')}).disabled`),true);
+  assert.deepEqual(await stored(),original,'full Places never discards the oldest stop');
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(form+' input')}).value`),'Pending investigation');
+  assert.match(await p.evaluate(`document.querySelector(${JSON.stringify(form)}).textContent`),/12 of 12 places saved.*Remove a saved place/s);await capture('full');
+  await remove('QA 06');await waitCount(11);
+  await p.wait(`document.activeElement?.getAttribute('aria-label')==='Undo removal of QA 06'`,'removal moves owned focus to Undo');
+  await undo('QA 06');await waitCount(12);
+  await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(form+' input')})`,'undo returns focus to the originating name input');
+  assert.deepEqual(await stored(),original,'undo restores the exact record and order');
+  await p.evaluate(`(() => {const original=Storage.prototype.setItem;window.__denyPlaceWrites=true;Storage.prototype.setItem=function(key,value){if(window.__denyPlaceWrites&&key==='kfm-map-workspaces-v1')throw new DOMException('Synthetic quota','QuotaExceededError');return original.call(this,key,value);};})()`);
+  await remove('QA 01');assert.deepEqual(await stored(),original,'failed removal keeps every stored stop');
+  await p.wait(`document.querySelector(${JSON.stringify(form)}).parentElement.textContent.includes('Places could not be updated')`,'persistent storage failure is visible');
+  await p.evaluate('window.__denyPlaceWrites=false');await remove('QA 01');await waitCount(11);const withoutOldest=await stored();
+  await p.evaluate('window.__denyPlaceWrites=true');await undo('QA 01');assert.deepEqual(await stored(),withoutOldest,'failed undo keeps the current list and its retry');await capture('undo-retry');
+  await p.evaluate('window.__denyPlaceWrites=false');await undo('QA 01');await waitCount(12);assert.deepEqual(await stored(),original);
+  await remove('QA 12');await waitCount(11);await fillName('Pending investigation');await p.key('Enter','Enter',13);await waitCount(12);
+  const replacement=await stored();assert.equal(replacement[0].name,'Pending investigation');assert.equal(replacement.at(-1).name,'QA 01');assert.deepEqual(replacement.slice(1),original.slice(1));
+  assert.equal(await p.evaluate(`document.querySelectorAll(${JSON.stringify(form+' + div button')}).length`),0,'successful addition ends the preceding undo');
+  assert.ok(await p.evaluate(`[...document.querySelectorAll('.places-trail-section .place-stop-actions button')].every(node=>node.getBoundingClientRect().width>=44&&node.getBoundingClientRect().height>=44)`),'place actions have 44 px targets');
+  assert.ok(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`),'Places has no horizontal document overflow');
+  const previous=await p.evaluate('performance.timeOrigin');await p.call('Page.reload');await p.wait(`performance.timeOrigin!==${previous}&&document.querySelector('.atlas-studio')?.dataset.startup==='ready'&&!document.querySelector('.explorer-guide')`,'new document restores the map');await openPlaces();assert.deepEqual(await stored(),replacement,'reload retains the deliberate replacement');
+  if(width===1280){
+   await enter('[aria-label="Close Explorer navigation"]');await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true'`,'Places closes before the utility opens');
+   await p.evaluate(`document.querySelector('#map-canvas').focus()`);await p.key('r','KeyR',82);
+   const workspace='[aria-label="Save a workspace"]';await p.wait(`document.querySelector(${JSON.stringify(workspace)})?.getClientRects().length>0`,'saved workspace controls are visible');
+   assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(workspace+' button[type="submit"]')}).disabled`),true);
+   await enter('.saved-workspace-list [aria-label="Delete Pending investigation"]');await waitCount(11);await p.wait(`document.activeElement?.getAttribute('aria-label')==='Undo removal of Pending investigation'`,'utility removal owns its undo focus');
+   await enter(`${workspace} + div [aria-label="Undo removal of Pending investigation"]`);await waitCount(12);assert.deepEqual(await stored(),replacement);
+   await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(workspace+' input')})`,'utility undo returns to its own name field');
+  }
+ });
+}
+
 // Sharing remains usable without clipboard or history permissions. These are
 // disposable pages; no link is sent and no real clipboard write is performed.
 for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
