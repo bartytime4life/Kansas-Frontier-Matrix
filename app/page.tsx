@@ -280,10 +280,14 @@ import {
 } from "./import-preview";
 import {
   MAX_PLACE_TRAIL_STOPS,
+  PLACES_FULL_MESSAGE,
   nextPlaceStopIndex,
   normalizePlaceStopName,
   reorderPlaceStops,
+  restorePlaceStop,
 } from "./places-trail";
+import { PlacesSaveControls, type PlacesControlContext, type PlacesFocusRequest } from "./places-save-controls";
+import placesStyles from "./places-save-controls.module.css";
 import ReportStoryWorkspaces from "./report-story-workspaces";
 import { KDOT_HISTORIC_STATE_MAPS_URL, KDOT_PAST_COUNTY_MAPS_URL, ROAD_MAP_EDITIONS } from "./road-map-editions";
 import { applyRoadStudyLayers, inspectRoadStudyFile as inspectRoadStudyGeoJson, ROAD_STUDY_COLORS, ROAD_STUDY_MAX_LAYERS, type RoadStudyLayer } from "./road-year-study";
@@ -1959,6 +1963,9 @@ export default function Home() {
   const [workspaceName, setWorkspaceName] = useState("");
   const [savedWorkspaces, setSavedWorkspaces] = useState<WorkspaceSnapshot[]>([]);
   const [activePlaceId, setActivePlaceId] = useState<string | null>(null);
+  const [placeNotice, setPlaceNotice] = useState("");
+  const [removedPlace, setRemovedPlace] = useState<{ snapshot: WorkspaceSnapshot; index: number; wasActive: boolean } | null>(null);
+  const [placeFocus, setPlaceFocus] = useState<PlacesFocusRequest | null>(null);
   const [placeTourPlaying, setPlaceTourPlaying] = useState(false);
   const [runtimeSeamState, setRuntimeSeamState] = useState<RuntimeSeamState>("IDLE");
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
@@ -9771,15 +9778,19 @@ export default function Home() {
   };
 
   const persistSavedWorkspaces = (next: WorkspaceSnapshot[]) => {
-    const bounded = next.slice(0, MAX_PLACE_TRAIL_STOPS);
+    if (next.length > MAX_PLACE_TRAIL_STOPS) { setPlaceNotice(PLACES_FULL_MESSAGE); announce(PLACES_FULL_MESSAGE); return false; }
     let saved = false;
-    try { saved = writeSavedWorkspaceList(window.localStorage, WORKSPACE_STORAGE_KEY, bounded); } catch { /* Browser may deny the storage getter itself. */ }
-    if (!saved) { announce("Investigation could not be saved on this device. Storage may be full or unavailable; your open map is unchanged."); return false; }
-    setSavedWorkspaces(bounded);
+    try { saved = writeSavedWorkspaceList(window.localStorage, WORKSPACE_STORAGE_KEY, next); } catch { /* Browser may deny the storage getter itself. */ }
+    if (!saved) {
+      const message = "Places could not be updated. Browser storage may be full or unavailable; existing places are unchanged.";
+      setPlaceNotice(message); announce(message); return false;
+    }
+    setSavedWorkspaces(next);
     return true;
   };
 
   const saveCurrentWorkspace = () => {
+    if (savedWorkspaces.length >= MAX_PLACE_TRAIL_STOPS) { setPlaceNotice(PLACES_FULL_MESSAGE); announce(PLACES_FULL_MESSAGE); return; }
     const savedAt = new Date().toISOString();
     const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted || subsurfacePrivate;
     const snapshot: WorkspaceSnapshot = {
@@ -9833,8 +9844,10 @@ export default function Home() {
       selection: selected ? { layerId: selected.layerId, featureId: selected.featureId } : null,
     };
     if (!persistSavedWorkspaces([snapshot, ...savedWorkspaces])) return;
+    setRemovedPlace(null);
     setActivePlaceId(snapshot.id);
     setWorkspaceName("");
+    setPlaceNotice(`${snapshot.name} added to Places on this device.`);
     announce(`${snapshot.name} added to Places on this device`);
   };
 
@@ -10037,14 +10050,34 @@ export default function Home() {
   const reorderSavedWorkspace = (snapshot: WorkspaceSnapshot, direction: -1 | 1) => {
     stopPlaceTour(false);
     if (!persistSavedWorkspaces(reorderPlaceStops(savedWorkspaces, snapshot.id, direction))) return;
+    setRemovedPlace(null);
+    setPlaceNotice(`${snapshot.name} moved ${direction < 0 ? "earlier" : "later"} in the Places trail.`);
     announce(`${snapshot.name} moved ${direction < 0 ? "earlier" : "later"} in the Places trail`);
   };
 
-  const deleteSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
+  const deleteSavedWorkspace = (snapshot: WorkspaceSnapshot, context: PlacesControlContext = "places") => {
     stopPlaceTour(false);
+    const index = savedWorkspaces.findIndex(candidate => candidate.id === snapshot.id);
+    if (index < 0) return;
     if (!persistSavedWorkspaces(savedWorkspaces.filter((candidate) => candidate.id !== snapshot.id))) return;
+    setRemovedPlace({ snapshot, index, wasActive: activePlaceId === snapshot.id });
     if (activePlaceId === snapshot.id) setActivePlaceId(null);
+    setPlaceNotice(`${snapshot.name} removed from Places.`);
+    setPlaceFocus(previous => ({ version: (previous?.version ?? 0) + 1, context, target: "undo" }));
     announce(`${snapshot.name} removed from this device`);
+  };
+
+  const undoRemovedPlace = (context: PlacesControlContext) => {
+    if (!removedPlace) return;
+    stopPlaceTour(false);
+    const restored = restorePlaceStop(savedWorkspaces, removedPlace.snapshot, removedPlace.index);
+    if (!restored) { setPlaceNotice("This place cannot be restored without replacing another saved place."); return; }
+    if (!persistSavedWorkspaces(restored)) return;
+    if (removedPlace.wasActive && activePlaceId === null) setActivePlaceId(removedPlace.snapshot.id);
+    setRemovedPlace(null);
+    setPlaceNotice(`${removedPlace.snapshot.name} restored to Places.`);
+    setPlaceFocus(previous => ({ version: (previous?.version ?? 0) + 1, context, target: "name" }));
+    announce(`${removedPlace.snapshot.name} restored to its position in Places`);
   };
 
   const updateMapEvidenceFilter = (nextFilter: RegistryEvidenceFilter) => {
@@ -11749,20 +11782,20 @@ export default function Home() {
             <div className="panel-stat-grid"><article><span>SAVED PLACES</span><strong>{savedWorkspaces.length}</strong></article><article><span>ACTIVE PLACE</span><strong>{activePlaceId ? "YES" : "NONE"}</strong></article></div>
             <article className="place-capture-card">
                   <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · Layers to save: {Object.values(visibility).filter(Boolean).length + visibleOfficialCount}</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
-                  <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Place or investigation step name" /><button type="button" onClick={saveCurrentWorkspace}>Add place</button></div>
+                  <PlacesSaveControls context="places" count={savedWorkspaces.length} name={workspaceName} notice={placeNotice} removedName={removedPlace?.snapshot.name ?? null} focusRequest={placeFocus} onName={setWorkspaceName} onSave={saveCurrentWorkspace} onUndo={() => undoRemovedPlace("places")} />
                 </article>
                 <div className="place-trail-controls" aria-label="Places trail controls">
                   <button type="button" onClick={() => stepPlaceTrail(-1)} disabled={savedWorkspaces.length === 0}>← Previous</button>
                   <button type="button" onClick={() => placeTourPlaying ? stopPlaceTour() : playPlaceTrail()} disabled={savedWorkspaces.length < 2}>{placeTourPlaying ? "Stop trail" : "▶ Play trail"}</button>
                   <button type="button" onClick={() => stepPlaceTrail(1)} disabled={savedWorkspaces.length === 0}>Next →</button>
                 </div>
-                <div className="place-trail-list" aria-label="Saved investigation places">
+                <div className={`place-trail-list ${placesStyles.list}`} aria-label="Saved investigation places">
                   {savedWorkspaces.map((snapshot, index) => <article key={snapshot.id} data-active={activePlaceId === snapshot.id}>
                     <span className="place-stop-number">{String(index + 1).padStart(2, "0")}</span>
                     <button className="place-stop-main" type="button" onClick={() => { stopPlaceTour(false); loadSavedWorkspace(snapshot); }} aria-pressed={activePlaceId === snapshot.id}>
                       <strong>{snapshot.name}</strong><small>{formatTimelineStep(snapshot.year)} · Layers: {Object.values(snapshot.visibility ?? {}).filter(Boolean).length + Object.values(snapshot.officialContext?.visibility ?? {}).filter(Boolean).length} · {snapshot.projection === "globe" ? "globe" : "2D"}</small><em>{snapshot.locationCameraRedacted !== false ? "Generalized camera" : snapshot.selection ? `Selection: ${snapshot.selection.featureId}` : "Map context"}</em>
                     </button>
-                    <div className="place-stop-actions"><button type="button" onClick={() => reorderSavedWorkspace(snapshot, -1)} disabled={index === 0} aria-label={`Move ${snapshot.name} earlier`}>↑</button><button type="button" onClick={() => reorderSavedWorkspace(snapshot, 1)} disabled={index === savedWorkspaces.length - 1} aria-label={`Move ${snapshot.name} later`}>↓</button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></div>
+                    <div className="place-stop-actions"><button type="button" onClick={() => reorderSavedWorkspace(snapshot, -1)} disabled={index === 0} aria-label={`Move ${snapshot.name} earlier`}>↑</button><button type="button" onClick={() => reorderSavedWorkspace(snapshot, 1)} disabled={index === savedWorkspaces.length - 1} aria-label={`Move ${snapshot.name} later`}>↓</button><button type="button" onClick={() => deleteSavedWorkspace(snapshot, "places")} aria-label={`Delete ${snapshot.name}`}>×</button></div>
                   </article>)}
                   {savedWorkspaces.length === 0 && <div className="map-utility-empty"><strong>No saved places yet</strong><p>Frame a useful map view, name it, and add it as the first investigation stop.</p></div>}
                 </div>
@@ -12447,9 +12480,9 @@ export default function Home() {
                     </fieldset>
 
                     <fieldset className="report-control-group saved-workspace-control"><legend>Saved workspaces</legend>
-                      <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Optional workspace name" /><button type="button" onClick={saveCurrentWorkspace}>Save current</button></div>
+                      <PlacesSaveControls context="workspace" count={savedWorkspaces.length} name={workspaceName} notice={placeNotice} removedName={removedPlace?.snapshot.name ?? null} focusRequest={placeFocus} onName={setWorkspaceName} onSave={saveCurrentWorkspace} onUndo={() => undoRemovedPlace("workspace")} />
                       <p>Stores camera, active time, Time A/B comparison, layers, opacity, selection, and report settings only on this device.</p>
-                      <div className="saved-workspace-list">{savedWorkspaces.map((snapshot) => <article key={snapshot.id}><button type="button" onClick={() => loadSavedWorkspace(snapshot)}><strong>{snapshot.name}</strong><small>{new Date(snapshot.savedAt).toLocaleString()} · {snapshot.report?.layerIds?.length ?? 0} report layers</small></button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></article>)}{savedWorkspaces.length === 0 && <div><strong>No saved workspaces</strong><small>Save the current analysis setup to return to it later on this device.</small></div>}</div>
+                      <div className={`saved-workspace-list ${placesStyles.legacyList}`}>{savedWorkspaces.map((snapshot) => <article key={snapshot.id}><button type="button" onClick={() => loadSavedWorkspace(snapshot)}><strong>{snapshot.name}</strong><small>{new Date(snapshot.savedAt).toLocaleString()} · {snapshot.report?.layerIds?.length ?? 0} report layers</small></button><button type="button" onClick={() => deleteSavedWorkspace(snapshot, "workspace")} aria-label={`Delete ${snapshot.name}`}>×</button></article>)}{savedWorkspaces.length === 0 && <div><strong>No saved workspaces</strong><small>Save the current analysis setup to return to it later on this device.</small></div>}</div>
                     </fieldset>
                   </div>
 
