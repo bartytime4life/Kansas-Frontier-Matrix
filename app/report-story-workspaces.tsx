@@ -1,7 +1,7 @@
 "use client";
 
 import { SCIENTIFIC_REPORT_CSS, scientificReportMarkup, downloadScientificReport, type ScientificReportLayout } from "./scientific-report";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   createReportDraft,
   createMapStory,
@@ -16,7 +16,8 @@ import {
 import SnapshotMap from "./snapshot-map";
 import AssistantPanel from "./assistant-panel";
 import {snapshotAssistantFocus} from "./assistant-context";
-import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
+import { readDraft, writeDraft, MAX_DRAFT_TEXT_LENGTH, REPORT_STORAGE_KEY, STORY_STORAGE_KEY, type DraftWriteState } from "./workspace-storage";
+import saveStyles from "./draft-save-status.module.css";
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
 import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } from "./subsurface-model";
 import { researchMarkdown, type ResearchContext } from "./research-context";
@@ -167,7 +168,8 @@ export default function ReportStoryWorkspaces({
   const [assistantOpen,setAssistantOpen] = useState(false);
   const assistantFocus = useMemo(()=>snapshotAssistantFocus(snapshot,mode),[snapshot,mode]);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [storageState, setStorageState] = useState<"saved" | "saving" | "unavailable">("saving");
+  const workspaceRef = useRef<HTMLElement>(null);
+  const [storageState, setStorageState] = useState<DraftWriteState | "saving">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
     readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined),
   );
@@ -179,9 +181,9 @@ export default function ReportStoryWorkspaces({
     const pending = pendingSave.current;
     if (!pending) return;
     try {
-      window.localStorage.setItem(pending.key, JSON.stringify(pending.draft));
-      pendingSave.current = null;
-      if (showStatus) setStorageState("saved");
+      const result = writeDraft(window.localStorage, pending.key, pending.draft);
+      if (result === "saved") pendingSave.current = null;
+      if (showStatus) setStorageState(result);
     } catch {
       if (showStatus) setStorageState("unavailable");
     }
@@ -191,13 +193,20 @@ export default function ReportStoryWorkspaces({
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => { headingRef.current?.focus(); }, [mode]);
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
+  useLayoutEffect(() => {
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (!event.defaultPrevented && !event.isComposing && !assistantOpen
+        && (event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey
+        && event.key.toLowerCase() === "s" && workspaceRef.current?.contains(event.target as Node)) {
+        event.preventDefault();
+        saveDraft();
+        return;
+      }
       if (event.key === "Escape" && !assistantOpen) onReturnToMap();
     };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [mode, onReturnToMap, assistantOpen]);
+    document.addEventListener("keydown", handleKeydown);
+    return () => document.removeEventListener("keydown", handleKeydown);
+  }, [mode, onReturnToMap, assistantOpen, saveDraft]);
 
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -207,10 +216,13 @@ export default function ReportStoryWorkspaces({
     return () => preference.removeEventListener("change", sync);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     pendingSave.current = mode === "reports"
       ? { key: REPORT_STORAGE_KEY, draft: report }
       : { key: STORY_STORAGE_KEY, draft: story };
+  }, [mode, report, story]);
+
+  useEffect(() => {
     const timer = window.setTimeout(() => saveDraft(), 300);
     return () => window.clearTimeout(timer);
   }, [mode, report, story, saveDraft]);
@@ -269,7 +281,7 @@ export default function ReportStoryWorkspaces({
   };
 
   const updateReportSection = (section: keyof ReportDraft["sections"], value: string) => {
-    value = value.slice(0, 24000);
+    value = value.slice(0, MAX_DRAFT_TEXT_LENGTH);
     updateReport((current) => replaceReport(current, { sections: { ...current.sections, [section]: value } }));
   };
 
@@ -348,9 +360,9 @@ export default function ReportStoryWorkspaces({
   };
 
   return (
-    <section className="primary-workspace-surface" data-workspace={mode} data-report-view={mode === "reports" ? reportView : undefined} aria-labelledby="primary-workspace-title">
+    <section ref={workspaceRef} className="primary-workspace-surface" data-workspace={mode} data-report-view={mode === "reports" ? reportView : undefined} aria-labelledby="primary-workspace-title">
       {assistantOpen&&<AssistantPanel focus={assistantFocus} onClose={()=>setAssistantOpen(false)}/>}
-      <header className="primary-workspace-header">
+      <header className={`primary-workspace-header ${saveStyles.header}`}>
         <div>
           <span>KANSAS FRONTIER MATRIX · DEVICE-LOCAL WORKSPACE</span>
           <h1 id="primary-workspace-title" ref={headingRef} tabIndex={-1}>{mode === "reports" ? report.fireContext ? "Fire report builder" : "Evidence report builder" : "Guided story builder"}</h1>
@@ -362,7 +374,7 @@ export default function ReportStoryWorkspaces({
           <button type="button" aria-current={mode === "stories" ? "page" : undefined} onClick={() => onModeChange("stories")}>Stories</button>
           <button className="return-map" type="button" onClick={onReturnToMap}>Return to map</button>
         </nav>
-        <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Browser storage unavailable · export to keep your work"}</small>{storageState === "unavailable" && <button type="button" onClick={() => saveDraft()}>Retry saving</button>}</div>
+        <div className={`draft-state ${saveStyles.status}`} role="status" aria-live="polite" aria-atomic="true"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : storageState === "too-large" ? "Draft too large for device saving · export to keep your work" : storageState === "invalid" ? "Draft cannot be reopened in this build · export to keep your work" : "Browser storage unavailable · export to keep your work"}</small><button type="button" aria-keyshortcuts="Control+S Meta+S" title="Save this draft (Ctrl+S or ⌘S)" disabled={storageState === "saved"} onClick={() => saveDraft()}>{storageState === "saved" || storageState === "saving" ? "Save now" : "Retry saving"}</button></div>
       </header>
 
       {mode === "reports" && <>
@@ -452,7 +464,7 @@ export default function ReportStoryWorkspaces({
         <aside className="story-scene-list" aria-label="Ordered story scenes">
           <div className="story-draft-fields">
             <label><span>Story title</span><input value={story.title} maxLength={120} onChange={(event) => updateStory({ title: event.target.value })} /></label>
-            <label><span>Guiding question</span><textarea rows={3} value={story.researchQuestion} onChange={(event) => updateStory({ researchQuestion: event.target.value })} /></label>
+            <label><span>Guiding question</span><textarea rows={3} value={story.researchQuestion} maxLength={MAX_DRAFT_TEXT_LENGTH} onChange={(event) => updateStory({ researchQuestion: event.target.value.slice(0, MAX_DRAFT_TEXT_LENGTH) })} /></label>
           </div>
           <div className="story-scene-heading"><div><span className="workspace-eyebrow">ORDERED SCENES</span><h2>{story.scenes.length} chapters</h2></div><button type="button" onClick={addCurrentScene} disabled={story.scenes.length >= 64}>Add current map scene</button></div>
           <ol>{story.scenes.map((scene, index) => <li key={scene.id} data-active={scene.id === activeScene?.id}>

@@ -1844,10 +1844,15 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     const report = await stored('report');
     assert.equal(report.title, 'QA report kept separate');
     assert.equal(await p.evaluate(`document.querySelectorAll('.story-scene-list .scene-select').length`), 1, 'new story contains one captured map scene');
+    await p.evaluate(`document.querySelector('.story-draft-fields textarea').focus()`);
+    await p.key('a', 'KeyA', 65, 2);
+    await p.call('Input.insertText', { text: 'q'.repeat(25000) });
+    await p.wait(`document.querySelector('.story-draft-fields textarea').value.length === 24000`, 'pasted question stops at the reopen limit');
     await fill('.story-draft-fields input', 'QA story kept separate');
     await switchTo('Reports');
     const story = await stored('story');
     assert.equal(story.title, 'QA story kept separate');
+    assert.equal(story.researchQuestion.length, 24000);
     assert.deepEqual(story.scenes[0].snapshot, story.baseSnapshot);
     assert.deepEqual(story.scenes[0].evidenceRefs, story.baseSnapshot.evidenceRefs);
     assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), report.title);
@@ -1858,6 +1863,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     assert.equal((await stored('report')).title, 'QA latest report before exit');
     await openFromMap('Stories');
     assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields input').value`), story.title);
+    assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields textarea').value`), story.researchQuestion, 'long question survives reopening');
     assert.equal((await stored('story')).baseSnapshot.id, story.baseSnapshot.id);
     await capture('restored-story');
     await button('Return to map', nav);
@@ -1897,6 +1903,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     assert.notEqual(freshCapture, report.snapshot.createdAt, 'explicit composition created a fresh snapshot');
     await fill('.report-title-field input', 'QA recoverable quota edit');
     await p.wait(`document.querySelector('.draft-state').textContent.includes('Browser storage unavailable')`, 'storage denial is visible');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.draft-state small')).display !== 'none'`), true, 'save failure remains visible on small screens');
     assert.equal((await stored('report')).title, 'QA latest report before exit');
     await openFromMap('Reports');
     assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), 'QA recoverable quota edit');

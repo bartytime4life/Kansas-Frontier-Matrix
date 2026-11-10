@@ -8,8 +8,11 @@ import { validResearchContext } from "./research-context";
 
 export const REPORT_STORAGE_KEY = "kfm-report-draft-v2";
 export const STORY_STORAGE_KEY = "kfm-story-draft-v2";
+export const MAX_DRAFT_TEXT_LENGTH = 24000;
+export const MAX_DRAFT_CHARACTERS = 2_000_000;
+export type DraftWriteState = "saved" | "invalid" | "too-large" | "unavailable";
 const object = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === "object" && !Array.isArray(value);
-const text = (value: unknown): value is string => typeof value === "string" && value.length <= 24000;
+const text = (value: unknown): value is string => typeof value === "string" && value.length <= MAX_DRAFT_TEXT_LENGTH;
 const strings = (value: unknown): value is string[] => Array.isArray(value) && value.length <= 1000 && value.every(text);
 const number = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 const registryIds = () => ({
@@ -80,12 +83,27 @@ export function readDraft(key: string): ReportDraft | StoryDraft | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(key);
-    if (!raw || raw.length > 2000000) return null;
+    if (!raw || raw.length > MAX_DRAFT_CHARACTERS) return null;
     const value: unknown = JSON.parse(raw);
     if (key === REPORT_STORAGE_KEY && validReportDraft(value)) return value;
     if (key === STORY_STORAGE_KEY && validStoryDraft(value)) return value;
   } catch { /* Storage denial or invalid drafts cannot block the map. */ }
   return null;
+}
+
+/** A successful save must satisfy the same size and shape checks as reopening.
+ * Validate the serialized value, including any toJSON transformation,
+ * before replacing the previous saved draft. */
+export function writeDraft(storage: Pick<Storage, "setItem">, key: string, draft: unknown): DraftWriteState {
+  if (key !== REPORT_STORAGE_KEY && key !== STORY_STORAGE_KEY) return "invalid";
+  let serialized: string | undefined;
+  try { serialized = JSON.stringify(draft); } catch { return "invalid"; }
+  if (serialized === undefined) return "invalid";
+  if (serialized.length > MAX_DRAFT_CHARACTERS) return "too-large";
+  const value: unknown = JSON.parse(serialized);
+  if (!(key === REPORT_STORAGE_KEY ? validReportDraft(value) : validStoryDraft(value))) return "invalid";
+  try { storage.setItem(key, serialized); return "saved"; }
+  catch { return "unavailable"; }
 }
 
 export function readDraftSnapshot(mode: "reports" | "stories"): MapSnapshot | null {
