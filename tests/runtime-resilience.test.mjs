@@ -43,6 +43,22 @@ test("corrupt device-local workspaces cannot replace the Explorer with a blank r
   assert.equal(mixed.rejected, true);
 });
 
+test("empty stored Places are preserved while missing and valid empty lists allow a first save", () => {
+  for (const raw of ["", " ", "\n"] ) {
+    assert.deepEqual(saved.parseSavedWorkspaceList(raw, 12), { records: [], rejected: true });
+    let stored = raw;
+    const storage = { getItem: () => stored, setItem: (_key, value) => { stored = value; } };
+    assert.equal(saved.updateSavedWorkspaceList(storage, "places", [], [workspace], 12).status, "unreadable");
+    assert.equal(stored, raw);
+  }
+  for (const raw of [null, "[]"]) {
+    let stored = raw;
+    const storage = { getItem: () => stored, setItem: (_key, value) => { stored = value; } };
+    assert.equal(saved.updateSavedWorkspaceList(storage, "places", [], [workspace], 12).status, "saved");
+    assert.deepEqual(JSON.parse(stored), [workspace]);
+  }
+});
+
 test("saved places exclude latitudes the map cannot restore while preserving valid and wrapped views", () => {
   const invalid = [-91, 91].map((latitude, index) => ({
     ...workspace, id: `invalid-${index}`, view: { ...workspace.view, center: [-98, latitude] },

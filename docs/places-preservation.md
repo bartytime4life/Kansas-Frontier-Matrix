@@ -147,3 +147,7 @@ failed downloads and temporary-resource cleanup. Shared-control tests cover both
 surfaces while saving is blocked. The hydrated two-tab journey downloads the
 actual file in Chromium after a corrupt-list reload and compares `rawValue` with
 the original storage value.
+
+An existing empty or whitespace-only storage value is unreadable and remains
+protected. Only a missing storage key or a valid empty JSON list permits a first
+save. The regression test verifies both preservation and normal first-save behavior.

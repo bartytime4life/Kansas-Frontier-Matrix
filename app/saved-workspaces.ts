@@ -36,7 +36,7 @@ export const validSavedWorkspaceRecord = (value: unknown): value is Record<strin
 };
 
 export const parseSavedWorkspaceList = (raw: string | null, maxItems: number, maxBytes = 2_000_000): SavedWorkspaceParseResult => {
-  if (!raw) return { records: Object.freeze([]), rejected: false };
+  if (raw === null) return { records: Object.freeze([]), rejected: false };
   if (raw.length > maxBytes || !Number.isInteger(maxItems) || maxItems < 1 || maxItems > 100) return { records: Object.freeze([]), rejected: true };
   try {
     const value: unknown = JSON.parse(raw);
