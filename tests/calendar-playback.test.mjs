@@ -8,7 +8,7 @@ const calendar = await import('data:text/javascript;base64,' + Buffer.from(js).t
 test('exhausted checked-empty playback clears intent and does not restart when skipping is disabled', async () => {
   const timers = new Map(); let nextTimer = 0;
   const h = await componentHarness(new URL('../app/compact-time-sweep.tsx', import.meta.url), {
-    './calendar-sweep': calendar, './time-emblem': { TimeEmblem: 'emblem' }, './compact-time-sweep.css': {},
+    './calendar-sweep': calendar, './time-emblem': { TimeEmblem: 'emblem' }, './compact-time-sweep.css': {}, './time-controls-focus': { retainTimeControlFocus() {} },
   }, { window: { setTimeout: fn => { timers.set(++nextTimer, fn); return nextTimer; }, clearTimeout: id => timers.delete(id) }, document: { hidden: false, addEventListener() {}, removeEventListener() {} } });
   const props = { value: {day:'2026-10-01',start:'2026-10-01',end:'2026-10-03',step:'days',before:null,showing:'B'},year:2026,years:[2026],today:'2026-10-21',sources:[{id:'quakes',state:'ready'}],open:true,onOpenChange(){},onPresent(){},onEra(){},onSeek: async next => { props.value = next; return {state:'empty', message:'No mapped records'}; } };
   const render = () => { const tree = h.render(h.exports.CompactTimeSweep, props); h.commit(); return tree; };
@@ -32,7 +32,7 @@ test('exhausted checked-empty playback clears intent and does not restart when s
 
 test('one stationary clock opens and closes time controls without hover or an animation setting', async () => {
   const h = await componentHarness('app/compact-time-sweep.tsx', {
-    './calendar-sweep': calendar, './compact-time-sweep.css': {},
+    './calendar-sweep': calendar, './compact-time-sweep.css': {}, './time-controls-focus': { retainTimeControlFocus() {} },
   }, { window: { requestAnimationFrame: fn => fn(), setTimeout, clearTimeout }, document: { addEventListener() {}, removeEventListener() {} } });
   const props = { value:null,year:2026,years:[2026],today:'2026-10-21',sources:[],open:false,
     onOpenChange(value){props.open=value;},onSeek:async()=>({state:'empty',message:'No records'}),onEra(){},onPresent(){} };
