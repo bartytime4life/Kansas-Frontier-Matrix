@@ -13,7 +13,7 @@ import {
 } from "./workspace-model";
 
 import SnapshotMap from "./snapshot-map";
-import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
+import { readDraft, writeDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
 import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } from "./subsurface-model";
 import { researchMarkdown, type ResearchContext } from "./research-context";
@@ -23,6 +23,7 @@ type WorkspaceMode = "reports" | "stories";
 type ReportStoryWorkspacesProps = Readonly<{
   mode: WorkspaceMode;
   snapshot: MapSnapshot;
+  freshDraftMode?: WorkspaceMode | null;
   evidenceRecords: readonly EvidenceRecord[];
   fireContext?: FireReportContext | null;
   researchContext?: ResearchContext | null;
@@ -34,11 +35,9 @@ type ReportStoryWorkspacesProps = Readonly<{
   getCurrentSnapshot: () => MapSnapshot;
 }>;
 
-const readStored = <T,>(key: string, snapshotId: string): T | null => {
+const readStored = <T,>(key: string): T | null => {
   const draft = readDraft(key);
-  if (!draft) return null;
-  const id = "snapshot" in draft ? draft.snapshot.id : draft.baseSnapshot?.id ?? draft.scenes[0]?.snapshot.id.replace(/-(?:supported|corrected|historical|denied)$/, "");
-  return id === snapshotId ? draft as T : null;
+  return draft as T | null;
 };
 
 const safeFileName = (value: string, fallback: string) =>
@@ -148,6 +147,7 @@ const evidenceForSnapshot = (snapshot: MapSnapshot, evidence: readonly EvidenceR
 export default function ReportStoryWorkspaces({
   mode,
   snapshot,
+  freshDraftMode,
   evidenceRecords,
   fireContext,
   researchContext,
@@ -161,10 +161,10 @@ export default function ReportStoryWorkspaces({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [storageState, setStorageState] = useState<"saved" | "saving" | "unavailable">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
-    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined),
+    (freshDraftMode === "reports" ? null : readStored<ReportDraft>(REPORT_STORAGE_KEY)) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined),
   );
   const [story, setStory] = useState<StoryDraft>(() =>
-    readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createTrustStory(snapshot, evidenceRecords),
+    (freshDraftMode === "stories" ? null : readStored<StoryDraft>(STORY_STORAGE_KEY)) ?? createTrustStory(snapshot, evidenceRecords),
   );
   const [storyPlaying, setStoryPlaying] = useState(false);
   const [storyPlayIndex, setStoryPlayIndex] = useState(0);
@@ -189,14 +189,9 @@ export default function ReportStoryWorkspaces({
 
   useEffect(() => {
     let active = true;
-    try {
-      if (mode === "reports") window.localStorage.setItem(REPORT_STORAGE_KEY, JSON.stringify(report));
-      else window.localStorage.setItem(STORY_STORAGE_KEY, JSON.stringify(story));
-      window.setTimeout(() => { if (active) setStorageState("saved"); }, 0);
-    } catch {
-      window.setTimeout(() => { if (active) setStorageState("unavailable"); }, 0);
-    }
-    return () => { active = false; };
+    const saved = mode === "reports" ? writeDraft(REPORT_STORAGE_KEY, report) : writeDraft(STORY_STORAGE_KEY, story);
+    const timer = window.setTimeout(() => { if (active) setStorageState(saved ? "saved" : "unavailable"); }, 0);
+    return () => { active = false; window.clearTimeout(timer); };
   }, [mode, report, story]);
 
   useEffect(() => {
@@ -330,7 +325,7 @@ export default function ReportStoryWorkspaces({
           <button type="button" aria-current={mode === "stories" ? "page" : undefined} onClick={() => onModeChange("stories")}>Stories</button>
           <button className="return-map" type="button" onClick={onReturnToMap}>Return to map</button>
         </nav>
-        <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Browser storage unavailable"}</small></div>
+        <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Not saved on this device · export a copy"}</small></div>
       </header>
 
       {mode === "reports" ? <div className="report-workspace-grid">
@@ -408,7 +403,7 @@ export default function ReportStoryWorkspaces({
         <aside className="story-scene-list" aria-label="Ordered story scenes">
           <div className="story-draft-fields">
             <label><span>Story title</span><input value={story.title} maxLength={120} onChange={(event) => updateStory({ title: event.target.value })} /></label>
-            <label><span>Guiding question</span><textarea rows={3} value={story.researchQuestion} onChange={(event) => updateStory({ researchQuestion: event.target.value })} /></label>
+            <label><span>Guiding question</span><textarea rows={3} value={story.researchQuestion} maxLength={24000} onChange={(event) => updateStory({ researchQuestion: event.target.value.slice(0, 24000) })} /></label>
           </div>
           <div className="story-scene-heading"><div><span className="workspace-eyebrow">ORDERED SCENES</span><h2>{story.scenes.length} chapters</h2></div><button type="button" onClick={addCurrentScene} disabled={story.scenes.length >= 64}>Add current map scene</button></div>
           <ol>{story.scenes.map((scene, index) => <li key={scene.id} data-active={scene.id === activeScene?.id}>

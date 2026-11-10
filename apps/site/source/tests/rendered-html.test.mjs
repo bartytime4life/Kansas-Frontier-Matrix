@@ -1356,7 +1356,7 @@ test("carries governed map context into creation workflows and checked source po
   assert.match(workspaces, /Export Markdown/);
   assert.match(workspaces, /Export JSON/);
   assert.match(workspaces, /DRAFT · NOT PUBLISHED/);
-  assert.match(workspaces, /localStorage/);
+  assert.match(workspaces, /writeDraft/);
   assert.match(css, /\.map-context-card/);
   assert.match(css, /\.source-admission-legend/);
   assert.match(css, /\.source-candidate-card footer a/);

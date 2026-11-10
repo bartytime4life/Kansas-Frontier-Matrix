@@ -230,40 +230,6 @@ export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly Evid
   };
 };
 
-const sceneSnapshot = (
-  snapshot: MapSnapshot,
-  id: string,
-  label: string,
-  time: number,
-  evidenceRef: string,
-  evidence: readonly EvidenceRecord[],
-): MapSnapshot => {
-  const record = evidence.find((item) => item.citation === evidenceRef);
-  const layer = record ? { id: record.layerId, title: record.domain, domain: record.domain, order: 0, opacity: .85, trustState: record.trustState } : undefined;
-  return ({
-  ...snapshot,
-  id: `${snapshot.id}-${id}`,
-  committedTime: { start: time, end: time, label, mode: "instant" },
-  temporalSweep: { mode: "snapshot", frame: time, rangeStart: time, rangeEnd: time, windowStart: time, windowFrames: 1, stepRule: "available-events", interpolation: false },
-  comparison: undefined,
-  evidenceFilter: "ALL",
-  evidenceRefs: [evidenceRef],
-  area: { kind: "viewport", label: record?.spatialScope ?? "Kansas demonstration context" },
-  camera: { center: record?.displayFocus ?? [-98.38, 38.48], zoom: record ? 6.4 : 5.4, bearing: 0, pitch: 0 },
-  representation: "2D",
-  terrainProvider: undefined,
-  terrainExaggeration: undefined,
-  projection: "mercator",
-  visibleLayers: layer ? [layer] : [],
-  selection: record ? { featureId: record.featureId, layerId: record.layerId, title: record.title, evidenceReference: record.citation, trustState: record.trustState } : null,
-  inspectableFeatureIds: record ? [record.featureId] : [],
-  inspectableRecordCount: record ? 1 : 0,
-  sourceBackedCount: 0,
-  boundedCount: record ? 1 : 0,
-  policy: policyDecisionFromEvidenceState(record?.evidenceState),
-  });
-};
-
 export const createTrustStory = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[] = []): StoryDraft => ({
   id: `story-${snapshot.id}`,
   status: "DRAFT",
@@ -273,39 +239,15 @@ export const createTrustStory = (snapshot: MapSnapshot, evidence: readonly Evide
   researchQuestion: "How does KFM keep evidence, correction, time, and policy visible?",
   scenes: [
     {
-      id: `scene-supported-${snapshot.id}`,
-      title: "A bounded claim can show its support",
-      narrative: "A site-local Topeka observation demonstrates how a selected map candidate points to a visible evidence reference without turning the renderer into the source of truth.",
-      snapshot: sceneSnapshot(snapshot, "supported", "2026 demonstration observation", 2026, "kfm:evidence:synthetic:atmo-2026", evidence),
-      evidenceRefs: ["kfm:evidence:synthetic:atmo-2026"],
-      caveats: ["Synthetic observation; not current weather, air-quality, forecasting, or life-safety guidance."],
-      motion: "ease",
-    },
-    {
-      id: `scene-corrected-${snapshot.id}`,
-      title: "A correction stays with the record",
-      narrative: "The 2024 Hays fixture keeps its correction state visible so a newer interpretation cannot silently erase lineage.",
-      snapshot: sceneSnapshot(snapshot, "corrected", "2024 corrected demonstration", 2024, "kfm:evidence:synthetic:atmo-2024-r2", evidence),
-      evidenceRefs: ["kfm:evidence:synthetic:atmo-2024-r2"],
-      caveats: ["Correction behavior is demonstrated with invented values and geometry."],
-      motion: "ease",
-    },
-    {
-      id: `scene-historical-${snapshot.id}`,
-      title: "Historical context remains historical",
-      narrative: "A 1910 study-line fixture demonstrates a dated edition without asserting an undocumented route or carrying it forward as current truth.",
-      snapshot: sceneSnapshot(snapshot, "historical", "1910 historical fixture", 1910, "kfm:evidence:synthetic:history-1910", evidence),
-      evidenceRefs: ["kfm:evidence:synthetic:history-1910"],
-      caveats: ["Illustrative line only; not a documented historical route."],
-      motion: "ease",
-    },
-    {
-      id: `scene-denied-${snapshot.id}`,
-      title: "Protected detail fails closed",
-      narrative: "A deliberately coarse envelope preserves the existence of a policy boundary while precise subject matter, attributes, and geometry remain absent.",
-      snapshot: sceneSnapshot(snapshot, "denied", "Protected time withheld", 2026, "kfm:policy:public-safe:deny-demo", evidence),
-      evidenceRefs: ["kfm:policy:public-safe:deny-demo"],
-      caveats: ["No protected detail is present, inferred, reconstructed, or exposed."],
+      id: `scene-current-${snapshot.id}`,
+      title: snapshot.selection?.title ?? "Current Kansas investigation",
+      narrative: "This scene preserves the captured map camera, representation, committed time, layer stack, selection, and evidence posture. Add a scoped narrative after checking the available sources.",
+      snapshot,
+      evidenceRefs: snapshot.evidenceRefs.filter((reference) => evidence.some((record) => record.citation === reference)),
+      caveats: [
+        "Map appearance and spatial overlap are context, not independent evidence.",
+        "Protected detail fails closed; withheld locations remain absent.",
+      ],
       motion: "none",
     },
   ],

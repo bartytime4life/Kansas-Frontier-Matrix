@@ -147,22 +147,35 @@ const nullableNumber = (record: JsonRecord, key: string): number | null => {
   return parsed;
 };
 
-const canonicalTimestamp = (value: unknown, label: string, allowDateOnly = false): string => {
+// Compare source instants before the adapter's existing millisecond projection.
+// Whole-minute offsets preserve the source's finer-than-millisecond fraction.
+const exactTimestampKey = (value: unknown, label: string, allowDateOnly = false): string => {
   const text = requiredString(value, label, 80);
   if (allowDateOnly && DATE_ONLY_PATTERN.test(text)) {
     const parsed = new Date(`${text}T00:00:00.000Z`);
     if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== text) {
       throw new UsgsUpstreamError(`USGS response field ${label} was not a valid calendar date.`);
     }
-    return parsed.toISOString();
+    return parsed.toISOString().replace(".000Z", ".000000000Z");
   }
-  if (!ISO_TIMESTAMP_PATTERN.test(text)) {
+  const match = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(Z|([+-])(\d{2}):(\d{2}))$/.exec(text);
+  if (!match) {
     throw new UsgsUpstreamError(`USGS response field ${label} was not an ISO timestamp.`);
   }
-  const milliseconds = Date.parse(text);
-  if (!Number.isFinite(milliseconds)) throw new UsgsUpstreamError(`USGS response field ${label} was not a valid timestamp.`);
-  return new Date(milliseconds).toISOString();
+  const fraction = (match[2] ?? "").padEnd(9, "0");
+  const local = `${match[1]}.${fraction.slice(0, 3)}Z`, milliseconds = Date.parse(local);
+  const hours = Number(match[5] ?? 0), minutes = Number(match[6] ?? 0);
+  if (!Number.isFinite(milliseconds) || new Date(milliseconds).toISOString() !== local || hours > 23 || minutes > 59) {
+    throw new UsgsUpstreamError(`USGS response field ${label} was not a valid timestamp.`);
+  }
+  const offset = (match[4] === "-" ? -1 : 1) * (hours * 60 + minutes) * 60_000;
+  const utc = new Date(milliseconds - offset).toISOString();
+  if (!/^\d{4}-/.test(utc)) throw new UsgsUpstreamError(`USGS response field ${label} was not a valid timestamp.`);
+  return utc.replace(/Z$/, `${fraction.slice(3)}Z`);
 };
+
+const canonicalTimestamp = (value: unknown, label: string, allowDateOnly = false): string =>
+  exactTimestampKey(value, label, allowDateOnly).slice(0, 23) + "Z";
 
 const nullableTimestamp = (record: JsonRecord, key: string): Readonly<{
   normalized: string | null;
@@ -816,6 +829,13 @@ const stationBundle = async (query: ParsedQuery, queryStart: string, queryEnd: s
   if (stations.length === 0) throw new StationNotFoundError(`USGS monitoring location ${stationId} was not found.`);
   if (stations.length !== 1 || metadata.hasNextPage) {
     throw new UsgsUpstreamError("USGS returned ambiguous monitoring-location metadata.");
+  }
+  const startKey = exactTimestampKey(queryStart, "queryStart"), endKey = exactTimestampKey(queryEnd, "queryEnd");
+  for (const feature of series.features) {
+    const observedKey = exactTimestampKey(featureProperties(feature).time, "time", true);
+    if (observedKey < startKey || observedKey > endKey) {
+      throw new UsgsUpstreamError("USGS returned an observation outside the requested station interval.");
+    }
   }
   const observations = parseObservations(series, expectedIds, query.parameterCode, statisticId);
   const observedStatisticIds = [...new Set(observations

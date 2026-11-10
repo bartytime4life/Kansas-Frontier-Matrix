@@ -13,6 +13,13 @@ import { readSceneEffects, registerSceneEffects } from "./scene-effects";
 import { webgl2Available } from "./webgl-support";
 
 type Camera = { center: [number, number]; zoom: number; bearing: number; pitch: number };
+type PreviewAttempt = {
+  disposed: boolean;
+  expired: boolean;
+  failed: boolean;
+  deadline: ReturnType<typeof setTimeout> | null;
+  beginReadiness: () => void;
+};
 
 const temporalQueryForSnapshot = (snapshot: MapSnapshot): TemporalSweepQuery => snapshot.temporalSweep
   ? {
@@ -51,18 +58,35 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
   const onMove = useRef(onCameraChange);
   const syncing = useRef(false);
   const appliedBasemap = useRef<keyof typeof BASEMAPS | null>(null);
+  const attemptRef = useRef<PreviewAttempt | null>(null);
+  const [attemptKey, setAttemptKey] = useState(0);
+  const [phase, setPhase] = useState<"loading" | "ready" | "error">("loading");
   const [status, setStatus] = useState("Loading map context…");
+  const clearDeadline = useCallback((attempt: PreviewAttempt) => {
+    if (attempt.deadline !== null) clearTimeout(attempt.deadline);
+    attempt.deadline = null;
+  }, []);
+  const showFailure = useCallback((message: string) => {
+    const attempt = attemptRef.current;
+    if (!attempt || attempt.disposed || attempt.expired) return;
+    attempt.failed = true;
+    clearDeadline(attempt);
+    setPhase("error");
+    setStatus(message);
+  }, [clearDeadline]);
   const containMapMutation = useCallback((operation: string, mutation: () => void): boolean => {
     try {
       mutation();
       return true;
     } catch {
-      setStatus(`${operation} is unavailable. Scene details and evidence remain readable. MAP_RENDER_FAILED`);
+      showFailure(`${operation} is unavailable. Retry the preview; scene details and evidence remain readable. MAP_RENDER_FAILED`);
       return false;
     }
-  }, []);
+  }, [showFailure]);
 
   const applySnapshot = useCallback((): boolean => {
+    const attempt = attemptRef.current;
+    if (!attempt || attempt.disposed || attempt.expired) return false;
     let applied = false;
     const succeeded = containMapMutation("Snapshot map update", () => {
     const map = mapRef.current;
@@ -73,6 +97,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     const query = temporalQueryForSnapshot(state);
     applyRegistryState(map, visible, opacity, query.frame, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL", query);
     map.setProjection({ type: state.projection });
+    map.setMaxPitch(state.representation === "Terrain 3D" ? 72 : 60);
     const terrain = setTerrainPresentation(map, state.representation === "Terrain 3D", state.terrainExaggeration ?? 1, terrainSourceFor(state.terrainProvider ?? "mapzen"));
     if (terrain === "ERROR") throw new Error("Snapshot terrain unavailable");
     updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
@@ -86,9 +111,15 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     } finally { syncing.current = false; }
     applied = true;
     });
-    if (succeeded && applied) setStatus("Saved map context · provider overlays are not replayed in this preview.");
+    if (succeeded && applied) {
+      clearDeadline(attempt);
+      if (!attempt.failed) {
+        setPhase("ready");
+        setStatus("Saved map context · provider overlays are not replayed in this preview.");
+      }
+    }
     return succeeded && applied;
-  }, [containMapMutation]);
+  }, [clearDeadline, containMapMutation]);
 
   useEffect(() => {
     current.current = snapshot;
@@ -100,13 +131,37 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
 
   useEffect(() => {
     if (!container.current) return;
-    let disposed = false;
+    const attempt: PreviewAttempt = { disposed: false, expired: false, failed: false, deadline: null, beginReadiness: () => undefined };
+    attemptRef.current = attempt;
+    setPhase("loading");
+    setStatus("Loading map context…");
     let observer: ResizeObserver | undefined;
-    const apply = () => { applySnapshot(); };
+    let ownedMap: MapLibreMap | null = null;
+    const active = () => attemptRef.current === attempt && !attempt.disposed && !attempt.expired;
+    const removeMap = () => {
+      observer?.disconnect();
+      const map = ownedMap;
+      ownedMap = null;
+      if (mapRef.current === map) { mapRef.current = null; appliedBasemap.current = null; }
+      try { map?.remove(); } catch { /* A failed renderer must not prevent preview recovery or unmount. */ }
+    };
+    attempt.beginReadiness = () => {
+      // Preserve the whole adapter + initial style deadline. A later basemap
+      // change gets a fresh bound; an error stays visible until explicit retry.
+      if (!active() || attempt.failed || attempt.deadline !== null) return;
+      attempt.deadline = setTimeout(() => {
+        if (!active()) return;
+        showFailure("The map preview timed out. Retry the preview; scene details and evidence remain readable.");
+        attempt.expired = true;
+        removeMap();
+      }, 15_000);
+    };
+    attempt.beginReadiness();
+    const apply = () => { if (active()) applySnapshot(); };
     loadMapLibre().then((lib) => {
-      if (disposed || !container.current) return;
+      if (!active() || !container.current) return;
       if (!webgl2Available()) {
-        setStatus("Map unavailable: WebGL2 is not supported here. Scene details and evidence remain available below.");
+        showFailure("Map unavailable: WebGL2 is not supported here. Retry after graphics support is available; scene details and evidence remain readable.");
         return;
       }
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
@@ -116,7 +171,8 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
         : state.camera as Camera;
       const key = Object.prototype.hasOwnProperty.call(BASEMAPS, state.basemap) ? state.basemap as keyof typeof BASEMAPS : "standard";
       const budget = browserRenderBudget();
-      const map = new lib.Map({ transformRequest: basemapCacheRequest, container: container.current, style: BASEMAPS[key].style, ...safeCamera, attributionControl: { compact: true }, pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(48, budget.tileCache), maxPitch: 60, renderWorldCopies: false });
+      const map = new lib.Map({ transformRequest: basemapCacheRequest, container: container.current, style: BASEMAPS[key].style, ...safeCamera, attributionControl: { compact: true }, pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(48, budget.tileCache), maxPitch: state.representation === "Terrain 3D" ? 72 : 60, renderWorldCopies: false });
+      ownedMap = map;
       // Snapshots honour the viewer's scene-effect preference for relief lighting.
       registerSceneEffects(map, readSceneEffects());
       mapRef.current = map;
@@ -126,22 +182,24 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       map.on("load", apply);
       map.on("style.load", apply);
       map.on("move", () => {
-        if (syncing.current) return;
+        if (!active() || syncing.current) return;
         onMove.current?.({ center: map.getCenter().toArray(), zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() });
       });
-      map.on("error", () => setStatus("Some map context is unavailable. Consult the scene details and evidence; no replacement claim is inferred."));
-      observer = new ResizeObserver(() => { containMapMutation("Snapshot map resize", () => map.resize()); });
+      map.on("error", () => { if (active()) showFailure("Some map context is unavailable. Retry the preview; consult the scene details and evidence. No replacement claim is inferred."); });
+      observer = new ResizeObserver(() => { if (active()) containMapMutation("Snapshot map resize", () => map.resize()); });
       observer.observe(container.current);
-    }).catch(() => { if (!disposed) setStatus("Map adapter unavailable. Scene details and evidence remain readable."); });
-    return () => { disposed = true; observer?.disconnect(); mapRef.current?.remove(); mapRef.current = null; appliedBasemap.current = null; };
-  }, [applySnapshot, containMapMutation]);
+    }).catch(() => { if (active()) showFailure("Map adapter unavailable. Retry the preview; scene details and evidence remain readable."); });
+    return () => { attempt.disposed = true; clearDeadline(attempt); removeMap(); if (attemptRef.current === attempt) attemptRef.current = null; };
+  }, [applySnapshot, attemptKey, clearDeadline, containMapMutation, showFailure]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const key = Object.prototype.hasOwnProperty.call(BASEMAPS, snapshot.basemap) ? snapshot.basemap as keyof typeof BASEMAPS : "standard";
     if (appliedBasemap.current !== key) {
-      setStatus("Loading saved basemap…");
+      const attempt = attemptRef.current;
+      if (attempt && !attempt.failed) { setPhase("loading"); setStatus("Loading saved basemap…"); }
+      attempt?.beginReadiness();
       containMapMutation("Snapshot basemap update", () => {
         map.setStyle(BASEMAPS[key].style);
         appliedBasemap.current = key;
@@ -158,7 +216,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
   }, [containMapMutation, syncCamera]);
 
   return <figure className="snapshot-map-renderer" aria-label={label}>
-    <div ref={container} className="snapshot-map-canvas" />
-    <figcaption role="status">{status}</figcaption>
+    <div ref={container} className="snapshot-map-canvas" aria-busy={phase === "loading"} />
+    <figcaption><span role={phase === "error" ? "alert" : "status"}>{status} {phase !== "ready" && "Provider overlays are not replayed in this preview."}</span> <button type="button" aria-busy={phase === "loading"} onClick={() => setAttemptKey(key => key + 1)}>{phase === "loading" ? "Restart preview" : phase === "error" ? "Retry preview" : "Refresh preview"}</button></figcaption>
   </figure>;
 }

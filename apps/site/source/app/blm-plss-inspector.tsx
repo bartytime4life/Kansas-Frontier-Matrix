@@ -30,12 +30,12 @@ export function BlmPlssInspector({ layer, mapRef, enabled }: {
 }) {
   const [busy, setBusy] = useState(false), [result, setResult] = useState<BlmPlssResult | null>(null);
   const [status, setStatus] = useState("Center the flat map on a survey division, then inspect BLM's identifiers.");
-  const pending = useRef<AbortController | null>(null), generation = useRef(0);
-  const cancel = useCallback(() => { generation.current++; pending.current?.abort(); pending.current = null; setBusy(false); }, []);
+  const pending = useRef<{ cancel: () => void } | null>(null), generation = useRef(0);
+  const cancel = useCallback(() => { generation.current++; pending.current?.cancel(); pending.current = null; setBusy(false); }, []);
   useEffect(() => {
-    if (!enabled) pending.current?.abort();
+    if (!enabled) pending.current?.cancel();
   }, [enabled]);
-  useEffect(() => () => { pending.current?.abort(); generation.current++; }, []);
+  useEffect(() => () => { generation.current++; pending.current?.cancel(); }, []);
   useEffect(() => {
     const map = mapRef.current;
     const moved = () => { if (pending.current) { cancel(); setStatus("Map moved. Inspect again at the new center; earlier records keep their original search point."); } };
@@ -45,15 +45,29 @@ export function BlmPlssInspector({ layer, mapRef, enabled }: {
   const inspect = async () => {
     const map = mapRef.current;
     if (!enabled || !map) return;
-    cancel(); const token = generation.current, controller = new AbortController(); pending.current = controller;
+    cancel(); const token = generation.current, controller = new AbortController();
     const center = map.getCenter();
     const params = new URLSearchParams({ layer, longitude: center.lng.toFixed(6), latitude: center.lat.toFixed(6) });
     setBusy(true); setStatus("Checking BLM survey identifiers at this map center…");
+    let rejectCancelled = () => {};
+    const cancelled = new Promise<never>((_, reject) => {
+      rejectCancelled = () => reject(controller.signal.reason);
+      controller.signal.addEventListener("abort", rejectCancelled, { once: true });
+    });
     const timer = setTimeout(() => controller.abort(new Error("PLSS inspection timed out.")), 15000);
-    try {
+    const dispose = () => { clearTimeout(timer); controller.signal.removeEventListener("abort", rejectCancelled); };
+    pending.current = { cancel: () => { controller.abort(); dispose(); } };
+    const load = async () => {
       const response = await fetch(`/api/blm-plss-records?${params}`, { signal: controller.signal, cache: "no-store" });
-      if (!response.ok) throw new Error("BLM records unavailable.");
-      const next = await readBoundedJson(response, 64 * 1024, controller.signal) as BlmPlssResult;
+      if (controller.signal.aborted || !response.ok) {
+        void response.body?.cancel(controller.signal.reason).catch(() => undefined);
+        controller.signal.throwIfAborted();
+        throw new Error("BLM records unavailable.");
+      }
+      return await readBoundedJson(response, 64 * 1024, controller.signal) as BlmPlssResult;
+    };
+    try {
+      const next = await Promise.race([load(), cancelled]);
       if (controller.signal.aborted || token !== generation.current) return;
       if (!Array.isArray(next.records) || next.records.length > BLM_PLSS_LIMIT || !Number.isSafeInteger(next.providerCount) || next.providerCount < next.records.length ||
           next.query?.layer !== layer || next.query.longitude !== Number(params.get("longitude")) || next.query.latitude !== Number(params.get("latitude")) ||
@@ -65,7 +79,7 @@ export function BlmPlssInspector({ layer, mapRef, enabled }: {
     } catch {
       if (token === generation.current) setStatus("BLM records unavailable or timed out. Check the Kansas map center and retry; earlier results retain their original search point.");
     } finally {
-      clearTimeout(timer);
+      dispose();
       if (token === generation.current) { pending.current = null; setBusy(false); }
     }
   };

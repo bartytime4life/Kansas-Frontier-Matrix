@@ -56,8 +56,8 @@ test("compact Qwen is a scrollable modal with contained keyboard focus", async (
   ]);
 
   assert.match(page, /className="qwen-panel" role="dialog" aria-modal=\{isCompact\}/);
-  const effectStart = page.indexOf("if (!qwenOpen || !isCompact) return;");
-  const effectEnd = page.indexOf("}, [closeQwenCompanion, isCompact, qwenOpen]);", effectStart);
+  const effectStart = page.indexOf("if (!qwenOpen || !isCompact || repositoryOpen) return;");
+  const effectEnd = page.indexOf("}, [closeQwenCompanion, isCompact, qwenOpen, repositoryOpen]);", effectStart);
   assert.ok(effectStart >= 0 && effectEnd > effectStart, "compact Qwen focus effect must be present");
   const focusEffect = page.slice(effectStart, effectEnd);
   assert.match(focusEffect, /const panel = qwenPanelRef\.current;/);

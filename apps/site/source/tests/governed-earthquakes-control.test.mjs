@@ -47,6 +47,22 @@ test("evidence binds every part of the selected month to its records in the same
   assert.equal(helpers.earthquakeExportMatchesSelection(year, evidence, MAY), false);
 });
 
+test("earthquake evidence requires a valid UTC origin in the matching numeric catalog year", () => {
+  const { layers, evidence } = month(MAY);
+  for (const origin of ["1999-05-03T14:02:11.004Z", "2025-05-99T14:02:11.004Z", "2025-05-03T24:00:00.000Z", "2025-05-03T14:02:11Z", "2025-05-03T14:02:11.004000Z", "2025-05-03T14:02:11.004+00:00"]) {
+    const bad = structuredClone(layers); bad.data.observations[0].origin_utc = origin;
+    assert.equal(helpers.earthquakeEvidenceMatchesSelection(bad, evidence, MAY), false, origin);
+    assert.equal(helpers.earthquakeExportMatchesSelection(bad, evidence, MAY), false, origin);
+  }
+  for (const year of [undefined, "2025", 2024, 0]) {
+    const bad = structuredClone(evidence); bad.data.data_year = year;
+    assert.equal(helpers.earthquakeExportMatchesSelection(layers, bad, MAY), false);
+  }
+  const fullYear = structuredClone(full); fullYear.data.approval_expires_at = layers.data.approval_expires_at;
+  assert.equal(helpers.earthquakeEvidenceMatchesSelection(fullYear, evidence, MAY), true, "other valid months still bind to selected-month evidence");
+  assert.equal(helpers.earthquakeExportMatchesSelection(layers, evidence, MAY), true);
+});
+
 test("responses classify without stations, and a missing magnitude is never shown as zero", () => {
   assert.equal(helpers.earthquakeBrowserStateForResponse(full, true), "received");
   assert.equal(helpers.earthquakeBrowserStateForResponse({ envelope: { outcome: "ANSWER" }, data: { months: [5] } }, true), "received");
@@ -143,4 +159,16 @@ test("a full-year response cannot be exported as one month", async () => {
   h.requests[1].resolve(evidence); await settle();
   assert.deepEqual(h.downloads, []);
   assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
+
+test("the earthquake export withholds wrong-year, impossible-date and mismatched-year evidence", async () => {
+  for (const mutate of [
+    ({ layers }) => { layers.data.observations[0].origin_utc = "1999-05-03T14:02:11.004Z"; },
+    ({ layers }) => { layers.data.observations[0].origin_utc = "2025-05-99T14:02:11.004Z"; },
+    ({ evidence }) => { evidence.data.data_year = 2024; },
+  ]) {
+    const initial = month(MAY), fresh = month(MAY), h = harness(initial.layers); mutate(fresh); h.start();
+    h.requests[0].resolve(fresh.layers); await settle(); h.requests[1].resolve(fresh.evidence); await settle();
+    assert.equal(h.requests.length, 2); assert.deepEqual(h.downloads, []); assert.match(h.statuses.at(-1), /^Export withheld:/);
+  }
 });

@@ -51,6 +51,61 @@ test("empty domain registry yields a valid draft with no invented evidence", () 
   assert.equal(storage.validReportDraft({ ...report, status: "PUBLISHED" }), false);
 });
 
+test("a new story round-trips an empty-registry map without retired demonstration references", () => {
+  const values = new Map();
+  globalThis.window = { localStorage: { getItem: key => values.get(key) ?? null, setItem: (key, raw) => values.set(key, raw) } };
+  try {
+    const story = model.createTrustStory(snapshot, []);
+    assert.equal(storage.validStoryDraft(story), true);
+    assert.equal(story.scenes.length, 1);
+    assert.deepEqual(story.scenes[0].snapshot, snapshot, "retain the captured camera, time and policy");
+    assert.deepEqual(story.scenes[0].evidenceRefs, []);
+    assert.equal(storage.writeDraft(storage.STORY_STORAGE_KEY, story), true);
+    assert.deepEqual(storage.readDraft(storage.STORY_STORAGE_KEY), story);
+  } finally { delete globalThis.window; }
+});
+
+test("story seeding uses only evidence present in the capture and does not bypass registry validation", () => {
+  const capture = { ...snapshot, evidenceRefs: ["unadmitted-captured-reference"] };
+  const story = model.createTrustStory(capture, [{ citation: "unrelated-reference" }]);
+  assert.deepEqual(story.scenes[0].evidenceRefs, []);
+  const matching = model.createTrustStory(capture, [{ citation: "unadmitted-captured-reference" }]);
+  assert.deepEqual(matching.scenes[0].evidenceRefs, ["unadmitted-captured-reference"]);
+  assert.equal(storage.validStoryDraft(matching), false, "available context cannot admit an unknown reference");
+});
+
+test("new stories keep location-redacted snapshots redacted and restorable", () => {
+  const redacted = { ...snapshot, camera: { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", pitch: "WITHHELD", bearing: "WITHHELD" } };
+  const story = model.createTrustStory(redacted, []);
+  assert.equal(storage.validStoryDraft(story), true);
+  assert.deepEqual(story.scenes[0].snapshot, redacted);
+  assert.equal(JSON.stringify(story).includes("-98.38"), false);
+});
+
+test("validated draft writes preserve prior bytes for unknown references, oversize data and denied storage", () => {
+  const values = new Map();
+  let writes = 0, denied = false;
+  globalThis.window = { localStorage: {
+    getItem: key => values.get(key) ?? null,
+    setItem(key, raw) { if (denied) throw new Error("quota denied"); writes += 1; values.set(key, raw); },
+  } };
+  try {
+    const story = model.createTrustStory(snapshot, []);
+    assert.equal(storage.writeDraft(storage.STORY_STORAGE_KEY, story), true);
+    const previous = values.get(storage.STORY_STORAGE_KEY);
+    const unadmitted = { ...story, scenes: [{ ...story.scenes[0], evidenceRefs: ["unadmitted-reference"] }] };
+    assert.equal(storage.writeDraft(storage.STORY_STORAGE_KEY, unadmitted), false);
+    const oversize = { ...story, scenes: Array.from({ length: 64 }, (_, i) => ({ ...story.scenes[0], id: `scene-${i}`, title: "t".repeat(20000), narrative: "n".repeat(20000) })) };
+    assert.equal(storage.validStoryDraft(oversize), true, "exercise the serialized read bound separately from field validation");
+    assert.equal(storage.writeDraft(storage.STORY_STORAGE_KEY, oversize), false);
+    assert.equal(storage.writeDraft("another-storage-key", story), false);
+    denied = true;
+    assert.equal(storage.writeDraft(storage.STORY_STORAGE_KEY, { ...story, title: "Unsaved newer title" }), false);
+    assert.equal(values.get(storage.STORY_STORAGE_KEY), previous);
+    assert.equal(writes, 1);
+  } finally { delete globalThis.window; }
+});
+
 test("fire report draft persists provider context without promoting it to evidence", () => {
   const context = fire.buildFireReportContext("nifc-fire-reports", null, "2026-09-24T14:00:00Z", "partial", "unavailable", []);
   const report = model.createReportDraft(snapshot, [], context);

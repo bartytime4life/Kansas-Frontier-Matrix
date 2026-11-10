@@ -10,14 +10,14 @@ export function BridgeRecordInspector({ layer, mapRef, enabled, reducedMotion }:
   const [radius, setRadius] = useState(500), [busy, setBusy] = useState(false);
   const [result, setResult] = useState<BridgeResult | null>(null);
   const [status, setStatus] = useState("Center the map on a bridge, then inspect nearby inventory records.");
-  const request = useRef<AbortController | null>(null), generation = useRef(0);
-  const cancel = useCallback(() => { generation.current++; request.current?.abort(); request.current = null; setBusy(false); }, []);
+  const request = useRef<{ cancel: () => void } | null>(null), generation = useRef(0);
+  const cancel = useCallback(() => { generation.current++; request.current?.cancel(); request.current = null; setBusy(false); }, []);
   useEffect(() => {
-    if (!enabled) request.current?.abort();
+    if (!enabled) request.current?.cancel();
   }, [enabled]);
   useEffect(() => {
     const pending = request, version = generation;
-    return () => { pending.current?.abort(); version.current++; };
+    return () => { version.current++; pending.current?.cancel(); };
   }, []);
   useEffect(() => {
     const map = mapRef.current;
@@ -28,15 +28,29 @@ export function BridgeRecordInspector({ layer, mapRef, enabled, reducedMotion }:
   const search = async () => {
     const map = mapRef.current;
     if (!enabled || !map) return;
-    cancel(); const token = generation.current, controller = new AbortController(); request.current = controller;
+    cancel(); const token = generation.current, controller = new AbortController();
     const center = map.getCenter();
     const params = new URLSearchParams({ layer, radius: String(radius), longitude: center.lng.toFixed(6), latitude: center.lat.toFixed(6) });
     setBusy(true); setStatus("Checking KDOT records near this map center…");
-    const timer = setTimeout(() => controller.abort(), 15000);
-    try {
+    let rejectCancelled = () => {};
+    const cancelled = new Promise<never>((_, reject) => {
+      rejectCancelled = () => reject(controller.signal.reason);
+      controller.signal.addEventListener("abort", rejectCancelled, { once: true });
+    });
+    const timer = setTimeout(() => controller.abort(new Error("Bridge inspection timed out.")), 15000);
+    const dispose = () => { clearTimeout(timer); controller.signal.removeEventListener("abort", rejectCancelled); };
+    request.current = { cancel: () => { controller.abort(); dispose(); } };
+    const load = async () => {
       const response = await fetch(`/api/bridge-records?${params}`, { signal: controller.signal, cache: "no-store" });
-      if (!response.ok) throw new Error("Unavailable");
-      const next = await readBoundedJson(response, 512 * 1024, controller.signal) as BridgeResult;
+      if (controller.signal.aborted || !response.ok) {
+        void response.body?.cancel(controller.signal.reason).catch(() => undefined);
+        controller.signal.throwIfAborted();
+        throw new Error("Unavailable");
+      }
+      return await readBoundedJson(response, 512 * 1024, controller.signal) as BridgeResult;
+    };
+    try {
+      const next = await Promise.race([load(), cancelled]);
       if (controller.signal.aborted || token !== generation.current) return;
       if (!Array.isArray(next.records) || next.records.length > BRIDGE_TOTAL_LIMIT || !Number.isSafeInteger(next.providerCount) || (next.providerCount ?? -1) < next.records.length || !Number.isInteger(next.pagesRead) || (next.pagesRead ?? 0) > 5 || next.query?.layer !== layer || next.query.radius !== radius || next.query.longitude !== Number(params.get("longitude")) || next.query.latitude !== Number(params.get("latitude")) || next.role !== "EXTERNAL_CONTEXT_ONLY") throw new Error("Unexpected response");
       setResult(next);
@@ -44,7 +58,7 @@ export function BridgeRecordInspector({ layer, mapRef, enabled, reducedMotion }:
     } catch {
       if (token === generation.current) setStatus("Records unavailable or timed out. Check that the map center is in Kansas, then retry. Prior results, if any, are retained at their original location.");
     } finally {
-      clearTimeout(timer);
+      dispose();
       if (token === generation.current) { request.current = null; setBusy(false); }
     }
   };

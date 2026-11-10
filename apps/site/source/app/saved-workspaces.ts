@@ -1,5 +1,14 @@
 import { validSubsurfaceContext } from "./subsurface-model";
 import { validResearchContext } from "./research-context";
+import { restoreArchiveViewDays, type ArchiveViewFeed } from "./explorer-layer-history";
+
+export type SavedSourceSettings = Readonly<{
+  version: 1;
+  visibility: Readonly<Record<string, boolean>>;
+  opacity: Readonly<Record<string, number>>;
+  archiveDays: Readonly<Partial<Record<ArchiveViewFeed, string>>>;
+  terrainProvider: "mapzen" | "usgs-3dep";
+}>;
 
 export type SavedWorkspaceParseResult = Readonly<{
   records: readonly Record<string, unknown>[];
@@ -14,6 +23,22 @@ const scalarMap = (value: unknown, kind: "boolean" | "number") => record(value)
   && Object.keys(value).length <= 100
   && Object.entries(value).every(([key, item]) => text(key, 160) && (kind === "boolean" ? typeof item === "boolean" : finite(item)));
 
+/** Source preferences only: no provider responses, measurements or private context. */
+export const validSavedSourceSettings = (value: unknown, savedAt: string): value is SavedSourceSettings => {
+  if (!record(value) || value.version !== 1 || Object.keys(value).some(key => !["version", "visibility", "opacity", "archiveDays", "terrainProvider"].includes(key))
+    || !scalarMap(value.visibility, "boolean") || !scalarMap(value.opacity, "number")
+    || !Object.values(value.opacity as Record<string, number>).every(item => item >= 0 && item <= 1)
+    || !["mapzen", "usgs-3dep"].includes(String(value.terrainProvider)) || !record(value.archiveDays)
+    || Object.keys(value.archiveDays).length > 4 || !Object.values(value.archiveDays).every(item => text(item, 10))
+    || !Number.isFinite(Date.parse(savedAt))) return false;
+  const entries = Object.entries(value.archiveDays);
+  const dates = restoreArchiveViewDays(entries.map(([feed, day]) => `${feed}:${day}`).join(","), new Date(savedAt).toISOString().slice(0, 10));
+  return entries.every(([feed, day]) => Object.hasOwn(dates, feed) && dates[feed as ArchiveViewFeed] === day);
+};
+
+export const savedWorkspaceSelectedLayerCount = (value: Readonly<{ visibility: Readonly<Record<string, boolean>>; sourceSettings?: SavedSourceSettings }>): number =>
+  Object.values(value.visibility).filter(item => item === true).length + Object.values(value.sourceSettings?.visibility ?? {}).filter(item => item === true).length;
+
 /** Validate the minimum complete device-local workspace shape before React sees it. */
 export const validSavedWorkspaceRecord = (value: unknown): value is Record<string, unknown> => {
   if (!record(value) || !text(value.id) || !text(value.name) || !text(value.savedAt) || !Number.isFinite(Date.parse(value.savedAt))) return false;
@@ -25,6 +50,7 @@ export const validSavedWorkspaceRecord = (value: unknown): value is Record<strin
     || !["EXECUTIVE", "STANDARD", "TECHNICAL"].includes(String(value.report.detail)) || !stringList(value.report.layerIds, 100)
     || !record(value.report.sections) || typeof value.report.query !== "string" || value.report.query.length > 500) return false;
   if (value.selection !== null && value.selection !== undefined && (!record(value.selection) || !text(value.selection.layerId, 160) || !text(value.selection.featureId, 240))) return false;
+  if (value.sourceSettings !== undefined && !validSavedSourceSettings(value.sourceSettings, value.savedAt)) return false;
   if (value.researchContext !== undefined && (value.locationCameraRedacted !== false || !validResearchContext(value.researchContext))) return false;
   if (value.subsurfaceContext !== undefined && (value.locationCameraRedacted !== false || !validSubsurfaceContext(value.subsurfaceContext))) return false;
   return true;
