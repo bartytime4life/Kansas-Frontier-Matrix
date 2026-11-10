@@ -2016,6 +2016,59 @@ test('responsive layer sheet retains map focus and a foreground share keeps its 
  }
 });
 
+for(const [control,label,targetWidth] of [
+ ['year','Sweep year or earlier era',390],['month','Sweep month',390],['day','Sweep day',390],
+ ['previous','Previous sweep frame',760],['compare','Pin or compare dates',760],['scrubber','Scrub time sweep',760],
+]){
+ test(`responsive time control retains keyboard context for ${control}`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,1280,900);
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  await p.evaluate(`document.querySelector('[aria-label="Open time sweep"]').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');
+  const selector=`[aria-label=${JSON.stringify(label)}]`,datePart=['year','month','day'].includes(control),fallback=datePart?'.compact-time-date-mobile':'.compact-time-more';
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus();window.__originalTimeControl=document.activeElement;void 0`);
+  await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(selector)})&&document.activeElement.getClientRects().length>0`,'desktop control is focused');
+  const initial=await p.evaluate(`({date:document.querySelector('[aria-label="Exact map date"]').value,url:location.href,scroll:document.documentElement.scrollTop})`);
+  let narrowed=false;
+  for(const [width,height]of [[1280,900],[targetWidth,targetWidth===760?900:844],[320,640],[844,390],[1280,900]]){
+   await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+   if(width<=targetWidth)narrowed=true;
+   const expected=datePart?width>420?selector:fallback:narrowed?fallback:selector;
+   await p.wait(`(() => {const el=document.querySelector(${JSON.stringify(expected)}),r=el?.getBoundingClientRect();return document.activeElement===el&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,`${control} keeps visible keyboard context at ${width}x${height}`);
+   assert.deepEqual(await p.evaluate(`({date:document.querySelector('[aria-label="Exact map date"]').value,url:location.href,scroll:document.documentElement.scrollTop})`),initial,'layout changes never seek a date, navigate or scroll the page');
+   assert.ok(await p.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'no horizontal document overflow');
+   if(process.env.KFM_WORKSPACE_SCREENSHOTS&&[1280,390,844].includes(width)){
+    await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+    await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width,height,scale:1},captureBeyondViewport:false});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`time-${control}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+   }
+  }
+  if(datePart)assert.equal(await p.evaluate('document.activeElement===window.__originalTimeControl'),true,'expanding restores the original date part');
+  await p.key('Escape','Escape',27);await p.wait(`document.activeElement?.getAttribute('aria-label')==='Open time sweep'&&!document.querySelector('#compact-time-settings')`,'Escape still closes the toolbar and returns to its clock');
+ });
+}
+
+test('responsive time control respects an intentional move back to the map',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('[aria-label="Open time sweep"]').focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');
+ await p.evaluate(`document.querySelector('[aria-label="Sweep month"]').focus();document.querySelector('#map-canvas').focus();window.__intentionalTimeExit=document.activeElement;void 0`);
+ await p.call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+ await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+ assert.equal(await p.evaluate('document.activeElement===window.__intentionalTimeExit'),true,'a former time control cannot reclaim map focus');
+});
+
+test('responsive time control follows its container without a window resize',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('[aria-label="Open time sweep"]').focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');
+ await p.evaluate(`(() => {document.querySelector('[aria-label="Sweep month"]').focus();window.__timeWindowResizes=0;window.addEventListener('resize',()=>window.__timeWindowResizes++);const panel=document.querySelector('.timeline-panel');panel.style.right='auto';panel.style.width='400px';})()`);
+ await p.wait(`document.activeElement===document.querySelector('.compact-time-date-mobile')`,'container query hands off to the compact date control');
+ assert.equal(await p.evaluate('innerWidth'),1280);assert.equal(await p.evaluate('window.__timeWindowResizes'),0);
+ await p.evaluate(`(() => {const panel=document.querySelector('.timeline-panel');panel.style.removeProperty('width');panel.style.removeProperty('right');})()`);
+ await p.wait(`document.activeElement===document.querySelector('[aria-label="Sweep month"]')`,'expanding only the container restores Month');
+ assert.equal(await p.evaluate('window.__timeWindowResizes'),0);
+});
+
 for(const [width,height] of [[1280,900],[390,844],[568,320]]){
  test(`Places preserve saved stops and recover removals at ${width}x${height}`,{timeout:180000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,height);

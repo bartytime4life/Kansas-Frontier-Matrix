@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { calendarDateParts, calendarDayInRange, calendarFrameDay, calendarFrameIndex, calendarFrames, defaultCalendarSweep, replaceCalendarPart, validCalendarDay, type CalendarFrameOutcome, type CalendarStep, type CalendarSweepView } from "./calendar-sweep";
+import { retainTimeControlFocus } from "./time-controls-focus";
 import "./compact-time-sweep.css";
 
 export type CalendarSourceRow = Readonly<{ id: string; title: string; state: string; detail: string }>;
@@ -92,6 +93,11 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
     return () => window.clearTimeout(timer);
   }, [playing, busy, era, reducedMotion, state.day, state.showing, frames, skipGaps, speed, seekDay, setPlaying]);
   const shown = expanded || open;
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!shown || !root) return;
+    return retainTimeControlFocus(root);
+  }, [shown]);
   useEffect(() => {
     if (!shown) return;
     const dismiss = (event: PointerEvent) => { if (event.target instanceof Node && !rootRef.current?.contains(event.target)) { onOpenChange(false); setExpanded(false); } };
