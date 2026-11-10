@@ -99,12 +99,13 @@ test("focus boundaries ignore closed disclosure contents even when the browser r
 
 test("reviewed water remains selected and hideable when a refresh withholds its package", async () => {
   const availability = await pure("governed-water-availability.ts");
+  const water = await pure("governed-water.ts");
   const layers = JSON.parse(await readFile("tests/fixtures/governed-water/layers.json", "utf8"));
   layers.data.approval_expires_at = "2099-01-01T00:00:00Z";
   const requests = [], timers = [], selections = [];
   const h = await componentHarness("app/governed-water-control.tsx", {
     "./bounded-json": { readBoundedJson: async response => response.body },
-    "./governed-water": { approvalRemainingMs: (expiry, now) => Date.parse(expiry) - now },
+    "./governed-water": water,
     "./governed-water-availability": availability,
   }, {
     fetch: url => new Promise(resolve => requests.push({ url, resolve })),

@@ -41,6 +41,36 @@ test("corrupt device-local workspaces cannot replace the Explorer with a blank r
   assert.equal(mixed.rejected, true);
 });
 
+test("versioned saved source preferences retain legacy records without admitting provider rows", () => {
+  const sourceSettings = { version: 1, visibility: { "usgs-earthquakes": true }, opacity: { "usgs-earthquakes": 0 }, archiveDays: { "usgs-earthquakes": "2026-09-14" }, terrainProvider: "usgs-3dep" };
+  assert.equal(saved.validSavedWorkspaceRecord(workspace), true);
+  assert.equal(saved.validSavedWorkspaceRecord({ ...workspace, sourceSettings }), true);
+  const roundTrip = saved.parseSavedWorkspaceList(JSON.stringify([workspace, { ...workspace, id: "new", sourceSettings }]), 12);
+  assert.equal(roundTrip.rejected, false); assert.equal(roundTrip.records.length, 2);
+  assert.deepEqual(roundTrip.records[1].sourceSettings, sourceSettings);
+  assert.equal(saved.savedWorkspaceSelectedLayerCount(roundTrip.records[1]), 2, "selected public and registry layers are counted together, including zero-opacity selections");
+  const unavailable = { ...sourceSettings, visibility: { "retired-public-source": true } };
+  assert.equal(saved.validSavedWorkspaceRecord({ ...workspace, sourceSettings: unavailable }), true, "keep the saved identity when a source is removed; restoration may use only its live allowlist");
+  assert.equal(saved.validSavedWorkspaceRecord({ ...workspace, sourceSettings: { ...sourceSettings, observations: [{ value: 42 }] } }), false);
+});
+
+test("saved source preferences reject invalid clocks, unbounded values and unsupported archive providers", () => {
+  const sourceSettings = { version: 1, visibility: { "usgs-earthquakes": true }, opacity: { "usgs-earthquakes": 0.7 }, archiveDays: {}, terrainProvider: "mapzen" };
+  for (const patch of [
+    { version: 2 }, { visibility: { "usgs-earthquakes": "true" } }, { opacity: { "usgs-earthquakes": -0.1 } }, { opacity: { "usgs-earthquakes": 1.1 } },
+    { terrainProvider: "unreviewed-provider" }, { archiveDays: { "usgs-earthquakes": "2026-02-30" } },
+    { archiveDays: { "usgs-earthquakes": "2026-09-16" } }, { archiveDays: { "nasa-gibs-fire-points": "2017-12-31" } },
+    { archiveDays: { "nws-alerts": "2026-09-14" } }, { archiveDays: { "__proto__": "2026-09-14", "nws-alerts": "2026-09-14" } },
+    { visibility: Object.fromEntries(Array.from({ length: 101 }, (_, i) => [`source-${i}`, true])) },
+  ]) assert.equal(saved.validSavedWorkspaceRecord({ ...workspace, sourceSettings: { ...sourceSettings, ...patch } }), false);
+  const valid = { ...workspace, sourceSettings };
+  const writes = [];
+  assert.equal(saved.writeSavedWorkspaceList({ setItem: (...args) => writes.push(args) }, "synthetic", [valid]), true);
+  const previous = writes[0][1];
+  assert.equal(saved.writeSavedWorkspaceList({ setItem() { assert.fail("invalid preferences must not replace prior bytes"); } }, "synthetic", [{ ...valid, sourceSettings: { ...sourceSettings, archiveDays: { "usgs-earthquakes": "2026-02-30" } } }]), false);
+  assert.equal(writes[0][1], previous);
+});
+
 test("embedded panels do not rewrite host-controlled history and history failures stay contained", () => {
   let writes = 0;
   const history = { replaceState: () => { writes++; } };

@@ -11,6 +11,8 @@ const compiled = text => ts.transpileModule(text, { compilerOptions: {
 } }).outputText;
 const helpers = { exports: {} };
 vm.runInNewContext(compiled(availability), { exports: helpers.exports });
+const water = { exports: {} };
+vm.runInNewContext(compiled(await readFile(new URL("../app/governed-water.ts", import.meta.url), "utf8")), { exports: water.exports });
 const bounded = { exports: {} };
 vm.runInNewContext(compiled(await readFile(new URL("../app/bounded-json.ts", import.meta.url), "utf8")), { exports: bounded.exports, TextDecoder });
 const station = "USGS-06892518";
@@ -40,7 +42,7 @@ function harness() {
       if (name === "react") return hooks;
       if (name === "react/jsx-runtime") return { jsx, jsxs: jsx, Fragment: "fragment" };
       if (name === "./governed-water-availability") return helpers.exports;
-      if (name === "./governed-water") return { approvalRemainingMs: expiry => Date.parse(expiry) - Date.now() };
+      if (name === "./governed-water") return water.exports;
       if (name === "./bounded-json") return { readBoundedJson: (response, limit) => { reads.push(response); return bounded.exports.readBoundedJson(response, limit); } };
       throw new Error(`Unexpected import ${name}`);
     },

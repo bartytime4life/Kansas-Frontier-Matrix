@@ -256,7 +256,7 @@ export function releaseGate(pkg: GatePackage, decision: Obj | null, now: string,
   if (REF_KEYS.some(k => typeof decision[k] !== "string" || !/^kfm:\/\/[A-Za-z0-9._~:/-]{1,240}$/.test(decision[k] as string))) return "REVIEW_REFERENCE_MISSING";
   if (["reviewer", "releaser"].some(k => typeof decision[k] !== "string" || !(decision[k] as string).length || (decision[k] as string).length > 128)) return "INDEPENDENT_REVIEW_REQUIRED";
   if (decision.reviewer === decision.releaser && !selfReleaseEligible(pkg, licenses)) return "INDEPENDENT_REVIEW_REQUIRED";
-  try { if (!(time(pkg.manifest.created_at) <= time(decision.reviewed_at) && time(decision.reviewed_at) <= time(decision.released_at) && time(decision.released_at) <= time(now) && time(now) < time(decision.expires_at))) return "RELEASE_TIME_INVALID"; } catch { return "RELEASE_TIME_INVALID"; }
+  try { if (!(microseconds(pkg.manifest.created_at) <= microseconds(decision.reviewed_at) && microseconds(decision.reviewed_at) <= microseconds(decision.released_at) && microseconds(decision.released_at) <= microseconds(now) && microseconds(now) < microseconds(decision.expires_at))) return "RELEASE_TIME_INVALID"; } catch { return "RELEASE_TIME_INVALID"; }
   if (pkg.evidence.entries.some(e => e.bundle.sensitivity.level !== "public" || e.bundle.rights.license.toLowerCase().includes("review required"))) return "RIGHTS_OR_SENSITIVITY_HOLD";
   return "ELIGIBLE";
 }
