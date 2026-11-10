@@ -228,7 +228,7 @@ test("compact evidence autofocus waits for active surface inspection and preserv
   for (const active of [false, true]) for (const surface of ["off", "slope"]) {
     const focus = [], closed = [], listeners = new Map();
     const first = { focus() { focus.push("first"); } }, last = { focus() { focus.push("last"); } };
-    const drawer = { addEventListener(type, fn) { listeners.set(type, fn); }, removeEventListener(type, fn) { assert.equal(listeners.get(type), fn); listeners.delete(type); } };
+    const drawer = { contains(node) { return node === first || node === last; }, addEventListener(type, fn) { listeners.set(type, fn); }, removeEventListener(type, fn) { assert.equal(listeners.get(type), fn); listeners.delete(type); } };
     const context = { primaryWorkspace: "map", guideOpen: false, isCompact: true, surfaceInspectionOpen: active && surface !== "off", terrainSurfaceMode: surface, mapUtilityOpen: false, rightOpen: true, leftOpen: false, layerPanelIsModal: false, leftPanelRef: { current: null }, timelineOpen: false, rightPanelRef: { current: drawer }, visibleFocusableElements: () => [first, last], document: { activeElement: new Element(true) }, Element, closeRightPanel() { closed.push(true); } };
     const cleanup = evaluate(effect.arguments[0], context)();
     if (context.surfaceInspectionOpen) {

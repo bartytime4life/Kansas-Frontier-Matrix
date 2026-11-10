@@ -12,6 +12,7 @@ import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
 import { countySearchGeometry, countySearchResults, globalSearchStatus } from "./county-search";
 import { atlasDiscoveryResults, type GlobalSearchItem } from "./atlas-discovery";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
+import { compactPanelOwner, revealPanelControl, type CompactPanel } from "./compact-panels";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
 import { ensureExplorerHistoryEntry, explorerHistoryEntryKey, explorerHistoryParams, explorerHistoryWelcome, restoreArchiveViewDays, saveExplorerHistoryView } from "./explorer-layer-history";
@@ -1855,6 +1856,7 @@ export default function Home() {
   const [aviationResearch, setAviationResearch] = useState<readonly ResearchRecord[] | null>(null);
   const [aviationInspect, setAviationInspect] = useState<Readonly<{ lon: number; lat: number; label: string; nonce: number }> | null>(null);
   const { inspectionPanel, rightOpen, qwenOpen, setRightOpen, setQwenOpen, previewEvidence } = useInspectionPanel();
+  const [chatLayoutSuspended, setChatLayoutSuspended] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
   const [focusStage, setFocusStage] = useState<FocusStage>("outcome");
@@ -5380,6 +5382,7 @@ export default function Home() {
     setGuideOpen(false);
     setWelcomeSourcesOpen(false);
     setQwenOpen(true);
+    setChatLayoutSuspended(false);
     setHelpOpen(false);
     dismissMapUtilityWithoutFocus();
     if (isCompact) {
@@ -5429,6 +5432,7 @@ export default function Home() {
   const closeQwenCompanion = useCallback((returnElement?: HTMLElement | null) => {
     const returnTarget = returnElement ?? qwenReturnRef.current;
     qwenReturnRef.current = null;
+    setChatLayoutSuspended(false);
     setQwenOpen(false);
     window.setTimeout(() => {
       if (returnTarget?.isConnected && returnTarget.getClientRects().length > 0) returnTarget.focus({ preventScroll: true });
@@ -6098,6 +6102,7 @@ export default function Home() {
     setMapContextOpen(false);
     setHelpOpen(false);
     setQwenOpen(false);
+    setChatLayoutSuspended(false);
     setPlaying(false);
     setStreamflowPlaying(false);
     setNoaaRadarPlaying(false);
@@ -6223,19 +6228,54 @@ export default function Home() {
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 1100px)");
+    const open = { left: leftOpen, evidence: rightOpen, tools: mapUtilityOpen, chat: qwenOpen, time: timelineOpen };
+    const panels: readonly [CompactPanel, HTMLElement | null][] = [
+      ["tools", mapUtilityPanelRef.current], ["chat", qwenPanelRef.current],
+      ["evidence", rightPanelRef.current], ["left", leftPanelRef.current], ["time", timelineRef.current],
+    ];
+    let revealFrame: number | undefined;
+    const reveal = () => {
+      if (revealFrame !== undefined) window.cancelAnimationFrame(revealFrame);
+      const active = document.activeElement;
+      const panel = panels.find(([id, node]) => open[id] && node?.contains(active))?.[1];
+      if (!media.matches || !(active instanceof HTMLElement) || !panel) return;
+      revealFrame = window.requestAnimationFrame(() => {
+        if (active === document.activeElement && active.isConnected && !active.closest('[hidden], [inert], [aria-hidden="true"]')) revealPanelControl(panel, active);
+      });
+    };
     const update = () => {
       setIsCompact(media.matches);
       if (media.matches && !compactRef.current) {
-        setLeftOpen(false);
-        setRightOpen(false);
-        setTimelineOpen(false);
+        const active = document.activeElement;
+        const focused = panels.find(([id, panel]) => open[id] && panel?.contains(active))?.[0] ?? null;
+        const otherDialog = !focused && active?.closest('dialog[open], [role="dialog"]');
+        const blocked = primaryWorkspace !== "map" || guideOpen !== false || mapShare !== null || repositoryOpen || Boolean(otherDialog);
+        const owner = compactPanelOwner(open, focused, blocked);
+        // Dismiss competing surfaces without returning focus over the retained
+        // control or the foreground dialog. Their drafts and setup remain.
+        if (owner !== "left") setLeftOpen(false);
+        if (owner !== "evidence") setRightOpen(false);
+        if (owner !== "tools") setMapUtilityOpen(false);
+        if (owner !== "chat") {
+          // Hiding a competing pane for layout must not cancel an accepted
+          // question. Explicit Close and leaving Map still deactivate it.
+          if (qwenOpen) setChatLayoutSuspended(true);
+          setQwenOpen(false);
+        }
+        if (owner !== "time") setTimelineOpen(false);
       }
       compactRef.current = media.matches;
+      reveal();
     };
     update();
     media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
+    window.addEventListener("resize", reveal);
+    return () => {
+      media.removeEventListener("change", update);
+      window.removeEventListener("resize", reveal);
+      if (revealFrame !== undefined) window.cancelAnimationFrame(revealFrame);
+    };
+  }, [leftOpen, rightOpen, mapUtilityOpen, qwenOpen, timelineOpen, primaryWorkspace, guideOpen, mapShare, repositoryOpen, setRightOpen, setQwenOpen]);
 
   const restoreExplorerFromUrl = useCallback(() => {
       cancelSmokePlayback();
@@ -8775,7 +8815,9 @@ export default function Home() {
     // A surface tap may open evidence behind Scene. Closing Scene with Escape
     // returns focus to its trigger; let Tab then enter the still-open drawer.
     const returningToScene = !mapUtilityOpen && rightOpen && terrainSurfaceMode !== "off" && document.activeElement instanceof Element && document.activeElement.closest(".scene-panel");
-    if (!returningToScene) items[0]?.focus({ preventScroll: true });
+    const nonmodalLayers = openPanel === leftPanelRef.current && !layerPanelIsModal;
+    const focusedInside = openPanel.contains(document.activeElement) && Boolean(document.activeElement?.getClientRects().length);
+    if (!returningToScene && !nonmodalLayers && !focusedInside) items[0]?.focus({ preventScroll: true });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         // This panel owns the transition; the same key must not close the
@@ -12908,7 +12950,7 @@ export default function Home() {
             <header className="qwen-panel-heading">
               <div><span className="qwen-eyebrow">YOUR INVESTIGATION</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
-            <AssistantWorkspace initialMode="explore" active={qwenOpen} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
+            <AssistantWorkspace initialMode="explore" active={primaryWorkspace === "map" && (qwenOpen || chatLayoutSuspended)} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
               discovery={{query:globalQuery, items:searchResults, status:searchStatus.message, busy:searchStatus.busy, onQuery:setGlobalQuery, onChoose:id => { const item=searchResults.find(row => row.id===id); if (item) chooseSearchResult(item); }}}
               onInspectSources={inspectAssistantSources} />
           </section>
