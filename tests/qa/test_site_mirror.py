@@ -1070,12 +1070,12 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert lock["packages"]["node_modules/minimatch"]["version"] == "3.1.5"
     assert "minimatch" not in manifest["overrides"]  # Legacy ESLint plugins need the callable API.
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 936
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 939
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
     assert result["file_states"]["inherited_repository_overlay"] == 69
-    assert result["file_states"]["repository_only_overlay"] == 74
+    assert result["file_states"]["repository_only_overlay"] == 77
     assert result["file_states"]["repository_safety_overlay"] == 74
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
@@ -2303,7 +2303,7 @@ def test_historical_reading_context_integrity_successor_preserves_recorded_bytes
     assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
-def test_share_context_integrity_successor_binds_current_bytes_and_preserves_all_holds() -> None:
+def test_historical_share_context_integrity_successor_preserves_recorded_bytes_and_holds() -> None:
     directory = ROOT / 'data/receipts/generated'
     predecessor = directory / 'site-v268-reading-context-integrity-overlay-20261109.json'
     previous_hash = '49f5c868d31d685feaf425eb95dbb8f61f071ae3654a3cd38d4673c115cc225b'
@@ -2311,7 +2311,7 @@ def test_share_context_integrity_successor_binds_current_bytes_and_preserves_all
     previous = json.loads(predecessor.read_text())
     path = directory / 'site-v268-share-context-integrity-overlay-20261109.json'
     current = json.loads(path.read_text())
-    assert TOOL.RECEIPT == path
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == 'd12d8a8ab30d83f7da1ccc01fc0e27d9b721218ca542f6435f90e8e4f81ffc20'
     assert current['predecessor_receipt'] == predecessor.name
     assert current['predecessor_receipt_sha256'] == previous_hash
     administrative = {'comparison', 'counts', 'inventory_sha256', 'recorded_at',
@@ -2355,7 +2355,8 @@ def test_share_context_integrity_successor_binds_current_bytes_and_preserves_all
         assert declaration['repository_base_sha256'] == declaration['previous_receipt_sha256'] == old_hash
         assert entry['site_sha256'] == (old['site_sha256'] if old else None)
         assert entry['state'] == declaration['state'] == (old['state'] if old and old['state'] != 'identical' else ('repository_safety_overlay' if old else 'repository_only_overlay'))
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # Immutable historical receipt is pinned above; the selected successor validates current bytes.
+        digest = entry['mirror_sha256']
         assert digest == entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
     for state, count in previous['counts'].items():
         expected_count = count + sum(entry['state'] == state for name, entry in after.items() if name not in before)
@@ -2363,6 +2364,68 @@ def test_share_context_integrity_successor_binds_current_bytes_and_preserves_all
         expected_count -= sum(before[name]['state'] == state for name in changed if name in before)
         assert current['counts'][state] == expected_count, state
     assert current['repository_reconciled_base'] == current['repository_reconciliation']['base_commit'] == 'ed202b8f89a5d13e8a4851319669a6c325671f6a'
+    assert current['repository_reconciliation']['authority'] == 'CONTENT_PARITY_ONLY'
+    assert current['repository_reconciliation']['restored_recorded_paths'] == []
+    assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')
+    inventory = {name: entry['mirror_sha256'] for name, entry in after.items()}
+    assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def test_replay_record_integrity_successor_binds_current_bytes_and_preserves_all_holds() -> None:
+    directory = ROOT / 'data/receipts/generated'
+    predecessor = directory / 'site-v268-share-context-integrity-overlay-20261109.json'
+    previous_hash = 'd12d8a8ab30d83f7da1ccc01fc0e27d9b721218ca542f6435f90e8e4f81ffc20'
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == previous_hash
+    previous = json.loads(predecessor.read_text())
+    path = directory / 'site-v268-replay-record-integrity-overlay-20261110.json'
+    current = json.loads(path.read_text())
+    assert TOOL.RECEIPT == path
+    assert current['predecessor_receipt'] == predecessor.name
+    assert current['predecessor_receipt_sha256'] == previous_hash
+    administrative = {'comparison', 'counts', 'inventory_sha256', 'recorded_at',
+                      'predecessor_receipt', 'predecessor_receipt_sha256', 'repository_reconciled_base',
+                      'repository_reconciliation', 'source_identity_currentness', 'validation', 'rollback'}
+    assert set(current) == set(previous)
+    for name in previous.keys() - administrative:
+        assert current[name] == previous[name], name
+    assert current['status'] == 'REVIEW_ONLY'
+    assert current['review']['source_and_overlay_review'] == 'PENDING'
+    assert current['review']['human_acceptance'] is current['review']['hosted_equivalence'] is False
+    assert current['counts']['repository_withheld'] == previous['counts']['repository_withheld'] == 262
+    before, after = previous['comparison'], current['comparison']
+    assert set(before) <= set(after)
+    assert set(after) - set(before) == {
+        'app/observatory/inspection.ts',
+        'docs/explorer-replay-record-integrity-2026-11-10.md',
+        'tests/observatory-inspection-frame.test.mjs',
+    }
+    changed = {name for name in after if after[name] != before.get(name)}
+    assert changed == {
+        'app/observatory/inspection.ts',
+        'app/observatory/workspace.tsx',
+        'docs/explorer-replay-record-integrity-2026-11-10.md',
+        'tests/observatory-inspection-frame.test.mjs',
+    }
+    declarations = {entry['path']: entry for entry in current['repository_reconciliation']['changes']}
+    assert set(declarations) == changed
+    assert len(declarations) == len(current['repository_reconciliation']['changes']) == 4
+    for name in set(before) - changed:
+        assert after[name] == before[name], name
+    for name in changed:
+        declaration, entry, old = declarations[name], after[name], before.get(name)
+        old_hash = old['mirror_sha256'] if old else None
+        assert declaration['proposed_in_this_change'] is True
+        assert declaration['repository_base_sha256'] == declaration['previous_receipt_sha256'] == old_hash
+        assert entry['site_sha256'] == (old['site_sha256'] if old else None)
+        assert entry['state'] == declaration['state'] == (old['state'] if old and old['state'] != 'identical' else ('repository_safety_overlay' if old else 'repository_only_overlay'))
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert digest == entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
+    for state, count in previous['counts'].items():
+        expected_count = count + sum(entry['state'] == state for name, entry in after.items() if name not in before)
+        expected_count += sum(after[name]['state'] == state for name in changed if name in before)
+        expected_count -= sum(before[name]['state'] == state for name in changed if name in before)
+        assert current['counts'][state] == expected_count, state
+    assert current['repository_reconciled_base'] == current['repository_reconciliation']['base_commit'] == '028ffa0870068741c5594c716ae2b21ea22955f3'
     assert current['repository_reconciliation']['authority'] == 'CONTENT_PARITY_ONLY'
     assert current['repository_reconciliation']['restored_recorded_paths'] == []
     assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')
