@@ -6,15 +6,15 @@ import {componentHarness,findNode} from './component-harness.mjs';
 
 const trail=await import('data:text/javascript;base64,'+Buffer.from(ts.transpileModule(await readFile(new URL('../app/places-trail.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).toString('base64'));
 async function harness(context='places'){
- const focus=[],names=[];let saves=0,undos=0,visible=true,blocked=false;
+ const focus=[],names=[];let saves=0,undos=0,backups=0,visible=true,blocked=false;
  const element=label=>({focus(){focus.push(label);},getClientRects:()=>visible?[{}]:[],closest:()=>blocked?{}:null});
  const name=element('name'),undo=element('undo');
  const h=await componentHarness(new URL('../app/places-save-controls.tsx',import.meta.url),{
   './places-trail':trail,'./places-save-controls.module.css':{default:{}},
  });
- const props={context,count:0,name:'',notice:'',removedName:null,focusRequest:null,onName:value=>names.push(value),onSave:()=>saves++,onUndo:()=>undos++};
+ const props={context,count:0,name:'',notice:'',removedName:null,focusRequest:null,onName:value=>names.push(value),onSave:()=>saves++,onUndo:()=>undos++,onBackup:()=>backups++};
  const render=()=>{const tree=h.render(h.exports.PlacesSaveControls,props);findNode(tree,n=>n.type==='input').props.ref.current=name;const button=findNode(tree,n=>n.type==='button'&&n.props.children==='Undo removal');if(button)button.props.ref.current=undo;h.commit();return tree;};
- return{h,props,render,focus,names,visibility(value){visible=value;},blocked(value){blocked=value;},get saves(){return saves;},get undos(){return undos;}};
+ return{h,props,render,focus,names,visibility(value){visible=value;},blocked(value){blocked=value;},get saves(){return saves;},get undos(){return undos;},get backups(){return backups;}};
 }
 
 test('save forms label their name and capacity and submit through Enter-compatible native form behavior',async()=>{
@@ -57,4 +57,14 @@ test('failed writes keep a readable status and the same undo action available',a
  const tree=p.render(),status=findNode(tree,n=>n.props?.role==='status');assert.equal(status.props['aria-live'],'polite');
  assert.ok(findNode(status,n=>n.type==='p'&&n.props.children===p.props.notice));
  assert.equal(findNode(status,n=>n.type==='button').props['aria-label'],'Undo removal of River view');p.h.dispose();
+});
+
+
+test('backup remains available for full and unreadable Places without submitting the save form',async()=>{
+ for(const context of ['places','workspace']){
+  const p=await harness(context);p.props.count=12;p.props.notice='Unreadable records; editing paused';
+  const tree=p.render(),backup=findNode(tree,n=>n.type==='button'&&n.props.children==='Download Places backup');
+  assert.equal(backup.props.type,'button');assert.notEqual(backup.props.disabled,true);
+  backup.props.onClick();assert.equal(p.backups,1);assert.equal(p.saves,0);assert.equal(p.undos,0);p.h.dispose();
+ }
 });

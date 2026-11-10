@@ -101,8 +101,7 @@ one. Valid records remain viewable, while the original stored bytes are retained
 A persistent notice explains that editing is paused to protect unreadable data.
 Saving, removing, reordering and undoing all check the current stored list first;
 none can silently discard records that the current version cannot interpret.
-This is preservation, not automatic repair: exporting or repairing an unreadable
-list remains a separate recovery task.
+Unreadable lists remain preserved for recovery; the application does not automatically repair them.
 
 Storage events synchronize Places between tabs without replacing the current map
 or unsaved name. A changed list clears obsolete removal undo and stops a running
@@ -132,3 +131,19 @@ node --test tests/runtime-resilience.test.mjs tests/saved-place-sources.test.mjs
 KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5208 KFM_TEST_CHROME=/path/to/chromium \
   node --test --test-name-pattern='Places synchronize across tabs|Places preserve saved stops' tests/explorer-startup.browser.mjs
 ```
+
+## Original-data backup — 2026-11-10
+
+Both Places save surfaces offer Download Places backup even when the list is full
+or editing is paused. The JSON recovery file contains the storage key, export
+time and exact original stored string in `rawValue`. Wrapping that string retains
+malformed JSON and unpaired UTF-16 characters without changing stored data. The
+control explains that the file may contain private place names and locations.
+An absent value, denied read or failed download produces persistent feedback.
+The file is for recovery; automatic import and repair are not implemented.
+
+Handler tests cover malformed, mixed, empty and Unicode values, denied storage,
+failed downloads and temporary-resource cleanup. Shared-control tests cover both
+surfaces while saving is blocked. The hydrated two-tab journey downloads the
+actual file in Chromium after a corrupt-list reload and compares `rawValue` with
+the original storage value.

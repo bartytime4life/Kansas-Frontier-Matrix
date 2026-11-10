@@ -7,7 +7,7 @@ import styles from "./places-save-controls.module.css";
 export type PlacesControlContext = "places" | "workspace";
 export type PlacesFocusRequest = Readonly<{ version: number; context: PlacesControlContext; target: "name" | "undo" }>;
 
-export function PlacesSaveControls({ context, count, name, notice, removedName, focusRequest, onName, onSave, onUndo }: {
+export function PlacesSaveControls({ context, count, name, notice, removedName, focusRequest, onName, onSave, onUndo, onBackup }: {
   context: PlacesControlContext;
   count: number;
   name: string;
@@ -17,6 +17,7 @@ export function PlacesSaveControls({ context, count, name, notice, removedName, 
   onName: (name: string) => void;
   onSave: () => void;
   onUndo: () => void;
+  onBackup: () => void;
 }) {
   const id = useId();
   const nameRef = useRef<HTMLInputElement>(null);
@@ -44,6 +45,10 @@ export function PlacesSaveControls({ context, count, name, notice, removedName, 
         <button ref={undoRef} type="button" onClick={onUndo} aria-label={`Undo removal of ${removedName}`}>Undo removal</button>
         <small>Undo stays available until you change the list or reload.</small>
       </div>}
+    </div>
+    <div className={styles.backup}>
+      <button type="button" onClick={onBackup}>Download Places backup</button>
+      <small>A recovery file containing your original stored data, including unreadable records. It may contain private place names and locations.</small>
     </div>
   </div>;
 }

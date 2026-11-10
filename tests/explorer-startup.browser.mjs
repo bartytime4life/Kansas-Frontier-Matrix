@@ -2526,4 +2526,22 @@ test('Places synchronize across tabs without overwriting newer or unreadable rec
  const before=await p.evaluate('performance.timeOrigin');await p.call('Page.reload');
  await p.wait(`performance.timeOrigin!==${before}&&document.querySelector('.atlas-studio')?.dataset.startup==='ready'`,'reload completes');await openPlaces();
  assert.equal(await p.evaluate(`localStorage.getItem('${key}')`),malformed,'hydration preserves every original byte');
+ const downloadPath=await mkdtemp(join(tmpdir(),'kfm-places-backup-'));
+ t.after(()=>rm(downloadPath,{recursive:true,force:true}));
+ await b.call('Browser.setDownloadBehavior',{behavior:'allow',downloadPath});
+ await p.evaluate(`(()=>{const button=[...document.querySelectorAll('.layer-panel button')].find(n=>n.textContent==='Download Places backup');button.scrollIntoView({block:'center'});button.focus();})()`);
+ await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('${form}').parentElement.textContent.includes('backup download requested')`,'backup download requested through visible control');
+ let files=[];
+ for(let attempt=0;attempt<50;attempt++){
+  files=(await readdir(downloadPath)).filter(file=>/^kfm-places-backup-.*\.json$/.test(file));
+  if(files.length)break;
+  await new Promise(resolve=>setTimeout(resolve,100));
+ }
+ assert.equal(files.length,1,'Chromium completes one backup download');
+ const backup=JSON.parse(await readFile(join(downloadPath,files[0]),'utf8'));
+ assert.equal(backup.format,'kfm-local-places-backup-v1');
+ assert.equal(backup.storageKey,key);
+ assert.equal(backup.rawValue,malformed,'download retains every original record including unreadable entries');
+ assert.equal(await p.evaluate(`localStorage.getItem('${key}')`),malformed,'download never changes stored Places');
 });

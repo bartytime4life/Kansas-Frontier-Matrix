@@ -148,3 +148,34 @@ test('missing source opacity uses defaults and finite out-of-range values are bo
   h.run({ ...base, officialContext: { visibility, opacity: { 'usgs-streamflow': 8 } } });
   assert.deepEqual(owner.state.setOfficialOpacity, { 'usgs-streamflow': 1, 'nws-radar': .7 });
 });
+
+function backupHandler(raw, { denied = false, failedClick = false } = {}) {
+ const blobs=[],timers=[],revoked=[];let clicks=0,removed=0;
+ const link={click(){if(failedClick)throw Error('download denied');clicks++;},remove(){removed++;}};
+ const h=handler('downloadPlacesBackup',{
+  Blob,URL:{createObjectURL:blob=>{blobs.push(blob);return 'blob:backup';},revokeObjectURL:url=>revoked.push(url)},
+  document:{createElement:tag=>{assert.equal(tag,'a');return link;},body:{appendChild:node=>assert.equal(node,link)}},
+  window:{localStorage:{getItem(){if(denied)throw Error('storage denied');return raw;},setItem(){assert.fail('backup never writes storage');},removeItem(){assert.fail('backup never deletes storage');}},setTimeout:fn=>timers.push(fn)},
+  WORKSPACE_STORAGE_KEY:'places',
+ });
+ return {...h,blobs,timers,revoked,link,get clicks(){return clicks;},get removed(){return removed;}};
+}
+
+test('backup preserves the exact stored string, including malformed JSON and unpaired UTF-16, without changing Places',async()=>{
+ for(const raw of [JSON.stringify([base]),'{broken', '\ud800', '', JSON.stringify([base,null])]){
+  const h=backupHandler(raw);h.run();assert.equal(h.clicks,1);assert.equal(h.removed,1);
+  assert.equal(h.blobs[0].type,'application/json');
+  const payload=JSON.parse(await h.blobs[0].text());
+  assert.equal(payload.format,'kfm-local-places-backup-v1');assert.equal(payload.rawValue,raw);assert.equal(payload.storageKey,'places');
+  assert.match(h.link.download,/^kfm-places-backup-\d{4}-\d{2}-\d{2}\.json$/);
+  assert.equal(h.state.setSavedWorkspaces,undefined);assert.equal(h.state.setWorkspaceName,undefined);
+  assert.match(h.state.setPlaceNotice,/download requested/);h.timers[0]();assert.deepEqual(h.revoked,['blob:backup']);
+ }
+});
+
+test('missing or denied storage and download failure keep data untouched and provide recovery feedback',()=>{
+ const empty=backupHandler(null);empty.run();assert.equal(empty.blobs.length,0);assert.match(empty.state.setPlaceNotice,/No stored Places/);
+ const denied=backupHandler('data',{denied:true});denied.run();assert.equal(denied.blobs.length,0);assert.match(denied.state.setPlaceNotice,/could not be downloaded/);
+ const failed=backupHandler('data',{failedClick:true});failed.run();assert.equal(failed.clicks,0);assert.equal(failed.removed,1);assert.match(failed.state.setPlaceNotice,/could not be downloaded/);
+ failed.timers[0]();assert.deepEqual(failed.revoked,['blob:backup']);
+});

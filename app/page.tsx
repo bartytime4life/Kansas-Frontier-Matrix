@@ -9855,6 +9855,33 @@ export default function Home() {
     return true;
   };
 
+  const downloadPlacesBackup = () => {
+    let url: string | null = null;
+    let link: HTMLAnchorElement | null = null;
+    try {
+      const rawValue = window.localStorage.getItem(WORKSPACE_STORAGE_KEY);
+      if (rawValue === null) { setPlaceNotice("No stored Places are available to back up."); return; }
+      const exportedAt = new Date().toISOString();
+      // Wrap the original string: even invalid JSON and unpaired UTF-16 units
+      // can be recovered without losing them during UTF-8 Blob encoding.
+      const content = JSON.stringify({ format: "kfm-local-places-backup-v1", exportedAt, storageKey: WORKSPACE_STORAGE_KEY, rawValue }, null, 2);
+      url = URL.createObjectURL(new Blob([content], { type: "application/json" }));
+      link = document.createElement("a");
+      link.href = url;
+      link.download = `kfm-places-backup-${exportedAt.slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      const message = "Places backup download requested. Your stored Places are unchanged.";
+      setPlaceNotice(message); announce(message);
+    } catch {
+      const message = "The Places backup could not be downloaded. Browser storage or downloads may be unavailable; your stored Places are unchanged.";
+      setPlaceNotice(message); announce(message);
+    } finally {
+      link?.remove();
+      if (url) { const release = url; window.setTimeout(() => URL.revokeObjectURL(release), 1000); }
+    }
+  };
+
   const saveCurrentWorkspace = () => {
     if (savedWorkspaces.length >= MAX_PLACE_TRAIL_STOPS) { setPlaceNotice(PLACES_FULL_MESSAGE); announce(PLACES_FULL_MESSAGE); return; }
     const savedAt = new Date().toISOString();
@@ -11848,7 +11875,7 @@ export default function Home() {
             <div className="panel-stat-grid"><article><span>SAVED PLACES</span><strong>{savedWorkspaces.length}</strong></article><article><span>ACTIVE PLACE</span><strong>{activePlaceId ? "YES" : "NONE"}</strong></article></div>
             <article className="place-capture-card">
                   <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · Layers to save: {Object.values(visibility).filter(Boolean).length + visibleOfficialCount}</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
-                  <PlacesSaveControls context="places" count={savedWorkspaces.length} name={workspaceName} notice={placeNotice} removedName={removedPlace?.snapshot.name ?? null} focusRequest={placeFocus} onName={setWorkspaceName} onSave={saveCurrentWorkspace} onUndo={() => undoRemovedPlace("places")} />
+                  <PlacesSaveControls context="places" count={savedWorkspaces.length} name={workspaceName} notice={placeNotice} removedName={removedPlace?.snapshot.name ?? null} focusRequest={placeFocus} onName={setWorkspaceName} onSave={saveCurrentWorkspace} onBackup={downloadPlacesBackup} onUndo={() => undoRemovedPlace("places")} />
                 </article>
                 <div className="place-trail-controls" aria-label="Places trail controls">
                   <button type="button" onClick={() => stepPlaceTrail(-1)} disabled={savedWorkspaces.length === 0}>← Previous</button>
@@ -12546,7 +12573,7 @@ export default function Home() {
                     </fieldset>
 
                     <fieldset className="report-control-group saved-workspace-control"><legend>Saved workspaces</legend>
-                      <PlacesSaveControls context="workspace" count={savedWorkspaces.length} name={workspaceName} notice={placeNotice} removedName={removedPlace?.snapshot.name ?? null} focusRequest={placeFocus} onName={setWorkspaceName} onSave={saveCurrentWorkspace} onUndo={() => undoRemovedPlace("workspace")} />
+                      <PlacesSaveControls context="workspace" count={savedWorkspaces.length} name={workspaceName} notice={placeNotice} removedName={removedPlace?.snapshot.name ?? null} focusRequest={placeFocus} onName={setWorkspaceName} onSave={saveCurrentWorkspace} onBackup={downloadPlacesBackup} onUndo={() => undoRemovedPlace("workspace")} />
                       <p>Stores camera, active time, Time A/B comparison, layers, opacity, selection, and report settings only on this device.</p>
                       <div className={`saved-workspace-list ${placesStyles.legacyList}`}>{savedWorkspaces.map((snapshot) => <article key={snapshot.id}><button type="button" onClick={() => loadSavedWorkspace(snapshot)}><strong>{snapshot.name}</strong><small>{new Date(snapshot.savedAt).toLocaleString()} · {snapshot.report?.layerIds?.length ?? 0} report layers</small></button><button type="button" onClick={() => deleteSavedWorkspace(snapshot, "workspace")} aria-label={`Delete ${snapshot.name}`}>×</button></article>)}{savedWorkspaces.length === 0 && <div><strong>No saved workspaces</strong><small>Save the current analysis setup to return to it later on this device.</small></div>}</div>
                     </fieldset>
