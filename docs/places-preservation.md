@@ -93,3 +93,42 @@ Revert the Places handlers and control integration in `app/page.tsx`, the
 addition to `places-trail.ts`, the shared save controls and scoped stylesheet
 together. No database migration, stored-data conversion, hosting change or
 publication is required for this candidate.
+
+## Cross-tab and unreadable-record protection — 2026-11-10
+
+Loading Places no longer rewrites a partially valid list or deletes an unreadable
+one. Valid records remain viewable, while the original stored bytes are retained.
+A persistent notice explains that editing is paused to protect unreadable data.
+Saving, removing, reordering and undoing all check the current stored list first;
+none can silently discard records that the current version cannot interpret.
+This is preservation, not automatic repair: exporting or repairing an unreadable
+list remains a separate recovery task.
+
+Storage events synchronize Places between tabs without replacing the current map
+or unsaved name. A changed list clears obsolete removal undo and stops a running
+trail, so an old tour cannot keep visiting records another tab removed. The
+listener reads current storage instead of replaying a potentially stale queued
+event value. Unrelated keys and session storage do not affect Places.
+
+Before each mutation, the page compares its displayed records with the current
+stored records. When those differ, it loads the newer list, retains the unsaved
+name, and asks the visitor to retry deliberately. Read/write denial preserves the
+existing list and reports failure. This synchronous comparison guards stale tabs;
+it is not an atomic cross-process transaction and does not guarantee ordering
+between truly simultaneous writes. No server-side store, cross-device account
+sync, schema migration or source-data activation is introduced.
+
+Regression coverage executes the actual hydration effect and persistence
+handlers, including mixed/oversized/corrupt values, denied reads/writes, unrelated
+storage events, list clearing, stale saves/removals/reorders, and explicit retry.
+The hydration regression fails on base `253b1528aa` because its old effect calls
+`removeItem` on unreadable data. The new two-tab browser journey exercises both
+normal notifications and deliberately delayed notifications, then verifies that
+corrupt bytes survive a reload. Existing Places journeys retain capacity, removal,
+undo, retry and responsive-control checks.
+
+```sh
+node --test tests/runtime-resilience.test.mjs tests/saved-place-sources.test.mjs
+KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5208 KFM_TEST_CHROME=/path/to/chromium \
+  node --test --test-name-pattern='Places synchronize across tabs|Places preserve saved stops' tests/explorer-startup.browser.mjs
+```

@@ -80,7 +80,7 @@ test('persistence refuses over-capacity input without truncation or storage acce
 });
 
 test('storage failure keeps the saved list and exposes persistent recovery feedback',()=>{
- const h=handler('persistSavedWorkspaces',{window:{localStorage:{}},WORKSPACE_STORAGE_KEY:'places',writeSavedWorkspaceList:()=>false});
+ const h=handler('persistSavedWorkspaces',{window:{localStorage:{}},WORKSPACE_STORAGE_KEY:'places',savedWorkspaces:[],updateSavedWorkspaceList:()=>({status:'unavailable'})});
  assert.equal(h.run([base]),false);assert.equal(h.state.setSavedWorkspaces,undefined);assert.match(h.state.setPlaceNotice,/existing places are unchanged/);
 });
 

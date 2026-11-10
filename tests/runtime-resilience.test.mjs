@@ -333,3 +333,73 @@ test("River Pulse lets an identical in-flight streamflow request finish instead 
   assert.match(refresh, /setStreamflowSelectedStationId\(streamflowRequestStationRef\.current\);/);
   assert.doesNotMatch(refresh, /setStreamflowSelectedStationId\(stationId\);/);
 });
+
+test('Places refuses stale saves, deletions and reorders, then accepts a deliberate retry against the latest list', () => {
+  const other = { ...workspace, id: 'other-tab', name: 'Other tab place' };
+  let raw = JSON.stringify([workspace, other]); let writes = 0;
+  const storage = { getItem: () => raw, setItem: (_key, value) => { raw = value; writes++; } };
+  for (const next of [[], [{ ...workspace, name: 'Changed' }], [workspace]]) {
+    assert.deepEqual(saved.updateSavedWorkspaceList(storage, 'places', [workspace], next, 12), { status: 'changed', records: [workspace, other] });
+    assert.equal(writes, 0); assert.deepEqual(JSON.parse(raw), [workspace, other]);
+  }
+  assert.deepEqual(saved.updateSavedWorkspaceList(storage, 'places', [workspace, other], [other, workspace], 12), { status: 'saved' });
+  assert.equal(writes, 1); assert.deepEqual(JSON.parse(raw), [other, workspace]);
+});
+
+test('Places preserves malformed, mixed and over-capacity storage and reports denied reads/writes', () => {
+  for (const raw of ['not-json', JSON.stringify([workspace, null]), JSON.stringify(Array(13).fill(workspace))]) {
+    let stored = raw;
+    const result = saved.updateSavedWorkspaceList({ getItem: () => stored, setItem: (_key, value) => { stored = value; } }, 'places', [workspace], [], 12);
+    assert.equal(result.status, 'unreadable'); assert.equal(stored, raw);
+  }
+  assert.equal(saved.updateSavedWorkspaceList({ getItem() { throw Error('denied'); }, setItem() { assert.fail('must not write'); } }, 'places', [], [workspace], 12).status, 'unavailable');
+  assert.equal(saved.updateSavedWorkspaceList({ getItem: () => null, setItem() { throw Error('quota'); } }, 'places', [], [workspace], 12).status, 'unavailable');
+});
+
+async function placesStorageEffect(initial) {
+  const source = await readFile(process.env.KFM_PLACES_PAGE ?? 'app/page.tsx', 'utf8');
+  const ast = ts.createSourceFile('page.tsx', source, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
+  let effect;
+  function visit(node) {
+    if (ts.isCallExpression(node) && node.expression.getText(ast) === 'useEffect'
+      && node.arguments[0]?.getText(ast).includes('const restoreSavedWorkspaces =')) effect = node.arguments[0].getText(ast);
+    ts.forEachChild(node, visit);
+  }
+  visit(ast); assert.ok(effect);
+  let raw = initial; const writes = [], listeners = new Map(), timers = new Map();
+  const state = { list: [], notice: '', active: workspace.id, removed: workspace, playing: true };
+  const storage = { getItem: () => raw, setItem: (...args) => writes.push(args), removeItem: (...args) => writes.push(args) };
+  const scope = { parseSavedWorkspaceList: saved.parseSavedWorkspaceList, MAX_PLACE_TRAIL_STOPS: 12, WORKSPACE_STORAGE_KEY: 'places',
+    window: { localStorage: storage, setTimeout: fn => { timers.set(1, fn); return 1; }, clearTimeout: id => timers.delete(id), addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) },
+    setSavedWorkspaces: value => { state.list = value; }, setPlaceNotice: value => { state.notice = value; },
+    setRemovedPlace: value => { state.removed = value; }, setActivePlaceId: fn => { state.active = fn(state.active); },
+    setPlaceTourPlaying: value => { state.playing = value; }, placeTourTimerRef: { current: 2 },
+  };
+  const compiled = ts.transpileModule(`const effect = ${effect};`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+  const cleanup = new Function('scope', `with(scope) { ${compiled} return effect(); }`)(scope);
+  timers.get(1)();
+  return { state, writes, listeners, cleanup, storage, update: value => { raw = value; }, raw: () => raw };
+}
+
+test('actual Places hydration retains rejected bytes and never silently rewrites or deletes stored records', async () => {
+  for (const raw of ['broken-json', JSON.stringify([workspace, null]), JSON.stringify(Array(13).fill(workspace))]) {
+    const h = await placesStorageEffect(raw);
+    assert.equal(h.raw(), raw); assert.deepEqual(h.writes, []); assert.match(h.state.notice, /kept unchanged/);
+    h.cleanup(); assert.equal(h.listeners.size, 0);
+  }
+});
+
+test('actual Places storage listener uses the latest list, clears stale undo/tours and ignores unrelated storage', async () => {
+  const h = await placesStorageEffect(JSON.stringify([workspace]));
+  const other = { ...workspace, id: 'other', name: 'New tab place' };
+  h.update(JSON.stringify([other]));
+  h.listeners.get('storage')({ key: 'unrelated', storageArea: h.storage });
+  assert.equal(h.state.list[0].id, workspace.id);
+  h.listeners.get('storage')({ key: 'places', storageArea: {}, newValue: 'stale' });
+  assert.equal(h.state.list[0].id, workspace.id);
+  h.listeners.get('storage')({ key: 'places', storageArea: h.storage, newValue: 'stale' });
+  assert.equal(h.state.list[0].id, 'other'); assert.equal(h.state.removed, null); assert.equal(h.state.active, null); assert.equal(h.state.playing, false);
+  assert.match(h.state.notice, /another tab/); assert.deepEqual(h.writes, []);
+  h.update(null); h.listeners.get('storage')({ key: null, storageArea: h.storage });
+  assert.equal(h.state.list.length, 0); h.cleanup();
+});

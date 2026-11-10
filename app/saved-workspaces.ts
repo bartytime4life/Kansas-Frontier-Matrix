@@ -57,3 +57,22 @@ export function writeSavedWorkspaceList(storage: Pick<Storage, "setItem">, key: 
     return true;
   } catch { return false; }
 }
+
+export type SavedWorkspaceUpdate =
+  | { status: "saved" }
+  | { status: "changed"; records: readonly Record<string, unknown>[] }
+  | { status: "unreadable" | "unavailable" };
+
+/** Refuse stale edits and preserve rejected bytes instead of silently repairing storage. */
+export function updateSavedWorkspaceList(
+  storage: Pick<Storage, "getItem" | "setItem">, key: string,
+  previous: readonly unknown[], next: readonly unknown[], maxItems: number,
+): SavedWorkspaceUpdate {
+  try {
+    const current = parseSavedWorkspaceList(storage.getItem(key), maxItems);
+    if (current.rejected) return { status: "unreadable" };
+    if (JSON.stringify(current.records) !== JSON.stringify(previous)) return { status: "changed", records: current.records };
+    if (next.length > maxItems || !writeSavedWorkspaceList(storage, key, next)) return { status: "unavailable" };
+    return { status: "saved" };
+  } catch { return { status: "unavailable" }; }
+}

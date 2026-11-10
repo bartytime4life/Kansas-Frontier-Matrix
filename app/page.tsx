@@ -106,7 +106,7 @@ import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
 import { MapShareDialog, copyMapLink, type MapShareRequest } from "./map-share-dialog";
-import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
+import { parseSavedWorkspaceList, updateSavedWorkspaceList, type SavedWorkspaceUpdate } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import { countyResearch, researchCounties } from "./research-county";
 import AssistantWorkspace from "./assistant/workspace";
@@ -2100,18 +2100,31 @@ export default function Home() {
     return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
   }, []);
   useEffect(() => {
-    const restoreSavedWorkspaces = window.setTimeout(() => {
+    const restore = (external = false) => {
       try {
         const result = parseSavedWorkspaceList(window.localStorage.getItem(WORKSPACE_STORAGE_KEY), MAX_PLACE_TRAIL_STOPS);
         const restored = result.records as unknown as WorkspaceSnapshot[];
         setSavedWorkspaces(restored);
-        if (result.rejected) {
-          if (restored.length) window.localStorage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(restored));
-          else window.localStorage.removeItem(WORKSPACE_STORAGE_KEY);
+        if (external) {
+          setRemovedPlace(null);
+          setActivePlaceId(current => restored.some(place => place.id === current) ? current : null);
+          if (placeTourTimerRef.current !== null) window.clearTimeout(placeTourTimerRef.current);
+          placeTourTimerRef.current = null;
+          setPlaceTourPlaying(false);
         }
-      } catch { /* Device-local workspace storage is optional. */ }
-    }, 0);
-    return () => window.clearTimeout(restoreSavedWorkspaces);
+        if (result.rejected) setPlaceNotice("Some saved Places could not be read. Their stored data has been kept unchanged; editing is paused to protect it.");
+        else if (external) setPlaceNotice("Places updated from another tab. Your current map and unsaved name are unchanged.");
+      } catch { setPlaceNotice("Saved Places could not be read. Browser storage may be unavailable; existing data has not been changed."); }
+    };
+    const restoreSavedWorkspaces = window.setTimeout(() => restore(), 0);
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== WORKSPACE_STORAGE_KEY && event.key !== null) return;
+      try { if (event.storageArea !== window.localStorage) return; } catch { return; }
+      // Read current storage, not a queued event's potentially outdated newValue.
+      restore(true);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => { window.clearTimeout(restoreSavedWorkspaces); window.removeEventListener("storage", onStorage); };
   }, []);
 
   useEffect(() => () => {
@@ -9779,10 +9792,21 @@ export default function Home() {
 
   const persistSavedWorkspaces = (next: WorkspaceSnapshot[]) => {
     if (next.length > MAX_PLACE_TRAIL_STOPS) { setPlaceNotice(PLACES_FULL_MESSAGE); announce(PLACES_FULL_MESSAGE); return false; }
-    let saved = false;
-    try { saved = writeSavedWorkspaceList(window.localStorage, WORKSPACE_STORAGE_KEY, next); } catch { /* Browser may deny the storage getter itself. */ }
-    if (!saved) {
-      const message = "Places could not be updated. Browser storage may be full or unavailable; existing places are unchanged.";
+    let result: SavedWorkspaceUpdate = { status: "unavailable" };
+    try { result = updateSavedWorkspaceList(window.localStorage, WORKSPACE_STORAGE_KEY, savedWorkspaces, next, MAX_PLACE_TRAIL_STOPS); } catch { /* Browser may deny the storage getter itself. */ }
+    if (result.status === "changed") {
+      stopPlaceTour(false);
+      const current = result.records as unknown as WorkspaceSnapshot[];
+      setSavedWorkspaces(current);
+      setRemovedPlace(null);
+      setActivePlaceId(id => current.some(place => place.id === id) ? id : null);
+      const message = "Places changed in another tab. The latest list is loaded; try your change again. Your unsaved name is unchanged.";
+      setPlaceNotice(message); announce(message); return false;
+    }
+    if (result.status !== "saved") {
+      const message = result.status === "unreadable"
+        ? "Some saved Places could not be read. Their stored data has been kept unchanged; editing is paused to protect it."
+        : "Places could not be updated. Browser storage may be full or unavailable; existing places are unchanged.";
       setPlaceNotice(message); announce(message); return false;
     }
     setSavedWorkspaces(next);

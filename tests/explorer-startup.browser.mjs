@@ -2393,3 +2393,37 @@ for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
     assert.equal(await p.evaluate(`document.activeElement?.matches('.map-dock-map-menu>summary')`),true,'focus returns to Map');
   });
 }
+
+test('Places synchronize across tabs without overwriting newer or unreadable records', {timeout:120000}, async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900),other=await pageSession(b,1280,900);
+ const key='kfm-map-workspaces-v1',form='[aria-label="Save a place"]';
+ const count=n=>p.wait(`JSON.parse(localStorage.getItem('${key}')||'[]').length===${n}`,'stored count '+n);
+ const openPlaces=async()=>{
+  await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(n=>n.querySelector('strong')?.textContent==='Places').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.layer-panel')?.dataset.panelMode==='places'&&document.querySelector('.layer-panel').contains(document.activeElement)`,'Places is open');
+ };
+ const name=async text=>{await p.evaluate(`document.querySelector('${form} input').focus()`);await p.key('a','KeyA',65,2);await p.key('Backspace','Backspace',8);await p.call('Input.insertText',{text});};
+ await p.call('Page.bringToFront');await p.open('/?topic=all&motion=off','1',`const addStorageListener=window.addEventListener;window.addEventListener=function(type,listener,...options){return addStorageListener.call(this,type,type==='storage'?(event=>{if(!window.__holdPlacesStorage)listener(event)}):listener,...options);};`);await openPlaces();await name('First tab');await p.key('Enter','Enter',13);await count(1);
+ await name('Unsaved investigation');
+ await other.call('Page.navigate',{url:new URL('/?topic=all&motion=off',origin).href});
+ await other.wait(`document.querySelector('.atlas-studio')?.dataset.startup==='ready'`,'second tab ready without clearing storage');
+ await other.evaluate(`(()=>{const records=JSON.parse(localStorage.getItem('${key}'));records.unshift({...records[0],id:'second-tab',name:'Second tab'});localStorage.setItem('${key}',JSON.stringify(records));})()`);
+ await p.wait(`document.querySelector('${form}').parentElement.textContent.includes('Places updated from another tab')&&document.querySelector('.places-trail-section').textContent.includes('Second tab')`,'external list is synchronized');
+ assert.equal(await p.evaluate(`document.querySelector('${form} input').value`),'Unsaved investigation');
+ // Delay cross-tab notifications to exercise the pre-write guard, not just the listener.
+ await p.evaluate(`window.__holdPlacesStorage=true`);
+ await other.evaluate(`(()=>{const records=JSON.parse(localStorage.getItem('${key}'));records.unshift({...records[0],id:'third-stop',name:'Third stop'});localStorage.setItem('${key}',JSON.stringify(records));})()`);
+ await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('${form}').parentElement.textContent.includes('try your change again')`,'stale edit is refused');
+ await count(3);assert.equal(await p.evaluate(`document.querySelector('${form} input').value`),'Unsaved investigation');
+ await p.key('Enter','Enter',13);await count(4);
+ assert.deepEqual(await p.evaluate(`JSON.parse(localStorage.getItem('${key}')).map(x=>x.name)`),['Unsaved investigation','Third stop','Second tab','First tab']);
+ const malformed=await other.evaluate(`(()=>{const raw=JSON.stringify([...JSON.parse(localStorage.getItem('${key}')),null]);localStorage.setItem('${key}',raw);return raw;})()`);
+ await name('Keep my draft');await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('${form}').parentElement.textContent.includes('editing is paused')`,'unreadable records block destructive writes');
+ assert.equal(await p.evaluate(`localStorage.getItem('${key}')`),malformed);
+ assert.equal(await p.evaluate(`document.querySelector('${form} input').value`),'Keep my draft');
+ const before=await p.evaluate('performance.timeOrigin');await p.call('Page.reload');
+ await p.wait(`performance.timeOrigin!==${before}&&document.querySelector('.atlas-studio')?.dataset.startup==='ready'`,'reload completes');await openPlaces();
+ assert.equal(await p.evaluate(`localStorage.getItem('${key}')`),malformed,'hydration preserves every original byte');
+});
