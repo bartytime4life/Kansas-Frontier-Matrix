@@ -13,8 +13,8 @@ export async function GET(request: Request) {
     const upstream = kind === "satellite" ? imageryTiles(date).replace("{z}",String(z)).replace("{x}",String(x)).replace("{y}",String(y)) : `https://api.gbif.org/v2/map/occurrence/density/${z}/${x}/${y}@1x.png?taxonKey=${kind === "flora" ? 6 : 1}&country=US&year=${date.slice(0,4)},${date.slice(0,4)}&bin=hex&hexPerTile=20&style=${kind === "flora" ? "green.poly" : "purpleYellow.poly"}`;
     const tile = await boundedFetch(upstream, 2 * 1024 * 1024);
     if (kind === "satellite" && tile.headers.get("layer-time-actual")?.slice(0,10) !== date) throw new Error("Satellite date was not confirmed; nearest-date substitution refused.");
-    const empty = tile.bytes.length === 0;
-    if (empty && kind === "satellite") throw new Error("Satellite coverage unavailable.");
+    const empty = kind !== "satellite" && tile.status === 204;
+    if (!empty && (tile.status !== 200 || tile.bytes.length === 0)) throw new Error("Tile coverage was not confirmed.");
     if (!empty && (kind === "satellite" ? !tile.headers.get("content-type")?.includes("image/jpeg") : !tile.headers.get("content-type")?.includes("image/png"))) throw new Error("Unexpected tile response.");
     const bytes = empty ? Uint8Array.from(atob(EMPTY_PNG), (char) => char.charCodeAt(0)) : tile.bytes;
     return new Response(bytes, { headers: { "Content-Type": empty ? "image/png" : tile.headers.get("content-type")!, "Cache-Control": "public, max-age=1200", "X-Content-Type-Options": "nosniff", "X-Temporal-Support": kind === "satellite" ? date : date.slice(0,4), "X-Aggregate-State": empty ? "no-records" : "source-image" } });

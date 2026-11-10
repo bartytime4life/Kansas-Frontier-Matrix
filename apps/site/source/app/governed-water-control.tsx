@@ -7,6 +7,13 @@ import { waterBrowserLabel, waterBrowserStateForResponse, waterEvidenceMatchesSe
 
 const SOURCE = "kfm-reviewed-water", LAYER = "kfm-reviewed-water-points";
 const reasonText: Record<string, string> = { NO_APPROVED_SNAPSHOT: "No reviewed water snapshot is active.", AUTHENTICATION_REQUIRED: "Sign in to check reviewed water.", RELEASE_STORE_UNAVAILABLE: "Reviewed water storage is unavailable.", REVIEW_REQUIRED: "This water package is waiting for review.", RIGHTS_OR_SENSITIVITY_HOLD: "Rights or sensitivity review is still required.", CORRECTION_HOLD: "This snapshot has been corrected or withdrawn.", RELEASE_TIME_INVALID: "The release approval has expired or is not yet valid." };
+async function readSuccessfulResponse(response: Response, limit: number) {
+  if (!response.ok) {
+    void response.body?.cancel().catch(() => undefined);
+    throw new Error("Reviewed water request failed.");
+  }
+  return readBoundedJson(response, limit);
+}
 export function GovernedWaterControl({ mapRef, styleReady, onSelectionChange }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void }) {
   const [response, setResponse] = useState<WaterResponse | null>(null), [status, setStatus] = useState("Not checked"), [loading, setLoading] = useState(false);
   const [clock, setClock] = useState(Date.now);
@@ -74,7 +81,7 @@ export function GovernedWaterControl({ mapRef, styleReady, onSelectionChange }: 
   useEffect(() => {
     if (!data || !response) return;
     const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request timed out. Data withheld."); }, 15000);
-    void fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readBoundedJson(r, 512 * 1024)).then(value => { const next = value as WaterResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
+    void fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readSuccessfulResponse(r, 512 * 1024)).then(value => { const next = value as WaterResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
       if (waterEvidenceMatchesSelection(response, next, selected)) setEvidenceRecord({ stationId: selected, packageId: data.package_id, value: next });
       else { setResponse(null); setEvidenceRecord(null); setBrowserState("withheld"); setStatus("Evidence or release changed. Check the connection again."); }
     }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request unavailable. Data withheld."); } });
@@ -84,8 +91,8 @@ export function GovernedWaterControl({ mapRef, styleReady, onSelectionChange }: 
     setExportStatus("Checking current release…");
     const requested = selected, requestedGeneration = selectionGeneration.current;
     try {
-      const fresh = await fetch(`/api/governed/v1/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 2 * 1024 * 1024)) as WaterResponse;
-      const refs = await fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 512 * 1024)) as WaterResponse;
+      const fresh = await fetch(`/api/governed/v1/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readSuccessfulResponse(r, 2 * 1024 * 1024)) as WaterResponse;
+      const refs = await fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readSuccessfulResponse(r, 512 * 1024)) as WaterResponse;
       if (selectionGeneration.current !== requestedGeneration || selectedRef.current !== requested || !waterExportMatchesSelection(fresh, refs, requested)
           || approvalRemainingMs(fresh.data?.approval_expires_at, Date.now()) <= 0
           || approvalRemainingMs(refs.data?.approval_expires_at, Date.now()) <= 0) throw new Error("WITHHELD");

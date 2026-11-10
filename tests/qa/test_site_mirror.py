@@ -1070,13 +1070,13 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert lock["packages"]["node_modules/minimatch"]["version"] == "3.1.5"
     assert "minimatch" not in manifest["overrides"]  # Legacy ESLint plugins need the callable API.
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 920
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 923
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
     assert result["file_states"]["inherited_repository_overlay"] == 69
-    assert result["file_states"]["repository_only_overlay"] == 58
-    assert result["file_states"]["repository_safety_overlay"] == 35
+    assert result["file_states"]["repository_only_overlay"] == 61
+    assert result["file_states"]["repository_safety_overlay"] == 46
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
@@ -1930,7 +1930,7 @@ def test_historical_source_resilience_successor_preserves_its_declared_correctio
     assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
-def test_evidence_review_successor_binds_current_bytes_and_preserves_all_holds() -> None:
+def test_historical_evidence_review_successor_preserves_its_declared_bytes_and_holds() -> None:
     directory = ROOT / 'data/receipts/generated'
     predecessor = directory / 'site-v268-source-resilience-overlay-20261109.json'
     previous_hash = 'e4c6587b4b5d7c7d858c292ce3c72d9e847c886b48ed017a99f472251fdb065f'
@@ -1938,7 +1938,7 @@ def test_evidence_review_successor_binds_current_bytes_and_preserves_all_holds()
     previous = json.loads(predecessor.read_text())
     path = directory / 'site-v268-evidence-review-overlay-20261109.json'
     current = json.loads(path.read_text())
-    assert TOOL.RECEIPT == path
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == '94b0359c01ff06eafeb3717dbcd43790583740e60cf1566e91602265f1119063'
     assert current['predecessor_receipt'] == predecessor.name
     assert current['predecessor_receipt_sha256'] == previous_hash
     administrative = {'comparison', 'counts', 'inventory_sha256', 'recorded_at',
@@ -1988,7 +1988,8 @@ def test_evidence_review_successor_binds_current_bytes_and_preserves_all_holds()
         assert declaration['repository_base_sha256'] == declaration['previous_receipt_sha256'] == old_hash
         assert entry['site_sha256'] == (old['site_sha256'] if old else None)
         assert entry['state'] == declaration['state'] == (old['state'] if old and old['state'] != 'identical' else ('repository_safety_overlay' if old else 'repository_only_overlay'))
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # Historical receipt is pinned above; current bytes belong to its successor.
+        digest = entry['mirror_sha256']
         assert digest == entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
     for state, count in previous['counts'].items():
         expected_count = count + sum(entry['state'] == state for name, entry in after.items() if name not in before)
@@ -1996,6 +1997,80 @@ def test_evidence_review_successor_binds_current_bytes_and_preserves_all_holds()
         expected_count -= sum(before[name]['state'] == state for name in changed if name in before)
         assert current['counts'][state] == expected_count, state
     assert current['repository_reconciled_base'] == current['repository_reconciliation']['base_commit'] == 'df48fcfbcc8b3000c84c479bf410a40fd400e54b'
+    assert current['repository_reconciliation']['authority'] == 'CONTENT_PARITY_ONLY'
+    assert current['repository_reconciliation']['restored_recorded_paths'] == []
+    assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')
+    inventory = {name: entry['mirror_sha256'] for name, entry in after.items()}
+    assert current['inventory_sha256'] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def test_context_selection_successor_binds_current_bytes_and_preserves_all_holds() -> None:
+    directory = ROOT / 'data/receipts/generated'
+    predecessor = directory / 'site-v268-evidence-review-overlay-20261109.json'
+    previous_hash = '94b0359c01ff06eafeb3717dbcd43790583740e60cf1566e91602265f1119063'
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == previous_hash
+    previous = json.loads(predecessor.read_text())
+    path = directory / 'site-v268-context-selection-overlay-20261109.json'
+    current = json.loads(path.read_text())
+    assert TOOL.RECEIPT == path
+    assert current['predecessor_receipt'] == predecessor.name
+    assert current['predecessor_receipt_sha256'] == previous_hash
+    administrative = {'comparison', 'counts', 'inventory_sha256', 'recorded_at',
+                      'predecessor_receipt', 'predecessor_receipt_sha256', 'repository_reconciled_base',
+                      'repository_reconciliation', 'source_identity_currentness', 'validation', 'rollback'}
+    assert set(current) == set(previous)
+    for name in previous.keys() - administrative:
+        assert current[name] == previous[name], name
+    assert current['status'] == 'REVIEW_ONLY'
+    assert current['review']['source_and_overlay_review'] == 'PENDING'
+    assert current['review']['human_acceptance'] is current['review']['hosted_equivalence'] is False
+    assert current['counts']['repository_withheld'] == previous['counts']['repository_withheld'] == 262
+    before, after = previous['comparison'], current['comparison']
+    assert set(before) <= set(after)
+    assert set(after) - set(before) == {
+        'tests/noaa-hydrology-transport.test.mjs', 'tests/repository-briefing-recovery.test.mjs',
+        'docs/explorer-context-selection-2026-11-09.md',
+    }
+    changed = {name for name in after if after[name] != before.get(name)}
+    assert changed == {
+        'app/api/event-atlas/tile/route.ts',
+        'app/api/event-atlas/upstream.ts',
+        'app/api/hydrology/noaa/route.ts',
+        'app/api/hydrology/streamflow/route.ts',
+        'app/globals.css',
+        'app/governed-water-control.tsx',
+        'app/governed-weather-control.tsx',
+        'app/page.tsx',
+        'docs/explorer-context-selection-2026-11-09.md',
+        'tests/event-atlas.test.mjs',
+        'tests/governed-water-export-selection.test.mjs',
+        'tests/governed-weather-control.test.mjs',
+        'tests/noaa-hydrology-transport.test.mjs',
+        'tests/repository-briefing-recovery.test.mjs',
+        'tests/river-network-budget.test.mjs',
+        'tests/river-network-route.test.mjs',
+        'tests/security-upstream.test.mjs',
+    }
+    declarations = {entry['path']: entry for entry in current['repository_reconciliation']['changes']}
+    assert set(declarations) == changed
+    assert len(declarations) == len(current['repository_reconciliation']['changes']) == 17
+    for name in set(before) - changed:
+        assert after[name] == before[name], name
+    for name in changed:
+        declaration, entry, old = declarations[name], after[name], before.get(name)
+        old_hash = old['mirror_sha256'] if old else None
+        assert declaration['proposed_in_this_change'] is True
+        assert declaration['repository_base_sha256'] == declaration['previous_receipt_sha256'] == old_hash
+        assert entry['site_sha256'] == (old['site_sha256'] if old else None)
+        assert entry['state'] == declaration['state'] == (old['state'] if old and old['state'] != 'identical' else ('repository_safety_overlay' if old else 'repository_only_overlay'))
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert digest == entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
+    for state, count in previous['counts'].items():
+        expected_count = count + sum(entry['state'] == state for name, entry in after.items() if name not in before)
+        expected_count += sum(after[name]['state'] == state for name in changed if name in before)
+        expected_count -= sum(before[name]['state'] == state for name in changed if name in before)
+        assert current['counts'][state] == expected_count, state
+    assert current['repository_reconciled_base'] == current['repository_reconciliation']['base_commit'] == '91e743e940eb1b5f4db2e07473af460f274a2b1b'
     assert current['repository_reconciliation']['authority'] == 'CONTENT_PARITY_ONLY'
     assert current['repository_reconciliation']['restored_recorded_paths'] == []
     assert current['source_identity_currentness'].startswith('PREDECESSOR_DECLARATION_ONLY')

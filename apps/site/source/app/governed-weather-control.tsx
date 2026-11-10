@@ -10,6 +10,13 @@ import { latestWeatherDay, weatherEvidenceMatchesSelection, weatherExportMatches
 const SOURCE = "kfm-reviewed-weather", LAYER = "kfm-reviewed-weather-points", ROUTE = "/api/governed/weather/v1";
 const reasonText: Record<string, string> = { NO_APPROVED_SNAPSHOT: "No reviewed weather snapshot is active.", RELEASE_STORE_UNAVAILABLE: "Reviewed weather storage is unavailable.", REVIEW_REQUIRED: "This weather package is waiting for review.", RIGHTS_OR_SENSITIVITY_HOLD: "Rights or sensitivity review is still required.", CORRECTION_HOLD: "This snapshot has been corrected or withdrawn.", RELEASE_TIME_INVALID: "The release approval has expired or is not yet valid." };
 const freshnessText: Record<string, string> = { RECENT: "Reporting", STALE: "Not reporting recently", EMPTY: "No reported values in the window" };
+async function readSuccessfulResponse(response: Response, limit: number) {
+  if (!response.ok) {
+    void response.body?.cancel().catch(() => undefined);
+    throw new Error("Reviewed weather request failed.");
+  }
+  return readBoundedJson(response, limit);
+}
 export function GovernedWeatherControl({ mapRef, styleReady, onSelectionChange }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void }) {
   const [response, setResponse] = useState<WeatherResponse | null>(null), [status, setStatus] = useState("Not checked"), [loading, setLoading] = useState(false);
   const [clock, setClock] = useState(Date.now);
@@ -79,7 +86,7 @@ export function GovernedWeatherControl({ mapRef, styleReady, onSelectionChange }
   useEffect(() => {
     if (!data || !response) return;
     const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request timed out. Data withheld."); }, 15000);
-    void fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readBoundedJson(r, 512 * 1024)).then(value => { const next = value as WeatherResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
+    void fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readSuccessfulResponse(r, 512 * 1024)).then(value => { const next = value as WeatherResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
       if (weatherEvidenceMatchesSelection(response, next, selected)) setEvidenceRecord({ stationId: selected, packageId: data.package_id, value: next });
       else { setResponse(null); setEvidenceRecord(null); setBrowserState("withheld"); setStatus("Evidence or release changed. Check the connection again."); }
     }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request unavailable. Data withheld."); } });
@@ -89,8 +96,8 @@ export function GovernedWeatherControl({ mapRef, styleReady, onSelectionChange }
     setExportStatus("Checking current release…");
     const requested = selected, requestedGeneration = selectionGeneration.current;
     try {
-      const fresh = await fetch(`${ROUTE}/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 2 * 1024 * 1024)) as WeatherResponse;
-      const refs = await fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 512 * 1024)) as WeatherResponse;
+      const fresh = await fetch(`${ROUTE}/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readSuccessfulResponse(r, 2 * 1024 * 1024)) as WeatherResponse;
+      const refs = await fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readSuccessfulResponse(r, 512 * 1024)) as WeatherResponse;
       if (selectionGeneration.current !== requestedGeneration || selectedRef.current !== requested || !weatherExportMatchesSelection(fresh, refs, requested)
           || approvalRemainingMs(fresh.data?.approval_expires_at, Date.now()) <= 0
           || approvalRemainingMs(refs.data?.approval_expires_at, Date.now()) <= 0) throw new Error("WITHHELD");

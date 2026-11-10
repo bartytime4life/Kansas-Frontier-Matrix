@@ -6903,23 +6903,38 @@ export default function Home() {
   useEffect(() => {
     if (!repositoryOpen) return;
     const controller = new AbortController();
+    let active = true, timedOut = false;
     let expiryTimer: ReturnType<typeof setTimeout> | undefined;
+    let cancel = () => {};
+    const cancelled = new Promise<never>((_, reject) => {
+      cancel = () => reject(controller.signal.reason);
+      controller.signal.addEventListener("abort", cancel, { once: true });
+    });
+    const deadline = setTimeout(() => { timedOut = true; controller.abort(); }, 15_000);
     setRepositoryConnection({ state: "loading" });
-    void fetch("/api/repository-status", { cache: "no-store", signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Repository status was unavailable");
-        const observation = parseRepositoryObservation(await readBoundedJson(response, 8 * 1024));
-        if (controller.signal.aborted) return;
+    const read = async () => {
+      const response = await fetch("/api/repository-status", { cache: "no-store", signal: controller.signal });
+      if (controller.signal.aborted || !response.ok) {
+        void response.body?.cancel(controller.signal.reason).catch(() => undefined);
+        controller.signal.throwIfAborted();
+        throw new Error("Repository status was unavailable");
+      }
+      return parseRepositoryObservation(await readBoundedJson(response, 8 * 1024, controller.signal));
+    };
+    void Promise.race([read(), cancelled])
+      .then((observation) => {
+        if (!active || controller.signal.aborted) return;
         setRepositoryConnection(observation);
         if (observation.state === "ready") expiryTimer = setTimeout(() => {
-          if (!controller.signal.aborted) setRepositoryConnection({ ...observation, state: "stale" });
+          if (active && !controller.signal.aborted) setRepositoryConnection({ ...observation, state: "stale" });
         }, Math.max(0, observation.expiresAt! - Date.now()));
       })
-      .catch((error) => {
-        if (controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
-        setRepositoryConnection({ state: "error" });
-      });
-    return () => { controller.abort(); clearTimeout(expiryTimer); };
+      .catch(() => {
+        if (!active) return;
+        setRepositoryConnection({ state: "error", message: timedOut ? "The read-only GitHub check timed out. Retry the check." : "The live check could not be completed. Retry the check." });
+      })
+      .finally(() => { clearTimeout(deadline); controller.signal.removeEventListener("abort", cancel); });
+    return () => { active = false; controller.abort(); clearTimeout(deadline); clearTimeout(expiryTimer); controller.signal.removeEventListener("abort", cancel); };
   }, [repositoryOpen, repositoryRefreshKey]);
 
   useEffect(() => {
@@ -9194,10 +9209,10 @@ export default function Home() {
                   : repositoryConnection.state === "stale"
                     ? "This observation is over one minute old. Refresh before using it as current status."
                   : repositoryConnection.state === "error"
-                    ? "The pinned snapshot remains available; no currentness claim is inferred."
+                    ? `${repositoryConnection.message ?? "The live check is unavailable. Retry the check."} The pinned snapshot remains available; no currentness claim is inferred.`
                     : "Reads fixed public repository metadata only when this briefing opens."}</p>
               </div>
-              <button type="button" onClick={() => setRepositoryRefreshKey((current) => current + 1)} disabled={repositoryConnection.state === "loading"}>Refresh</button>
+              <button type="button" onClick={() => setRepositoryRefreshKey((current) => current + 1)} aria-busy={repositoryConnection.state === "loading"}>{repositoryConnection.state === "loading" ? "Restart check" : repositoryConnection.state === "error" ? "Retry check" : "Refresh"}</button>
               {(repositoryConnection.state === "ready" || repositoryConnection.state === "stale") && <small>{repositoryConnection.message ?? "Current main commit"}{repositoryConnection.observedAt ? ` · checked ${new Date(repositoryConnection.observedAt).toLocaleString()}` : ""}</small>}
               <footer>Read-only metadata · separate Site and GitHub source histories · no automatic code sync or mutation</footer>
             </div>

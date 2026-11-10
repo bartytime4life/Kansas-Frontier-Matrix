@@ -8,9 +8,10 @@ const read = path => readFile(new URL(path, import.meta.url), "utf8");
 const compiled = text => ts.transpileModule(text, { compilerOptions: {
   module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX,
 } }).outputText;
-const load = async path => { const exports = {}; vm.runInNewContext(compiled(await read(path)), { exports }); return exports; };
+const load = async path => { const exports = {}; vm.runInNewContext(compiled(await read(path)), { exports, TextDecoder }); return exports; };
 const waterHelpers = await load("../app/governed-water-availability.ts");
 const helpers = await load("../app/governed-weather-availability.ts");
+const bounded = await load("../app/bounded-json.ts");
 const source = await read("../app/governed-weather-control.tsx");
 const station = "USW00003928", other = "USW00013996";
 const fixture = async name => JSON.parse(await read(`./fixtures/governed-weather/${name}.json`));
@@ -54,14 +55,14 @@ test("the latest station-local day shows withheld values as withheld, never as z
 });
 
 function harness(initial) {
-  const requests = [], downloads = [], statuses = [];
+  const requests = [], downloads = [], statuses = [], effects = [], updates = [], reads = [];
   let stateIndex = 0;
   const hooks = {
     useState(value) {
       const index = stateIndex++;
-      return [index === 0 ? initial : typeof value === "function" ? value() : value, next => { if (index === 9) statuses.push(next); }];
+      return [index === 0 ? initial : typeof value === "function" ? value() : value, next => { updates.push({ index, value: next }); if (index === 9) statuses.push(next); }];
     },
-    useRef: current => ({ current }), useCallback: fn => fn, useEffect() {},
+    useRef: current => ({ current }), useCallback: fn => fn, useEffect: fn => effects.push(fn),
   };
   const jsx = (type, props) => ({ type, props });
   const exports = {};
@@ -73,11 +74,11 @@ function harness(initial) {
       if (name === "./governed-water-availability") return waterHelpers;
       if (name === "./governed-weather-availability") return helpers;
       if (name === "./governed-water") return { approvalRemainingMs: expiry => Date.parse(expiry) - Date.now() };
-      if (name === "./bounded-json") return { readBoundedJson: async response => response };
+      if (name === "./bounded-json") return { readBoundedJson: (response, limit) => { reads.push(response); return bounded.readBoundedJson(response, limit); } };
       throw new Error(`Unexpected import ${name}`);
     },
-    fetch: url => new Promise(resolve => requests.push({ url, resolve })),
-    AbortSignal, Blob, Date, setTimeout: () => 0,
+    fetch: url => new Promise(resolve => requests.push({ url, resolve: (value, status = 200) => resolve(value instanceof Response ? value : Response.json(value, { status })) })),
+    AbortController, AbortSignal, Blob, Date, setTimeout: () => 0, clearTimeout() {},
     URL: { createObjectURL: () => "blob:test", revokeObjectURL() {} },
     document: { createElement: () => ({ click() { downloads.push(this.download); } }) },
   });
@@ -92,10 +93,11 @@ function harness(initial) {
   const select = find(tree, node => node.type === "select");
   const button = find(tree, node => node.type === "button" && node.props.children === "Export selected station with evidence");
   find(tree, () => false);
-  return { requests, downloads, statuses, text: text.join(" "),
+  return { requests, downloads, statuses, reads, updates, text: text.join(" "),
+    checkEvidence: () => effects.at(-1)(),
     choose: id => select.props.onChange({ target: { value: id } }), start: () => button.props.onClick() };
 }
-const settle = async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); };
+const settle = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
 
 test("the control renders withheld values and exports one station's evidence from the weather routes", async () => {
   const { layers, evidence } = only(station);
@@ -119,4 +121,38 @@ test("changing station during an export withholds the download", async () => {
   h.requests[1].resolve(evidence); await settle();
   assert.deepEqual(h.downloads, []);
   assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
+
+for (const status of [302, 401, 403, 404, 409, 429, 500, 503]) for (const stage of [0, 1]) test(`weather export withholds HTTP ${status} from ${stage ? "evidence" : "layers"} despite matching JSON`, async () => {
+  const { layers, evidence } = only(station);
+  const h = harness(layers); h.start();
+  if (stage) { h.requests[0].resolve(layers); await settle(); }
+  const response = Response.json(stage ? evidence : layers, { status });
+  h.requests[stage].resolve(response); await settle();
+  assert.equal(h.requests.length, stage + 1);
+  assert.equal(h.reads.length, stage, "failed response body is never parsed as reviewed data");
+  assert.equal(response.bodyUsed, true); assert.equal(response.body.locked, false);
+  assert.deepEqual(h.downloads, []);
+  assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
+
+test("weather station evidence accepts HTTP 200 but withholds every failed HTTP response", async () => {
+  const { layers, evidence } = only(station);
+  for (const status of [200, 302, 401, 403, 404, 409, 429, 500, 503]) {
+    const h = harness(layers), cleanup = h.checkEvidence();
+    assert.equal(h.requests.length, 1); assert.match(h.requests[0].url, /evidence\?station_id=USW00003928$/);
+    const response = Response.json(evidence, { status }); h.requests[0].resolve(response); await settle();
+    const records = h.updates.filter(update => update.index === 8);
+    if (status === 200) {
+      assert.equal(h.reads.length, 1); assert.equal(records.at(-1).value.stationId, station);
+      assert.equal(records.at(-1).value.value.data.package_id, evidence.data.package_id);
+    } else {
+      assert.equal(h.reads.length, 0); assert.ok(records.every(update => update.value === null));
+      assert.equal(h.updates.findLast(update => update.index === 0).value, null);
+      assert.equal(h.updates.findLast(update => update.index === 4).value, "unavailable");
+      assert.match(h.updates.findLast(update => update.index === 1).value, /Evidence request unavailable/);
+      assert.equal(response.bodyUsed, true); assert.equal(response.body.locked, false);
+    }
+    assert.deepEqual(h.downloads, []); cleanup();
+  }
 });

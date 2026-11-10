@@ -19,7 +19,7 @@ export async function boundedFetch(url: string, limit: number, options: { timeou
     // Manual keeps redirects inside the same fail-closed source boundary.
     response = await fetch(parsed, { signal: controller.signal, redirect: "manual", cache: options.cache, headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
     controller.signal.throwIfAborted();
-    if (response.status === 204) { complete = true; return { bytes: new Uint8Array(), text: () => "", headers: response.headers }; }
+    if (response.status === 204) { complete = true; return { status: response.status, bytes: new Uint8Array(), text: () => "", headers: response.headers }; }
     if (!response.ok) throw new Error(`Source unavailable (HTTP ${response.status}).`);
     if (!response.body) throw new Error("Source response body was missing.");
     if (Number(response.headers.get("content-length")) > limit) throw new Error("Source exceeded the response budget.");
@@ -37,7 +37,7 @@ export async function boundedFetch(url: string, limit: number, options: { timeou
     const bytes = new Uint8Array(total); let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     complete = true;
-    return { bytes, text: () => new TextDecoder().decode(bytes), headers: response.headers };
+    return { status: response.status, bytes, text: () => new TextDecoder().decode(bytes), headers: response.headers };
   } finally {
     clearTimeout(timer);
     options.signal?.removeEventListener("abort", abort);
