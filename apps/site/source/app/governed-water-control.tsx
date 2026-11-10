@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
-import { approvalRemainingMs, type WaterResponse } from "./governed-water";
+import { approvalRemainingMs, microseconds, type WaterResponse } from "./governed-water";
 import { waterBrowserLabel, waterBrowserStateForResponse, waterEvidenceMatchesSelection, waterExportMatchesSelection, type WaterBrowserState } from "./governed-water-availability";
 
 const SOURCE = "kfm-reviewed-water", LAYER = "kfm-reviewed-water-points";
@@ -59,7 +59,10 @@ export function GovernedWaterControl({ mapRef, styleReady, onSelectionChange }: 
   const shownRender = !visible || !data ? "Hidden" : !styleReady ? "Not ready" : render;
   useEffect(() => { onSelectionChange?.(visible); }, [visible, onSelectionChange]);
   const observations = data?.observations?.filter(r => r.station_id === selected) ?? [];
-  const latest = [...observations].sort((a, b) => b.observed_at.localeCompare(a.observed_at))[0];
+  const latest = [...observations].sort((a, b) => {
+    const left = microseconds(a.observed_at), right = microseconds(b.observed_at);
+    return left > right ? -1 : left < right ? 1 : 0;
+  })[0];
   useEffect(() => {
     const map = mapRef.current; if (!map || !styleReady) return;
     const remove = () => { try { if (map.getLayer(LAYER)) map.removeLayer(LAYER); if (map.getSource(SOURCE)) map.removeSource(SOURCE); } catch { /* Map teardown already removed its sources. */ } };

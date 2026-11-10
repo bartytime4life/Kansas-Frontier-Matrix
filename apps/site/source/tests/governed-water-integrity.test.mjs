@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import ts from "typescript";
+import { componentHarness, findNode, settle } from "./component-harness.mjs";
 
 const source = await readFile(new URL("../app/governed-water.ts", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
@@ -154,4 +155,95 @@ test("malformed, escaped duplicate, deep, nonfinite and impossible-time carriers
   const snapshot = await fixture(), contents = values(snapshot);
   contents["candidate.json"].revision_history[0].retrieved_at = "2026-09-31T18:01:00Z";
   await assert.rejects(water.parseWaterPackage(await reseal(snapshot, contents, { records: true })), /TIME_INVALID/);
+});
+
+async function releasedReadings(readings) {
+  const snapshot = await fixture(), contents = values(snapshot), stationId = "USGS-06892518";
+  const candidate = contents["candidate.json"], original = candidate.observations.find(row => row.station_id === stationId);
+  const rows = await Promise.all(readings.map(async ([observed_at, value]) => {
+    const identity = (await hash([stationId, original.time_series_id, "00060", observed_at])).slice(7);
+    return { ...original, observed_at, value, id: "kfm:flow:" + identity, evidence_ref: "kfm:evidence:flow:" + identity };
+  }));
+  candidate.observations = [...rows, ...candidate.observations.filter(row => row.station_id !== stationId)]
+    .sort((a, b) => water.codepointOrder(a.station_id, b.station_id) || water.codepointOrder(a.observed_at, b.observed_at) || water.codepointOrder(a.id, b.id));
+  candidate.revision_history = structuredClone(candidate.observations);
+  contents["validation.json"].observations = candidate.observations.length;
+  for (const entry of contents["catalog.json"].entries) {
+    const own = candidate.observations.filter(row => row.station_id === entry.id);
+    entry.observation_count = own.length; entry.missing_value_count = own.filter(row => row.value === null).length;
+  }
+  for (const entry of contents["evidence.json"].entries) {
+    const station = candidate.stations.find(row => row.id === entry.station_id), own = candidate.observations.filter(row => row.station_id === entry.station_id);
+    entry.bundle.evidence_refs = [entry.evidence_ref, ...own.map(row => ({ ref: row.evidence_ref, kind: "measurement", bundle_ref: entry.bundle.bundle_id }))];
+    entry.bundle.source_records = [...new Set([station.page_digest, ...own.map(row => row.page_digest)])].sort();
+  }
+  // Recompute every record, carrier and evidence binding before the real parser and projector run.
+  const parsed = await water.parseWaterPackage(await reseal(snapshot, contents, { records: true }));
+  const decision = JSON.parse(await readFile(new URL("./fixtures/governed-water/decision.json", import.meta.url), "utf8"));
+  decision.package_id = parsed.manifest.package_id;
+  const now = "2026-09-30T19:00:00Z";
+  const layers = await water.projectWater(parsed, decision, "layers", now), evidence = await water.projectWater(parsed, decision, "evidence", now, stationId);
+  assert.equal(layers.envelope.outcome, "ANSWER"); assert.equal(evidence.envelope.outcome, "ANSWER");
+  return { layers, evidence, now };
+}
+
+test("a parsed carrier's exact creation time remains the lower bound for review", async () => {
+  const snapshot = await fixture(), contents = values(snapshot);
+  snapshot.manifest.created_at = contents["candidate.json"].retrieved_at = "2026-09-30T18:01:00.000002Z";
+  const parsed = await water.parseWaterPackage(await reseal(snapshot, contents));
+  const decision = JSON.parse(await readFile(new URL("./fixtures/governed-water/decision.json", import.meta.url), "utf8"));
+  decision.package_id = parsed.manifest.package_id;
+  decision.released_at = "2026-09-30T18:01:00.000002Z";
+  const now = "2026-09-30T19:00:00Z";
+  for (const [reviewed_at, expected] of [["2026-09-30T18:01:00.000001Z", "RELEASE_TIME_INVALID"], ["2026-09-30T18:01:00.000002Z", "ELIGIBLE"]]) {
+    const response = await water.projectWater(parsed, { ...decision, reviewed_at }, "layers", now);
+    assert.equal(water.waterGate(parsed, { ...decision, reviewed_at }, now), expected);
+    assert.equal(response.envelope.outcome, expected === "ELIGIBLE" ? "ANSWER" : "ABSTAIN");
+    assert.equal(Boolean(response.data), expected === "ELIGIBLE");
+  }
+});
+
+const loadPure = async file => import("data:text/javascript;base64," + Buffer.from(ts.transpileModule(await readFile(new URL(`../app/${file}`, import.meta.url), "utf8"), {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+}).outputText).toString("base64"));
+for (const [name, earlier, later, value] of [
+  ["whole and fractional seconds", "17:59:59Z", "17:59:59.9Z", 20],
+  ["different fraction lengths", "17:59:59.1Z", "17:59:59.11Z", 20],
+  ["milliseconds and a finer fraction", "17:59:59.123Z", "17:59:59.1234Z", 20],
+  ["four and five fraction digits", "17:59:59.1234Z", "17:59:59.12345Z", 20],
+  ["distinct microseconds in one millisecond and true zero", "17:59:59.123100Z", "17:59:59.123900Z", 0],
+  ["a newer null rather than carrying an older value", "17:59:59Z", "17:59:59.000001Z", null],
+]) test(`parsed and released water displays the actual latest reading: ${name}`, async () => {
+  const older = "2026-09-30T" + earlier, newer = "2026-09-30T" + later;
+  const { layers, evidence, now } = await releasedReadings([[older, 10], [newer, value]]);
+  const availability = await loadPure("governed-water-availability.ts"), bounded = await loadPure("bounded-json.ts");
+  assert.equal(availability.waterEvidenceMatchesSelection(layers, evidence, "USGS-06892518"), true);
+  const timers = [], requests = [];
+  class Clock extends Date { static now() { return Date.parse(now); } }
+  const h = await componentHarness("app/governed-water-control.tsx", {
+    "./governed-water": water, "./governed-water-availability": availability, "./bounded-json": bounded,
+  }, {
+    Date: Clock,
+    fetch: async url => {
+      requests.push(url);
+      if (url === "/api/governed/v1/layers") return Response.json(layers);
+      if (url === "/api/governed/v1/evidence?station_id=USGS-06892518") return Response.json(evidence);
+      throw new Error(`Unexpected fixture request ${url}`);
+    },
+    setTimeout: (fn, ms) => { timers.push({ fn, ms }); return timers.length; }, clearTimeout() {},
+    setInterval: () => 1, clearInterval() {},
+  });
+  try {
+    const render = () => { const tree = h.render(h.exports.GovernedWaterControl, { mapRef: { current: null }, styleReady: false }); h.commit(); return tree; };
+    render(); timers.find(timer => timer.ms === 0).fn();
+    for (let i = 0; i < 4; i++) await settle();
+    render(); for (let i = 0; i < 4; i++) await settle();
+    const tree = render();
+    assert.deepEqual(requests, ["/api/governed/v1/layers", "/api/governed/v1/evidence?station_id=USGS-06892518"]);
+    const expected = value === null ? "No reported value" : `${value} ft^3/s`;
+    assert.ok(findNode(tree, node => node.type === "strong" && node.props.children === expected), "visible value belongs to the later exact instant");
+    assert.ok(findNode(tree, node => node.type === "dd" && node.props.children === newer), "provider clock retains the source fraction");
+    assert.ok(findNode(tree, node => node.type === "small" && node.props.children.includes("Resolved and released")), "actual projected evidence remains bound");
+    assert.equal(layers.data.observations.find(row => row.observed_at === newer).value, value, "display does not rewrite the carrier");
+  } finally { h.dispose(); }
 });

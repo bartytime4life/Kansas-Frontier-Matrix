@@ -65,6 +65,7 @@ function renderer(overrides = {}) {
     setOfficialPayloads: () => {}, setOfficialArchiveDays: fn => commits.push(fn({})),
     setOfficialStates: () => {}, setOfficialErrors: () => {},
     smokeTransitionsRef: ref(new smoke.HmsFrameTransitions()),
+    smokePlaybackGenerationRef: ref(0),
     ...overrides,
   };
   const commit = new Function(...Object.keys(context), callbackCode + "\nreturn commitSmokePlayback;")(...Object.values(context));

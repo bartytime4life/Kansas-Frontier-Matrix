@@ -1,10 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import { HMS_FIRST_DAY, HmsFrameCache, findRecentSmoke, hmsAdvance, hmsDayNumber, hmsToday, hmsValidDay } from "./hms-smoke-playback";
 import type { OfficialContextPayload } from "./live-context";
 
-export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload, onReserve, onFrame, onCurrent }: {
+export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload, cancelRef, onReserve, onFrame, onCurrent }: {
   enabled: boolean; reducedMotion: boolean; displayedDay?: string; payload?: OfficialContextPayload;
+  cancelRef?: RefObject<(() => void) | null>;
   onReserve: (day: string) => void;
   onFrame: (day: string, payload: OfficialContextPayload, signal: AbortSignal, smooth: boolean) => Promise<void>;
   onCurrent: () => void;
@@ -20,6 +21,11 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   const generation = useRef(0);
   const valid = hmsValidDay(from, today) && hmsValidDay(through, today) && from <= through;
   const stop = useCallback(() => { generation.current++; request.current?.abort(); prefetch.current?.abort(); setBusy(false); setPlaying(false); }, []);
+  useLayoutEffect(() => {
+    if (!cancelRef) return;
+    cancelRef.current = stop;
+    return () => { if (cancelRef.current === stop) cancelRef.current = null; };
+  }, [cancelRef, stop]);
   useEffect(() => {
     // A parent map/motion change must cancel outstanding publication and frame requests immediately.
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -58,7 +64,8 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   useEffect(() => {
     if (!playing || busy || !valid || !enabled || reducedMotion) return;
     const next = cursor < through ? hmsAdvance(cursor, 1) : loop ? from : null;
-    const timer = setTimeout(() => { if (next) void show(next); else setPlaying(false); }, speed);
+    const token = generation.current;
+    const timer = setTimeout(() => { if (generation.current !== token) return; if (next) void show(next); else setPlaying(false); }, speed);
     return () => clearTimeout(timer);
   }, [playing, busy, valid, enabled, reducedMotion, cursor, through, loop, from, show, speed]);
   const choose = (start: string) => { stop(); setFrom(start); setThrough(today); setCursor(start); };
@@ -67,7 +74,7 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
     const token = ++generation.current, controller = new AbortController(); request.current = controller;
     setBusy(true);
     try {
-      const found = await findRecentSmoke(cache.current, today, controller.signal, day => setStatus(`Looking for Kansas-area smoke: checking ${day} UTC…`));
+      const found = await findRecentSmoke(cache.current, today, controller.signal, day => { if (generation.current === token && !controller.signal.aborted) setStatus(`Looking for Kansas-area smoke: checking ${day} UTC…`); });
       if (generation.current !== token) return;
       if (!found.day || !found.payload) {
         setStatus(`No footprints found in the checked publications from the last seven days.${found.missingDays.length ? ` ${found.missingDays.length} publication day(s) could not be checked.` : ""} This is not an all-clear.`);

@@ -48,7 +48,7 @@ import { buildAvailabilityBins, timelineLabelSteps } from "./timeline-availabili
 import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
-import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
+import { parseSavedWorkspaceList, savedWorkspaceSelectedLayerCount, validSavedSourceSettings, writeSavedWorkspaceList, type SavedSourceSettings } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import GeologyPointExplorer, { GEOLOGY_POINT_LAYER_ID } from "./geology-point-explorer";
@@ -406,6 +406,7 @@ type WorkspaceSnapshot = Readonly<{
   locationCameraRedacted?: boolean;
   researchContext?: ResearchContext;
   subsurfaceContext?: SubsurfaceContext;
+  sourceSettings?: SavedSourceSettings;
   visibility: Record<string, boolean>;
   opacity: Record<string, number>;
   layerOrder: string[];
@@ -1207,6 +1208,8 @@ export default function Home() {
   const officialArchiveDaysRef = useRef<Partial<Record<OfficialContextFeedId, string>>>({});
   const officialArchivePayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const smokeTransitionsRef = useRef(new HmsFrameTransitions());
+  const smokePlaybackGenerationRef = useRef(0);
+  const smokePlaybackCancelRef = useRef<(() => void) | null>(null);
   const layerJsonReadsRef = useRef<LayerJsonReads | null>(null);
   layerJsonReadsRef.current ??= new LayerJsonReads();
   const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
@@ -3544,12 +3547,15 @@ export default function Home() {
     // Pin acquisition immediately, but label the map date only after commit.
     officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, "noaa-hms-smoke": day };
   }, []);
-  const commitSmokePlayback = useCallback((day: string, payload: OfficialContextPayload, callerSignal: AbortSignal, smooth: boolean) => smokeTransitionsRef.current.run(callerSignal, async (signal) => {
+  const commitSmokePlayback = useCallback((day: string, payload: OfficialContextPayload, callerSignal: AbortSignal, smooth: boolean) => {
+    const generation = smokePlaybackGenerationRef.current;
+    return smokeTransitionsRef.current.run(callerSignal, async (signal) => {
     const map = mapRef.current;
     const sourceId = OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].sourceId;
     const source = map?.getSource(sourceId);
     if (!map || !styleGenerationReadyRef.current || source?.type !== "geojson") throw new Error("Smoke map is not ready.");
-    const sameSource = () => mapRef.current === map && styleGenerationReadyRef.current && map.getSource(sourceId) === source;
+    const ownsFrame = () => smokePlaybackGenerationRef.current === generation;
+    const sameSource = () => ownsFrame() && mapRef.current === map && styleGenerationReadyRef.current && map.getSource(sourceId) === source;
     const checked = (uploaded = false) => {
       signal.throwIfAborted();
       if (!sameSource() || uploaded && !geoJSONHasData(source as GeoJSONSource, payload.data)) throw new Error("Smoke map changed during playback.");
@@ -3572,7 +3578,7 @@ export default function Home() {
       setOfficialStates(current => ({ ...current, "noaa-hms-smoke": payload.state }));
       setOfficialErrors(current => ({ ...current, "noaa-hms-smoke": undefined }));
     } catch (error) {
-      if (officialPayloadsRef.current["noaa-hms-smoke"] === payload) {
+      if (ownsFrame() && officialPayloadsRef.current["noaa-hms-smoke"] === payload) {
         officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": prior }; apply(); setOfficialPayloads(officialPayloadsRef.current);
         // Restoration is bounded by the upload helper, but must finish before
         // a queued transition is allowed to adopt its own prior frame.
@@ -3582,10 +3588,13 @@ export default function Home() {
     } finally {
       // Style replacement can remove this source while its map remains alive.
       // Do not leave that map's next style inheriting a zero opacity multiplier.
-      resetHmsSmokeFade(map);
-      if (mapRef.current === map && styleGenerationReadyRef.current) setHmsSmokeFade(map, 1, officialOpacityRef.current["noaa-hms-smoke"]);
+      if (ownsFrame()) {
+        resetHmsSmokeFade(map);
+        if (mapRef.current === map && styleGenerationReadyRef.current) setHmsSmokeFade(map, 1, officialOpacityRef.current["noaa-hms-smoke"]);
+      }
     }
-  }), []);
+    });
+  }, []);
 
   const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string, force = false) => {
     if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
@@ -7891,6 +7900,16 @@ export default function Home() {
   const saveCurrentWorkspace = () => {
     const savedAt = new Date().toISOString();
     const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted || subsurfacePrivate;
+    // Smoke playback reserves a request in its ref before committing the displayed day.
+    const archiveDays = restoreArchiveViewDays(Object.entries(officialArchiveDays).filter(([, day]) => day).map(([feed, day]) => `${feed}:${day}`).join(","), savedAt.slice(0, 10));
+    const confirmedArchiveDay = (feed: OfficialContextFeedId, day: string | undefined) => {
+      const payload = officialArchivePayloadsRef.current[feed];
+      return Boolean(day && validLayerPayload(payload, feed, day) && (feed !== "noaa-hms-smoke" || payload?.smokeCoverage?.day === day));
+    };
+    const unconfirmedArchive = OFFICIAL_CONTEXT_SOURCES.some(source => officialVisibility[source.id] && officialArchiveDays[source.id as OfficialContextFeedId]
+      && !confirmedArchiveDay(source.id as OfficialContextFeedId, archiveDays[source.id as keyof typeof archiveDays]));
+    if (unconfirmedArchive) { announce("The selected archive day has not finished loading. Wait for a dated response or return that source to Current before saving this Place."); return; }
+    const committedDays = Object.fromEntries(Object.entries(archiveDays).filter(([feed, day]) => confirmedArchiveDay(feed as OfficialContextFeedId, day)));
     const snapshot: WorkspaceSnapshot = {
       id: `workspace-${Date.now()}`,
       name: normalizePlaceStopName(workspaceName || (!redactWorkspaceCamera && researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : ""), savedWorkspaces.length + 1),
@@ -7901,6 +7920,13 @@ export default function Home() {
       locationCameraRedacted: redactWorkspaceCamera,
       researchContext: persistableResearch(researchContext && { ...researchContext, capturedAt: savedAt }, redactWorkspaceCamera, true),
       subsurfaceContext: persistableSubsurface(subsurfaceContext && { ...subsurfaceContext, capturedAt: savedAt }, redactWorkspaceCamera, true),
+      sourceSettings: {
+        version: 1,
+        visibility: Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, officialVisibility[source.id] === true])),
+        opacity: Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, clamp(officialOpacity[source.id] ?? source.defaultOpacity, 0, 1)])),
+        archiveDays: committedDays,
+        terrainProvider,
+      },
       visibility: { ...visibility },
       opacity: { ...opacity },
       layerOrder: [...layerOrder],
@@ -7948,6 +7974,19 @@ export default function Home() {
 
   const loadSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
     stopSceneOrbit(false);
+    // Take ownership before React effects: playback may have an uncommitted
+    // upload or a same-day request that visibility changes would not cancel.
+    smokePlaybackGenerationRef.current++;
+    smokePlaybackCancelRef.current?.();
+    officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, "noaa-hms-smoke": officialArchiveDays["noaa-hms-smoke"] };
+    officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": officialPayloads["noaa-hms-smoke"] };
+    setOfficialPayloads(officialPayloadsRef.current);
+    const smokeMap = mapRef.current;
+    if (smokeMap && styleGenerationReadyRef.current) runMapMutation("Restore committed smoke frame", () => {
+      resetHmsSmokeFade(smokeMap);
+      setHmsSmokeFade(smokeMap, 1, officialOpacityRef.current["noaa-hms-smoke"]);
+      applyOfficialContextState(smokeMap, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+    });
     const knownLayerIds = new Set(LAYER_REGISTRY.map((layer) => layer.id));
     const nextVisibility = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibility?.[layer.id] === true]));
     const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), 0, 1)]));
@@ -7958,6 +7997,7 @@ export default function Home() {
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
     // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
     const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
+    const savedSources = validSavedSourceSettings(snapshot.sourceSettings, snapshot.savedAt) ? snapshot.sourceSettings : null;
     const savedScene = snapshot.scene;
     const nextScenePreset: ScenePresetId = savedScene?.preset === "globe-overview" || savedScene?.preset === "water-systems" || savedScene?.preset === "smoke-context" || savedScene?.preset === "elevation-3d" || savedScene?.preset === "tile-grid" ? savedScene.preset : "overview-2d";
     const nextVerticalExaggeration = nextScenePreset === "elevation-3d" ? terrainDepth(Number(savedScene?.verticalExaggeration ?? DEFAULT_TERRAIN_DEPTH)) : clamp(Number(savedScene?.verticalExaggeration ?? 1), 0, 2);
@@ -7973,6 +8013,7 @@ export default function Home() {
     mapEvidenceFilterRef.current = nextMapEvidenceFilter;
     basemapRef.current = nextBasemap;
     projectionRef.current = nextProjection;
+    scenePresetRef.current = nextScenePreset;
     verticalExaggerationRef.current = nextVerticalExaggeration;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = nextLightAzimuth;
@@ -8023,7 +8064,7 @@ export default function Home() {
     setMeasurementGeometryMode(restoredMeasurement?.mode ?? null);
     setMeasurement(restoredMeasurement?.label ?? "Select a measurement tool");
     if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
-    const savedAnalysisArea = snapshot.analysisArea;
+    const savedAnalysisArea = restoredLocationCameraRedaction ? null : snapshot.analysisArea;
     const nextAnalysisArea = savedAnalysisArea
       && Number.isFinite(savedAnalysisArea.west)
       && Number.isFinite(savedAnalysisArea.south)
@@ -8051,13 +8092,51 @@ export default function Home() {
     const savedEvidenceFilter = snapshot.report?.evidenceFilter;
     setReportEvidenceFilter(savedEvidenceFilter === "ALL" || (savedEvidenceFilter && savedEvidenceFilter in evidenceLabels) ? savedEvidenceFilter : "ALL");
     setReportGeneratedAt(new Date().toISOString());
-    const savedView = snapshot.view;
+    const savedView: ViewState = restoredLocationCameraRedaction ? { ...KANSAS_VIEW, center: [...KANSAS_VIEW.center] as [number, number] } : {
+      center: [clamp(snapshot.view.center[0], nextProjection === "globe" ? -180 : REGIONAL_NAVIGATION_BOUNDS[0][0], nextProjection === "globe" ? 180 : REGIONAL_NAVIGATION_BOUNDS[1][0]),
+        clamp(snapshot.view.center[1], nextProjection === "globe" ? -85 : REGIONAL_NAVIGATION_BOUNDS[0][1], nextProjection === "globe" ? 85 : REGIONAL_NAVIGATION_BOUNDS[1][1])],
+      zoom: clamp(snapshot.view.zoom, nextProjection === "globe" ? 0 : 4, 16), bearing: clamp(snapshot.view.bearing, -180, 180),
+      pitch: clamp(snapshot.view.pitch, 0, nextScenePreset === "elevation-3d" ? 72 : 60),
+    };
+    pendingViewRef.current = savedView;
+    setView(savedView);
+    cameraHistoryRef.current = [savedView];
+    cameraHistoryIndexRef.current = 0;
+    setCameraHistoryIndex(0);
+    setCameraHistoryLength(1);
     if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, nextProjection);
-    if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
-      locationDerivedViewRef.current = restoredLocationCameraRedaction;
-      setLocationCameraRedacted(restoredLocationCameraRedaction);
-      mapRef.current?.easeTo({ center: [...savedView.center] as [number, number], zoom: savedView.zoom, bearing: savedView.bearing, pitch: savedView.pitch, duration: motionDuration(650) });
-    }
+    locationDerivedViewRef.current = restoredLocationCameraRedaction;
+    setLocationCameraRedacted(restoredLocationCameraRedaction);
+    if (nextScenePreset === "elevation-3d") mapRef.current?.setMaxPitch(72);
+    mapRef.current?.easeTo({ ...savedView, duration: motionDuration(650) });
+    const sourceRestoreNotes: string[] = [];
+    if (savedSources) {
+      const restoredDays = restoreArchiveViewDays(Object.entries(savedSources.archiveDays).map(([feed, day]) => `${feed}:${day}`).join(","), currentUtcDay());
+      const unavailableDates = Object.keys(savedSources.archiveDays).filter(feed => !Object.hasOwn(restoredDays, feed));
+      for (const feed of new Set([...Object.keys(officialArchiveDaysRef.current), ...Object.keys(restoredDays)]) as Set<OfficialContextFeedId>) {
+        if (feed !== "noaa-hms-smoke" && officialArchiveDaysRef.current[feed] === restoredDays[feed as keyof typeof restoredDays]) continue;
+        if (officialVisibilityRef.current[feed]) setOfficialContextVisible(feed, false);
+        officialRequestsRef.current.get(feed)?.abort();
+        officialRequestsRef.current.delete(feed);
+        officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+        officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: undefined };
+        if (feed === "usgs-earthquakes") setEarthquakeArchiveFrameIndex(-1);
+        if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(-1);
+      }
+      officialArchiveDaysRef.current = restoredDays;
+      setOfficialArchiveDays(restoredDays);
+      setOfficialArchiveDraftDays({ "noaa-hms-smoke": currentUtcDay(), ...restoredDays });
+      setOfficialPayloads(officialPayloadsRef.current);
+      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+        const visible = savedSources.visibility[source.id] === true && !unavailableDates.includes(source.id);
+        const opacity = savedSources.opacity[source.id] ?? source.defaultOpacity;
+        if (officialOpacityRef.current[source.id] !== opacity) setOfficialContextOpacity(source.id, opacity);
+        if (visible || officialVisibilityRef.current[source.id]) setOfficialContextVisible(source.id, visible);
+      }
+      if (terrainProviderRef.current !== savedSources.terrainProvider) chooseTerrainProvider(savedSources.terrainProvider);
+      const missingSources = Object.keys(savedSources.visibility).filter(id => savedSources.visibility[id] && !OFFICIAL_CONTEXT_SOURCES.some(source => source.id === id));
+      if (missingSources.length || unavailableDates.length) sourceRestoreNotes.push("some saved sources or archive dates are unavailable and were left off");
+    } else sourceRestoreNotes.push("legacy save: public source, archive-date and DEM settings were not recorded; current settings retained");
     const restoredLayer = LAYER_REGISTRY.find((layer) => layer.id === snapshot.selection?.layerId);
     const restoredSelection = snapshot.selection && restoredLayer ? copyFeature(restoredLayer, snapshot.selection.featureId) : null;
     selectedRef.current = restoredSelection;
@@ -8078,7 +8157,7 @@ export default function Home() {
     setRightOpen(Boolean(savedResearch));
     if (savedResearch) {
       const sourceIds = new Set(savedResearch.coverage.map(item => item.sourceId));
-      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+      for (const source of savedSources ? [] : OFFICIAL_CONTEXT_SOURCES) {
         const visible = sourceIds.has(source.id);
         if (officialVisibilityRef.current[source.id] !== visible) setOfficialContextVisible(source.id, visible);
         // An explicit reopen refreshes existing eligible feeds as well as loading missing ones.
@@ -8089,7 +8168,7 @@ export default function Home() {
       if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
     } else setResearchMissingSources([]);
     setMapQueryCandidates([]);
-    announce(`${snapshot.name} restored from Places on this device${savedResearch ? "; dossier data reloads from eligible sources, saved rows are not reused" : ""}`);
+    announce(`${snapshot.name}: recorded setup reopened from Places${sourceRestoreNotes.length ? `; ${sourceRestoreNotes.join("; ")}` : "; saved source settings restored; eligible source data reloads, saved measurements are not replayed"}${savedResearch ? "; dossier data reloads from eligible sources, saved rows are not reused" : ""}`);
   };
 
   const stopPlaceTour = (announceStop = true) => {
@@ -9496,10 +9575,10 @@ export default function Home() {
 
           <section className="panel-mode-placeholder places-trail-section" hidden={leftPanelMode !== "places"} aria-labelledby="places-panel-title">
             <div className="panel-mode-heading"><span className="panel-kicker">DEVICE-LOCAL WORKSPACES</span><h2 id="places-panel-title">Return to an investigation</h2></div>
-            <p>Places stores camera, time, layers, comparison, report setup, and selected evidence on this device only.</p>
+            <p>Places stores camera, map time, selected public and registry layers, confirmed archive-day settings, DEM choice, comparison, and report setup on this device. Source measurements reload when eligible; they are not saved here.</p>
             <div className="panel-stat-grid"><article><span>SAVED PLACES</span><strong>{savedWorkspaces.length}</strong></article><article><span>ACTIVE PLACE</span><strong>{activePlaceId ? "YES" : "NONE"}</strong></article></div>
             <article className="place-capture-card">
-                  <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · {visibleCount} visible layers</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
+                  <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · {visibleCount + visibleOfficialSources.length} selected public / registry layers</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"} · Selection does not confirm loaded or verified data.</small></header>
                   <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Place or investigation step name" /><button type="button" onClick={saveCurrentWorkspace}>Add place</button></div>
                 </article>
                 <div className="place-trail-controls" aria-label="Places trail controls">
@@ -9511,7 +9590,7 @@ export default function Home() {
                   {savedWorkspaces.map((snapshot, index) => <article key={snapshot.id} data-active={activePlaceId === snapshot.id}>
                     <span className="place-stop-number">{String(index + 1).padStart(2, "0")}</span>
                     <button className="place-stop-main" type="button" onClick={() => { stopPlaceTour(false); loadSavedWorkspace(snapshot); }} aria-pressed={activePlaceId === snapshot.id}>
-                      <strong>{snapshot.name}</strong><small>{formatTimelineStep(snapshot.year)} · {Object.values(snapshot.visibility ?? {}).filter(Boolean).length} layers · {snapshot.projection === "globe" ? "globe" : "2D"}</small><em>{snapshot.locationCameraRedacted !== false ? "Generalized camera" : snapshot.selection ? `Selection: ${snapshot.selection.featureId}` : "Map context"}</em>
+                      <strong>{snapshot.name}</strong><small>{formatTimelineStep(snapshot.year)} · {savedWorkspaceSelectedLayerCount(snapshot)} selected {snapshot.sourceSettings ? "layers" : "registry layers · public source/date/DEM settings not recorded"} · {snapshot.projection === "globe" ? "globe" : "2D"}</small><em>{snapshot.locationCameraRedacted !== false ? "Generalized camera" : snapshot.selection ? `Selection: ${snapshot.selection.featureId}` : "Map context"}</em>
                     </button>
                     <div className="place-stop-actions"><button type="button" onClick={() => reorderSavedWorkspace(snapshot, -1)} disabled={index === 0} aria-label={`Move ${snapshot.name} earlier`}>↑</button><button type="button" onClick={() => reorderSavedWorkspace(snapshot, 1)} disabled={index === savedWorkspaces.length - 1} aria-label={`Move ${snapshot.name} later`}>↓</button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></div>
                   </article>)}
@@ -9700,7 +9779,7 @@ export default function Home() {
                     <p>Interagency working incident reports discovered in Kansas during the last 30 days. A record confirms provider reporting; status, area, and cause can change. Satellite detections are compared only by proximity.</p>
                     <output>{!officialVisibility[source.id] ? "Report layer off." : heldAtFrame ? "Held by atlas year · Return to Present." : state === "loading" ? "Checking NIFC reports…" : state === "error" ? "NIFC reports unavailable · no substitute claims." : `${officialPayloads["nifc-fire-reports"]?.featureCount ?? 0} reports in the loaded response${state === "partial" ? " · partial" : ""}. No report is not an all-clear.`}</output>
                     <div className="source-time-actions"><button type="button" onClick={() => openPrimaryWorkspace("reports", true, buildFireReportContext("nifc-fire-reports", null, officialPayloads["nifc-fire-reports"]?.retrievedAt, officialPayloads["nifc-fire-reports"]?.state ?? "unavailable", officialPayloads["nasa-gibs-fire-points"]?.state ?? "unavailable", []))}>Build Kansas fire report</button><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb incident updates ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">National fire news ↗</a></div>
-                  </> : source.id === "noaa-hms-smoke" ? <HmsSmokePlayback enabled={Boolean(effectiveOfficialVisibility["noaa-hms-smoke"] && styleReady)} reducedMotion={reducedMotion} displayedDay={officialArchiveDays["noaa-hms-smoke"]} payload={officialPayloads["noaa-hms-smoke"]} onReserve={reserveSmokePlayback} onFrame={commitSmokePlayback} onCurrent={() => returnOfficialSourceToCurrent("noaa-hms-smoke")} /> : ["usgs-earthquakes", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
+                  </> : source.id === "noaa-hms-smoke" ? <HmsSmokePlayback enabled={Boolean(effectiveOfficialVisibility["noaa-hms-smoke"] && styleReady)} reducedMotion={reducedMotion} displayedDay={officialArchiveDays["noaa-hms-smoke"]} payload={officialPayloads["noaa-hms-smoke"]} cancelRef={smokePlaybackCancelRef} onReserve={reserveSmokePlayback} onFrame={commitSmokePlayback} onCurrent={() => returnOfficialSourceToCurrent("noaa-hms-smoke")} /> : ["usgs-earthquakes", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
                     <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "nasa-gibs-fire-points" ? "Selectable thermal detections for one exact UTC day; each point carries its own acquisition time. This is separate from the provider-default image layer." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
                     <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || heldAtFrame || state === "loading" && officialArchiveDraftDays[source.id as OfficialContextFeedId] === officialArchiveDays[source.id as OfficialContextFeedId]} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
                     <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : !officialArchivePayloadsRef.current[source.id as OfficialContextFeedId] ? "Day not loaded · turn on layer to resume" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `${officialPayloads["nasa-gibs-fire-points"]?.sourceDay ? `NASA image day ${officialPayloads["nasa-gibs-fire-points"]!.sourceDay} UTC` : "Current UTC day · check source"}${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded${officialPayloads["nasa-gibs-fire-points"]!.state === "partial" ? " · partial" : ""}` : ""}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>
