@@ -68,7 +68,7 @@ test("opening Chat dismisses the welcome and focuses the requested composer with
     const context = { qwenReturnRef:{current:null}, document:{activeElement:trigger}, HTMLElement:class {}, isCompact:compact,
       globalSearchInputRef:{current:{focus:()=>{state.focus=composer;}}}, qwenPanelRef:{current:{querySelector:()=>({focus:()=>{state.focus=close;}})}},
       setPrimaryWorkspace:value=>{state.workspace=value;}, setGuideOpen:value=>{state.guide=value;}, setWelcomeSourcesOpen:value=>{state.sources=value;},
-      setQwenOpen:value=>{state.chat=value;}, setHelpOpen(){}, dismissMapUtilityWithoutFocus(){},
+      setQwenOpen:value=>{state.chat=value;}, setChatLayoutSuspended(){}, setHelpOpen(){}, dismissMapUtilityWithoutFocus(){},
       setLeftOpen(){}, setRightOpen(){}, setTimelineOpen(){}, window:{setTimeout:fn=>timers.push(fn)},
     };
     const open = new Function(...Object.keys(context), code)(...Object.values(context));
