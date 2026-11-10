@@ -27,7 +27,7 @@ import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
@@ -4014,8 +4014,8 @@ export default function Home() {
     }, 0);
   }, []);
 
-  useEffect(() => {
-    if (!qwenOpen || !isCompact) return;
+  useLayoutEffect(() => {
+    if (!qwenOpen || !isCompact || repositoryOpen) return;
     const panel = qwenPanelRef.current;
     if (!panel) return;
     const focusable = () => visibleFocusableElements(panel);
@@ -4083,7 +4083,7 @@ export default function Home() {
         else element.setAttribute("aria-hidden", ariaHidden);
       }
     };
-  }, [closeQwenCompanion, isCompact, qwenOpen]);
+  }, [closeQwenCompanion, isCompact, qwenOpen, repositoryOpen]);
 
   const copyQwenPrompt = useCallback(async () => {
     try {
@@ -4489,8 +4489,9 @@ export default function Home() {
 
   useEffect(() => {
     const handleWorkspaceShortcut = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey || repositoryOpen) return;
       const target = event.target as HTMLElement | null;
+      if (target?.closest('[role="dialog"][aria-modal="true"]')) return;
       const isEditing = target?.matches("input, textarea, select, [contenteditable='true']");
       if (event.key === "/" && !isEditing) {
         event.preventDefault();
@@ -4513,7 +4514,7 @@ export default function Home() {
     };
     document.addEventListener("keydown", handleWorkspaceShortcut);
     return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
-  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, primaryWorkspace]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, primaryWorkspace, repositoryOpen]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -6960,32 +6961,42 @@ export default function Home() {
     return () => { active = false; controller.abort(); clearTimeout(deadline); clearTimeout(expiryTimer); controller.signal.removeEventListener("abort", cancel); };
   }, [repositoryOpen, repositoryRefreshKey]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!repositoryOpen) return;
     const panel = repositoryPanelRef.current;
     if (!panel) return;
     const focusable = () => visibleFocusableElements(panel);
+    const restoreBackground = isolateModalBackground(panel, panel.closest<HTMLElement>(".site-root"));
+    const keepFocusInside = (event: FocusEvent) => {
+      if (event.target instanceof Node && !panel.contains(event.target)) focusable()[0]?.focus({ preventScroll: true });
+    };
+    document.addEventListener("focusin", keepFocusInside, true);
     focusable()[0]?.focus();
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
+        event.stopPropagation();
         closeRepository();
         return;
       }
       if (event.key !== "Tab") return;
       const items = focusable();
-      if (!items.length) return;
+      if (!items.length) { event.preventDefault(); return; }
       const first = items[0];
       const last = items[items.length - 1];
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     };
     panel.addEventListener("keydown", handleKey);
-    return () => panel.removeEventListener("keydown", handleKey);
+    return () => {
+      panel.removeEventListener("keydown", handleKey);
+      document.removeEventListener("focusin", keepFocusInside, true);
+      restoreBackground();
+    };
   }, [repositoryOpen, closeRepository]);
 
-  useEffect(() => {
-    if (primaryWorkspace !== "map" || !isCompact || !leftOpen || rightOpen || mapUtilityOpen || qwenOpen) return;
+  useLayoutEffect(() => {
+    if (repositoryOpen || primaryWorkspace !== "map" || !isCompact || !leftOpen || rightOpen || mapUtilityOpen || qwenOpen) return;
     const panel = leftPanelRef.current;
     if (!panel) return;
     const restoreBackground = isolateModalBackground(panel, panel.closest<HTMLElement>(".site-root"));
@@ -6997,10 +7008,10 @@ export default function Home() {
       document.removeEventListener("focusin", keepFocusInside, true);
       restoreBackground();
     };
-  }, [primaryWorkspace, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
+  }, [repositoryOpen, primaryWorkspace, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
 
-  useEffect(() => {
-    if (primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen) || (mapUtilityOpen && mapUtilityView === "localAtlas" && localAtlasPeek)) return;
+  useLayoutEffect(() => {
+    if (repositoryOpen || qwenOpen || primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen) || (mapUtilityOpen && mapUtilityView === "localAtlas" && localAtlasPeek)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
@@ -7026,7 +7037,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, sourceStatusOpen, closeSourceStatus, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [repositoryOpen, qwenOpen, primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, sourceStatusOpen, closeSourceStatus, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;

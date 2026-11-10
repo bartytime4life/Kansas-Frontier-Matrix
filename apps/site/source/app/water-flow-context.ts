@@ -159,16 +159,30 @@ export type WaterReadingCue = Readonly<{
   rangeMaximum: number | null;
 }>;
 
+type WaterBasis = Pick<StreamflowFrameProperties, "stationId" | "parameterCode" | "statisticId" | "unit">;
+const waterBasis = (row: WaterBasis | null): string | null => row
+  && [row.stationId, row.parameterCode, row.statisticId, row.unit].every(value => typeof value === "string" && value.trim().length > 0)
+  ? JSON.stringify([row.stationId, row.parameterCode, row.statisticId, row.unit]) : null;
+
+/** Raw observations remain inspectable; comparisons require one explicitly qualified measurement basis. */
+export function waterComparisonState(observations: readonly StreamflowObservation[], frame: StreamflowFrameProperties | null = null): "empty" | "compatible" | "mixed" | "unqualified" {
+  if (!observations.length) return "empty";
+  const basis = waterBasis(observations[0]);
+  if (!basis || observations.some(row => !waterBasis(row)) || frame && !waterBasis(frame)) return "unqualified";
+  return observations.every(row => waterBasis(row) === basis) && (!frame || waterBasis(frame) === basis) ? "compatible" : "mixed";
+}
+
 /** Relative position is limited to the loaded observations at one station. */
 export function waterReadingCue(
   frame: StreamflowFrameProperties | null,
   observations: readonly StreamflowObservation[],
 ): WaterReadingCue {
-  const values = observations.flatMap((observation) => observation.value !== null && Number.isFinite(observation.value) && observation.value >= 0 ? [observation.value] : []);
+  const comparable = waterComparisonState(observations, frame) === "compatible";
+  const values = comparable ? observations.flatMap((observation) => observation.value !== null && Number.isFinite(observation.value) && observation.value >= 0 ? [observation.value] : []) : [];
   const minimum = values.length ? Math.min(...values) : null;
   const maximum = values.length ? Math.max(...values) : null;
   const value = frame && !frame.missing && frame.value !== null && Number.isFinite(frame.value) && frame.value >= 0 ? frame.value : null;
-  const previousValue = frame && frame.previousValue !== null && Number.isFinite(frame.previousValue) && frame.previousValue >= 0 ? frame.previousValue : null;
+  const previousValue = comparable && frame && frame.previousValue !== null && Number.isFinite(frame.previousValue) && frame.previousValue >= 0 ? frame.previousValue : null;
   const change = value !== null && previousValue !== null ? value - previousValue : null;
   const rangePosition = value !== null && minimum !== null && maximum !== null && maximum > minimum
     ? Math.max(0, Math.min(1, (value - minimum) / (maximum - minimum))) : null;

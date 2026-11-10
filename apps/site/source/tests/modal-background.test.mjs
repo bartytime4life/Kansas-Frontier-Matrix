@@ -54,14 +54,14 @@ test("modal close returns to visible trigger, closed-menu summary or map fallbac
 const page = await readFile("app/page.tsx", "utf8"), ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
 let effect;
 function visit(node) {
-  if (ts.isCallExpression(node) && node.expression.getText(ast) === "useEffect" && node.arguments[0]?.getText(ast).includes("const restoreBackground = isolateModalBackground")) effect = node.arguments[0].getText(ast);
+  if (ts.isCallExpression(node) && node.expression.getText(ast) === "useLayoutEffect" && node.arguments[0]?.getText(ast).includes("const panel = leftPanelRef.current;") && node.arguments[0].getText(ast).includes("const restoreBackground = isolateModalBackground")) effect = node.arguments[0].getText(ast);
   ts.forEachChild(node, visit);
 }
 visit(ast); assert.ok(effect);
 test("actual Layers effect owns external focus and releases it when another tool or workspace takes over", () => {
-  for (const overrides of [{}, { isCompact: false }, { primaryWorkspace: "reports" }, { leftOpen: false }, { rightOpen: true }, { mapUtilityOpen: true }, { qwenOpen: true }]) {
+  for (const overrides of [{}, { repositoryOpen: true }, { isCompact: false }, { primaryWorkspace: "reports" }, { leftOpen: false }, { rightOpen: true }, { mapUtilityOpen: true }, { qwenOpen: true }]) {
     const f = fixture(), listeners = new Map(), focused = [];
-    const scope = { primaryWorkspace: "map", isCompact: true, leftOpen: true, rightOpen: false, mapUtilityOpen: false, qwenOpen: false,
+    const scope = { repositoryOpen: false, primaryWorkspace: "map", isCompact: true, leftOpen: true, rightOpen: false, mapUtilityOpen: false, qwenOpen: false,
       ...overrides, leftPanelRef: { current: f.panel }, isolateModalBackground, Node: Element,
       visibleFocusableElements: () => [{ focus: () => focused.push("close") }],
       document: { addEventListener: (name, callback, capture) => { assert.equal(capture, true); listeners.set(name, callback); }, removeEventListener: (name, callback, capture) => { assert.equal(capture, true); assert.equal(listeners.get(name), callback); listeners.delete(name); } } };

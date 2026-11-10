@@ -5,7 +5,7 @@ import { RiverNetworkSignal } from "./river-network-signal";
 import { nearestRiverSample } from "./river-pulse-visuals";
 import { WaterTerrainProfile } from "./water-terrain-profile";
 import type { WaterPathAnalysis } from "./water-path-analysis";
-import { waterReadingCue } from "./water-flow-context";
+import { waterComparisonState, waterReadingCue } from "./water-flow-context";
 import {
   buildHydrographSegments,
   stationObservations,
@@ -213,17 +213,19 @@ export function HydrologyObservatory({
     () => bundle && selectedStation ? stationObservations(bundle, selectedStation.stationId) : [],
     [bundle, selectedStation],
   );
+  const comparisonWithheld = selectedSeries.length > 0 && waterComparisonState(selectedSeries) !== "compatible";
+  const comparisonSeries = useMemo(() => comparisonWithheld ? [] : selectedSeries, [comparisonWithheld, selectedSeries]);
   const gapMinutes = useMemo(() => observationGapMinutes(selectedSeries), [selectedSeries]);
   const hydrographSegments = useMemo(
-    () => buildHydrographSegments(selectedSeries, {
+    () => buildHydrographSegments(comparisonSeries, {
       width: CHART_WIDTH,
       height: CHART_HEIGHT,
       gapMinutes,
       padding: CHART_PADDING,
     }),
-    [gapMinutes, selectedSeries],
+    [gapMinutes, comparisonSeries],
   );
-  const hydrographSummary = useMemo(() => summarizeHydrograph(selectedSeries), [selectedSeries]);
+  const hydrographSummary = useMemo(() => summarizeHydrograph(comparisonSeries), [comparisonSeries]);
   const frameValues = frameProperties(frame);
   const frameTime = stringValue(frameValues[0]?.frameCursor)
     ?? observationTimes[Math.max(0, Math.min(frameIndex, observationTimes.length - 1))]
@@ -233,6 +235,7 @@ export function HydrologyObservatory({
   const missingCount = Math.max(explicitMissingCount, Math.max(0, stationOptions.length - reportingCount));
   const provisionalCount = frameValues.filter((properties) => stringValue(properties.approvalStatus)?.toLowerCase().includes("provisional")).length;
   const selectedFrameProperties = frameValues.find((properties) => stringValue(properties.stationId) === selectedStationId) ?? null;
+  const selectedFrameUnit = stringValue(selectedFrameProperties?.unit);
   const selectedWaterCue = waterReadingCue(frame?.features.find((feature) => feature.properties.stationId === selectedStationId)?.properties ?? null, selectedSeries);
   const relativePosition = selectedWaterCue.rangePosition === null ? null
     : selectedWaterCue.rangePosition <= 0.2 ? "Near loaded low" : selectedWaterCue.rangePosition >= 0.8 ? "Near loaded high" : "Between loaded low and high";
@@ -254,7 +257,8 @@ export function HydrologyObservatory({
   const atLatest = observationTimes.length > 0 && safeFrameIndex === observationTimes.length - 1;
   const displayState = playing && (state === "ready" || state === "partial") ? "PLAYING" : STATE_LABELS[state];
   const queryMode = bundle?.query.mode.replaceAll("-", " ") ?? "not loaded";
-  const chartSummary = `${hydrographSummary.valid.length} exact observations; minimum ${formatDischarge(hydrographSummary.minimum, hydrographSummary.unit)}; maximum ${formatDischarge(hydrographSummary.maximum, hydrographSummary.unit)}; latest ${formatDischarge(hydrographSummary.latest?.value ?? null, hydrographSummary.unit)}; ${gapCount} detected gap${gapCount === 1 ? "" : "s"}.`;
+  const comparisonNotice = "Comparison withheld: loaded units, parameters or statistics differ or are not supplied. Raw observations remain available for inspection; no unit conversion was applied.";
+  const chartSummary = comparisonWithheld ? `${comparisonNotice} ${selectedSeries.length} raw observations.` : `${hydrographSummary.valid.length} exact observations; minimum ${formatDischarge(hydrographSummary.minimum, hydrographSummary.unit)}; maximum ${formatDischarge(hydrographSummary.maximum, hydrographSummary.unit)}; latest ${formatDischarge(hydrographSummary.latest?.value ?? null, hydrographSummary.unit)}; ${gapCount} detected gap${gapCount === 1 ? "" : "s"}.`;
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === "Escape") {
@@ -363,14 +367,15 @@ export function HydrologyObservatory({
 
 
     <section className="hydrology-water-reading" data-reading={selectedWaterCue.kind} aria-label="Selected station water movement and range">
-      <div className="hydrology-water-reading-head"><span>{selectedStation?.name ?? "WATER AT SELECTED GAUGE"}</span><strong>{selectedStation ? selectedWaterCue.kind === "missing" ? "No reading at this frame" : formatDischarge(selectedWaterCue.value, hydrographSummary.unit) : "Choose a station to inspect flow"}</strong></div>
+      <div className="hydrology-water-reading-head"><span>{selectedStation?.name ?? "WATER AT SELECTED GAUGE"}</span><strong>{selectedStation ? selectedWaterCue.kind === "missing" ? "No reading at this frame" : formatDischarge(selectedWaterCue.value, selectedFrameUnit) : "Choose a station to inspect flow"}</strong></div>
       {selectedStation && <>
         <div className="river-reading-meta"><b>{selectedWaterCue.kind === "missing" ? "NO FRESH MEASUREMENT" : selectedWaterCue.kind === "zero" ? "MEASURED ZERO" : selectedWaterCue.kind.toUpperCase()}</b><span>{activeObservationTime ? formatLocalTime(activeObservationTime) : "No source timestamp"}</span><span>{stringValue(selectedFrameProperties?.approvalStatus) ?? "Quality not supplied"}</span></div>
         <p>{selectedWaterCue.kind === "zero" ? "Observed zero discharge at this gauge. The extent of dry channel is unknown."
           : selectedWaterCue.kind === "missing" ? "Missing is unknown, not zero or dry."
-          : selectedWaterCue.change !== null ? `${selectedWaterCue.change > 0 ? "Rising" : selectedWaterCue.change < 0 ? "Falling" : "Steady"} by ${formatDischarge(Math.abs(selectedWaterCue.change), hydrographSummary.unit)} since the prior reported observation.`
+          : selectedWaterCue.change !== null ? `${selectedWaterCue.change > 0 ? "Rising" : selectedWaterCue.change < 0 ? "Falling" : "Steady"} by ${formatDischarge(Math.abs(selectedWaterCue.change), selectedFrameUnit)} since the prior reported observation.`
           : "No prior reported value is available for comparison in this frame."}</p>
-        {relativePosition && <div className="hydrology-range-position"><div role="meter" aria-label="Position within loaded station observations" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(selectedWaterCue.rangePosition! * 100)} aria-valuetext={relativePosition}><i style={{ left: `${selectedWaterCue.rangePosition! * 100}%` }} /></div><small>{relativePosition} · {formatDischarge(selectedWaterCue.rangeMinimum, hydrographSummary.unit)} to {formatDischarge(selectedWaterCue.rangeMaximum, hydrographSummary.unit)} in loaded station range</small></div>}
+        {comparisonWithheld && <p role="status">{comparisonNotice}</p>}
+        {relativePosition && <div className="hydrology-range-position"><div role="meter" aria-label="Position within loaded station observations" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(selectedWaterCue.rangePosition! * 100)} aria-valuetext={relativePosition}><i style={{ left: `${selectedWaterCue.rangePosition! * 100}%` }} /></div><small>{relativePosition} · {formatDischarge(selectedWaterCue.rangeMinimum, selectedFrameUnit)} to {formatDischarge(selectedWaterCue.rangeMaximum, selectedFrameUnit)} in loaded station range</small></div>}
       </>}
       <details className="river-path-details"><summary>Channel direction &amp; terrain</summary>
       <div className="hydrology-direction-status" role="status"><strong>MAPPED FLOW DIRECTION</strong><span>{!selectedStation ? "Show direction to choose a reporting gauge and inspect its nearby mapped channels." : downstreamState === "ready" ? `Upstream/downstream corridor follows ${downstreamAnalysis?.segments ?? downstreamPathCount} USGS mapped reach${(downstreamAnalysis?.segments ?? downstreamPathCount) === 1 ? "" : "es"}. ${selectedWaterCue.kind === "zero" ? "Measured zero: the amber guide is stationary, with no moving arrows." : selectedWaterCue.kind === "missing" ? "Measurement unavailable: the dashed guide is stationary, with no arrows." : "Motion follows a positive reading and pauses when the feed is unavailable or stale."} Luminous trails show mapped direction; their pace is illustrative, not measured water speed.` : downstreamState === "loading" ? downstreamPathCount ? downstreamAnalysis?.upstreamM !== undefined ? "Extended mapped corridor ready; checking terrain samples…" : "Showing verified nearby direction while checking the longer mapped path and terrain…" : "Checking mapped channel direction…" : downstreamState === "empty" ? "No verified directional channel segment nearby; arrows hidden. Try another gauge." : downstreamState === "error" ? "Mapped channel direction unavailable; arrows hidden." : "Mapped direction is not loaded."}</span></div>
@@ -413,9 +418,9 @@ export function HydrologyObservatory({
           <strong id={chartTitleId}>{selectedStation.name}</strong>
           <small>{selectedStation.stationId} · discharge parameter 00060</small>
         </div>
-        <b>{hydrographSummary.valid.length} OBS</b>
+        <b>{comparisonWithheld ? `${selectedSeries.length} RAW OBS` : `${hydrographSummary.valid.length} OBS`}</b>
       </header>
-      {hydrographSummary.valid.length > 0 ? <figure>
+      {comparisonWithheld ? <div className="hydrology-hydrograph-empty" role="status"><strong>Comparison withheld</strong><span>{comparisonNotice}</span></div> : hydrographSummary.valid.length > 0 ? <figure>
         <svg
           className="hydrology-chart"
           viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
@@ -450,20 +455,20 @@ export function HydrologyObservatory({
             <circle className="hydrology-chart-active" cx={activePoint.x} cy={activePoint.y} r="6" vectorEffect="non-scaling-stroke" />
           </>}
         </svg>
-        <div className="river-sample-probe" aria-label="Exact source sample inspector"><div><span>INSPECTED SAMPLE</span><strong>{formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)}</strong><time>{formatLocalTime(probeObservation?.observedAt ?? null)}</time></div><small>{probeObservation?.approvalStatus ?? "No sample"} · {probeObservation?.value === null ? "Missing value; no point invented." : "Exact reported value. Inspection does not change map time."}</small>
-          <input type="range" min="0" max={Math.max(0, selectedSeries.length - 1)} value={probeIndex >= 0 ? probeIndex : Math.max(0, selectedSeries.indexOf(probeObservation!))} disabled={!selectedSeries.length} onChange={event => inspectIndex(Number(event.target.value))} aria-label="Inspect exact station sample" aria-valuetext={`${formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)} at ${formatLocalTime(probeObservation?.observedAt ?? null)}`} />
-        </div>
         <figcaption className="hydrology-chart-caption">
           <span>{formatLocalTime(selectedSeries[0]?.observedAt ?? null)}</span>
           <strong>Exact values · gaps break the path</strong>
           <span>{formatLocalTime(selectedSeries.at(-1)?.observedAt ?? null)}</span>
         </figcaption>
       </figure> : <div className="hydrology-hydrograph-empty" role="status"><strong>No plottable discharge values</strong><span>The selected range returned no numeric observations; this is not interpreted as zero flow.</span></div>}
+      {selectedSeries.length > 0 && <div className="river-sample-probe" aria-label="Exact source sample inspector"><div><span>INSPECTED SAMPLE</span><strong>{formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)}</strong><time>{formatLocalTime(probeObservation?.observedAt ?? null)}</time></div><small>{probeObservation?.approvalStatus ?? "No sample"} · Statistic {probeObservation?.statisticId ?? "not supplied"} · {probeObservation?.value === null ? "Missing value; no point invented." : "Exact reported value. Inspection does not change map time."}</small>
+        <input type="range" min="0" max={Math.max(0, selectedSeries.length - 1)} value={probeIndex >= 0 ? probeIndex : Math.max(0, selectedSeries.indexOf(probeObservation!))} onChange={event => inspectIndex(Number(event.target.value))} aria-label="Inspect exact station sample" aria-valuetext={`${formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)} at ${formatLocalTime(probeObservation?.observedAt ?? null)}`} />
+      </div>}
       <dl className="hydrology-hydrograph-summary" aria-label="Hydrograph textual summary">
-        <div><dt>Minimum</dt><dd>{formatDischarge(hydrographSummary.minimum, hydrographSummary.unit)}</dd></div>
-        <div><dt>Maximum</dt><dd>{formatDischarge(hydrographSummary.maximum, hydrographSummary.unit)}</dd></div>
-        <div><dt>Latest</dt><dd>{formatDischarge(hydrographSummary.latest?.value ?? null, hydrographSummary.unit)}</dd></div>
-        <div><dt>Detected gaps</dt><dd>{gapCount} · threshold {gapMinutes} min</dd></div>
+        <div><dt>Minimum</dt><dd>{comparisonWithheld ? "Withheld" : formatDischarge(hydrographSummary.minimum, hydrographSummary.unit)}</dd></div>
+        <div><dt>Maximum</dt><dd>{comparisonWithheld ? "Withheld" : formatDischarge(hydrographSummary.maximum, hydrographSummary.unit)}</dd></div>
+        <div><dt>Latest</dt><dd>{comparisonWithheld ? "Withheld from comparison" : formatDischarge(hydrographSummary.latest?.value ?? null, hydrographSummary.unit)}</dd></div>
+        <div><dt>Detected gaps</dt><dd>{comparisonWithheld ? "Withheld" : `${gapCount} · threshold ${gapMinutes} min`}</dd></div>
       </dl>
       <p className="hydrology-chart-boundary">{chartSummary} The unsmoothed paths join reported values for readability; values between observations are not inferred.</p>
     </section>}
