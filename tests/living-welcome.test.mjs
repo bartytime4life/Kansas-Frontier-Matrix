@@ -5,6 +5,7 @@ import test from 'node:test';
 import ts from 'typescript';
 import * as carouselGeometry from '../app/living-welcome/card-carousel.mjs';
 import * as recordLinks from '../app/living-welcome/record-links.mjs';
+import * as topicSearch from '../app/living-welcome/topic-search.mjs';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
@@ -26,6 +27,7 @@ function environment(reduced=false){
 async function welcome(reduced=false,globals={}){
  const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
+  './topic-search.mjs':topicSearch,
   './card-carousel.mjs':carouselGeometry,'./record-links.mjs':recordLinks,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':welcomeViewModule,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
@@ -277,7 +279,7 @@ test('visual welcome owns focus and Escape before passive effects run',async()=>
  const tree=h.harness.render(h.harness.exports.default,h.props);
  findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props.ref.current={
   contains:node=>node===input,
-  querySelector:()=>({focus(){h.env.document.activeElement=input;}}),
+  querySelector:selector=>selector==='[data-guide-autofocus]'?{focus(){h.env.document.activeElement=input;}}:null,
  };
  try{
   // React commits layout effects before the browser can paint or dispatch
@@ -892,6 +894,57 @@ test('selection survives filtering and preview; cards remove topics and an empty
  }finally{h.harness.dispose();}
 });
 
+
+test('topic filtering keeps desktop preview and matching cards in agreement',async()=>{
+ const h=await welcome(false,{window:{matchMedia:query=>({matches:query.startsWith('(min-width:1101px)'),addEventListener(){},removeEventListener(){}})}});
+ try{
+  let tree=h.render();
+  const filter=tree=>findNode(tree,n=>n.type==='input'&&n.props['aria-describedby']==='topic-search-results');
+  filter(tree).props.onChange({target:{value:'network river'}});tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'water');
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-focus').props['data-topic'],'water');
+  assert.ok(gridCard(tree,'water'));
+  assert.equal(gridCard(tree,'weather'),undefined);
+  assert.equal(findNode(tree,n=>n.props?.className==='topic-result-count').props.children.join(''),'1 / 22');
+  assert.deepEqual(h.calls,[],'filtering only previews; it never opens a map');
+  filter(tree).props.onChange({target:{value:'no matching topic'}});tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-focus'),undefined,'no unrelated chosen-map action beside empty results');
+ }finally{h.harness.dispose();}
+});
+
+test('clearing topic filters restores the group, preserves selection and returns focus',async()=>{
+ const h=await welcome();h.props.initialTopics=['water'];const focused=[];
+ const input={focus:()=>focused.push('input')},summary={focus:()=>focused.push('summary')};
+ const finder={open:true,querySelector:selector=>selector==='input'?input:summary};
+ try{
+  let tree=h.render();rootOf(tree).props.ref.current={querySelector:()=>finder};
+  findNode(tree,n=>n.type==='input'&&n.props.type==='search').props.onChange({target:{value:'zzzzz'}});
+  findNode(tree,n=>n.type==='select'&&n.props['aria-describedby']==='topic-search-results').props.onChange({target:{value:'People & place'}});
+  tree=h.render();assert.ok(findNode(tree,n=>n.props?.className==='topic-empty'));
+  findNode(tree,n=>n.props?.className==='topic-clear').props.onClick();tree=h.render();
+  assert.deepEqual(focused,['input']);
+  assert.equal(findNode(tree,n=>n.type==='select'&&n.props['aria-describedby']==='topic-search-results').props.value,'All');
+  assert.equal(addCard(tree,'water').props['aria-pressed'],true);
+  assert.equal(findNode(tree,n=>n.props?.className==='topic-clear'),undefined);
+  // A closed finder cannot leave keyboard focus on the removed Clear button.
+  findNode(tree,n=>n.type==='input'&&n.props.type==='search').props.onChange({target:{value:'water'}});tree=h.render();
+  finder.open=false;findNode(tree,n=>n.props?.className==='topic-clear').props.onClick();h.render();
+  assert.deepEqual(focused,['input','summary']);
+ }finally{h.harness.dispose();}
+});
+
+test('Escape closes an open welcome disclosure before dismissing the welcome',async()=>{
+ for(const selector of ['.topic-filters','.welcome-preferences']){
+  const h=await welcome();let focused=0;
+  const disclosure={open:true,querySelector:()=>({focus:()=>focused++})};
+  try{
+   const tree=h.render();rootOf(tree).props.ref.current={contains:()=>true,querySelector:query=>query.includes(selector)&&disclosure.open?disclosure:null};
+   const key=()=>h.env.listeners.get('keydown')({key:'Escape',target:{closest:()=>null},preventDefault(){},stopImmediatePropagation(){}});
+   key();assert.equal(disclosure.open,false);assert.equal(focused,1);assert.deepEqual(h.calls,[]);
+   key();assert.deepEqual(h.calls,[['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});
 
 test('opening a primary card replaces the combined choice with that category alone',async()=>{
  const h=await welcome();h.props.initialTopics=['water','weather'];
