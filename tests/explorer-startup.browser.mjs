@@ -2616,6 +2616,55 @@ for(const [width,height] of [[1280,800],[390,844]]) {
 }
 
 for (const [width, height] of [[1280,800],[390,844],[568,320]]) {
+  for (const route of ['section','advanced']) {
+    test(`Map tool ${route} navigation preserves its keyboard control at ${width}x${height}`, {timeout:90000}, async t => {
+      const b=await browser(t),p=await pageSession(b,width,height);
+      await p.open('/?maptab=scene&mapui=open&motion=off');
+      await p.wait(`document.querySelector('#map-utility-panel').contains(document.activeElement)`, 'initial tool entry receives focus');
+      await p.wait(`!document.querySelector('.runtime-overlay.loading')`, 'map initialization settles');
+      const target=route==='section'?'measure':'inspect';
+      const owner=route==='section'?'.map-utility-tabs button:nth-child(2)':'.explorer-advanced-navigation > summary';
+      await p.evaluate(`document.querySelector(${JSON.stringify(owner)}).focus()`);
+      await p.key('Enter','Enter',13);
+      if(route==='advanced'){
+        await p.wait(`document.querySelector('.explorer-advanced-navigation').open`, 'Advanced tools opens');
+        await p.key('Tab','Tab',9);
+        assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation button:first-child')`),true,'the first real advanced tool owns keyboard input');
+        await p.key('Enter','Enter',13);
+      }
+      await p.wait(`document.querySelector('#map-utility-panel').dataset.view===${JSON.stringify(target)}`, 'the requested tool commits');
+      // Include both deferred entry frames; a synchronous check misses the jump.
+      await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))`);
+      if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+        await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+        const shot=await p.call('Page.captureScreenshot',{format:'png'});
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`tool-${route}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+      }
+      assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(owner)})`),true,'switching tools retains the navigation control instead of jumping to Close');
+      assert.equal(await p.evaluate(`(()=>{const node=document.activeElement,r=node.getBoundingClientRect();return r.width>0&&r.height>0&&r.top>=0&&r.bottom<=innerHeight&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`),true,'the retained control remains visible and unobstructed');
+      if(route==='advanced'){
+        assert.equal(await p.evaluate(`['static','relative'].includes(getComputedStyle(document.querySelector('#map-utility-view-inspect .map-context-card')).position)`),true,'the context receipt remains in the Inspect content flow');
+      }
+      await p.key('Tab','Tab',9);
+      if(route==='section'){
+        assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation > summary')`),true,'Tab follows the selected section in DOM order');
+        await p.key('Tab','Tab',9);
+      }
+      assert.equal(await p.evaluate(`document.querySelector('.map-utility-scroll').contains(document.activeElement)&&!document.activeElement.closest('[inert]')`),true,'Tab enters the selected tool contents');
+      // Explicit entry requests still re-enter even when that tool is already
+      // open and a persistent navigation control currently owns focus.
+      for(let request=0;request<2;request++){
+        await p.evaluate(`document.querySelector('.explorer-advanced-navigation > summary').focus()`);
+        await p.key('r','KeyR',82);
+        await p.wait(`document.querySelector('#map-utility-panel').dataset.view==='report'&&document.activeElement?.matches('#map-utility-panel .icon-close')`, 'an explicit report request receives entry focus, including a repeated request');
+      }
+      await p.key('Escape','Escape',27);
+      await p.wait(`document.querySelector('#map-utility-panel').dataset.open==='false'&&document.querySelector('#map-canvas').contains(document.activeElement)`, 'Escape still closes the panel and returns to the map');
+    });
+  }
+}
+
+for (const [width, height] of [[1280,800],[390,844],[568,320]]) {
   test(`Advanced tools Escape closes its menu before Map controls at ${width}x${height}`, {timeout:60000}, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     const capture = async (step, label) => {

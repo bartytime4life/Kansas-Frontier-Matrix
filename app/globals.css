@@ -2153,7 +2153,7 @@ body { font-size: 14px; }
 .top-actions .new-from-map-action:hover, .top-actions .new-from-map-action[aria-expanded="true"] { border-color: #fff0c5; background: #efd58f; color: #071918; }
 .new-from-map-action > span:first-child { font-size: 17px; line-height: 1; }
 .new-from-map-caret { margin-left: auto; color: rgba(16, 35, 33, .72); }
-.map-context-card {
+.map-context-composer > .map-context-card {
   position: absolute;
   z-index: 190;
   top: calc(100% + 12px);
@@ -2167,16 +2167,16 @@ body { font-size: 14px; }
   text-align: left;
   box-shadow: 0 32px 90px rgba(0, 0, 0, .5), 0 2px 0 rgba(255, 255, 255, .65) inset;
 }
-.map-context-card::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 4px; background: linear-gradient(90deg, #c9973d, #74aaa1); }
-.map-context-card > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 20px 8px; }
-.map-context-card > header span { color: #8a692b; font-size: 12px; font-weight: 950; letter-spacing: .14em; }
-.map-context-card h2 { margin: 5px 0 0; color: #102c28; font-size: 24px; line-height: 1; letter-spacing: -.045em; }
+.map-context-composer > .map-context-card::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 4px; background: linear-gradient(90deg, #c9973d, #74aaa1); }
+.map-context-composer > .map-context-card > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 20px 8px; }
+.map-context-composer > .map-context-card > header span { color: #8a692b; font-size: 12px; font-weight: 950; letter-spacing: .14em; }
+.map-context-composer > .map-context-card h2 { margin: 5px 0 0; color: #102c28; font-size: 24px; line-height: 1; letter-spacing: -.045em; }
 .top-actions .map-context-card > header > button { display: grid; place-items: center; flex: none; width: 44px; min-width: 44px; height: 44px; min-height: 44px; border: 1px solid rgba(23, 49, 45, .18); border-radius: 9px; background: rgba(23, 49, 45, .05); color: #36544f; padding: 0; font-size: 18px; }
-.map-context-card > p { margin: 0; padding: 0 20px 15px; color: #526761; font-size: 13px; line-height: 1.5; }
-.map-context-card dl { display: grid; grid-template-columns: 1fr 1fr; margin: 0 20px 14px; border-top: 1px solid rgba(23, 49, 45, .14); border-left: 1px solid rgba(23, 49, 45, .14); }
-.map-context-card dl div { min-width: 0; border-right: 1px solid rgba(23, 49, 45, .14); border-bottom: 1px solid rgba(23, 49, 45, .14); padding: 10px; }
-.map-context-card dt { color: #8a692b; font-size: 12px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
-.map-context-card dd { margin: 5px 0 0; overflow: hidden; color: #17312d; font-size: 12px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.map-context-composer > .map-context-card > p { margin: 0; padding: 0 20px 15px; color: #526761; font-size: 13px; line-height: 1.5; }
+.map-context-composer > .map-context-card dl { display: grid; grid-template-columns: 1fr 1fr; margin: 0 20px 14px; border-top: 1px solid rgba(23, 49, 45, .14); border-left: 1px solid rgba(23, 49, 45, .14); }
+.map-context-composer > .map-context-card dl div { min-width: 0; border-right: 1px solid rgba(23, 49, 45, .14); border-bottom: 1px solid rgba(23, 49, 45, .14); padding: 10px; }
+.map-context-composer > .map-context-card dt { color: #8a692b; font-size: 12px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+.map-context-composer > .map-context-card dd { margin: 5px 0 0; overflow: hidden; color: #17312d; font-size: 12px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
 .map-context-actions { display: grid; gap: 7px; padding: 0 20px 18px; }
 .top-actions .map-context-actions button { display: grid; grid-template-columns: 34px minmax(0, 1fr); grid-template-rows: auto auto; gap: 2px 10px; width: 100%; min-width: 0; height: auto; min-height: 56px; border: 1px solid rgba(23, 49, 45, .17); border-radius: 11px; background: rgba(255, 255, 255, .5); color: #17312d; padding: 9px 11px; text-align: left; }
 .top-actions .map-context-actions button:first-child { border-color: #1f665d; background: #1f665d; color: #f8f3e8; }
@@ -2186,9 +2186,9 @@ body { font-size: 14px; }
 .map-context-actions button strong { align-self: end; font-size: 13px; }
 .map-context-actions button small { align-self: start; color: #64766f; font-size: 12px; line-height: 1.35; }
 .map-context-actions button:first-child small { color: #caddd7; }
-.map-context-card > footer { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; border-top: 1px solid rgba(23, 49, 45, .14); background: rgba(23, 49, 45, .045); padding: 11px 20px 13px; }
-.map-context-card > footer span { border: 1px solid rgba(138, 105, 43, .32); border-radius: 999px; color: #7e5f26; padding: 5px 7px; font-size: 12px; font-weight: 950; letter-spacing: .08em; white-space: nowrap; }
-.map-context-card > footer p { margin: 0; color: #687972; font-size: 12px; line-height: 1.4; }
+.map-context-composer > .map-context-card > footer { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; border-top: 1px solid rgba(23, 49, 45, .14); background: rgba(23, 49, 45, .045); padding: 11px 20px 13px; }
+.map-context-composer > .map-context-card > footer span { border: 1px solid rgba(138, 105, 43, .32); border-radius: 999px; color: #7e5f26; padding: 5px 7px; font-size: 12px; font-weight: 950; letter-spacing: .08em; white-space: nowrap; }
+.map-context-composer > .map-context-card > footer p { margin: 0; color: #687972; font-size: 12px; line-height: 1.4; }
 
 @media (max-width: 1100px) {
   .qwen-map-launch { right: 70px; }
@@ -2210,7 +2210,7 @@ body { font-size: 14px; }
   .qwen-context-strip span:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .qwen-messages article p, .qwen-form textarea { font-size: 14px; }
   .map-utility-panel { right: 0; }
-  .map-context-card { position: fixed; top: calc(var(--topbar) + 8px); right: 8px; width: min(390px, calc(100vw - 16px)); max-height: calc(100dvh - var(--topbar) - 18px); overflow-y: auto; }
+  .map-context-composer > .map-context-card { position: fixed; top: calc(var(--topbar) + 8px); right: 8px; width: min(390px, calc(100vw - 16px)); max-height: calc(100dvh - var(--topbar) - 18px); overflow-y: auto; }
 }
 
 @media (max-width: 500px) {

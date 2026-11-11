@@ -1895,6 +1895,7 @@ export default function Home() {
   const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
   const [mapUtilityOpen, setMapUtilityOpen] = useState(false);
   const [mapUtilityFocusRequest, setMapUtilityFocusRequest] = useState(0);
+  const mapUtilityFocusEntryRef = useRef<{ workspace: string; open: boolean; request: number } | null>(null);
   const [mapContextOpen, setMapContextOpen] = useState(false);
   const [mapShare, setMapShare] = useState<MapShareRequest | null>(null);
   const closeMapShare = useCallback(() => setMapShare(null), []);
@@ -5812,12 +5813,23 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const previousEntry = mapUtilityFocusEntryRef.current;
+    mapUtilityFocusEntryRef.current = { workspace: primaryWorkspace, open: mapUtilityOpen, request: mapUtilityFocusRequest };
     if (primaryWorkspace !== "map" || !mapUtilityOpen) return;
+    const entering = !previousEntry || previousEntry.workspace !== "map" || !previousEntry.open || previousEntry.request !== mapUtilityFocusRequest;
+    const focusOwner = document.activeElement;
+    // Tool navigation already owns a usable control (including the summary
+    // after an Advanced choice). Preserve it when only the view changed.
+    if (!entering && mapUtilityPanelRef.current?.contains(focusOwner) && focusOwner?.getClientRects().length) return;
     // Wait for the committed workspace and the panel's first opening paint.
     // A repeated request must also re-enter retained controls after a menu closes.
     let focusFrame: number | undefined;
     const commitFrame = window.requestAnimationFrame(() => {
       focusFrame = window.requestAnimationFrame(() => {
+        // Any newer focus choice, including leaving focus on body, supersedes
+        // this delayed handoff. A view that unmounted its form starts on body
+        // and can still recover into the panel if nothing else takes focus.
+        if (document.activeElement !== focusOwner) return;
         const panel = mapUtilityPanelRef.current;
         if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
       });

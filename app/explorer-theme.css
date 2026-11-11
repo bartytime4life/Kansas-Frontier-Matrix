@@ -174,7 +174,7 @@ button:active:not(:disabled) { transform: translateY(1px); }
 .map-guide h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
 
 /* Floating overlay panels share one glass surface. */
-.qwen-panel, .map-utility-panel, .map-context-card, .data-notices-panel, .timeline-detail {
+.qwen-panel, .map-utility-panel, .map-context-composer > .map-context-card, .data-notices-panel, .timeline-detail {
   border-color: var(--line-strong) !important;
   border-radius: var(--kfm-radius-l) !important;
   background: var(--kfm-glass) !important;
