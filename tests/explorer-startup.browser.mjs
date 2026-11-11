@@ -2615,6 +2615,60 @@ for(const [width,height] of [[1280,800],[390,844]]) {
  });
 }
 
+for (const [width, height] of [[1280,800],[390,844],[568,320]]) {
+  test(`Advanced tools Escape closes its menu before Map controls at ${width}x${height}`, {timeout:60000}, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    const capture = async (step, label) => {
+      if (!process.env.KFM_WORKSPACE_SCREENSHOTS) return;
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, {recursive:true});
+      const shot = await p.call('Page.captureScreenshot', {format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `controls-${width}x${height}-${step}-${label}.png`), Buffer.from(shot.data, 'base64'));
+    };
+    await p.open('/?maptab=scene&mapui=open&motion=off');
+    await p.wait(`document.querySelector('#map-utility-panel[data-open="true"]').contains(document.activeElement)`, 'Map controls receives entry focus');
+    await p.wait(`!document.querySelector('.runtime-overlay.loading')`, 'map initialization settles before capturing controls');
+    const original = await p.evaluate(`({view:document.querySelector('#map-utility-panel').dataset.view, camera:new URLSearchParams(location.search).get('c')})`);
+    await capture('01', 'appearance');
+    await p.evaluate(`document.querySelector('.explorer-advanced-navigation > summary').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.explorer-advanced-navigation').open`, 'Advanced tools opens');
+    await p.key('Tab', 'Tab', 9);
+    assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation button')`), true, 'keyboard enters a real tool option');
+    await capture('02', 'advanced');
+    const menuGeometry = await p.evaluate(`(()=>{const nav=document.querySelector('.explorer-advanced-navigation nav'),r=nav.getBoundingClientRect(),p=document.querySelector('#map-utility-panel').getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:nav.clientHeight,panelTop:p.top,panelBottom:p.bottom};})()`);
+    assert.ok(menuGeometry.top >= menuGeometry.panelTop + 4 && menuGeometry.bottom <= menuGeometry.panelBottom - 4 && menuGeometry.height >= 44, 'the menu fits inside the visible panel: '+JSON.stringify(menuGeometry));
+    for (let option = 0; option < 8; option++) {
+      if (option) await p.key('Tab', 'Tab', 9);
+      assert.equal(await p.evaluate(`(()=>{const node=document.activeElement,nav=document.querySelector('.explorer-advanced-navigation nav'),r=node.getBoundingClientRect(),n=nav.getBoundingClientRect();return node===nav.querySelectorAll('button')[${option}]&&r.top>=n.top&&r.bottom<=n.bottom&&r.height>=44&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`), true, 'every tool remains visible and hit-testable when reached by Tab, including option '+option);
+    }
+    if (width === 1280) {
+      for (const [w, h] of [[568,320],[1280,800]]) {
+        await p.call('Emulation.setDeviceMetricsOverride', {width:w,height:h,deviceScaleFactor:1,mobile:false});
+        await p.wait(`innerWidth===${w}&&innerHeight===${h}`, 'the viewport resize commits');
+        await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+        assert.equal(await p.evaluate(`(()=>{const nav=document.querySelector('.explorer-advanced-navigation nav'),node=document.activeElement,r=node.getBoundingClientRect(),n=nav.getBoundingClientRect(),p=document.querySelector('#map-utility-panel').getBoundingClientRect();return node===nav.querySelectorAll('button')[7]&&r.top>=n.top&&r.bottom<=n.bottom&&n.top>=p.top&&n.bottom<=p.bottom;})()`), true, 'resizing an open menu keeps the focused final option visible at '+w+'x'+h);
+      }
+    }
+    await p.key('Escape', 'Escape', 27);
+    await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+    await capture('03', 'escape');
+    assert.equal(await p.evaluate(`document.querySelector('#map-utility-panel').dataset.open`), 'true', 'Escape dismisses the nested menu without losing Map controls');
+    assert.equal(await p.evaluate(`document.querySelector('.explorer-advanced-navigation').open`), false);
+    assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation > summary')`), true, 'the summary regains focus');
+    assert.deepEqual(await p.evaluate(`({view:document.querySelector('#map-utility-panel').dataset.view, camera:new URLSearchParams(location.search).get('c')})`), original, 'dismissing a menu keeps the selected controls and map position');
+    await p.key('Tab', 'Tab', 9);
+    assert.equal(await p.evaluate(`document.querySelector('#map-utility-panel').contains(document.activeElement) && !document.activeElement.closest('.explorer-advanced-navigation')`), true, 'Tab resumes in the retained panel, outside the closed menu');
+    await p.evaluate(`document.querySelector('.explorer-advanced-navigation > summary').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.explorer-advanced-navigation').open`, 'the retained menu can reopen');
+    await p.key('Escape', 'Escape', 27);
+    assert.equal(await p.evaluate(`document.querySelector('#map-utility-panel').dataset.open`), 'true', 'Escape on the open summary also dismisses only the menu');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`document.querySelector('#map-utility-panel').dataset.open==='false'`, 'a later Escape closes Map controls normally');
+    await p.wait(`document.querySelector('#map-canvas').contains(document.activeElement)`, 'panel close restores map focus');
+  });
+}
+
 // The startup map hides its instrument dock; its color key must remain reachable
 // from the existing header menu without changing the selected map or camera.
 for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
