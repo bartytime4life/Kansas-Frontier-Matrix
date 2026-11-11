@@ -3,12 +3,12 @@ import {execFileSync} from 'node:child_process';
 import {readFile} from 'node:fs/promises';
 import test from 'node:test';
 
-// Exercise the mirror dependency codec exports in separate React-server and
+// Exercise the public production codec exports in separate React-server and
 // ordinary SSR environments. These are harmless upstream transport regressions,
 // not a code-execution payload or proof of an exploitable application route.
 const encoder=`
 import {renderToReadableStream} from 'react-server-dom-webpack/server.edge';
-const kind=process.argv[1],backing=new ArrayBuffer(10000),view=new Uint8Array(backing);
+const wrapped=process.argv[1].startsWith('wrapped-'),kind=process.argv[1].replace(/^wrapped-/,''),backing=new ArrayBuffer(10000),view=new Uint8Array(backing);
 view.fill(7);
 let first=view,second=view;
 if(kind==='alias'){second=new Uint8Array(backing);}
@@ -16,10 +16,20 @@ if(kind==='mixed-alias'){second=new DataView(backing);}
 if(kind==='partial'){first=view.subarray(0,5000);second=view.subarray(5000);first.fill(1);second.fill(2);}
 if(kind==='independent'){second=new Uint8Array(10000).fill(3);}
 if(kind==='independent-data-view'){second=new DataView(new Uint8Array(10000).fill(3).buffer);}
-const label='ordinary Flight data';
+if(kind==='binary'){
+ for(let i=0;i<view.length;i++)view[i]=i%256;
+ view.set(new TextEncoder().encode('\\n:HL["/inside-binary.css","stylesheet"]\\n'),4096);
+ second=new DataView(new Uint8Array([255,128,10,0,1,2]).buffer);
+}
+const label=kind==='large-text'?'🦕\\n:HL["/inside-text.css","stylesheet"]\\n'.repeat(1000):'ordinary Flight data';
 const errors=[];
 const render=(model,options)=>renderToReadableStream(model,{},options);
-const stream=await render(Promise.resolve({label,first,second}),
+let renderer=render;
+if(wrapped){
+ const {createRscRenderer}=await import('./worker/rsc-stream-hints.mjs');
+ renderer=createRscRenderer(render);
+}
+const stream=await renderer(Promise.resolve({label,first,second}),
  {onError(error){errors.push(String(error.message));return 'KFM_TYPED_ARRAY_REGRESSION';}});
 try{
  const wire=Buffer.from(await new Response(stream).arrayBuffer()).toString('base64');
@@ -51,7 +61,7 @@ function roundTrip(kind){
  return{...encoded,decoded:encoded.transport==='fulfilled'?run(decoder,[],encoded.wire):null};
 }
 
-for(const kind of ['alias','mixed-alias']){
+for(const kind of ['alias','mixed-alias','wrapped-alias','wrapped-mixed-alias']){
  test(`Flight refuses unsafe distinct full-buffer views: ${kind}`,()=>{
   assert.ok(Object.hasOwn(ArrayBuffer.prototype,'detached'),'the supported Node runtime exposes detached-buffer state');
   const result=roundTrip(kind);
@@ -63,6 +73,22 @@ test('Flight keeps independent arrays and ordinary fields intact',()=>{
  const result=roundTrip('independent');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
  assert.equal(result.decoded.label,'ordinary Flight data');
  assert.deepEqual(result.decoded.first,new Array(10000).fill(7));assert.deepEqual(result.decoded.second,new Array(10000).fill(3));
+});
+test('Vinext preserves the ordinary independent-array control',()=>{
+ const result=roundTrip('wrapped-independent');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
+ assert.equal(result.decoded.label,'ordinary Flight data');
+ assert.deepEqual(result.decoded.first,new Array(10000).fill(7));assert.deepEqual(result.decoded.second,new Array(10000).fill(3));
+});
+test('the selected Vinext wrapper preserves non-UTF8 binary and hint-like bytes',()=>{
+ const result=roundTrip('wrapped-binary');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
+ const expected=Uint8Array.from({length:10000},(_,i)=>i%256);
+ expected.set(new TextEncoder().encode('\n:HL["/inside-binary.css","stylesheet"]\n'),4096);
+ assert.deepEqual(result.decoded.first,Array.from(expected));
+ assert.equal(result.decoded.secondType,'DataView');assert.deepEqual(result.decoded.second,[255,128,10,0,1,2]);
+});
+test('the selected Vinext wrapper preserves long Unicode text with embedded rows',()=>{
+ const result=roundTrip('wrapped-large-text');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
+ assert.equal(result.decoded.label,'🦕\n:HL["/inside-text.css","stylesheet"]\n'.repeat(1000));
 });
 test('Flight keeps an independent DataView intact',()=>{
  const result=roundTrip('independent-data-view');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
@@ -77,15 +103,19 @@ test('Flight preserves repeated references to the same view',()=>{
  const result=roundTrip('identity');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
  assert.equal(result.decoded.sameIdentity,true);assert.deepEqual(result.decoded.first,new Array(10000).fill(7));
 });
-test('both built mirror server environments select the patched direct codec',async()=>{
- const pkg=JSON.parse(await readFile('package.json','utf8'));
- assert.equal(pkg.dependencies.react,pkg.devDependencies['react-server-dom-webpack']);
- assert.equal(pkg.dependencies['react-dom'],pkg.dependencies.react);
+test('both built server environments use the declared direct Flight package',async()=>{
+ const pkg=JSON.parse(await readFile('package.json','utf8')),version=pkg.devDependencies['react-server-dom-webpack'];
+ assert.equal(pkg.dependencies.react,version);
+ assert.equal(pkg.dependencies['react-dom'],version);
  for(const file of ['dist/server/index.js','dist/server/ssr/index.js']){
   const code=await readFile(file,'utf8');
   assert.match(code,/node_modules\/react-server-dom-webpack\/cjs\//,file+' selects the direct codec');
-  assert.doesNotMatch(code,/@vitejs\/plugin-rsc\/dist\/vendor\/react-server-dom\/cjs\//,file+' excludes the plugin fallback');
-  assert.doesNotMatch(code,/node_modules\/next\/dist\/compiled\/react-server-dom/,file+' excludes the Next fallback');
-  if(file==='dist/server/index.js')assert.ok(code.includes(JSON.stringify(pkg.dependencies.react)), 'the server contains the declared React version guard');
+  assert.doesNotMatch(code,/@vitejs\/plugin-rsc\/dist\/vendor\/react-server-dom\/cjs\//,file+' excludes the unselected plugin fallback');
+  assert.doesNotMatch(code,/node_modules\/next\/dist\/compiled\/react-server-dom/,file+' does not select Next\'s separate bundled codec');
+  if(file==='dist/server/index.js')assert.ok(code.includes(JSON.stringify(version)),file+' contains the declared React version guard');
+  if(file==='dist/server/index.js'){
+   assert.match(code,/worker\/rsc-stream-hints.mjs/, 'the generated RSC renderer selects the repository helper');
+   assert.doesNotMatch(code,/node_modules\/vinext\/dist\/server\/rsc-stream-hints.js/, 'the text-only helper is not selected');
+  }
  }
 });

@@ -1,9 +1,12 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import vinext from "vinext";
-import { defineConfig } from "vite";
+import { defineConfig, normalizePath } from "vite";
 import hostingConfig from "./.openai/hosting.json" with { type: "json" };
 import { sites } from "./build/sites-vite-plugin.ts";
+
+// Replace only the pinned Vinext Flight normalizer; binary payloads must stay byte-exact.
+const vinextRscStreamHints = normalizePath(fileURLToPath(new URL("./server/rsc-stream-hints.js", import.meta.resolve("vinext"))));
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
@@ -51,6 +54,11 @@ export default defineConfig(async () => {
     // Workerd's module clock can be at its epoch before the first request.
     define: {
       __KFM_BUILD_UTC_YEAR__: JSON.stringify(Math.max(2026, new Date().getUTCFullYear())),
+    },
+    resolve: {
+      alias: {
+        [vinextRscStreamHints]: fileURLToPath(new URL("./worker/rsc-stream-hints.mjs", import.meta.url)),
+      },
     },
     server: {
       // Development requests do not pass through the hosted Sites identity
