@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import type { FeatureCollection } from 'geojson';
 import { loadMapLibre, type Map as MapLibreMap } from '../maplibre-seam';
@@ -9,6 +9,8 @@ import './workspace.css';
 
 type Product = { state: string; reason?: string; releaseId?: string; sourceId?: string; retrievedAt?: string; freshness?: string; measurementFreshness?: string; limitation?: string; sourceUrl?: string; rightsUrl?: string; evidenceRole?: string; approvalExpiresAt?: string; payloadSha256?: string; data?: FeatureCollection };
 const reasons: Record<string, string> = { PIPELINE_NOT_CONFIGURED: 'Published snapshots are not configured yet.', NO_APPROVED_RELEASE: 'No approved snapshot is available.', RELEASE_STORE_UNAVAILABLE: 'Published data is temporarily unavailable.', APPROVAL_INVALID: 'This snapshot is awaiting a current approval.', APPROVAL_REVOKED: 'This snapshot has been withheld following review.' };
+const RECORD_PAGE_SIZE = 25;
+const searchText = (value: string) => value.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase().replace(/[\p{P}\p{S}]+/gu, ' ').replace(/\s+/g, ' ').trim();
 export default function CuratedWorkspace() {
   const [source, setSource] = useState('usgs-streamflow');
   const [product, setProduct] = useState<Product | null>(null);
@@ -17,6 +19,8 @@ export default function CuratedWorkspace() {
   const [attempt, setAttempt] = useState(0);
   const [release, setRelease] = useState('');
   const [history, setHistory] = useState<{ releaseId: string; publishedAt: string }[]>([]);
+  const [recordQuery, setRecordQuery] = useState(''), [recordPage, setRecordPage] = useState(0);
+  const recordSearch = useRef<HTMLInputElement>(null), recordsHeading = useRef<HTMLHeadingElement>(null);
   const [mapState, setMapState] = useState('Map not started');
   const container = useRef<HTMLDivElement>(null), map = useRef<MapLibreMap | null>(null);
   const [ready, setReady] = useState(false);
@@ -82,8 +86,24 @@ export default function CuratedWorkspace() {
     instance.on('click', 'curated-points', clicked); instance.on('click', 'curated-areas', clicked);
     return () => { instance.off('click', 'curated-points', clicked); instance.off('click', 'curated-areas', clicked); };
   }, [product, source, ready]);
-  const features = product?.sourceId === source ? product.data?.features ?? [] : [];
+  const features = useMemo(() => product?.sourceId === source ? product.data?.features ?? [] : [], [product, source]);
   const feature = features.find(f => String(f.id) === selected);
+  const recordIndex = useMemo(() => features.map(feature => ({ feature, text: searchText([
+    feature.id, feature.properties?.headline, feature.properties?.stationId, feature.properties?.stationName,
+  ].filter(value => typeof value === 'string' || typeof value === 'number').join(' ')) })), [features]);
+  const matchingRecords = useMemo(() => {
+    const words = searchText(recordQuery).split(' ').filter(Boolean);
+    return recordIndex.filter(row => words.every(word => row.text.includes(word))).map(row => row.feature);
+  }, [recordIndex, recordQuery]);
+  const recordPages = Math.max(1, Math.ceil(matchingRecords.length / RECORD_PAGE_SIZE));
+  const page = Math.min(recordPage, recordPages - 1), firstRecord = page * RECORD_PAGE_SIZE;
+  const pageRecords = matchingRecords.slice(firstRecord, firstRecord + RECORD_PAGE_SIZE);
+  const clearRecordSearch = () => { setRecordQuery(''); setRecordPage(0); recordSearch.current?.focus(); };
+  const changeRecordPage = (next: number) => {
+    setRecordPage(next);
+    recordsHeading.current?.focus({ preventScroll: true });
+    recordsHeading.current?.scrollIntoView({ block: 'start' });
+  };
   const publishedCollection = product?.sourceId === source && product.evidenceRole === 'EXTERNAL_CONTEXT_ONLY'
     && product.data?.type === 'FeatureCollection' && Array.isArray(product.data.features)
     && ['available', 'empty', 'partial'].includes(product.state);
@@ -97,8 +117,8 @@ export default function CuratedWorkspace() {
     <Link href="/">← Kansas Frontier Matrix</Link>
     <h1>Curated source snapshots</h1>
     <p>Dated provider context prepared by KFM. These snapshots are not admitted evidence or an emergency notification service.</p>
-    <div className="curated-toolbar"><label>Source <select value={source} onChange={e => { setSource(e.target.value); setRelease(''); setHistory([]); }}><option value="usgs-streamflow">USGS streamflow</option><option value="nws-alerts">NWS Kansas alerts</option></select></label>
-      <label>Snapshot <select value={release} onChange={e => setRelease(e.target.value)}><option value="">Latest approved</option>{history.map(h => <option key={h.releaseId} value={h.releaseId}>{h.publishedAt}</option>)}</select></label>
+    <div className="curated-toolbar"><label>Source <select value={source} onChange={e => { setSource(e.target.value); setRelease(''); setHistory([]); setRecordQuery(''); setRecordPage(0); }}><option value="usgs-streamflow">USGS streamflow</option><option value="nws-alerts">NWS Kansas alerts</option></select></label>
+      <label>Snapshot <select value={release} onChange={e => { setRelease(e.target.value); setRecordPage(0); }}><option value="">Latest approved</option>{history.map(h => <option key={h.releaseId} value={h.releaseId}>{h.publishedAt}</option>)}</select></label>
       <button type="button" disabled={loading} onClick={() => setAttempt(v => v + 1)}>{loading ? 'Checking…' : 'Refresh'}</button></div>
     <p role="status">{loading ? 'Checking published data…' : `${product?.state ?? 'Not checked'}${product?.freshness ? ' · snapshot retrieval: ' + product.freshness : ''}`}</p>
     {product?.data && source === 'usgs-streamflow' && <p>Measurement freshness: {product.measurementFreshness ?? 'unknown'}. Retrieval time does not change observation dates.</p>}
@@ -110,7 +130,13 @@ export default function CuratedWorkspace() {
     {product?.sourceUrl && <p><a href={product.sourceUrl}>Provider query</a>{' · '}<a href={product.rightsUrl}>Provider terms</a></p>}
     {product?.limitation && <p>{product.limitation}</p>}
     {feature && <section aria-label="Selected source record"><h2>Selected record</h2><dl>{Object.entries(feature.properties ?? {}).map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value === null ? 'Missing' : typeof value === 'object' ? JSON.stringify(value) : String(value)}</dd></div>)}</dl></section>}
-    <h2>Source records</h2>
-    {features.length ? <ul className="curated-records">{features.map(f => <li key={String(f.id)}><button type="button" aria-pressed={selected === String(f.id)} onClick={() => setSelected(String(f.id))}>{String(f.properties?.headline ?? f.properties?.stationId ?? f.id)}{f.properties?.expired ? ' · expired' : ''}</button><small>{String(f.properties?.observedAt ?? '')}{' '}{f.properties?.value === null ? 'Missing value' : f.properties?.value !== undefined ? String(f.properties.value) + ' ' + String(f.properties.unit ?? 'unit unavailable') : ''}</small></li>)}</ul> : <p role="status">{emptyRecords}</p>}
+    <section className="curated-record-browser" aria-labelledby="curated-records-heading">
+      <h2 id="curated-records-heading" ref={recordsHeading} tabIndex={-1}>Source records</h2>
+      <div className="curated-record-search"><label>Search source records<input ref={recordSearch} type="search" value={recordQuery} placeholder="Station, alert or record ID" onChange={event => { setRecordQuery(event.target.value); setRecordPage(0); }} /></label>{recordQuery && <button type="button" onClick={clearRecordSearch}>Clear search</button>}</div>
+      <p className="curated-record-help">Find a station, alert title or record ID. Downloads include the full snapshot.</p>
+      {features.length > 0 && <p role="status" aria-live="polite" aria-atomic="true">{matchingRecords.length ? `Showing ${firstRecord + 1}–${firstRecord + pageRecords.length} of ${matchingRecords.length} ${recordQuery.trim() ? 'matching ' : ''}records${recordQuery.trim() ? ` · ${features.length} in this snapshot` : ''}.` : `No records match “${recordQuery}” in this snapshot.`}</p>}
+      {features.length ? <ul className="curated-records">{pageRecords.map(f => <li key={String(f.id)}><button type="button" aria-pressed={selected === String(f.id)} onClick={() => setSelected(String(f.id))}>{String(f.properties?.headline ?? f.properties?.stationId ?? f.id)}{f.properties?.expired ? ' · expired' : ''}</button><small>{String(f.properties?.observedAt ?? '')}{' '}{f.properties?.value === null ? 'Missing value' : f.properties?.value !== undefined ? String(f.properties.value) + ' ' + String(f.properties.unit ?? 'unit unavailable') : ''}</small></li>)}</ul> : <p role="status">{emptyRecords}</p>}
+      {recordPages > 1 && <nav className="curated-record-pagination" aria-label="Source record pages"><button type="button" disabled={page === 0} onClick={() => changeRecordPage(page - 1)}>Previous records</button><span>Page {page + 1} of {recordPages}</span><button type="button" disabled={page === recordPages - 1} onClick={() => changeRecordPage(page + 1)}>Next records</button></nav>}
+    </section>
   </main>;
 }
