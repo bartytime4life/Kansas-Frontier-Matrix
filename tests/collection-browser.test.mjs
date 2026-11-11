@@ -147,3 +147,62 @@ test('a timed-out collection response cannot become a page and an explicit retry
   await f.answer();assert.ok(button(f.tree,'Download this page · JSON'),'a new explicit request can still succeed');
  }finally{f.h.dispose();}
 });
+
+async function fieldFixture(){
+ const calls=[],pending=[],timers=[];
+ const h=await componentHarness('app/data-library/page.tsx',{
+  'next/link':{default:'a'},'../recovered-collections':library,
+  '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise((resolve,reject)=>pending.push({resolve,reject}));},rowLabel:()=>'',textValue:String},
+  './search':{default:'archive-search'},'./freshness':{},'./collection-browser':model,'./library.module.css':css,'./collection-browser.module.css':css,
+ },{setTimeout:(fn,ms)=>{assert.equal(ms,25000);const timer={fn,cleared:false};timers.push(timer);return timer;},clearTimeout:timer=>{timer.cleared=true;}},'\nexport {RecordField};');
+ const props={value:{longField:true,preview:'Recorded preview'},id:'bulk-newspaper-pages',database:'bulk',record:'synthetic-1',field:'text'};
+ let tree;
+ function render(){tree=h.render(h.exports.RecordField,props);h.commit();}
+ render();
+ return {h,calls,pending,get tree(){return tree;},refresh:render,
+  click(label){button(tree,label).props.onClick();render();},
+  expire(){timers.find(timer=>!timer.cleared).fn();render();},
+  async finish(index,result){pending[index].resolve(result);await settle();render();},
+  async fail(index){pending[index].reject(new Error('synthetic failure'));await settle();render();},
+ };
+}
+const fieldAnswer=(start=0,text='First retained part',nextStart=32768)=>({...answer,rows:[{id:'synthetic-1',values:{text}}],fieldChunk:{field:'text',start,characters:40000,nextStart}});
+
+test('long-field timeout releases retry before transport settles and refuses its late result',async()=>{
+ const f=await fieldFixture();try{
+  f.click('Open full field');f.expire();
+  assert.equal(f.calls[0].signal.aborted,true);
+  assert.equal(button(f.tree,'Open full field').props.disabled,false,'timeout must release the reader even if transport never settles');
+  assert.ok(findNode(f.tree,n=>n.props?.role==='status'&&/timed out.*Retry/i.test(n.props.children)));
+  f.click('Open full field');await f.finish(1,fieldAnswer(0,'Current retry'));
+  await f.finish(0,fieldAnswer(0,'Expired result'));
+  assert.equal(findNode(f.tree,n=>n.type==='pre').props.children,'Current retry');
+ }finally{f.h.dispose();}
+});
+
+test('disposed long-field reader ignores late failures as well as late values',async()=>{
+ const f=await fieldFixture();try{
+  f.click('Open full field');f.h.dispose();
+  assert.equal(f.calls[0].signal.aborted,true);
+  await f.fail(0);
+  assert.equal(findNode(f.tree,n=>n.props?.role==='status').props.children,'Loading field…','no state update belongs to an unmounted reader');
+ }finally{f.h.dispose();}
+});
+
+test('long-field paging retains its last part on failure and retries the same source offset',async()=>{
+ const f=await fieldFixture();try{
+  f.click('Open full field');await f.finish(0,fieldAnswer());
+  f.click('Next part');await f.fail(1);
+  assert.equal(findNode(f.tree,n=>n.type==='pre').props.children,'First retained part');
+  assert.ok(findNode(f.tree,n=>n.props?.role==='status'&&n.props.children==='Field unavailable. Retry.'));
+  f.click('Next part');await f.finish(2,fieldAnswer(32768,'Last retained part',null));
+  assert.deepEqual(f.calls.map(c=>({...c.query})),[
+   {collection:'bulk-newspaper-pages',record:'synthetic-1',field:'text',start:'0'},
+   {collection:'bulk-newspaper-pages',record:'synthetic-1',field:'text',start:'32768'},
+   {collection:'bulk-newspaper-pages',record:'synthetic-1',field:'text',start:'32768'},
+  ]);
+  assert.ok(f.calls.every(c=>c.dataset==='recovered-bulk'));
+  assert.equal(findNode(f.tree,n=>n.type==='pre').props.children,'Last retained part');
+  assert.equal(button(f.tree,'Next part'),undefined);
+ }finally{f.h.dispose();}
+});

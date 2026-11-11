@@ -12,14 +12,21 @@ import browserStyles from './collection-browser.module.css';
 function RecordField({value,id,database,record,field}:{value:unknown;id:string;database:string;record:string;field:string}){
  const [part,setPart]=useState<ArchiveAnswer|null>(null),[message,setMessage]=useState(''),[busy,setBusy]=useState(false);
  const request=useRef<AbortController|null>(null);
- useEffect(()=>()=>request.current?.abort(),[]);
+ useEffect(()=>()=>{const controller=request.current;request.current=null;controller?.abort();},[]);
  const long=!!value&&typeof value==='object'&&'longField' in value&&'preview' in value;
  async function read(start=0){
   request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage('Loading field…');
-  const timer=setTimeout(()=>controller.abort(),25000);
-  try{const result=await fetchArchive(`recovered-${database}`,{collection:id,record,field,start:String(start)},controller.signal);if(!controller.signal.aborted){setPart(result);setMessage('');}}
+  const timer=setTimeout(()=>{
+   if(request.current!==controller)return;
+   request.current=null;controller.abort();setBusy(false);setMessage('Field request timed out. Retry.');
+  },25000);
+  try{
+   const result=await fetchArchive(`recovered-${database}`,{collection:id,record,field,start:String(start)},controller.signal);
+   if(request.current!==controller||controller.signal.aborted)return;
+   setPart(result);setMessage('');
+  }
   catch{if(request.current===controller)setMessage('Field unavailable. Retry.');}
-  finally{clearTimeout(timer);if(request.current===controller)setBusy(false);}
+  finally{clearTimeout(timer);if(request.current===controller){request.current=null;setBusy(false);}}
  }
  if(!long)return <>{textValue(value)}</>;
  return <><p>{String(value.preview)}…</p><button type="button" disabled={busy} onClick={()=>void read()}>Open full field</button>{message&&<p role="status">{message}</p>}{part&&<><p>Characters {part.fieldChunk!.start+1}–{Math.min(part.fieldChunk!.characters,part.fieldChunk!.start+32768)} of {part.fieldChunk!.characters}</p><pre>{textValue((part.rows[0]?.values as Record<string,unknown>)?.[field])}</pre>{part.fieldChunk?.nextStart!==null&&<button type="button" disabled={busy} onClick={()=>void read(part.fieldChunk!.nextStart!)}>Next part</button>}</>}</>;
