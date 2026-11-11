@@ -381,3 +381,11 @@ Providers were blocked and APIs isolated. An initial new browser assertion
 incorrectly assumed Browse was already selected; the final fixture uses its
 visible control before checking topics. No assertion or deadline was waived.
 This is local synthetic navigation evidence, not actual hosted acceptance.
+
+
+First-head CI found one additional fixture coupling in `local-atlas.test.mjs`:
+it required the exact expression `if (restoredSourceStatus)` before executing
+the actual restoration block. The fixture now bounds that complete block by its
+existing status assignment and next-utility declaration. All eight legacy
+source-status combinations still assert panel mode/open state, closed PC utility
+and unchanged URL parameters. This is a fixture adaptation, not a waived check.
