@@ -85,6 +85,9 @@ This establishes a binary-transport compatibility defect, not an advisory
 bypass or RCE. It remains a separate framework follow-up; this dependency patch
 does not claim to repair it.
 
+The separate [Flight preload-normalization follow-up](flight-binary-preload-hints-20261111.md)
+records its reproduction and the repository helper that preserves binary rows.
+
 The RSC plugin still contains an unselected 19.2.6 fallback and Next contains
 its own unselected codec. The emitted-bundle checks guard the supported direct
 codec path; they do not claim those bundled copies were updated.
