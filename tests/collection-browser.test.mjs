@@ -39,7 +39,7 @@ test('collection URLs preserve text search, years, anchors and unrelated paramet
 });
 
 async function fixture({search='',hash='#collections',historyFails=false}={}){
- const calls=[],pending=[],focus=[],updates=[],startup=[],location={search,hash};
+ const calls=[],pending=[],focus=[],updates=[],startup=[],recordTimers=[],location={search,hash};
  const history={state:{router:'retained'},replaceState(state,_unused,url){
   if(historyFails)throw new Error('History unavailable');
   updates.push({state,url});const parsed=new URL(url,'https://example.test');location.search=parsed.search;location.hash=parsed.hash;
@@ -49,7 +49,7 @@ async function fixture({search='',hash='#collections',historyFails=false}={}){
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise(resolve=>pending.push(resolve));},rowLabel:row=>row.values.name,textValue:String},
   './search':{default:'archive-search'},'./freshness':{fetchCatalogFreshness:async()=>null,loadedThrough:()=>null,freshnessLine:()=>''},
   './collection-browser':model,'./library.module.css':css,'./collection-browser.module.css':css,
- },{URLSearchParams,location,history,setTimeout:(fn,ms)=>ms===0?(startup.push(fn),0):setTimeout(fn,ms)});
+ },{URLSearchParams,location,history,setTimeout:(fn,ms)=>ms===0?(startup.push(fn),0):ms===25000?(recordTimers.push(fn),{recordTimer:true}):setTimeout(fn,ms),clearTimeout:token=>{if(!token?.recordTimer)clearTimeout(token);}});
  const dispose=h.dispose;h.dispose=()=>{dispose();for(const resolve of pending)resolve(answer);};
  const render=()=>{
   const tree=h.render(h.exports.default,{});
@@ -58,7 +58,7 @@ async function fixture({search='',hash='#collections',historyFails=false}={}){
   h.commit();return tree;
  };
  let tree=render();startup.shift()();tree=render();await settle();tree=render();
- return {h,focus,updates,history,location,calls,pending,get tree(){return tree;},refresh(){tree=render();},
+ return {h,focus,updates,history,location,calls,pending,expireRecord(){recordTimers.shift()();},get tree(){return tree;},refresh(){tree=render();},
   change(value){input(tree).props.onChange({target:{value}});tree=render();},
   mapped(checked){findNode(tree,n=>n.type==='input'&&n.props.type==='checkbox').props.onChange({target:{checked}});tree=render();},
   choose(id){card(tree,id).props.onClick();tree=render();},
@@ -121,5 +121,29 @@ test('filtering and record completion do not steal focus, and changing collectio
   await f.answer();assert.equal(findNode(f.tree,n=>n.type==='button'&&n.props.children==='Download this page · JSON'),undefined);
   f.change('');assert.equal(f.focus.length,focused);
   f.click('Read first page');await f.answer();assert.equal(f.focus.length,focused);assert.ok(button(f.tree,'Download this page · JSON'));
+ }finally{f.h.dispose();}
+});
+
+
+test('unmount invalidates a late collection response even when transport ignores abort',async()=>{
+ const f=await fixture();try{
+  f.choose(firstReference.id);f.click('Read first page');
+  const finish=f.pending.shift();f.h.dispose();
+  assert.equal(f.calls[0].signal.aborted,true);
+  finish(answer);await settle();f.refresh();
+  assert.equal(button(f.tree,'Download this page · JSON'),undefined,'a disposed reader cannot retain a late downloadable page');
+ }finally{f.h.dispose();}
+});
+
+test('a timed-out collection response cannot become a page and an explicit retry still works',async()=>{
+ const f=await fixture();try{
+  f.choose(firstReference.id);f.click('Read first page');
+  f.expireRecord();assert.equal(f.calls[0].signal.aborted,true);
+  await f.answer();
+  assert.equal(button(f.tree,'Download this page · JSON'),undefined,'abort is a refusal boundary even if transport resolves');
+  assert.ok(findNode(f.tree,n=>n.props?.role==='status'&&n.props.children==='The archive did not respond in time. Retry when the PC is available.'));
+  assert.equal(button(f.tree,'Read first page').props.disabled,false);
+  f.click('Read first page');assert.equal(f.calls[1].signal.aborted,false);
+  await f.answer();assert.ok(button(f.tree,'Download this page · JSON'),'a new explicit request can still succeed');
  }finally{f.h.dispose();}
 });
