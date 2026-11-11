@@ -74,6 +74,8 @@
 .explorer-advanced-navigation[open] > summary::before { content: "−"; }
 .explorer-advanced-navigation summary span { margin-left: auto; color: #e6cf91; }
 .explorer-advanced-navigation nav { position: absolute; top: 100%; z-index: 8; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 8px; border: 1px solid #5a6b7e; border-radius: 7px; background: #182636; box-shadow: 0 12px 26px #0008; }
+.explorer-advanced-navigation nav { max-height: var(--advanced-menu-height,260px); overflow-y: auto; overscroll-behavior: contain; }
+.explorer-advanced-navigation[data-placement="above"] nav { top: auto; bottom: 100%; }
 .explorer-advanced-navigation button { min-height: 44px; padding: 8px; text-align: left; color: #e0e8ef; background: #ffffff05; border: 1px solid transparent; border-radius: 4px; font: inherit; font-size: 12px; }
 .explorer-advanced-navigation button:hover,.explorer-advanced-navigation button[aria-pressed="true"] { background: #314557; color: #f3dfa5; }
 .map-utility-panel .map-utility-heading { padding: 14px 16px 12px; }
