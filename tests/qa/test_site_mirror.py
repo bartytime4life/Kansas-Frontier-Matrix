@@ -2430,8 +2430,11 @@ def test_historical_replay_record_successor_preserves_recorded_bytes_and_holds()
         assert declaration['repository_base_sha256'] == declaration['previous_receipt_sha256'] == old_hash
         assert entry['site_sha256'] == (old['site_sha256'] if old else None)
         assert entry['state'] == declaration['state'] == (old['state'] if old and old['state'] != 'identical' else ('repository_safety_overlay' if old else 'repository_only_overlay'))
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
-        assert digest == entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
+        # The immutable historical receipt is hash-pinned above. The selected
+        # successor and strict inventory check bind all current application bytes.
+        assert entry['mirror_sha256'] == declaration['mirror_sha256'] != old_hash
+        if TOOL.RECEIPT == path:
+            assert hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest() == entry['mirror_sha256']
     for state, count in previous['counts'].items():
         expected_count = count + sum(entry['state'] == state for name, entry in after.items() if name not in before)
         expected_count += sum(after[name]['state'] == state for name in changed if name in before)
@@ -2568,3 +2571,14 @@ def test_zod_successor_preserves_flight_inventory_and_all_holds():
     selected = {name: entry["version"] for name, entry in lock["packages"].items()
                 if name.endswith("/node_modules/zod") or name == "node_modules/zod"}
     assert selected == {"node_modules/zod": "4.6.6"}
+
+
+def test_interval_recovery_successor_preserves_zod_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-interval-recovery-overlay-20261111.json",
+        "site-v268-zod-collection-security-overlay-20261111.json",
+        "c12677c0b6e91f386d1179ac6e13d280aff0f904d697be27ce14c31397c149f9",
+        {"app/observatory/workspace.tsx", "app/observatory/load-deadline.ts",
+         "tests/observatory-load-recovery.test.mjs", "docs/observatory-interval-recovery-20261111.md"},
+        "b4c07171560e19f8d72690dcaee03876f8b0e70e",
+    )

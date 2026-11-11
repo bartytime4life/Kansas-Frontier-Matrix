@@ -8,6 +8,7 @@ import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, geoJSONHasData, updateGeoJSON, uploadedGeoJSON } from "../map-performance";
 import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
 import { committedInspection, type InspectionFrame } from "./inspection";
+import { replayRead } from "./load-deadline";
 import type { FeatureCollection } from "geojson";
 import { DataNotices } from "../map-toolbar";
 import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
@@ -466,13 +467,18 @@ export default function EventObservatory() {
       const requestedEnd = new Date(Date.parse(requestedStart) + nextHours * 3_600_000).toISOString();
       let data: EventManifest;
       try {
-        const response = await fetch(`/api/event-atlas/manifest?${new URLSearchParams({ start: requestedStart, hours: String(nextHours) })}`, { signal: controller.signal });
-        const candidate = await response.json();
-        if (!response.ok || candidate.format !== "kfm-event-atlas-v1") throw new Error(candidate.message ?? "The interval could not be loaded.");
-        data = candidate as EventManifest;
+        data = await replayRead(async (signal) => {
+          const response = await fetch(`/api/event-atlas/manifest?${new URLSearchParams({ start: requestedStart, hours: String(nextHours) })}`, { signal });
+          const candidate = await response.json();
+          if (!response.ok || candidate.format !== "kfm-event-atlas-v1") throw new Error(candidate.message ?? "The interval could not be loaded.");
+          return candidate as EventManifest;
+        }, controller.signal, "The archive check took too long. Try loading the interval again; coverage was not confirmed.");
       } catch (failure) {
         if (controller.signal.aborted || !radarReplayMode) throw failure;
-        const saved = await readRadarIndex(calendarDay);
+        // Browser file storage has no AbortSignal API; bound the wait and reject
+        // late results before they can publish fallback state for another load.
+        const saved = await replayRead(() => readRadarIndex(calendarDay), controller.signal,
+          "Reading saved radar frames took too long. Try loading the interval again.", 15_000);
         const local = saved && radarManifestFromCache(saved, new Date(requestedStart).toISOString(), requestedEnd);
         if (!local) throw failure;
         data = local;
@@ -482,9 +488,12 @@ export default function EventObservatory() {
       let message = "No station selected";
       if (station) {
         try {
-          const hydro = await fetch(`/api/hydrology/streamflow?${new URLSearchParams({ mode: "station", range: "24h", parameter: "00060", station, end: data.end, resolution })}`, { signal: controller.signal });
-          const body = await hydro.json(); if (!hydro.ok) throw new Error(body.message ?? "Station data unavailable");
-          bundle = parseStreamflowBundle(body); message = bundle.observations.length ? `${bundle.observations.length} samples loaded${bundle.truncated ? " · PARTIAL" : ""}` : "No observations returned for this station and interval";
+          bundle = await replayRead(async (signal) => {
+            const hydro = await fetch(`/api/hydrology/streamflow?${new URLSearchParams({ mode: "station", range: "24h", parameter: "00060", station, end: data.end, resolution })}`, { signal });
+            const body = await hydro.json(); if (!hydro.ok) throw new Error(body.message ?? "Station data unavailable");
+            return parseStreamflowBundle(body);
+          }, controller.signal, "River observations took too long. Reload the interval to retry; river coverage was not confirmed.");
+          message = bundle.observations.length ? `${bundle.observations.length} samples loaded${bundle.truncated ? " · PARTIAL" : ""}` : "No observations returned for this station and interval";
         } catch (failure) { message = failure instanceof Error ? failure.message : "River observations unavailable"; }
       }
       if (token !== generation.current || controller.signal.aborted) return;
@@ -519,7 +528,7 @@ export default function EventObservatory() {
       setError(message);
       if (fullDaySweep) setCalendarLedger((current) => ({ ...current, [calendarDay]: { status: "failed", supportedHours: [], message } }));
     }
-    finally { if (token === generation.current) setLoading(false); }
+    finally { if (token === generation.current && !controller.signal.aborted) setLoading(false); }
   }, [start, hours, station, riverResolution, radarReplayMode, hideEventLayers]);
 
   const loadToday = useCallback(() => {
