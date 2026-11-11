@@ -1229,10 +1229,19 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       await p.wait(`!document.querySelector('.explorer-guide')`, 'blocked storage still permits dismissal');
     });
     await t.test('shared camera and retained source-status routes bypass without opt-out', async () => {
-      for (const url of ['/?c=-98.2,38.6&z=7&t=2026', '/?layers=sources', '/?maptab=localAtlas']) {
+      for (const url of ['/?c=-98.2,38.6&z=7&t=2026', '/?layers=sources', '/?maptab=localAtlas', '/?panel=layers']) {
         await p.open(url);
         assert.equal(await p.evaluate(`!!document.querySelector('.explorer-guide')`), false, url);
         assert.equal(await p.evaluate(`localStorage.getItem('kfm.explorer.guide.dismissed.v2')`), null);
+        if (url === '/?panel=layers') {
+          await p.wait(`document.querySelector('[aria-label="Map layers"]')?.getAttribute('aria-hidden') === 'false'`, 'library return opens Layers');
+          const browse = '[data-layer-view="official"]';
+          await p.wait(`(() => { const e=document.querySelector('${browse}'),r=e?.getBoundingClientRect();return e && !e.closest('[inert], [aria-hidden="true"]') && r.width>0 && r.height>0 && e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`, 'Browse is a visible, unobscured target');
+          const at = await p.evaluate(`(() => {const r=document.querySelector('${browse}').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+          for (const type of ['mousePressed', 'mouseReleased']) await p.call('Input.dispatchMouseEvent', {type, ...at, button:'left', clickCount:1});
+          await p.unobstructed('[aria-label="Layer topic"]');
+          assert.equal(await p.evaluate(`!!document.querySelector('#map-source-status')`), false, 'Layers does not open source status');
+        }
       }
     });
     await t.test('real Topics link and browser back/forward', async () => {
