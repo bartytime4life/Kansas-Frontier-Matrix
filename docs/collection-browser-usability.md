@@ -124,3 +124,55 @@ The existing app/data-library implementation, collection-browser tests and
 this behavior document own the change; no new responsibility root or schema
 is introduced. Revert these three files together to roll back the source fix.
 Publication remains separate and on hold.
+
+## Comparison desk — November 11, 2026
+
+After reading a collection page, open a record and choose **Pin for comparison**.
+Up to four pinned records remain together while changing collections, filters or
+record pages. Their original field names form the comparison rows. This aligns
+labels for reading only: it does not join locations, normalize units, infer dates,
+compute differences or establish a relationship between datasets. Null, absent,
+empty text and zero are distinct. Long-field markers remain explicitly labelled
+previews; pinning never fetches their full contents.
+
+Each pin is a detached copy bound to its collection, dataset and record identity,
+with the response's retrieval time, source context, cache status and original
+row provenance. Retrieval time is not observation time. Re-reading the same
+identity does not silently update a pin; remove and pin it again to replace it.
+The desk is browser memory only and ends when the page is left or reloaded.
+**Download comparison · JSON** exports those snapshots and an explicit
+`personal-comparison-not-a-release` label. No URL, storage write, background
+collection, provider request, map geometry inference or server upload is added.
+
+The desk refuses a fifth record, a record larger than 64 KiB (UTF-8 serialized
+snapshot including source context), or a combined set exceeding 200 field names.
+It explains the limit without truncating or evicting existing pins. The original
+page download remains available for larger records. Removing or clearing pins
+returns keyboard focus to the desk heading. The table scrolls within its labelled,
+keyboard-focusable region on narrow screens instead of widening the page.
+
+Placement follows the existing responsibility owners: `app/data-library/` for
+archive interaction, `tests/collection-browser.test.mjs` for model/component
+regressions, and this `docs/` behavior record. This follows the responsibility
+placement basis of Directory Rules v2 / accepted ADR-0029; no new root, canonical
+schema, registry, dataset, release or proof home is created. The JSON document is
+a personal client export, not an EvidenceBundle or an admission receipt.
+
+The live welcome/start page, native Staging, monorepo mirror, installed PC and
+persistent stores are outside this change. Revert the comparison commit's five
+files together; no persisted-data migration or rollback is needed. Source review,
+private Staging adoption and public publication remain separate; publication is
+on hold.
+
+Local validation: 53 changed-area and neighboring archive tests pass without
+skips, including five new model/component cases; production build and TypeScript
+pass. Three hydrated Chrome 157 checks at 1280, 390 and 320 CSS px use synthetic
+records and block off-origin requests. They check native keyboard pinning,
+cross-collection retention, zero/missing/preview values, bounded page width,
+keyboard table scrolling, actual JSON download contents and clear/focus recovery.
+The first browser attempt omitted the Enter character event; the diagnostic
+retained an untouched Pin button and no runtime exception. The harness then used
+the repository's full native key sequence; no application assertion or deadline
+was weakened. This is local synthetic UI evidence, not real-source comparison,
+physical-phone, screen-reader or deployed acceptance. Changed-file lint has zero
+errors and the existing generation-ref cleanup warning.

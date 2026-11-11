@@ -9,7 +9,7 @@ const collections=library.RECOVERED_COLLECTIONS;
 const css={default:new Proxy({},{get:(_target,key)=>String(key)})};
 const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
 const input=tree=>findNode(tree,n=>n.type==='input'&&n.props.type==='search');
-const heading=tree=>findNode(tree,n=>n.type==='h2'&&n.props.ref);
+const heading=tree=>findNode(tree,n=>n.type==='h2'&&n.props.ref&&n.props.className==='heading');
 const card=(tree,id)=>findNode(tree,n=>n.type==='button'&&findNode(n,c=>c.type==='strong'&&c.props.children===library.recoveredCollection(id).title));
 const firstMapped=collections.find(c=>c.geometry),firstReference=collections.find(c=>!c.geometry);
 const answer={dataset:'recovered-observations',total:null,count:1,rows:[{id:'synthetic-row',values:{name:'Synthetic record'}}],hasMore:false,nextCursor:null,generatedAt:'2026-11-10T00:00:00Z',source:{notes:'Synthetic UI fixture only'}};
@@ -55,6 +55,7 @@ async function fixture({search='',hash='#collections',historyFails=false}={}){
   const tree=h.render(h.exports.default,{});
   input(tree).props.ref.current={focus:()=>focus.push('finder')};
   const title=heading(tree);if(title)title.props.ref.current={focus:()=>focus.push(title.props.children),scrollIntoView(){}};
+  findNode(tree,n=>n.props?.id==='archive-comparison-heading').props.ref.current={focus:()=>focus.push('comparison')};
   h.commit();return tree;
  };
  let tree=render();startup.shift()();tree=render();await settle();tree=render();
@@ -204,5 +205,64 @@ test('long-field paging retains its last part on failure and retries the same so
   assert.ok(f.calls.every(c=>c.dataset==='recovered-bulk'));
   assert.equal(findNode(f.tree,n=>n.type==='pre').props.children,'Last retained part');
   assert.equal(button(f.tree,'Next part'),undefined);
+ }finally{f.h.dispose();}
+});
+
+const comparisonCollection=library.recoveredCollection('observations-kgs-wells');
+function comparisonAnswer(row={id:'same-id',values:{name:'Synthetic well',depth:0},provenance:{receipt:'synthetic'}}){
+ return {...answer,collection:comparisonCollection.id,rows:[row],source:{provider:'Synthetic source',notes:'Test only',coverage:'One record'},cache:{state:'stale',at:'2026-11-09T00:00:00Z'}};
+}
+test('comparison copies source-bound records and keeps the original pinned edition',()=>{
+ const a=comparisonAnswer(),original=structuredClone(a.rows[0]);
+ const pinned=model.pinComparison([],comparisonCollection,a.rows[0],a);
+ a.rows[0].values.depth=12;a.source.notes='Changed';
+ assert.deepEqual(pinned[0].row,original);assert.equal(pinned[0].source.notes,'Test only');
+ assert.equal(pinned[0].retrievedAt,answer.generatedAt);assert.equal(pinned[0].cache.state,'stale');
+ const repeat=model.pinComparison(pinned,comparisonCollection,a.rows[0],a);
+ assert.equal(repeat.length,1);assert.equal(repeat[0].row.values.depth,0,'rereading does not silently replace a pinned edition');
+ const other={...comparisonCollection,id:'other-source',title:'Other source'};
+ const two=model.pinComparison(pinned,other,a.rows[0],{...a,collection:other.id});
+ assert.equal(two.length,2,'identical row ids from different collections stay distinct');
+ const exported=model.comparisonExport(two);
+ assert.equal(exported.status,'personal-comparison-not-a-release');
+ assert.deepEqual(JSON.parse(JSON.stringify(exported)).records[0],pinned[0]);
+});
+test('comparison refuses detached records, mismatched sources, missing identity and bounded-capacity overflow without evicting',()=>{
+ const a=comparisonAnswer();
+ assert.throws(()=>model.pinComparison([],comparisonCollection,{...a.rows[0]},a),/tied/);
+ for(const change of [{dataset:'other'},{collection:'other'}])assert.throws(()=>model.pinComparison([],comparisonCollection,a.rows[0],{...a,...change}),/tied/);
+ const missing=comparisonAnswer({values:{depth:1}});assert.throws(()=>model.pinComparison([],comparisonCollection,missing.rows[0],missing),/tied/);
+ let pins=[];for(let i=0;i<4;i++){const next=comparisonAnswer({id:String(i),values:{depth:i}});pins=model.pinComparison(pins,comparisonCollection,next.rows[0],next);}
+ const fifth=comparisonAnswer({id:'fifth',values:{depth:5}});assert.throws(()=>model.pinComparison(pins,comparisonCollection,fifth.rows[0],fifth),/four records/);assert.equal(pins.length,4);
+ const large=comparisonAnswer({id:'large',values:{text:'🌻'.repeat(17000)}});assert.throws(()=>model.pinComparison([],comparisonCollection,large.rows[0],large),/64 KiB/);
+ const many=comparisonAnswer({id:'many',values:Object.fromEntries(Array.from({length:201},(_,i)=>['field'+i,i]))});assert.throws(()=>model.pinComparison([],comparisonCollection,many.rows[0],many),/200-field/);
+});
+test('comparison distinguishes missing, null, zero, false, blank and preview values without conversions or prototype lookup',()=>{
+ const row=JSON.parse('{"id":"typed","values":{"zero":0,"null":null,"false":false,"blank":"","units":"ft","date":"1900-01-02","__proto__":"original field","long":{"longField":true,"preview":"excerpt"}}}');
+ const a=comparisonAnswer(row),[pin]=model.pinComparison([],comparisonCollection,row,a);
+ assert.deepEqual(model.comparisonFields([pin]),Object.keys(row.values));
+ for(const [field,expected]of Object.entries({zero:'0',null:'Not supplied (null)',false:'false',blank:'Empty text',absent:'Field absent',toString:'Field absent',units:'ft',date:'1900-01-02',long:'Preview only: excerpt'}))assert.equal(model.comparisonValue(pin,field),expected);
+ assert.equal(model.comparisonValue(pin,'__proto__'),'original field');
+ assert.deepEqual(pin.row.values.long,row.values.long);
+});
+test('comparison stays across collection changes, requires explicit pinning, preserves map choices and restores focus on removal',async()=>{
+ const f=await fixture();try{
+  f.choose(comparisonCollection.id);f.click('Read first page');await f.answer(comparisonAnswer());
+  assert.equal(findNode(f.tree,n=>n.type==='table'),undefined);
+  f.click('Pin for comparison');assert.ok(findNode(f.tree,n=>n.type==='table'));
+  assert.ok(button(f.tree,'Unpin from comparison'));assert.equal(f.calls.length,1,'pinning does not fetch');
+  f.choose(firstMapped.id);f.click('Add to map selection');
+  assert.ok(findNode(f.tree,n=>n.type==='table'));assert.ok(button(f.tree,'Remove from map selection'));
+  const remove=findNode(f.tree,n=>n.type==='button'&&n.props['aria-label']?.startsWith('Remove KGS Wells record'));
+  remove.props.onClick();f.refresh();assert.equal(f.focus.at(-1),'comparison');
+  assert.equal(findNode(f.tree,n=>n.type==='table'),undefined);assert.ok(button(f.tree,'Remove from map selection'));assert.equal(f.calls.length,1);
+ }finally{f.h.dispose();}
+});
+test('unpinning and clearing affect only comparison memory, not the current response or original data',async()=>{
+ const f=await fixture();try{
+  const a=comparisonAnswer(),before=structuredClone(a);f.choose(comparisonCollection.id);f.click('Read first page');await f.answer(a);
+  f.click('Pin for comparison');f.click('Unpin from comparison');assert.equal(findNode(f.tree,n=>n.type==='table'),undefined);
+  f.click('Pin for comparison');f.click('Clear comparison');assert.equal(f.focus.at(-1),'comparison');
+  assert.ok(button(f.tree,'Download this page · JSON'));assert.ok(button(f.tree,'Pin for comparison'));assert.deepEqual(a,before);
  }finally{f.h.dispose();}
 });

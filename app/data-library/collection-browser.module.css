@@ -14,3 +14,20 @@
 /* Keep selected-map actions in the document, leaving record controls uncovered. */
 .selectionTray.selectionTray{position:static;margin:0 0 24px;box-shadow:none}
 .mapLink{display:inline-flex;align-items:center;min-height:44px;padding:10px 0}
+
+.comparison{min-width:0;margin:0 0 28px;padding:clamp(16px,3vw,30px);background:#122b35;border:1px solid #35515a;border-radius:16px}
+.comparisonScroll{max-width:100%;max-height:min(65vh,640px);overflow:auto;overscroll-behavior-inline:contain;border:1px solid #48636b;border-radius:8px}
+.comparisonTable{border-collapse:collapse;table-layout:fixed;width:max-content;min-width:100%;font-size:13px}
+.comparisonTable caption{text-align:left;padding:12px;color:#bfd0d0}
+.comparisonTable th,.comparisonTable td{vertical-align:top;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #35515a;padding:12px;width:240px;max-width:240px}
+.comparisonTable th:first-child{width:140px;max-width:140px}
+.comparisonTable th{background:#17323d}
+.comparisonTable th small{display:block;margin:8px 0;color:#bfd0d0;font-weight:400}
+.comparisonTable p{margin:0 0 8px}
+.comparisonTable pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:280px;overflow:auto;font:inherit}
+.comparisonTable summary{font-weight:400}
+@media(max-width:700px){.comparisonTable th,.comparisonTable td{width:210px;max-width:210px}.comparisonTable th:first-child{width:110px;max-width:110px}}
+
+.comparisonTable th:first-child{position:sticky;left:0;z-index:1;background:#17323d}
+.comparisonTable thead th{position:sticky;top:0;z-index:2;background:#17323d}
+.comparisonTable thead th:first-child{z-index:3}
