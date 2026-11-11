@@ -2028,6 +2028,57 @@ async function pointAtTimeControl(p,selector,touch=false){
  await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
 }
 
+for(const menu of ['map','more'])for(const [width,height]of [[390,844],[768,1024],[1280,900]]){
+ test(`keyboard header ${menu} menu owns the foreground at ${width}px`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height),panel=menu==='map'?'.map-dock-map-menu':'.header-overflow-menu',summary=panel+' > summary';
+  const action=menu==='map'?width<=1100?panel+' [aria-controls="compact-time-settings"]':panel+' [aria-label="Style and basemap"]':panel+' .header-overflow-workspaces button';
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time opens from its clock');
+  const state=()=>p.evaluate(`({url:location.href,date:['Sweep year or earlier era','Sweep month','Sweep day'].map(label=>document.querySelector('[aria-label="'+label+'"]').value),scroll:document.documentElement.scrollTop})`),initial=await state();
+  const enterMenu=async()=>{
+   await p.evaluate(`document.querySelector(${JSON.stringify(summary)}).focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector(${JSON.stringify(panel)}).open&&!document.querySelector('#compact-time-settings')&&document.querySelector('.compact-time').dataset.expanded==='false'`,'the native header opening dismisses Time without pointer input');
+   assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(summary)})`),true,'the menu summary keeps keyboard focus');
+   await p.wait(`(() => {const el=document.querySelector(${JSON.stringify(action)}),r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'header action is visible and not covered by Time');
+  };
+  await enterMenu();assert.deepEqual(await state(),initial,'menu ownership never seeks, navigates or scrolls the page');
+  await p.key('Tab','Tab',9);await p.wait(`document.querySelector(${JSON.stringify(panel)}).contains(document.activeElement)&&document.activeElement!==document.querySelector(${JSON.stringify(summary)})`,'Tab enters the opened menu');
+  await p.wait(`(() => {const el=document.activeElement,r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'the keyboard destination is visible');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width,height,scale:1},captureBeyondViewport:false});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`header-${menu}-${width}.png`),Buffer.from(shot.data,'base64'));}
+  await p.key('Escape','Escape',27);await p.wait(`!document.querySelector(${JSON.stringify(panel)}).open&&document.activeElement===document.querySelector(${JSON.stringify(summary)})`,'Escape closes the menu and returns to its summary');
+  assert.equal(await p.evaluate(`!!document.querySelector('#compact-time-settings')`),false,'closing a menu does not resurrect Time');
+  await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time can be reopened normally');
+  assert.deepEqual(await state(),initial);
+  const destination=menu==='map'&&width>1100?'.map-dock-actions [aria-controls="compact-time-settings"]':action;
+  await enterMenu();await p.evaluate(`document.querySelector(${JSON.stringify(destination)}).focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`!document.querySelector(${JSON.stringify(panel)}).open`,'the chosen menu action closes its native menu');
+  if(menu==='map'){
+   await p.wait(`!!document.querySelector('#compact-time-settings')`,'the Time action survives the queued closed-menu toggle event');
+   assert.deepEqual(await state(),initial);
+  }else await p.wait(`!document.querySelector('#compact-time-settings')`,'returning to Map keeps Time dismissed');
+ });
+}
+
+test('keyboard header opening also dismisses transport-only Time',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,390,844);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time opens');
+ await p.evaluate(`document.querySelector('.compact-time-more').focus()`);await p.key('Enter','Enter',13);await p.wait(`!document.querySelector('#compact-time-settings')&&document.querySelector('.compact-time').dataset.expanded==='true'`,'transport-only mode is retained');
+ await p.evaluate(`document.querySelector('.map-dock-map-menu > summary').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.map-dock-map-menu').open&&document.querySelector('.compact-time').dataset.expanded==='false'`,'the header menu owns the whole time surface');
+ assert.equal(await p.evaluate(`document.activeElement===document.querySelector('.map-dock-map-menu > summary')`),true);
+});
+
+test('local Time details do not trigger header-menu dismissal',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,390,844);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time opens');
+ const summary='.compact-time-source-details > summary';
+ await p.evaluate(`document.querySelector(${JSON.stringify(summary)}).focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.compact-time-source-details').open&&!!document.querySelector('#compact-time-settings')`,'local source-clock details stay within Time');
+ await p.key('Enter','Enter',13);await p.wait(`!document.querySelector('.compact-time-source-details').open&&!!document.querySelector('#compact-time-settings')`,'closing local details also keeps Time open');
+});
+
 for(const width of [1280,1101]){
  test(`Time pointer toggle matches keyboard behavior at ${width}px`,{timeout:120000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,900),trigger='.map-dock-actions [aria-controls="compact-time-settings"]';
