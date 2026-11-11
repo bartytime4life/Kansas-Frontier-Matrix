@@ -2016,6 +2016,67 @@ test('responsive layer sheet retains map focus and a foreground share keeps its 
  }
 });
 
+async function pointAtTimeControl(p,selector,touch=false){
+ const encoded=JSON.stringify(selector);
+ await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+ await p.evaluate(`Promise.all([...document.querySelectorAll('.compact-time,.compact-time-row,.compact-time-popover')].flatMap(node=>node.getAnimations()).map(animation=>animation.finished.catch(()=>{})))`);
+ await p.wait(`(() => {const el=document.querySelector(${encoded}),r=el?.getBoundingClientRect();return r&&r.width>0&&r.height>0&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'Time action is visible and hit-testable');
+ const point=await p.evaluate(`(() => {const r=document.querySelector(${encoded}).getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+ if(touch){await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
+ else{await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...point,button:'none',buttons:0});for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...point,button:'left',buttons:type==='mousePressed'?1:0,clickCount:1});}
+ // Check the settled click result, not the transient pointer-down dismissal.
+ await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+}
+
+for(const width of [1280,1101]){
+ test(`Time pointer toggle matches keyboard behavior at ${width}px`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,900),trigger='.map-dock-actions [aria-controls="compact-time-settings"]';
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  const initialUrl=await p.evaluate('location.href');
+  const opened=()=>p.wait(`!!document.querySelector('#compact-time-settings')&&document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')==='true'`,'Time opens once');
+  const closed=()=>p.wait(`!document.querySelector('#compact-time-settings')&&document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')==='false'&&document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-pressed')==='false'`,'Time closes after the complete activation');
+  await pointAtTimeControl(p,trigger+' strong');await opened();
+  const date=await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`);
+  await pointAtTimeControl(p,trigger+' strong');await closed();
+  assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(trigger)})`),true,'the clicked header trigger retains focus');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`time-toggle-closed-${width}.png`),Buffer.from(shot.data,'base64'));}
+  await p.key('Enter','Enter',13);await opened();await p.key(' ','Space',32);await closed();
+  // Clock entry deliberately keeps the transport available when settings close.
+  await pointAtTimeControl(p,'.compact-time-clock-toggle');await opened();await pointAtTimeControl(p,trigger+' strong');await closed();
+  assert.equal(await p.evaluate(`document.querySelector('.compact-time').dataset.expanded`),'true');
+  assert.equal(await p.evaluate(`document.querySelector('#compact-time-transport').inert`),false);
+  await pointAtTimeControl(p,'.compact-time-more');await opened();assert.equal(await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`),date);
+  await pointAtTimeControl(p,'.compact-time-more');await closed();
+  await pointAtTimeControl(p,'.compact-time-clock-toggle');
+  await p.wait(`document.querySelector('.compact-time').dataset.expanded==='false'`,'the clock still collapses the whole transport');
+  await pointAtTimeControl(p,trigger+' strong');await opened();
+  const outside={x:width-160,y:240};for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...outside,button:'left',buttons:type==='mousePressed'?1:0,clickCount:1});
+  await closed();assert.equal(await p.evaluate(`document.querySelector('.compact-time').dataset.expanded`),'false','an unrelated map pointer still dismisses Time');
+  assert.equal(await p.evaluate('location.href'),initialUrl,'toggle routing never seeks or navigates');
+ });
+}
+
+for(const [width,height]of [[390,844],[768,1024]]){
+ test(`Time touch and keyboard actions stay consistent from the Map menu at ${width}px`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height),summary='.map-dock-map-menu > summary',trigger='.map-dock-menu-quick [aria-controls="compact-time-settings"]';
+  await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  await pointAtTimeControl(p,summary,true);await p.wait(`document.querySelector('.map-dock-map-menu').open`,'Map menu opens by touch');
+  await pointAtTimeControl(p,trigger,true);await p.wait(`!!document.querySelector('#compact-time-settings')&&!document.querySelector('.map-dock-map-menu').open`,'touch selects Time and closes its menu');
+  const date=await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`);
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')`),'true');
+  await pointAtTimeControl(p,summary,true);await p.wait(`document.querySelector('.map-dock-map-menu').open&&!document.querySelector('#compact-time-settings')`,'touching Map dismisses Time before opening its menu');
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')`),'false');
+  await pointAtTimeControl(p,trigger,true);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time reopens once');
+  assert.equal(await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`),date);
+  await pointAtTimeControl(p,'.compact-time-clock-toggle',true);await p.wait(`!document.querySelector('#compact-time-settings')&&document.querySelector('.compact-time').dataset.expanded==='false'`,'the clock closes Time by touch');
+  await p.evaluate(`document.querySelector(${JSON.stringify(summary)}).focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.map-dock-map-menu').open`,'Map menu opens with the keyboard');
+  await p.evaluate(`document.querySelector(${JSON.stringify(trigger)}).focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')&&!document.querySelector('.map-dock-map-menu').open`,'keyboard selects the same Time window');
+  assert.equal(await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`),date);
+  await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('#compact-time-settings')&&document.activeElement?.getAttribute('aria-label')==='Open time sweep'`,'Escape returns to the visible clock');
+ });
+}
+
 for(const [control,label,targetWidth] of [
  ['year','Sweep year or earlier era',390],['month','Sweep month',390],['day','Sweep day',390],
  ['previous','Previous sweep frame',760],['compare','Pin or compare dates',760],['scrubber','Scrub time sweep',760],

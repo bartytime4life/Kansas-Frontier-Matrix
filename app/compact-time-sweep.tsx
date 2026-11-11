@@ -100,7 +100,13 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
   }, [shown]);
   useEffect(() => {
     if (!shown) return;
-    const dismiss = (event: PointerEvent) => { if (event.target instanceof Node && !rootRef.current?.contains(event.target)) { onOpenChange(false); setExpanded(false); } };
+    const dismiss = (event: PointerEvent) => {
+      if (!(event.target instanceof Node) || rootRef.current?.contains(event.target)) return;
+      // An external Time toggle owns its click transition. Closing here first
+      // would make that same click reopen the settings it meant to close.
+      if (event.target instanceof Element && event.target.closest('[aria-controls="compact-time-settings"]')) return;
+      onOpenChange(false); setExpanded(false);
+    };
     document.addEventListener("pointerdown", dismiss);
     return () => document.removeEventListener("pointerdown", dismiss);
   }, [shown, onOpenChange]);
