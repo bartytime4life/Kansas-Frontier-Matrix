@@ -45,7 +45,7 @@ export default function DataLibrary(){
  useLayoutEffect(()=>{if(selectionVisit>0){collectionHeading.current?.focus();collectionHeading.current?.scrollIntoView({block:'start',behavior:'auto'});}},[selectionVisit]);
  useEffect(()=>{
   const token=setTimeout(()=>{const params=new URLSearchParams(location.search),value=params.get('collection'),find=(params.get('find')??'').slice(0,80);if(value&&recoveredCollection(value))setId(value);if(find.trim())setSearch(find);setMappedOnly(params.get('mapped')==='1');},0);
-  return()=>{clearTimeout(token);request.current?.abort();};
+  return()=>{clearTimeout(token);generation.current++;request.current?.abort();};
  },[]);
  useEffect(()=>{
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
@@ -66,6 +66,7 @@ export default function DataLibrary(){
   try{
    const result=await fetchArchive(`recovered-${collection.database}`,{collection:id,limit:'20',...(after?{after}:{})},controller.signal);
    if(version!==generation.current)return;
+   if(controller.signal.aborted){setStatus('The archive did not respond in time. Retry when the PC is available.');return;}
    setAnswer(result);setPage(n=>after?n+1:1);setStatus(result.count?`${result.count} records on this page. ${result.hasMore?'More pages are available.':'End of this collection.'}`:'This collection has no retained records.');
   }catch(error){if(version===generation.current)setStatus(controller.signal.aborted?'The archive did not respond in time. Retry when the PC is available.':error instanceof Error?error.message:'Archive unavailable.');}
   finally{clearTimeout(timer);if(version===generation.current)setBusy(false);}

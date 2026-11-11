@@ -75,3 +75,31 @@ and `collection-browser.module.css`; regressions live in
 `tests/collection-browser.test.mjs`. Revert the page changes and new helper,
 stylesheet and regressions together. No database migration or saved-data
 rollback is needed. Publication remains separate.
+
+## Request lifecycle correction — November 11, 2026
+
+A collection response must belong to the current mounted reader and a request
+that has not timed out. Cleanup now invalidates its generation as well as
+aborting transport. A late successful transport result is rejected when its
+signal has already been aborted; the active reader explains the timeout and
+allows an explicit retry. Changing collections still refuses the older result.
+
+At base `beed3bbcdb6ef9e65c17f9c481be171f63c3dc8d`, two controlled regressions
+show a late result becoming a downloadable page after unmount or timeout. The
+fixtures deliberately resolve after abort, so transport cooperation cannot hide
+the race. Tests also verify that a fresh retry can succeed. The test clock fires
+the existing 25-second deadline deterministically; production deadlines do not
+change. These are synthetic component observations, not provider data reads.
+
+The public archive configuration, all catalog descriptions, connected reads,
+map selection, welcome page and existing stored records remain intact. Native
+Staging's unconfigured-service policy is not transferred here. Existing `app/`,
+`tests/` and `docs/` own the correction. Reverting the three-file commit rolls
+back this behavior without any database or data migration. No deployment or
+publication is authorized by this source change.
+
+Local validation of this correction: all 23 collection-browser, archive-search
+and freshness tests pass with no skips; production build and TypeScript pass.
+The two new cases fail before the implementation change. Existing collection
+switch, focus, metadata/source identity and connected-search coverage is retained.
+No browser/provider data acceptance is inferred from these component fixtures.
