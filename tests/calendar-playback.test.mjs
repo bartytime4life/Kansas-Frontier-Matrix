@@ -62,19 +62,20 @@ class PointerNode {
 }
 class PointerElement extends PointerNode {
   constructor(parent=null,controls=null){super(parent);this.controls=controls;}
-  closest(selector){const id=selector.match(/^\[aria-controls="([^"]+)"\]$/)?.[1];return id&&this.controls===id?this:this.parent?.closest?.(selector)??null;}
+  matches(selector){return Boolean(this.open&&this.menuClass&&selector.includes(`details.${this.menuClass}[open]`));}
+  closest(selector){const id=selector.match(/^\[aria-controls="([^"]+)"\]$/)?.[1];return selector==='.topbar'&&this.header||id&&this.controls===id?this:this.parent?.closest?.(selector)??null;}
 }
 async function pointerHarness(t,open=true){
-  const listeners=new Map(),root=new PointerElement(),changes=[];
+  const listeners=new Map(),captures=new Map(),root=new PointerElement(),changes=[];let focusFrames=0;
   const h=await componentHarness('app/compact-time-sweep.tsx',{
     './calendar-sweep':calendar,'./compact-time-sweep.css':{},'./time-controls-focus':{retainTimeControlFocus(){}},
-  },{Node:PointerNode,Element:PointerElement,window:{requestAnimationFrame:fn=>fn(),setTimeout,clearTimeout},document:{hidden:false,
-    addEventListener(type,fn){listeners.set(type,fn);},removeEventListener(type,fn){assert.equal(listeners.get(type),fn);listeners.delete(type);}}});
+  },{Node:PointerNode,Element:PointerElement,window:{requestAnimationFrame:fn=>{focusFrames++;fn();},setTimeout,clearTimeout},document:{hidden:false,
+    addEventListener(type,fn,capture=false){listeners.set(type,fn);captures.set(type,capture);},removeEventListener(type,fn,capture=false){assert.equal(listeners.get(type),fn);assert.equal(captures.get(type),capture);listeners.delete(type);captures.delete(type);}}});
   const props={value:null,year:2026,years:[2026],today:'2026-10-21',sources:[],open,
     onOpenChange(value){props.open=value;changes.push(value);},onSeek(){throw Error('Pointer routing must not seek a date');},onEra(){},onPresent(){}};
   const render=()=>{const tree=h.render(h.exports.CompactTimeSweep,props);tree.props.ref.current=root;h.commit();return tree;};
   t.after(()=>h.dispose());
-  return{props,changes,root,render,pointer:target=>listeners.get('pointerdown')?.({target})};
+  return{props,changes,root,render,listeners,captures,get focusFrames(){return focusFrames;},pointer:target=>listeners.get('pointerdown')?.({target}),toggle:target=>listeners.get('toggle')?.({target})};
 }
 test('the external Time toggle owns its click without a preceding outside-pointer dismissal',async t=>{
   const h=await pointerHarness(t);h.render();
@@ -96,4 +97,31 @@ test('the clock can retain transport-only mode and an outside pointer still clos
   findNode(tree,n=>n.props?.['aria-label']==='Time sweep settings').props.onClick();tree=h.render();
   assert.equal(h.props.open,false);assert.equal(tree.props['data-expanded'],true);assert.equal(findNode(tree,n=>n.props?.role==='dialog'),undefined);
   h.pointer(new PointerElement());tree=h.render();assert.equal(tree.props['data-expanded'],false);
+});
+
+function headerMenu(menuClass,open=true){const header=new PointerElement();header.header=true;const menu=new PointerElement(header);menu.menuClass=menuClass;menu.open=open;return menu;}
+test('native header-menu opening dismisses Time without changing or refocusing the menu',async t=>{
+  for(const name of ['map-dock-menu','header-overflow-menu']){
+    const h=await pointerHarness(t,false);let tree=h.render();
+    findNode(tree,n=>n.props?.className?.includes('compact-time-clock-toggle')).props.onClick();h.render();
+    const menu=headerMenu(name);h.toggle(menu);tree=h.render();
+    assert.equal(h.props.open,false);assert.equal(tree.props['data-expanded'],false);assert.equal(menu.open,true);
+    assert.equal(h.focusFrames,0,'header ownership must not schedule a return to the Time clock');
+  }
+});
+test('closed header menus, local Time details and unrelated details do not dismiss Time',async t=>{
+  const h=await pointerHarness(t);h.render();
+  const local=new PointerElement(h.root);local.open=true;local.menuClass='compact-time-source-details';
+  const elsewhere=new PointerElement();elsewhere.open=true;elsewhere.menuClass='map-dock-menu';
+  for(const target of [headerMenu('map-dock-menu',false),headerMenu('header-overflow-menu',false),headerMenu('unrelated-menu'),local,elsewhere])h.toggle(target);
+  assert.deepEqual(h.changes,[]);assert.equal(h.props.open,true);
+});
+test('header ownership also closes transport-only mode and removes its capturing toggle listener',async t=>{
+  const h=await pointerHarness(t,false);let tree=h.render();
+  findNode(tree,n=>n.props?.className?.includes('compact-time-clock-toggle')).props.onClick();tree=h.render();
+  findNode(tree,n=>n.props?.['aria-label']==='Time sweep settings').props.onClick();tree=h.render();
+  assert.equal(h.props.open,false);assert.equal(tree.props['data-expanded'],true);assert.equal(h.captures.get('toggle'),true);
+  h.toggle(headerMenu('map-dock-menu'));tree=h.render();
+  assert.equal(tree.props['data-expanded'],false);assert.equal(h.listeners.has('toggle'),false);assert.equal(h.captures.has('toggle'),false);
+  const changes=h.changes.length;h.toggle(headerMenu('header-overflow-menu'));assert.equal(h.changes.length,changes);
 });

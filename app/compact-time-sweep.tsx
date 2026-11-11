@@ -100,15 +100,26 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
   }, [shown]);
   useEffect(() => {
     if (!shown) return;
+    const hide = () => { onOpenChange(false); setExpanded(false); };
     const dismiss = (event: PointerEvent) => {
       if (!(event.target instanceof Node) || rootRef.current?.contains(event.target)) return;
       // An external Time toggle owns its click transition. Closing here first
       // would make that same click reopen the settings it meant to close.
       if (event.target instanceof Element && event.target.closest('[aria-controls="compact-time-settings"]')) return;
-      onOpenChange(false); setExpanded(false);
+      hide();
+    };
+    const headerMenuOpened = (event: Event) => {
+      const menu = event.target;
+      if (menu instanceof Element && menu.matches('details.map-dock-menu[open], details.header-overflow-menu[open]') && menu.closest(".topbar")) hide();
     };
     document.addEventListener("pointerdown", dismiss);
-    return () => document.removeEventListener("pointerdown", dismiss);
+    // Native details toggle does not bubble. Capture also covers keyboard and
+    // assistive-technology activation, without a competing focus return.
+    document.addEventListener("toggle", headerMenuOpened, true);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss);
+      document.removeEventListener("toggle", headerMenuOpened, true);
+    };
   }, [shown, onOpenChange]);
   const reveal = () => { setExpanded(true); onOpenChange(true); };
   const collapse = (returnFocus = false) => {
