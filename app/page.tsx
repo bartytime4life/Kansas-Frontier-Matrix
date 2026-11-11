@@ -6543,8 +6543,8 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const restoredSourceStatus = params.get("layers") === "sources" || restoredMapUtilityView === "localAtlas";
       setSourceStatusOpen(restoredSourceStatus);
-      setLeftOpen(restoredSourceStatus || (restoredTopic !== "all" && !restoredTopics.length));
-      if (restoredSourceStatus) setLeftPanelMode("layers");
+      setLeftOpen(restoredSourceStatus || params.get("panel") === "layers" || (restoredTopic !== "all" && !restoredTopics.length));
+      if (restoredSourceStatus || params.get("panel") === "layers") setLeftPanelMode("layers");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
         : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";

@@ -354,3 +354,38 @@ and passes with layout scheduling, retaining separate chooser and later-map
 entries. Existing identity, source-date/privacy, embedded-host and original exit
 contracts remain. Native browser assertions and deadlines are retained; local
 hook tests do not replace current-head browser or deployment acceptance.
+
+## Library return destination — November 11, 2026
+
+The existing data-library links use `/?panel=layers`. That exact value now
+bypasses automatic welcome and opens the editable Layers panel. It does not
+open source status or write the device's welcome preference. Plain `/`, empty
+or unknown panel values retain their existing welcome behavior. The starting
+page's presentation, category cards and styles are unchanged.
+
+At base `beed3bbcdb6ef9e65c17f9c481be171f63c3dc8d`, the added destination and
+actual-restoration regressions both fail before the fix. They exercise the
+production destination predicate and restoration statements, including starting
+from a different panel mode. Existing preference/history tests remain in place.
+This is navigation state only; no provider, data, runtime or access change.
+Implementation, regression and documentation stay in the existing `app/`,
+`tests/` and `docs/` responsibility roots. Revert this bounded change to roll
+back; no saved-data migration is required. Publication remains separate.
+
+Candidate validation: 59 focused model/component tests pass; production build
+and TypeScript pass. The existing production-build startup browser matrix
+passes 14 journeys at 1366×768 and 390×844 (16 TAP passes including parents),
+including the new library destination, native-pointer Browse activation,
+unobscured topic control, normal welcome, preferences and Back/Forward.
+Providers were blocked and APIs isolated. An initial new browser assertion
+incorrectly assumed Browse was already selected; the final fixture uses its
+visible control before checking topics. No assertion or deadline was waived.
+This is local synthetic navigation evidence, not actual hosted acceptance.
+
+
+First-head CI found one additional fixture coupling in `local-atlas.test.mjs`:
+it required the exact expression `if (restoredSourceStatus)` before executing
+the actual restoration block. The fixture now bounds that complete block by its
+existing status assignment and next-utility declaration. All eight legacy
+source-status combinations still assert panel mode/open state, closed PC utility
+and unchanged URL parameters. This is a fixture adaptation, not a waived check.

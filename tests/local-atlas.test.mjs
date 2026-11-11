@@ -77,16 +77,17 @@ test('hosted map mounts source status without mounting or importing the local-PC
 
 test('legacy local Atlas bookmarks reveal hosted source status without opening a PC utility', async () => {
  const page=await readFile('app/page.tsx','utf8');
- const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX),declarations=new Map();let reveal;
+ const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX),declarations=new Map();
  function visit(node){
   if(ts.isVariableDeclaration(node)&&node.initializer)declarations.set(node.name.getText(ast),node.initializer.getText(ast));
-  if(ts.isIfStatement(node)&&node.expression.getText(ast)==='restoredSourceStatus')reveal=node.getText(ast);
   ts.forEachChild(node,visit);
  }
- visit(ast);assert.ok(reveal);
+ visit(ast);
  const statusStart=page.indexOf('      setSourceStatusOpen(restoredSourceStatus);',page.indexOf('  const restoreExplorerFromUrl'));
  assert.ok(statusStart>0,'execute the complete status-state assignment');
- reveal=page.slice(statusStart,page.indexOf('      const nextMapUtilityView:',statusStart));
+ const statusEnd=page.indexOf('      const nextMapUtilityView:',statusStart);
+ assert.ok(statusEnd>statusStart,'the complete status restoration ends at the next utility decision');
+ const reveal=page.slice(statusStart,statusEnd);
  const code=['restoredMapUtilityView','restoredSourceStatus','nextMapUtilityView','restoredMapUtilityOpen']
   .map(name=>{assert.ok(declarations.has(name));return `const ${name} = ${declarations.get(name)};`;}).join('\n');
  const javascript=ts.transpileModule(`${code}\n${reveal}\nreturn {view:nextMapUtilityView,open:restoredMapUtilityOpen};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
