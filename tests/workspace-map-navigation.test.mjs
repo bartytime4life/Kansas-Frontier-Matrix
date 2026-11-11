@@ -236,7 +236,7 @@ test('map utility focus waits through its opening paint, suppresses draft focus 
   const code=ts.transpileModule(`return ${effect};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   for(const primaryWorkspace of ['reports','stories','map'])for(const mapUtilityOpen of [false,true])for(const cancelAt of ['commit','paint','after-focus']){
     const frames=[],focused=[],cancelled=new Set();let painted=false;
-    const scope={primaryWorkspace,mapUtilityOpen,mapUtilityPanelRef:{current:{}},visibleFocusableElements:()=>[{focus:()=>{assert.equal(painted,true);focused.push(primaryWorkspace);}}],window:{requestAnimationFrame(fn){frames.push(fn);return frames.length;},cancelAnimationFrame(id){cancelled.add(id);}}};
+    const scope={primaryWorkspace,mapUtilityOpen,mapUtilityFocusRequest:1,mapUtilityFocusEntryRef:{current:null},document:{activeElement:{}},mapUtilityPanelRef:{current:{}},visibleFocusableElements:()=>[{focus:()=>{assert.equal(painted,true);focused.push(primaryWorkspace);}}],window:{requestAnimationFrame(fn){frames.push(fn);return frames.length;},cancelAnimationFrame(id){cancelled.add(id);}}};
     const cleanup=new Function(...Object.keys(scope),code)(...Object.values(scope))();
     assert.deepEqual(focused,[]);const active=primaryWorkspace==='map'&&mapUtilityOpen;
     assert.equal(frames.length,active?1:0);
