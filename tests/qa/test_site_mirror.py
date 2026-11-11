@@ -2551,3 +2551,20 @@ def test_flight_binary_successor_preserves_immutable_history_and_all_holds():
          "tests/rsc-stream-hints.test.mjs", "docs/flight-binary-preload-hints-20261111.md"},
         "d4b02bfa6b5f0f27bb4e9b4374bf7578e80490c4",
     )
+
+
+def test_zod_successor_preserves_flight_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-zod-collection-security-overlay-20261111.json",
+        "site-v268-flight-binary-preload-overlay-20261111.json",
+        "2a88c1b8eed0121016dd4bb67a00efc865ff8f87990bc8629f1bd8666ab43eb1",
+        {"package.json", "package-lock.json", "tests/zod-collection-security.test.mjs",
+         "docs/zod-collection-security-20261111.md"},
+        "35c26af900e73c2473fd423ec42ed6b7602de997",
+    )
+    manifest = json.loads((TOOL.DESTINATION / "package.json").read_text())
+    lock = json.loads((TOOL.DESTINATION / "package-lock.json").read_text())
+    assert manifest["overrides"]["eslint-plugin-react-hooks"]["zod"] == "4.6.6"
+    selected = {name: entry["version"] for name, entry in lock["packages"].items()
+                if name.endswith("/node_modules/zod") or name == "node_modules/zod"}
+    assert selected == {"node_modules/zod": "4.6.6"}
