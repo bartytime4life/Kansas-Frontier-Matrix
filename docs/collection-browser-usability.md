@@ -103,3 +103,24 @@ and freshness tests pass with no skips; production build and TypeScript pass.
 The two new cases fail before the implementation change. Existing collection
 switch, focus, metadata/source identity and connected-search coverage is retained.
 No browser/provider data acceptance is inferred from these component fixtures.
+
+## Long-field request ownership — November 11, 2026
+
+Long retained fields keep the last successfully read part when a later part
+fails. The existing 25-second timeout now releases the reading control and
+shows an explicit retry message immediately, even if a transport remains
+pending. A closed or expired reader no longer owns response/error updates;
+only its current request can commit text or change the loading state. A retry
+keeps the same source collection, record, field and next-part offset.
+
+Controlled component regressions reproduce the former blocked retry and late
+unmount error before the repair. They verify immediate timeout recovery,
+refusal of late text, normal pagination, retained text on failure and retry of
+the same offset. These use synthetic records and do not establish live PC,
+provider or hosted-browser acceptance. No source records, welcome cards,
+starting-page layout, archive access policy or server limits are changed.
+
+The existing app/data-library implementation, collection-browser tests and
+this behavior document own the change; no new responsibility root or schema
+is introduced. Revert these three files together to roll back the source fix.
+Publication remains separate and on hold.
