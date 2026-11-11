@@ -16,14 +16,20 @@ if(kind==='mixed-alias'){second=new DataView(backing);}
 if(kind==='partial'){first=view.subarray(0,5000);second=view.subarray(5000);first.fill(1);second.fill(2);}
 if(kind==='independent'){second=new Uint8Array(10000).fill(3);}
 if(kind==='independent-data-view'){second=new DataView(new Uint8Array(10000).fill(3).buffer);}
+if(kind==='binary'){
+ for(let i=0;i<view.length;i++)view[i]=i%256;
+ view.set(new TextEncoder().encode('\\n:HL["/inside-binary.css","stylesheet"]\\n'),4096);
+ second=new DataView(new Uint8Array([255,128,10,0,1,2]).buffer);
+}
+const label=kind==='large-text'?'🦕\\n:HL["/inside-text.css","stylesheet"]\\n'.repeat(1000):'ordinary Flight data';
 const errors=[];
 const render=(model,options)=>renderToReadableStream(model,{},options);
 let renderer=render;
 if(wrapped){
- const {createRscRenderer}=await import(new URL('./server/rsc-stream-hints.js',import.meta.resolve('vinext')));
+ const {createRscRenderer}=await import('./server/rsc-stream-hints.mjs');
  renderer=createRscRenderer(render);
 }
-const stream=await renderer(Promise.resolve({label:'ordinary Flight data',first,second}),
+const stream=await renderer(Promise.resolve({label,first,second}),
  {onError(error){errors.push(String(error.message));return 'KFM_TYPED_ARRAY_REGRESSION';}});
 try{
  const wire=Buffer.from(await new Response(stream).arrayBuffer()).toString('base64');
@@ -73,6 +79,17 @@ test('Vinext preserves the ordinary independent-array control',()=>{
  assert.equal(result.decoded.label,'ordinary Flight data');
  assert.deepEqual(result.decoded.first,new Array(10000).fill(7));assert.deepEqual(result.decoded.second,new Array(10000).fill(3));
 });
+test('the selected Vinext wrapper preserves non-UTF8 binary and hint-like bytes',()=>{
+ const result=roundTrip('wrapped-binary');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
+ const expected=Uint8Array.from({length:10000},(_,i)=>i%256);
+ expected.set(new TextEncoder().encode('\n:HL["/inside-binary.css","stylesheet"]\n'),4096);
+ assert.deepEqual(result.decoded.first,Array.from(expected));
+ assert.equal(result.decoded.secondType,'DataView');assert.deepEqual(result.decoded.second,[255,128,10,0,1,2]);
+});
+test('the selected Vinext wrapper preserves long Unicode text with embedded rows',()=>{
+ const result=roundTrip('wrapped-large-text');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
+ assert.equal(result.decoded.label,'🦕\n:HL["/inside-text.css","stylesheet"]\n'.repeat(1000));
+});
 test('Flight keeps an independent DataView intact',()=>{
  const result=roundTrip('independent-data-view');assert.deepEqual(result.errors,[]);assert.equal(result.decoded.status,'fulfilled');
  assert.equal(result.decoded.secondType,'DataView');assert.deepEqual(result.decoded.second,new Array(10000).fill(3));
@@ -94,5 +111,9 @@ test('both built server environments use the declared direct Flight package',asy
   assert.doesNotMatch(code,/@vitejs\/plugin-rsc\/dist\/vendor\/react-server-dom\/cjs\//,file+' excludes the unselected plugin fallback');
   assert.doesNotMatch(code,/node_modules\/next\/dist\/compiled\/react-server-dom/,file+' does not select Next\'s separate bundled codec');
   if(file==='dist/server/index.js')assert.ok(code.includes(JSON.stringify(version)),file+' contains the declared React version guard');
+  if(file==='dist/server/index.js'){
+   assert.match(code,/server\/rsc-stream-hints.mjs/, 'the generated RSC renderer selects the repository helper');
+   assert.doesNotMatch(code,/node_modules\/vinext\/dist\/server\/rsc-stream-hints.js/, 'the text-only helper is not selected');
+  }
  }
 });
