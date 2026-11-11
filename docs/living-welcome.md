@@ -1136,3 +1136,24 @@ has no established cause and is not claimed fixed by this change.
 Placement remains within the existing `app/`, `tests/` and `docs/` responsibility
 roots described above. Rollback is a revert; no data, stored preferences,
 provider settings, hosting configuration or publication state changes.
+
+### Escape ownership across expanded previews (November 11, 2026)
+
+An expanded category preview owns Escape before preferences or topic-filter
+disclosures left open behind it. Source notes still close first and restore
+their trigger; the next Escape returns to the original preview card. Once the
+categories are visible again, an open disclosure keeps its normal close and
+summary-focus action before a further Escape dismisses the chooser. Active
+disclosures containing the focused control retain their own priority.
+
+The repair preserves the current cards, category order, responsive layout,
+preview content and water-animation defaults. Component tests cover retained
+background preferences and filters; the existing browser journey retains its
+close-button geometry, native input, modal isolation and focus assertions,
+and now explicitly checks the restored preferences close step. Original
+failing CI and local reproduction remain separate from candidate validation.
+
+Implementation, tests and this document stay in their existing ownership
+roots under Directory Rules / ADR-0029. No new source, schema, data release or
+runtime authority is introduced. Revert this focused source/test/document
+change to roll back; deployment and publication remain separate.

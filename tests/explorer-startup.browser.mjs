@@ -1319,6 +1319,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
       assert.equal(await p.evaluate(`document.activeElement === document.querySelector(${JSON.stringify(selector)})`), true, 'focus returns to opening control');
       assert.equal(await p.evaluate(`document.querySelector('header.topbar').inert`), true, 'map header stays inert while the chooser remains open');
     }
+    assert.equal(await p.evaluate(`document.querySelector('.welcome-preferences').open`),true,'Map notes leaves its owning preferences disclosure open');
     await p.evaluate(`document.querySelector('.topic-preview-weather').focus()`);
     await p.key('Enter', 'Enter', 13);
     await openStageNotes(p);
@@ -1327,6 +1328,8 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
     await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.welcome-layer-demo-actions button:last-child')`, 'Escape restores the source-notes action');
     await p.key('Escape','Escape',27);
     await p.wait(`document.activeElement?.matches('.topic-preview-weather')`, 'Escape returns to the original card');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`!document.querySelector('.welcome-preferences').open && document.activeElement===document.querySelector('.welcome-preferences > summary')`, 'the next Escape closes the now-visible preferences and restores its summary');
     await p.key('Escape', 'Escape', 27);
     await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement?.matches('.guide-trigger')`, 'next Escape closes welcome and returns focus to the guide trigger');
   });

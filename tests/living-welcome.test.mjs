@@ -1109,3 +1109,24 @@ test('preview and source-note map actions open only their named category with ot
   }finally{h.harness.dispose();}
  }
 });
+
+test('expanded preview Escape ignores background disclosures but retains their later close action',async()=>{
+ for(const selector of ['.topic-filters','.welcome-preferences']){
+  const h=await welcome();let tree=h.render();
+  const summary={focus(){h.env.document.activeElement=this;}},card={focus(){h.env.document.activeElement=this;}},back={focus(){h.env.document.activeElement=this;}};
+  const disclosure={open:true,querySelector:()=>summary};
+  const root={contains:()=>true,querySelector:query=>query.includes(selector)&&disclosure.open?disclosure:query==='.topic-preview-weather'?card:query==='.welcome-preview-expand'?back:null};
+  rootOf(tree).props.ref.current=root;
+  const escape=()=>h.env.listeners.get('keydown')({key:'Escape',target:h.env.document.activeElement,preventDefault(){},stopImmediatePropagation(){}});
+  try{
+   previewCard(tree,'weather').props.onClick();tree=h.render();
+   assert.equal(rootOf(tree).props['data-fullscreen'],true);
+   escape();tree=h.render();
+   assert.equal(rootOf(tree).props['data-fullscreen'],false,'the visible expanded preview owns Escape');
+   assert.equal(disclosure.open,true,'background choice is preserved while hidden');
+   assert.equal(h.env.document.activeElement,card);
+   escape();tree=h.render();assert.equal(disclosure.open,false);assert.equal(h.env.document.activeElement,summary);assert.deepEqual(h.calls,[]);
+   escape();assert.deepEqual(h.calls,[['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});

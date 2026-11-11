@@ -202,7 +202,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       if(event.key==='Escape'){
         event.preventDefault();event.stopImmediatePropagation();
         if(!modal){
-          const disclosure=event.target?.closest?.('details[open]')||root.current?.querySelector('.welcome-preferences[open],.topic-filters[open]');
+          // Expanded previews own Escape before disclosures left open behind them.
+          const disclosure=event.target?.closest?.('details[open]')||(!fullscreen&&root.current?.querySelector('.welcome-preferences[open],.topic-filters[open]'));
           if(disclosure){disclosure.open=false;disclosure.querySelector('summary')?.focus({preventScroll:true});return;}
         }
         if(modal)closePanel();else if(fullscreen){returnToCategories();}else if(pinned){setPinned(null);setActive(null);}else onClose(remember);
