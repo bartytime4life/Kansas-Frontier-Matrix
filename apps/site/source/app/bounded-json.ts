@@ -43,7 +43,10 @@ export async function readBoundedBytes(message: Request | Response, maxBytes: nu
 }
 
 export async function readBoundedText(message: Request | Response, maxBytes: number, signal?: AbortSignal): Promise<string> {
-  signal?.throwIfAborted();
+  if (signal?.aborted) {
+    void message.body?.cancel(signal.reason).catch(() => undefined);
+    signal.throwIfAborted();
+  }
   const declared = Number(message.headers.get("content-length"));
   if (Number.isFinite(declared) && declared > maxBytes) {
     void message.body?.cancel().catch(() => undefined);
@@ -78,4 +81,13 @@ export async function readBoundedText(message: Request | Response, maxBytes: num
 
 export async function readBoundedJson(message: Request | Response, maxBytes: number, signal?: AbortSignal): Promise<unknown> {
   return JSON.parse(await readBoundedText(message, maxBytes, signal)) as unknown;
+}
+
+/** A released-looking body cannot turn a failed HTTP response into a successful read. */
+export async function readSuccessfulJson(response: Response, maxBytes: number, signal?: AbortSignal): Promise<unknown> {
+  if (!response.ok) {
+    void response.body?.cancel().catch(() => undefined);
+    throw new Error("Response request failed.");
+  }
+  return readBoundedJson(response, maxBytes, signal);
 }

@@ -39,6 +39,11 @@ owner/token configuration and a real approved package remain separate gates.
 A manifest does not supply its own trusted approvals. Applying SQL or receiving
 HTTP 200 cannot establish admission, evidence eligibility or a reviewed release.
 
+The [shared request and export guide](reviewed-control-requests.md) describes
+HTTP success checks, cancellation when the view changes, and the single
+15-second export deadline. Run its cross-control regressions alongside the
+family checks below.
+
 Local conformance: `node --test tests/governed-water.test.mjs`; full validation:
 `npm test` and `npx tsc --noEmit`. The 2026-10-10 reconciliation passed 985 tests,
 type checking, production build and a local map/flow browser smoke check. This

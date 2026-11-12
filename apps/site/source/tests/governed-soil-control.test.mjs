@@ -11,6 +11,7 @@ const compiled = text => ts.transpileModule(text, { compilerOptions: {
 const load = async path => { const exports = {}; vm.runInNewContext(compiled(await read(path)), { exports }); return exports; };
 const waterHelpers = await load("../app/governed-water-availability.ts");
 const helpers = await load("../app/governed-soil-availability.ts");
+const boundedCode = compiled(await read("../app/bounded-json.ts"));
 const source = await read("../app/governed-soil-control.tsx");
 const station = "53974", other = "03067";
 const fixture = async name => JSON.parse(await read(`./fixtures/governed-soil/${name}.json`));
@@ -79,6 +80,8 @@ test("the latest day shows withheld values as withheld, never as zero", () => {
 
 function harness(initial) {
   const requests = [], downloads = [], statuses = [];
+  const bounded = {};
+  vm.runInNewContext(boundedCode, { exports: bounded, TextDecoder });
   let stateIndex = 0;
   const hooks = {
     useState(value) {
@@ -97,11 +100,11 @@ function harness(initial) {
       if (name === "./governed-water-availability") return waterHelpers;
       if (name === "./governed-soil-availability") return helpers;
       if (name === "./governed-water") return { approvalRemainingMs: expiry => Date.parse(expiry) - Date.now() };
-      if (name === "./bounded-json") return { readBoundedJson: async response => response };
+      if (name === "./bounded-json") return bounded;
       throw new Error(`Unexpected import ${name}`);
     },
-    fetch: url => new Promise(resolve => requests.push({ url, resolve })),
-    AbortSignal, Blob, Date, setTimeout: () => 0,
+    fetch: url => new Promise(resolve => requests.push({ url, resolve: value => resolve(value instanceof Response ? value : Response.json(value)) })),
+    AbortController, AbortSignal, Blob, Date, setTimeout: () => 0, clearTimeout() {},
     URL: { createObjectURL: () => "blob:test", revokeObjectURL() {} },
     document: { createElement: () => ({ click() { downloads.push(this.download); } }) },
   });
@@ -119,7 +122,7 @@ function harness(initial) {
   return { requests, downloads, statuses, text: text.join(" "),
     choose: id => select.props.onChange({ target: { value: id } }), start: () => button.props.onClick() };
 }
-const settle = async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); };
+const settle = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
 
 
 test("the control renders depth values and exports one station's evidence from the soil routes", async () => {
@@ -139,13 +142,13 @@ test("the control renders depth values and exports one station's evidence from t
 });
 
 test("changing station during an export withholds the download", async () => {
-  const { layers, evidence } = only(station);
+  const { layers } = only(station);
   const h = harness(layers); h.start();
   h.choose(other); h.choose(station);
   h.requests[0].resolve(layers); await settle();
-  h.requests[1].resolve(evidence); await settle();
+  assert.equal(h.requests.length, 1, "no evidence request follows a canceled export");
   assert.deepEqual(h.downloads, []);
-  assert.match(h.statuses.at(-1), /^Export withheld:/);
+  assert.equal(h.statuses.at(-1), "", "old completion cannot replace the new selection's status");
 });
 
 test("an unbound soil depth withholds the actual export before creating a download", async () => {

@@ -13,8 +13,7 @@ const helpers = { exports: {} };
 vm.runInNewContext(compiled(availability), { exports: helpers.exports });
 const water = { exports: {} };
 vm.runInNewContext(compiled(await readFile(new URL("../app/governed-water.ts", import.meta.url), "utf8")), { exports: water.exports });
-const bounded = { exports: {} };
-vm.runInNewContext(compiled(await readFile(new URL("../app/bounded-json.ts", import.meta.url), "utf8")), { exports: bounded.exports, TextDecoder });
+const boundedCode = compiled(await readFile(new URL("../app/bounded-json.ts", import.meta.url), "utf8"));
 const station = "USGS-06892518";
 const layers = JSON.parse(await readFile(new URL("./fixtures/governed-water/layers.json", import.meta.url), "utf8"));
 const evidence = JSON.parse(await readFile(new URL("./fixtures/governed-water/evidence.json", import.meta.url), "utf8"));
@@ -25,6 +24,8 @@ evidence.data.entries = evidence.data.entries.filter(s => s.station_id === stati
 
 function harness() {
   const requests = [], downloads = [], statuses = [], effects = [], updates = [], reads = [];
+  const bounded = {};
+  vm.runInNewContext(boundedCode, { exports: bounded, TextDecoder, JSON: { parse: text => { reads.push(text); return JSON.parse(text); } } });
   let stateIndex = 0;
   const hooks = {
     useState(initial) {
@@ -43,7 +44,7 @@ function harness() {
       if (name === "react/jsx-runtime") return { jsx, jsxs: jsx, Fragment: "fragment" };
       if (name === "./governed-water-availability") return helpers.exports;
       if (name === "./governed-water") return water.exports;
-      if (name === "./bounded-json") return { readBoundedJson: (response, limit) => { reads.push(response); return bounded.exports.readBoundedJson(response, limit); } };
+      if (name === "./bounded-json") return bounded;
       throw new Error(`Unexpected import ${name}`);
     },
     fetch: url => new Promise(resolve => requests.push({ url, resolve: (value, status = 200) => resolve(value instanceof Response ? value : Response.json(value, { status })) })),
@@ -75,12 +76,14 @@ for (const stage of [0, 1]) test(`A→B→A during export request ${stage + 1} w
   if (stage === 1) { h.requests[0].resolve(layers); await settle(); }
   h.choose("USGS-07156900"); h.choose(station);
   if (stage === 0) { h.requests[0].resolve(layers); await settle(); }
-  assert.equal(h.requests.length, 2);
+  assert.equal(h.requests.length, stage + 1, "no next request follows a canceled export");
   assert.match(h.requests[0].url, /layers\?station_id=USGS-06892518$/);
-  assert.match(h.requests[1].url, /evidence\?station_id=USGS-06892518$/);
-  h.requests[1].resolve(evidence); await settle();
+  if (stage) {
+    assert.match(h.requests[1].url, /evidence\?station_id=USGS-06892518$/);
+    h.requests[1].resolve(evidence); await settle();
+  }
   assert.deepEqual(h.downloads, []);
-  assert.match(h.statuses.at(-1), /^Export withheld:/);
+  assert.equal(h.statuses.at(-1), "", "old completion cannot replace the new selection's status");
 });
 
 test("unchanged selection, including reselecting A, permits a valid export", async () => {

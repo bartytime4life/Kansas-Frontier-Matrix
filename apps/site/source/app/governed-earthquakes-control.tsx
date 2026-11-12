@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
-import { readBoundedJson } from "./bounded-json";
+import { readBoundedJson, readSuccessfulJson } from "./bounded-json";
 import { approvalRemainingMs } from "./governed-water";
 import type { EarthquakeResponse } from "./governed-earthquakes";
 import { waterBrowserLabel, type WaterBrowserState } from "./governed-water-availability";
@@ -19,16 +19,23 @@ export function GovernedEarthquakesControl({ mapRef, styleReady, onSelectionChan
   const [exportStatus, setExportStatus] = useState("");
   const [months, setMonths] = useState<number[]>([]);
   const controller = useRef<AbortController | null>(null);
+  const exportController = useRef<AbortController | null>(null);
+  const cancelExport = useCallback(() => {
+    const previous = exportController.current;
+    exportController.current = null;
+    previous?.abort();
+  }, []);
   const monthRef = useRef(month);
   const selectionGeneration = useRef(0);
-  const withhold = useCallback((state: WaterBrowserState, text: string) => { setResponse(null); setEvidenceRecord(null); setBrowserState(state); setStatus(text); }, []);
+  const withhold = useCallback((state: WaterBrowserState, text: string) => { cancelExport(); setResponse(null); setEvidenceRecord(null); setBrowserState(state); setStatus(text); }, [cancelExport]);
   // Bootstrap names the months that have events; the layer is then read one month at a time.
   const refresh = useCallback(async (requested?: number) => {
+    cancelExport(); setExportStatus("");
     controller.current?.abort(); const abort = new AbortController(); controller.current = abort; setLoading(true); setResponse(null); setEvidenceRecord(null); setStatus("Checking current release…"); setBrowserState("checking"); setRender("Waiting for map frame");
     const timeout = setTimeout(() => abort.abort(), 15000);
     try {
       const booted = await fetch(`${ROUTE}/bootstrap`, { signal: abort.signal, cache: "no-store", credentials: "same-origin" });
-      const boot = await readBoundedJson(booted, 256 * 1024) as EarthquakeResponse;
+      const boot = await readBoundedJson(booted, 256 * 1024, abort.signal) as EarthquakeResponse;
       if (abort.signal.aborted) return;
       const listed = Array.isArray(boot?.data?.months) ? boot.data.months.filter(m => Number.isInteger(m) && m >= 1 && m <= 12) : [];
       if (earthquakeBrowserStateForResponse(boot, booted.ok) !== "received" || !listed.length) { withhold(earthquakeBrowserStateForResponse(boot, booted.ok), reasonText[boot?.envelope?.reason_code] ?? "Earthquakes are withheld."); return; }
@@ -36,27 +43,27 @@ export function GovernedEarthquakesControl({ mapRef, styleReady, onSelectionChan
       const chosen = requested && listed.includes(requested) ? requested : listed.includes(monthRef.current) ? monthRef.current : listed[listed.length - 1];
       monthRef.current = chosen; setMonth(chosen);
       const fetched = await fetch(`${ROUTE}/layers?month=${chosen}`, { signal: abort.signal, cache: "no-store", credentials: "same-origin" });
-      const value = await readBoundedJson(fetched, 8 * 1024 * 1024) as EarthquakeResponse;
+      const value = await readBoundedJson(fetched, 8 * 1024 * 1024, abort.signal) as EarthquakeResponse;
       if (abort.signal.aborted) return;
       const next = earthquakeBrowserStateForResponse(value, fetched.ok);
       if (next !== "received") withhold(next, reasonText[value?.envelope?.reason_code] ?? (next === "unavailable" ? "Browser request unavailable. Try again." : "Earthquakes are withheld."));
       else { setBrowserState(next); setClock(Date.now()); setResponse(value); setStatus("Reviewed snapshot received"); }
     } catch { if (controller.current === abort) withhold("unavailable", "Browser request unavailable. Try again."); }
     finally { clearTimeout(timeout); if (controller.current === abort) setLoading(false); }
-  }, [withhold]);
+  }, [withhold, cancelExport]);
   const chooseMonth = useCallback((value: number) => {
     if (monthRef.current !== value) selectionGeneration.current += 1;
     monthRef.current = value; setMonth(value); setExportStatus(""); void refresh(value);
   }, [refresh]);
   // A released year changes only when the owner replaces it: an hourly recheck notices a withdrawal or replacement.
-  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => void refresh(), 3600000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; clearInterval(interval); }; }, [refresh]);
+  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => void refresh(), 3600000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; cancelExport(); clearInterval(interval); }; }, [refresh, cancelExport]);
   useEffect(() => {
     if (!response?.data) return;
     const remaining = approvalRemainingMs(response.data.approval_expires_at, Date.now());
     if (remaining <= 0) return;
-    const timer = setTimeout(() => setClock(Date.now()), Math.min(remaining, 2147483647));
+    const timer = setTimeout(() => { cancelExport(); setClock(Date.now()); }, Math.min(remaining, 2147483647));
     return () => clearTimeout(timer);
-  }, [response]);
+  }, [response, cancelExport]);
   const expired = Boolean(response?.data && approvalRemainingMs(response.data.approval_expires_at, clock) <= 0);
   const data = expired ? null : response?.data;
   const evidence = evidenceRecord?.month === month && evidenceRecord.packageId === data?.package_id ? evidenceRecord.value : null;
@@ -90,24 +97,33 @@ export function GovernedEarthquakesControl({ mapRef, styleReady, onSelectionChan
   useEffect(() => {
     if (!data || !response || !month) return;
     const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); withhold("unavailable", "Evidence request timed out. Data withheld."); }, 15000);
-    void fetch(`${ROUTE}/evidence?month=${month}`, { signal: abort.signal, cache: "no-store" }).then(r => readBoundedJson(r, 8 * 1024 * 1024)).then(value => { const next = value as EarthquakeResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
+    void fetch(`${ROUTE}/evidence?month=${month}`, { signal: abort.signal, cache: "no-store" }).then(r => readSuccessfulJson(r, 8 * 1024 * 1024, abort.signal)).then(value => { const next = value as EarthquakeResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
       if (earthquakeEvidenceMatchesSelection(response, next, month)) setEvidenceRecord({ month, packageId: data.package_id, value: next });
       else withhold("withheld", "Evidence or release changed. Check the connection again.");
     }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) withhold("unavailable", "Evidence request unavailable. Data withheld."); });
-    return () => { abort.abort(); clearTimeout(timeout); };
-  }, [month, data, response, withhold]);
+    return () => { abort.abort(); cancelExport(); clearTimeout(timeout); };
+  }, [month, data, response, withhold, cancelExport]);
   async function exportMonth() {
+    cancelExport();
+    const abort = new AbortController(); exportController.current = abort;
+    const timeout = setTimeout(() => {
+      abort.abort();
+      if (exportController.current === abort) setExportStatus("Export withheld: current evidence or release could not be verified.");
+    }, 15000);
     setExportStatus("Checking current release…");
     const requested = month, requestedGeneration = selectionGeneration.current;
     try {
-      const fresh = await fetch(`${ROUTE}/layers?month=${requested}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 8 * 1024 * 1024)) as EarthquakeResponse;
-      const refs = await fetch(`${ROUTE}/evidence?month=${requested}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 8 * 1024 * 1024)) as EarthquakeResponse;
+      const fresh = await fetch(`${ROUTE}/layers?month=${requested}`, { cache: "no-store", signal: abort.signal }).then(r => readSuccessfulJson(r, 8 * 1024 * 1024, abort.signal)) as EarthquakeResponse;
+      if (exportController.current !== abort || abort.signal.aborted) return;
+      const refs = await fetch(`${ROUTE}/evidence?month=${requested}`, { cache: "no-store", signal: abort.signal }).then(r => readSuccessfulJson(r, 8 * 1024 * 1024, abort.signal)) as EarthquakeResponse;
+      if (exportController.current !== abort || abort.signal.aborted) return;
       if (selectionGeneration.current !== requestedGeneration || monthRef.current !== requested || !earthquakeExportMatchesSelection(fresh, refs, requested)
           || approvalRemainingMs(fresh.data?.approval_expires_at, Date.now()) <= 0
           || approvalRemainingMs(refs.data?.approval_expires_at, Date.now()) <= 0) throw new Error("WITHHELD");
       const blob = new Blob([JSON.stringify({ earthquakes: fresh, evidence: refs }, null, 2)], { type: "application/json" }), url = URL.createObjectURL(blob);
       const link = document.createElement("a"); link.href = url; link.download = `kfm-reviewed-earthquakes-${String(fresh.data?.data_year)}-${String(requested).padStart(2, "0")}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setExportStatus("Export includes source, evidence and release references.");
-    } catch { setExportStatus("Export withheld: current evidence or release could not be verified."); }
+    } catch { if (exportController.current === abort) setExportStatus("Export withheld: current evidence or release could not be verified."); }
+    finally { clearTimeout(timeout); if (exportController.current === abort) exportController.current = null; }
   }
   const selection = data?.selection, statuses = Object.entries(selection?.review_status ?? {});
   return <section className="official-context-row" aria-label="Reviewed earthquakes">
