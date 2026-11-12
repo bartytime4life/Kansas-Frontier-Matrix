@@ -4,7 +4,14 @@ import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import ts from 'typescript';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
-const moduleAt = async file => import(`data:text/javascript;base64,${Buffer.from(ts.transpileModule(await readFile(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText).toString('base64')}`);
+const moduleAt = async file => {
+ let js=ts.transpileModule(await readFile(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+ if(js.includes('"./bounded-json"')){
+  const bounded=ts.transpileModule(await readFile('app/bounded-json.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+  js=js.replaceAll('"./bounded-json"',JSON.stringify(`data:text/javascript;base64,${Buffer.from(bounded).toString('base64')}`));
+ }
+ return import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+};
 const model = await moduleAt('app/history-reader-model.ts'), maps = await moduleAt('app/public-map-catalog.ts');
 const sources = JSON.parse(await readFile('app/history-sources.json')), seed = JSON.parse(await readFile('app/public-map-catalog.json'));
 const text = await readFile('public/history/prentis-1909.txt');

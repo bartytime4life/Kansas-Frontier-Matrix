@@ -2625,3 +2625,16 @@ def test_navigation_successor_preserves_underground_inventory_and_all_holds():
          "docs/unified-download-workspace.md", "docs/explorer-evidence-workspaces-2026-11-09.md"},
         "cdc1008e9addd1811cde5e754e436b315792f2df",
     )
+
+
+def test_source_read_successor_preserves_navigation_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-source-read-recovery-overlay-20261111.json",
+        "site-v268-navigation-recovery-overlay-20261111.json",
+        "7ad81427133e52cf538d90ebc9f96c9869dbc61b56244e3b33c27da7618f3160",
+        {"app/history-reader-model.ts", "app/history/prentis-1909/page.tsx",
+         "app/underground-resources.tsx", "tests/history-library.test.mjs",
+         "tests/underground-resources.test.mjs", "tests/source-read-recovery.test.mjs",
+         "docs/kansas-history-library.md", "docs/underground-explorer.md"},
+        "a421ab22c3f71c87bf9bf06f6208f8ba4ffcffbc",
+    )

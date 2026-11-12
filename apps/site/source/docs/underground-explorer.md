@@ -25,6 +25,15 @@ acceptance or change source admission, privacy, saved data, or provider clocks.
 Revert the layout change and its mirror successor together to restore the prior
 presentation; no data migration is needed.
 
+## Resource-list recovery — 2026-11-11
+
+The oil/gas and mineral lists use the shared bounded request reader with a
+fifteen-second deadline through headers and body. A stalled read exposes
+**Retry** instead of leaving the list loading indefinitely. Retry and area
+changes retain request identity checks, so an abandoned response cannot populate
+another area's markers or details. Resource source dates remain separate from
+well-log record time, and privacy-redacted views still suppress these lookups.
+
 This addition starts from owner-private Site v155, source `d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae`. It preserves the existing Map Library, place dossiers, Evidence Drawer, reports, Earth Engine controls, DB/R2 bindings, and Site audience. GitHub PR #4899 merged during implementation; the feature review starts from `8c955317117e53fa93ece5d0af4455d86fad17b3`, retaining its separate CodeQL test correction. The dirty owner maintenance checkout is not used as an import source.
 
 ## Original probe and workbench behavior

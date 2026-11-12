@@ -50,8 +50,8 @@ test('the real Worker runtime reads resource records and refuses provider redire
  }finally{await mf.dispose();}
 });
 test('switching area discards delayed resource response before displaying markers or details',async()=>{
- const requests=[];
- const h=await componentHarness('app/underground-resources.tsx',{'./underground-resources-model':model,'./bounded-json':{readBoundedJson:r=>r.json()},'./subsurface.module.css':{default:new Proxy({},{get:(_,k)=>k})}}, {URLSearchParams,fetch:(u,o)=>new Promise(resolve=>requests.push({u,o,resolve}))});
+ const requests=[];const fetch=(u,o)=>new Promise(resolve=>requests.push({u,o,resolve}));
+ const h=await componentHarness('app/underground-resources.tsx',{'./underground-resources-model':model,'./browser-json-request':{browserJsonRequest:async(u,o)=>{const response=await fetch(u,o);return{response,body:await response.json()};}},'./subsurface.module.css':{default:new Proxy({},{get:(_,k)=>k})}}, {URLSearchParams,fetch});
  let props={map:null,bounds,revision:1,active:true,redacted:false,water:[],onInspect(){}};
  let tree=h.render(h.exports.default,props);h.commit();findNode(tree,n=>n.type==='details').props.onToggle({currentTarget:{open:true}});h.render(h.exports.default,props);h.commit();
  props={...props,bounds:[-99.2,38.7,-99,39],revision:2};h.render(h.exports.default,props);h.commit();assert.equal(requests[0].o.signal.aborted,true);

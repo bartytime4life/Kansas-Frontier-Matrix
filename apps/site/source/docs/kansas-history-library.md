@@ -9,6 +9,14 @@ coverage, rights, checked time, source evidence and size findings. Two malformed
 combined links were split into four individual URLs. Source guides and GIS
 searches are discovery links, not claims that their holdings have been captured.
 
+## Reader recovery — 2026-11-11
+
+OCR loading now has a fifteen-second deadline covering both response headers
+and streamed bytes. A stalled read offers **Retry loading**; leaving or retrying
+the reader cancels its body read without waiting for transport cleanup. The
+757,514-byte limit, exact source checksum and strict UTF-8 decoding still apply.
+A timeout is an unavailable read, not an empty book or a successful verification.
+
 ## Included material and storage
 
 - Prentis, *A history of Kansas* (1909): the original 757,514-byte archival OCR
