@@ -195,8 +195,15 @@ export default function ReportStoryWorkspaces({
   }, [mode, report, story]);
 
   useEffect(() => {
-    if (!storyPlaying || story.scenes.length < 2) return;
+    if (!storyPlaying) return;
+    if (mode !== "stories" || document.hidden || story.scenes.length < 2) {
+      let current = true;
+      queueMicrotask(() => { if (current) setStoryPlaying(false); });
+      return () => { current = false; };
+    }
+    let active = true;
     const timer = window.setTimeout(() => {
+      if (!active || document.hidden) return;
       setStoryPlayIndex((index) => {
         if (index >= story.scenes.length - 1) {
           setStoryPlaying(false);
@@ -205,8 +212,13 @@ export default function ReportStoryWorkspaces({
         return index + 1;
       });
     }, reducedMotion ? 6500 : 4800);
-    return () => window.clearTimeout(timer);
-  }, [reducedMotion, story.scenes.length, storyPlayIndex, storyPlaying]);
+    const pauseHidden = () => {
+      if (!document.hidden) return;
+      active = false; window.clearTimeout(timer); setStoryPlaying(false);
+    };
+    document.addEventListener("visibilitychange", pauseHidden);
+    return () => { active = false; window.clearTimeout(timer); document.removeEventListener("visibilitychange", pauseHidden); };
+  }, [mode, reducedMotion, story.scenes.length, storyPlayIndex, storyPlaying]);
 
   const snapshotEvidence = useMemo(
     () => evidenceForSnapshot(report.snapshot, evidenceRecords),
@@ -321,8 +333,8 @@ export default function ReportStoryWorkspaces({
           <p>{mode === "reports" ? report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the exact inherited map state and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
         </div>
         <nav aria-label="Report and story workspaces">
-          <button type="button" aria-current={mode === "reports" ? "page" : undefined} onClick={() => onModeChange("reports")}>Reports</button>
-          <button type="button" aria-current={mode === "stories" ? "page" : undefined} onClick={() => onModeChange("stories")}>Stories</button>
+          <button type="button" aria-current={mode === "reports" ? "page" : undefined} onClick={() => { setStoryPlaying(false); onModeChange("reports"); }}>Reports</button>
+          <button type="button" aria-current={mode === "stories" ? "page" : undefined} onClick={() => { setStoryPlaying(false); onModeChange("stories"); }}>Stories</button>
           <button className="return-map" type="button" onClick={onReturnToMap}>Return to map</button>
         </nav>
         <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Not saved on this device · export a copy"}</small></div>

@@ -3,6 +3,17 @@
 Design follow-up, 2026-10-08. Local implementation; hosted publication is outside
 this request. Human review remains pending.
 
+## Navigation recovery — 2026-11-11
+
+Workspace buttons now retain their destination in the URL: `#library`,
+`#activity`, `#public-maps`, `#public-climate`, or `#history`. Back and Forward
+restore the corresponding tab and source category. Returning to the empty
+`/downloads` URL restores the default satellite/climate discovery view. Selecting
+the same destination adds no extra history entry. These actions preserve the
+mounted transfer controllers and do not start downloads or change connection
+permissions. Existing non-workspace anchors, such as `#cache-budget`, retain
+their ordinary anchor behavior.
+
 ## Observed problem
 
 The original `/downloads` page exposed useful capabilities but arranged them as

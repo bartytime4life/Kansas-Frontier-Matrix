@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
-import { componentHarness, findNode } from "./component-harness.mjs";
+import { componentHarness, findNode, settle } from "./component-harness.mjs";
 
 // Load the actual model and strict storage validators, rather than accepting test-only drafts.
 const urls = new Map();
@@ -36,32 +36,34 @@ const snapshot = id => ({
 const reportDraft = id => ({ ...model.createReportDraft(snapshot(id), []), title: `Report ${id}`, sections: { ...model.createReportDraft(snapshot(id), []).sections, summary: `Unique report prose ${id}` } });
 const storyDraft = id => ({ ...model.createTrustStory(snapshot(id), []), title: `Story ${id}`, scenes: [{ ...model.createTrustStory(snapshot(id), []).scenes[0], narrative: `Unique story prose ${id}` }] });
 function browser(initial = {}) {
-  const values = new Map(Object.entries(initial)), writes = [], timers = new Map(), listeners = new Set(), downloads = [];
+  const values = new Map(Object.entries(initial)), writes = [], timers = new Map(), listeners = new Set(), events = new Map(), downloads = [];
   let serial = 0, denied = false;
   const window = {
     localStorage: { getItem: key => values.get(key) ?? null, setItem(key, raw) { if (denied) throw new Error("storage denied"); writes.push(key); values.set(key, raw); } },
-    setTimeout(fn) { timers.set(++serial, fn); return serial; }, clearTimeout(id) { timers.delete(id); },
+    setTimeout(fn, delay = 0) { timers.set(++serial, { fn, delay }); return serial; }, clearTimeout(id) { timers.delete(id); },
     matchMedia: () => ({ matches: false, addEventListener(_type, fn) { listeners.add(fn); }, removeEventListener(_type, fn) { listeners.delete(fn); } }),
   };
   const document = {
-    addEventListener(_type, fn) { listeners.add(fn); }, removeEventListener(_type, fn) { listeners.delete(fn); },
+    hidden: false,
+    addEventListener(type, fn) { listeners.add(fn); if (!events.has(type)) events.set(type, new Set()); events.get(type).add(fn); }, removeEventListener(type, fn) { listeners.delete(fn); events.get(type)?.delete(fn); },
     body: { append() {} }, createElement() { return { click() {}, remove() {} }; },
   };
   return { window, document, values, writes, timers, listeners, downloads,
     URL: { createObjectURL(blob) { downloads.push(blob); return `blob:synthetic-${downloads.length}`; }, revokeObjectURL() {} },
-    deny() { denied = true; }, flush() { for (const [id, fn] of [...timers]) { timers.delete(id); fn(); } },
+    deny() { denied = true; }, flush() { for (const [id, entry] of [...timers]) { timers.delete(id); entry.fn(); } },
+    dispatch(type) { for (const callback of events.get(type) ?? []) callback({ type }); },
   };
 }
 async function mount(b, initialProps) {
   globalThis.window = b.window;
-  const harness = await componentHarness(new URL("../app/report-story-workspaces.tsx", import.meta.url), imports, { window: b.window, document: b.document, URL: b.URL, Blob });
+  const harness = await componentHarness(new URL("../app/report-story-workspaces.tsx", import.meta.url), imports, { window: b.window, document: b.document, URL: b.URL, Blob, queueMicrotask });
   let props = { evidenceRecords: [], onReturnToMap() {}, onInspectEvidence() {}, onApplyScene() {}, getCurrentSnapshot: () => snapshot("current-map"), ...initialProps };
   props.onModeChange = mode => { props = { ...props, mode }; };
   let tree;
   const draw = () => { tree = harness.render(harness.exports.default, props); harness.commit(); return tree; };
   draw();
   return {
-    draw, get tree() { return tree; },
+    draw, get tree() { return tree; }, changeProps(patch) { props = { ...props, ...patch }; return draw(); },
     switch(mode) { findNode(tree, n => n.type === "button" && n.props.children === (mode === "reports" ? "Reports" : "Stories")).props.onClick(); draw(); },
     edit(label, value) {
       const field = findNode(tree, n => n.type === "label" && [n.props.children].flat().some(child => child?.type === "span" && child.props.children === label));
@@ -204,4 +206,24 @@ test("actual page opener and rendered props distinguish resume, fresh capture an
   open("reports");
   assert.equal(rendered().freshDraftMode, null, "resuming after fresh creation must not create another new draft");
   assert.deepEqual(calls, ["read:reports", "read:stories", "capture", "capture", "read:reports"]);
+});
+
+const playerButton=(tree,name)=>findNode(tree,n=>n.type==='button'&&n.props.children===name);
+const previewLabel=tree=>findNode(tree,n=>n.type==='snapshot-map').props.label;
+const chapters=()=>{const draft=storyDraft('playback');return{...draft,scenes:Array.from({length:3},(_,i)=>({...draft.scenes[0],id:`chapter-${i}`,title:`Chapter ${i+1}`}))};};
+test('switching to Reports stops story playback and returning does not silently resume',async()=>{
+ const b=browser({[storage.STORY_STORAGE_KEY]:JSON.stringify(chapters())}),h=await mount(b,{mode:'stories',snapshot:snapshot('playback')});
+ try{
+  playerButton(h.tree,'Preview full story').props.onClick();h.draw();assert.ok([...b.timers.values()].some(entry=>entry.delay>=4800));
+  h.changeProps({mode:'reports'});await settle();h.draw();b.flush();h.draw();h.changeProps({mode:'stories'});
+  assert.equal(previewLabel(h.tree),'Story scene: Chapter 1');assert.ok(playerButton(h.tree,'Preview full story'));assert.equal(playerButton(h.tree,'Pause'),undefined);
+ }finally{h.dispose();delete globalThis.window;}
+});
+test('hiding the document pauses immediately and requires an explicit restart',async()=>{
+ const b=browser({[storage.STORY_STORAGE_KEY]:JSON.stringify(chapters())}),h=await mount(b,{mode:'stories',snapshot:snapshot('playback')});
+ try{
+  playerButton(h.tree,'Preview full story').props.onClick();h.draw();b.document.hidden=true;b.dispatch('visibilitychange');b.flush();h.draw();
+  assert.equal(previewLabel(h.tree),'Story scene: Chapter 1');assert.ok(playerButton(h.tree,'Preview full story'));
+  b.document.hidden=false;b.dispatch('visibilitychange');h.draw();assert.ok(playerButton(h.tree,'Preview full story'));assert.equal([...b.timers.values()].filter(entry=>entry.delay>=4800).length,0);
+ }finally{h.dispose();assert.equal(b.listeners.size,0);delete globalThis.window;}
 });

@@ -1,5 +1,16 @@
 # Saved investigations and evidence scope
 
+## Story navigation recovery — 2026-11-11
+
+Story preview pauses when you switch to Reports or hide the document. Returning
+to Stories or the visible page keeps the current chapter and requires an
+explicit **Preview full story** action to resume. Navigation does not advance
+chapters in an unseen player or replace the independent report/story drafts.
+This is a source and component-test correction; rendered browser acceptance is
+separate.
+
+## Original correction — 2026-11-09
+
 This bounded correction starts at PR #5792 head
 `05642be1bced8cfbd4bd1ab03e5c83dcc0c2e41f`. It preserves the standalone Site,
 existing review holds and device-local drafts while correcting reproduced source

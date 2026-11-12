@@ -1265,7 +1265,11 @@ def test_historical_privacy_receipt_binds_only_home_path_redactions(monkeypatch:
     assert set(declarations) == changed and len(receipt["repository_reconciliation"]["changes"]) == len(changed)
     for name in changed:
         entry, before = receipt["comparison"][name], previous["comparison"][name]
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # The immutable receipt above pins the historical bytes. Navigation
+        # guidance now has a strict selected successor; privacy still holds below.
+        digest = declarations[name]["mirror_sha256"]
+        if name != "docs/unified-download-workspace.md":
+            assert hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest() == digest
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         assert entry["site_sha256"] == before["site_sha256"]
         assert entry["state"] == "inherited_repository_overlay"
@@ -2608,4 +2612,16 @@ def test_underground_map_space_successor_preserves_documentation_inventory_and_a
          "tests/selected-surface.test.mjs",
          "tests/underground-map-space.test.mjs"},
         "c9e4c808ced2be92548863b5636ff8af6885facb",
+    )
+
+
+def test_navigation_successor_preserves_underground_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-navigation-recovery-overlay-20261111.json",
+        "site-v268-underground-map-space-overlay-20261111.json",
+        "5d48938c94ee08a05a048590d42b9f1fb3a03d7a5d02522b0e50c1f4cd18f08a",
+        {"app/downloads/workspace.tsx", "app/report-story-workspaces.tsx",
+         "tests/download-workspace-ui.test.mjs", "tests/report-story-persistence.test.mjs",
+         "docs/unified-download-workspace.md", "docs/explorer-evidence-workspaces-2026-11-09.md"},
+        "cdc1008e9addd1811cde5e754e436b315792f2df",
     )
