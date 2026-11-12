@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { startAquiferVolumeWorker } from "./subsurface-workers";
 import { projectVolumePosition, volumeDepthScale, validVolumeBounds } from "./aquifer-volume";
@@ -27,12 +27,14 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState(""),[previewChanged,setPreviewChanged]=useState(false);
   const [surfaceMode,setSurfaceMode]=useState(false);
+  const [areaMapOpen,setAreaMapOpen]=useState(true);
+  const areaMapId=useId();
   const [detailCapture,setDetailCapture]=useState<SurfaceCapture|null>(null),[detailStatus,setDetailStatus]=useState("Preparing high-detail surface…"),[detailShown,setDetailShown]=useState(false);
   // Start with the bounded high-detail view; keep the maximum tile budget opt-in.
   const [detailPixels,setDetailPixels]=useState(2048),[detailRetry,setDetailRetry]=useState(0);
   const detailRenderer=useRef<ReturnType<typeof startCutawaySurfaceDetail>|null>(null),detailFrame=useRef<SurfaceDetailFrame|null>(null);
   const [frame,setFrame]=useState<VolumeBounds|null>(null);
-  const modelFocus=useRef<HTMLElement|null>(null),focusAfterApply=useRef(false);
+  const modelFocus=useRef<HTMLElement|null>(null),focusAfterApply=useRef(false),focusAreaAfterApply=useRef<string|null>(null);
   const [navigation,setNavigation]=useState<"orbit"|"pan">("orbit");
   const areaSession=useRef<{prepare:()=>void}|null>(null),onAreaRef=useRef(onArea);
   useEffect(()=>{onAreaRef.current=onArea;},[onArea]);
@@ -52,7 +54,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const surfaceArea=volume?.bounds.join(",");
   const aquiferLoading=snapshot?.aquiferState==="loading";
   useEffect(()=>{if(!map)return;const read=()=>{try{setFrame(locatorBounds(map));}catch{setFrame(null);}};read();map.on("moveend",read);map.on("resize",read);map.on("load",read);return()=>{map.off("moveend",read);map.off("resize",read);map.off("load",read);};},[map]);
-  useEffect(()=>{if(volume&&focusAfterApply.current){focusAfterApply.current=false;modelFocus.current?.focus({preventScroll:false});}},[volume]);
+  useEffect(()=>{if(volume&&focusAfterApply.current&&focusAreaAfterApply.current===volume.bounds.join(",")){focusAfterApply.current=false;focusAreaAfterApply.current=null;modelFocus.current?.focus({preventScroll:false});}},[volume]);
   const drawn = useMemo(() => volume ? cutawayRecords(volume, records) : null, [volume, records]);
   const sampleRecords=useMemo(()=>Array.from(new Map(drawn?.intervals.map(({record})=>[record.id,record])).values()),[drawn]);
   const pickedRecord=sampleRecords.find(record=>record.id===pickedLog?.recordId);
@@ -66,7 +68,15 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
     if(!map||!active)return;
     let worker:Worker|null=null;
     try{worker=startAquiferVolumeWorker();}catch{ /* Independent record loading still gets an applied frame. */ }
-    const stop=startAquiferView<HTMLCanvasElement>({map,worker,manual:true,initialSnapshot:snapshotRef.current,onArea:bounds=>onAreaRef.current(bounds),onPreview:setPreviewChanged,onSnapshot:setSnapshot,onStatus:setStatus,onSurfaceStatus:setSurfaceStatus,sampleSurface:()=>{
+    const stop=startAquiferView<HTMLCanvasElement>({map,worker,manual:true,initialSnapshot:snapshotRef.current,onArea:bounds=>{
+      // The session accepts this exact frame before publishing its snapshot.
+      // A late capture from an older frame cannot fulfill a new apply request.
+      if(bounds&&focusAfterApply.current){
+        focusAreaAfterApply.current=bounds.join(",");
+        if(matchMedia("(max-width: 800px)").matches)setAreaMapOpen(false);
+      }
+      onAreaRef.current(bounds);
+    },onPreview:setPreviewChanged,onSnapshot:setSnapshot,onStatus:setStatus,onSurfaceStatus:setSurfaceStatus,sampleSurface:()=>{
       const source=map.getCanvas(),image=document.createElement("canvas");
       const ratio=Math.min(1,1024/Math.max(source.width,source.height));image.width=Math.max(1,Math.round(source.width*ratio));image.height=Math.max(1,Math.round(source.height*ratio));
       const ctx=image.getContext("2d");if(!ctx)throw new Error("Surface capture unavailable");
@@ -328,7 +338,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   useEffect(()=>{api.current?.highlightRecord(pickedLog?.recordId??null);},[pickedLog]);
   const selected=snapshot?.volume.envelopes.find(e=>e.id===selection);
   const showArea=()=>{
-    focusAfterApply.current=true;
+    focusAfterApply.current=true;focusAreaAfterApply.current=null;
     // The global 2D callback animates even an already-flat map. Avoid that needless
     // transition; tilted/globe requests are retained by the session until settled.
     try{if(map&&(Math.abs(map.getPitch())>.1||Math.abs(map.getBearing())>.1||map.getProjection()?.type!=="mercator"))onFlatMap();}catch{ /* The session waits for style readiness and explains the hold. */ }
@@ -355,9 +365,15 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   };
   const example=()=>{if(!map)return;map.jumpTo({center:[-100.5,38.5],zoom:11,pitch:0,bearing:0});showArea();};
   const frameReady=frame&&validVolumeBounds(frame),hasScene=Boolean(snapshot);
-  return <section className={`${s.cutawayExplorer} ${s.areaExplorer}`} data-ready={hasScene} aria-label="4D area underlay from source records">
+  const areaMapVisible=!hasScene||areaMapOpen;
+  return <section className={`${s.cutawayExplorer} ${s.areaExplorer}`} data-ready={hasScene} data-area-map={areaMapVisible?"open":"closed"} aria-label="4D area underlay from source records">
     <div className={s.cutawayWorkspace}>
-      <aside className={s.cutawayLocator} aria-label="Choose the underlay area">
+      {hasScene&&<div className={s.areaMapToolbar}>
+        <div className={s.surfaceViewSwitch} aria-label="Selected-area view"><button type="button" aria-pressed={surfaceMode} onClick={()=>setSurfaceMode(true)}>Surface map</button><button type="button" aria-pressed={!surfaceMode} onClick={()=>setSurfaceMode(false)}>3D cutaway</button></div>
+        <button type="button" className={s.areaMapToggle} aria-expanded={areaMapVisible} aria-controls={areaMapId} onClick={()=>setAreaMapOpen(value=>!value)}>{areaMapVisible?"Hide area map":"Show area map"}</button>
+        <span className={s.areaMapContext}>Source context · unknown ground stays empty</span>
+      </div>}
+      <aside id={areaMapId} className={s.cutawayLocator} hidden={!areaMapVisible} aria-label="Choose the underlay area">
         <div className={s.cutawayLocatorTitle}><strong>{hasScene?"Selected area":"Choose an area"}</strong><span>2D MAP</span></div>
         <div ref={onLocatorSlot} className={s.cutawayLocatorMap} aria-label="Linked 2D selector map position" />
         <div className={s.cutawayLocatorActions}><button type="button" disabled={!map} onClick={frame&&!frameReady?zoomLocal:showArea}>{frame&&!frameReady?"Zoom in & explore":hasScene&&previewChanged?"Show new area":"Show this area"} <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map and selected area in" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("in")}>+</button><button type="button" aria-label="Zoom selector map and selected area out" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("out")}>−</button></div>
@@ -370,8 +386,9 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
       </aside>
       <section ref={modelFocus} tabIndex={-1} className={s.areaModel} aria-label="Selected-area surface and cutaway">
         {!hasScene?<div className={s.areaStart}><span className={s.cutawayEyebrow}>UNDERGROUND</span><h3>A place, then a cutaway.</h3><p>Choose the area on the map. Its recorded logs will appear below the surface, ready to orbit and explore through record time.</p><p>Unknown ground stays empty. Aquifer ranges are an optional 2022–2024 source layer.</p></div>:<>
-        <div className={s.areaModelHeading}><h3>{surfaceMode?"Surface map":"3D cutaway"}</h3><span>{surfaceMode?"Explore details within the selected slice":"Independent records · unknown ground stays empty"}</span></div>
-        <div className={s.surfaceViewSwitch} aria-label="Selected-area view"><button type="button" aria-pressed={surfaceMode} onClick={()=>setSurfaceMode(true)}>Surface map</button><button type="button" aria-pressed={!surfaceMode} onClick={()=>setSurfaceMode(false)}>3D cutaway</button></div>
+        <h3 className="sr-only">{surfaceMode?"Surface map":"3D cutaway"} of the selected area</h3>
+        <div className={s.areaDisplayTools}>
+        <details className={s.surfaceDetailTools}><summary>Map settings &amp; sources</summary>
         <div className={s.surfaceDetailControls} aria-label="Basemap and surface detail">
           {onBasemap&&<label>Basemap <select aria-label="Cutaway basemap" value={basemap} onChange={event=>onBasemap(event.target.value as "standard"|"imagery"|"kansas-aerial"|"topo")}><option value="standard">Detailed streets &amp; buildings · vector</option><option value="kansas-aerial">Kansas aerial · 2024 · 1 foot</option><option value="imagery">Aerial &amp; satellite imagery · Esri</option><option value="topo">USGS topographic map</option>{!["standard","imagery","kansas-aerial","topo"].includes(basemap??"")&&<option value={basemap}>Current basemap</option>}</select></label>}
           {onLayers&&<button type="button" onClick={onLayers}>Choose map layers</button>}
@@ -381,18 +398,21 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           <p>Opacity changes the map image and its display overlays. Recorded sample markers and source values stay unchanged.</p>
           <p>{detailCapture?.style.sources["kansas-ng911-2024"]?"Kansas NG911 aerial · February–April 2024 · approximately 1-foot source resolution. Exact local flight date unresolved; independent of map time.":"Provider basemap tiles. Imagery dates and resolution vary by location; refreshing is not a new acquisition."} Display context, not KFM evidence. <a href={detailCapture?.style.sources["kansas-ng911-2024"]?"https://storymaps.arcgis.com/stories/426fc98cba994ff99d0c9f21c96eef08":basemap==="imagery"?"https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9":basemap==="topo"?"https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer":"https://openfreemap.org/"} target="_blank" rel="noreferrer">Provider &amp; imagery dates ↗</a> After changing layers, refresh the surface. If the selector has moved, show that area first.</p>
           {!surfaceMode&&<p role="status">{detailStatus} Crisp cells are the default; no detail is invented beyond the provider resolution.</p>}
+        </div></details>
+        {!surfaceMode&&sampleRecords.length>0&&<details className={s.sampleLocationTools}><summary>Sample locations <span>{sampleRecords.length}</span></summary>
+          <div className={s.sampleLocationControls}>
+            <label>Sample location <select aria-label="Sample location" value={pickedLog?.recordId??""} onChange={event=>{const record=sampleRecords.find(item=>item.id===event.target.value);if(record){setSelection(null);setPickedLog({recordId:record.id,label:record.name});inspectRef.current(record);}else setPickedLog(null);}}><option value="">Select a recorded well or core</option>{sampleRecords.map(record=><option key={record.id} value={record.id}>{record.kind==="core"?"Core":"Well"} · {record.name}</option>)}</select></label>
+            <button type="button" disabled={!pickedRecord||!!failure} onClick={()=>{if(pickedRecord)api.current?.focusRecord(pickedRecord.id);}}>Zoom to sample</button>
+            <p>{pickedRecord?`Recorded location: ${pickedRecord.coordinates[1].toFixed(6)}, ${pickedRecord.coordinates[0].toFixed(6)}. `:""}The dot marks the recorded location on the flat map; rings are selection aids. Location accuracy is not supplied here.</p>
+          </div>
+        </details>}
         </div>
         {snapshot&&<SelectedSurfaceMap onCapture={setDetailCapture} refreshKey={`${basemap}:${detailRetry}`} source={map} bounds={snapshot.volume.bounds} image={snapshot.image} active={active&&surfaceMode} opacity={surface} smooth={smooth} onSmooth={()=>setSmooth(v=>!v)} />}
         <div hidden={surfaceMode}>
-        {sampleRecords.length>0&&<div className={s.sampleLocationControls}>
-          <label>Sample location <select aria-label="Sample location" value={pickedLog?.recordId??""} onChange={event=>{const record=sampleRecords.find(item=>item.id===event.target.value);if(record){setSelection(null);setPickedLog({recordId:record.id,label:record.name});inspectRef.current(record);}else setPickedLog(null);}}><option value="">Select a recorded well or core</option>{sampleRecords.map(record=><option key={record.id} value={record.id}>{record.kind==="core"?"Core":"Well"} · {record.name}</option>)}</select></label>
-          <button type="button" disabled={!pickedRecord||!!failure} onClick={()=>{if(pickedRecord)api.current?.focusRecord(pickedRecord.id);}}>Zoom to sample</button>
-          <p>{pickedRecord?`Recorded location: ${pickedRecord.coordinates[1].toFixed(6)}, ${pickedRecord.coordinates[0].toFixed(6)}. `:""}The dot marks the recorded location on the flat map; rings are selection aids. Location accuracy is not supplied here.</p>
-        </div>}
         {sceneRenderable&&<div className={s.cutawayStage}>
           <div ref={host} className={s.cutawayCanvas} hidden={!!failure} />
           {failure&&<div className={s.cutawayEmpty}><h4>3D view unavailable</h4><p role="alert">{failure}</p><button type="button" onClick={()=>{setFailure("");setRetry(v=>v+1);}}>Retry 3D view</button></div>}
-          {!failure&&<div className={s.cutawayCamera} aria-label="Area 3D navigation"><button type="button" aria-pressed={navigation==="orbit"} onClick={()=>setNavigation("orbit")}>Orbit</button><button type="button" aria-pressed={navigation==="pan"} onClick={()=>setNavigation("pan")}>Move</button><button type="button" onClick={()=>api.current?.camera("top")}>Top view</button><button type="button" aria-pressed={smooth} onClick={()=>setSmooth(v=>!v)}>{smooth?"Smooth image":"Exact pixels"}</button>{([['reset','Reset view'],['in','+'],['out','−']] as const).map(([action,label])=><button type="button" key={action} aria-label={action==='in'?'Zoom in':action==='out'?'Zoom out':label} onClick={()=>api.current?.camera(action)}>{label}</button>)}</div>}
+          {!failure&&<div className={s.cutawayCamera} aria-label="Area 3D navigation"><button type="button" aria-pressed={navigation==="orbit"} onClick={()=>setNavigation("orbit")}>Orbit</button><button type="button" aria-pressed={navigation==="pan"} onClick={()=>setNavigation("pan")}>Move</button><details className={s.areaCameraTools}><summary>Camera</summary><div><button type="button" onClick={()=>api.current?.camera("top")}>Top view</button><button type="button" aria-pressed={smooth} onClick={()=>setSmooth(v=>!v)}>{smooth?"Smooth image":"Exact pixels"}</button><button type="button" onClick={()=>api.current?.camera("reset")}>Reset view</button></div></details>{([['in','+'],['out','−']] as const).map(([action,label])=><button type="button" key={action} aria-label={action==='in'?'Zoom in':action==='out'?'Zoom out':label} onClick={()=>api.current?.camera(action)}>{label}</button>)}</div>}
           <div className={s.cutawaySceneLabel}><span>{navigation==="pan"?"Drag to move":"Drag to orbit"} · scroll to zoom · select a source</span></div>
           <div className={s.cutawayStamp}>{scale}× DEPTH <span>·</span> {detailShown?"HIGH-DETAIL MAP":snapshot?.image?"SELECTED-AREA MAP":"FLAT REFERENCE PLANE · MAP IMAGE UNAVAILABLE"}</div>
         </div>}

@@ -107,3 +107,14 @@ test('late locator screenshot preserves identical source capture but real change
  button(h.tree,'Reload surface layers').props.onClick();await h.render();await h.render();assert.equal(h.maps.length,3,'explicit retry works even when content is unchanged');
  h.h.dispose();
 });
+
+test('surface navigation keeps advanced actions in a closed disclosure and guidance after the map region',async()=>{
+ const h=await harness(),stage=findNode(h.tree,n=>n.props?.className==='surfaceMapStage');
+ const children=stage.props.children.flat(Infinity).filter(Boolean),map=children.find(n=>n.props?.className==='surfaceMap'),hint=children.find(n=>n.props?.className==='surfaceHint');
+ assert.ok(children.indexOf(map)<children.indexOf(hint),'guidance stays outside the live map region and follows its bottom controls');
+ assert.equal(map.props.role,'region');assert.equal(map.props.children,undefined,'map transport owns only the interactive map region');
+ const tools=findNode(stage,n=>n.props?.className==='surfaceMapTools');assert.equal(tools.type,'details');assert.equal(tools.props.open,undefined);
+ assert.ok(findNode(tools,n=>n.type==='summary'));assert.ok(button(tools,'Crisp imagery'));assert.ok(button(tools,'Reload surface layers'));
+ assert.ok(button(stage,'Zoom selected surface in'));assert.ok(button(stage,'Zoom selected surface out'));assert.ok(button(stage,'Fit selected slice'));
+ h.h.dispose();
+});
