@@ -14,20 +14,34 @@ import IntakeDeskSummary from "../intake-desk-summary";
 import styles from "./workspace.module.css";
 
 type View = "find" | "library" | "activity";
+type Source = "maps" | "satellite" | "history";
 export default function DownloadsWorkspace() {
   const local = useLocalDownloads(), reviewed = useEarthEngineContext();
   const maps = usePublicMapDownloads({ onTransferTerminal: local.refreshLibrary, blockedByOtherDownload: Boolean(local.status?.active) || local.starting });
-  const [view, setView] = useState<View>("find"), [source, setSource] = useState<"maps" | "satellite" | "history">("satellite");
+  const [view, setView] = useState<View>("find"), [source, setSource] = useState<Source>("satellite");
   const items = useMemo(() => normalizeDownloadActivity(local.status, maps.status), [local.status, maps.status]);
   const active = items.filter(item => item.active), allConnected = local.connection === "connected" && maps.connection === "connected";
   const someConnected = local.connection === "connected" || maps.connection === "connected", connecting = local.connection === "connecting" || maps.connection === "connecting";
   const checked = local.lastChecked && maps.lastChecked ? new Date(Math.min(Date.parse(local.lastChecked), Date.parse(maps.lastChecked))).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : null;
   const connect = () => { local.connect(); maps.connect(); };
-  const openActivity = () => setView("activity");
-  const openLibrary = () => setView("library");
+  const navigate = (nextView: View, nextSource: Source = source) => {
+    const hash = nextView === "library" ? "#library" : nextView === "activity" ? "#activity" : nextSource === "history" ? "#history" : nextSource === "maps" ? "#public-maps" : "#public-climate";
+    if (window.location.hash !== hash) window.history.pushState(window.history.state, "", hash);
+    setView(nextView); setSource(nextSource);
+  };
+  const openActivity = () => navigate("activity");
+  const openLibrary = () => navigate("library");
   useEffect(() => {
-    const deepLink = () => { if (window.location.hash === "#library") setView("library"); else if (window.location.hash === "#history") { setView("find"); setSource("history"); } else if (["#public-maps", "#public-climate"].includes(window.location.hash)) { setView("find"); setSource(window.location.hash === "#public-maps" ? "maps" : "satellite"); } };
-    deepLink(); window.addEventListener("hashchange", deepLink); return () => window.removeEventListener("hashchange", deepLink);
+    const deepLink = () => {
+      const hash = window.location.hash;
+      if (hash === "#library") setView("library");
+      else if (hash === "#activity") setView("activity");
+      else if (["", "#history", "#public-maps", "#public-climate"].includes(hash)) {
+        setView("find"); setSource(hash === "#history" ? "history" : hash === "#public-maps" ? "maps" : "satellite");
+      }
+    };
+    deepLink(); window.addEventListener("hashchange", deepLink); window.addEventListener("popstate", deepLink);
+    return () => { window.removeEventListener("hashchange", deepLink); window.removeEventListener("popstate", deepLink); };
   }, []);
   return <main className={styles.page} data-download-scroll data-transfer-active={active.length > 0 || local.starting || maps.busy === "download" || local.library?.state === "scanning" || maps.status?.refresh.state === "running"}>
     <div className={styles.wrap}>
@@ -39,12 +53,12 @@ export default function DownloadsWorkspace() {
       </div>
       <LocalCacheSettings onSaved={() => { local.refresh(); maps.refresh(); }} />
       <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{local.announcement} {maps.announcement}</p>
-      <nav className={styles.workspaceNav} aria-label="Download workspace"><button type="button" aria-controls="download-find" aria-current={view === "find" ? "page" : undefined} onClick={() => setView("find")}>Find data</button><button type="button" aria-controls="download-library" aria-current={view === "library" ? "page" : undefined} onClick={() => setView("library")}>My library</button><button type="button" aria-controls="download-activity" aria-current={view === "activity" ? "page" : undefined} onClick={openActivity}>Activity{active.length > 0 && <span>{active.length}</span>}</button></nav>
+      <nav className={styles.workspaceNav} aria-label="Download workspace"><button type="button" aria-controls="download-find" aria-current={view === "find" ? "page" : undefined} onClick={() => navigate("find")}>Find data</button><button type="button" aria-controls="download-library" aria-current={view === "library" ? "page" : undefined} onClick={openLibrary}>My library</button><button type="button" aria-controls="download-activity" aria-current={view === "activity" ? "page" : undefined} onClick={openActivity}>Activity{active.length > 0 && <span>{active.length}</span>}</button></nav>
       <div className={styles.libraryOverview}><button type="button" onClick={openLibrary}>View downloaded data →</button><span>{local.library?.generatedAt ? `${local.library.totalFiles.toLocaleString()} stored files · ${items.filter(item => item.state === "downloaded").length} completed recent transfers` : "My library shows stored files when this computer is connected."}{local.library?.generatedAt && (local.library.state !== "complete" || local.connection !== "connected") ? " · last completed scan" : ""}</span></div>
       <div className={styles.workbench}>
         <div className={styles.mainColumn}>
           <div id="download-find" hidden={view !== "find"}>
-            <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => setSource("maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => setSource("satellite")}><span>02</span><strong>Satellite, climate &amp; storms</strong><small>Public files · no login</small></button><button type="button" aria-pressed={source === "history"} onClick={() => setSource("history")}><span>03</span><strong>History &amp; archives</strong><small>Books, records &amp; research</small></button></nav>
+            <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => navigate("find", "maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => navigate("find", "satellite")}><span>02</span><strong>Satellite, climate &amp; storms</strong><small>Public files · no login</small></button><button type="button" aria-pressed={source === "history"} onClick={() => navigate("find", "history")}><span>03</span><strong>History &amp; archives</strong><small>Books, records &amp; research</small></button></nav>
             <div hidden={source !== "maps"}><PublicMapBrowser downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
             <div hidden={source !== "satellite"}><PublicMapBrowser collection="satellite" downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
             {source === "history" && <HistoryBrowser downloads={maps} onConnect={connect} blocked={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} />}

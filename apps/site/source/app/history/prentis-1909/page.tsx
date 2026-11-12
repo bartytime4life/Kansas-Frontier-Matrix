@@ -6,7 +6,16 @@ import h from "../../history.module.css";
 
 export default function HistoryReader() {
   const [text, setText] = useState(""), [error, setError] = useState(""), [query, setQuery] = useState(""), [page, setPage] = useState(0), [attempt, setAttempt] = useState(0);
-  useEffect(() => { const controller = new AbortController(); fetch("/history/prentis-1909.txt", { signal: controller.signal }).then(readHistoryText).then(value => { if (!controller.signal.aborted) setText(value); }).catch(reason => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "Unable to load the text."); }); return () => controller.abort(); }, [attempt]);
+  useEffect(() => {
+    const controller = new AbortController(), deadline = new AbortController();
+    const signal = AbortSignal.any([controller.signal, deadline.signal]);
+    const timer = setTimeout(() => deadline.abort(new DOMException("Text loading timed out. Retry when the connection is available.", "TimeoutError")), 15_000);
+    void fetch("/history/prentis-1909.txt", { signal }).then(response => readHistoryText(response, signal))
+      .then(value => { if (!controller.signal.aborted) setText(value); })
+      .catch(reason => { if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "Unable to load the text."); })
+      .finally(() => clearTimeout(timer));
+    return () => { controller.abort(); clearTimeout(timer); };
+  }, [attempt]);
   const paragraphs = useMemo(() => historyParagraphs(text), [text]);
   const results = useMemo(() => searchHistory(paragraphs, query), [paragraphs, query]);
   const pages = Math.max(1, Math.ceil(results.length / OCR_PAGE_SIZE)), current = Math.min(page, pages - 1);

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import type { AreaBounds, Borehole } from "./subsurface-model";
 import { RESOURCE_SOURCES, type ResourceKind, type ResourceLocation } from "./underground-resources-model";
-import { readBoundedJson } from "./bounded-json";
+import { browserJsonRequest } from "./browser-json-request";
 import s from "./subsurface.module.css";
 type Result={key:string;rows:ResourceLocation[];partial:boolean;rejected:number;retrievedAt:string};
 export default function UndergroundResources({map,bounds,revision,active,redacted,water,onInspect}:{map:MapLibreMap|null;bounds:AreaBounds|null;revision:number;active:boolean;redacted:boolean;water:Borehole[];onInspect:(r:Borehole)=>void}){
@@ -17,9 +17,9 @@ export default function UndergroundResources({map,bounds,revision,active,redacte
     if(!enabled||kind==="water"||!bounds)return;
     const controller=new AbortController();
     (async()=>{try{
-      const response=await fetch(`/api/subsurface/resources?${new URLSearchParams({kind,bounds:bounds.join(",")})}`,{signal:controller.signal});
+      const {response,body}=await browserJsonRequest(`/api/subsurface/resources?${new URLSearchParams({kind,bounds:bounds.join(",")})}`,{signal:controller.signal,maxBytes:1_000_000});
       if(!response.ok)throw new Error("Resource source is unavailable. Try again.");
-      const v=await readBoundedJson(response,1_000_000,controller.signal) as Omit<Result,"key">;
+      const v=body as Omit<Result,"key">;
       if(!Array.isArray(v.rows)||v.rows.length>200||typeof v.partial!=="boolean"||typeof v.retrievedAt!=="string")throw new Error("Unrecognized source response.");
       if(!controller.signal.aborted)setResult({...v,key});
     }catch(e){if(!controller.signal.aborted)setFailure({key,message:e instanceof Error?e.message:"Resource source unavailable."});}})();

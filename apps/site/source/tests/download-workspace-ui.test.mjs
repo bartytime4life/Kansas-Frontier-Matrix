@@ -21,7 +21,7 @@ test('no-login workbench defaults to public climate, retains controllers, and sh
     'next/link': { default: 'a' }, '../use-local-downloads': { useLocalDownloads: () => local }, '../use-public-map-downloads': { usePublicMapDownloads: value => { options = value; return maps; } },
     '../earth-engine-context-client': { useEarthEngineContext: () => ({ manifests: [] }) }, '../download-activity': activity,
     '../download-activity-panel': { ActivityWorkspace: 'activity', TransferPanel: 'transfer-panel' }, '../public-map-browser': { default: 'maps' }, '../earth-engine-picker': { default: 'satellite' }, '../history-browser': { default: 'history' }, '../download-library': { default: 'library' }, '../intake-desk-summary': { default: 'intake-desk' }, '../local-cache-settings': { default: 'cache-budget' }, './workspace.module.css': css,
-  }, { window: { location: { hash: '' }, addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
+  }, { window: { location: { hash: '' }, history: { state: null, pushState() {} }, addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
   let tree = render(); const view = id => findNode(tree, n => n.props?.id === id);
   assert.equal(view('download-find').props.hidden, false); assert.equal(view('download-library').props.hidden, true); assert.equal(view('download-activity').props.hidden, true);
@@ -80,4 +80,41 @@ test('persistent panel shows pending acknowledgement without inventing a job or 
   let tree = h.render(h.exports.TransferPanel, { items: [], local, maps, onViewActivity() {} }); assert.match(JSON.stringify(tree), /Confirming transfer/); assert.doesNotMatch(JSON.stringify(tree), /Ready when you are/); assert.equal(tree.props['data-pending'], true);
   const progress = findNode(tree, n => n.type === 'progress'); assert.equal(progress.props.value, undefined); assert.equal(progress.props.max, undefined); assert.equal(nodes(tree, n => n.type === h.exports.ActivityCard).length, 0);
   local.starting = false; maps.busy = 'download'; tree = h.render(h.exports.TransferPanel, { items: [], local, maps, onViewActivity() {} }); assert.match(JSON.stringify(tree), /Confirming transfer/); h.dispose();
+});
+
+async function routeWorkspace(hash = '') {
+ const events = new Map(), pushes = [], location = { hash };
+ const local = { status: eeStatus, connection: 'idle', starting: false, library: null, refreshLibrary() {} }, maps = { status: mapStatus, connection: 'idle', busy: null };
+ const history = { state: { router: 'preserved' }, pushState(state, _title, hash) { pushes.push({ state, hash }); location.hash = hash; } };
+ const h = await componentHarness('app/downloads/workspace.tsx', {
+  'next/link': { default: 'a' }, '../use-local-downloads': { useLocalDownloads: () => local }, '../use-public-map-downloads': { usePublicMapDownloads: () => maps },
+  '../earth-engine-context-client': { useEarthEngineContext: () => ({ manifests: [] }) }, '../download-activity': activity,
+  '../download-activity-panel': { ActivityWorkspace: 'activity', TransferPanel: 'transfer-panel' }, '../public-map-browser': { default: 'maps' }, '../history-browser': { default: 'history' }, '../download-library': { default: 'library' }, '../intake-desk-summary': { default: 'intake-desk' }, '../local-cache-settings': { default: 'cache-budget' }, './workspace.module.css': css,
+ }, { window: { location, history, addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
+ let tree;
+ const render = () => { tree = h.render(h.exports.default); h.commit(); tree = h.render(h.exports.default); return tree; };
+ render();
+ return { h, pushes, location, events, render, get tree() { return tree; }, navigate(hash, event = 'popstate') { location.hash = hash; events.get(event)?.(); return render(); } };
+}
+test('download actions retain canonical URLs and router state without starting transfers', async () => {
+ const h = await routeWorkspace();
+ try {
+  for (const [label, hash] of [['My library','#library'],['Activity','#activity'],['Find data','#public-climate'],['Maps &','#public-maps'],['History &','#history']]) {
+   button(h.tree,label).props.onClick();h.render();assert.equal(h.location.hash,hash);
+  }
+  const count=h.pushes.length;button(h.tree,'History &').props.onClick();h.render();assert.equal(h.pushes.length,count);
+  assert.ok(h.pushes.every(entry=>entry.state.router==='preserved'));
+ } finally { h.h.dispose(); }
+});
+test('download Back and Forward restore tab and category including the empty default URL', async () => {
+ const h=await routeWorkspace('#history'), visible=id=>!findNode(h.tree,n=>n.props?.id===id).props.hidden;
+ try {
+  assert.equal(button(h.tree,'History &').props['aria-pressed'],true);
+  h.navigate('#library');assert.equal(visible('download-library'),true);
+  h.navigate('#public-maps');assert.equal(visible('download-find'),true);assert.equal(button(h.tree,'Maps &').props['aria-pressed'],true);
+  h.navigate('');assert.equal(visible('download-find'),true);assert.equal(button(h.tree,'Satellite, climate &').props['aria-pressed'],true);
+  h.navigate('#activity');assert.equal(visible('download-activity'),true);
+  h.navigate('#history','hashchange');assert.equal(visible('download-find'),true);assert.equal(button(h.tree,'History &').props['aria-pressed'],true);
+  assert.equal(h.pushes.length,0);
+ }finally{h.h.dispose();assert.equal(h.events.size,0);}
 });
