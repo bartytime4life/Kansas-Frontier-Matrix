@@ -6,33 +6,35 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Route steward · Archaeology steward · Cultural-review reviewer · Policy steward · Evidence steward · Release steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../../../README.md
-  - ../../README.md
-  - ../README.md
-  - ../../../../README.md
-  - ../../../../explorer-web/README.md
-  - ../../../../../docs/doctrine/directory-rules.md
-  - ../../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../../../docs/domains/archaeology/README.md
-  - ../../../../../docs/domains/archaeology/SENSITIVITY.md
-  - ../../../../../docs/domains/archaeology/PUBLICATION_AND_POLICY.md
-  - ../../../../../docs/domains/archaeology/OBJECT_FAMILIES.md
-  - ../../../../../policy/domains/archaeology/README.md
-  - ../../../../../policy/sensitivity/archaeology/
-  - ../../../../../policy/release/archaeology/
-  - ../../../../../schemas/contracts/v1/runtime/
-  - ../../../../../schemas/contracts/v1/domains/archaeology/
-  - ../../../../../contracts/runtime/
-  - ../../../../../contracts/domains/archaeology/
-  - ../../../../../packages/evidence-resolver/README.md
-  - ../../../../../packages/policy-runtime/README.md
-  - ../../../../../data/README.md
-  - ../../../../../release/README.md
-  - ../../../../../tests/domains/archaeology/
-  - ../../../../../fixtures/domains/archaeology/
+  - "../../../README.md"
+  - "../../README.md"
+  - "../README.md"
+  - "../../../../README.md"
+  - "apps/site/README.md"
+  - "../../../../../docs/doctrine/directory-rules.md"
+  - "../../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../../../docs/domains/archaeology/README.md"
+  - "../../../../../docs/domains/archaeology/SENSITIVITY.md"
+  - "../../../../../docs/domains/archaeology/PUBLICATION_AND_POLICY.md"
+  - "../../../../../docs/domains/archaeology/OBJECT_FAMILIES.md"
+  - "../../../../../policy/domains/archaeology/README.md"
+  - "../../../../../policy/sensitivity/archaeology/"
+  - "../../../../../schemas/contracts/v1/runtime/"
+  - "../../../../../schemas/contracts/v1/domains/archaeology/"
+  - "../../../../../contracts/runtime/"
+  - "../../../../../contracts/domains/archaeology/"
+  - "../../../../../packages/evidence-resolver/README.md"
+  - "../../../../../packages/policy-runtime/README.md"
+  - "../../../../../data/README.md"
+  - "../../../../../release/README.md"
+  - "../../../../../tests/domains/archaeology/"
+  - "../../../../../fixtures/domains/archaeology/"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../../explorer-web/README.md"
+  - "NEEDS VERIFICATION: ../../../../../policy/release/archaeology/"
 tags: [kfm, apps, governed-api, routes, domains, archaeology, cultural-heritage, sensitive-domain, finite-outcomes, deny-by-default, evidencebundle, policydecision, release-manifest, exact-location-denial]
 notes:
   - "Refreshes the bounded governed-api Archaeology route-family contract."
@@ -40,6 +42,9 @@ notes:
   - "Archaeology exact site geometry, human remains, sacred sites, collection-security detail, looting-risk exposure, oral-history restrictions, sovereign/CARE-bearing cultural knowledge, private landowner detail, and unresolved cultural-review material fail closed unless a reviewed, receipt-backed, release-approved transform explicitly allows a bounded response."
   - "Route handlers, DTOs, middleware, schemas, tests, fixtures, authorization, policy enforcement, evidence resolution, release lookup, transform receipt support, logging redaction, telemetry redaction, deployment state, dashboards, and CI pass state remain NEEDS VERIFICATION."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, minimum safe route slice, runtime anti-bypass matrix, stronger exact-location denial, candidate-not-confirmed, cultural/steward review, safe-error, logging/telemetry, export-scope, and auditability gates without claiming runtime maturity."
+owning_root: apps/
+responsibility: "Document the Governed API Archaeology Domain Routes lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

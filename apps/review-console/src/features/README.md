@@ -6,30 +6,35 @@ version: v0.1
 status: draft
 owners: OWNER_TBD — Review steward · UI steward · Policy steward · Evidence steward · Release steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../../README.md
-  - ../../../README.md
-  - ../../../governed-api/README.md
-  - ../../../explorer-web/src/features/review_console_readonly/README.md
-  - ../../../../docs/architecture/ui/REVIEW_CONSOLE.md
-  - ../../../../docs/governance/REVIEW_DUTIES.md
-  - ../../../../policy/access/README.md
-  - ../../../../policy/decision/README.md
-  - ../../../../schemas/contracts/v1/review/
-  - ../../../../schemas/contracts/v1/evidence/
-  - ../../../../contracts/
-  - ../../../../data/README.md
-  - ../../../../release/README.md
-  - ../../../../packages/ui/README.md
-  - ../../../../packages/evidence-resolver/README.md
-  - ../../../../packages/policy-runtime/README.md
+  - "../../README.md"
+  - "../../../README.md"
+  - "../../../governed-api/README.md"
+  - "apps/site/README.md"
+  - "../../../../docs/architecture/ui/REVIEW_CONSOLE.md"
+  - "../../../../docs/governance/REVIEW_DUTIES.md"
+  - "../../../../policy/access/README.md"
+  - "../../../../policy/decision/README.md"
+  - "../../../../schemas/contracts/v1/review/"
+  - "../../../../schemas/contracts/v1/evidence/"
+  - "../../../../contracts/"
+  - "../../../../data/README.md"
+  - "../../../../release/README.md"
+  - "../../../../packages/ui/README.md"
+  - "../../../../packages/evidence-resolver/README.md"
+  - "../../../../packages/policy-runtime/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../explorer-web/src/features/review_console_readonly/README.md"
 tags: [kfm, apps, review-console, src, features, review-workflow, queue, item-detail, decision-pane, audit, provenance]
 notes:
   - "Replaces an empty review-console source feature README with a bounded feature-tree contract."
   - "This path may hold app-local Review Console feature modules, but it must not become review doctrine, policy authority, schema authority, contract authority, lifecycle storage, release authority, proof storage, shared UI package root, or public review surface."
   - "Feature files, route wiring, decision recorder integration, schemas, tests, fixtures, policy enforcement, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
+owning_root: apps/
+responsibility: "Document the Review Console Source Features lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

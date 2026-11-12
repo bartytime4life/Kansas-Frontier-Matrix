@@ -6,36 +6,38 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Route steward · Policy steward · Evidence steward · Release steward · Runtime steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../routes/README.md
-  - ../../routes/domains/README.md
-  - ./routes/README.md
-  - ../ai/README.md
-  - ../../../README.md
-  - ../../../explorer-web/README.md
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../../schemas/contracts/v1/runtime/
-  - ../../../../schemas/contracts/v1/domains/
-  - ../../../../schemas/contracts/v1/evidence/
-  - ../../../../schemas/contracts/v1/focus/
-  - ../../../../contracts/runtime/
-  - ../../../../contracts/domains/
-  - ../../../../contracts/evidence/
-  - ../../../../contracts/focus/
-  - ../../../../policy/access/README.md
-  - ../../../../policy/decision/README.md
-  - ../../../../policy/domains/README.md
-  - ../../../../policy/telemetry/README.md
-  - ../../../../packages/evidence-resolver/README.md
-  - ../../../../packages/policy-runtime/README.md
-  - ../../../../runtime/README.md
-  - ../../../../release/README.md
-  - ../../../../data/README.md
+  - "../README.md"
+  - "../../README.md"
+  - "../../routes/README.md"
+  - "../../routes/domains/README.md"
+  - "./routes/README.md"
+  - "../ai/README.md"
+  - "../../../README.md"
+  - "apps/site/README.md"
+  - "../../../../docs/doctrine/directory-rules.md"
+  - "../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../../schemas/contracts/v1/runtime/"
+  - "../../../../schemas/contracts/v1/domains/"
+  - "../../../../schemas/contracts/v1/evidence/"
+  - "../../../../schemas/contracts/v1/focus/"
+  - "../../../../contracts/runtime/"
+  - "../../../../contracts/domains/"
+  - "../../../../contracts/evidence/"
+  - "../../../../contracts/focus/"
+  - "../../../../policy/access/README.md"
+  - "../../../../policy/decision/README.md"
+  - "../../../../policy/domains/README.md"
+  - "../../../../policy/telemetry/README.md"
+  - "../../../../packages/evidence-resolver/README.md"
+  - "../../../../packages/policy-runtime/README.md"
+  - "../../../../runtime/README.md"
+  - "../../../../release/README.md"
+  - "../../../../data/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../explorer-web/README.md"
 tags: [kfm, apps, governed-api, src, governed-api-package, python-package, trust-membrane, runtime-response-envelope, finite-outcomes, safe-errors, safe-observability, package-boundary]
 notes:
   - "Refreshes the bounded governed_api package-source contract."
@@ -43,6 +45,9 @@ notes:
   - "Package files, route wiring, DTOs, middleware, schemas, tests, fixtures, authorization, policy enforcement, evidence resolution, release lookup, transform receipt support, safe logging, safe telemetry, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
   - "`apps/governed-api/src/governed_api/routes/README.md` exists as a blank file on main at the time of this parent refresh; the filled route-package README is handled in a separate draft PR unless merged before this branch."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, child-package alignment, minimum safe package slice, runtime anti-bypass matrix, stronger safe-observability and AI-boundary gates, and validation/definition-of-done updates without claiming runtime maturity."
+owning_root: apps/
+responsibility: "Document the Governed API Python Package lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

@@ -3,14 +3,26 @@ KFM_WIKI_SOURCE
 page_id: Getting-Started
 title: Getting Started
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-10-27
+updated: 2026-11-11
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Getting-Started.md
-evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
+evidence_checkpoint: main@d4d84171653a2f2582b48ece511dc010857fde15; historical-hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
 publication_effect: none until reviewed source is separately synchronized
 -->
 
 # Getting Started
+
+## Repository update — November 11, 2026
+
+Main `d4d84171653a2f2582b48ece511dc010857fde15` includes merged Explorer
+recovery, replay-inspection and Flight/Zod corrections. The
+[repository review](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/reports/documentation-currentness-review-20261111.md)
+separates current source and recorded validation from the historical public
+website and media qualification below. Use the
+[Explorer guide index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/site/source/docs/README.md)
+for current usage. This source update does not synchronize the native wiki or
+establish a new deployed version.
+
 
 **Choose the experience or source you want to evaluate.**
 
@@ -23,7 +35,7 @@ shows dated renderer excerpts before you open a workspace.
 The public welcome was reachable in Chrome on October 27. Full route, provider,
 accessibility and device acceptance are separate from that observation.
 
-## Run the public application source
+## Reproduce the historical public application source
 
 The public Node composition has its own source tree and npm lockfile. Use Node.js
 `>=22.13.0`. This is the exact application revision built and tested in this edition:
@@ -49,8 +61,8 @@ Use `main` for contracts, schemas, validators, capture/admission and release sup
 The root npm build/test/lint commands intentionally report `WORKFLOW_HOLD`; they do
 not run the public app. [Repository Map](Repository-Map.md) explains ownership.
 
-The [preserved Sites mirror](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/17f106d558674ec92a11809bcf3a06c82453777e/apps/site/README.md) has a separate
-local workflow. Do not substitute it for the public Node application or overwrite its
+The [current repository Explorer](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/site/README.md) has a separate
+[local installation and verification workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/installation.md#explorer-site-mirror). Do not substitute it for the public Node application or overwrite its
 source, audience or persisted data.
 
 ## Contribute one useful slice

@@ -8,7 +8,7 @@ prior_version: v0.9
 status: historical snapshot; current app placement noted below
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-10-20
+updated: 2026-11-11
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -88,6 +88,15 @@ notes:
 <div align="center">
 
 # Deployable Applications
+
+## Repository documentation update — November 11, 2026
+
+Use [Site setup](site/README.md), the [complete Explorer guide index](site/source/docs/README.md)
+and [current review](../docs/reports/documentation-currentness-review-20261111.md)
+for the inspected repository Explorer checkpoint. The metadata-only app README
+repairs in this edition do not establish implementation or deployment of dormant
+application lanes. Existing source snapshots below retain their own scope.
+
 
 `apps/`
 

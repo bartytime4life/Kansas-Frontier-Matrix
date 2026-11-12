@@ -1,4 +1,33 @@
 <!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/domains/habitat/releases/readme
+title: Habitat release documentation index
+type: navigation-guide
+version: v1.1
+status: draft; review-required; navigation-only
+owners: ["NEEDS VERIFICATION — existing domain/documentation stewardship assignments"]
+created: 2026-06-04
+updated: 2026-11-11
+policy_label: public-documentation
+owning_root: docs/
+responsibility: "Maintain navigation and qualification boundaries for Habitat release documentation index."
+truth_posture: "CONFIRMED repository navigation; PROPOSED path-based document identity replacing an unassigned placeholder; NEEDS VERIFICATION historical semantic claims and named stewardship."
+related:
+  - ../README.md
+  - ../../../../release/README.md
+  - ../../../README.md
+[/KFM_META_BLOCK_V2] -->
+
+# 🌾 Habitat Domain — Release Index
+
+<details>
+<summary>Previous metadata envelope — retained as historical context</summary>
+
+The exact base-envelope content from main
+`d4d84171653a2f2582b48ece511dc010857fde15` is retained below, including its
+unassigned document-ID placeholder and nested role/taxonomy fields. The current envelope above is a review candidate; it does
+not assign people, adopt authority or rewrite an archived lineage record.
+
+```yaml
 doc_id: kfm://doc/<uuid>                                  # placeholder — assign on intake
 title: Habitat Domain — Release Index (Documentation Lane)
 type: standard
@@ -19,9 +48,10 @@ notes:
   - "CONTRACT_VERSION = 3.0.0 pinned."
   - "This is a DOCUMENTATION lane only. Canonical release decisions live under release/, not here."
   - "All repo paths PROPOSED until verified against a mounted repository."
-[/KFM_META_BLOCK_V2] -->
+```
 
-# 🌾 Habitat Domain — Release Index
+</details>
+
 
 > Human-facing index and navigation lane for **published Habitat releases**. This doc *explains and points to* the canonical release artifacts; it is **not** a release store.
 
@@ -59,7 +89,7 @@ notes:
 - [10. How to read / add an entry](#10-how-to-read--add-an-entry)
 - [11. FAQ](#11-faq)
 - [12. Related docs](#12-related-docs)
-- [13. Appendix — field reference](#13-appendix--field-reference)
+- Field-reference appendix: not materialized; inspect the owning release paths above.
 
 ---
 
@@ -154,7 +184,7 @@ docs/
 ```
 
 > [!NOTE]
-> The directory **rules** above are CONFIRMED. Whether these specific Habitat paths are populated in any given repository is **PROPOSED** until verified against a mounted repo — see the [Verification](#13-appendix--field-reference) note in the appendix.
+> The directory **rules** above are CONFIRMED. Whether these specific Habitat paths are populated in any given repository is **PROPOSED** until verified against a mounted repo — verify the owning paths under [Where Habitat releases actually live](#5-where-habitat-releases-actually-live).
 
 [↑ Back to top](#-habitat-domain--release-index)
 

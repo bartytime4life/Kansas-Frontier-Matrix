@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://app/review-console/src/features/audit-log/readme
 title: Review Console Audit Log — Read-Only Governed Audit Projection Boundary
-type: app-readme; directory-readme; feature-boundary; read-only-audit-projection
+type: feature-boundary
 version: v0.2
 status: draft; repository-grounded; readme-only-direct-lane; review-console-package-placeholder; review-record-schema-paired; contract-schema-drift; executable-feature-not-established
 owners: OWNER_TBD — Review steward · Audit steward · Governance steward · Security steward · Policy steward · Evidence steward · Release steward · API steward · UI steward · Validation steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-19
+updated: 2026-11-11
 policy_label: "public-governance; restricted-review; read-only-audit-projection; role-gated; append-only-aware; privacy-minimizing; no-local-writes; no-release-authority; no-truth-authority"
 current_path: apps/review-console/src/features/audit_log/README.md
 owning_root: apps/
@@ -21,24 +21,26 @@ evidence_snapshot:
   inventory_method: GitHub connector exact file reads plus bounded code, branch, and open-pull-request searches
   bounded_direct_lane_result: search for audit_log surfaced this README only; recursive lane enumeration remains NEEDS VERIFICATION
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../../README.md
-  - ../../../../governed-api/README.md
-  - ../../../../explorer-web/src/features/review_console_readonly/README.md
-  - ../../../../../docs/architecture/ui/REVIEW_CONSOLE.md
-  - ../../../../../docs/governance/REVIEW_DUTIES.md
-  - ../../../../../docs/security/AUDIT_INVARIANTS.md
-  - ../../../../../docs/doctrine/directory-rules.md
-  - ../../../../../contracts/governance/ReviewRecord.md
-  - ../../../../../schemas/contracts/v1/governance/review_record.schema.json
-  - ../../../../../fixtures/contracts/v1/governance/review_record/README.md
-  - ../../../../../tools/validators/validate_review_record.py
-  - ../../../../../tests/schemas/test_common_contracts.py
-  - ../../../../../policy/access/README.md
-  - ../../../../../policy/decision/README.md
-  - ../../../../../data/README.md
-  - ../../../../../release/README.md
+  - "../README.md"
+  - "../../README.md"
+  - "../../../README.md"
+  - "../../../../governed-api/README.md"
+  - "apps/site/README.md"
+  - "../../../../../docs/architecture/ui/REVIEW_CONSOLE.md"
+  - "../../../../../docs/governance/REVIEW_DUTIES.md"
+  - "../../../../../docs/security/AUDIT_INVARIANTS.md"
+  - "../../../../../docs/doctrine/directory-rules.md"
+  - "../../../../../contracts/governance/ReviewRecord.md"
+  - "../../../../../schemas/contracts/v1/governance/review_record.schema.json"
+  - "../../../../../fixtures/contracts/v1/governance/review_record/README.md"
+  - "../../../../../tools/validators/validate_review_record.py"
+  - "../../../../../tests/schemas/test_common_contracts.py"
+  - "../../../../../policy/access/README.md"
+  - "../../../../../policy/decision/README.md"
+  - "../../../../../data/README.md"
+  - "../../../../../release/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../../explorer-web/src/features/review_console_readonly/README.md"
 tags: [kfm, apps, review-console, audit-log, read-model, review-record, provenance, immutable-history, role-gated, evidence, policy, release-context, correction, rollback, safe-rendering]
 notes:
   - "v0.2 preserves the existing feature path and narrows it to a read-only governed projection boundary."

@@ -6,7 +6,7 @@ version: v0.3.0
 status: proposed; review-required; not-native-wiki-published
 owners: ["@bartytime4life"]
 created: 2026-08-07
-updated: 2026-10-29
+updated: 2026-11-11
 policy_label: public-documentation
 current_path: docs/wiki/README.md
 owning_root: docs/
@@ -94,6 +94,14 @@ Wiki pages use KFM's core truth labels:
 | `PROPOSED` | A recommended design or future state, not verified as current implementation |
 | `UNKNOWN` | Available evidence is insufficient |
 | `NEEDS VERIFICATION` | A concrete check remains before the claim can be relied upon |
+
+## November 11 repository documentation review
+
+Home, Getting Started, Project Status, Development and Validation, Map/UI/AI and
+navigation now distinguish current repository recovery/replay behavior from the
+October hosted/media qualification. The complete Explorer guide index and
+source-bound review are linked from those pages. The finite wiki page set and
+projection helper remain unchanged; this update does not publish the native wiki.
 
 ## October 29 scientific reading path
 

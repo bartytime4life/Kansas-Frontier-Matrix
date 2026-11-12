@@ -9,7 +9,7 @@ status: draft; repository-grounded; placeholder-only; no-executable-worker-bindi
 owners: OWNER_TBD — Worker steward · Validation steward · Runtime steward · Contract steward · Schema steward · Evidence steward · Policy steward · Receipt steward · Security reviewer · Operations steward · Docs steward
 review_route: .github/CODEOWNERS defaults GitHub review routing to @bartytime4life; this is not stewardship, independent approval, validation authority, policy authority, review authority, release authority, or proof that review occurred
 created: 2026-06-16
-updated: 2026-08-26
+updated: 2026-11-11
 policy_label: public-documentation; app-boundary; fail-closed; candidate-only; non-authoritative; no-direct-publication
 current_path: apps/workers/src/validate_worker/README.md
 owning_root: apps/
@@ -73,41 +73,42 @@ implementation_facts:
   worker_integrity_launch_readiness_family: confirmed executable fixture-only validation family outside this worker and outside the canonical registry
   worker_integrity_launch_authority: explicitly false; review remains required
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../../cli/src/kfm_cli/commands/validate.py
-  - ../../../governed-api/README.md
-  - ../../../review-console/README.md
-  - ../../../../tools/validate_all.py
-  - ../../../../tools/validators/README.md
-  - ../../../../tools/validators/validate_all.py
-  - ../../../../tools/validators/validator_registry.json
-  - ../../../../tests/validators/test_validator_orchestrator.py
-  - ../../../../docs/runbooks/VALIDATOR_ORCHESTRATOR.md
-  - ../../../../docs/dashboards/observability/validator-orchestrator-health.md
-  - ../../../../pipelines/validate/README.md
-  - ../../../../pipelines/validate/main.py
-  - ../../../../pipeline_specs/README.md
-  - ../../../../contracts/data/validation_report.md
-  - ../../../../schemas/contracts/v1/data/validation_report.schema.json
-  - ../../../../fixtures/data/validation_report/README.md
-  - ../../../../tools/validators/data/validate_validation_report.py
-  - ../../../../tests/validators/test_validate_validation_report.py
-  - ../../../../contracts/runtime/worker_integrity_launch_readiness.md
-  - ../../../../schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json
-  - ../../../../tools/validators/runtime/validate_worker_integrity_launch_readiness.py
-  - ../../../../tests/validators/test_worker_integrity_launch_readiness.py
-  - ../../../../contracts/validation/README.md
-  - ../../../../schemas/contracts/v1/validation/README.md
-  - ../../../../artifacts/qa/validation/README.md
-  - ../../../../data/receipts/validation/README.md
-  - ../../../../data/proofs/validation_report/README.md
-  - ../../../../policy/README.md
-  - ../../../../release/README.md
-  - ../../../../.github/workflows/validator-suite.yml
-  - ../../../../.github/workflows/schema-validation.yml
-  - ../../../../.github/workflows/contracts-validate.yml
-  - ../../../../.github/workflows/worker-integrity-launch-readiness.yml
+  - "../README.md"
+  - "../../README.md"
+  - "../../../governed-api/README.md"
+  - "../../../review-console/README.md"
+  - "../../../../tools/validate_all.py"
+  - "../../../../tools/validators/README.md"
+  - "../../../../tools/validators/validate_all.py"
+  - "../../../../tools/validators/validator_registry.json"
+  - "../../../../tests/validators/test_validator_orchestrator.py"
+  - "../../../../docs/runbooks/VALIDATOR_ORCHESTRATOR.md"
+  - "../../../../docs/dashboards/observability/validator-orchestrator-health.md"
+  - "../../../../pipelines/validate/README.md"
+  - "../../../../pipelines/validate/main.py"
+  - "../../../../pipeline_specs/README.md"
+  - "../../../../contracts/data/validation_report.md"
+  - "../../../../schemas/contracts/v1/data/validation_report.schema.json"
+  - "../../../../fixtures/data/validation_report/README.md"
+  - "../../../../tools/validators/data/validate_validation_report.py"
+  - "../../../../tests/validators/test_validate_validation_report.py"
+  - "../../../../contracts/runtime/worker_integrity_launch_readiness.md"
+  - "../../../../schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json"
+  - "../../../../tools/validators/runtime/validate_worker_integrity_launch_readiness.py"
+  - "../../../../tests/validators/test_worker_integrity_launch_readiness.py"
+  - "../../../../contracts/validation/README.md"
+  - "../../../../schemas/contracts/v1/validation/README.md"
+  - "../../../../artifacts/qa/validation/README.md"
+  - "../../../../data/receipts/validation/README.md"
+  - "../../../../data/proofs/validation_report/README.md"
+  - "../../../../policy/README.md"
+  - "../../../../release/README.md"
+  - "../../../../.github/workflows/validator-suite.yml"
+  - "../../../../.github/workflows/schema-validation.yml"
+  - "../../../../.github/workflows/contracts-validate.yml"
+  - "../../../../.github/workflows/worker-integrity-launch-readiness.yml"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../cli/src/kfm_cli/commands/validate.py"
 non_effects:
   - No executable worker code, package, import, validator, queue, schedule, service identity, configuration, test, fixture, deployment, network access, report, receipt, proof, review record, release record, lifecycle mutation, or public route is created
   - No schema, contract, policy, evidence, review, lifecycle, release, correction, rollback, or publication authority is changed
@@ -119,6 +120,7 @@ notes:
   - "This edition refreshes the placeholder boundary against the 24-entry canonical registry, the now-present bounded generic ValidationReport validator and fixtures, and the separate inactive WorkerIntegrityLaunchReadinessCandidate family."
   - "Repository-wide validator orchestration exists under tools/, but Directory Rules prohibit production apps from depending on tools as runtime libraries."
   - "The general ValidationReport prose contract, placeholder schema, orchestrator report, domain reports, receipts, and proof-support lanes are distinct surfaces and must not be collapsed."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

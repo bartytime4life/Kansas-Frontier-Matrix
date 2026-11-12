@@ -3,18 +3,35 @@ KFM_WIKI_SOURCE
 page_id: Project-Status
 title: Project Status
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-10-27
+updated: 2026-11-11
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Project-Status.md
-evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
+evidence_checkpoint: main@d4d84171653a2f2582b48ece511dc010857fde15; historical-hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
 publication_effect: none until reviewed source is separately synchronized
 -->
 
 # Project Status
 
-**October 27, 2026: source identity first, then the claim.**
+**November 11, 2026: source identity first, then the claim.**
 
-## What this edition verified
+## Current repository checkpoint
+
+| Surface | Recorded result | Boundary |
+|---|---|---|
+| Inspected monorepo | main `d4d84171653a2f2582b48ece511dc010857fde15` | Contains externally merged PR #5822; its tree equals that PR's head tree |
+| Explorer source | `apps/site/source/` at `8a532b34eb691c06a53325ef553ea248ebbb11d5` | Preserved Sites lineage plus repository overlays |
+| Local application validation | Build/types; 1,804 Site tests; lint zero errors and 77 inherited warnings | Node 22.13.1 and clean exact-lock install |
+| Conformance and route smoke | 380 checks including 79 mirror checks; 110 smoke checks across 79 routes | Fourteen provider-only routes unexercised |
+| PR #5822 CI | 52 successes and one skip at readback | Exact submitted head; merge and deployment are distinct |
+| Browser and deployment | Interval-load browser acceptance pending; no new deployment performed | The browser tool could not create a test tab |
+
+[Current review and documentation audit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/reports/documentation-currentness-review-20261111.md) ·
+[Explorer guides](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/site/source/docs/README.md).
+
+The following qualification remains historical. Its public Node counts and
+media do not describe the current repository mirror or a freshly read deployment.
+
+## Historical public qualification — October 27, 2026
 
 | Surface | Result | Evidence boundary |
 |---|---|---|

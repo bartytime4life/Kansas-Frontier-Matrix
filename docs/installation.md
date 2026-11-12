@@ -2,16 +2,16 @@
 doc_id: kfm://doc/installation
 title: Install and configure KFM locally
 type: guide
-version: v1
+version: v1.1
 status: repository-grounded; local-development-only
 owners: ["@bartytime4life"]
 created: 2026-09-27
-updated: 2026-10-19
+updated: 2026-11-11
 policy_label: public-documentation
 current_path: docs/installation.md
 owning_root: docs/
 responsibility: current local dependency installation and configuration paths
-truth_posture: CONFIRMED local command definitions at main@0bcdc2e784, GitHub Site manifest at main@788fdf4829c7, and Site launcher, smoke and make site-check behavior at main@46afef9b01; runtime results require separate execution evidence
+truth_posture: CONFIRMED command definitions inspected at main@d4d84171653a2f2582b48ece511dc010857fde15; recorded runtime results retain their exact application revision; deployment and provider acceptance require separate evidence
 related:
   - ../README.md
   - ../apps/site/README.md
@@ -146,7 +146,9 @@ The committed `allowBuilds` policy in `pnpm-workspace.yaml` controls dependency 
 
 ## Explorer Site mirror
 
-The runnable local web app is the historical Site source mirror. On Linux:
+The runnable repository Explorer is the preserved Site source mirror, including
+subsequent repository safety and recovery overlays. It uses its own npm lockfile;
+it is distinct from the public Node composition described above. On Linux:
 
 ```bash
 cd apps/site/source
@@ -173,6 +175,24 @@ and local bindings contain no hosted private D1 rows, R2 uploads, or live
 provider snapshot.
 
 To check the Site the same way the `explorer-site` workflow does, run `make site-check` from the repository root. It installs from the Site's lockfile, then runs lint, typecheck, the build with its node tests, and `apps/site/smoke-local.sh`, which checks every API route that can answer without a provider against a temporary local state. Neither the tests nor the smoke need provider network. See [Site setup](../apps/site/README.md) and the Site's [feature notes](../apps/site/source/README.md).
+
+For manual verification, build before running tests that import generated
+`dist/server` output. From `apps/site/source/`, after installation:
+
+```bash
+npm run build
+node_modules/.bin/tsc --noEmit --incremental false
+node --test tests/*.test.mjs
+npm run lint
+SITE_PORT=4191 ../smoke-local.sh
+```
+
+Choose an unused smoke port. This is an explicit manual sequence; the existing
+`make site-check` orchestration remains unchanged. Use `../serve-local.sh` for
+the built Worker; a raw `vinext start` command does not supply its Cloudflare
+runtime/binding environment. [Explorer guides](../apps/site/source/docs/README.md)
+and the [current review](reports/documentation-currentness-review-20261111.md)
+separate source checks, native browser acceptance, installed state and deployment.
 
 ## Local data and configuration
 

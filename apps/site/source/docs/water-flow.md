@@ -1,5 +1,11 @@
 # Flowing water — zoom-adaptive repository candidate
 
+For current selected-record timing and stalled interval recovery, use the
+[Observatory guide](observatory-replay.md). Provider discharge, daily means,
+map display and release eligibility retain separate meanings. Dated validation
+below remains bound to its recorded source.
+
+
 The dated evidence below belongs to the source implementation. For the
 2026-10-17 local comparison and current-main reconciliation, see
 [the local port record](explorer-local-port-20261017.md).

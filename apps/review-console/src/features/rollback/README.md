@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owners: OWNER_TBD — Review steward · Rollback steward · Release steward · Policy steward · Evidence steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-11-11
 policy_label: public
 related:
   - ../README.md
@@ -28,6 +28,9 @@ notes:
   - "Replaces the greenfield rollback feature stub with a bounded feature contract."
   - "This feature may support rollback review and rollback-target inspection, but it must not execute rollbacks, mutate published artifacts, create RollbackCard records locally, or bypass release/correction governance."
   - "Feature files, route wiring, schemas, tests, fixtures, governed API envelopes, release/rollback handoffs, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
+owning_root: apps/
+responsibility: "Document the Review Console Rollback Feature lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

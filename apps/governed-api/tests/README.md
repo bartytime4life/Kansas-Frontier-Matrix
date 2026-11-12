@@ -6,43 +6,45 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Test steward · Policy steward · Evidence steward · Release steward · Runtime steward · Security steward · Privacy steward · Audit steward · CI steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../src/README.md
-  - ../src/ai/README.md
-  - ../src/governed_api/README.md
-  - ../src/governed_api/routes/README.md
-  - ../src/routes/README.md
-  - ../src/routes/agriculture/README.md
-  - ../routes/README.md
-  - ../routes/domains/README.md
-  - ../../README.md
-  - ../../explorer-web/README.md
-  - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../docs/architecture/governed-ai/FOCUS_FLOW.md
-  - ../../../schemas/contracts/v1/runtime/
-  - ../../../schemas/contracts/v1/domains/
-  - ../../../schemas/contracts/v1/evidence/
-  - ../../../schemas/contracts/v1/focus/
-  - ../../../contracts/runtime/
-  - ../../../contracts/domains/
-  - ../../../contracts/evidence/
-  - ../../../contracts/focus/
-  - ../../../policy/access/README.md
-  - ../../../policy/decision/README.md
-  - ../../../policy/domains/README.md
-  - ../../../policy/telemetry/README.md
-  - ../../../packages/evidence-resolver/README.md
-  - ../../../packages/policy-runtime/README.md
-  - ../../../runtime/README.md
-  - ../../../release/README.md
-  - ../../../data/README.md
-  - ../../../fixtures/
-  - ../../../tests/
-  - ../../../.github/workflows/api-test.yml
+  - "../README.md"
+  - "../src/README.md"
+  - "../src/ai/README.md"
+  - "../src/governed_api/README.md"
+  - "../src/governed_api/routes/README.md"
+  - "../src/routes/README.md"
+  - "../src/routes/agriculture/README.md"
+  - "../routes/README.md"
+  - "../routes/domains/README.md"
+  - "../../README.md"
+  - "apps/site/README.md"
+  - "../../../docs/doctrine/directory-rules.md"
+  - "../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../docs/architecture/governed-ai/FOCUS_FLOW.md"
+  - "../../../schemas/contracts/v1/runtime/"
+  - "../../../schemas/contracts/v1/domains/"
+  - "../../../schemas/contracts/v1/evidence/"
+  - "../../../schemas/contracts/v1/focus/"
+  - "../../../contracts/runtime/"
+  - "../../../contracts/domains/"
+  - "../../../contracts/evidence/"
+  - "../../../contracts/focus/"
+  - "../../../policy/access/README.md"
+  - "../../../policy/decision/README.md"
+  - "../../../policy/domains/README.md"
+  - "../../../policy/telemetry/README.md"
+  - "../../../packages/evidence-resolver/README.md"
+  - "../../../packages/policy-runtime/README.md"
+  - "../../../runtime/README.md"
+  - "../../../release/README.md"
+  - "../../../data/README.md"
+  - "../../../fixtures/"
+  - "../../../tests/"
+  - "../../../.github/workflows/api-test.yml"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../explorer-web/README.md"
 tags: [kfm, apps, governed-api, tests, trust-membrane, finite-outcomes, runtime-response-envelope, abstain, deny, error, pytest, safe-fixtures, safe-observability, ci-boundary]
 notes:
   - "Refreshes the bounded governed-api tests lane contract."
@@ -50,6 +52,9 @@ notes:
   - "The api-test workflow file exists and names governed-api smoke and envelope-shape commands. Workflow pass state, local pass state, test inventory, fixture inventory, route coverage, middleware coverage, policy runtime coverage, evidence resolver coverage, release lookup coverage, safe-observability coverage, and runtime behavior remain NEEDS VERIFICATION."
   - "Child source README refreshes may exist as separate draft PRs; this test README does not claim those source changes are merged unless verified on the target ref."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, minimum safe test slice, runtime anti-bypass matrix, fixture-safety gates, safe-observability gates, route/source/package alignment, no-browser-model/no-chain-of-thought tests, CI/pass-state boundaries, and validation/definition-of-done updates without claiming test pass maturity."
+owning_root: apps/
+responsibility: "Document the Governed API Tests lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

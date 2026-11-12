@@ -6,32 +6,37 @@ version: v0.1
 status: draft
 owners: OWNER_TBD — Review steward · Sensitivity steward · Policy steward · Evidence steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../../README.md
-  - ../../../../governed-api/README.md
-  - ../../../../explorer-web/src/features/review_console_readonly/README.md
-  - ../../../../../docs/architecture/ui/REVIEW_CONSOLE.md
-  - ../../../../../docs/doctrine/sensitivity.md
-  - ../../../../../docs/governance/REVIEW_DUTIES.md
-  - ../../../../../policy/access/README.md
-  - ../../../../../policy/decision/README.md
-  - ../../../../../policy/redaction/README.md
-  - ../../../../../schemas/contracts/v1/review/
-  - ../../../../../schemas/contracts/v1/evidence/
-  - ../../../../../schemas/contracts/v1/sensitivity_assessment.schema.json
-  - ../../../../../contracts/
-  - ../../../../../data/README.md
-  - ../../../../../release/README.md
-  - ../../../../../packages/evidence-resolver/README.md
-  - ../../../../../packages/policy-runtime/README.md
+  - "../README.md"
+  - "../../../README.md"
+  - "../../../../governed-api/README.md"
+  - "apps/site/README.md"
+  - "../../../../../docs/architecture/ui/REVIEW_CONSOLE.md"
+  - "../../../../../docs/doctrine/sensitivity.md"
+  - "../../../../../docs/governance/REVIEW_DUTIES.md"
+  - "../../../../../policy/access/README.md"
+  - "../../../../../policy/decision/README.md"
+  - "../../../../../policy/redaction/README.md"
+  - "../../../../../schemas/contracts/v1/review/"
+  - "../../../../../schemas/contracts/v1/evidence/"
+  - "../../../../../contracts/"
+  - "../../../../../data/README.md"
+  - "../../../../../release/README.md"
+  - "../../../../../packages/evidence-resolver/README.md"
+  - "../../../../../packages/policy-runtime/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../../explorer-web/src/features/review_console_readonly/README.md"
+  - "NEEDS VERIFICATION: ../../../../../schemas/contracts/v1/sensitivity_assessment.schema.json"
 tags: [kfm, apps, review-console, feature, sensitivity-review, sensitivity-assessment, redaction, geoprivacy, consent, rights, finite-states]
 notes:
   - "Replaces the greenfield sensitivity_review feature stub with a bounded feature contract."
   - "This feature may support role-gated sensitivity review and redaction/generalization readiness inspection, but it must not author sensitivity doctrine, mutate source records locally, write policy rules, bypass deterministic transforms, or become a public sensitivity surface."
   - "Feature files, route wiring, schemas, tests, fixtures, governed API envelopes, sensitivity-assessment handoffs, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
+owning_root: apps/
+responsibility: "Document the Review Console Sensitivity Review Feature lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

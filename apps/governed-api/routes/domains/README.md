@@ -6,30 +6,32 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Route steward · Domain stewards · Policy steward · Evidence steward · Release steward · Runtime steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../../README.md
-  - ../../../README.md
-  - ../../../explorer-web/README.md
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../../docs/domains/README.md
-  - ../../../../docs/domains/archaeology/README.md
-  - ../../../../policy/domains/README.md
-  - ../../../../policy/domains/archaeology/README.md
-  - ../../../../policy/access/README.md
-  - ../../../../policy/decision/README.md
-  - ../../../../policy/telemetry/README.md
-  - ../../../../schemas/contracts/v1/runtime/
-  - ../../../../schemas/contracts/v1/domains/
-  - ../../../../contracts/runtime/
-  - ../../../../contracts/domains/
-  - ../../../../packages/evidence-resolver/README.md
-  - ../../../../packages/policy-runtime/README.md
-  - ../../../../data/README.md
-  - ../../../../release/README.md
-  - ./archaeology/README.md
+  - "../../README.md"
+  - "../../../README.md"
+  - "apps/site/README.md"
+  - "../../../../docs/doctrine/directory-rules.md"
+  - "../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../../docs/domains/README.md"
+  - "../../../../docs/domains/archaeology/README.md"
+  - "../../../../policy/domains/README.md"
+  - "../../../../policy/domains/archaeology/README.md"
+  - "../../../../policy/access/README.md"
+  - "../../../../policy/decision/README.md"
+  - "../../../../policy/telemetry/README.md"
+  - "../../../../schemas/contracts/v1/runtime/"
+  - "../../../../schemas/contracts/v1/domains/"
+  - "../../../../contracts/runtime/"
+  - "../../../../contracts/domains/"
+  - "../../../../packages/evidence-resolver/README.md"
+  - "../../../../packages/policy-runtime/README.md"
+  - "../../../../data/README.md"
+  - "../../../../release/README.md"
+  - "./archaeology/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../explorer-web/README.md"
 tags: [kfm, apps, governed-api, routes, domains, trust-membrane, finite-outcomes, domain-routes, evidencebundle, policydecision, release-manifest, safe-errors, sensitivity-gates]
 notes:
   - "Refreshes the governed-api domain-routes parent contract."
@@ -38,6 +40,9 @@ notes:
   - "Child route-family names are route-family proposals unless their files, tests, schemas, policy gates, authorization, and runtime behavior are verified on the target branch."
   - "policy/telemetry/README.md may be stub-level; executable telemetry policy wiring remains NEEDS VERIFICATION unless separately verified."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, minimum safe domain-route slice, runtime anti-bypass matrix, stronger child route map, safe-error/logging/telemetry/cache safeguards, cross-domain boundary gates, and validation/definition-of-done gates without claiming runtime maturity."
+owning_root: apps/
+responsibility: "Document the Governed API Domain Routes lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

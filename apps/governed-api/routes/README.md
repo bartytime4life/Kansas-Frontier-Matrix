@@ -6,26 +6,28 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Route steward · Policy steward · Evidence steward · Release steward · Runtime steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../explorer-web/README.md
-  - ../../../docs/doctrine/directory-rules.md
-  - ../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../contracts/runtime/
-  - ../../../contracts/runtime/runtime_response_envelope.md
-  - ../../../schemas/contracts/v1/runtime/
-  - ../../../policy/access/README.md
-  - ../../../policy/decision/README.md
-  - ../../../policy/telemetry/README.md
-  - ../../../packages/evidence-resolver/README.md
-  - ../../../packages/policy-runtime/README.md
-  - ../../../runtime/README.md
-  - ../../../release/README.md
-  - ../../../data/README.md
-  - ./domains/README.md
+  - "../README.md"
+  - "../../README.md"
+  - "apps/site/README.md"
+  - "../../../docs/doctrine/directory-rules.md"
+  - "../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../contracts/runtime/"
+  - "../../../contracts/runtime/runtime_response_envelope.md"
+  - "../../../schemas/contracts/v1/runtime/"
+  - "../../../policy/access/README.md"
+  - "../../../policy/decision/README.md"
+  - "../../../policy/telemetry/README.md"
+  - "../../../packages/evidence-resolver/README.md"
+  - "../../../packages/policy-runtime/README.md"
+  - "../../../runtime/README.md"
+  - "../../../release/README.md"
+  - "../../../data/README.md"
+  - "./domains/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../explorer-web/README.md"
 tags: [kfm, apps, governed-api, routes, trust-membrane, runtime-response-envelope, decision-envelope, finite-outcomes, evidencebundle, policydecision, release-manifest, safe-errors, route-tree]
 notes:
   - "Refreshes the governed-api route-tree contract."
@@ -33,6 +35,9 @@ notes:
   - "Route handlers, DTOs, middleware, schemas, tests, fixtures, authorization, policy enforcement, evidence resolution, release lookup, transform receipt support, safe logging, safe telemetry, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
   - "policy/telemetry/README.md may be stub-level; executable telemetry policy wiring remains NEEDS VERIFICATION unless separately verified."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, minimum safe route slice, runtime anti-bypass matrix, stronger route-family map, safe-error/logging/telemetry gates, cache-key/diagnostic safeguards, and validation/definition-of-done gates without claiming runtime maturity."
+owning_root: apps/
+responsibility: "Document the Governed API Routes lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

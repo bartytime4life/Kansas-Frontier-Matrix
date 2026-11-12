@@ -1,5 +1,11 @@
 # Daily source archive
 
+Current recovery behavior is recorded in the [Explorer guide index](README.md).
+A failed or stalled storage-status check is an unavailable state, rather than
+empty saved coverage. Retry the check before capture/settings actions become
+available. Local lifecycle fixtures do not establish hosted owner access.
+
+
 `/daily-archive` retains bounded Kansas adapter responses in the existing R2
 binding and indexes each attempt in the existing D1 binding. The Explorer's
 Time panel links to it. The map reads only the exact selected stored object,

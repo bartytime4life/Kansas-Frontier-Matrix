@@ -1,4 +1,16 @@
-> **Public website boundary — 2026-10-17:** the live
+> **Repository checkpoint — 2026-11-11:** main
+> `d4d84171653a2f2582b48ece511dc010857fde15` includes the merged Explorer recovery,
+> committed replay-inspection and Flight/Zod corrections. Use the
+> [complete guide index](source/docs/README.md), [Observatory guide](source/docs/observatory-replay.md)
+> and [current review](../../docs/reports/documentation-currentness-review-20261111.md).
+> Recorded validation at PR #5822's head: 1,804 Site tests, 380 conformance checks,
+> 110 local smoke checks, build/types and lint (zero errors, 77 inherited warnings).
+> Its CI readback has 52 successes and one skip. Browser acceptance for interval
+> loading remains pending. The active parity selector is defined in
+> [site_mirror.py](../../tools/qa/site_mirror.py); content parity is not hosted
+> equivalence or source approval. Older versioned checkpoints below are historical.
+
+> **Historical public website boundary — 2026-10-17:** the observed
 > [GoDaddy Explorer](https://kansasfrontiermatrix.com/) is a separate standalone
 > Node composition in the same GitHub repository. The [Node runbook](../../docs/runbooks/godaddy-node-hosting.md)
 > pins the observed public source, preview and verification process. This
@@ -39,7 +51,12 @@
   <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="../../docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Animated illustration of the KFM Explorer: map, area, layers, time, inspect, evidence, report and share." width="100%" /></picture></a>
 </p>
 
-**The KFM Explorer** — a map-first Kansas workbench with live provider context, archive replay back to 1995, an Underground 3D cutaway, an Evidence Drawer on everything, and reports drawn straight from the map. Start with the [illustrated tour](../../README.md#take-the-tour) and [things to try](../../README.md#things-to-try), then use the checkpoints below for exact source, validation and limits.
+**The KFM Explorer** — a map-first Kansas workbench with attributed provider
+context, date-bound replay, an Underground cutaway, inspectable source records
+and map-to-draft handoffs. The interval selector accepts dates from 1800; each
+source has its own coverage. Radar's 1995 query bound is not coverage for every
+layer. Start with the [guide index](source/docs/README.md) and
+[illustrated tour](../../README.md#take-the-tour).
 
 <details>
 <summary><b>Capability board</b> — all 23 registered features by declared status</summary>
@@ -61,7 +78,7 @@ Drawn from [`source/app/site-features.ts`](source/app/site-features.ts). Status 
 
 <a id="current-site-checkpoint"></a>
 
-> **Current Site checkpoint — v221 / 2026-10-10:** owner-private source `00b653cd4680965d4a311d3118442f9d40bc51de` deployed as `appgdep_6acabe1a4c788191b54a53352f831a3f`. The previous caption fix remains, while the redundant synchronous state reset that failed PR #5019's Site lint is removed. The effect cleanup still removes the previous detail; an actual component callback regression now verifies that a pending refresh does not retain **HIGH-DETAIL MAP**. Site lint has zero errors, all 1,006 tests pass, and type checking and build pass. The [926-file mirror receipt](../../data/receipts/generated/site-v221-cutaway-caption-lint-20261010.json) retains two canonical mappings and pending human review. The 928 source and 427 build files checksum-match the new PC installation at port 4173, with the original store and v220 installation retained. The owner-private hosted browser rendered the High Plains example with 28 columns, one aquifer overlap, partial-coverage disclosure and a ready 4096 × 3437 surface; the corrected caption was visible. Local application rollback v221→v220→v221 returned HTTP 200 at each step while retaining the original data-store path; data snapshot rollback was not tested. Broader device and accessibility acceptance remain separate. No source raster, data, schema or release logic changed.
+> **Historical Site checkpoint — v221 / 2026-10-10:** owner-private source `00b653cd4680965d4a311d3118442f9d40bc51de` deployed as `appgdep_6acabe1a4c788191b54a53352f831a3f`. The previous caption fix remains, while the redundant synchronous state reset that failed PR #5019's Site lint is removed. The effect cleanup still removes the previous detail; an actual component callback regression now verifies that a pending refresh does not retain **HIGH-DETAIL MAP**. Site lint has zero errors, all 1,006 tests pass, and type checking and build pass. The [926-file mirror receipt](../../data/receipts/generated/site-v221-cutaway-caption-lint-20261010.json) retains two canonical mappings and pending human review. The 928 source and 427 build files checksum-match the new PC installation at port 4173, with the original store and v220 installation retained. The owner-private hosted browser rendered the High Plains example with 28 columns, one aquifer overlap, partial-coverage disclosure and a ready 4096 × 3437 surface; the corrected caption was visible. Local application rollback v221→v220→v221 returned HTTP 200 at each step while retaining the original data-store path; data snapshot rollback was not tested. Broader device and accessibility acceptance remain separate. No source raster, data, schema or release logic changed.
 
 > **Previous Site checkpoint — v220 / 2026-10-10:** owner-private source `19d19c2cb8ac02ba36389e863aba6d2e5b498878` deployed as `appgdep_6acab87ad70081918a81cdfc918fc69e`. The Underground caption reports **HIGH-DETAIL MAP** only when an intersecting map mesh is attached; otherwise it reports the selected-area fallback image or the unavailable state. Its actual component callback regression failed on v219 and passed on v220. All 1,006 Site tests, type checking and production build passed, but the merged PR #5019 Site lint check failed on a synchronous effect state reset; v221 repairs that. The [926-file mirror receipt](../../data/receipts/generated/site-v220-cutaway-image-status-20261010.json) retained two canonical mappings and pending human review. A local built-browser journey showed the corrected caption beneath a ready 4096 × 3437 surface with partial coverage.
 

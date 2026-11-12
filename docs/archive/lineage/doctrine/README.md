@@ -1,4 +1,33 @@
 <!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/archive/lineage/doctrine/readme
+title: Archived lineage — doctrine navigation
+type: navigation-guide
+version: v1.1
+status: draft; review-required; navigation-only
+owners: ["NEEDS VERIFICATION — existing domain/documentation stewardship assignments"]
+created: 2026-05-25
+updated: 2026-11-11
+policy_label: public-documentation
+owning_root: docs/
+responsibility: "Maintain navigation and qualification boundaries for Archived lineage — doctrine navigation."
+truth_posture: "CONFIRMED repository navigation; PROPOSED path-based document identity replacing an unassigned placeholder; NEEDS VERIFICATION historical semantic claims and named stewardship."
+related:
+  - ../README.md
+  - ../../../doctrine/README.md
+  - ../../../README.md
+[/KFM_META_BLOCK_V2] -->
+
+# 📜 Archived Lineage — Doctrine Documents
+
+<details>
+<summary>Previous metadata envelope — retained as historical context</summary>
+
+The exact base-envelope content from main
+`d4d84171653a2f2582b48ece511dc010857fde15` is retained below, including its
+unassigned document-ID placeholder and nested role/taxonomy fields. The current envelope above is a review candidate; it does
+not assign people, adopt authority or rewrite an archived lineage record.
+
+```yaml
 doc_id: kfm://doc/<TODO-uuid>
 title: Archived Lineage — Doctrine Documents
 type: standard
@@ -50,9 +79,10 @@ notes:
   - "In-document version bumps (e.g., Directory Rules v1.2 → v1.3) DO NOT land here per §4."
   - "Every record indexed here is ADR-backed — the adr_ref field is mandatory and never null."
   - "directory-rules.md is itself one of the docs this view tracks; the self-referential wrinkle is documented in §1 and §12."
-[/KFM_META_BLOCK_V2] -->
+```
 
-# 📜 Archived Lineage — Doctrine Documents
+</details>
+
 
 > Subject-indexed, navigational view of supersession lineage records pertaining to retired or superseded **foundational doctrine documents** under [`docs/doctrine/`](../../../doctrine/). Records remain filed by category in the parent archive — this directory curates them by doctrine doc.
 
@@ -177,7 +207,7 @@ The inter-doc event taxonomy:
 | **Within-doc version bumps** (e.g., Directory Rules v1.2 → v1.3) | Doctrine docs use supersession-by-extension with in-document changelogs (e.g., `directory-rules.md` §21). v1.0 text is preserved verbatim, later versions are additive. The retirement event is the **named version**, recorded in §21, not in this archive. | The doctrine doc's own `§N` changelog (e.g., Directory Rules §21).        |
 | **Atlas / supplement supersession** (e.g., Atlas v1.0 → v1.1)   | Per Atlas v1.1 Ch. 24.8.2, atlas supersession lives in-document (App. E / App. G). The Atlas isn't even a doctrine doc — it's a dossier-class artifact under `docs/atlases/`. | Inside the Atlas / supplement itself.                                    |
 | **Per-domain doc retirements** (e.g., `docs/domains/<domain>/<file>.md`) | Those go to the sibling `docs/archive/lineage/domains/` view.                     | [`docs/archive/lineage/domains/`](../domains/)                            |
-| **Runbook / standards doc retirements**                         | Those go to the sibling views for runbooks and standards.                          | [`docs/archive/lineage/{runbooks,standards}/`](../)                       |
+| **Runbook / standards doc retirements**                         | Those go to the sibling views for runbooks and standards.                          | [`docs/archive/lineage/{runbooks,standards}/`](../README.md)                       |
 | The retired doctrine doc itself                                 | Retired docs remain at their `docs/doctrine/<file>.md` path with a SUNSET banner. | Original path, with `status: deprecated` in its meta block                |
 | The **actual** record file (`KFM-DR-NNNN-*.md`, etc.)           | Records live in the parent's category lanes; filing here creates parallel authority. | `docs/archive/lineage/<category>/KFM-<PREFIX>-NNNN-<slug>.md`            |
 | ADR working drafts                                              | Drafts live with active ADRs; only the *retirement* trail lands here.             | `docs/adr/` working area                                                 |
@@ -571,7 +601,7 @@ The paths below cite Directory Rules v1.3 §6.1 placements. Per-doc paths under 
 **ADR authority (CONFIRMED home):**
 
 - [`docs/adr/`](../../../adr/) — every record indexed here cross-links to an ADR here.
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule (precedent for doctrine-doc ADR shape).
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule (precedent for doctrine-doc ADR shape).
 
 **Atlas references (CONFIRMED doctrine; in-document for Atlas-level supersession):**
 

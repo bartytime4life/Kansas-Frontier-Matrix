@@ -3,13 +3,13 @@ doc_id: kfm://doc/docs-root-readme
 title: docs/ — Human-Readable Governance and Explanation Root
 type: readme/root-readme
 authority: documentation-boundary
-version: v1.1
+version: v1.2
 status: active
 owners:
   - "@bartytime4life"
 created: 2026-08-08
 created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
-updated: 2026-10-29
+updated: 2026-11-11
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the docs/ responsibility boundary, navigation contract, exposure posture, validation expectations, and relationships to KFM authority roots."
@@ -26,6 +26,20 @@ related:
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/` — Human-Readable Governance and Explanation Root
+
+## Current reading routes — November 11, 2026
+
+| Need | Start here |
+|---|---|
+| Current repository state and documentation audit | [Currentness review](reports/documentation-currentness-review-20261111.md) |
+| Install or verify the repository Explorer | [Installation](installation.md#explorer-site-mirror) |
+| Find every Explorer topic and dated implementation note | [Explorer documentation index](../apps/site/source/docs/README.md) |
+| Replay a day, inspect a reading, or recover a stalled interval | [Observatory guide](../apps/site/source/docs/observatory-replay.md) |
+| Maintain documentation without rewriting history | [Documentation maintenance](runbooks/documentation-maintenance.md) |
+
+The October showcase and historical checkpoints below retain their original
+source, media and acceptance scope. The currentness review does not requalify
+every domain, release procedure, external URL or deployed application.
 
 
 <p align="center">
@@ -54,7 +68,9 @@ related:
 
 <a id="practical-reading-routes--2026-10-08"></a>
 
-## Explore the current program · October 27, 2026
+<a id="explore-the-current-program--october-27-2026"></a>
+
+## Historical program showcase · October 27, 2026
 
 [![Recorded Flint Hills terrain display](brand/readme/kfm-tour-terrain.jpg)](brand/readme/kfm-tour-terrain.webp)
 

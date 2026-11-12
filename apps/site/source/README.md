@@ -1,3 +1,29 @@
+# Kansas Frontier Matrix Explorer
+
+## Start with the repository source
+
+This mirror at main `d4d84171653a2f2582b48ece511dc010857fde15` includes
+subsequent repository recovery and dependency corrections. Use the
+[complete documentation index](docs/README.md), [Observatory guide](docs/observatory-replay.md)
+and [installation/verification commands](../../../docs/installation.md#explorer-site-mirror).
+The [November 11 review](../../../docs/reports/documentation-currentness-review-20261111.md)
+records source identity, local validation, CI and remaining acceptance separately.
+
+Replay inspection follows the committed record at the current frame. Interval
+reads now recover from stalled headers, bodies and private radar-index reads;
+optional river failure retains other loaded sources. Sharing an investigation,
+reading source details and downloading reviewed records retain their exact
+selection and evidence context. The dated implementation notes in the index
+explain these independent corrections and their limits.
+
+The project keeps its original Sites identity and preservation record. The
+repository mirror, public Node website, private Site and any installed local
+copy have separate source/runtime state. No new deployed version or hosted parity
+is established by this README. The versioned delivery records below retain
+their stated dates, test counts and acceptance scope.
+
+## Historical delivery records
+
 > **Subsurface containment candidate — 2026-10-13:** Exact WWC5/core tiles and the statewide locator are removed from source delivery. Underground reports a publication hold; private candidate preparation requires explicit external review storage. Separate survey, aquifer and soil features remain. [Containment, checks and retained-copy limits](docs/subsurface-data.md). This repository change does not erase history or deploy/purge existing versions.
 
 > **Underground surface-refresh candidate — 2026-10-10:** Starting from owner-private Site v221, **Refresh surface** reloads the selected basemap's tiles while retaining the previous georeferenced cutaway image until a new frame is drawn. The status identifies the old image during loading and does not claim that unavailable new tiles are complete. A changed area, basemap, resolution, or departure from 3D still clears the old image through the existing lifecycle. No well logs, aquifer ranges, source admission, storage, or release state change. Revert this bounded change or redeploy saved v221 if rendered acceptance fails.
@@ -23,7 +49,6 @@
 > [reviewed soil moisture](docs/governed-soil.md), [reviewed storm event reports](docs/governed-storm-events.md) and [reviewed earthquakes](docs/governed-earthquakes.md) remain subject to package review and activation even when the application is deployed. Dated sections below retain
 > their original scope and are not current runtime or dependency-audit results.
 
-# Kansas Frontier Matrix Explorer
 
 The [2026-10-06 reliability review](docs/explorer-reliability-review-2026-10-06.md) records dropdown focus and Escape repairs, saved-scene basemap and terrain restoration, location-redacted preview cameras, and knowledge-record retries. Production-worker route checks and executable interaction tests remain separate from pending rendered browser/WebGL acceptance.
 
@@ -36,7 +61,7 @@ The reviewed Crop-CASMA 1 km raster is shown only in 2D Mercator. Globe view hol
 it because its regional Web Mercator tiles cannot provide trustworthy globe
 placement. In 2D it uses the shared map layer order and raster opacity budget.
 
-The current reconciliation and rollback baseline is Site version 160. The older
+The October 6 reconciliation used Site version 160 as its rollback baseline. The older
 version-68 preservation record remains historical evidence in
 [preservation and recovery](docs/SITE_PRESERVATION.md); read it with root
 `AGENTS.md` before importing, replacing, synchronizing, or publishing another
@@ -346,7 +371,9 @@ This reconciliation publishes one tested application tree to both histories and
 records their distinct commit identifiers in a reviewable draft pull request;
 it does not merge the GitHub branch or collapse either repository's authority.
 
-## Current public scope
+<a id="current-public-scope"></a>
+
+## Repository scope and limits
 
 - Real USGS, NOAA, Census, NWS, and Raspberry Shake connections provide attributed
   source context. No synthetic KFM domain layer is selectable.
@@ -364,7 +391,9 @@ it does not merge the GitHub branch or collapse either repository's authority.
 - Candidate source records link to their checked official portals, while keeping
   source discovery explicitly separate from admission, activation, and release.
 
-## Site, repository, and domain checkpoint
+<a id="site-repository-and-domain-checkpoint"></a>
+
+## Historical Site, repository, and domain checkpoint — September/October 2026
 
 - The active runtime authority is OpenAI Sites / Vinext, Site slug
   `kansas-frontier-matrix-explorer`, project `appgprj_6aa0b1c41bc08191bfd86003920f1631`.
@@ -414,6 +443,10 @@ held integrations, release external context, merge repository code, or deploy
 the Site.
 
 ## Date-bound Event Observatory
+
+For current controls, committed-record inspection, deadlines and retry, use the
+[Observatory replay guide](docs/observatory-replay.md). The implementation narrative
+below retains its original source and qualification boundaries.
 
 `/observatory` is the real-data animation workspace within this existing Site,
 linked from the map command bar and navigation drawer. It is separate from the

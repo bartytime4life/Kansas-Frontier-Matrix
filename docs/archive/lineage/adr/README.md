@@ -1,4 +1,33 @@
 <!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/archive/lineage/adr/readme
+title: Archived lineage — ADR navigation
+type: navigation-guide
+version: v1.1
+status: draft; review-required; navigation-only
+owners: ["NEEDS VERIFICATION — existing domain/documentation stewardship assignments"]
+created: 2026-05-25
+updated: 2026-11-11
+policy_label: public-documentation
+owning_root: docs/
+responsibility: "Maintain navigation and qualification boundaries for Archived lineage — ADR navigation."
+truth_posture: "CONFIRMED repository navigation; PROPOSED path-based document identity replacing an unassigned placeholder; NEEDS VERIFICATION historical semantic claims and named stewardship."
+related:
+  - ../README.md
+  - ../../../adr/README.md
+  - ../../../README.md
+[/KFM_META_BLOCK_V2] -->
+
+# ⚖ Archived Lineage — Architecture Decision Records (ADRs)
+
+<details>
+<summary>Previous metadata envelope — retained as historical context</summary>
+
+The exact base-envelope content from main
+`d4d84171653a2f2582b48ece511dc010857fde15` is retained below, including its
+unassigned document-ID placeholder and nested role/taxonomy fields. The current envelope above is a review candidate; it does
+not assign people, adopt authority or rewrite an archived lineage record.
+
+```yaml
 doc_id: kfm://doc/<TODO-uuid>
 title: Archived Lineage — Architecture Decision Records (ADRs)
 type: standard
@@ -60,9 +89,10 @@ notes:
   - "ADR internal supersession is ALWAYS in-document via the status field; this view never duplicates the in-ADR forward link."
   - "REFLEXIVE: ADRs are the authority for retirements in every sibling view, including this one's own existence. See §1."
   - "CONFIRMED conflict between Atlas Ch. 24.12 and Doctrine Synthesis §49 ADR-S-NN mappings — a near-term lineage candidate; see §8 worked example."
-[/KFM_META_BLOCK_V2] -->
+```
 
-# ⚖ Archived Lineage — Architecture Decision Records (ADRs)
+</details>
+
 
 > **Dual-mode reflexive view**: a navigational index pointing OUT to ADRs marked `status: superseded` in `docs/adr/`, **and** a true filing surface for the narrow set of ADR-adjacent events the `status` field cannot capture. The view is reflexive because **ADRs are the authority for retirements in every other sibling view**.
 
@@ -696,8 +726,8 @@ The paths below cite Directory Rules v1.3 §6.1 placements. Per-doc paths under 
 **Active subject material (CONFIRMED home per §6.1; per-file presence varies):**
 
 - [`docs/adr/`](../../../adr/) — active ADRs landing.
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema home rule (CONFIRMED authored).
-- [`docs/adr/ADR-0003-policy-singular-is-canonical.md`](../../../adr/ADR-0003-policy-singular-is-canonical.md) — policy singular canonical (CONFIRMED authored).
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema home rule (CONFIRMED authored).
+- [`docs/adr/ADR-0003-policy-singular-is-canonical.md`](<../../../adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) — policy singular canonical (CONFIRMED authored).
 - `docs/adr/README.md` *(NEEDS VERIFICATION)* — ADR landing page.
 
 **Doctrine (CONFIRMED homes per Directory Rules §6.1):**
