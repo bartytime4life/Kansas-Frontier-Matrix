@@ -25,6 +25,6 @@ export function cutawayLocatorPlacement(slot: {left:number;top:number;width:numb
     top: slot.top - stage.top + stage.scrollTop,
     width: slot.width, height: slot.height,
     clipTop: Math.max(0, clip.top - slot.top), clipBottom: Math.max(0, slot.bottom - clip.bottom),
-    visible: slot.bottom > clip.top && slot.top < clip.bottom,
+    visible: slot.width > 0 && slot.height > 0 && slot.bottom > clip.top && slot.top < clip.bottom,
   };
 }

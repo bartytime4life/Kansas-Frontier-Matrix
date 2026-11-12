@@ -33,3 +33,11 @@ test('explicit unchanged-size protection preserves public canvas dimensions but 
   canvas.style.width='375px';assert.equal(resizeMapAfterLayout(map,true),false);
   assert.equal(resizeMapAfterLayout(map),true);assert.equal(calls,3,'the optional flag does not change ordinary layout updates');
 });
+
+test('collapsed or zero-size selector slots hide the live map overlay',()=>{
+  const stage={left:0,top:0,scrollTop:0,scrollLeft:0},clip={top:0,bottom:800};
+  for(const [width,height] of [[0,0],[0,260],[320,0]]){
+    assert.equal(cutawayLocatorPlacement({left:8,top:80,width,height,bottom:80+height},stage,clip).visible,false);
+  }
+  assert.equal(cutawayLocatorPlacement({left:8,top:80,width:320,height:260,bottom:340},stage,clip).visible,true);
+});

@@ -109,15 +109,19 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
   }, [smooth, capture]);
   const fit = () => { if (view.current) view.current.fitBounds(surfaceCameraBounds(bounds), { padding: 12, duration: 0 }); };
   return <div hidden={!active} className={s.surfaceWorkspace}>
+    <div className={s.surfaceMapStage}>
     <div className={s.surfaceNavigation} aria-label="Selected surface navigation">
-      <button type="button" disabled={!capture} aria-label="Zoom selected surface in" onClick={() => view.current?.zoomIn({ duration: 0 })}>Zoom in</button>
-      <button type="button" disabled={!capture} aria-label="Zoom selected surface out" onClick={() => view.current?.zoomOut({ duration: 0 })}>Zoom out</button>
-      <button type="button" disabled={!capture} onClick={fit}>Fit selected slice</button>
-      <button type="button" aria-pressed={!smooth} onClick={onSmooth}>Crisp imagery</button>
-      <button type="button" disabled={!canReload} onClick={() => setReload(value => value + 1)}>Reload surface layers</button>
+      <button type="button" disabled={!capture} aria-label="Zoom selected surface in" onClick={() => view.current?.zoomIn({ duration: 0 })}>+</button>
+      <button type="button" disabled={!capture} aria-label="Zoom selected surface out" onClick={() => view.current?.zoomOut({ duration: 0 })}>−</button>
+      <button type="button" disabled={!capture} aria-label="Fit selected slice" onClick={fit}>Fit slice</button>
+      <details className={s.surfaceMapTools}><summary>Surface tools</summary><div>
+        <button type="button" aria-pressed={!smooth} onClick={onSmooth}>Crisp imagery</button>
+        <button type="button" disabled={!canReload} onClick={() => setReload(value => value + 1)}>Reload surface layers</button>
+      </div></details>
     </div>
-    <p className={s.surfaceHint}>Drag to pan · scroll or pinch to zoom · arrow keys move the map. The selected slice stays fixed.</p>
     <div ref={host} className={s.surfaceMap} style={{"--surface-map-opacity":opacity} as CSSProperties} role="region" aria-label="Interactive surface of the selected slice" />
+    <p className={s.surfaceHint}>Drag to pan · scroll or pinch to zoom · arrow keys move the map. The selected slice stays fixed.</p>
+    </div>
     <div className={s.surfaceStatus} role="status"><strong>Display context · not KFM evidence</strong><span>{capture && capturedArea === area ? status : "Surface layers are unavailable for this slice. Show this area in the selector to prepare them."}</span><span>{zoom !== null ? `Surface zoom ${zoom.toFixed(1)} · ` : ""}Fixed slice: {bounds.map(n => n.toFixed(4)).join(", ")}</span></div>
     <details className={s.surfaceSources}><summary>Surface layers, clocks &amp; limits</summary>
       <p>High detail rendering is enabled. Crisp imagery preserves source cells without smoothing. Vector roads and labels redraw at this zoom; raster zoom beyond a source limit only enlarges existing pixels.</p>

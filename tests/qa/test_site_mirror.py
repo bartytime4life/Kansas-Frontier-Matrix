@@ -2595,3 +2595,17 @@ def test_documentation_successor_preserves_interval_inventory_and_all_holds():
          "docs/map-research-tools.md", "docs/water-flow.md"},
         "d4d84171653a2f2582b48ece511dc010857fde15",
     )
+
+
+def test_underground_map_space_successor_preserves_documentation_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-underground-map-space-overlay-20261111.json",
+        "site-v268-documentation-refresh-overlay-20261111.json",
+        "78dcd988961739cb5c76fc0fedc557c1a80c073e062973f42af2d47f829b29d7",
+        {"app/aquifer-volume-view.tsx", "app/cutaway-locator.ts",
+         "app/selected-surface-map.tsx", "app/subsurface.module.css",
+         "docs/underground-explorer.md", "tests/cutaway-locator.test.mjs",
+         "tests/selected-surface.test.mjs",
+         "tests/underground-map-space.test.mjs"},
+        "c9e4c808ced2be92548863b5636ff8af6885facb",
+    )

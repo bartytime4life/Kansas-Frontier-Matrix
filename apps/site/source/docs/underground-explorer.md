@@ -1,6 +1,29 @@
 # Underground Explorer
 
-The current area-first flow is described in **Area underlay and record-time navigation — 2026-10-07** below. Earlier sections retain the progression of probe, cutaway and individual-log behavior.
+The map-first layout is described below. **Area underlay and record-time navigation — 2026-10-07** explains the accepted-area and source-time behavior it retains. Earlier sections record the progression of probe, cutaway and individual-log behavior.
+
+## Map-first workspace — 2026-11-11
+
+Start with the larger area map, pan to a Kansas location, then choose **Show this
+area**. Once a frame is accepted, the selected surface or cutaway gets the main
+workspace. The area map can be hidden and reopened when you want to choose a new
+frame. Reopening it does not apply a preview, change the accepted area, reset the
+cutaway camera, or change record filters.
+
+On narrow screens the selector folds after the new frame is accepted. **Show
+area map** reopens it. **Hide area map** expands the selected view on any screen.
+
+The surface/cutaway switch stays close to the map. Basemap, surface resolution,
+opacity and imagery-date guidance live in a collapsed settings disclosure;
+sample controls remain available without occupying the top of the canvas.
+Record-time navigation, coverage, source evidence and individual-log inspection
+remain available. Map images remain display context; unknown ground stays empty.
+
+This is a repository layout change against main at
+`c9e4c808ced2be92548863b5636ff8af6885facb`. It does not establish hosted visual
+acceptance or change source admission, privacy, saved data, or provider clocks.
+Revert the layout change and its mirror successor together to restore the prior
+presentation; no data migration is needed.
 
 This addition starts from owner-private Site v155, source `d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae`. It preserves the existing Map Library, place dossiers, Evidence Drawer, reports, Earth Engine controls, DB/R2 bindings, and Site audience. GitHub PR #4899 merged during implementation; the feature review starts from `8c955317117e53fa93ece5d0af4455d86fad17b3`, retaining its separate CodeQL test correction. The dirty owner maintenance checkout is not used as an import source.
 
