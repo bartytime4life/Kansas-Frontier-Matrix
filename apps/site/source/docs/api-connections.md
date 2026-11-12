@@ -1,6 +1,12 @@
-<!-- Packaging mirror of canonical docs/runbooks/api-connections.md. No additional doctrine, source, review or release authority. -->
+<!-- Application packaging guide. Canonical connector/runtime ownership remains in connectors/, packages/ and pipelines/; this document creates no source, review or release authority. -->
 
 # API connections on both hosts
+
+For the current repository checkpoint and status-recovery notes, use the
+[Explorer guide index](README.md). Host-status failure remains distinct from
+an empty receipt list or a completed capture. The historical candidate and
+provider/browser results below retain their original source and host scope.
+
 
 The owner selected all 15 researched connections plus the previously implemented
 NOAA NCEI products, across the owner-private Sites Explorer and separate GoDaddy

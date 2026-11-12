@@ -6,23 +6,27 @@ version: v1
 status: draft
 owners: Sensitivity reviewer · Docs steward · subsystem owners
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-11-11
 policy_label: public
 related:
-  - docs/standards/SENSITIVITY_RUBRIC.md
-  - docs/runbooks/REVOCATION.md
-  - docs/runbooks/ui_ROLLBACK.md
-  - docs/runbooks/governed_ai_ROLLBACK.md
-  - docs/registers/DRIFT_REGISTER.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-S-05-sensitivity-tier-scheme.md
-  - policy/sensitivity/README.md
-  - policy/redaction/profiles.yaml
+  - "docs/standards/SENSITIVITY_RUBRIC.md"
+  - "docs/runbooks/revocation.md"
+  - "docs/runbooks/ui_ROLLBACK.md"
+  - "docs/registers/DRIFT_REGISTER.md"
+  - "docs/registers/VERIFICATION_BACKLOG.md"
+  - "policy/sensitivity/README.md"
+  - "policy/redaction/profiles.yaml"
+unresolved_related:
+  - "NEEDS VERIFICATION: docs/runbooks/governed_ai_ROLLBACK.md"
+  - "NEEDS VERIFICATION: docs/adr/ADR-S-05-sensitivity-tier-scheme.md"
 tags: [kfm, runbook, sensitivity, redaction, rights, sovereignty, governance, fail-closed]
 notes:
   - Path is PROPOSED until verified against mounted repo evidence (Directory Rules §6.1).
   - Sensitivity rubric 0–5 (CONFIRMED, [ENCY] C6-01) and tier scheme T0–T4 (PROPOSED, [ENCY-v1.1] §24.5) coexist; reconciliation is open per ADR-S-05.
   - All reason codes, gate names, and artifact shapes are PROPOSED doctrine pending mounted-repo verification.
+owning_root: docs/
+responsibility: "Document the 🛡️ Sensitivity Escalation Runbook navigation and authority boundaries."
+truth_posture: "CONFIRMED navigation and document placement; NEEDS VERIFICATION substantive historical implementation and authority claims, which retain their original scope."
 [/KFM_META_BLOCK_V2] -->
 
 # 🛡️ Sensitivity Escalation Runbook
@@ -606,6 +610,8 @@ These are tracked here so the runbook does not silently pretend they are settled
 | Fail-closed | The default posture for sensitive lanes: QUARANTINE / DENY / ABSTAIN / HOLD when in doubt. | [BLD-COMP] §§21–23 |
 
 </details>
+
+<a id="162-appendix-b--rank-0-5--tier-t0-t4-mapping-proposed"></a>
 
 ### 16.2 Appendix B — Rank 0–5 ↔ tier T0–T4 mapping (PROPOSED)
 

@@ -6,38 +6,43 @@ version: v0.1
 status: draft
 owners: OWNER_TBD — API steward · Route steward · Policy steward · Evidence steward · Release steward · Runtime steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-07-09
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../../README.md
-  - ../../../routes/README.md
-  - ../../../routes/domains/README.md
-  - ../../../routes/domains/archaeology/README.md
-  - ../../../../README.md
-  - ../../../../explorer-web/README.md
-  - ../../../../../docs/doctrine/directory-rules.md
-  - ../../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../../../schemas/contracts/v1/runtime/
-  - ../../../../../schemas/contracts/v1/domains/
-  - ../../../../../contracts/runtime/
-  - ../../../../../contracts/domains/
-  - ../../../../../policy/access/README.md
-  - ../../../../../policy/decision/README.md
-  - ../../../../../policy/domains/README.md
-  - ../../../../../policy/telemetry/README.md
-  - ../../../../../packages/evidence-resolver/README.md
-  - ../../../../../packages/policy-runtime/README.md
-  - ../../../../../runtime/README.md
-  - ../../../../../release/README.md
-  - ../../../../../data/README.md
+  - "../README.md"
+  - "../../README.md"
+  - "../../../README.md"
+  - "../../../routes/README.md"
+  - "../../../routes/domains/README.md"
+  - "../../../routes/domains/archaeology/README.md"
+  - "../../../../README.md"
+  - "apps/site/README.md"
+  - "../../../../../docs/doctrine/directory-rules.md"
+  - "../../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../../../schemas/contracts/v1/runtime/"
+  - "../../../../../schemas/contracts/v1/domains/"
+  - "../../../../../contracts/runtime/"
+  - "../../../../../contracts/domains/"
+  - "../../../../../policy/access/README.md"
+  - "../../../../../policy/decision/README.md"
+  - "../../../../../policy/domains/README.md"
+  - "../../../../../policy/telemetry/README.md"
+  - "../../../../../packages/evidence-resolver/README.md"
+  - "../../../../../packages/policy-runtime/README.md"
+  - "../../../../../runtime/README.md"
+  - "../../../../../release/README.md"
+  - "../../../../../data/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../../explorer-web/README.md"
 tags: [kfm, apps, governed-api, src, governed-api-package, routes, python-package, route-handlers, trust-membrane, runtime-response-envelope, finite-outcomes, safe-errors]
 notes:
   - "Fills the previously blank governed_api routes package README with a bounded implementation-package contract."
   - "This path is an app-local import-package subtree for route implementation code. It is distinct from `apps/governed-api/routes/`, which is the route-family documentation/organization boundary."
   - "Route implementation modules may bind handlers, routers, middleware, DTO mapping, envelope construction, authorization, policy/evidence/release lookups, and safe errors, but they must not become schema authority, contract authority, policy authority, lifecycle storage, release authority, proof/receipt storage, runtime-adapter authority, telemetry authority, public UI, or direct source/model access."
   - "Route implementation files, DTOs, middleware, schemas, tests, fixtures, authorization, policy runtime integration, evidence resolver integration, release lookup, transform receipt support, safe logging, safe telemetry, deployment state, dashboards, and CI pass state remain NEEDS VERIFICATION."
+owning_root: apps/
+responsibility: "Document the Governed API Python Routes Package lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

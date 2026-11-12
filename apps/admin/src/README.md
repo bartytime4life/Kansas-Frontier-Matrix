@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · Security steward · Access steward · Audit steward · Docs steward
 created: 2026-06-15
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: restricted
 related:
   - ../README.md
@@ -31,6 +31,9 @@ notes:
   - "apps/admin/src/README.md, apps/admin/README.md, and apps/README.md were verified through the GitHub app in this update. Implementation files, route inventory, auth wiring, audit sinks, tests, CI, and deployment posture remain NEEDS VERIFICATION."
   - "This source tree is for admin app implementation only; it must not become the normal public path, release authority, lifecycle store, policy root, shared package root, security doctrine home, evidence authority, or break-glass bypass."
   - "Admin actions must be least-privilege, purpose-bound, policy-bound, audited, reviewable, reversible where consequential, and unable to bypass governed-api, release, lifecycle, policy, or EvidenceBundle closure."
+owning_root: apps/
+responsibility: "Document the Admin App Source Tree lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

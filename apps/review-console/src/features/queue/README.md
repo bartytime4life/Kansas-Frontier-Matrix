@@ -6,29 +6,34 @@ version: v0.1
 status: draft
 owners: OWNER_TBD — Review steward · UI steward · Policy steward · Evidence steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../../README.md
-  - ../../../../governed-api/README.md
-  - ../../../../explorer-web/src/features/review_console_readonly/README.md
-  - ../../../../../docs/architecture/ui/REVIEW_CONSOLE.md
-  - ../../../../../docs/governance/REVIEW_DUTIES.md
-  - ../../../../../policy/access/README.md
-  - ../../../../../policy/decision/README.md
-  - ../../../../../schemas/contracts/v1/review/
-  - ../../../../../schemas/contracts/v1/evidence/
-  - ../../../../../contracts/
-  - ../../../../../data/README.md
-  - ../../../../../release/README.md
-  - ../../../../../packages/evidence-resolver/README.md
-  - ../../../../../packages/policy-runtime/README.md
+  - "../README.md"
+  - "../../../README.md"
+  - "../../../../governed-api/README.md"
+  - "apps/site/README.md"
+  - "../../../../../docs/architecture/ui/REVIEW_CONSOLE.md"
+  - "../../../../../docs/governance/REVIEW_DUTIES.md"
+  - "../../../../../policy/access/README.md"
+  - "../../../../../policy/decision/README.md"
+  - "../../../../../schemas/contracts/v1/review/"
+  - "../../../../../schemas/contracts/v1/evidence/"
+  - "../../../../../contracts/"
+  - "../../../../../data/README.md"
+  - "../../../../../release/README.md"
+  - "../../../../../packages/evidence-resolver/README.md"
+  - "../../../../../packages/policy-runtime/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../../explorer-web/src/features/review_console_readonly/README.md"
 tags: [kfm, apps, review-console, feature, queue, quarantine, work, review-queue, policy-gated, evidencebundle, finite-states]
 notes:
   - "Replaces the greenfield queue feature stub with a bounded feature contract."
   - "This feature may render a role-gated review queue projection, but it must not read lifecycle stores directly, mutate queue items locally, bypass governed API/policy gates, or become a public review surface."
   - "Feature files, route wiring, schemas, tests, fixtures, governed API envelopes, queue APIs, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
+owning_root: apps/
+responsibility: "Document the Review Console Queue Feature lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

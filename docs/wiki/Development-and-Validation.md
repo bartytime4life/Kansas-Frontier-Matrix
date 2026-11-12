@@ -3,10 +3,10 @@ KFM_WIKI_SOURCE
 page_id: Development-and-Validation
 title: Development and Validation
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-10-29
+updated: 2026-11-11
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Development-and-Validation.md
-evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
+evidence_checkpoint: main@d4d84171653a2f2582b48ece511dc010857fde15; historical-hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
 publication_effect: none until reviewed source is separately synchronized
 -->
 
@@ -14,7 +14,18 @@ publication_effect: none until reviewed source is separately synchronized
 
 **Run the component you intend to evaluate. Report the result it actually produced.**
 
-## Reproduce this application check
+## Verify the repository Explorer
+
+Use the Site's exact-lock installer and built Worker workflow in
+[Installation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/installation.md#explorer-site-mirror).
+Build before tests that import generated server output. At PR #5822 head
+`8a532b34eb691c06a53325ef553ea248ebbb11d5`, recorded checks passed the build,
+types, 1,804 Site tests, 380 conformance checks and 110 local route smoke checks;
+lint had zero errors and 77 inherited warnings. Its CI readback has 52 successes
+and one skip. These are separate from pending browser acceptance and deployment.
+[Source and documentation review](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/reports/documentation-currentness-review-20261111.md).
+
+## Reproduce the historical public application check
 
 At hosted composition [`bbcec824fe57`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bbcec824fe57e6be0409ba1e35d737fa99581560), after `npm ci`:
 
@@ -61,6 +72,13 @@ source admission, or release eligibility. The
 maps existing repository candidates to their narrower responsibilities.
 
 ## Documentation checks
+
+The [documentation maintenance runbook](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/runbooks/documentation-maintenance.md)
+gives explicit changed-file commands and a tracked-file inventory scan. Local
+link resolution, metadata, freshness and document-graph results retain separate
+coverage and inherited-debt boundaries. Do not advance historical dates to
+manufacture freshness.
+
 
 Use the repository's existing documentation validators under
 [tools/validators/docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/17f106d558674ec92a11809bcf3a06c82453777e/tools/validators/docs), the generated-work

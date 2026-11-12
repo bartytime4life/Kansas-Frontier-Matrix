@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://app/review-console/src/features/correction/readme
 title: Review Console Correction — Governed Review-Support and Release-Handoff Boundary
-type: app-readme; directory-readme; feature-boundary; correction-review-support
+type: feature-boundary
 version: v0.2
 status: draft; repository-grounded; readme-only-direct-lane; thin-schema; placement-drift; executable-feature-not-established
 owners: OWNER_TBD — Review steward · Correction reviewer · Release steward · Governance steward · Security steward · Policy steward · Evidence steward · API steward · UI steward · Validation steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-19
+updated: 2026-11-11
 policy_label: "public-governance; restricted-review; correction-review-support; role-gated; evidence-aware; release-subordinate; append-only; no-local-release-writes; no-publication-authority; no-truth-authority"
 current_path: apps/review-console/src/features/correction/README.md
 owning_root: apps/

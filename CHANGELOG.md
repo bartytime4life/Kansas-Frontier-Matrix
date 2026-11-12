@@ -56,6 +56,14 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ### Changed
 
+- Refreshed repository, installation, contributor and wiki documentation for the
+  November 11 Explorer checkpoint; added a complete Explorer guide index,
+  Observatory recovery guide and documentation maintenance procedure. Repaired
+  22 local navigation failures and routine app metadata omissions; one frozen
+  catalog anchor remains an explicit proposal.
+  [Audit scope and remaining debt](docs/reports/documentation-currentness-review-20261111.md)
+  keep historical qualification, native wiki sync and deployment separate.
+
 - Local Qwen question gate in `apps/site/source` (repository source; not yet deployed) is now an allowlist: a question is interpreted only when every sentence is about the map, its data or a mapped subject (or asks a definition, history, comparison or explanation), and any first-person wording is about the map itself rather than the asker's place, people or plans. On a second held-out set the keyword rules alone missed 16 of 40 sensitive questions (40%); on a third set written after the allowlist was built they missed 16 of 40 again, against 6 of 40 (15%) for the first allowlist, which the every-sentence rule then closed. The gate also abstains on care and symptom words (hospital, bitten, symptoms), sheltering ("ride it out") and requests for the real points behind generalized sites. The abstention message now says the companion interprets only questions about the map and, in an emergency, to call 911. Both new held-out sets are kept and tested.
 - Local Qwen knowledge pack cross-domain ideas in `apps/site/source` (repository source; not yet deployed): 32 ideas across 30 of the 45 domain pairings (up from 9), every domain in at least three, and the three offered per question now favour pairs that touch the question's domains.
 - Local Qwen knowledge pack glossary in `apps/site/source` (repository source; not yet deployed): definitions for source kinds, connection states and the map-context fields the model reads (for example selected versus displayed, and retrieval versus observation time), five more governance terms, and 55 technical terms across all ten domains (discharge versus gage height, NWS warning versus watch, PLSS township and range, wind direction convention and more), sent only for relevant domains.

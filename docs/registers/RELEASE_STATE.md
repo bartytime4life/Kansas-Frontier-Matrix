@@ -6,21 +6,24 @@ version: v1
 status: draft
 owners: Docs steward; Release authority (per ADR when assigned)
 created: 2026-05-12
-updated: 2026-05-12
+updated: 2026-11-11
 policy_label: public
 related:
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - control_plane/release_state_register.yaml
-  - schemas/contracts/v1/release/ReleaseManifest.schema.json
-  - release/manifests/
-  - release/rollback_cards/
-  - release/correction_notices/
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/trust-membrane.md"
+  - "control_plane/release_state_register.yaml"
+  - "schemas/contracts/v1/release/release_manifest.schema.json"
+  - "release/manifests/"
+  - "release/rollback_cards/"
+  - "release/correction_notices/"
 tags: [kfm, registers, release, governance, lifecycle]
 notes:
   - "PROPOSED placement: docs/registers/ pattern per Directory Rules §6.1; not explicitly listed in canonical examples but matches the AUTHORITY_LADDER / DRIFT_REGISTER / VERIFICATION_BACKLOG family."
   - "Human-facing companion to control_plane/release_state_register.yaml (per Directory Rules: docs explains; control_plane indexes)."
+owning_root: docs/
+responsibility: "Document the Release State Register navigation and authority boundaries."
+truth_posture: "CONFIRMED navigation and document placement; NEEDS VERIFICATION substantive historical implementation and authority claims, which retain their original scope."
 [/KFM_META_BLOCK_V2] -->
 
 # Release State Register
@@ -32,14 +35,14 @@ notes:
 ![authority: canonical](https://img.shields.io/badge/authority-canonical-blue)
 ![policy: public](https://img.shields.io/badge/policy-public-success)
 ![lifecycle: PUBLISHED gate](https://img.shields.io/badge/lifecycle-PUBLISHED%20gate-informational)
-![last reviewed: 2026-05-12](https://img.shields.io/badge/last%20reviewed-2026--05--12-lightgrey)
+![navigation reviewed: 2026-11-11](https://img.shields.io/badge/navigation%20reviewed-2026--11--11-lightgrey)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` |
 | **Owners** | Docs steward; Release authority (per ADR when assigned) |
 | **Authority** | Canonical (register) — refines doctrine; never overrides it |
-| **Last reviewed** | 2026-05-12 |
+| **Last reviewed** | 2026-11-11 — navigation only; state semantics not requalified |
 | **Authority of the rules below** | CONFIRMED (derived from KFM doctrine) |
 | **Authority of any specific repo path quoted** | PROPOSED until verified against mounted-repo evidence |
 
@@ -396,6 +399,8 @@ A. No. Lifecycle phase tracks the **content's** journey (`RAW → … → PUBLIS
 
 ---
 
+<a id="appendix-a--releasemanifest-release_state-enum-reference"></a>
+
 <details>
 <summary><strong>Appendix A — <code>ReleaseManifest</code> <code>release_state</code> enum reference</strong></summary>
 
@@ -432,6 +437,8 @@ The `release_state` enum below is **CONFIRMED** doctrine derived from the projec
 
 </details>
 
+<a id="appendix-b--change-discipline-for-this-register"></a>
+
 <details>
 <summary><strong>Appendix B — Change discipline for this register</strong></summary>
 
@@ -459,4 +466,4 @@ Every PR touching this file MUST update the "Last reviewed" line in the impact b
 - `control_plane/release_state_register.yaml` *(PROPOSED path)*
 - `schemas/contracts/v1/release/ReleaseManifest.schema.json` *(PROPOSED path)*
 
-**Last reviewed:** 2026-05-12 · **Status:** `draft` · [↑ Back to top](#release-state-register)
+**Last reviewed:** 2026-11-11 (navigation only) · **Status:** `draft` · [↑ Back to top](#release-state-register)

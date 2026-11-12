@@ -2,17 +2,17 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.6.0
+version: v3.7.0
 status: source-grounded documentation candidate; independent review pending
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-10-29
+updated: 2026-11-11
 policy_label: public
 current_path: README.md
 owning_root: repository-root
 responsibility: repository-wide identity, orientation, contribution, and validation entry point
 truth_posture: cite-or-abstain; implementation and validation claims retain exact source identities
-base_commit: 17f106d558674ec92a11809bcf3a06c82453777e
+base_commit: d4d84171653a2f2582b48ece511dc010857fde15
 hosted_commit: bbcec824fe57e6be0409ba1e35d737fa99581560
 media_commit: 974d3b340e619effc91d8da98cf9e67d95119df9
 related:
@@ -36,6 +36,12 @@ Explore Kansas from river valleys to the ground beneath them. Move through maps,
 source dates and recorded observations. Keep the evidence close enough to inspect.
 
 [Open the Explorer](https://kansasfrontiermatrix.com/) · [Watch the visual tour](docs/wiki/visual-tour.md) · [Run the program](#try-it-yourself) · [Read the wiki](docs/wiki/Home.md) · [Inspect the checks](docs/reports/documentation-showcase-qualification-20261027.md)
+
+**Repository review — November 11, 2026.** The current monorepo includes the
+[Explorer recovery and replay fixes](apps/site/source/docs/README.md).
+[Current source, validation and documentation limits](docs/reports/documentation-currentness-review-20261111.md)
+are recorded separately from the October public-website and media observations
+below. No fresh public deployment or live-provider acceptance is asserted.
 
 <picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/brand/readme/kfm-tour-terrain.jpg" /><img src="docs/brand/readme/kfm-tour-terrain.webp" alt="Recorded Explorer map tour: Flint Hills elevation relief. Attributed October 20 display; seven-second finite playback." width="100%" /></picture>
 
@@ -74,7 +80,7 @@ differences. [Trust membrane](docs/doctrine/trust-membrane.md) · [Truth posture
 
 ## Take the tour
 
-The current welcome contains **19 categories in four groups**, verified against the
+The October 27 public welcome contained **19 categories in four groups**, verified against the
 [category source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/app/layer-workspaces.ts) and the public welcome on October 27.
 These are navigation choices; this count does not certify every layer or provider.
 
@@ -143,7 +149,18 @@ captures in pinned WORK review packages with release authority disabled.
 
 ## Build status at a glance
 
-**Verified October 27, 2026, for the declared revision and environment.**
+**Repository Explorer checkpoint — November 11, 2026.** At
+`8a532b34eb691c06a53325ef553ea248ebbb11d5`, merged to main as
+`d4d84171653a2f2582b48ece511dc010857fde15`, the Site mirror passed its production
+build, types, 1,804 Site tests, 380 bounded conformance checks and 110 local route
+smoke checks. Lint had zero errors and 77 inherited warnings. The PR reported
+52 successful workflows and one skip at readback. Browser acceptance for the
+interval-load correction remains pending. These results concern the repository
+mirror; the [review record](docs/reports/documentation-currentness-review-20261111.md)
+keeps the source and acceptance boundaries explicit.
+
+**Historical public Node qualification — October 27, 2026.** The following
+results remain bound to that application revision and environment.
 
 | Evidence | Result | Scope |
 |---|---|---|
@@ -159,9 +176,9 @@ Commands, skip boundaries and review limits are in the [qualification record](do
 
 | Work | Source |
 |---|---|
-| Public Explorer UI, server routes and hosted AI | Separate [`a0-hosted-ai-web-20261017` tree](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bbcec824fe57e6be0409ba1e35d737fa99581560); this edition tested `bbcec824fe57e6be0409ba1e35d737fa99581560` |
+| Public Node composition, last qualified October 27 | Separate [`a0-hosted-ai-web-20261017` tree](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bbcec824fe57e6be0409ba1e35d737fa99581560); this edition tested `bbcec824fe57e6be0409ba1e35d737fa99581560` |
 | Contracts, schemas, connectors, validators and release support | This monorepo's `main`; root npm commands report intentional `WORKFLOW_HOLD` |
-| Preserved Sites lineage | [apps/site/](apps/site/README.md), with its own source, lockfile and checks |
+| Current repository Explorer and preserved Sites lineage | [apps/site/](apps/site/README.md), with its own source, lockfile, [guide index](apps/site/source/docs/README.md) and checks; deployment is separately verified |
 | Wiki orientation | Reviewable [docs/wiki/](docs/wiki/README.md); native sync follows source review |
 
 [Hosting/source runbook](docs/runbooks/godaddy-node-hosting.md). A later main merge or
@@ -169,7 +186,26 @@ site publication has its own identity; it does not retroactively change this tes
 
 ## Try it yourself
 
-Use a separate checkout for the **public Node composition**. These are the tested
+To review the current **repository Explorer**, use a separate checkout and the
+Site's own lockfile:
+
+```bash
+git clone --branch main https://github.com/bartytime4life/Kansas-Frontier-Matrix.git kfm-review
+cd kfm-review
+git checkout --detach d4d84171653a2f2582b48ece511dc010857fde15
+cd apps/site/source
+npm run install:ci
+npm run build
+../serve-local.sh
+```
+
+On Linux, use Node.js 22.13 or newer plus `flock`, `curl`, `sha256sum` and GNU
+`timeout`. The built Worker launcher prints a loopback URL, normally
+`http://127.0.0.1:4173`. Read [Installation](docs/installation.md#explorer-site-mirror)
+for local state, port conflicts and configuration boundaries.
+
+To reproduce the **October 27 public Node composition**, use another separate
+checkout. These are its historical tested
 source revision and build commands; application startup/provider setup remain
 separate from the tests performed here.
 
@@ -206,8 +242,9 @@ with remaining unknowns and rollback. [Contributor guide](CONTRIBUTING.md).
 
 ## FAQ
 
-**Is the Explorer public?** The website was reachable and its welcome inspected in
-this session. That observation does not certify uptime or every route.
+**Is the Explorer public?** The website was reachable and its welcome inspected on
+October 27. Current uptime, deployed revision and route/provider health require
+fresh verification.
 
 **Are the moving images live?** No. They are dated renderer tours. Their camera
 motion is assembled from captured frames, and wind trails are illustrative.
@@ -242,7 +279,9 @@ Placement follows adopted [Directory Rules](docs/doctrine/directory-rules.md) an
 
 ## Validation
 
-Run the command for the component under review. This edition ran `npm test`
+Run the command for the component under review. The November 11 repository
+checks are recorded in the [current review](docs/reports/documentation-currentness-review-20261111.md).
+The October 27 edition ran `npm test`
 (build plus Node tests) and `node_modules/.bin/tsc --noEmit` in the pinned standalone
 application. Root npm scripts intentionally fail with `WORKFLOW_HOLD`; they are
 not substitute application checks. See [performed checks and limitations](docs/reports/documentation-showcase-qualification-20261027.md)
@@ -269,10 +308,10 @@ not newly implemented analytical services.
 
 ## Current edges and non-goals
 
-This documentation update changes presentation, navigation and source-bound claims.
-It does not admit data, configure inference, change access, deploy the app, merge
-code or authorize a release. The retained legacy SVGs are explicitly illustrative;
-the five new tour previews are recorded display derivatives with their own manifest.
+This documentation refresh changes guidance, navigation and metadata. Existing
+SVG illustrations and October tour derivatives retain their own provenance; no
+new media was generated. Source admission, inference configuration, access,
+deployment, merge and release remain separate actions.
 
 ## Project references
 
@@ -280,7 +319,10 @@ the five new tour previews are recorded display derivatives with their own manif
 
 ## Last evidence review
 
-Monorepo `17f106d558674ec92a11809bcf3a06c82453777e` and standalone application `bbcec824fe57e6be0409ba1e35d737fa99581560`;
+Repository documentation inspected at main
+`d4d84171653a2f2582b48ece511dc010857fde15` on November 11, 2026; see the
+[current review](docs/reports/documentation-currentness-review-20261111.md).
+The earlier showcase inspected monorepo `17f106d558674ec92a11809bcf3a06c82453777e` and standalone application `bbcec824fe57e6be0409ba1e35d737fa99581560`;
 October 27, 2026. Media is pinned independently at `974d3b340e619effc91d8da98cf9e67d95119df9`.
 The [qualification record](docs/reports/documentation-showcase-qualification-20261027.md) is the detailed account of this edition's
 execution, source limits, placement, risks and rollback. Native wiki synchronization

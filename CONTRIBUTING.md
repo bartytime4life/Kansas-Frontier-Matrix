@@ -529,7 +529,15 @@ For Markdown changes, verify at minimum:
 - `git diff --check`;
 - generated receipt when required.
 
-No canonical repository-wide Markdown link checker was verified at the evidence snapshot. Report link validation method honestly.
+The repository now has a bounded, no-network [local link checker](tools/validators/docs/link-check/README.md),
+plus metadata, freshness, document-graph and critical-structure validators under
+[tools/validators/docs](tools/validators/docs/README.md). Use the
+[documentation maintenance guide](docs/runbooks/documentation-maintenance.md)
+for exact commands, changed-file checks and whole-tree inventory scans.
+External URLs, inline HTML links and factual/source acceptance remain separate
+from local Markdown target checks. Preserve historical receipts and adopted
+document bytes; report inherited findings rather than changing dates or gates
+to manufacture a clean result.
 
 ### Generated-receipt checks
 

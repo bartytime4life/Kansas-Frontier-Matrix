@@ -6,36 +6,38 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Governed AI steward · Policy steward · Evidence steward · Runtime steward · Citation steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../routes/README.md
-  - ../../routes/domains/README.md
-  - ../../../README.md
-  - ../../../explorer-web/README.md
-  - ../../../../docs/doctrine/directory-rules.md
-  - ../../../../docs/architecture/governed-ai/FOCUS_FLOW.md
-  - ../../../../docs/architecture/governed-ai/BOUNDARIES.md
-  - ../../../../docs/architecture/governed-ai/STATE_OWNERSHIP.md
-  - ../../../../docs/architecture/governed-ai/ROUTE_MAP.md
-  - ../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../../schemas/contracts/v1/runtime/
-  - ../../../../schemas/contracts/v1/focus/
-  - ../../../../schemas/contracts/v1/evidence/
-  - ../../../../contracts/runtime/
-  - ../../../../contracts/focus/
-  - ../../../../contracts/evidence/
-  - ../../../../policy/focus/README.md
-  - ../../../../policy/access/README.md
-  - ../../../../policy/decision/README.md
-  - ../../../../policy/telemetry/README.md
-  - ../../../../packages/evidence-resolver/README.md
-  - ../../../../packages/policy-runtime/README.md
-  - ../../../../runtime/README.md
-  - ../../../../data/README.md
-  - ../../../../release/README.md
+  - "../README.md"
+  - "../../README.md"
+  - "../../routes/README.md"
+  - "../../routes/domains/README.md"
+  - "../../../README.md"
+  - "apps/site/README.md"
+  - "../../../../docs/doctrine/directory-rules.md"
+  - "../../../../docs/architecture/governed-ai/FOCUS_FLOW.md"
+  - "../../../../docs/architecture/governed-ai/BOUNDARIES.md"
+  - "../../../../docs/architecture/governed-ai/ROUTE_MAP.md"
+  - "../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../../schemas/contracts/v1/runtime/"
+  - "../../../../schemas/contracts/v1/focus/"
+  - "../../../../schemas/contracts/v1/evidence/"
+  - "../../../../contracts/runtime/"
+  - "../../../../contracts/focus/"
+  - "../../../../contracts/evidence/"
+  - "../../../../policy/focus/README.md"
+  - "../../../../policy/access/README.md"
+  - "../../../../policy/decision/README.md"
+  - "../../../../policy/telemetry/README.md"
+  - "../../../../packages/evidence-resolver/README.md"
+  - "../../../../packages/policy-runtime/README.md"
+  - "../../../../runtime/README.md"
+  - "../../../../data/README.md"
+  - "../../../../release/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../explorer-web/README.md"
+  - "NEEDS VERIFICATION: ../../../../docs/architecture/governed-ai/STATE_OWNERSHIP.md"
 tags: [kfm, apps, governed-api, src, ai, governed-ai, focus-mode, model-adapter, bounded-context, citation-validation, ai-receipt, finite-outcomes, safe-errors, no-browser-model]
 notes:
   - "Refreshes the bounded governed-api AI source-subtree contract."
@@ -43,6 +45,9 @@ notes:
   - "AI source files, adapter bindings, DTOs, middleware, schemas, tests, fixtures, authorization, policy enforcement, evidence resolution, citation validation, receipt handling, safe logging, safe telemetry, deployment state, logs, dashboards, and CI pass state remain NEEDS VERIFICATION."
   - "policy/focus/README.md currently exists as a greenfield bundle stub; executable Focus policy wiring remains NEEDS VERIFICATION."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, minimum safe AI source slice, runtime anti-bypass matrix, stronger bounded-context, no-browser-model, no-chain-of-thought, citation-validation, receipt-redaction, prompt/log/telemetry, safe-error, and model-adapter gates without claiming runtime maturity."
+owning_root: apps/
+responsibility: "Document the Governed API AI Source lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

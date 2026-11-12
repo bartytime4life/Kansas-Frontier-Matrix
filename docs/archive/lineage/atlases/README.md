@@ -1,4 +1,33 @@
 <!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/archive/lineage/atlases/readme
+title: Archived lineage — atlas navigation
+type: navigation-guide
+version: v1.1
+status: draft; review-required; navigation-only
+owners: ["NEEDS VERIFICATION — existing domain/documentation stewardship assignments"]
+created: 2026-05-25
+updated: 2026-11-11
+policy_label: public-documentation
+owning_root: docs/
+responsibility: "Maintain navigation and qualification boundaries for Archived lineage — atlas navigation."
+truth_posture: "CONFIRMED repository navigation; PROPOSED path-based document identity replacing an unassigned placeholder; NEEDS VERIFICATION historical semantic claims and named stewardship."
+related:
+  - ../README.md
+  - ../../../atlases/README.md
+  - ../../../README.md
+[/KFM_META_BLOCK_V2] -->
+
+# 🧭 Archived Lineage — Atlases, Supplements, and Dossiers
+
+<details>
+<summary>Previous metadata envelope — retained as historical context</summary>
+
+The exact base-envelope content from main
+`d4d84171653a2f2582b48ece511dc010857fde15` is retained below, including its
+unassigned document-ID placeholder and nested role/taxonomy fields. The current envelope above is a review candidate; it does
+not assign people, adopt authority or rewrite an archived lineage record.
+
+```yaml
 doc_id: kfm://doc/<TODO-uuid>
 title: Archived Lineage — Atlases, Supplements, and Dossiers
 type: standard
@@ -53,9 +82,10 @@ notes:
   - "DUAL-MODE INDEX: this view's INDEX.md contains both navigational entries (pointers to in-document App. E/G) AND true filings (records in parent category lanes). The entry_type column distinguishes them."
   - "Per Atlas v1.1 Ch. 24.8.2, atlas/supplement internal supersession is ALWAYS in-document; this view never duplicates an in-document App. E/G."
   - "All paths to specific files under docs/archive/lineage/atlases/ remain PROPOSED until inspected against a mounted repo."
-[/KFM_META_BLOCK_V2] -->
+```
 
-# 🧭 Archived Lineage — Atlases, Supplements, and Dossiers
+</details>
+
 
 > **Dual-mode** subject view: a navigational index pointing OUT to in-document supersession appendices across the KFM atlas ecosystem, **and** a true filing surface for the narrow edge cases the in-document pattern cannot handle (atlas-adjacent docs, cross-family events, orphan dossier supersession).
 
@@ -87,21 +117,26 @@ notes:
 
 ## Contents
 
+Navigation review, November 11, 2026: only sections 1 and 2 below are
+materialized in this file. The remaining outline entries are retained as plain
+text, rather than links to absent sections. They do not establish implemented
+procedures or new lineage records.
+
 1. [Scope](#1-scope)
 2. [Repo fit](#2-repo-fit)
-3. [Inputs — what this view indexes](#3-inputs--what-this-view-indexes)
-4. [Exclusions — what does not belong here](#4-exclusions--what-does-not-belong-here)
-5. [Directory layout](#5-directory-layout)
-6. [Index ↔ category mapping (dual-mode)](#6-index--category-mapping-dual-mode)
-7. [Subject-curation flow](#7-subject-curation-flow)
-8. [Worked example — ADR-S-15 + ADR-S-02](#8-worked-example--adr-s-15--adr-s-02)
-9. [Tracked atlases, supplements, and dossiers](#9-tracked-atlases-supplements-and-dossiers)
-10. [Authoring workflow](#10-authoring-workflow)
-11. [Navigational vs filing entries](#11-navigational-vs-filing-entries)
-12. [FAQ](#12-faq)
-13. [Related docs](#13-related-docs)
-14. [Per-root README contract](#14-per-root-readme-contract)
-15. [Appendix](#15-appendix)
+3. Inputs — what this view indexes
+4. Exclusions — what does not belong here
+5. Directory layout
+6. Index ↔ category mapping (dual-mode)
+7. Subject-curation flow
+8. Worked example — ADR-S-15 + ADR-S-02
+9. Tracked atlases, supplements, and dossiers
+10. Authoring workflow
+11. Navigational vs filing entries
+12. FAQ
+13. Related docs
+14. Per-root README contract
+15. Appendix
 
 ---
 

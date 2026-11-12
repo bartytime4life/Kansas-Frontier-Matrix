@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: _Sidebar
 title: Kansas Frontier Matrix Wiki Navigation
 status: PROPOSED wiki source; review required
-updated: 2026-10-29
+updated: 2026-11-11
 authority: navigation-only; canonical repository evidence and adopted KFM authority outrank this page
 source_path: docs/wiki/_Sidebar.md
 publication_effect: none until separately synchronized to the native GitHub Wiki
@@ -23,7 +23,8 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 
 - [Home](Home.md) — project purpose and public entry point
 - [Getting Started](Getting-Started.md) — first reading and contribution paths
-- [Project Status](Project-Status.md) — evidence-bounded implementation snapshot
+- [Project Status](Project-Status.md) — November repository checkpoint and dated hosted qualification
+- [Explorer guide index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/site/source/docs/README.md) — current usage and historical notes
 
 **Go deeper · system design**
 

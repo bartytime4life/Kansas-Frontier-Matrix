@@ -1,5 +1,11 @@
 # Map research tools
 
+The [current guide index](README.md) links the investigation restore,
+reading-context and share-context corrections. Saved context and share links
+retain their own identity and time; an old implementation test count below
+is not a current deployment or whole-browser acceptance result.
+
+
 ## Behavior and scope
 
 The provider catalog adds **All / Selected / Needs attention** filters beside

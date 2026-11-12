@@ -1088,7 +1088,8 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert result["file_states"]["inherited_repository_overlay"] == 69
     assert result["file_states"]["repository_only_overlay"] == receipt["counts"]["repository_only_overlay"]
     assert result["file_states"]["repository_only_overlay"] >= 79
-    assert result["file_states"]["repository_safety_overlay"] == 74
+    assert result["file_states"]["repository_safety_overlay"] == receipt["counts"]["repository_safety_overlay"]
+    assert result["file_states"]["repository_safety_overlay"] >= 74
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
@@ -2581,4 +2582,16 @@ def test_interval_recovery_successor_preserves_zod_inventory_and_all_holds():
         {"app/observatory/workspace.tsx", "app/observatory/load-deadline.ts",
          "tests/observatory-load-recovery.test.mjs", "docs/observatory-interval-recovery-20261111.md"},
         "b4c07171560e19f8d72690dcaee03876f8b0e70e",
+    )
+
+
+def test_documentation_successor_preserves_interval_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-documentation-refresh-overlay-20261111.json",
+        "site-v268-interval-recovery-overlay-20261111.json",
+        "624562a174b9a97fe74a2511e35fd17ad03c03a124b29a988dc15dbd5829e0a1",
+        {"README.md", "docs/README.md", "docs/observatory-replay.md",
+         "docs/api-connections.md", "docs/daily-archive.md",
+         "docs/map-research-tools.md", "docs/water-flow.md"},
+        "d4d84171653a2f2582b48ece511dc010857fde15",
     )

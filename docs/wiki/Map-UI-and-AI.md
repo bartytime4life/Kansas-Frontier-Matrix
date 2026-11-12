@@ -3,16 +3,28 @@ KFM_WIKI_SOURCE
 page_id: Map-UI-and-AI
 title: Map, UI, and AI
 status: source-grounded orientation; independent review pending
-updated: 2026-10-09
+updated: 2026-11-11
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Map-UI-and-AI.md
-evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+evidence_checkpoint: main@d4d84171653a2f2582b48ece511dc010857fde15; historical-hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
 publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
 # Map, UI, and AI
+
+## Repository update — November 11, 2026
+
+Main `d4d84171653a2f2582b48ece511dc010857fde15` includes merged Explorer
+recovery, replay-inspection and Flight/Zod corrections. The
+[repository review](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/reports/documentation-currentness-review-20261111.md)
+separates current source and recorded validation from the historical public
+website and media qualification below. Use the
+[Explorer guide index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/site/source/docs/README.md)
+for current usage. This source update does not synchronize the native wiki or
+establish a new deployed version.
+
 
 ## Current public application · October 27, 2026
 

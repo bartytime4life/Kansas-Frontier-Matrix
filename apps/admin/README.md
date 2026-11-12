@@ -6,34 +6,37 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · Security steward · Access steward · Release steward · Audit steward · Docs steward
 created: 2026-06-15
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: restricted
 related:
-  - ../README.md
-  - src/README.md
-  - ../governed-api/README.md
-  - ../review-console/README.md
-  - ../../README.md
-  - ../../SECURITY.md
-  - ../../docs/doctrine/directory-rules.md
-  - ../../docs/doctrine/trust-membrane.md
-  - ../../docs/security/AUDIT_INVARIANTS.md
-  - ../../docs/security/THREAT_MODEL.md
-  - ../../docs/security/INCIDENT_RESPONSE.md
-  - ../../docs/security/SECRETS.md
-  - ../../policy/access/README.md
-  - ../../policy/decision/README.md
-  - ../../policy/data/README.md
-  - ../../release/README.md
-  - ../../data/README.md
-  - ../../tools/validators/README.md
-  - ../../tools/watchers/README.md
+  - "../README.md"
+  - "apps/admin/src/README.md"
+  - "../governed-api/README.md"
+  - "../review-console/README.md"
+  - "../../README.md"
+  - "../../SECURITY.md"
+  - "../../docs/doctrine/directory-rules.md"
+  - "../../docs/doctrine/trust-membrane.md"
+  - "../../docs/security/AUDIT_INVARIANTS.md"
+  - "../../docs/security/THREAT_MODEL.md"
+  - "../../docs/security/INCIDENT_RESPONSE.md"
+  - "../../docs/security/SECRETS.md"
+  - "../../policy/access/README.md"
+  - "../../policy/decision/README.md"
+  - "../../policy/data/README.md"
+  - "../../release/README.md"
+  - "../../data/README.md"
+  - "../../tools/validators/README.md"
+  - "../../tools/watchers/README.md"
 tags: [kfm, apps, admin, restricted, least-privilege, audit, break-glass, trust-membrane, deny-by-default, fail-closed, no-public-path]
 notes:
   - "v0.2 updates the uploaded Admin app README into a current repo-aware app-lane contract."
   - "apps/admin/README.md, apps/admin/src/README.md, and apps/README.md were verified through the GitHub app in this update. Implementation files, routes, auth providers, deployment posture, tests, CI, audit sinks, secrets posture, and break-glass workflow remain NEEDS VERIFICATION."
   - "Admin is a restricted deployable surface and must not become the normal public path or a bypass around governed-api, release, data lifecycle, policy, evidence, audit, correction, or rollback controls."
   - "Admin actions must be justified, constrained, role-gated, purpose-bound, audited, reviewable, and reversible where they affect trust-bearing state."
+owning_root: apps/
+responsibility: "Document the Admin App lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>

@@ -10,7 +10,7 @@ owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable runbook, domain, security, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-10-09
+updated: 2026-11-11
 policy_label: repository-facing; mixed child sensitivity
 current_path: docs/runbooks/README.md
 owning_root: docs/
@@ -77,6 +77,17 @@ notes:
 <a id="top"></a>
 
 # `docs/runbooks/` — Operational Procedure and Recovery Index
+
+## Current operational reading routes — November 11, 2026
+
+- [Install and verify the repository Explorer](../installation.md#explorer-site-mirror).
+- [Maintain documentation and run local QA](documentation-maintenance.md).
+- [Current source and documentation review](../reports/documentation-currentness-review-20261111.md).
+
+The detailed inventory and maturity assessment below retain their declared
+historical tree and review scope. Adding this reading route does not requalify
+every operational procedure or remove its holds.
+
 
 > **Human-facing index for KFM procedures used to inspect, rehearse, contain, correct, recover, and safely hand off governed work.** Runbooks explain how an authorized actor should proceed; they do not grant authority, make evidence true, approve policy, change lifecycle state, or release anything by themselves.
 

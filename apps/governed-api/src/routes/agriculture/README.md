@@ -6,42 +6,44 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — API steward · Agriculture steward · Route steward · Policy steward · Evidence steward · Release steward · Runtime steward · Security steward · Privacy steward · Audit steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-11-11
 policy_label: public
 related:
-  - ../README.md
-  - ../../README.md
-  - ../../../README.md
-  - ../../../routes/README.md
-  - ../../../routes/domains/README.md
-  - ../../../routes/domains/agriculture/README.md
-  - ../../governed_api/README.md
-  - ../../governed_api/routes/README.md
-  - ../../ai/README.md
-  - ../../../../README.md
-  - ../../../../explorer-web/README.md
-  - ../../../../../docs/doctrine/directory-rules.md
-  - ../../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../../../../../docs/domains/agriculture/README.md
-  - ../../../../../docs/domains/agriculture/POLICY.md
-  - ../../../../../docs/domains/agriculture/SENSITIVITY.md
-  - ../../../../../docs/domains/agriculture/OBJECTS.md
-  - ../../../../../docs/domains/agriculture/PIPELINE.md
-  - ../../../../../policy/domains/agriculture/README.md
-  - ../../../../../policy/access/README.md
-  - ../../../../../policy/decision/README.md
-  - ../../../../../policy/telemetry/README.md
-  - ../../../../../schemas/contracts/v1/runtime/
-  - ../../../../../schemas/contracts/v1/domains/agriculture/
-  - ../../../../../schemas/contracts/v1/evidence/
-  - ../../../../../contracts/runtime/
-  - ../../../../../contracts/domains/agriculture/
-  - ../../../../../contracts/evidence/
-  - ../../../../../packages/evidence-resolver/README.md
-  - ../../../../../packages/policy-runtime/README.md
-  - ../../../../../runtime/README.md
-  - ../../../../../release/README.md
-  - ../../../../../data/README.md
+  - "../README.md"
+  - "../../README.md"
+  - "../../../README.md"
+  - "../../../routes/README.md"
+  - "../../../routes/domains/README.md"
+  - "../../governed_api/README.md"
+  - "../../governed_api/routes/README.md"
+  - "../../ai/README.md"
+  - "../../../../README.md"
+  - "apps/site/README.md"
+  - "../../../../../docs/doctrine/directory-rules.md"
+  - "../../../../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md"
+  - "../../../../../docs/domains/agriculture/README.md"
+  - "../../../../../docs/domains/agriculture/POLICY.md"
+  - "../../../../../docs/domains/agriculture/SENSITIVITY.md"
+  - "../../../../../docs/domains/agriculture/OBJECTS.md"
+  - "../../../../../docs/domains/agriculture/PIPELINE.md"
+  - "../../../../../policy/domains/agriculture/README.md"
+  - "../../../../../policy/access/README.md"
+  - "../../../../../policy/decision/README.md"
+  - "../../../../../policy/telemetry/README.md"
+  - "../../../../../schemas/contracts/v1/runtime/"
+  - "../../../../../schemas/contracts/v1/domains/agriculture/"
+  - "../../../../../schemas/contracts/v1/evidence/"
+  - "../../../../../contracts/runtime/"
+  - "../../../../../contracts/domains/agriculture/"
+  - "../../../../../contracts/evidence/"
+  - "../../../../../packages/evidence-resolver/README.md"
+  - "../../../../../packages/policy-runtime/README.md"
+  - "../../../../../runtime/README.md"
+  - "../../../../../release/README.md"
+  - "../../../../../data/README.md"
+unresolved_related:
+  - "NEEDS VERIFICATION: ../../../routes/domains/agriculture/README.md"
+  - "NEEDS VERIFICATION: ../../../../explorer-web/README.md"
 tags: [kfm, apps, governed-api, src, routes, agriculture, field-privacy, operator-privacy, aggregate-release, finite-outcomes, evidencebundle, policydecision, release-manifest, safe-observability, source-rights]
 notes:
   - "Refreshes the bounded governed-api src/routes/agriculture route-source contract."
@@ -49,6 +51,9 @@ notes:
   - "Agriculture route source files may bind handlers, DTO mapping, authorization handoff, policy/evidence/release lookups, aggregation/redaction/generalization receipts, export-scope prechecks, finite envelope construction, safe errors, and safe observability, but they must not become Agriculture doctrine, Agriculture policy authority, schema authority, contract authority, lifecycle storage, release authority, proof/receipt storage, runtime-adapter authority, telemetry authority, public UI, source-ingest code, or direct source/model access."
   - "Route source files, handlers, DTOs, middleware, schemas, tests, fixtures, authorization, policy runtime integration, evidence resolver integration, release lookup, transform receipt support, safe logging, safe telemetry, deployment state, dashboards, and CI pass state remain NEEDS VERIFICATION."
   - "v0.2 adds a current evidence basis, Directory Rules placement basis, route-source/package-route separation, minimum safe Agriculture route-source slice, runtime anti-bypass matrix, stronger field/operator denial, source-rights, candidate-labeling, export-scope, safe-observability, AI-boundary, and validation/definition-of-done gates without claiming runtime maturity."
+owning_root: apps/
+responsibility: "Document the Governed API Agriculture Source Routes lane and its ownership, implementation and validation limits."
+truth_posture: "CONFIRMED documentation placement; NEEDS VERIFICATION runtime implementation and deployment. Existing substantive claims retain their stated evidence snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
