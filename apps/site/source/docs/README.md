@@ -40,6 +40,7 @@ checks or establish current deployment, browser acceptance or source admission.
 - [Reviewed earthquakes (USGS ComCat)](governed-earthquakes.md)
 - [Reviewed soil moisture (NOAA USCRN)](governed-soil.md)
 - [Reviewed storm event reports (NOAA Storm Events)](governed-storm-events.md)
+- [Reviewed source requests, export ownership and recovery](reviewed-control-requests.md)
 - [Reviewed water delivery candidate](governed-water.md)
 - [Reviewed daily weather (NOAA GHCN-Daily)](governed-weather.md)
 - [Historical map request quota](historical-topo-request-quota.md)

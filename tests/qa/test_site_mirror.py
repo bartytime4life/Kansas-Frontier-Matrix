@@ -2638,3 +2638,21 @@ def test_source_read_successor_preserves_navigation_inventory_and_all_holds():
          "docs/kansas-history-library.md", "docs/underground-explorer.md"},
         "a421ab22c3f71c87bf9bf06f6208f8ba4ffcffbc",
     )
+
+
+def test_reviewed_requests_successor_preserves_source_read_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-reviewed-control-requests-overlay-20261111.json",
+        "site-v268-source-read-recovery-overlay-20261111.json",
+        "7a1879a85b4147072e8956cd9342bb2defc130b615266c1f052ba5906c240287",
+        {"app/bounded-json.ts", "app/governed-earthquakes-control.tsx",
+         "app/governed-soil-control.tsx", "app/governed-storm-events-control.tsx",
+         "app/governed-water-control.tsx", "app/governed-weather-control.tsx",
+         "docs/README.md", "docs/governed-earthquakes.md", "docs/governed-soil.md",
+         "docs/governed-storm-events.md", "docs/governed-water.md", "docs/governed-weather.md",
+         "docs/reviewed-control-requests.md", "tests/governed-earthquakes-control.test.mjs",
+         "tests/governed-soil-control.test.mjs", "tests/governed-storm-events-control.test.mjs",
+         "tests/governed-water-export-selection.test.mjs", "tests/governed-weather-control.test.mjs",
+         "tests/reviewed-control-request-integrity.test.mjs"},
+        "d58bd53a33bbe83a0f77dd98bc1b74a3d594aa7f",
+    )

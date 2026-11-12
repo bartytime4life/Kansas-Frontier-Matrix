@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
-import { readBoundedJson } from "./bounded-json";
+import { readBoundedJson, readSuccessfulJson } from "./bounded-json";
 import { approvalRemainingMs } from "./governed-water";
 import type { SoilResponse } from "./governed-soil";
 import { waterBrowserLabel, waterBrowserStateForResponse, type WaterBrowserState } from "./governed-water-availability";
@@ -18,18 +18,25 @@ export function GovernedSoilControl({ mapRef, styleReady, onSelectionChange }: {
   const [evidenceRecord, setEvidenceRecord] = useState<{ stationId: string; packageId: unknown; value: SoilResponse } | null>(null);
   const [exportStatus, setExportStatus] = useState("");
   const controller = useRef<AbortController | null>(null);
+  const exportController = useRef<AbortController | null>(null);
+  const cancelExport = useCallback(() => {
+    const previous = exportController.current;
+    exportController.current = null;
+    previous?.abort();
+  }, []);
   const selectedRef = useRef(selected);
   const selectionGeneration = useRef(0);
   const chooseStation = useCallback((id: string) => {
-    if (selectedRef.current !== id) selectionGeneration.current += 1;
+    if (selectedRef.current !== id) { selectionGeneration.current += 1; cancelExport(); }
     selectedRef.current = id; setSelected(id); setExportStatus("");
-  }, []);
+  }, [cancelExport]);
   const refresh = useCallback(async () => {
+    cancelExport(); setExportStatus("");
     controller.current?.abort(); const abort = new AbortController(); controller.current = abort; setLoading(true); setResponse(null); setEvidenceRecord(null); setStatus("Checking current release…"); setBrowserState("checking"); setRender("Waiting for map frame");
     const timeout = setTimeout(() => abort.abort(), 15000);
     try {
       const fetched = await fetch(`${ROUTE}/layers`, { signal: abort.signal, cache: "no-store", credentials: "same-origin" });
-      const value = await readBoundedJson(fetched, 2 * 1024 * 1024) as SoilResponse;
+      const value = await readBoundedJson(fetched, 2 * 1024 * 1024, abort.signal) as SoilResponse;
       if (abort.signal.aborted) return;
       const next = waterBrowserStateForResponse(value, fetched.ok);
       setBrowserState(next);
@@ -37,16 +44,16 @@ export function GovernedSoilControl({ mapRef, styleReady, onSelectionChange }: {
       else { setClock(Date.now()); setResponse(value); setStatus("Reviewed snapshot received"); }
     } catch { if (controller.current === abort) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Browser request unavailable. Try again."); } }
     finally { clearTimeout(timeout); if (controller.current === abort) setLoading(false); }
-  }, []);
+  }, [cancelExport]);
   // Daily data: a ten-minute recheck is enough to notice a withdrawal or replacement.
-  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => void refresh(), 600000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; clearInterval(interval); }; }, [refresh]);
+  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => void refresh(), 600000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; cancelExport(); clearInterval(interval); }; }, [refresh, cancelExport]);
   useEffect(() => {
     if (!response?.data) return;
     const remaining = approvalRemainingMs(response.data.approval_expires_at, Date.now());
     if (remaining <= 0) return;
-    const timer = setTimeout(() => setClock(Date.now()), Math.min(remaining, 2147483647));
+    const timer = setTimeout(() => { cancelExport(); setClock(Date.now()); }, Math.min(remaining, 2147483647));
     return () => clearTimeout(timer);
-  }, [response]);
+  }, [response, cancelExport]);
   const expired = Boolean(response?.data && approvalRemainingMs(response.data.approval_expires_at, clock) <= 0);
   const data = expired ? null : response?.data, station = data?.stations?.find(s => s.id === selected);
   const evidence = evidenceRecord?.stationId === selected && evidenceRecord.packageId === data?.package_id ? evidenceRecord.value : null;
@@ -78,25 +85,34 @@ export function GovernedSoilControl({ mapRef, styleReady, onSelectionChange }: {
   }, [mapRef, styleReady, visible, data, chooseStation]);
   useEffect(() => {
     if (!data || !response) return;
-    const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request timed out. Data withheld."); }, 15000);
-    void fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readBoundedJson(r, 1024 * 1024)).then(value => { const next = value as SoilResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
+    const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); cancelExport(); setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request timed out. Data withheld."); }, 15000);
+    void fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readSuccessfulJson(r, 1024 * 1024, abort.signal)).then(value => { const next = value as SoilResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
       if (soilEvidenceMatchesSelection(response, next, selected)) setEvidenceRecord({ stationId: selected, packageId: data.package_id, value: next });
-      else { setResponse(null); setEvidenceRecord(null); setBrowserState("withheld"); setStatus("Evidence or release changed. Check the connection again."); }
-    }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request unavailable. Data withheld."); } });
-    return () => { abort.abort(); clearTimeout(timeout); };
-  }, [selected, data, response]);
+      else { cancelExport(); setResponse(null); setEvidenceRecord(null); setBrowserState("withheld"); setStatus("Evidence or release changed. Check the connection again."); }
+    }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) { cancelExport(); setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request unavailable. Data withheld."); } });
+    return () => { abort.abort(); cancelExport(); clearTimeout(timeout); };
+  }, [selected, data, response, cancelExport]);
   async function exportStation() {
+    cancelExport();
+    const abort = new AbortController(); exportController.current = abort;
+    const timeout = setTimeout(() => {
+      abort.abort();
+      if (exportController.current === abort) setExportStatus("Export withheld: current evidence or release could not be verified.");
+    }, 15000);
     setExportStatus("Checking current release…");
     const requested = selected, requestedGeneration = selectionGeneration.current;
     try {
-      const fresh = await fetch(`${ROUTE}/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 2 * 1024 * 1024)) as SoilResponse;
-      const refs = await fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 1024 * 1024)) as SoilResponse;
+      const fresh = await fetch(`${ROUTE}/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: abort.signal }).then(r => readSuccessfulJson(r, 2 * 1024 * 1024, abort.signal)) as SoilResponse;
+      if (exportController.current !== abort || abort.signal.aborted) return;
+      const refs = await fetch(`${ROUTE}/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: abort.signal }).then(r => readSuccessfulJson(r, 1024 * 1024, abort.signal)) as SoilResponse;
+      if (exportController.current !== abort || abort.signal.aborted) return;
       if (selectionGeneration.current !== requestedGeneration || selectedRef.current !== requested || !soilExportMatchesSelection(fresh, refs, requested)
           || approvalRemainingMs(fresh.data?.approval_expires_at, Date.now()) <= 0
           || approvalRemainingMs(refs.data?.approval_expires_at, Date.now()) <= 0) throw new Error("WITHHELD");
       const blob = new Blob([JSON.stringify({ observations: fresh, evidence: refs }, null, 2)], { type: "application/json" }), url = URL.createObjectURL(blob);
       const link = document.createElement("a"); link.href = url; link.download = `kfm-reviewed-soil-${requested}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setExportStatus("Export includes source, evidence and release references.");
-    } catch { setExportStatus("Export withheld: current evidence or release could not be verified."); }
+    } catch { if (exportController.current === abort) setExportStatus("Export withheld: current evidence or release could not be verified."); }
+    finally { clearTimeout(timeout); if (exportController.current === abort) exportController.current = null; }
   }
   return <section className="official-context-row" aria-label="Reviewed daily soil snapshot">
     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} disabled={!visible && !data} aria-label={visible ? "Hide reviewed soil stations" : "Show reviewed soil stations"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": "#a47148" } as React.CSSProperties} /><div><strong>Reviewed soil moisture</strong><small>NOAA USCRN · {visible ? !data ? "Selected · held" : shownRender : waterBrowserLabel(shownBrowserState)}</small></div></div>

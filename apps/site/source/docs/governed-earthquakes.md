@@ -91,6 +91,11 @@ the earthquake metadata tables only and activates nothing.
 
 The owner releases packages at `/governed/earthquakes-release`.
 
+The [shared request and export guide](reviewed-control-requests.md) describes
+HTTP success checks, cancellation when the view changes, and the single
+15-second export deadline. Run its cross-control regressions alongside the
+family checks below.
+
 Local conformance: `node --test tests/governed-earthquakes*.test.mjs`.
 
 Rollback before activation is to leave the earthquake tables empty; the layer

@@ -58,6 +58,11 @@ bundles from the same release, and a fresh single-station export is withheld if
 the selection changes while it is in flight. The owner releases packages at
 `/governed/soil-release`.
 
+The [shared request and export guide](reviewed-control-requests.md) describes
+HTTP success checks, cancellation when the view changes, and the single
+15-second export deadline. Run its cross-control regressions alongside the
+family checks below.
+
 Local conformance: `node --test tests/governed-soil*.test.mjs`.
 
 Rollback before activation is to leave the soil tables empty; the layer then

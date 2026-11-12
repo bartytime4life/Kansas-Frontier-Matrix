@@ -11,6 +11,7 @@ const compiled = text => ts.transpileModule(text, { compilerOptions: {
 const load = async path => { const exports = {}; vm.runInNewContext(compiled(await read(path)), { exports }); return exports; };
 const waterHelpers = await load("../app/governed-water-availability.ts");
 const helpers = await load("../app/governed-storm-events-availability.ts");
+const boundedCode = compiled(await read("../app/bounded-json.ts"));
 const source = await read("../app/governed-storm-events-control.tsx");
 const fixture = async name => JSON.parse(await read(`./fixtures/governed-storm-events/${name}.json`));
 const full = await fixture("layers"), allEvidence = await fixture("evidence"), mayLayers = await fixture("layers-may");
@@ -83,6 +84,8 @@ test("responses classify without stations, and damage is never shown as zero whe
 
 function harness(initial) {
   const requests = [], downloads = [], statuses = [];
+  const bounded = {};
+  vm.runInNewContext(boundedCode, { exports: bounded, TextDecoder });
   let stateIndex = 0;
   const hooks = {
     useState(value) {
@@ -102,10 +105,10 @@ function harness(initial) {
       if (name === "./governed-water-availability") return waterHelpers;
       if (name === "./governed-storm-events-availability") return helpers;
       if (name === "./governed-water") return { approvalRemainingMs: expiry => Date.parse(expiry) - Date.now() };
-      if (name === "./bounded-json") return { readBoundedJson: async response => response };
+      if (name === "./bounded-json") return bounded;
       throw new Error(`Unexpected import ${name}`);
     },
-    fetch: url => new Promise(resolve => requests.push({ url, resolve })),
+    fetch: url => new Promise(resolve => requests.push({ url, resolve: value => resolve(value instanceof Response ? value : Response.json(value)) })),
     AbortController, AbortSignal, Blob, Date, setTimeout: () => 0, clearTimeout() {},
     URL: { createObjectURL: () => "blob:test", revokeObjectURL() {} },
     document: { createElement: () => ({ click() { downloads.push(this.download); } }) },
@@ -125,7 +128,7 @@ function harness(initial) {
   return { requests, request, downloads, statuses, text: text.join(" "),
     choose: m => select.props.onChange({ target: { value: String(m) } }), start: () => button.props.onClick() };
 }
-const settle = async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); };
+const settle = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
 
 test("the control lists the month's reports as historical, and exports one month's evidence from the storm events routes", async () => {
   const { layers, evidence } = month(MAY);
@@ -144,13 +147,13 @@ test("the control lists the month's reports as historical, and exports one month
 });
 
 test("changing month during an export withholds the download", async () => {
-  const { layers, evidence } = month(MAY);
+  const { layers } = month(MAY);
   const h = harness(layers); h.start();
   h.choose(4); h.choose(MAY);
   h.request(/layers\?month=5$/).resolve(layers); await settle();
-  h.request(/evidence\?month=5$/).resolve(evidence); await settle();
+  assert.equal(h.request(/evidence\?month=5$/), undefined, "no evidence request follows a canceled export");
   assert.deepEqual(h.downloads, []);
-  assert.match(h.statuses.at(-1), /^Export withheld:/);
+  assert.equal(h.statuses.at(-1), "", "old completion cannot replace the new month's status");
 });
 
 test("a full-year response cannot be exported as one month", async () => {

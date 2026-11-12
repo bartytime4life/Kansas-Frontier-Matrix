@@ -11,7 +11,7 @@ const compiled = text => ts.transpileModule(text, { compilerOptions: {
 const load = async path => { const exports = {}; vm.runInNewContext(compiled(await read(path)), { exports, TextDecoder }); return exports; };
 const waterHelpers = await load("../app/governed-water-availability.ts");
 const helpers = await load("../app/governed-weather-availability.ts");
-const bounded = await load("../app/bounded-json.ts");
+const boundedCode = compiled(await read("../app/bounded-json.ts"));
 const source = await read("../app/governed-weather-control.tsx");
 const station = "USW00003928", other = "USW00013996";
 const fixture = async name => JSON.parse(await read(`./fixtures/governed-weather/${name}.json`));
@@ -56,6 +56,8 @@ test("the latest station-local day shows withheld values as withheld, never as z
 
 function harness(initial) {
   const requests = [], downloads = [], statuses = [], effects = [], updates = [], reads = [];
+  const bounded = {};
+  vm.runInNewContext(boundedCode, { exports: bounded, TextDecoder, JSON: { parse: text => { reads.push(text); return JSON.parse(text); } } });
   let stateIndex = 0;
   const hooks = {
     useState(value) {
@@ -74,7 +76,7 @@ function harness(initial) {
       if (name === "./governed-water-availability") return waterHelpers;
       if (name === "./governed-weather-availability") return helpers;
       if (name === "./governed-water") return { approvalRemainingMs: expiry => Date.parse(expiry) - Date.now() };
-      if (name === "./bounded-json") return { readBoundedJson: (response, limit) => { reads.push(response); return bounded.readBoundedJson(response, limit); } };
+      if (name === "./bounded-json") return bounded;
       throw new Error(`Unexpected import ${name}`);
     },
     fetch: url => new Promise(resolve => requests.push({ url, resolve: (value, status = 200) => resolve(value instanceof Response ? value : Response.json(value, { status })) })),
@@ -114,13 +116,13 @@ test("the control renders withheld values and exports one station's evidence fro
 });
 
 test("changing station during an export withholds the download", async () => {
-  const { layers, evidence } = only(station);
+  const { layers } = only(station);
   const h = harness(layers); h.start();
   h.choose(other); h.choose(station);
   h.requests[0].resolve(layers); await settle();
-  h.requests[1].resolve(evidence); await settle();
+  assert.equal(h.requests.length, 1, "no evidence request follows a canceled export");
   assert.deepEqual(h.downloads, []);
-  assert.match(h.statuses.at(-1), /^Export withheld:/);
+  assert.equal(h.statuses.at(-1), "", "old completion cannot replace the new selection's status");
 });
 
 for (const status of [302, 401, 403, 404, 409, 429, 500, 503]) for (const stage of [0, 1]) test(`weather export withholds HTTP ${status} from ${stage ? "evidence" : "layers"} despite matching JSON`, async () => {

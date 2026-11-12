@@ -49,6 +49,11 @@ the NOAA NCEI source. Evidence must belong to the selected station and the same
 release, and a fresh single-station export is withheld if the selection changes
 while it is in flight. The owner releases packages at `/governed/weather-release`.
 
+The [shared request and export guide](reviewed-control-requests.md) describes
+HTTP success checks, cancellation when the view changes, and the single
+15-second export deadline. Run its cross-control regressions alongside the
+family checks below.
+
 Local conformance: `node --test tests/governed-weather*.test.mjs`.
 In a standalone Site checkout, set `KFM_WEATHER_REPOSITORY_ROOT` to the absolute
 path of the verified KFM repository before running tests. The Python license
