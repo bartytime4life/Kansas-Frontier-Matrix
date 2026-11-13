@@ -122,6 +122,23 @@ not update the public application; an explicit **Publish** does. Verify with
 `/api/build` and the identity checker rather than the dashboard label alone.
 Input parity is not browser-asset, provider, release or accessibility acceptance.
 
+<a id="public-readback-2026-11-13-later"></a>
+
+### Later publications the same day: outdoor layers and a privacy correction
+
+| Step | Observation |
+|---|---|
+| Merge and publish | [#5835](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5835) added the KDWP wildlife-area and Walk-In Hunting Access (WIHA) feeds and the SSURGO soil layer; merge head `c300b594`. After the owner published, the identity checker reported `APPLICATION_INPUTS_MATCH`. The feeds returned 273 wildlife-area polygons and 3,591 WIHA tracts |
+| Finding | In that live readback, the WIHA payload included KDWP's free-text `NOTES` field. A few notes held landowner contract numbers, per-acre payment rates and conservation-contract expiries, which broke the layer's stated boundary |
+| Correction | [#5837](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5837) stopped requesting `NOTES` and removed it from the payload and drawer; merge head `f2ff9516`. [#5838](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5838) applied the same fix to the repository Explorer |
+| After Publish | `APPLICATION_INPUTS_MATCH` for `f2ff9516`. The live WIHA feed still returned 3,591 tracts, with no `notes` property and no contract or payment text. A headless browser showed both KDWP layers statewide, with no page errors and no basemap-tile warning after repeated zooming and panning |
+| External outage seen | At about 23:25 UTC the NPS `nrhp_locations` MapServer itself returned `502 Bad Gateway` (Azure Application Gateway). The `nps-nrhp-places` feed reported 502, and Cloudflare replaced its JSON body with `error code: 502`. The Explorer shows the layer as unavailable; no substitute data is produced |
+| CI note | One `explorer-browser` run (#5835) failed a header "More" menu focus test that the diff does not touch. The re-run on #5837 passed, and three local runs of the merged code passed |
+
+Lesson: before merging a new external feed, read back a real provider payload
+and review every free-text field, not only the declared identifier fields. The
+fix was found only after publication.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 ## Historical verified starting point, 2026-10-19
