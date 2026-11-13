@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
-import { MAP_STARTERS, contextSelectionChanges, readContextPreference, starterPlan, writeContextPreference,
+import { MAP_STARTERS, contextSelectionChanges, readContextPreference, starterPlan, surpriseStarterId, writeContextPreference,
   type ContextSelection, type StarterAccessMap } from "./map-starters";
 
 export function MapStartersControl({ sources, access, visibility, selectionReady, sourceStatus, onApply }: Readonly<{
@@ -48,7 +48,7 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
     <h2 id="map-starters-title">Start with a purpose</h2>
     <p id="map-starters-help">Choose a small public context stack, then customize individual layers. Reviewed layers and imagery keep their own selections.</p>
     <label className="map-starters-choice">Starter view<select value={starter.id} aria-describedby="map-starters-help map-starters-description" onChange={event => setChoice(event.target.value)}>
-      {MAP_STARTERS.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
+      {MAP_STARTERS.map(item => <option key={item.id} value={item.id}>{"isNew" in item && item.isNew ? `${item.title} · new` : item.title}</option>)}
     </select></label>
     <p id="map-starters-description">{starter.description}</p>
     <div className="map-starters-actions">
@@ -57,6 +57,15 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
         onApply([], "Clear starter layers");
         setMessage("Public context layers cleared. Choose a starter or turn on individual layers below.");
       }}>Clear context layers</button>
+      <button type="button" className="map-starters-surprise" disabled={!selectionReady} onClick={() => {
+        const nextId = surpriseStarterId(starter.id);
+        const next = MAP_STARTERS.find(item => item.id === nextId) ?? starter;
+        const nextPlan = starterPlan(next.ids, sources, access);
+        setChoice(next.id);
+        if (nextPlan.selected.length === 0) { setMessage(`${next.title}: no starter sources are selectable right now. Try another.`); return; }
+        onApply(nextPlan.selected, next.title);
+        setMessage(`Surprise: ${next.title}. ${nextPlan.selected.length} public context layers selected.${nextPlan.skipped.length ? ` ${nextPlan.skipped.length} starter sources skipped; see source status.` : ""} ${next.description}`);
+      }}>Surprise me</button>
     </div>
     <p className="map-starters-selection">{matches ? "Public context matches this starter" : "Custom public context selection"} · {plan.selected.length} of {starter.ids.length} sources selectable</p>
     <details><summary>Sources &amp; limits</summary>

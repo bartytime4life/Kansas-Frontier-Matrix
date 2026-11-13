@@ -168,6 +168,11 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "name": "Weather & hazards",
       "sourceIds": [
         "fema-flood-zones",
+        "noaa-spc-convective-outlook",
+        "noaa-mrms-qpe-24h",
+        "noaa-wpc-qpf-5day",
+        "noaa-cpc-drought-outlook",
+        "nws-storm-reports",
         "fema-disaster-declarations",
         "nws-alerts",
         "nws-radar",
@@ -223,6 +228,74 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "Water table": "The top of the saturated zone in an unconfined aquifer.",
         "Alluvial aquifer": "Water-bearing sand and gravel deposited along river valleys.",
         "Monitoring well": "A well measured on a schedule to track water levels; one well describes one point."
+      }
+    },
+    {
+      "name": "Fire, smoke & hazards",
+      "sourceIds": [
+        "noaa-spc-fire-weather",
+        "noaa-hms-smoke",
+        "nasa-firms-active-fire",
+        "nasa-gibs-fire-points",
+        "nifc-fire-reports",
+        "noaa-goes-geocolor"
+      ],
+      "ideas": [
+        "Compare NASA FIRMS detections, NIFC reports, and HMS smoke polygons for one day to show how each sees fire differently.",
+        "Use GOES GeoColor timing to discuss when smoke was visible versus when detections were recorded.",
+        "Note which Flint Hills burn seasons appear and which detections may be agricultural burning.",
+        "Compare spring Flint Hills detections with HMS smoke reaching eastern Kansas cities, keeping air quality outside what these sources measure.",
+        "Ask how cloud cover or satellite overpass timing could hide fires on a given day before reading an empty map as no fire.",
+        "Count detections that have no matching NIFC incident report, and explain why a thermal detection is not necessarily a wildfire."
+      ],
+      "terms": {
+        "Active fire detection": "A satellite pixel markedly hotter than its surroundings; VIIRS pixels are about 375 m and MODIS about 1 km.",
+        "Fire radiative power": "Heat energy released by a detected fire, in megawatts; it indicates intensity, not area burned.",
+        "Smoke polygon": "HMS analyst-drawn smoke extent from satellite imagery, labeled light, medium or heavy; not ground-level air quality.",
+        "Prescribed burn": "A planned, managed fire, common in Flint Hills grasslands in spring.",
+        "GeoColor": "GOES imagery that looks like true color by day and uses infrared at night.",
+        "Incident": "A reported wildland fire tracked by an agency, with its own name, size and dates."
+      }
+    },
+    {
+      "name": "Land cover & ecology",
+      "sourceIds": [
+        "mrlc-nlcd-land-cover",
+        "usgs-padus-lands"
+      ],
+      "ideas": [
+        "Compare NLCD cultivated cropland in western Kansas with grassland in the Flint Hills and ask what soils, water and history might explain, as questions.",
+        "Ask how much of a county is developed, crop, grassland or water in the 2021 NLCD before reading other layers there.",
+        "Locate PAD-US public lands along river corridors and ask which agencies manage them.",
+        "Compare PAD-US state wildlife areas with nearby NLCD wetlands to frame habitat questions without claiming species presence.",
+        "Name which parts of Kansas have very little public land in PAD-US, so access questions start with the gap.",
+        "Set the 2021 land-cover edition beside current imagery and ask what may have changed, leaving any change unconfirmed."
+      ],
+      "terms": {
+        "NLCD": "National Land Cover Database: 30 m Landsat-based land-cover classes; this Site shows the 2021 edition.",
+        "Land-cover class": "A mapped category such as cultivated crops or grassland; classes carry mapping error and are not land ownership or use permits.",
+        "PAD-US": "Protected Areas Database of the United States, a USGS compilation of agency-reported public and protected lands.",
+        "Fee manager": "The agency type that owns and manages a protected parcel in PAD-US; it does not imply public access."
+      }
+    },
+    {
+      "name": "History & cultural heritage",
+      "sourceIds": [
+        "nps-nrhp-places"
+      ],
+      "ideas": [
+        "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
+        "Compare listing certification dates to see when Kansas places were added to the Register, not when they were built.",
+        "Find National Historic Landmarks and ask what made each nationally significant, using the National Archives record when one is linked.",
+        "Separate districts, buildings, structures, sites and objects before comparing places; a district can hold many buildings.",
+        "Ask why some places have vicinity-only locations, and avoid treating any point as a property boundary.",
+        "Note that restricted archaeological listings are absent by design, so the map never shows the full Register."
+      ],
+      "terms": {
+        "National Register of Historic Places": "The federal list of buildings, districts, sites, structures and objects judged worthy of preservation, kept by the National Park Service.",
+        "National Historic Landmark": "A nationally significant property designated by the Secretary of the Interior; a smaller set within the National Register.",
+        "NRIS reference number": "The National Register's identifier for one listing.",
+        "Restricted location": "A listing whose location NPS withholds, often an archaeological site; the Site never shows or infers it."
       }
     },
     {
@@ -292,32 +365,6 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "ComCat": "USGS Comprehensive Earthquake Catalog, source of the earthquake layer.",
         "Raspberry Shake": "A network of low-cost seismographs run largely by volunteers.",
         "Felt report": "A public report that shaking was felt; different from an instrument detection."
-      }
-    },
-    {
-      "name": "Fire, smoke & hazards",
-      "sourceIds": [
-        "noaa-hms-smoke",
-        "nasa-firms-active-fire",
-        "nasa-gibs-fire-points",
-        "nifc-fire-reports",
-        "noaa-goes-geocolor"
-      ],
-      "ideas": [
-        "Compare NASA FIRMS detections, NIFC reports, and HMS smoke polygons for one day to show how each sees fire differently.",
-        "Use GOES GeoColor timing to discuss when smoke was visible versus when detections were recorded.",
-        "Note which Flint Hills burn seasons appear and which detections may be agricultural burning.",
-        "Compare spring Flint Hills detections with HMS smoke reaching eastern Kansas cities, keeping air quality outside what these sources measure.",
-        "Ask how cloud cover or satellite overpass timing could hide fires on a given day before reading an empty map as no fire.",
-        "Count detections that have no matching NIFC incident report, and explain why a thermal detection is not necessarily a wildfire."
-      ],
-      "terms": {
-        "Active fire detection": "A satellite pixel markedly hotter than its surroundings; VIIRS pixels are about 375 m and MODIS about 1 km.",
-        "Fire radiative power": "Heat energy released by a detected fire, in megawatts; it indicates intensity, not area burned.",
-        "Smoke polygon": "HMS analyst-drawn smoke extent from satellite imagery, labeled light, medium or heavy; not ground-level air quality.",
-        "Prescribed burn": "A planned, managed fire, common in Flint Hills grasslands in spring.",
-        "GeoColor": "GOES imagery that looks like true color by day and uses infrared at night.",
-        "Incident": "A reported wildland fire tracked by an agency, with its own name, size and dates."
       }
     },
     {
@@ -587,6 +634,48 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "Reference boundaries & locators"
       ],
       "idea": "Describe forecast wind by county region (west, central, east) to talk about statewide patterns without point values."
+    },
+    {
+      "domains": [
+        "Land cover & ecology",
+        "Living waters"
+      ],
+      "idea": "Follow a gauged river through NLCD land cover and ask how cropland, grassland and towns line its banks, without estimating runoff."
+    },
+    {
+      "domains": [
+        "Land cover & ecology",
+        "Weather & hazards"
+      ],
+      "idea": "Set the seasonal drought outlook beside NLCD cropland and grassland to frame which land covers the outlook region includes, without predicting crop loss."
+    },
+    {
+      "domains": [
+        "Land cover & ecology",
+        "Fire, smoke & hazards"
+      ],
+      "idea": "Compare Flint Hills fire detections with NLCD grassland to discuss prescribed burning on rangeland, as a question."
+    },
+    {
+      "domains": [
+        "History & cultural heritage",
+        "Roads, rail & movement"
+      ],
+      "idea": "Find National Register places along 1918 roads and abandoned rail lines and ask how transportation shaped which towns kept historic buildings."
+    },
+    {
+      "domains": [
+        "History & cultural heritage",
+        "Reference boundaries & locators"
+      ],
+      "idea": "Count National Register listings per county and compare with county population, as orientation rather than a measure of history."
+    },
+    {
+      "domains": [
+        "History & cultural heritage",
+        "Living waters"
+      ],
+      "idea": "Look for listed mills, bridges and river towns near gauged rivers and ask how water shaped early settlement."
     }
   ],
   "projectIdeas": [
@@ -944,6 +1033,141 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "fallback": "Snapshot gaps and unclassified areas remain blank; missing coverage does not mean zero water.",
       "attribution": "Kansas Geological Survey · High Plains Aquifer Atlas",
       "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Annual_measurement_wells_2026/FeatureServer/0",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-spc-convective-outlook",
+      "title": "NOAA SPC Day 1 severe-thunderstorm outlook",
+      "shortTitle": "Severe storm outlook · Day 1",
+      "organization": "NOAA NWS Storm Prediction Center",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "SPC issues Day 1 outlooks several times daily; the service shows its current issuance",
+      "freshness": "Provider-current Day 1 forecast; issuance and valid times are on the SPC product page",
+      "boundary": "This is the Storm Prediction Center's probabilistic forecast of organized severe-thunderstorm risk for the current outlook day. It is a forecast area, not an observed storm, a watch, a warning, or a local safety instruction. Categories describe forecast likelihood over a broad area. External context only; not a KFM release.",
+      "fallback": "If the outlook service is unavailable or returns no polygons, the layer stays blank. Blank never means no storms are possible; consult NWS watches and warnings for decisions.",
+      "attribution": "NOAA NWS Storm Prediction Center",
+      "sourceUrl": "https://www.spc.noaa.gov/products/outlook/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-spc-fire-weather",
+      "title": "NOAA SPC Day 1 fire-weather outlook",
+      "shortTitle": "Fire-weather outlook · Day 1",
+      "organization": "NOAA NWS Storm Prediction Center",
+      "domain": "Fire, smoke & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "SPC fire-weather outlooks are issued daily and updated; the service shows its current issuance",
+      "freshness": "Provider-current Day 1 forecast; issuance time is on the SPC product page",
+      "boundary": "SPC fire-weather outlooks forecast meteorological conditions (wind, humidity, dry thunderstorms) that favor wildfire spread. They are not burn bans, red-flag warnings, active fire detections or fire perimeters. Combine with thermal detections and NIFC reports only as separate context. Not KFM evidence.",
+      "fallback": "An empty or failed image is not a no-risk finding. Local NWS red-flag warnings and county burn restrictions remain authoritative.",
+      "attribution": "NOAA NWS Storm Prediction Center",
+      "sourceUrl": "https://www.spc.noaa.gov/products/fire_wx/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-mrms-qpe-24h",
+      "title": "NOAA MRMS radar-estimated rainfall · past 24 hours",
+      "shortTitle": "Rainfall · past 24 h",
+      "organization": "NOAA NWS · NSSL Multi-Radar Multi-Sensor",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "Hourly provider update, usually a few minutes after the hour",
+      "freshness": "Rolling 24-hour accumulation ending at the provider's latest hourly analysis",
+      "boundary": "MRMS radar-only quantitative precipitation estimates accumulate the past 24 hours at about 1 km. Radar estimates can miss shallow precipitation, overestimate hail cores, and degrade far from radars or under beam blockage. It is not a weather-station rainfall measurement, flood observation, or KFM evidence.",
+      "fallback": "Missing tiles stay transparent. A blank area can mean no estimated rain, no radar coverage or a service gap; the Site never labels it dry.",
+      "attribution": "NOAA NWS · NSSL MRMS",
+      "sourceUrl": "https://mrms.ncep.noaa.gov/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-wpc-qpf-5day",
+      "title": "NOAA WPC 5-day precipitation forecast",
+      "shortTitle": "Rain forecast · 5 days",
+      "organization": "NOAA NWS Weather Prediction Center",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "WPC updates quantitative precipitation forecasts several times daily",
+      "freshness": "Provider-current 120-hour forecast total; issuance time on the WPC page",
+      "boundary": "WPC quantitative precipitation forecasts are expert-blended forecast totals over broad areas. They are not observed rainfall, river forecasts, flood warnings or point guarantees. Compare with past-24-hour radar estimates only as different products on different clocks. Not KFM evidence.",
+      "fallback": "Unavailable forecast imagery remains blank. No rainfall value is inferred from colors or carried forward from an older issuance.",
+      "attribution": "NOAA NWS Weather Prediction Center",
+      "sourceUrl": "https://www.wpc.ncep.noaa.gov/qpf/qpf2.shtml",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-cpc-drought-outlook",
+      "title": "NOAA CPC seasonal drought outlook",
+      "shortTitle": "Drought outlook · seasonal",
+      "organization": "NOAA NWS Climate Prediction Center",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "CPC issues the seasonal drought outlook monthly",
+      "freshness": "Provider-current seasonal outlook; valid period on the CPC page",
+      "boundary": "The seasonal drought outlook forecasts the direction of drought change relative to the U.S. Drought Monitor. It is not current drought intensity, a disaster designation, an irrigation or crop-insurance determination, or KFM evidence.",
+      "fallback": "Missing imagery stays blank. Blank is not a no-drought finding; check the current U.S. Drought Monitor for present conditions.",
+      "attribution": "NOAA NWS Climate Prediction Center",
+      "sourceUrl": "https://www.cpc.ncep.noaa.gov/products/expert_assessment/sdo_summary.php",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "mrlc-nlcd-land-cover",
+      "title": "USGS/MRLC National Land Cover Database · 2021",
+      "shortTitle": "Land cover · NLCD 2021",
+      "organization": "Multi-Resolution Land Characteristics Consortium · USGS",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "Fixed 2021 edition; newer Annual NLCD products are published separately",
+      "freshness": "2021 land-cover classification from Landsat; not current conditions",
+      "boundary": "NLCD classifies 30 m Landsat pixels into land-cover classes for 2021. Classes have mapping error and do not establish ownership, current crops, habitat quality, species presence, zoning or present land use. External context only.",
+      "fallback": "Unavailable tiles stay transparent. No land-cover class is inferred for missing pixels.",
+      "attribution": "MRLC · USGS National Land Cover Database",
+      "sourceUrl": "https://www.mrlc.gov/data",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "usgs-padus-lands",
+      "title": "USGS PAD-US 4.0 public and protected lands",
+      "shortTitle": "Public & protected lands",
+      "organization": "U.S. Geological Survey Gap Analysis Project",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "Periodic PAD-US releases; this service shows version 4.0",
+      "freshness": "PAD-US 4.0 compilation; individual agency submissions have their own dates",
+      "boundary": "PAD-US compiles agency-reported fee ownership and management for protected areas. Boundaries can be generalized or out of date, and inclusion does not grant public access, hunting permission or legal title. Private land is not shown. External context only.",
+      "fallback": "Unavailable tiles stay transparent. No absence of public land, access or protection is inferred.",
+      "attribution": "USGS Gap Analysis Project · PAD-US 4.0",
+      "sourceUrl": "https://www.sciencebase.gov/catalog/item/652ef930d34edd15305a9b03",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nws-storm-reports",
+      "title": "NWS Kansas local storm reports · past 72 hours",
+      "shortTitle": "Storm reports · 72 h",
+      "organization": "NOAA National Weather Service",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NWS offices issue local storm reports as reports arrive; the service is refreshed frequently",
+      "freshness": "Reports valid in the provider's rolling 72-hour window, each with its own report time",
+      "boundary": "Local storm reports relay what spotters, emergency managers, the public and instruments told an NWS office: event type, approximate location, reported magnitude and remarks. Reports are preliminary, can be duplicated or revised, and their locations are approximate. They are not a complete event inventory, damage survey, warning or KFM evidence. The final record is NCEI Storm Data.",
+      "fallback": "A failed or empty query is labeled. No reports does not mean no severe weather occurred; reports depend on who observed and relayed them.",
+      "attribution": "NOAA National Weather Service local storm reports",
+      "sourceUrl": "https://www.spc.noaa.gov/climo/reports/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-nrhp-places",
+      "title": "National Register of Historic Places · Kansas listings",
+      "shortTitle": "Historic places · National Register",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS cultural-resources service; listings and spatial edits are published periodically",
+      "freshness": "Current public NPS spatial service; certification dates are carried by each listing",
+      "boundary": "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
+      "fallback": "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
+      "attribution": "National Park Service · National Register of Historic Places",
+      "sourceUrl": "https://www.nps.gov/subjects/nationalregister/database-research.htm",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {

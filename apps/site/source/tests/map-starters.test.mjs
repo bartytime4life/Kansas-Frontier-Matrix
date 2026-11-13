@@ -39,10 +39,10 @@ const memoryStorage = () => {
   return { data, writes, getItem: key => data.get(key) ?? null, setItem: (key, value) => { writes.push([key, value]); data.set(key, value); }, removeItem: key => data.delete(key) };
 };
 
-test("six bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
+test("eleven bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
   const before = JSON.stringify(sources);
-  assert.equal(model.MAP_STARTERS.length, 6);
-  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 6);
+  assert.equal(model.MAP_STARTERS.length, 11);
+  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 11);
   for (const starter of model.MAP_STARTERS) {
     assert.ok(starter.description && starter.limitation);
     assert.ok(starter.ids.length >= 3 && starter.ids.length <= 4);
@@ -126,13 +126,14 @@ test("accessible native controls choose every starter, announce partial coverage
     let tree = render(); await settle(); tree = render();
     const select = findNode(tree, node => node.type === "select");
     assert.ok(select.props["aria-describedby"].includes("map-starters-description"));
-    assert.equal(nodes(tree, "option").length, 6);
+    assert.equal(nodes(tree, "option").length, 11);
     for (const starter of model.MAP_STARTERS) {
       select.props.onChange({ target: { value: starter.id } }); tree = render();
       const button = findNode(tree, node => node.type === "button" && node.props.children === "Use starter");
       assert.equal(button.props.type, "button"); assert.equal(button.props.disabled, false); button.props.onClick();
       assert.deepEqual(calls.at(-1).ids, [...starter.ids]);
     }
+    select.props.onChange({ target: { value: "community-planning" } });
     props.access = { ...available, "fema-flood-zones": { held: true, unavailable: false } }; tree = render();
     assert.ok(nodes(tree, "span").some(node => String(node.props.children).includes("Held")));
     findNode(tree, node => node.type === "button" && node.props.children === "Use starter").props.onClick(); tree = render();
@@ -174,4 +175,33 @@ test("remembered preference cannot overwrite pending URL restoration; storage fa
   assert.match(findNode(tree, node => node.props?.role === "status").props.children, /unavailable/);
   assert.equal(findNode(tree, node => node.type === "input").props.checked, false);
   h.dispose(); delete globalThis.window;
+});
+
+test("new starters are marked, Surprise me always moves to a different selectable starter, and limits stay visible", async () => {
+  const fresh = model.MAP_STARTERS.filter(starter => starter.isNew);
+  assert.deepEqual(fresh.map(starter => starter.id), ["storm-watch", "rain-and-drought", "fire-season", "heritage-trail", "open-lands"]);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "storm-watch").limitation, /not a warning service/);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "heritage-trail").limitation, /sensitive sites are withheld/);
+  for (const current of model.MAP_STARTERS.map(starter => starter.id)) {
+    for (const r of [0, 0.25, 0.5, 0.999999]) {
+      const next = model.surpriseStarterId(current, () => r);
+      assert.notEqual(next, current);
+      assert.ok(model.MAP_STARTERS.some(starter => starter.id === next));
+    }
+  }
+  const h = await componentHarness("app/map-starters-control.tsx", { "./map-starters": model });
+  const calls = [], props = { sources, access: available, visibility: {}, selectionReady: true, sourceStatus: () => "Available to request", onApply: (ids, title) => calls.push({ ids, title }) };
+  const render = () => { const tree = h.render(h.exports.MapStartersControl, props); h.commit(); return tree; };
+  let tree = render(); await settle(); tree = render();
+  assert.ok(nodes(tree, "option").some(node => String(node.props.children).endsWith("· new")));
+  const before = findNode(tree, node => node.type === "select").props.value;
+  const surprise = findNode(tree, node => node.type === "button" && node.props.children === "Surprise me");
+  assert.equal(surprise.props.type, "button");
+  surprise.props.onClick(); tree = render();
+  assert.equal(calls.length, 1);
+  const picked = model.MAP_STARTERS.find(starter => starter.title === calls[0].title);
+  assert.ok(picked && picked.id !== before, "Surprise me never re-applies the starter already chosen");
+  assert.deepEqual(calls[0].ids, [...picked.ids]);
+  assert.equal(findNode(tree, node => node.type === "select").props.value, picked.id);
+  assert.match(findNode(tree, node => node.props?.role === "status").props.children, /^Surprise: /);
 });

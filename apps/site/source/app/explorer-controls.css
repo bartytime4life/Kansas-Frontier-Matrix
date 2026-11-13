@@ -1,6 +1,7 @@
 /* A compact cartographic workbench: keep the catalog and measured map allocation in sync. */
 .map-starters { order: -1; padding: 12px 14px; border-bottom: 1px solid #465568; background: #101b29; }
 .map-starters h2 { margin: 0 0 8px; font-size: 17px; color: #f1d992; }
+.map-starters .map-starters-surprise { border-color: #c79a3c; background: linear-gradient(90deg, rgba(242, 193, 78, .18), rgba(239, 123, 97, .18)); color: #ffe7b0; }
 .map-starters p { margin: 8px 0; font-size: 12px; line-height: 1.5; color: #c2cfdd; }
 .map-starters-choice { display: grid; gap: 6px; font-size: 13px; color: #eef2f6; }
 .map-starters select { min-height: 44px; width: 100%; min-width: 0; padding: 8px; border: 1px solid #657990; border-radius: 5px; background: #1d2b3b; color: #eef2f6; font: inherit; }

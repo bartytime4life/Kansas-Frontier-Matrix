@@ -25,6 +25,7 @@ const atlasData = await import(await compileModuleUrl("explorer-data"));
 const bridgeModuleUrl = await compileModuleUrl("kansas-bridge-records");
 const aquiferModuleUrl = await compileModuleUrl("aquifer-layers");
 const referenceModuleUrl = await compileModuleUrl("kansas-reference-layers", source => source.replace('from "./kansas-bridge-records";', `from "${bridgeModuleUrl}";`));
+const discoveryModuleUrl = await compileModuleUrl("kansas-discovery-layers");
 const radarModuleUrl = await compileModuleUrl("noaa-radar");
 const satelliteModuleUrl = await compileModuleUrl("noaa-satellite");
 const lightningModuleUrl = await compileModuleUrl("lightning-data");
@@ -32,6 +33,7 @@ const performanceModuleUrl = await compileModuleUrl("map-performance");
 const globeModuleUrl = await compileModuleUrl("globe-context");
 const compositionModuleUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
 const official = await import(await compileModuleUrl("live-context", (source) => source.replace('from "./aquifer-layers";', `from "${aquiferModuleUrl}";`).replace('from "./kansas-reference-layers";', `from "${referenceModuleUrl}";`)
+  .replace('from "./kansas-discovery-layers";', `from "${discoveryModuleUrl}";`)
   .replace('from "./noaa-radar";', `from "${radarModuleUrl}";`)
   .replace('from "./noaa-satellite";', `from "${satelliteModuleUrl}";`)
   .replace('from "./lightning-data";', `from "${lightningModuleUrl}";`)

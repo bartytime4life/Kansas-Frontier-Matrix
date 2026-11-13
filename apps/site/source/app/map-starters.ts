@@ -20,7 +20,29 @@ export const MAP_STARTERS = [
   { id: "community-planning", title: "Community planning", description: "For public agencies and communities: orient by county population, roads, watersheds and flood-zone context.",
     ids: ["census-counties", "kdot-roads", "usgs-wbd-watersheds", "fema-flood-zones"],
     limitation: "Reference boundaries have different purposes and dates. Area population does not identify individuals or establish property rights." },
-] as const satisfies readonly { id: string; title: string; description: string; ids: readonly OfficialContextId[]; limitation: string }[];
+  { id: "storm-watch", title: "Storm watch", isNew: true, description: "For weather watchers: today's SPC severe-storm outlook, preliminary storm reports, active NWS alerts and past-24-hour radar rainfall.",
+    ids: ["noaa-spc-convective-outlook", "nws-storm-reports", "nws-alerts", "noaa-mrms-qpe-24h"],
+    limitation: "Outlooks are forecasts, reports are preliminary and rainfall is a radar estimate. This is not a warning service; follow NWS warnings and local officials." },
+  { id: "rain-and-drought", title: "Rain & drought", isNew: true, description: "For growers and water planners: compare recent radar rainfall, the 5-day rain forecast, the seasonal drought outlook and river observations.",
+    ids: ["noaa-mrms-qpe-24h", "noaa-wpc-qpf-5day", "noaa-cpc-drought-outlook", "usgs-streamflow"],
+    limitation: "Estimates, forecasts and outlooks run on different clocks. None is a gauge measurement, crop advice or a drought designation." },
+  { id: "fire-season", title: "Fire season", isNew: true, description: "For land managers and burn planners: the SPC fire-weather outlook beside satellite heat detections, interagency fire reports and smoke footprints.",
+    ids: ["noaa-spc-fire-weather", "nasa-firms-active-fire", "nifc-fire-reports", "noaa-hms-smoke"],
+    limitation: "Fire-weather outlooks are forecasts; heat detections and reports do not confirm the same incident. Check county burn restrictions and red-flag warnings." },
+  { id: "heritage-trail", title: "Heritage trail", isNew: true, description: "For history explorers: click National Register places, then follow 1918 roads and historic bridges across Kansas counties.",
+    ids: ["nps-nrhp-places", "kdot-roads-1918", "kdot-bridges-historic", "census-counties"],
+    limitation: "Listed places are representative public points; sensitive sites are withheld by NPS. Listing does not grant access or confirm a property still stands." },
+  { id: "open-lands", title: "Land cover & open lands", isNew: true, description: "For naturalists and outdoor planners: read 2021 land cover, public and protected lands, and watershed boundaries together.",
+    ids: ["mrlc-nlcd-land-cover", "usgs-padus-lands", "usgs-wbd-watersheds"],
+    limitation: "Land-cover classes have mapping error and PAD-US does not grant access, hunting permission or title. Check each managing agency's rules." },
+] as const satisfies readonly { id: string; title: string; description: string; ids: readonly OfficialContextId[]; limitation: string; isNew?: boolean }[];
+
+/** Pick a different starter for "Surprise me"; deterministic when a random source is injected. */
+export function surpriseStarterId(current: string, random: () => number = Math.random): string {
+  const choices = MAP_STARTERS.filter(starter => starter.id !== current);
+  const index = Math.min(choices.length - 1, Math.max(0, Math.floor(random() * choices.length)));
+  return choices[index]?.id ?? current;
+}
 
 export type StarterAccess = Readonly<{ held: boolean; unavailable: boolean; guidance?: string }>;
 export type StarterAccessMap = Readonly<Partial<Record<OfficialContextId, StarterAccess>>>;

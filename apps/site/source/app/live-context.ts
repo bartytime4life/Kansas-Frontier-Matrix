@@ -1,5 +1,6 @@
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
+import { KANSAS_DISCOVERY_SOURCES, type DiscoveryLayerId } from "./kansas-discovery-layers";
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
@@ -10,8 +11,8 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { globeOverviewPaintSize } from "./globe-context";
 
-export type OfficialContextId = "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
+export type OfficialContextId = "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | DiscoveryLayerId | "nps-nrhp-places" | "nws-storm-reports";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "nws-storm-reports";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -68,6 +69,43 @@ const blmPlssImageUrl = (layer: 1 | 2 | 3, where: string) =>
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
   ...KANSAS_REFERENCE_SOURCES,
   ...AQUIFER_RASTER_SOURCES, ...GROUNDWATER_SNAPSHOT_SOURCES,
+  ...KANSAS_DISCOVERY_SOURCES,
+  Object.freeze({
+    id: "nws-storm-reports", title: "NWS Kansas local storm reports · past 72 hours", shortTitle: "Storm reports · 72 h",
+    organization: "NOAA National Weather Service", domain: "Weather & hazards", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nws-storm-reports",
+    layerIds: Object.freeze(["external-nws-storm-reports-halo", "external-nws-storm-reports-points"]),
+    interactiveLayerIds: Object.freeze(["external-nws-storm-reports-points"]),
+    apiPath: "/api/live-context?feed=nws-storm-reports",
+    endpointLabel: "mapservices.weather.noaa.gov · nws_local_storm_reports · Last_72_Hours",
+    sourceUrl: "https://www.spc.noaa.gov/climo/reports/", serviceUrl: "https://mapservices.weather.noaa.gov/vector/rest/services/obs/nws_local_storm_reports/MapServer",
+    cadence: "NWS offices issue local storm reports as reports arrive; the service is refreshed frequently",
+    freshness: "Reports valid in the provider's rolling 72-hour window, each with its own report time",
+    defaultVisibility: false, defaultOpacity: 0.95, color: "#7fd1ea",
+    attribution: "NOAA National Weather Service local storm reports",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Markers colored by report type: tornado, hail, wind, flood, snow/ice and other. Size grows with reported magnitude where supplied.",
+    boundary: "Local storm reports relay what spotters, emergency managers, the public and instruments told an NWS office: event type, approximate location, reported magnitude and remarks. Reports are preliminary, can be duplicated or revised, and their locations are approximate. They are not a complete event inventory, damage survey, warning or KFM evidence. The final record is NCEI Storm Data.",
+    fallback: "A failed or empty query is labeled. No reports does not mean no severe weather occurred; reports depend on who observed and relayed them.",
+  }),
+  Object.freeze({
+    id: "nps-nrhp-places", title: "National Register of Historic Places · Kansas listings", shortTitle: "Historic places · National Register",
+    organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nps-nrhp-places",
+    layerIds: Object.freeze(["external-nps-nrhp-places-halo", "external-nps-nrhp-places-points", "external-nps-nrhp-places-labels"]),
+    interactiveLayerIds: Object.freeze(["external-nps-nrhp-places-points"]),
+    apiPath: "/api/live-context?feed=nps-nrhp-places",
+    endpointLabel: "mapservices.nps.gov · nrhp_locations · Kansas points",
+    sourceUrl: "https://www.nps.gov/subjects/nationalregister/database-research.htm", serviceUrl: "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer",
+    cadence: "NPS cultural-resources service; listings and spatial edits are published periodically",
+    freshness: "Current public NPS spatial service; certification dates are carried by each listing",
+    defaultVisibility: false, defaultOpacity: 0.95, color: "#e8c27a",
+    attribution: "National Park Service · National Register of Historic Places",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Gold markers · listed buildings, districts, sites, structures and objects. Larger rings mark National Historic Landmarks.",
+    boundary: "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
+    fallback: "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
+  }),
   Object.freeze({
     id: "fema-disaster-declarations", title: "FEMA Kansas disaster declaration areas", shortTitle: "FEMA declarations",
     organization: "Federal Emergency Management Agency", domain: "Weather & hazards", kind: "OPERATIONAL_GEOJSON",
@@ -656,6 +694,15 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "kdot-rail-abandoned": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
   "fema-flood-zones": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
 
+  "noaa-spc-convective-outlook": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Day 1 SPC issuance only; earlier outlooks are not replayed and the forecast is held outside historical frames." }),
+  "noaa-spc-fire-weather": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Day 1 fire-weather issuance only; not an archive of past outlooks or observed fire behavior." }),
+  "noaa-mrms-qpe-24h": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Rolling 24-hour radar estimate ending at the latest provider hour; the map service exposes no selectable historical hour." }),
+  "noaa-wpc-qpf-5day": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current 120-hour forecast total; earlier issuances are not replayed." }),
+  "noaa-cpc-drought-outlook": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current seasonal outlook; not a historical drought record or current drought intensity." }),
+  "mrlc-nlcd-land-cover": Object.freeze({ axis: "fixed-historical-composite", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Fixed 2021 NLCD edition. Other NLCD years and Annual NLCD are separate products not replayed here." }),
+  "usgs-padus-lands": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "PAD-US 4.0 compilation; agency submission dates vary and no historical ownership series is connected." }),
+  "nws-storm-reports": Object.freeze({ axis: "rolling-retrieval-window", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Rolling 72-hour provider window at retrieval time. Each report keeps its own valid time; older reports belong to NCEI Storm Data and are not replayed." }),
+  "nps-nrhp-places": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current public NPS listing locations. Certification dates are attributes, not a reconstruction of the landscape at that date." }),
   "fema-disaster-declarations": Object.freeze({ axis: "provider-observation-history", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Dated historical declaration records with 2020 county locator geometry. The current atlas frame does not turn their declaration dates into present hazard conditions." }),
   "blm-plss-townships": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas township survey image. Feature-level survey dates are not a selectable historical series or a KFM release." }),
   "blm-plss-sections": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas section survey image, shown at local scale. No parcel or historical title time axis is connected." }),
@@ -896,6 +943,33 @@ export const applyOfficialContextState = (
     "circle-stroke-color": "#fff1d1", "circle-stroke-width": 2.6,
   } });
 
+  const stormReports = OFFICIAL_CONTEXT_BY_ID["nws-storm-reports"];
+  ensureGeoJsonSource(map, stormReports, payloads["nws-storm-reports"]?.data ?? emptyCollection());
+  const stormColor = ["match", ["get", "category"], "Tornado", "#ff3b5c", "Hail", "#5ec8ff", "Wind", "#ffd166", "Flood", "#7ae582", "Winter", "#c9b6ff", "#e7e1d6"] as unknown as string;
+  ensureLayer(map, { id: stormReports.layerIds[0], type: "circle", source: stormReports.sourceId, paint: {
+    "circle-color": stormColor, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 9, 10, 20], "circle-blur": 0.75, "circle-opacity": 0.28,
+  } });
+  ensureLayer(map, { id: stormReports.layerIds[1], type: "circle", source: stormReports.sourceId, paint: {
+    "circle-color": stormColor,
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["+", 3.5, ["*", 0.9, ["min", 4, ["coalesce", ["get", "sizeRank"], 0]]]], 10, ["+", 7, ["*", 1.6, ["min", 4, ["coalesce", ["get", "sizeRank"], 0]]]]],
+    "circle-stroke-color": "#0d1a24", "circle-stroke-width": 1.4,
+  } });
+
+  const historicPlaces = OFFICIAL_CONTEXT_BY_ID["nps-nrhp-places"];
+  ensureGeoJsonSource(map, historicPlaces, payloads["nps-nrhp-places"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: historicPlaces.layerIds[0], type: "circle", source: historicPlaces.sourceId, filter: ["==", ["get", "landmark"], true], paint: {
+    "circle-color": "rgba(0,0,0,0)", "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 7, 12, 15],
+    "circle-stroke-color": "#fff0c2", "circle-stroke-width": 2, "circle-opacity": 0.3,
+  } });
+  ensureLayer(map, { id: historicPlaces.layerIds[1], type: "circle", source: historicPlaces.sourceId, paint: {
+    "circle-color": ["match", ["get", "resourceType"], "district", "#d99a4e", "site", "#c7a46b", "structure", "#e2b866", "object", "#f0d9a0", historicPlaces.color],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2.6, 9, 4.5, 13, 7.5],
+    "circle-stroke-color": "#3a2a12", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 5, 0.6, 12, 1.4],
+  } });
+  ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, minzoom: 11, layout: {
+    "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 10.5, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
+  }, paint: { "text-color": "#f6e4bd", "text-halo-color": "#1c140a", "text-halo-width": 1.5, "text-opacity": 0.9 } });
+
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
   ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());
   ensureLayer(map, { id: raspberryShake.layerIds[0], type: "circle", source: raspberryShake.sourceId, paint: {
@@ -919,7 +993,7 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: declarations.layerIds[0], type: "fill", source: declarations.sourceId, paint: { "fill-color": declarations.color, "fill-opacity": 0.28 } });
   ensureLayer(map, { id: declarations.layerIds[1], type: "line", source: declarations.sourceId, paint: { "line-color": declarations.color, "line-width": 1.7, "line-opacity": 0.72 } });
 
-  for (const raster of [...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
+  for (const raster of [...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES, ...KANSAS_DISCOVERY_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
