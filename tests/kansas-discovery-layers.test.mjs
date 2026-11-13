@@ -37,6 +37,7 @@ const topics = await import(await moduleUrl("app/layer-workspaces.ts"));
 const downloads = await import(await moduleUrl("app/source-downloads.ts"));
 const drawer = await import(await moduleUrl("app/evidence-drawer-data.ts"));
 const registry = await import(await moduleUrl("app/site-registry.ts"));
+const globe = await import(await moduleUrl("app/globe-context.ts"));
 
 const ALLOWED_TILE_HOSTS = new Set(["mapservices.weather.noaa.gov", "edits.nationalmap.gov"]);
 const FEEDS = ["nps-nrhp-places"];
@@ -84,12 +85,12 @@ test("new topics reach weather, hazards, ecology, land and history without chang
   for (const id of [...discovery.DISCOVERY_LAYER_IDS, ...FEEDS]) assert.ok(discovery.NEW_LAYER_IDS.has(id));
 });
 
-function mapHarness() {
+function mapHarness(projection = "mercator") {
   const sources = new Map(), layers = new Map();
   const map = {
     getSource: id => sources.get(id), getLayer: id => layers.get(id), getStyle: () => ({ layers: [...layers.values()] }),
     moveLayer(id) { const layer = layers.get(id); layers.delete(id); layers.set(id, layer); },
-    getProjection: () => ({ type: "mercator" }),
+    getProjection: () => ({ type: projection }),
     addSource(id, spec) { sources.set(id, { ...spec, setData(data) { this.data = data; } }); },
     addLayer(layer) { layers.set(layer.id, structuredClone(layer)); },
     getLayoutProperty: (id, key) => layers.get(id)?.layout?.[key], getPaintProperty: (id, key) => layers.get(id)?.paint?.[key],
@@ -144,6 +145,41 @@ test("the National Register feed draws typed places and landmark rings from its 
   const legend = discovery.discoveryLegend("nps-nrhp-places").map(stop => stop.color);
   const paint = JSON.stringify(layers.get("external-nps-nrhp-places-points").paint["circle-color"]);
   for (const color of legend.slice(0, 5)) assert.ok(paint.includes(color), `legend chip ${color} matches the map paint`);
+});
+
+// MapLibre accepts ["zoom"] only as the input of a top-level interpolate or step.
+const containsZoom = value => Array.isArray(value) && (value.length === 1 && value[0] === "zoom" || value.some(containsZoom));
+const isTopLevelZoomCurve = value => Array.isArray(value) && (value[0] === "interpolate" || value[0] === "step")
+  && JSON.stringify(value[value[0] === "interpolate" ? 2 : 1]) === JSON.stringify(["zoom"]);
+const hasNestedZoom = value => isTopLevelZoomCurve(value)
+  ? value.slice(value[0] === "interpolate" ? 3 : 2).some(containsZoom)
+  : containsZoom(value);
+const CIRCLE_SIZE_PROPERTIES = ["circle-radius", "circle-stroke-width"];
+
+test("official circle sizes stay valid zoom curves after globe overview scaling", () => {
+  const visibility = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(s => [s.id, true]));
+  const opacity = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(s => [s.id, s.defaultOpacity]));
+  const flat = mapHarness("mercator");
+  context.applyOfficialContextState(flat.map, visibility, opacity, {});
+  let zoomCurves = 0;
+  for (const layer of flat.layers.values()) {
+    if (layer.type !== "circle") continue;
+    for (const property of CIRCLE_SIZE_PROPERTIES) {
+      const base = layer.paint?.[property];
+      if (!containsZoom(base)) continue;
+      zoomCurves += 1;
+      assert.ok(isTopLevelZoomCurve(base), `${layer.id} ${property} is a top-level zoom curve`);
+      const scaled = globe.globeOverviewPaintSize(base);
+      assert.ok(base[3] === 4 || !hasNestedZoom(scaled), `${layer.id} ${property} starts at zoom 4 or survives globe scaling without a nested zoom`);
+    }
+  }
+  assert.ok(zoomCurves >= 3, "the National Register zoom curves are covered");
+  const round = mapHarness("globe");
+  context.applyOfficialContextState(round.map, visibility, opacity, {});
+  for (const layer of round.layers.values()) {
+    if (layer.type !== "circle") continue;
+    for (const property of CIRCLE_SIZE_PROPERTIES) assert.ok(!hasNestedZoom(layer.paint?.[property]), `${layer.id} ${property} has no nested zoom in globe view`);
+  }
 });
 
 const route = await import(await moduleUrl("app/api/live-context/route.ts"));
