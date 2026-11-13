@@ -76,6 +76,10 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
   "nws-forecast-wind": ["app/live-context.ts", "app/airflow-tiles.ts", "app/api/airflow-tile/route.ts", "app/wind-arrow-data.ts", "app/wind-flow-client.ts", "app/wind-arrow-canvas.ts", "app/api/wind-arrows/route.ts", "app/page.tsx"],
   "noaa-lightning-density": ["app/live-context.ts", "app/lightning-data.ts", "app/lightning-server.ts", "app/api/lightning/frames/route.ts", "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts", "app/page.tsx"],
   "nasa-lightning-climatology": ["app/live-context.ts", "app/lightning-data.ts", "app/page.tsx"],
+  "noaa-spc-fire-weather": ["app/kansas-discovery-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "noaa-cpc-drought-outlook": ["app/kansas-discovery-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "usgs-padus-lands": ["app/kansas-discovery-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "nps-nrhp-places": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
 };
 
 const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>> = {
@@ -91,6 +95,7 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
   "nifc-fire-reports": "nifc-fire-reports",
   "raspberry-shake-stations": "raspberry-shake-stations",
   "nws-alerts": "nws-alerts",
+  "nps-nrhp-places": "nps-nrhp-places",
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
@@ -146,6 +151,10 @@ const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
   "nws-forecast-wind": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "noaa-lightning-density": ["toggle-context-connection", "refresh-visible-context", "step-exact-observation", "set-context-opacity", "open-provider-source"],
   "nasa-lightning-climatology": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "noaa-spc-fire-weather": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "noaa-cpc-drought-outlook": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "usgs-padus-lands": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "nps-nrhp-places": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
 };
 
 const connectionKind = (source: (typeof OFFICIAL_CONTEXT_SOURCES)[number]): SiteConnectionKind => {

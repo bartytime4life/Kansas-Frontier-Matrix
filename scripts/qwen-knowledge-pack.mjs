@@ -123,6 +123,7 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "name": "Weather & hazards",
       "sourceIds": [
         "fema-flood-zones",
+        "noaa-cpc-drought-outlook",
         "fema-disaster-declarations",
         "nws-alerts",
         "nws-radar",
@@ -154,6 +155,42 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "Relate High Plains aquifer saturated thickness to depth-to-water wells across western Kansas counties.",
         "Compare the alluvial aquifer footprint with Living Waters reaches to discuss surface-groundwater connection (as a question, not a finding).",
         "List which KGS groundwater layers are snapshots and what year each represents before comparing them."
+      ]
+    },
+    {
+      "name": "Fire, smoke & hazards",
+      "sourceIds": [
+        "noaa-spc-fire-weather",
+        "noaa-hms-smoke",
+        "nasa-firms-active-fire",
+        "nasa-gibs-fire-points",
+        "nifc-fire-reports",
+        "noaa-goes-geocolor"
+      ],
+      "ideas": [
+        "Compare NASA FIRMS detections, NIFC reports, and HMS smoke polygons for one day to show how each sees fire differently.",
+        "Use GOES GeoColor timing to discuss when smoke was visible versus when detections were recorded.",
+        "Note which Flint Hills burn seasons appear and which detections may be agricultural burning."
+      ]
+    },
+    {
+      "name": "Land cover & ecology",
+      "sourceIds": [
+        "usgs-padus-lands"
+      ],
+      "ideas": [
+        "Name which parts of Kansas have very little public land in PAD-US, so access questions start with the gap.",
+        "Locate PAD-US public lands along river corridors and ask which agencies manage them, without implying public access."
+      ]
+    },
+    {
+      "name": "History & cultural heritage",
+      "sourceIds": [
+        "nps-nrhp-places"
+      ],
+      "ideas": [
+        "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
+        "Note that restricted archaeological listings are absent by design, so the map never shows the full Register."
       ]
     },
     {
@@ -191,21 +228,6 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "ideas": [
         "Compare USGS earthquake locations with Raspberry Shake station coverage to discuss detection limits.",
         "Ask how recent south-central Kansas seismicity is discussed in public sources, keeping causation as an open question."
-      ]
-    },
-    {
-      "name": "Fire, smoke & hazards",
-      "sourceIds": [
-        "noaa-hms-smoke",
-        "nasa-firms-active-fire",
-        "nasa-gibs-fire-points",
-        "nifc-fire-reports",
-        "noaa-goes-geocolor"
-      ],
-      "ideas": [
-        "Compare NASA FIRMS detections, NIFC reports, and HMS smoke polygons for one day to show how each sees fire differently.",
-        "Use GOES GeoColor timing to discuss when smoke was visible versus when detections were recorded.",
-        "Note which Flint Hills burn seasons appear and which detections may be agricultural burning."
       ]
     },
     {
@@ -610,6 +632,66 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "fallback": "Snapshot gaps and unclassified areas remain blank; missing coverage does not mean zero water.",
       "attribution": "Kansas Geological Survey · High Plains Aquifer Atlas",
       "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Annual_measurement_wells_2026/FeatureServer/0",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-spc-fire-weather",
+      "title": "NOAA SPC Day 1 fire-weather outlook",
+      "shortTitle": "Fire-weather outlook · Day 1",
+      "organization": "NOAA NWS Storm Prediction Center",
+      "domain": "Fire, smoke & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "SPC fire-weather outlooks are issued daily and updated; the service shows its current issuance",
+      "freshness": "Provider-current Day 1 forecast; issuance time is on the SPC product page",
+      "boundary": "SPC fire-weather outlooks forecast meteorological conditions (wind, humidity, dry thunderstorms) that favor wildfire spread. They are not burn bans, red-flag warnings, active fire detections or fire perimeters. Combine with thermal detections and NIFC reports only as separate context. Not KFM evidence.",
+      "fallback": "An empty or failed image is not a no-risk finding. Local NWS red-flag warnings and county burn restrictions remain authoritative.",
+      "attribution": "NOAA NWS Storm Prediction Center",
+      "sourceUrl": "https://www.spc.noaa.gov/products/fire_wx/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-cpc-drought-outlook",
+      "title": "NOAA CPC seasonal drought outlook",
+      "shortTitle": "Drought outlook · seasonal",
+      "organization": "NOAA NWS Climate Prediction Center",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "CPC issues the seasonal drought outlook monthly",
+      "freshness": "Provider-current seasonal outlook; valid period on the CPC page",
+      "boundary": "The seasonal drought outlook forecasts the direction of drought change relative to the U.S. Drought Monitor. It is not current drought intensity, a disaster designation, an irrigation or crop-insurance determination, or KFM evidence.",
+      "fallback": "Missing imagery stays blank. Blank is not a no-drought finding; check the current U.S. Drought Monitor for present conditions.",
+      "attribution": "NOAA NWS Climate Prediction Center",
+      "sourceUrl": "https://www.cpc.ncep.noaa.gov/products/expert_assessment/sdo_summary.php",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "usgs-padus-lands",
+      "title": "USGS PAD-US 4.0 public and protected lands",
+      "shortTitle": "Public & protected lands",
+      "organization": "U.S. Geological Survey Gap Analysis Project",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "Periodic PAD-US releases; this service shows version 4.0",
+      "freshness": "PAD-US 4.0 compilation; individual agency submissions have their own dates",
+      "boundary": "PAD-US compiles agency-reported fee ownership and management for protected areas. Boundaries can be generalized or out of date, and inclusion does not grant public access, hunting permission or legal title. Private land is not shown. External context only.",
+      "fallback": "Unavailable tiles stay transparent. No absence of public land, access or protection is inferred.",
+      "attribution": "USGS Gap Analysis Project · PAD-US 4.0",
+      "sourceUrl": "https://www.sciencebase.gov/catalog/item/652ef930d34edd15305a9b03",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-nrhp-places",
+      "title": "National Register of Historic Places · Kansas listings",
+      "shortTitle": "Historic places · National Register",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS cultural-resources service; listings and spatial edits are published periodically",
+      "freshness": "Current public NPS spatial service; certification dates are carried by each listing",
+      "boundary": "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
+      "fallback": "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
+      "attribution": "National Park Service · National Register of Historic Places",
+      "sourceUrl": "https://www.nps.gov/subjects/nationalregister/database-research.htm",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {

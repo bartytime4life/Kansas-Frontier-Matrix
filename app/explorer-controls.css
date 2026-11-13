@@ -151,6 +151,8 @@
 .map-starters-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
 .map-starters-options button { min-height: 44px; text-align: left; padding: 8px 10px; }
 .map-starters-options button[aria-pressed="true"] { border-color: var(--gold,#dfc076); background: #3a3526; color: #fff1c9; }
+.map-starters .map-starters-surprise { border-color: #c79a3c; background: linear-gradient(90deg, rgba(242, 193, 78, .18), rgba(239, 123, 97, .18)); color: #ffe7b0; }
+.map-starters-options .new-layer-badge { margin-left: 6px; }
 .map-starters-recovery { padding: 10px; border-left: 2px solid var(--gold,#dfc076); }
 .map-starters-browse { min-height: 44px; width: 100%; }
 .layer-panel .layer-source-switch { grid-template-columns: repeat(2,minmax(0,1fr)); }

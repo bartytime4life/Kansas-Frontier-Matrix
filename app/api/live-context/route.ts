@@ -21,6 +21,8 @@ const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
 const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";
 const NIFC_INCIDENT_URL = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_YearToDate/FeatureServer/0/query";
 const FEMA_DECLARATIONS_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
+const NPS_NRHP_POINTS_URL = "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query";
+const MAX_NRHP_PLACES = 2000;
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_NWS_ZONE_REQUESTS = 36;
@@ -35,7 +37,7 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
+type Feed = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -627,17 +629,74 @@ const nifcFireReports = async () => {
     retrievedAt, newestTimestamp, skipped > 0 || truncated, truncated);
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600 };
+/** Public, non-restricted National Register listing points in Kansas. NPS withholds
+ * sensitive locations at the source; this adapter never requests or infers them. */
+const nationalRegisterPlaces = async () => {
+  const retrievedAt = new Date().toISOString();
+  const url = new URL(NPS_NRHP_POINTS_URL);
+  url.searchParams.set("where", "State='KANSAS'");
+  url.searchParams.set("outFields", "NRIS_Refnum,RESNAME,ResType,City,County,CertDate,Is_NHL,NARA_URL,STATUS,Vicinity");
+  url.searchParams.set("returnGeometry", "true");
+  url.searchParams.set("outSR", "4326");
+  url.searchParams.set("orderByFields", "RESNAME ASC");
+  url.searchParams.set("resultRecordCount", String(MAX_NRHP_PLACES));
+  url.searchParams.set("f", "geojson");
+  const payload = await fetchBoundedJson(url.toString(), 15_000);
+  if (!Array.isArray(payload.features)) throw new UpstreamError("NPS National Register response had no feature array.");
+  const transferFlags = [payload.exceededTransferLimit, isRecord(payload.properties) ? payload.properties.exceededTransferLimit : undefined];
+  const providerLimited = transferFlags.includes(true);
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  const pointsPerListing = new Map<string, number>();
+  let skipped = 0, removed = 0, landmarks = 0;
+  for (const candidate of payload.features) {
+    if (features.length >= MAX_NRHP_PLACES) break;
+    if (!isRecord(candidate) || !isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) { skipped += 1; continue; }
+    const properties = isRecord(candidate.properties) ? candidate.properties : {};
+    const longitude = asNumber(candidate.geometry.coordinates[0]);
+    const latitude = asNumber(candidate.geometry.coordinates[1]);
+    const refnum = asString(properties.NRIS_Refnum)?.trim() ?? "";
+    const name = asString(properties.RESNAME)?.trim().slice(0, 160) ?? "";
+    if (longitude === null || latitude === null || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2] || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3]
+      || !/^[0-9A-Z]{6,12}$/.test(refnum) || !name) { skipped += 1; continue; }
+    const status = asString(properties.STATUS)?.trim() || null;
+    if (status && status !== "Listed") { removed += 1; continue; }
+    // Some listings (districts, multiple-part properties) publish several points under one reference number.
+    const part = (pointsPerListing.get(refnum) ?? 0) + 1;
+    pointsPerListing.set(refnum, part);
+    const featureId = part === 1 ? `nrhp-${refnum}` : `nrhp-${refnum}-${part}`;
+    const landmark = asString(properties.Is_NHL)?.trim().toUpperCase() === "X";
+    if (landmark && part === 1) landmarks += 1;
+    const resourceType = (asString(properties.ResType)?.trim().toLowerCase() ?? "").replace(/[^a-z ]/g, "").slice(0, 24) || "not recorded";
+    const certified = (asString(properties.CertDate)?.trim() ?? "").replace(/-+$/, "");
+    const nara = asString(properties.NARA_URL)?.trim() ?? "";
+    features.push({ type: "Feature", id: featureId, geometry: { type: "Point", coordinates: [longitude, latitude] }, properties: {
+      featureId, name, resourceType, landmark, landmarkLabel: landmark ? "National Historic Landmark" : null,
+      city: asString(properties.City)?.trim().slice(0, 80) || null, county: asString(properties.County)?.trim().slice(0, 80) || null,
+      certified: /^\d{4}(-\d{2}(-\d{2})?)?$/.test(certified) ? certified : null, refnum,
+      vicinity: asString(properties.Vicinity) === "True" ? "Approximate (vicinity) location" : "Listed address location",
+      recordUrl: /^https:\/\/catalog\.archives\.gov\/[\w/?=&%.:-]+$/.test(nara) ? nara.slice(0, 240) : null,
+      latitude, longitude, retrievedAt, dataRole: "NPS public National Register point", evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    } });
+  }
+  const capped = payload.features.length > MAX_NRHP_PLACES;
+  const truncated = capped || providerLimited;
+  return envelope("nps-nrhp-places", { type: "FeatureCollection", features },
+    "National Park Service · National Register of Historic Places public point locations",
+    `${pointsPerListing.size.toLocaleString("en-US")} listed Kansas properties shown at ${features.length.toLocaleString("en-US")} public points (${landmarks} flagged as National Historic Landmarks in this service). ${removed} record${removed === 1 ? "" : "s"} marked removed from the Register ${removed === 1 ? "is" : "are"} omitted; ${skipped} record${skipped === 1 ? "" : "s"} withheld for an invalid location or identifier${truncated ? "; the response was capped, so additional listings may be missing" : ""}. NPS withholds restricted and sensitive locations. Points are representative locations, not boundaries, access permission, ownership or current condition.`,
+    retrievedAt, null, skipped > 0 || truncated, truncated);
+};
+
+const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (feed === "census-congress-119" && civicCongressForDay(day ?? new Date().toISOString().slice(0, 10)) === null || request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : feed === "noaa-hms-smoke" ? "2005-08-05" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["census-congress-119", "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-congress-119" && feed !== "deflock-alpr" && feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations") {
+  if (feed !== "census-congress-119" && feed !== "deflock-alpr" && feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-congress-119" ? day ? await readCivicHistory(day) : await readCivicDistricts() : feed === "deflock-alpr" ? await readDeflock() : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : await raspberryShakeStations(day);
+    const result = feed === "census-congress-119" ? day ? await readCivicHistory(day) : await readCivicDistricts() : feed === "deflock-alpr" ? await readDeflock() : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": (feed === "deflock-alpr" || feed === "census-congress-119") ? "no-store" : `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

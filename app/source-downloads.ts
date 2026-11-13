@@ -54,6 +54,10 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "nws-forecast-wind": { href: "https://open-meteo.com/en/docs/gfs-api", label: "GFS model forecast documentation" },
   "nasa-lightning-climatology": { href: "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/LIS_High_Resolution_Full_Climatology_Combined_Flash_Rate_Climatology.json", label: "NASA climatology source metadata" },
   "noaa-lightning-density": { href: "https://nowcoast.noaa.gov/geoserver/observations/lightning_detection/ows?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities", label: "NOAA lightning density capabilities" },
+  "noaa-spc-fire-weather": { href: "https://www.spc.noaa.gov/products/fire_wx/", label: "SPC fire-weather outlook products" },
+  "noaa-cpc-drought-outlook": { href: "https://www.cpc.ncep.noaa.gov/products/GIS/GIS_DATA/droughtlook/", label: "CPC drought outlook shapefiles" },
+  "usgs-padus-lands": { href: "https://www.sciencebase.gov/catalog/item/652ef930d34edd15305a9b03", label: "PAD-US 4.0 full inventory · ScienceBase" },
+  "nps-nrhp-places": { href: "/api/source-download?source=nps-nrhp-places", label: "Download Kansas listings · GeoJSON" },
 };
 
 const ARCHIVE_DOWNLOAD_SOURCES = new Set<OfficialContextId>(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);
