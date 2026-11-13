@@ -2702,3 +2702,14 @@ def test_outdoor_access_soil_successor_preserves_globe_zoom_inventory_and_all_ho
          "tests/rendered-html.test.mjs", "tests/runtime-resilience.test.mjs"},
         "a921a27523802ef35d1080f0c52cc18ac3b3b76c",
     )
+
+
+def test_wiha_notes_privacy_successor_preserves_outdoor_access_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-wiha-notes-privacy-overlay-20261113.json",
+        "site-v268-outdoor-access-soil-overlay-20261113.json",
+        "bd9a187afc2351c77118f47cfbb6d987a0fea705e7a716b97f392e008ea8f2aa",
+        {"app/api/live-context/route.ts", "app/evidence-drawer-data.ts",
+         "docs/explorer-outdoor-access-soil-layers-2026-11-13.md", "tests/kansas-discovery-layers.test.mjs"},
+        "d787e1c4c6f11e74265abd283ec22add3d90692a",
+    )

@@ -927,8 +927,9 @@ const KDWP_WILDLIFE_AREAS: KdwpLayer = {
 };
 const KDWP_WIHA: KdwpLayer = {
   feed: "kdwp-wiha-access", url: KDWP_WIHA_URL, source: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access (2026–2027 public web map layer)",
-  // Contract identifiers tie a tract to a private landowner agreement and are not requested.
-  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY,NOTES",
+  // Contract identifiers and the free-text NOTES field are not requested: NOTES holds KDWP
+  // administrative text such as landowner contract numbers, payment rates and CRP expiries.
+  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY",
   properties: record => {
     const fid = asNumber(record.FID);
     if (fid === null || !Number.isInteger(fid)) return null;
@@ -938,7 +939,7 @@ const KDWP_WIHA: KdwpLayer = {
     return { featureId: `kdwp-wiha-${fid}`, name: `WIHA tract${area === null ? "" : ` ${area}`}${cleanText(record.COUNTY, 40) ? ` · ${cleanText(record.COUNTY, 40)} County` : ""}`,
       areaId: area, acres: acres === null ? null : Math.round(acres), county: cleanText(record.COUNTY, 40),
       species: species.length ? species.join(", ") : null, archeryOnly: archery === 1 ? "Archery only" : archery === 0 ? "Not archery-only" : null,
-      notes: cleanText(record.NOTES, 240), dataRole: "KDWP walk-in hunting access tract" };
+      dataRole: "KDWP walk-in hunting access tract" };
   },
   limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
 };
