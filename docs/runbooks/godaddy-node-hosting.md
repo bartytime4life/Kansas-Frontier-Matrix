@@ -6,12 +6,12 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-10-21
+updated: 2026-11-13
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
 responsibility: Identify the existing Node deployment, select its exact standalone source, validate changes and verify or roll back application delivery
-truth_posture: CONFIRMED source inspection at main 91ca0314 and hosted 65d56575 on 2026-10-21; historical dashboard observations are not a fresh live readback
+truth_posture: CONFIRMED source inspection at main 91ca0314 and hosted 65d56575 on 2026-10-21; CONFIRMED public build-identity parity with 43ea4988 on 2026-11-13; historical dashboard observations are not a fresh live readback
 related:
   - godaddy-hosting.md
   - godaddy-hosted-capture.md
@@ -100,6 +100,27 @@ but cannot acquire hosting credentials or create a competing deployment. Keep
 the GoDaddy Node application as the sole intended public production path.
 Private Sites preservation and Public Staging remain separate; neither is
 unpublished by this source change. Historical deployment records are retained.
+
+<a id="public-readback-2026-11-13"></a>
+
+## Public readback after owner publication, 2026-11-13
+
+This is a public-endpoint observation, not a dashboard inspection. The owner
+performed **Publish**; settings, secrets and Preview were not read here.
+
+| Step | Observation |
+|---|---|
+| Before | Public `/api/build` reported `sourceCommit` `82786c3e`, then the head of `a0-hosted-ai-web-20261017` |
+| Merges | [#5830](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5830) (discovery layers port), [#5832](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5832) (globe zoom sizes) and [#5833](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5833) (basemap warning and Kansas Sky lifecycle fixes) merged into that branch; head `43ea4988` |
+| Merge alone | For more than 20 minutes after the #5830 merge, `/api/build` (`Cache-Control: no-store`, Cloudflare `DYNAMIC`) still reported `82786c3e` |
+| After Publish | `/api/build` reported `43ea4988ec31f62ebe200fd6cc915d4e5f8a3b1d`, `CLEAN_CHECKOUT`, digest `sha256:049c7791…cf4e09`, 1,254 inputs, about three minutes after the owner published |
+| Parity | `node scripts/build-identity.mjs --verify https://kansasfrontiermatrix.com` from a clean checkout of `43ea4988`: `APPLICATION_INPUTS_MATCH` |
+| Live checks | `/api/live-context?feed=nps-nrhp-places` returned 1,344 points (1,331 listings); its source download returned 200; a headless browser showed the drought outlook and National Register layers, NEW markers, legend chips, the four new starters and **Surprise me**, with no page errors |
+
+Operational consequence, reconfirmed: merging into the connected branch does
+not update the public application; an explicit **Publish** does. Verify with
+`/api/build` and the identity checker rather than the dashboard label alone.
+Input parity is not browser-asset, provider, release or accessibility acceptance.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
@@ -233,7 +254,8 @@ reusing that result. A missing commit must not be inferred from a branch label.
 ## Preview, publication and acceptance
 
 1. In the dashboard, confirm the app ID (`urdng3v1vk`), its source branch
-   (`a0-hosted-ai-web-20261017` in the dated 2026-10-20 readback) and the Published commit.
+   (`a0-hosted-ai-web-20261017` in the dated 2026-10-20 readback; public
+   `/api/build` matched that branch's head on [2026-11-13](#public-readback-2026-11-13)) and the Published commit.
    Compare public `/api/build` with `node scripts/build-identity.mjs --print` from
    a clean checkout of that commit. Stop and refresh this runbook if any differ.
 2. Record the public rollback commit, preview commit, connected branch and
