@@ -83,6 +83,9 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
   "usgs-padus-lands": ["app/kansas-discovery-layers.ts", "app/live-context.ts", "app/page.tsx"],
   "nws-storm-reports": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
   "nps-nrhp-places": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
+  "nrcs-ssurgo-soils": ["app/kansas-discovery-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdwp-wildlife-areas": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
+  "kdwp-wiha-access": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
 };
 
 const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>> = {
@@ -98,6 +101,8 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
   "nws-alerts": "nws-alerts",
   "nws-storm-reports": "nws-storm-reports",
   "nps-nrhp-places": "nps-nrhp-places",
+  "kdwp-wildlife-areas": "kdwp-wildlife-areas",
+  "kdwp-wiha-access": "kdwp-wiha-access",
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
@@ -160,6 +165,9 @@ const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
   "usgs-padus-lands": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "nws-storm-reports": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "nps-nrhp-places": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
+  "nrcs-ssurgo-soils": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdwp-wildlife-areas": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
+  "kdwp-wiha-access": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
 };
 
 const connectionKind = (source: (typeof OFFICIAL_CONTEXT_SOURCES)[number]): SiteConnectionKind => {

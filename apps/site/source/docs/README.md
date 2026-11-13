@@ -11,6 +11,7 @@ main `d4d84171653a2f2582b48ece511dc010857fde15` on November 11, 2026.
 | Task | Guide |
 |---|---|
 | Try the new storm, rain, land-cover and historic-place layers | [Discovery layers and starters](explorer-discovery-layers-2026-11-13.md) |
+| See KDWP wildlife areas, walk-in hunting access and soil map units | [Outdoor access and soil survey layers](explorer-outdoor-access-soil-layers-2026-11-13.md) |
 | Replay a day, inspect a current record or recover a stalled read | [Observatory replay](observatory-replay.md) |
 | Save or share an investigation | [Research tools](map-research-tools.md) and [share-context correction](explorer-share-context-integrity-2026-11-09.md) |
 | Read a selected station or source-qualified value | [Reading-context correction](explorer-reading-context-integrity-2026-11-09.md) |
@@ -92,6 +93,7 @@ checks or establish current deployment, browser acceptance or source admission.
 - [Explorer reliability and recovery improvements — 2026-11-09](explorer-improvements-2026-11-09.md)
 - [Investigation restore and observation-time integrity](explorer-investigation-restore-2026-11-09.md)
 - [Discovery layers, legend chips and themed starters — November 13, 2026](explorer-discovery-layers-2026-11-13.md)
+- [Outdoor access and soil survey layers — November 13, 2026](explorer-outdoor-access-soil-layers-2026-11-13.md)
 - [Explorer local-port reconciliation](explorer-local-port-20261017.md)
 - [Reading context and keyboard ownership](explorer-reading-context-integrity-2026-11-09.md)
 - [Explorer reliability review — 2026-10-06](explorer-reliability-review-2026-10-06.md)

@@ -61,6 +61,9 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "usgs-padus-lands": { href: "https://www.sciencebase.gov/catalog/item/652ef930d34edd15305a9b03", label: "PAD-US 4.0 full inventory · ScienceBase" },
   "nws-storm-reports": { href: "/api/source-download?source=nws-storm-reports", label: "Download storm reports · GeoJSON" },
   "nps-nrhp-places": { href: "/api/source-download?source=nps-nrhp-places", label: "Download Kansas listings · GeoJSON" },
+  "nrcs-ssurgo-soils": { href: "https://websoilsurvey.nrcs.usda.gov/", label: "Web Soil Survey map-unit data" },
+  "kdwp-wildlife-areas": { href: "/api/source-download?source=kdwp-wildlife-areas", label: "Download wildlife areas · GeoJSON" },
+  "kdwp-wiha-access": { href: "/api/source-download?source=kdwp-wiha-access", label: "Download WIHA tracts · GeoJSON" },
 };
 
 const ARCHIVE_DOWNLOAD_SOURCES = new Set<OfficialContextId>(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);
