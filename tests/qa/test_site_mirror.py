@@ -2686,3 +2686,19 @@ def test_globe_zoom_stops_successor_preserves_discovery_layers_inventory_and_all
         {"app/live-context.ts", "tests/kansas-discovery-layers.test.mjs"},
         "680ff92ae225899d2940723b9a0a95afe1646c8a",
     )
+
+
+def test_outdoor_access_soil_successor_preserves_globe_zoom_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-outdoor-access-soil-overlay-20261113.json",
+        "site-v268-globe-zoom-stops-overlay-20261113.json",
+        "ce4d34a11e278f55d7ab84d92278d2f2e9aacf0a2c4a86dac76902e8e352702e",
+        {"app/api/live-context/route.ts", "app/api/source-download/route.ts", "app/evidence-drawer-data.ts",
+         "app/kansas-discovery-layers.ts", "app/layer-workspaces.ts", "app/live-context.ts", "app/page.tsx",
+         "app/site-connections.ts", "app/site-features.ts", "app/source-downloads.ts",
+         "docs/README.md", "docs/explorer-outdoor-access-soil-layers-2026-11-13.md",
+         "scripts/qwen-knowledge-pack.mjs", "scripts/qwen-local-contract.mjs",
+         "tests/kansas-discovery-layers.test.mjs", "tests/local-qwen-bridge.test.mjs",
+         "tests/rendered-html.test.mjs", "tests/runtime-resilience.test.mjs"},
+        "a921a27523802ef35d1080f0c52cc18ac3b3b76c",
+    )

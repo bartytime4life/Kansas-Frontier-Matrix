@@ -98,6 +98,9 @@ const discoveryTopics: Readonly<Record<string, readonly TopicId[]>> = Object.fre
   "mrlc-nlcd-land-cover": ["ecology", "agriculture", "land", "science"],
   "usgs-padus-lands": ["ecology", "land", "places"],
   "nps-nrhp-places": ["history", "places"],
+  "nrcs-ssurgo-soils": ["agriculture", "land", "science"],
+  "kdwp-wildlife-areas": ["ecology", "land", "places"],
+  "kdwp-wiha-access": ["ecology", "land", "places"],
 });
 
 /** Source identity, rather than provider name or a broad domain string, determines membership. */

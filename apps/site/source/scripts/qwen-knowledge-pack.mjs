@@ -114,6 +114,7 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "sourceIds": [
         "blm-mlrs-leases-authorized",
         "blm-mlrs-leases-closed",
+        "nrcs-ssurgo-soils",
         "blm-plss-townships",
         "blm-plss-sections",
         "blm-plss-intersected"
@@ -261,7 +262,9 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "name": "Land cover & ecology",
       "sourceIds": [
         "mrlc-nlcd-land-cover",
-        "usgs-padus-lands"
+        "usgs-padus-lands",
+        "kdwp-wildlife-areas",
+        "kdwp-wiha-access"
       ],
       "ideas": [
         "Compare NLCD cultivated cropland in western Kansas with grassland in the Flint Hills and ask what soils, water and history might explain, as questions.",
@@ -1141,6 +1144,21 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {
+      "id": "nrcs-ssurgo-soils",
+      "title": "USDA NRCS SSURGO soil survey map units",
+      "shortTitle": "Soil survey · map units",
+      "organization": "USDA Natural Resources Conservation Service",
+      "domain": "Land records & survey",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "NRCS refreshes SSURGO annually; the service shows the current Soil Data Mart edition",
+      "freshness": "Provider-current SSURGO map units; survey-area publication dates vary",
+      "boundary": "SSURGO map units delineate soil-survey polygons mapped at roughly 1:12,000–1:24,000. A map unit can contain several soil components and inclusions; the outline is not a site-specific soil test, engineering suitability, septic or building approval, or a KFM release. Visible only at close zoom because outlines are dense.",
+      "fallback": "At overview scale or on provider failure, outlines are absent; no soil class or property is inferred.",
+      "attribution": "USDA NRCS Soil Survey Geographic Database (SSURGO)",
+      "sourceUrl": "https://websoilsurvey.nrcs.usda.gov/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
       "id": "nws-storm-reports",
       "title": "NWS Kansas local storm reports · past 72 hours",
       "shortTitle": "Storm reports · 72 h",
@@ -1168,6 +1186,36 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "fallback": "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
       "attribution": "National Park Service · National Register of Historic Places",
       "sourceUrl": "https://www.nps.gov/subjects/nationalregister/database-research.htm",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "kdwp-wildlife-areas",
+      "title": "KDWP public wildlife areas",
+      "shortTitle": "Wildlife areas · KDWP",
+      "organization": "Kansas Department of Wildlife and Parks",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "KDWP updates its public hunting atlas layers as areas and rules change",
+      "freshness": "Current KDWP public layer at retrieval time",
+      "boundary": "KDWP's public wildlife-area polygons, simplified for display. Refuges, closures, seasons, permits and special rules change during the year and are not complete here. This is not a legal boundary, a regulation, hunting permission or KFM evidence; check KDWP before entering or hunting.",
+      "fallback": "A failed KDWP request leaves the layer empty and labeled; missing areas never imply no public land.",
+      "attribution": "Kansas Department of Wildlife and Parks",
+      "sourceUrl": "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "kdwp-wiha-access",
+      "title": "KDWP Walk-In Hunting Access tracts · 2026–2027",
+      "shortTitle": "Walk-in hunting access",
+      "organization": "Kansas Department of Wildlife and Parks",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "KDWP publishes WIHA enrollments by hunting season; tracts can change during the season",
+      "freshness": "Layer used by KDWP's public 2026–2027 WIHA map at retrieval time",
+      "boundary": "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going.",
+      "fallback": "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
+      "attribution": "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
+      "sourceUrl": "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {
