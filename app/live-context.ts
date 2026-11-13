@@ -1032,8 +1032,8 @@ export const applyOfficialContextState = (
     if (!map.getSource(source.sourceId)) map.addSource(source.sourceId, { type: "geojson", data: source.mapUrl!, attribution: source.attribution });
     if (source.id === "kgs-monitoring-wells") {
       ensureLayer(map, { id: source.layerIds[0], type: "circle", source: source.sourceId, paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 1.25, 7, 1.8, 10, 5], "circle-color": source.color,
-        "circle-stroke-color": "#092b31", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 5, 0, 8, 0.5, 10, 1], "circle-opacity": monitoringWellOpacity(source.defaultOpacity),
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 1.25, 7, 1.8, 10, 5], "circle-color": source.color,
+        "circle-stroke-color": "#092b31", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 0, 5, 0, 8, 0.5, 10, 1], "circle-opacity": monitoringWellOpacity(source.defaultOpacity),
       } });
     } else {
       ensureLayer(map, { id: source.layerIds[0], type: "fill", source: source.sourceId, filter: ["==", ["get", "hasValue"], true], paint: {
