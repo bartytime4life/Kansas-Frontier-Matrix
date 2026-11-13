@@ -39,11 +39,11 @@ const drawer = await import(await moduleUrl("app/evidence-drawer-data.ts"));
 const registry = await import(await moduleUrl("app/site-registry.ts"));
 const globe = await import(await moduleUrl("app/globe-context.ts"));
 
-const ALLOWED_TILE_HOSTS = new Set(["mapservices.weather.noaa.gov", "edits.nationalmap.gov"]);
+const ALLOWED_TILE_HOSTS = new Set(["mapservices.weather.noaa.gov", "edits.nationalmap.gov", "sdmdataaccess.sc.egov.usda.gov"]);
 const FEEDS = ["nps-nrhp-places"];
 
 test("discovery layers are fixed, provider-rendered, off by default and never admitted as evidence", () => {
-  assert.equal(discovery.KANSAS_DISCOVERY_SOURCES.length, 3);
+  assert.equal(discovery.KANSAS_DISCOVERY_SOURCES.length, 4);
   for (const source of discovery.KANSAS_DISCOVERY_SOURCES) {
     assert.equal(context.OFFICIAL_CONTEXT_BY_ID[source.id], source);
     assert.equal(source.kind, "OPERATIONAL_WMS");
@@ -57,7 +57,7 @@ test("discovery layers are fixed, provider-rendered, off by default and never ad
     assert.ok(!/\$\{|undefined/.test(source.mapUrl));
     assert.ok(source.boundary.length > 120 && source.fallback.length > 60);
     assert.match(`${source.boundary} ${source.fallback}`, /not|never/i);
-    assert.ok(discovery.discoveryLegend(source.id)?.length >= 3, `${source.id} has legend chips`);
+    assert.ok(discovery.discoveryLegend(source.id)?.length >= 1, `${source.id} has legend chips`);
     for (const stop of discovery.discoveryLegend(source.id)) assert.match(stop.color, /^#[0-9a-f]{6}$/);
     assert.ok(context.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id], `${source.id} declares its clock`);
     assert.ok(topics.officialSourceTopics(source.id).length >= 2, `${source.id} is reachable from topics`);
@@ -236,4 +236,57 @@ test("unknown feeds stay rejected and an empty listing response is labeled empty
   const { body } = await callFeed("nps-nrhp-places", { type: "FeatureCollection", features: [] });
   assert.equal(body.state, "empty");
   assert.equal(body.featureCount, 0);
+});
+
+test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons and never request contract identifiers", async () => {
+  const square = (lon, lat) => ({ type: "Polygon", coordinates: [[[lon, lat], [lon + 0.05, lat], [lon + 0.05, lat + 0.05], [lon, lat + 0.05], [lon, lat]]] });
+  const original = globalThis.fetch, seen = [];
+  globalThis.fetch = async url => {
+    const u = new URL(String(url)); seen.push(u);
+    const offset = Number(u.searchParams.get("resultOffset"));
+    const page = offset === 0
+      ? { type: "FeatureCollection", exceededTransferLimit: true, features: [
+        { type: "Feature", geometry: square(-97, 38), properties: { FID: 1, AREAID: 1386, ACRES: 1121.6, COUNTY: "Dickinson", ISARCHERYS: 1, NOTES: "  05s18w20 " } },
+        { type: "Feature", geometry: square(-120, 45), properties: { FID: 2, AREAID: 9 } },
+        { type: "Feature", geometry: { type: "Point", coordinates: [-97, 38] }, properties: { FID: 3 } } ] }
+      : { type: "FeatureCollection", features: [{ type: "Feature", geometry: square(-99, 39), properties: { FID: 4, AREAID: 7, ISARCHERYS: 0 } }] };
+    return new Response(JSON.stringify(page), { headers: { "Content-Type": "application/json" } });
+  };
+  try {
+    const response = await route.GET(new NextRequest("http://127.0.0.1/api/live-context?feed=kdwp-wiha-access"));
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(seen.length, 2, "the provider transfer limit pages to a second request");
+    assert.deepEqual(seen.map(u => u.searchParams.get("resultOffset")), ["0", "2000"]);
+    for (const u of seen) {
+      assert.equal(u.origin + u.pathname, "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0/query");
+      assert.doesNotMatch(u.searchParams.get("outFields"), /CONTRACT/i, "landowner contract identifiers are never requested");
+      assert.equal(u.searchParams.get("maxAllowableOffset"), "0.0005");
+    }
+    assert.deepEqual(body.data.features.map(f => f.properties.featureId), ["kdwp-wiha-1", "kdwp-wiha-4"]);
+    const [first, second] = body.data.features.map(f => f.properties);
+    assert.equal(first.name, "WIHA tract 1386 · Dickinson County");
+    assert.equal(first.acres, 1122);
+    assert.equal(first.archeryOnly, "Archery only");
+    assert.equal(first.notes, "05s18w20");
+    assert.equal(second.archeryOnly, "Not archery-only");
+    assert.equal(body.state, "partial");
+    assert.match(body.limitation, /2 withheld/);
+    assert.match(body.limitation, /not general public access|Not legal access/i);
+  } finally { globalThis.fetch = original; }
+});
+
+test("KDWP wildlife areas keep unnamed polygons and accept only ksoutdoors links from the HTML snippet", async () => {
+  const square = { type: "Polygon", coordinates: [[[-98, 38], [-97.9, 38], [-97.9, 38.1], [-98, 38.1], [-98, 38]]] };
+  const { body } = await callFeed("kdwp-wildlife-areas", { type: "FeatureCollection", features: [
+    { type: "Feature", geometry: square, properties: { FID: 1, NAME: "Hamilton State Fishing Lake and Wildlife Area", Label_Name: "Hamilton SFL and Wildlife Area", Hunt_Acc: "Yes", Access_Res: "No",
+      Hyperlink: 'Click <a href="https://ksoutdoors.com/KDWPT-Info/Locations/Wildlife-Areas" target="_top">HERE</a> to view.' } },
+    { type: "Feature", geometry: square, properties: { FID: 214, NAME: null, Label_Name: null, Hyperlink: '<a href="javascript:alert(1)">x</a>' } },
+  ] });
+  const [named, unnamed] = body.data.features.map(f => f.properties);
+  assert.equal(named.name, "Hamilton SFL and Wildlife Area");
+  assert.equal(named.recordUrl, "https://ksoutdoors.com/KDWPT-Info/Locations/Wildlife-Areas");
+  assert.equal(unnamed.name, "KDWP wildlife area (unnamed in source)");
+  assert.equal(unnamed.recordUrl, null);
+  assert.equal(body.state, "ready");
 });

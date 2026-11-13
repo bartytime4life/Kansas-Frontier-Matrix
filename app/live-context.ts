@@ -19,8 +19,8 @@ import { globeOverviewPaintSize } from "./globe-context";
 // Only exports the CI fire baseline (a pinned earlier renderer) also has, so its comparison build still links.
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay } from "./fire-detection-style";
 
-export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nps-nrhp-places";
-export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places";
+export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nps-nrhp-places" | "nrcs-ssurgo-soils" | "kdwp-wildlife-areas" | "kdwp-wiha-access";
+export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -101,6 +101,42 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     legend: "Gold markers · listed buildings, districts, sites, structures and objects. Larger rings mark National Historic Landmarks.",
     boundary: "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
     fallback: "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
+  }),
+  Object.freeze({
+    id: "kdwp-wildlife-areas", title: "KDWP public wildlife areas", shortTitle: "Wildlife areas · KDWP",
+    organization: "Kansas Department of Wildlife and Parks", domain: "Land cover & ecology", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-kdwp-wildlife-areas",
+    layerIds: Object.freeze(["external-kdwp-wildlife-areas-fill", "external-kdwp-wildlife-areas-line"]),
+    interactiveLayerIds: Object.freeze(["external-kdwp-wildlife-areas-fill"]),
+    apiPath: "/api/live-context?feed=kdwp-wildlife-areas",
+    endpointLabel: "services1.arcgis.com · KDWPT_Wildlife_Areas_view (KDWP public hunting atlas)",
+    sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/KDWPT_Wildlife_Areas_view/FeatureServer/0",
+    cadence: "KDWP updates its public hunting atlas layers as areas and rules change",
+    freshness: "Current KDWP public layer at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.55, color: "#7fbf6a",
+    attribution: "Kansas Department of Wildlife and Parks",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Green fill · KDWP-managed public wildlife areas. Click an area for its name, manager and access notes.",
+    boundary: "KDWP's public wildlife-area polygons, simplified for display. Refuges, closures, seasons, permits and special rules change during the year and are not complete here. This is not a legal boundary, a regulation, hunting permission or KFM evidence; check KDWP before entering or hunting.",
+    fallback: "A failed KDWP request leaves the layer empty and labeled; missing areas never imply no public land.",
+  }),
+  Object.freeze({
+    id: "kdwp-wiha-access", title: "KDWP Walk-In Hunting Access tracts · 2026–2027", shortTitle: "Walk-in hunting access",
+    organization: "Kansas Department of Wildlife and Parks", domain: "Land cover & ecology", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-kdwp-wiha-access",
+    layerIds: Object.freeze(["external-kdwp-wiha-access-fill", "external-kdwp-wiha-access-line"]),
+    interactiveLayerIds: Object.freeze(["external-kdwp-wiha-access-fill"]),
+    apiPath: "/api/live-context?feed=kdwp-wiha-access",
+    endpointLabel: "services1.arcgis.com · WIHA access layer in KDWP's 2026–2027 WIHA web map",
+    sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0",
+    cadence: "KDWP publishes WIHA enrollments by hunting season; tracts can change during the season",
+    freshness: "Layer used by KDWP's public 2026–2027 WIHA map at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.5, color: "#e5b54b",
+    attribution: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Gold fill · private land enrolled in Walk-In Hunting Access. Click a tract for acres, species and archery-only status.",
+    boundary: "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going.",
+    fallback: "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
   }),
   Object.freeze({
     id: "fema-disaster-declarations", title: "FEMA Kansas disaster declaration areas", shortTitle: "FEMA declarations",
@@ -698,6 +734,9 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "noaa-spc-fire-weather": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Day 1 fire-weather issuance only; not an archive of past outlooks or observed fire behavior." }),
   "noaa-cpc-drought-outlook": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current seasonal outlook; not a historical drought record or current drought intensity." }),
   "usgs-padus-lands": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "PAD-US 4.0 compilation; agency submission dates vary and no historical ownership series is connected." }),
+  "nrcs-ssurgo-soils": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current SSURGO edition; survey-area dates vary and no historical soil series is replayed." }),
+  "kdwp-wildlife-areas": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current KDWP public layer; past area boundaries and rules are not replayed." }),
+  "kdwp-wiha-access": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current KDWP season layer; earlier seasons' enrollments are not replayed." }),
   "nps-nrhp-places": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current public NPS listing locations. Certification dates are attributes, not a reconstruction of the landscape at that date." }),
   "fema-disaster-declarations": Object.freeze({ axis: "provider-observation-history", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Dated historical declaration records with 2020 county locator geometry. The current atlas frame does not turn their declaration dates into present hazard conditions." }),
   "blm-plss-townships": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas township survey image. Feature-level survey dates are not a selectable historical series or a KFM release." }),
@@ -985,6 +1024,14 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, minzoom: 11, layout: {
     "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 10.5, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
   }, paint: { "text-color": "#f6e4bd", "text-halo-color": "#1c140a", "text-halo-width": 1.5, "text-opacity": 0.9 } });
+
+  for (const [id, color, line] of [["kdwp-wildlife-areas", "#7fbf6a", "#cfeec4"], ["kdwp-wiha-access", "#e5b54b", "#fde7b0"]] as const) {
+    const area = OFFICIAL_CONTEXT_BY_ID[id];
+    if (!visibility[id] && !map.getSource(area.sourceId)) continue;
+    ensureGeoJsonSource(map, area, payloads[id]?.data ?? emptyCollection());
+    ensureLayer(map, { id: area.layerIds[0], type: "fill", source: area.sourceId, paint: { "fill-color": color, "fill-opacity": area.defaultOpacity } }, firstRegistryLayer(map));
+    ensureLayer(map, { id: area.layerIds[1], type: "line", source: area.sourceId, paint: { "line-color": line, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.4, 10, 1.2, 14, 2], "line-opacity": 0.85 } });
+  }
 
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
   ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());

@@ -23,6 +23,11 @@ const NIFC_INCIDENT_URL = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/
 const FEMA_DECLARATIONS_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
 const NPS_NRHP_POINTS_URL = "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query";
 const MAX_NRHP_PLACES = 2000;
+const KDWP_SERVICES = "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services";
+const KDWP_WILDLIFE_AREAS_URL = `${KDWP_SERVICES}/KDWPT_Wildlife_Areas_view/FeatureServer/0/query`;
+const KDWP_WIHA_URL = `${KDWP_SERVICES}/24_25_7_29/FeatureServer/0/query`;
+const MAX_KDWP_AREAS = 6000;
+const KDWP_PAGE_SIZE = 2000;
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_NWS_ZONE_REQUESTS = 36;
@@ -37,7 +42,7 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places";
+type Feed = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -686,17 +691,116 @@ const nationalRegisterPlaces = async () => {
     retrievedAt, null, skipped > 0 || truncated, truncated);
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400 };
+type KdwpLayer = Readonly<{ feed: "kdwp-wildlife-areas" | "kdwp-wiha-access"; url: string; outFields: string; source: string;
+  properties: (record: JsonRecord) => Record<string, unknown> | null; limitation: (shown: number, skipped: number, truncated: boolean) => string }>;
+
+const finitePolygon = (geometry: unknown): Geometry | null => {
+  if (!isRecord(geometry) || (geometry.type !== "Polygon" && geometry.type !== "MultiPolygon") || !Array.isArray(geometry.coordinates)) return null;
+  const polygons = (geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates) as unknown[];
+  let west = Infinity, east = -Infinity, south = Infinity, north = -Infinity, points = 0;
+  for (const polygon of polygons) {
+    if (!Array.isArray(polygon) || polygon.length === 0) return null;
+    for (const ring of polygon) {
+      if (!Array.isArray(ring) || ring.length < 4) return null;
+      for (const position of ring) {
+        const lon = Array.isArray(position) ? asNumber(position[0]) : null, lat = Array.isArray(position) ? asNumber(position[1]) : null;
+        if (lon === null || lat === null) return null;
+        west = Math.min(west, lon); east = Math.max(east, lon); south = Math.min(south, lat); north = Math.max(north, lat); points++;
+      }
+    }
+  }
+  if (points === 0 || east < EVENT_BOUNDS[0] || west > EVENT_BOUNDS[2] || north < EVENT_BOUNDS[1] || south > EVENT_BOUNDS[3]) return null;
+  return geometry as unknown as Geometry;
+};
+const cleanText = (value: unknown, max = 120) => {
+  const text = asString(value)?.replace(/\s+/g, " ").trim().slice(0, max);
+  return text ? text : null;
+};
+const kdwpLink = (value: unknown) => {
+  // KDWP stores the link as an HTML snippet; keep only an https ksoutdoors href.
+  const raw = asString(value)?.trim() ?? "", href = raw.match(/href="([^"]+)"/i)?.[1] ?? raw;
+  const url = href.trim();
+  return /^https:\/\/(?:www\.)?ksoutdoors\.(?:com|gov)\/[\w/?=&%.:#-]*$/i.test(url) ? url.slice(0, 240) : null;
+};
+
+/** KDWP public outdoor-access polygons from fixed FeatureServer layers. Paged,
+ * simplified at the provider, bounded to Kansas, and reduced to access fields. */
+const kdwpAreas = async (layer: KdwpLayer) => {
+  const retrievedAt = new Date().toISOString();
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  let skipped = 0, providerLimited = false, received = 0;
+  for (let offset = 0; offset < MAX_KDWP_AREAS; offset += KDWP_PAGE_SIZE) {
+    const url = new URL(layer.url);
+    url.searchParams.set("where", "1=1");
+    url.searchParams.set("outFields", layer.outFields);
+    url.searchParams.set("returnGeometry", "true");
+    url.searchParams.set("outSR", "4326");
+    url.searchParams.set("maxAllowableOffset", "0.0005");
+    url.searchParams.set("geometryPrecision", "5");
+    url.searchParams.set("orderByFields", "FID ASC");
+    url.searchParams.set("resultOffset", String(offset));
+    url.searchParams.set("resultRecordCount", String(KDWP_PAGE_SIZE));
+    url.searchParams.set("f", "geojson");
+    const payload = await fetchBoundedJson(url.toString(), 20_000);
+    if (!Array.isArray(payload.features)) throw new UpstreamError("KDWP response had no feature array.");
+    received += payload.features.length;
+    for (const candidate of payload.features) {
+      if (!isRecord(candidate)) { skipped++; continue; }
+      const geometry = finitePolygon(candidate.geometry);
+      const properties = layer.properties(isRecord(candidate.properties) ? candidate.properties : {});
+      if (!geometry || !properties) { skipped++; continue; }
+      features.push({ type: "Feature", id: String(properties.featureId), geometry, properties: { ...properties, retrievedAt, evidenceRole: "EXTERNAL_CONTEXT_ONLY" } });
+    }
+    const more = [payload.exceededTransferLimit, isRecord(payload.properties) ? payload.properties.exceededTransferLimit : undefined].includes(true);
+    if (!more || payload.features.length === 0) break;
+    if (offset + KDWP_PAGE_SIZE >= MAX_KDWP_AREAS) providerLimited = true;
+  }
+  return envelope(layer.feed, { type: "FeatureCollection", features }, layer.source,
+    layer.limitation(features.length, skipped, providerLimited), retrievedAt, null, skipped > 0 || providerLimited, providerLimited || received > MAX_KDWP_AREAS);
+};
+
+const KDWP_WILDLIFE_AREAS: KdwpLayer = {
+  feed: "kdwp-wildlife-areas", url: KDWP_WILDLIFE_AREAS_URL, source: "Kansas Department of Wildlife and Parks · Wildlife Areas (public web map layer)",
+  outFields: "FID,NAME,OTHER_NAME,Label_Name,Access_Res,Hunt_Acc,Hyperlink,Area_Site",
+  properties: record => {
+    const fid = asNumber(record.FID);
+    if (fid === null || !Number.isInteger(fid)) return null;
+    const name = cleanText(record.Label_Name) ?? cleanText(record.NAME) ?? "KDWP wildlife area (unnamed in source)";
+    return { featureId: `kdwp-area-${fid}`, name, otherName: cleanText(record.OTHER_NAME),
+      accessRestrictions: cleanText(record.Access_Res, 240), huntingAccess: cleanText(record.Hunt_Acc, 120), areaType: cleanText(record.Area_Site, 60),
+      recordUrl: kdwpLink(record.Hyperlink), dataRole: "KDWP public wildlife area polygon" };
+  },
+  limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} KDWP-managed public wildlife area polygons; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. Boundaries are simplified display geometry. Regulations, closures, refuges and seasons change; check KDWP before entering or hunting. Not a legal boundary, regulation or KFM evidence.`,
+};
+const KDWP_WIHA: KdwpLayer = {
+  feed: "kdwp-wiha-access", url: KDWP_WIHA_URL, source: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access (2026–2027 public web map layer)",
+  // Contract identifiers tie a tract to a private landowner agreement and are not requested.
+  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY,NOTES",
+  properties: record => {
+    const fid = asNumber(record.FID);
+    if (fid === null || !Number.isInteger(fid)) return null;
+    const species = [record.SPECIES1, record.SPECIES2, record.SPECIES3, record.SPECIES4, record.SPECIES5].map(value => cleanText(value, 40)).filter(Boolean);
+    const archery = asNumeric(record.ISARCHERYS);
+    const area = asNumeric(record.AREAID), acres = asNumeric(record.ACRES);
+    return { featureId: `kdwp-wiha-${fid}`, name: `WIHA tract${area === null ? "" : ` ${area}`}${cleanText(record.COUNTY, 40) ? ` · ${cleanText(record.COUNTY, 40)} County` : ""}`,
+      areaId: area, acres: acres === null ? null : Math.round(acres), county: cleanText(record.COUNTY, 40),
+      species: species.length ? species.join(", ") : null, archeryOnly: archery === 1 ? "Archery only" : archery === 0 ? "Not archery-only" : null,
+      notes: cleanText(record.NOTES, 240), dataRole: "KDWP walk-in hunting access tract" };
+  },
+  limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
+};
+
+const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (feed === "census-congress-119" && civicCongressForDay(day ?? new Date().toISOString().slice(0, 10)) === null || request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : feed === "noaa-hms-smoke" ? "2005-08-05" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["census-congress-119", "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-congress-119" && feed !== "deflock-alpr" && feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places") {
+  if (feed !== "census-congress-119" && feed !== "deflock-alpr" && feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places" && feed !== "kdwp-wildlife-areas" && feed !== "kdwp-wiha-access") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-congress-119" ? day ? await readCivicHistory(day) : await readCivicDistricts() : feed === "deflock-alpr" ? await readDeflock() : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : await raspberryShakeStations(day);
+    const result = feed === "census-congress-119" ? day ? await readCivicHistory(day) : await readCivicDistricts() : feed === "deflock-alpr" ? await readDeflock() : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": (feed === "deflock-alpr" || feed === "census-congress-119") ? "no-store" : `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;
