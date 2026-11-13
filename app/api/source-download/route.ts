@@ -3,7 +3,7 @@ import { GET as contextData } from "../live-context/route";
 import { GET as streamflowData } from "../hydrology/streamflow/route";
 import { eventDay } from "../../event-atlas";
 export const dynamic = "force-dynamic";
-const sources = new Set(["census-counties", "usgs-streamflow", "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "nifc-fire-reports", "raspberry-shake-stations", "nws-alerts", "nps-nrhp-places"]);
+const sources = new Set(["census-counties", "usgs-streamflow", "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "nifc-fire-reports", "raspberry-shake-stations", "nws-alerts", "nps-nrhp-places", "kdwp-wildlife-areas", "kdwp-wiha-access"]);
 const archiveSources = new Set(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);
 export async function GET(request: Request) {
   const url = new URL(request.url); const source = url.searchParams.get("source") ?? "";

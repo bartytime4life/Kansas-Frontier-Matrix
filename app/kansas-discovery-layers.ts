@@ -7,9 +7,10 @@ import type { OfficialContextSource } from "./live-context";
  */
 const NOAA_VECTOR = "https://mapservices.weather.noaa.gov/vector/rest/services";
 const PADUS = "https://edits.nationalmap.gov/arcgis/rest/services/PAD-US/PAD_US/MapServer";
+const SDM_WMS = "https://sdmdataaccess.sc.egov.usda.gov/Spatial/SDM.wms";
 
 export type LegendStop = Readonly<{ label: string; color: string }>;
-export type DiscoveryLayerId = "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands";
+export type DiscoveryLayerId = "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nrcs-ssurgo-soils";
 
 const arcgisExport = (service: string, layers: readonly number[]) =>
   `${service}/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A${layers.join("%2C")}&f=image`;
@@ -31,6 +32,9 @@ export const DISCOVERY_LEGENDS: Readonly<Record<DiscoveryLayerId, readonly Legen
     { label: "Federal (USACE)", color: "#63ddff" }, { label: "Fish & Wildlife", color: "#ad5764" },
     { label: "State fish & wildlife", color: "#a392de" }, { label: "State park", color: "#9baade" },
     { label: "City / county", color: "#bbc458" }, { label: "Private conservation", color: "#e68d45" },
+  ],
+  "nrcs-ssurgo-soils": [
+    { label: "Soil map-unit boundary", color: "#ff8c00" },
   ],
 });
 
@@ -79,6 +83,21 @@ export const KANSAS_DISCOVERY_SOURCES: readonly OfficialContextSource[] = Object
     legend: "Colors identify the managing agency type for fee-owned public and protected lands.",
     boundary: "PAD-US compiles agency-reported fee ownership and management for protected areas. Boundaries can be generalized or out of date, and inclusion does not grant public access, hunting permission or legal title. Private land is not shown. External context only.",
     fallback: "Unavailable tiles stay transparent. No absence of public land, access or protection is inferred.",
+  },
+  {
+    ...operational, id: "nrcs-ssurgo-soils", title: "USDA NRCS SSURGO soil survey map units", shortTitle: "Soil survey · map units",
+    organization: "USDA Natural Resources Conservation Service", domain: "Land records & survey",
+    sourceId: "external-nrcs-ssurgo-soils", layerIds: ["external-nrcs-ssurgo-soils-raster"],
+    mapUrl: `${SDM_WMS}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=MapunitPoly&STYLES=&SRS=EPSG%3A3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image%2Fpng&TRANSPARENT=TRUE`,
+    minDisplayZoom: 12, maxNativeZoom: 16,
+    endpointLabel: "sdmdataaccess.sc.egov.usda.gov · SDM WMS · MapunitPoly",
+    sourceUrl: "https://websoilsurvey.nrcs.usda.gov/", serviceUrl: SDM_WMS,
+    cadence: "NRCS refreshes SSURGO annually; the service shows the current Soil Data Mart edition",
+    freshness: "Provider-current SSURGO map units; survey-area publication dates vary",
+    defaultOpacity: 0.75, color: "#ff8c00", attribution: "USDA NRCS Soil Survey Geographic Database (SSURGO)",
+    legend: "Orange outlines · SSURGO soil map-unit polygons. Open Web Soil Survey for map-unit names and properties.",
+    boundary: "SSURGO map units delineate soil-survey polygons mapped at roughly 1:12,000–1:24,000. A map unit can contain several soil components and inclusions; the outline is not a site-specific soil test, engineering suitability, septic or building approval, or a KFM release. Visible only at close zoom because outlines are dense.",
+    fallback: "At overview scale or on provider failure, outlines are absent; no soil class or property is inferred.",
   },
 ] satisfies OfficialContextSource[]).map(source => Object.freeze({ ...source, layerIds: Object.freeze(source.layerIds), interactiveLayerIds: Object.freeze(source.interactiveLayerIds) })) as readonly OfficialContextSource[];
 

@@ -98,6 +98,9 @@ const discoveryTopics: Readonly<Record<string, readonly TopicId[]>> = Object.fre
   "noaa-cpc-drought-outlook": ["weather", "agriculture", "water", "science"],
   "usgs-padus-lands": ["ecology", "land", "places"],
   "nps-nrhp-places": ["history", "places"],
+  "nrcs-ssurgo-soils": ["agriculture", "land", "science"],
+  "kdwp-wildlife-areas": ["ecology", "fauna", "land", "places"],
+  "kdwp-wiha-access": ["ecology", "fauna", "land"],
 });
 
 /** Source identity, rather than provider name or a broad domain string, determines membership. */
