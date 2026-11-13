@@ -158,7 +158,7 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   const motionCursor=useRef(cursor),motionState=useRef({tracks:new Map<string,readonly SkyPoint[]>() as ReadonlyMap<string,readonly SkyPoint[]>,envelope:null as (TrafficEnvelope&{receivedAt:number})|null,feedState,selected:null as string|null,camera:"free" as Camera,flat,reduced,enabled,hidden});
   const rangeId=useId(),flightExtraId=useId(), ownCameraMove=useRef(false), latestPicked=useRef<Aircraft|undefined>(undefined);
   const framedRequest=useRef(-1),cameraLeaseActive=flightView||camera!=="free";
-  const layer=useRef<ReturnType<typeof attachKansasSky>|null>(null),request=useRef<AbortController|null>(null),catalogRequest=useRef<AbortController|null>(null);
+  const layer=useRef<ReturnType<typeof attachKansasSky>|null>(null),skyLayerMap=useRef<MapLibreMap|null>(null),request=useRef<AbortController|null>(null),catalogRequest=useRef<AbortController|null>(null);
   useEffect(()=>{const media=matchMedia("(prefers-reduced-motion: reduce)");const update=()=>{setReduced(media.matches);if(media.matches){setCamera("free");setPlaying(false);}};update();media.addEventListener("change",update);const visibility=()=>{setHidden(document.hidden);if(document.hidden){setPlaying(false);setCamera("free");setFlightView(false);}};visibility();document.addEventListener("visibilitychange",visibility);return()=>{media.removeEventListener("change",update);document.removeEventListener("visibilitychange",visibility);};},[]);
   useEffect(()=>{if(envelope&&enabled)store.ingest(envelope);},[envelope,enabled,store]);
   useEffect(()=>{store.select(selected);},[selected,store]);
@@ -219,7 +219,18 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   useEffect(()=>{if(!playing&&mode!=="buffered")latestPicked.current=picked;},[picked,playing,mode]);
   const selectedSource=useMemo(()=>{const points=selected?tracks.get(selected):undefined;return points?.findLast(point=>point.observedAt<=effectiveCursor)?.providerId??null;},[tracks,selected,effectiveCursor]);
   const sourceIds=useMemo(()=>[...new Set([...tracks.values()].flatMap(points=>points.map(point=>point.providerId)))].join(", "),[tracks]);
-  useEffect(()=>{const map=mapRef.current;if(!map||!styleReady||!enabled||hidden)return;try{layer.current=attachKansasSky(map,hex=>{setSelected(hex);setCamera("free");inspectCallback.current?.();},setRenderError,setProjectionPhase);}catch{queueMicrotask(()=>setRenderError("Aircraft renderer unavailable; use the aircraft list."));}return()=>{layer.current?.dispose();layer.current=null;};},[mapRef,styleReady,enabled,hidden]);
+  // Attach once per map instance after its first ready style. The renderer
+  // reinstalls itself on style.load, so a transient readiness drop (sources
+  // still loading after a style swap) must not tear it down and rebuild it:
+  // that removed the custom layer for a frame window after recovery (#5737).
+  useEffect(()=>{const map=mapRef.current;
+    if(!map||!enabled||hidden){layer.current?.dispose();layer.current=null;skyLayerMap.current=null;return;}
+    if(skyLayerMap.current===map&&layer.current)return;
+    if(!styleReady)return;
+    layer.current?.dispose();layer.current=null;skyLayerMap.current=null;
+    try{layer.current=attachKansasSky(map,hex=>{setSelected(hex);setCamera("free");inspectCallback.current?.();},setRenderError,setProjectionPhase);skyLayerMap.current=map;}catch{queueMicrotask(()=>setRenderError("Aircraft renderer unavailable; use the aircraft list."));}
+  },[mapRef,styleReady,enabled,hidden]);
+  useEffect(()=>()=>{layer.current?.dispose();layer.current=null;skyLayerMap.current=null;},[]);
   useEffect(()=>{
     // Readouts/trails refresh more slowly than the shared animation clock.
     // Re-evaluate at its latest instant instead of rewinding an emitted frame.

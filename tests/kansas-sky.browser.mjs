@@ -359,6 +359,9 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
   assert.equal(await p.evaluate(`(${airportToggle}).checked`),!airportState,'ordinary airport layer remains independently editable during replay');
   await p.evaluate(`(${airportToggle}).click()`);
 
+  await p.evaluate(`(()=>{const m=window.__skyMap;window.__skyLifecycle=[];const t0=performance.now();const remove=m.removeLayer.bind(m),add=m.addLayer.bind(m);
+    m.removeLayer=id=>{if(id==='kfm-kansas-sky')window.__skyLifecycle.push(['remove',Math.round(performance.now()-t0),m.isStyleLoaded()]);return remove(id);};
+    m.addLayer=(layer,...rest)=>{if(layer?.id==='kfm-kansas-sky')window.__skyLifecycle.push(['add',Math.round(performance.now()-t0),m.isStyleLoaded()]);return add(layer,...rest);};})()`);
   // Reload the actual style, not a fake event; the custom layer reinstalls.
   await p.evaluate(`new Promise(resolve=>{
     window.__skyMap.once('style.load',()=>{
@@ -371,6 +374,20 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     && window.__skyMap.getLayer('kfm-kansas-sky') && window.__skyRender.aircraftVertices>0
     && (window.__skyRender!==window.__skyReloadCheckpoint.render || window.__skyRender.frames>window.__skyReloadCheckpoint.frames)`,'settled replacement style renders a fresh aircraft frame');
   if(repaint)assert.equal(await p.evaluate(`window.__skyIdleCount`),0,'replacement style recovery also precedes idle');
+  // #5737: once the replacement style has re-installed the aircraft renderer,
+  // ordinary readiness changes (sources loading in the recovered style) must
+  // not tear it down again. Count removals across the settle window.
+  await p.evaluate(`(()=>{const m=window.__skyMap;window.__skyRemovals=0;const remove=m.removeLayer.bind(m);m.removeLayer=id=>{if(id==='kfm-kansas-sky')window.__skyRemovals++;return remove(id);};})()`);
+  await p.evaluate(`new Promise(r=>setTimeout(r,3000))`);
+  await p.wait(`window.__skyMap.loaded()`,'replacement style settled');
+  const lifecycle=await p.evaluate(`window.__skyLifecycle`);
+  t.diagnostic('sky lifecycle '+JSON.stringify(lifecycle));
+  // #5737: the replaced style drops the custom layer by itself and the renderer
+  // reinstalls it on style.load. The app must not additionally dispose it while
+  // the new style's sources load; that left a no-layer window after recovery.
+  assert.deepEqual(lifecycle.filter(([kind])=>kind==='remove'),[],'no app-initiated aircraft layer removal across a style replacement');
+  assert.equal(await p.evaluate(`window.__skyRemovals`),0,'the recovered aircraft renderer stays installed while the style settles');
+  assert.ok(await p.evaluate(`Boolean(window.__skyMap.getLayer('kfm-kansas-sky'))`),'the aircraft renderer is still installed after settling');
   await p.evaluate(`document.querySelector('.kansas-sky-clock').scrollIntoView({block:'center',behavior:'instant'})`);
   await p.wait(`document.querySelector('.toast')?.dataset.visible!=='true'`,'transient status toast settled before controls capture');
   if(process.env.KFM_SKY_SCREENSHOTS){

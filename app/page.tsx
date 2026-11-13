@@ -7632,6 +7632,8 @@ export default function Home() {
             }
             const probe = refreshMaplibreProbe();
             const mutationError = mapMutationErrorRef.current;
+            const settledBounds = map.getBounds();
+            basemapHealth.retainInView({ west: settledBounds.getWest(), east: settledBounds.getEast(), south: settledBounds.getSouth(), north: settledBounds.getNorth(), zoom: map.getZoom() });
             const basemapWarning = basemapHealth.warning();
             const ready = probe.styleLoaded
               && probe.canvasReady
