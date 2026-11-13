@@ -2533,7 +2533,7 @@ def _assert_transport_successor(receipt_name, predecessor_name, predecessor_sha,
         old_hash = old["mirror_sha256"] if old else None
         assert declaration["proposed_in_this_change"] is True
         assert declaration["repository_base_sha256"] == declaration["previous_receipt_sha256"] == old_hash
-        assert entry["site_sha256"] == (old["site_sha256"] if old else None)
+        assert entry.get("site_sha256") == (old.get("site_sha256") if old else None)  # repository-only entries may omit the key
         state = old["state"] if old and old["state"] != "identical" else ("repository_safety_overlay" if old else "repository_only_overlay")
         assert entry["state"] == declaration["state"] == state
         assert entry["mirror_sha256"] == declaration["mirror_sha256"] != old_hash
@@ -2655,4 +2655,24 @@ def test_reviewed_requests_successor_preserves_source_read_inventory_and_all_hol
          "tests/governed-water-export-selection.test.mjs", "tests/governed-weather-control.test.mjs",
          "tests/reviewed-control-request-integrity.test.mjs"},
         "d58bd53a33bbe83a0f77dd98bc1b74a3d594aa7f",
+    )
+
+
+def test_discovery_layers_successor_preserves_reviewed_requests_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-discovery-layers-overlay-20261113.json",
+        "site-v268-reviewed-control-requests-overlay-20261111.json",
+        "bbd566849d5b9d915fd6801b28ba8cce2be41d047be32524e732ac0d1381beec",
+        {"app/api/live-context/route.ts", "app/api/source-download/route.ts",
+         "app/evidence-drawer-data.ts", "app/explorer-controls.css", "app/kansas-discovery-layers.ts",
+         "app/layer-workspaces.ts", "app/live-context.ts", "app/map-layers.css",
+         "app/map-starters-control.tsx", "app/map-starters.ts", "app/page.tsx",
+         "app/site-connections.ts", "app/site-features.ts", "app/source-downloads.ts",
+         "docs/README.md", "docs/explorer-discovery-layers-2026-11-13.md",
+         "scripts/qwen-knowledge-curated.mjs", "scripts/qwen-knowledge-pack.mjs",
+         "scripts/qwen-local-contract.mjs", "tests/kansas-discovery-layers.test.mjs",
+         "tests/local-qwen-bridge.test.mjs", "tests/map-starters.test.mjs",
+         "tests/qwen-real-envelope-size.test.mjs", "tests/rendered-html.test.mjs",
+         "tests/runtime-resilience.test.mjs", "tests/temporal-sweep.test.mjs"},
+        "e61e89a4c01ff24a760224db497382901e8ab9f3",
     )
