@@ -25,6 +25,22 @@ export function basemapTileKey(value: unknown): string | null {
   return `${z}/${x}/${y}/${typeof id?.wrap === "number" ? id.wrap : 0}/${typeof id?.overscaledZ === "number" ? id.overscaledZ : z}`;
 }
 
+export type BasemapView = { west: number; east: number; south: number; north: number; zoom: number };
+
+/** Whether a failed tile still belongs to the settled view. Conservative: the
+ * zoom window spans the 512 px vector (zoom - 1), 256 px raster (zoom + 1) and
+ * coarser pitched-horizon tiles, so an uncertain tile keeps its warning. */
+export function basemapTileInView(key: string, view: BasemapView): boolean {
+  const parts = key.split("/").map(Number);
+  if (parts.length !== 5 || !parts.every(Number.isFinite) || ![view.west, view.east, view.south, view.north, view.zoom].every(Number.isFinite)) return true;
+  const [z, x, y, wrap, overscaledZ] = parts;
+  const level = Math.floor(view.zoom);
+  if (overscaledZ < level - 3 || overscaledZ > level + 2) return false;
+  const n = 2 ** z, latitude = (row: number) => Math.atan(Math.sinh(Math.PI * (1 - 2 * row / n))) * 180 / Math.PI;
+  const west = (x + wrap * n) / n * 360 - 180, east = (x + 1 + wrap * n) / n * 360 - 180;
+  return east > view.west && west < view.east && latitude(y) > view.south && latitude(y + 1) < view.north;
+}
+
 export type BasemapHealthInput = { sourceId: string; sourceInstance?: object; sourceSpec: unknown; event: unknown };
 export type BasemapErrorKind = "tile" | "source" | "stale" | "cancelled" | "unrelated";
 
@@ -70,6 +86,16 @@ export function createBasemapHealth(maxFailures = 128) {
         const f = failures[i];
         if (f.kind === "tile" && f.tile === tile && f.sourceId === input.sourceId
           && f.sourceInstance === input.sourceInstance && f.identity === identity) failures.splice(i, 1);
+      }
+    },
+    // Called when the map settles. A tile that failed during a flight, resize or
+    // zoom and is no longer part of the view cannot leave a gap on screen; MapLibre
+    // does not cache errored tiles, so returning re-requests and re-reports it.
+    // Source-level failures (no tile identity) are never retired here.
+    retainInView(view: BasemapView) {
+      for (let i = failures.length - 1; i >= 0; i--) {
+        const f = failures[i];
+        if (f.kind === "tile" && f.tile && !basemapTileInView(f.tile, view)) failures.splice(i, 1);
       }
     },
     warning(): string | null {

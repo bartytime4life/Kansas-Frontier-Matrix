@@ -60,7 +60,8 @@ function harness(basemap='aviation-chart') {
     // unchanged page's real warning-state transitions and style replacement.
     runMapMutation(label,fn){if(label!=='Map style synchronization')fn();return true;},
     hiDpiBasemapStyle:style=>style,
-    map:{getSource:id=>sources[id],getPixelRatio:()=>1,setProjection(){},resize(){},setStyle(){exports.style();}},
+    // A settled Kansas view that contains the failed test tile (6/14/24).
+    map:{getSource:id=>sources[id],getBounds:()=>({getWest:()=>-104,getEast:()=>-93,getSouth:()=>35.5,getNorth:()=>41.5}),getZoom:()=>6,getPixelRatio:()=>1,setProjection(){},resize(){},setStyle(){exports.style();}},
   };
   ctx.mapRef={current:ctx.map};
   vm.runInNewContext(callbackCode,ctx);

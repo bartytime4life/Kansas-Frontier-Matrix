@@ -208,6 +208,7 @@ jobs:
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/river-pulse.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/county-search.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/aviation-layout.browser.mjs
+          node --test tests/basemap-health.browser.mjs
           node --input-type=module - "$RUNNER_TEMP/node-runtime.log" <<'NODE'
           import { readFileSync } from 'node:fs';
           import assert from 'node:assert/strict';

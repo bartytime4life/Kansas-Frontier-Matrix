@@ -38,6 +38,9 @@ export function terrainHarness() {
     getSource: id => h.sources.get(id), isSourceLoaded: () => h.loaded,
     getTerrain: () => ({ source: terrainId }),
     getLayer: () => undefined, refreshTiles: () => {},
+    // The settled view the idle handler reads for basemap health; derived from the harness camera.
+    getZoom: () => h.view.zoom,
+    getBounds: () => ({ getWest: () => h.view.center[0] - 1, getEast: () => h.view.center[0] + 1, getSouth: () => h.view.center[1] - 1, getNorth: () => h.view.center[1] + 1 }),
   };
   const set = field => value => { h[field] = typeof value === 'function' ? value(h[field]) : value; };
   const scope = {
