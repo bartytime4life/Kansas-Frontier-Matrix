@@ -177,6 +177,18 @@ export const QWEN_KNOWLEDGE_DOMAIN_TERMS = Object.freeze({
     Gust: "A brief burst of wind above the sustained speed.",
     "Sustained wind": "Wind speed averaged over a short period.",
   }),
+  "Land cover & ecology": Object.freeze({
+    NLCD: "National Land Cover Database: 30 m Landsat-based land-cover classes; this Site shows the 2021 edition.",
+    "Land-cover class": "A mapped category such as cultivated crops or grassland; classes carry mapping error and are not land ownership or use permits.",
+    "PAD-US": "Protected Areas Database of the United States, a USGS compilation of agency-reported public and protected lands.",
+    "Fee manager": "The agency type that owns and manages a protected parcel in PAD-US; it does not imply public access.",
+  }),
+  "History & cultural heritage": Object.freeze({
+    "National Register of Historic Places": "The federal list of buildings, districts, sites, structures and objects judged worthy of preservation, kept by the National Park Service.",
+    "National Historic Landmark": "A nationally significant property designated by the Secretary of the Interior; a smaller set within the National Register.",
+    "NRIS reference number": "The National Register's identifier for one listing.",
+    "Restricted location": "A listing whose location NPS withholds, often an archaeological site; the Site never shows or infers it.",
+  }),
   "Reference boundaries & locators": Object.freeze({
     "FIPS code": "Federal numeric code for a state or county; Kansas is 20.",
     "Census vintage": "The year of the Census geography; county lines and names can change between vintages.",
@@ -262,6 +274,22 @@ export const QWEN_KNOWLEDGE_DOMAIN_IDEAS = Object.freeze({
     "Compare wind patterns in western and eastern Kansas across several forecast frames as an orientation exercise.",
     "Pair forecast wind with lightning climatology to discuss storm-season context, not a storm forecast.",
   ]),
+  "Land cover & ecology": Object.freeze([
+    "Compare NLCD cultivated cropland in western Kansas with grassland in the Flint Hills and ask what soils, water and history might explain, as questions.",
+    "Ask how much of a county is developed, crop, grassland or water in the 2021 NLCD before reading other layers there.",
+    "Locate PAD-US public lands along river corridors and ask which agencies manage them.",
+    "Compare PAD-US state wildlife areas with nearby NLCD wetlands to frame habitat questions without claiming species presence.",
+    "Name which parts of Kansas have very little public land in PAD-US, so access questions start with the gap.",
+    "Set the 2021 land-cover edition beside current imagery and ask what may have changed, leaving any change unconfirmed.",
+  ]),
+  "History & cultural heritage": Object.freeze([
+    "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
+    "Compare listing certification dates to see when Kansas places were added to the Register, not when they were built.",
+    "Find National Historic Landmarks and ask what made each nationally significant, using the National Archives record when one is linked.",
+    "Separate districts, buildings, structures, sites and objects before comparing places; a district can hold many buildings.",
+    "Ask why some places have vicinity-only locations, and avoid treating any point as a property boundary.",
+    "Note that restricted archaeological listings are absent by design, so the map never shows the full Register.",
+  ]),
   "Reference boundaries & locators": Object.freeze([
     "Use county outlines to frame a question by county, then name which sources report at county versus point scale.",
     "Compare county population with the count of FEMA declarations as context, not a risk statistic.",
@@ -311,6 +339,12 @@ export const QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS = Object.freeze([
   Object.freeze({ domains: Object.freeze(["Geology & hazards", "Terrain & landforms"]), idea: "Compare earthquake locations with landforms at overview scale, noting that surface landforms do not reveal the faults involved." }),
   Object.freeze({ domains: Object.freeze(["Atmosphere", "Terrain & landforms"]), idea: "Compare forecast wind over the High Plains with wind in eastern river valleys to ask how terrain shapes surface wind." }),
   Object.freeze({ domains: Object.freeze(["Atmosphere", "Reference boundaries & locators"]), idea: "Describe forecast wind by county region (west, central, east) to talk about statewide patterns without point values." }),
+  Object.freeze({ domains: Object.freeze(["Land cover & ecology", "Living waters"]), idea: "Follow a gauged river through NLCD land cover and ask how cropland, grassland and towns line its banks, without estimating runoff." }),
+  Object.freeze({ domains: Object.freeze(["Land cover & ecology", "Weather & hazards"]), idea: "Set the seasonal drought outlook beside NLCD cropland and grassland to frame which land covers the outlook region includes, without predicting crop loss." }),
+  Object.freeze({ domains: Object.freeze(["Land cover & ecology", "Fire, smoke & hazards"]), idea: "Compare Flint Hills fire detections with NLCD grassland to discuss prescribed burning on rangeland, as a question." }),
+  Object.freeze({ domains: Object.freeze(["History & cultural heritage", "Roads, rail & movement"]), idea: "Find National Register places along 1918 roads and abandoned rail lines and ask how transportation shaped which towns kept historic buildings." }),
+  Object.freeze({ domains: Object.freeze(["History & cultural heritage", "Reference boundaries & locators"]), idea: "Count National Register listings per county and compare with county population, as orientation rather than a measure of history." }),
+  Object.freeze({ domains: Object.freeze(["History & cultural heritage", "Living waters"]), idea: "Look for listed mills, bridges and river towns near gauged rivers and ask how water shaped early settlement." }),
 ]);
 
 /** Cross-domain ideas for building KFM itself: gaps the Site could close next. */

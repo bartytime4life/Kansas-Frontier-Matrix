@@ -17,6 +17,10 @@ const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
 const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";
 const NIFC_INCIDENT_URL = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_YearToDate/FeatureServer/0/query";
 const FEMA_DECLARATIONS_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
+const NPS_NRHP_POINTS_URL = "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query";
+const NWS_STORM_REPORTS_URL = "https://mapservices.weather.noaa.gov/vector/rest/services/obs/nws_local_storm_reports/MapServer/2/query";
+const MAX_NRHP_PLACES = 2000;
+const MAX_STORM_REPORTS = 500;
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_STREAMFLOW_RECORDS = 1000;
@@ -32,7 +36,7 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "nws-storm-reports";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -709,17 +713,143 @@ const nifcFireReports = async () => {
     retrievedAt, newestTimestamp, skipped > 0 || invalidOptionalDates > 0 || truncated, truncated);
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600 };
+/** Public, non-restricted National Register listing points in Kansas. NPS withholds
+ * sensitive locations at the source; this adapter never requests or infers them. */
+const nationalRegisterPlaces = async () => {
+  const retrievedAt = new Date().toISOString();
+  const url = new URL(NPS_NRHP_POINTS_URL);
+  url.searchParams.set("where", "State='KANSAS'");
+  url.searchParams.set("outFields", "NRIS_Refnum,RESNAME,ResType,City,County,CertDate,Is_NHL,NARA_URL,STATUS,Vicinity");
+  url.searchParams.set("returnGeometry", "true");
+  url.searchParams.set("outSR", "4326");
+  url.searchParams.set("orderByFields", "RESNAME ASC");
+  url.searchParams.set("resultRecordCount", String(MAX_NRHP_PLACES));
+  url.searchParams.set("f", "geojson");
+  const payload = await fetchBoundedJson(url.toString(), 15_000);
+  if (!Array.isArray(payload.features)) throw new UpstreamError("NPS National Register response had no feature array.");
+  const transferFlags = [payload.exceededTransferLimit, isRecord(payload.properties) ? payload.properties.exceededTransferLimit : undefined];
+  const providerLimited = transferFlags.includes(true);
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  const pointsPerListing = new Map<string, number>();
+  let skipped = 0, removed = 0, landmarks = 0;
+  for (const candidate of payload.features) {
+    if (features.length >= MAX_NRHP_PLACES) break;
+    if (!isRecord(candidate) || !isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) { skipped += 1; continue; }
+    const properties = isRecord(candidate.properties) ? candidate.properties : {};
+    const longitude = asNumber(candidate.geometry.coordinates[0]);
+    const latitude = asNumber(candidate.geometry.coordinates[1]);
+    const refnum = asString(properties.NRIS_Refnum)?.trim() ?? "";
+    const name = asString(properties.RESNAME)?.trim().slice(0, 160) ?? "";
+    if (longitude === null || latitude === null || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2] || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3]
+      || !/^[0-9A-Z]{6,12}$/.test(refnum) || !name) { skipped += 1; continue; }
+    const status = asString(properties.STATUS)?.trim() || null;
+    if (status && status !== "Listed") { removed += 1; continue; }
+    // Some listings (districts, multiple-part properties) publish several points under one reference number.
+    const part = (pointsPerListing.get(refnum) ?? 0) + 1;
+    pointsPerListing.set(refnum, part);
+    const featureId = part === 1 ? `nrhp-${refnum}` : `nrhp-${refnum}-${part}`;
+    const landmark = asString(properties.Is_NHL)?.trim().toUpperCase() === "X";
+    if (landmark && part === 1) landmarks += 1;
+    const resourceType = (asString(properties.ResType)?.trim().toLowerCase() ?? "").replace(/[^a-z ]/g, "").slice(0, 24) || "not recorded";
+    const certified = (asString(properties.CertDate)?.trim() ?? "").replace(/-+$/, "");
+    const nara = asString(properties.NARA_URL)?.trim() ?? "";
+    features.push({ type: "Feature", id: featureId, geometry: { type: "Point", coordinates: [longitude, latitude] }, properties: {
+      featureId, name, resourceType, landmark, landmarkLabel: landmark ? "National Historic Landmark" : null,
+      city: asString(properties.City)?.trim().slice(0, 80) || null, county: asString(properties.County)?.trim().slice(0, 80) || null,
+      certified: /^\d{4}(-\d{2}(-\d{2})?)?$/.test(certified) ? certified : null, refnum,
+      vicinity: asString(properties.Vicinity) === "True" ? "Approximate (vicinity) location" : "Listed address location",
+      recordUrl: /^https:\/\/catalog\.archives\.gov\/[\w/?=&%.:-]+$/.test(nara) ? nara.slice(0, 240) : null,
+      latitude, longitude, retrievedAt, dataRole: "NPS public National Register point", evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    } });
+  }
+  const capped = payload.features.length > MAX_NRHP_PLACES;
+  const truncated = capped || providerLimited;
+  return envelope("nps-nrhp-places", { type: "FeatureCollection", features },
+    "National Park Service · National Register of Historic Places public point locations",
+    `${pointsPerListing.size.toLocaleString("en-US")} listed Kansas properties shown at ${features.length.toLocaleString("en-US")} public points (${landmarks} flagged as National Historic Landmarks in this service). ${removed} record${removed === 1 ? "" : "s"} marked removed from the Register ${removed === 1 ? "is" : "are"} omitted; ${skipped} record${skipped === 1 ? "" : "s"} withheld for an invalid location or identifier${truncated ? "; the response was capped, so additional listings may be missing" : ""}. NPS withholds restricted and sensitive locations. Points are representative locations, not boundaries, access permission, ownership or current condition.`,
+    retrievedAt, null, skipped > 0 || truncated, truncated);
+};
+
+const stormReportCategory = (description: string) => {
+  if (/tornado|funnel|landspout|waterspout/i.test(description)) return "Tornado";
+  if (/hail/i.test(description)) return "Hail";
+  if (/flood/i.test(description)) return "Flood";
+  if (/snow|sleet|freez|blizzard|ice|chill|cold/i.test(description)) return "Winter";
+  if (/wind|wnd|gust|downburst/i.test(description)) return "Wind";
+  return "Other";
+};
+const stormReportRank = (category: string, magnitude: number | null) => {
+  if (category === "Tornado") return 3;
+  if (magnitude === null) return 0;
+  if (category === "Hail") return magnitude >= 2 ? 4 : magnitude >= 1.5 ? 3 : magnitude >= 1 ? 2 : 1;
+  if (category === "Wind") return magnitude >= 80 ? 4 : magnitude >= 70 ? 3 : magnitude >= 58 ? 2 : 1;
+  if (category === "Winter") return magnitude >= 12 ? 3 : magnitude >= 6 ? 2 : 1;
+  return 1;
+};
+
+/** Preliminary NWS local storm reports for Kansas in the provider's rolling 72-hour layer. */
+const recentStormReports = async () => {
+  const retrievedAt = new Date().toISOString();
+  const url = new URL(NWS_STORM_REPORTS_URL);
+  url.searchParams.set("where", "state='KS'");
+  url.searchParams.set("outFields", "objectid,wfo,lsr_validtime,descript,loc_desc,magnitude,units,remarks,state");
+  url.searchParams.set("returnGeometry", "true");
+  url.searchParams.set("outSR", "4326");
+  url.searchParams.set("orderByFields", "lsr_validtime DESC");
+  url.searchParams.set("resultRecordCount", String(MAX_STORM_REPORTS + 1));
+  url.searchParams.set("f", "geojson");
+  const payload = await fetchBoundedJson(url.toString(), 12_000);
+  if (!Array.isArray(payload.features)) throw new UpstreamError("NWS storm-report response had no feature array.");
+  const providerLimited = [payload.exceededTransferLimit, isRecord(payload.properties) ? payload.properties.exceededTransferLimit : undefined].includes(true);
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  let skipped = 0;
+  let newestTimestamp: string | null = null;
+  const earliest = Date.now() - 4 * 86_400_000;
+  for (const candidate of payload.features) {
+    if (features.length >= MAX_STORM_REPORTS) break;
+    if (!isRecord(candidate) || !isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) { skipped += 1; continue; }
+    const properties = isRecord(candidate.properties) ? candidate.properties : {};
+    const longitude = asNumber(candidate.geometry.coordinates[0]);
+    const latitude = asNumber(candidate.geometry.coordinates[1]);
+    const validMs = asNumber(properties.lsr_validtime);
+    const objectId = asNumber(properties.objectid);
+    const description = asString(properties.descript)?.trim().slice(0, 60) ?? "";
+    if (longitude === null || latitude === null || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2] || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3]
+      || asString(properties.state) !== "KS" || validMs === null || validMs < earliest || validMs > Date.now() + 3_600_000 || objectId === null || !description) { skipped += 1; continue; }
+    const reportedAt = new Date(validMs).toISOString();
+    const magnitude = asNumeric(properties.magnitude);
+    const units = asString(properties.units)?.trim().slice(0, 20) || null;
+    const category = stormReportCategory(description);
+    const featureId = `lsr-${objectId}-${validMs}`;
+    features.push({ type: "Feature", id: featureId, geometry: { type: "Point", coordinates: [longitude, latitude] }, properties: {
+      featureId, name: `${description}${asString(properties.loc_desc) ? ` · ${asString(properties.loc_desc)!.trim().slice(0, 80)}` : ""}`,
+      reportType: description, category, reportedAt, magnitude: magnitude === null ? null : magnitude, units,
+      magnitudeLabel: magnitude === null ? "Not reported" : `${magnitude.toLocaleString("en-US")}${units ? ` ${units}` : ""}`,
+      sizeRank: stormReportRank(category, magnitude), location: asString(properties.loc_desc)?.trim().slice(0, 120) || null,
+      office: asString(properties.wfo)?.trim().slice(0, 60) || null, remarks: asString(properties.remarks)?.trim().slice(0, 400) || null,
+      latitude, longitude, retrievedAt, dataRole: "Preliminary NWS local storm report", evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    } });
+    if (!newestTimestamp || reportedAt > newestTimestamp) newestTimestamp = reportedAt;
+  }
+  const capped = payload.features.length > MAX_STORM_REPORTS;
+  const truncated = capped || providerLimited;
+  return envelope("nws-storm-reports", { type: "FeatureCollection", features },
+    "NOAA NWS local storm reports · Last_72_Hours service layer",
+    `Preliminary Kansas reports in the provider's rolling 72-hour window; ${skipped} record${skipped === 1 ? "" : "s"} withheld for missing time, location, type or Kansas scope${truncated ? "; capped, so additional reports may be missing" : ""}. Reports are relayed observations with approximate locations; they can be duplicated, revised or incomplete and are not warnings, damage surveys or KFM evidence. No reports is not an all-clear.`,
+    retrievedAt, newestTimestamp, skipped > 0 || truncated, truncated);
+};
+
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "nws-storm-reports": 300 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : feed === "noaa-hms-smoke" ? "2005-08-05" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations") {
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places" && feed !== "nws-storm-reports") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : await raspberryShakeStations(day);
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "nws-storm-reports" ? await recentStormReports() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

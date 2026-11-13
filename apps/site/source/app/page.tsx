@@ -9,6 +9,7 @@ import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
 import { FrameCheck } from "./frame-check";
 import { MapStartersControl } from "./map-starters-control";
+import { discoveryLegend, NEW_LAYER_IDS } from "./kansas-discovery-layers";
 import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
@@ -944,6 +945,19 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
     const elevation = numberContextProperty(properties, "elevationMeters");
     return `${title} · ${network}.${station}${elevation === null ? "" : ` · ${elevation.toFixed(0)} m`}. FDSN station metadata is a delayed/archive context connection; open StationView for provider realtime inspection. No waveform, alert, or KFM evidence is inferred from the marker.`;
   }
+  if (source === "nws-storm-reports") {
+    const magnitude = stringContextProperty(properties, "magnitudeLabel");
+    const reportedAt = stringContextProperty(properties, "reportedAt");
+    const office = stringContextProperty(properties, "office");
+    return `${title}${magnitude && magnitude !== "Not reported" ? ` · ${magnitude}` : ""}${reportedAt ? ` · ${new Date(reportedAt).toLocaleString()}` : ""}${office ? ` · NWS ${office}` : ""}. A preliminary local storm report relayed to the National Weather Service; its location is approximate and it may be revised or duplicated. Not a warning, damage survey or KFM evidence.`;
+  }
+  if (source === "nps-nrhp-places") {
+    const kind = stringContextProperty(properties, "resourceType");
+    const place = [stringContextProperty(properties, "city"), stringContextProperty(properties, "county") ? `${stringContextProperty(properties, "county")} County` : null].filter(Boolean).join(", ");
+    const certified = stringContextProperty(properties, "certified");
+    const landmark = properties.landmark === true;
+    return `${title}${kind ? ` · ${kind}` : ""}${place ? ` · ${place}` : ""}${certified ? ` · listed ${certified}` : ""}${landmark ? " · National Historic Landmark" : ""}. A public National Register point from the National Park Service. It is a representative location, not a property boundary or permission to visit; listing does not confirm the property still stands. External context only.`;
+  }
   if (source === "nws-alerts") {
     const severity = stringContextProperty(properties, "severity") ?? "severity not supplied";
     const area = stringContextProperty(properties, "zoneName") ?? stringContextProperty(properties, "areaDesc");
@@ -974,6 +988,11 @@ const officialContextTime = (source: OfficialContextId, properties: Record<strin
   if (source === "nasa-gibs-fire-points") return stringContextProperty(properties, "acquiredAt") ?? fallback;
   if (source === "nifc-fire-reports") return stringContextProperty(properties, "discoveryAt") ?? fallback;
   if (source === "raspberry-shake-stations") return fallback;
+  if (source === "nws-storm-reports") return stringContextProperty(properties, "reportedAt") ?? fallback;
+  if (source === "nps-nrhp-places") {
+    const certified = stringContextProperty(properties, "certified");
+    return certified ? `Listed ${certified} · current NPS location record` : fallback;
+  }
   return fallback;
 };
 
@@ -1004,7 +1023,9 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     category: officialSource.id === "census-counties" ? "Reference boundaries & locators"
       : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
-          : "Weather & hazards",
+          : officialSource.id === "nps-nrhp-places" ? "Historical geography"
+            : officialSource.id === "mrlc-nlcd-land-cover" || officialSource.id === "usgs-padus-lands" ? "Habitat, fauna & flora"
+              : "Weather & hazards",
     sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",
     sourceId: officialSource.sourceId,
     datasetName: officialSource.title,
@@ -9716,7 +9737,7 @@ export default function Home() {
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} hidden={!listedOfficialSources.some(item => item.id === source.id)} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
+                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}{NEW_LAYER_IDS.has(source.id) && <span className="new-layer-badge" title="Added in the November 2026 layer refresh">NEW</span>}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
                 {officialVisibility[source.id] && state === "loading" && source.apiPath && <small role="status">{officialReadPhases[source.id] === "queued" ? "Waiting for a loading slot…" : "Receiving source data…"} You can hide this layer to cancel.</small>}
                 {officialVisibility[source.id] && state === "error" && <div className="layer-request-recovery">
                   <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
@@ -9752,6 +9773,7 @@ export default function Home() {
 
 
                 {source.legend && <p className="reference-layer-legend"><i style={{ backgroundColor: source.color }} aria-hidden="true" />{source.legend}</p>}
+                {discoveryLegend(source.id) && <ul className="discovery-legend" aria-label={`${source.shortTitle} legend`}>{discoveryLegend(source.id)!.map(stop => <li key={stop.label}><i style={{ backgroundColor: stop.color }} aria-hidden="true" />{stop.label}</li>)}</ul>}
                 {isBridgeLayer(source.id) && <BridgeRecordInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} reducedMotion={reducedMotion} />}
                 {isBlmPlssLayer(source.id) && <BlmPlssInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} />}
                 {GROUNDWATER_MANIFEST.find(item => item.id === source.id)?.legend.map(item => <p className="reference-layer-legend" key={item.value}><i style={{ backgroundColor: item.color }} aria-hidden="true" />{item.label} ft</p>)}
