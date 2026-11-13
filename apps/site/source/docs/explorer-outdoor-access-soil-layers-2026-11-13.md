@@ -30,7 +30,9 @@ Counts change with the provider and are not a fixed inventory.
   change, so visitors should check KDWP before entering or hunting.
 - **WIHA tracts** are private land. The public may hunt there only during the
   posted seasons and under program rules. The adapter never requests landowner
-  contract identifiers (`CONTRACTID`), and a test checks this.
+  contract identifiers (`CONTRACTID`) or the free-text `NOTES` field, which
+  holds KDWP administrative text such as contract numbers, payment rates and
+  conservation-contract expiries. A test checks both.
 - **Links** are kept only when they point to `ksoutdoors.com` or
   `ksoutdoors.gov`. They are extracted from KDWP's HTML link field.
 - **SSURGO outlines** are map units, which often contain several soil
