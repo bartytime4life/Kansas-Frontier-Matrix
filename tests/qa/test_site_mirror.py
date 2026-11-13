@@ -2676,3 +2676,13 @@ def test_discovery_layers_successor_preserves_reviewed_requests_inventory_and_al
          "tests/runtime-resilience.test.mjs", "tests/temporal-sweep.test.mjs"},
         "e61e89a4c01ff24a760224db497382901e8ab9f3",
     )
+
+
+def test_globe_zoom_stops_successor_preserves_discovery_layers_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-globe-zoom-stops-overlay-20261113.json",
+        "site-v268-discovery-layers-overlay-20261113.json",
+        "936d5ed1eb5a19e6fe83c063c6b289f21c47b09d95d3f242bf27e05f4030f827",
+        {"app/live-context.ts", "tests/kansas-discovery-layers.test.mjs"},
+        "680ff92ae225899d2940723b9a0a95afe1646c8a",
+    )
