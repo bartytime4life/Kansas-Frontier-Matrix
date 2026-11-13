@@ -20,7 +20,26 @@ export const MAP_STARTERS = [
   { id: "community-planning", title: "Community planning", description: "For public agencies and communities: orient by county population, roads, watersheds and flood-zone context.",
     ids: ["census-counties", "kdot-roads", "usgs-wbd-watersheds", "fema-flood-zones"],
     limitation: "Reference boundaries have different purposes and dates. Area population does not identify individuals or establish property rights." },
-] as const satisfies readonly { id: string; title: string; description: string; ids: readonly OfficialContextId[]; limitation: string }[];
+  { id: "drought-watch", title: "Drought & water", isNew: true, description: "For growers and water planners: set the seasonal drought outlook beside river observations and the High Plains aquifer extent.",
+    ids: ["noaa-cpc-drought-outlook", "usgs-streamflow", "kgs-aquifer-high-plains"],
+    limitation: "The drought outlook is a forecast of change, not current drought intensity or a designation. Gauges and aquifer extent are separate products on their own clocks." },
+  { id: "fire-season", title: "Fire season", isNew: true, description: "For land managers and burn planners: the SPC fire-weather outlook beside satellite heat detections, interagency fire reports and smoke footprints.",
+    ids: ["noaa-spc-fire-weather", "nasa-firms-active-fire", "nifc-fire-reports", "noaa-hms-smoke"],
+    limitation: "Fire-weather outlooks are forecasts; heat detections and reports do not confirm the same incident. Check county burn restrictions and red-flag warnings." },
+  { id: "heritage-trail", title: "Heritage trail", isNew: true, description: "For history explorers: click National Register places, then follow 1918 roads and historic bridges across Kansas counties.",
+    ids: ["nps-nrhp-places", "kdot-roads-1918", "kdot-bridges-historic", "census-counties"],
+    limitation: "Listed places are representative public points; sensitive sites are withheld by NPS. Listing does not grant access or confirm a property still stands." },
+  { id: "open-lands", title: "Open lands & waters", isNew: true, description: "For naturalists and outdoor planners: read public and protected lands with river networks and watershed boundaries.",
+    ids: ["usgs-padus-lands", "usgs-3dhp-hydrography", "usgs-wbd-watersheds"],
+    limitation: "PAD-US does not grant access, hunting permission or title, and boundaries can be generalized. Check each managing agency's rules." },
+] as const satisfies readonly { id: string; title: string; description: string; ids: readonly OfficialContextId[]; limitation: string; isNew?: boolean }[];
+
+/** Pick a different starter for "Surprise me"; deterministic when a random source is injected. */
+export function surpriseStarterId(current: string, random: () => number = Math.random): string {
+  const choices = MAP_STARTERS.filter(starter => starter.id !== current);
+  const index = Math.min(choices.length - 1, Math.max(0, Math.floor(random() * choices.length)));
+  return choices[index]?.id ?? current;
+}
 
 export type StarterAccess = Readonly<{ held: boolean; unavailable: boolean; guidance?: string }>;
 export type StarterAccessMap = Readonly<Partial<Record<OfficialContextId, StarterAccess>>>;

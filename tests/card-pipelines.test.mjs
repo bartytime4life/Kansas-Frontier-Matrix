@@ -19,7 +19,7 @@ const config = { format: 'kfm-pc-pipeline-config-v1', root: '/private/store', mo
 
 test('every real question, recipe and welcome topic has valid distinct registry bindings', () => {
   assert.equal(model.validateCardPipelines(), true);
-  for (const [kind, count] of [['recipe', 6], ['topic', 22]]) assert.equal(model.CARD_PIPELINE_BINDINGS.filter(card => card.kind === kind).length, count);
+  for (const [kind, count] of [['recipe', 10], ['topic', 22]]) assert.equal(model.CARD_PIPELINE_BINDINGS.filter(card => card.kind === kind).length, count);
   assert.deepEqual(model.PIPELINE_DEFINITIONS.filter(p => p.mode === 'pc-capture').map(p => p.id).sort(), [...PC_CAPTURE_IDS].sort());
   const ids = new Set(model.CARD_PIPELINE_BINDINGS.flatMap(card => [...card.required, ...card.optional, ...card.gaps]));
   for (const candidate of model.PIPELINE_DEFINITIONS.filter(p => p.mode === 'candidate')) assert.ok(ids.has(candidate.id), candidate.id);
@@ -69,7 +69,7 @@ test('required failures show partial, empty differs from gaps, optional context 
 test('disabled and preview environments never touch storage or announce local capture health', async () => {
   for (const environment of [{}, { KFM_PIPELINE_ENABLED: 'true', KFM_RUNTIME_ROLE: 'preview' }]) {
     const snapshot = await server.getCardPipelineSnapshot({ environment, storeFactory: () => assert.fail('no storage'), now });
-    assert.equal(snapshot.cards.length, 28); assert.equal(snapshot.state, 'setup-pending');
+    assert.equal(snapshot.cards.length, 32); assert.equal(snapshot.state, 'setup-pending');
     assert.ok(snapshot.sources.every(source => source.health.releaseId === null));
     assert.doesNotMatch(JSON.stringify(snapshot), /privatePath|workerSecret|pipeline-journal|\/run\/media/);
   }
@@ -120,7 +120,7 @@ test('built cards endpoint is bounded, read-only and useful before publication s
   const response = await fetch(new URL('/api/pipeline/v1/cards', origin));
   assert.equal(response.status, 200); assert.match(response.headers.get('cache-control'), /no-store/);
   const text = await response.text(); assert.ok(Buffer.byteLength(text) < 256 * 1024);
-  const snapshot = JSON.parse(text); assert.equal(snapshot.cards.length, 28); assert.equal(snapshot.authority, 'COVERAGE_METADATA_ONLY');
+  const snapshot = JSON.parse(text); assert.equal(snapshot.cards.length, 32); assert.equal(snapshot.authority, 'COVERAGE_METADATA_ONLY');
   const metadata = sources => sources.map(({ id, cadence, owner }) => ({ id, cadence, owner }));
   assert.deepEqual(metadata(snapshot.sources), metadata(model.PIPELINE_DEFINITIONS), 'built metadata must match current source');
   assert.doesNotMatch(text, /workerSecret|DB_PASSWORD|\/run\/media|pipeline-journal\.sqlite/);

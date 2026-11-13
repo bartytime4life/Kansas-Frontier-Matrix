@@ -73,7 +73,7 @@ const soilMoisture = Object.freeze({
   productGuideUrl: "https://nsidc.org/data/spl3smp_e/versions/6",
 });
 
-test("the real 48-source empty-registry browser envelope stays below the shared request cap", () => {
+test("the real 57-source empty-registry browser envelope stays below the shared request cap", () => {
   assert.equal(liveContext.OFFICIAL_CONTEXT_SOURCES.length, QWEN_LOCAL_MAX_OFFICIAL_SOURCES);
   assert.equal(explorerData.LAYER_REGISTRY.length, 0);
 

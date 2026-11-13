@@ -37,6 +37,8 @@ const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readon
   "blm-plss-townships": [], "blm-plss-sections": [], "blm-plss-intersected": [],
   "blm-mlrs-leases-authorized": [], "blm-mlrs-leases-closed": [],
   "usgs-3dhp-hydrography": [], "usgs-wbd-watersheds": [], "noaa-nwm-analysis": [], "noaa-nwm-short-range": [], "nasa-firms-active-fire": [], "noaa-goes-geocolor": [], "usgs-3dep-hillshade": [], "usgs-3dep-slope": [], "nws-radar": [], "nws-forecast-wind": [], "nasa-lightning-climatology": [], "noaa-lightning-density": [],
+  "noaa-spc-fire-weather": [], "noaa-cpc-drought-outlook": [], "usgs-padus-lands": [],
+  "nps-nrhp-places": [["resourceType", "Resource type"], ["landmarkLabel", "Designation"], ["city", "City"], ["county", "County"], ["certified", "Listed (certification date)"], ["refnum", "NRIS reference number"], ["vicinity", "Location precision"], ["recordUrl", "National Archives record"], ["dataRole", "Data role"]],
   registry: [["displayElevationFt", "Display elevation · ft"], ["relativeHeightM", "Relative height · m"], ["smokeDensity", "Smoke density"], ["watershedClass", "Watershed class"], ["settlementClass", "Settlement class"], ["transportMode", "Transport mode"], ["habitatClass", "Habitat class"], ["faunaClass", "Fauna class"], ["floraClass", "Flora class"], ["fireClass", "Fire class"], ["hazardClass", "Hazard class"], ["consentPosture", "Consent posture"], ["tileLabel", "Tile label"], ["displayLabel", "Display label"]],
   basemap: [["name", "Name"], ["name:en", "English name"], ["class", "Map class"], ["type", "Map type"], ["ref", "Reference"]],
 };

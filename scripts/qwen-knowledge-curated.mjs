@@ -122,6 +122,14 @@ export const QWEN_KNOWLEDGE_DOMAIN_IDEAS = Object.freeze({
   "Reference boundaries & locators": Object.freeze([
     "Use county outlines to frame a question by county, then name which sources report at county versus point scale.",
   ]),
+  "Land cover & ecology": Object.freeze([
+    "Name which parts of Kansas have very little public land in PAD-US, so access questions start with the gap.",
+    "Locate PAD-US public lands along river corridors and ask which agencies manage them, without implying public access.",
+  ]),
+  "History & cultural heritage": Object.freeze([
+    "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
+    "Note that restricted archaeological listings are absent by design, so the map never shows the full Register.",
+  ]),
 });
 
 /** Cross-domain ideas for building KFM itself: gaps the Site could close next. */
