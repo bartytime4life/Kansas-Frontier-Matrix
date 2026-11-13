@@ -246,7 +246,7 @@ test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons an
     const offset = Number(u.searchParams.get("resultOffset"));
     const page = offset === 0
       ? { type: "FeatureCollection", exceededTransferLimit: true, features: [
-        { type: "Feature", geometry: square(-97, 38), properties: { FID: 1, AREAID: 1386, ACRES: 1121.6, COUNTY: "Dickinson", ISARCHERYS: 1, NOTES: "  05s18w20 " } },
+        { type: "Feature", geometry: square(-97, 38), properties: { FID: 1, AREAID: 1386, ACRES: 1121.6, COUNTY: "Dickinson", ISARCHERYS: 1, NOTES: "SIP payments are $10 per acre. Contract number 11004", CONTRACTID: "11004" } },
         { type: "Feature", geometry: square(-120, 45), properties: { FID: 2, AREAID: 9 } },
         { type: "Feature", geometry: { type: "Point", coordinates: [-97, 38] }, properties: { FID: 3 } } ] }
       : { type: "FeatureCollection", features: [{ type: "Feature", geometry: square(-99, 39), properties: { FID: 4, AREAID: 7, ISARCHERYS: 0 } }] };
@@ -260,7 +260,7 @@ test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons an
     assert.deepEqual(seen.map(u => u.searchParams.get("resultOffset")), ["0", "2000"]);
     for (const u of seen) {
       assert.equal(u.origin + u.pathname, "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0/query");
-      assert.doesNotMatch(u.searchParams.get("outFields"), /CONTRACT/i, "landowner contract identifiers are never requested");
+      assert.doesNotMatch(u.searchParams.get("outFields"), /CONTRACT|NOTES/i, "landowner contract identifiers and administrative notes are never requested");
       assert.equal(u.searchParams.get("maxAllowableOffset"), "0.0005");
     }
     assert.deepEqual(body.data.features.map(f => f.properties.featureId), ["kdwp-wiha-1", "kdwp-wiha-4"]);
@@ -268,7 +268,8 @@ test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons an
     assert.equal(first.name, "WIHA tract 1386 · Dickinson County");
     assert.equal(first.acres, 1122);
     assert.equal(first.archeryOnly, "Archery only");
-    assert.equal(first.notes, "05s18w20");
+    assert.equal("notes" in first, false, "administrative notes never reach the public payload");
+    assert.doesNotMatch(JSON.stringify(body.data), /11004|SIP payments|CONTRACTID/, "provider-side contract and payment text is dropped even if returned");
     assert.equal(second.archeryOnly, "Not archery-only");
     assert.equal(body.state, "partial");
     assert.match(body.limitation, /2 withheld/);
