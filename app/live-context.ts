@@ -974,13 +974,13 @@ export const applyOfficialContextState = (
   const historicPlaces = OFFICIAL_CONTEXT_BY_ID["nps-nrhp-places"];
   ensureGeoJsonSource(map, historicPlaces, payloads["nps-nrhp-places"]?.data ?? emptyCollection());
   ensureLayer(map, { id: historicPlaces.layerIds[0], type: "circle", source: historicPlaces.sourceId, filter: ["==", ["get", "landmark"], true], paint: {
-    "circle-color": "rgba(0,0,0,0)", "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 7, 12, 15],
+    "circle-color": "rgba(0,0,0,0)", "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 6.5, 12, 15],
     "circle-stroke-color": "#fff0c2", "circle-stroke-width": 2, "circle-opacity": 0.3,
   } });
   ensureLayer(map, { id: historicPlaces.layerIds[1], type: "circle", source: historicPlaces.sourceId, paint: {
     "circle-color": ["match", ["get", "resourceType"], "district", "#d99a4e", "site", "#c7a46b", "structure", "#e2b866", "object", "#f0d9a0", historicPlaces.color],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2.6, 9, 4.5, 13, 7.5],
-    "circle-stroke-color": "#3a2a12", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 5, 0.6, 12, 1.4],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 2.4, 9, 4.5, 13, 7.5],
+    "circle-stroke-color": "#3a2a12", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 0.6, 12, 1.4],
   } });
   ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, minzoom: 11, layout: {
     "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 10.5, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
