@@ -1,3 +1,4 @@
+import { wihaPublicRecord } from "../../wiha-public-record";
 import { readCivicHistory } from "./civic-history";
 import { civicCongressForDay } from "../../civic-history";
 import { readCivicDistricts } from "./civic-districts";
@@ -776,9 +777,9 @@ const KDWP_WILDLIFE_AREAS: KdwpLayer = {
 };
 const KDWP_WIHA: KdwpLayer = {
   feed: "kdwp-wiha-access", url: KDWP_WIHA_URL, source: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access (2026–2027 public web map layer)",
-  // Contract identifiers and the free-text NOTES field are not requested: NOTES holds KDWP
-  // administrative text such as landowner contract numbers, payment rates and CRP expiries.
-  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY",
+  // Public administrative references and notes are eligible; targeted safeguards
+  // apply to possible personal contact/identity/location detail, not payment data.
+  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY,CONTRACTID,NOTES",
   properties: record => {
     const fid = asNumber(record.FID);
     if (fid === null || !Number.isInteger(fid)) return null;
@@ -788,9 +789,9 @@ const KDWP_WIHA: KdwpLayer = {
     return { featureId: `kdwp-wiha-${fid}`, name: `WIHA tract${area === null ? "" : ` ${area}`}${cleanText(record.COUNTY, 40) ? ` · ${cleanText(record.COUNTY, 40)} County` : ""}`,
       areaId: area, acres: acres === null ? null : Math.round(acres), county: cleanText(record.COUNTY, 40),
       species: species.length ? species.join(", ") : null, archeryOnly: archery === 1 ? "Archery only" : archery === 0 ? "Not archery-only" : null,
-      dataRole: "KDWP walk-in hunting access tract" };
+      ...wihaPublicRecord(record), dataRole: "KDWP walk-in hunting access tract" };
   },
-  limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
+  limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; public administrative references and notes describe the tract, not an identified owner. Notes with detected personal contact, identity or location indicators are withheld for review; this screening is not exhaustive. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
 };
 
 

@@ -238,7 +238,7 @@ test("unknown feeds stay rejected and an empty listing response is labeled empty
   assert.equal(body.featureCount, 0);
 });
 
-test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons and never request contract identifiers", async () => {
+test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons and allow public administrative details without arbitrary properties", async () => {
   const square = (lon, lat) => ({ type: "Polygon", coordinates: [[[lon, lat], [lon + 0.05, lat], [lon + 0.05, lat + 0.05], [lon, lat + 0.05], [lon, lat]]] });
   const original = globalThis.fetch, seen = [];
   globalThis.fetch = async url => {
@@ -246,7 +246,7 @@ test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons an
     const offset = Number(u.searchParams.get("resultOffset"));
     const page = offset === 0
       ? { type: "FeatureCollection", exceededTransferLimit: true, features: [
-        { type: "Feature", geometry: square(-97, 38), properties: { FID: 1, AREAID: 1386, ACRES: 1121.6, COUNTY: "Dickinson", ISARCHERYS: 1, NOTES: "SIP payments are $10 per acre. Contract number 11004", CONTRACTID: "11004" } },
+        { type: "Feature", geometry: square(-97, 38), properties: { FID: 1, AREAID: 1386, ACRES: 1121.6, COUNTY: "Dickinson", ISARCHERYS: 1, NOTES: "Synthetic program payment $12 per acre; contract TEST-42; CRP expires 2030.", CONTRACTID: "TEST-42", OWNER_NAME: "Synthetic private owner", PHONE: "202-555-0199" } },
         { type: "Feature", geometry: square(-120, 45), properties: { FID: 2, AREAID: 9 } },
         { type: "Feature", geometry: { type: "Point", coordinates: [-97, 38] }, properties: { FID: 3 } } ] }
       : { type: "FeatureCollection", features: [{ type: "Feature", geometry: square(-99, 39), properties: { FID: 4, AREAID: 7, ISARCHERYS: 0 } }] };
@@ -260,7 +260,8 @@ test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons an
     assert.deepEqual(seen.map(u => u.searchParams.get("resultOffset")), ["0", "2000"]);
     for (const u of seen) {
       assert.equal(u.origin + u.pathname, "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0/query");
-      assert.doesNotMatch(u.searchParams.get("outFields"), /CONTRACT|NOTES/i, "landowner contract identifiers and administrative notes are never requested");
+      assert.match(u.searchParams.get("outFields"), /CONTRACTID,NOTES$/);
+      assert.doesNotMatch(u.searchParams.get("outFields"), /OWNER|PHONE|EMAIL|ADDRESS|\*/i);
       assert.equal(u.searchParams.get("maxAllowableOffset"), "0.0005");
     }
     assert.deepEqual(body.data.features.map(f => f.properties.featureId), ["kdwp-wiha-1", "kdwp-wiha-4"]);
@@ -268,8 +269,13 @@ test("KDWP outdoor-access feeds page the provider, keep valid Kansas polygons an
     assert.equal(first.name, "WIHA tract 1386 · Dickinson County");
     assert.equal(first.acres, 1122);
     assert.equal(first.archeryOnly, "Archery only");
-    assert.equal("notes" in first, false, "administrative notes never reach the public payload");
-    assert.doesNotMatch(JSON.stringify(body.data), /11004|SIP payments|CONTRACTID/, "provider-side contract and payment text is dropped even if returned");
+    assert.equal(first.contractReference, "TEST-42");
+    assert.equal(first.notes, "Synthetic program payment $12 per acre; contract TEST-42; CRP expires 2030.");
+    assert.equal(first.notesStatus, "Public provider note");
+    assert.doesNotMatch(JSON.stringify(body.data), /Synthetic private owner|202-555|OWNER_NAME|PHONE/, "unexpected personal properties never pass through");
+    assert.equal(first.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+    assert.ok(first.retrievedAt);
+    assert.ok(drawer.drawerArtifactAttributes("kdwp-wiha-access", first).some(row => row.label === "Public contract reference" && row.value === "TEST-42"));
     assert.equal(second.archeryOnly, "Not archery-only");
     assert.equal(body.state, "partial");
     assert.match(body.limitation, /2 withheld/);
@@ -355,4 +361,54 @@ test("frontier trails draw designated trails solid and study routes dashed, with
   for (const stop of discovery.discoveryLegend("nps-historic-trails")) assert.ok(paint.includes(stop.color), stop.label);
   assert.ok(discovery.NEW_LAYER_IDS.has("nps-historic-trails"));
   assert.deepEqual(topics.officialSourceTopics("nps-historic-trails"), ["history", "places"]);
+});
+
+const wihaRecord = await import(await moduleUrl("app/wiha-public-record.ts"));
+test("WIHA public notes admit administration, not obvious personal targeting details", () => {
+  for (const note of ["Contract TEST-42", "Program payment $12 per acre", "CRP expires 2030", "Access closed until November 15", "Public registry reference ABC-12", "A driver's license is required", "Do not publish a home address"]) {
+    assert.equal(wihaRecord.wihaPublicRecord({ NOTES: note }).notes, note);
+  }
+  for (const note of ["Contact example@example.com", "Call 202-555-0199", "Call (202)555-0199", "SSN 000-00-0000", "Home address: synthetic example", "Owner lives at a synthetic address", "Last seen at the gate", "Live location: synthetic example", "A".repeat(250) + " personal phone 202-555-0199"]) {
+    const result = wihaRecord.wihaPublicRecord({ NOTES: note });
+    assert.equal(result.notes, null);
+    assert.match(result.notesStatus, /review required/);
+    assert.ok(!JSON.stringify(result).includes(note));
+  }
+  assert.equal(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(4097) }).notes, null);
+  assert.match(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(4097) }).notesStatus, /4096-character screening limit/);
+  assert.equal(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(241) }).notes.length, 240);
+  assert.match(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(241) }).notesStatus, /shortened/);
+  assert.equal(wihaRecord.wihaPublicRecord({ CONTRACTID: { owner: "synthetic" } }).contractReference, null);
+  assert.equal(wihaRecord.wihaPublicRecord({ CONTRACTID: 42 }).contractReference, "42");
+  for (const contract of ["example@example.com", "202-555-0199", "000-00-0000"]) {
+    assert.equal(wihaRecord.wihaPublicRecord({ CONTRACTID: contract }).contractReference, null);
+  }
+});
+
+test("WIHA is not an arbitrary provider proxy, person search or tracking API", async () => {
+  const original = globalThis.fetch; let calls = 0;
+  globalThis.fetch = async () => { calls++; throw new Error("must not fetch"); };
+  try {
+    for (const query of ["owner=Synthetic", "person=Synthetic", "phone=2025550199", "where=1%3D1", "outFields=*", "url=https%3A%2F%2Fexample.com", "feed=kdwp-wiha-access", "day=2026-01-01"]) {
+      const result = await route.GET(new NextRequest(`http://127.0.0.1/api/live-context?feed=kdwp-wiha-access&${query}`));
+      assert.equal(result.status, 400);
+    }
+    assert.equal(calls, 0);
+  } finally { globalThis.fetch = original; }
+});
+
+
+test("WIHA route keeps the tract and administrative reference when a note needs review", async () => {
+  const { body } = await callFeed("kdwp-wiha-access", { type: "FeatureCollection", features: [{
+    type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97.9, 38], [-97.9, 38.1], [-98, 38.1], [-98, 38]]] },
+    properties: { FID: 42, AREAID: 42, CONTRACTID: "TEST-42", NOTES: "Personal email: example@example.com" },
+  }] });
+  const properties = body.data.features[0].properties;
+  assert.equal(properties.contractReference, "TEST-42");
+  assert.equal(properties.notes, null);
+  assert.match(properties.notesStatus, /review required/);
+  assert.doesNotMatch(JSON.stringify(body), /example@example/);
+  const attributes = drawer.drawerArtifactAttributes("kdwp-wiha-access", properties);
+  assert.ok(attributes.some(row => row.label === "Note handling" && /review required/.test(row.value)));
+  assert.ok(!attributes.some(row => row.label === "KDWP public note"));
 });
