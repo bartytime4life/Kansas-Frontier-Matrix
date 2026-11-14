@@ -1031,6 +1031,10 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
     const elevation = numberContextProperty(properties, "elevationMeters");
     return `${title} · ${network}.${station}${elevation === null ? "" : ` · ${elevation.toFixed(0)} m`}. FDSN station metadata is a delayed/archive context connection; open StationView for provider realtime inspection. No waveform, alert, or KFM evidence is inferred from the marker.`;
   }
+  if (source === "nps-historic-trails") {
+    const designation = stringContextProperty(properties, "designation"), trail = stringContextProperty(properties, "trailName");
+    return `${title}${trail && trail !== title ? ` · ${trail}` : ""}${designation ? ` · ${designation}` : ""}. An approximate NPS alignment of a 19th-century route, simplified for display. Most of the land along it is private; this is not public access, a property boundary or KFM evidence.`;
+  }
   if (source === "kdwp-wildlife-areas") {
     const access = stringContextProperty(properties, "huntingAccess");
     return `${title}${access ? ` · hunting access: ${access}` : ""}. A KDWP public wildlife area outline, simplified for display. Seasons, refuges, closures and permits change; check KDWP before entering or hunting. Not a legal boundary or KFM evidence.`;
@@ -1114,7 +1118,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
       : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : officialSource.id === "kdwp-wildlife-areas" || officialSource.id === "kdwp-wiha-access" ? "Habitat, fauna & flora"
-          : officialSource.id === "nps-nrhp-places" ? "Historical geography"
+          : officialSource.id === "nps-nrhp-places" || officialSource.id === "nps-historic-trails" ? "Historical geography"
             : officialSource.id === "usgs-padus-lands" ? "Habitat, fauna & flora"
               : "Weather & hazards",
     sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",

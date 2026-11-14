@@ -39,10 +39,10 @@ const memoryStorage = () => {
   return { data, writes, getItem: key => data.get(key) ?? null, setItem: (key, value) => { writes.push([key, value]); data.set(key, value); }, removeItem: key => data.delete(key) };
 };
 
-test("ten bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
+test("eleven bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
   const before = JSON.stringify(sources);
-  assert.equal(model.MAP_STARTERS.length, 10);
-  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 10);
+  assert.equal(model.MAP_STARTERS.length, 11);
+  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 11);
   for (const starter of model.MAP_STARTERS) {
     assert.ok(starter.description && starter.limitation);
     assert.ok(starter.ids.length >= 3 && starter.ids.length <= 4);
@@ -175,7 +175,7 @@ test("accessible native controls choose every starter, announce partial coverage
     let tree = render(); await settle(); tree = render();
     const purposes = findNode(tree, node => node.props?.["aria-label"] === "Map purpose");
     assert.ok(purposes.props["aria-describedby"].includes("map-starters-description"));
-    assert.equal(nodes(purposes, "button").length, 10);
+    assert.equal(nodes(purposes, "button").length, 11);
     for (const starter of model.MAP_STARTERS) {
       findNode(tree, node => node.type === "button" && [node.props.children].flat()[0] === starter.title).props.onClick(); tree = render();
       assert.equal(findNode(tree, node => node.type === "button" && [node.props.children].flat()[0] === starter.title).props["aria-pressed"], true);
@@ -245,9 +245,10 @@ test("recovery and customize actions use existing owners without applying a diff
 
 test("new starters are marked, Surprise me always moves to a different selectable starter, and limits stay visible", async () => {
   const fresh = model.MAP_STARTERS.filter(starter => starter.isNew);
-  assert.deepEqual(fresh.map(starter => starter.id), ["drought-watch", "fire-season", "heritage-trail", "open-lands"]);
+  assert.deepEqual(fresh.map(starter => starter.id), ["drought-watch", "fire-season", "heritage-trail", "trails-west", "open-lands"]);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "drought-watch").limitation, /not current drought intensity/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "heritage-trail").limitation, /sensitive sites are withheld/);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "trails-west").limitation, /not public access/);
   for (const current of model.MAP_STARTERS.map(starter => starter.id)) {
     for (const r of [0, 0.25, 0.5, 0.999999]) {
       const next = model.surpriseStarterId(current, () => r);
@@ -260,7 +261,7 @@ test("new starters are marked, Surprise me always moves to a different selectabl
   const render = () => { const tree = h.render(h.exports.MapStartersControl, props); h.commit(); return tree; };
   let tree = render(); await settle(); tree = render();
   const purposeButtons = () => nodes(findNode(tree, node => node.props?.["aria-label"] === "Map purpose"), "button");
-  assert.equal(purposeButtons().filter(node => JSON.stringify(node.props.children).includes("new-layer-badge")).length, 4);
+  assert.equal(purposeButtons().filter(node => JSON.stringify(node.props.children).includes("new-layer-badge")).length, 5);
   const before = model.MAP_STARTERS[purposeButtons().findIndex(node => node.props["aria-pressed"])].id;
   const surprise = findNode(tree, node => node.type === "button" && node.props.children === "Surprise me");
   assert.equal(surprise.props.type, "button");

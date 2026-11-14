@@ -772,7 +772,7 @@ test("connects bounded official context sources without admitting evidence", asy
     "kgs-aquifer-alluvial", "kgs-aquifer-dakota", "kgs-aquifer-glacial-drift", "kgs-aquifer-high-plains", "kgs-aquifer-ozark", "kgs-aquifer-osage", "kgs-aquifer-flint-hills",
     "kgs-water-table", "kgs-saturated-thickness", "kgs-depth-to-water", "kgs-monitoring-wells",
     "noaa-spc-fire-weather", "noaa-cpc-drought-outlook", "usgs-padus-lands", "nrcs-ssurgo-soils",
-    "nps-nrhp-places", "kdwp-wildlife-areas", "kdwp-wiha-access",
+    "nps-nrhp-places", "nps-historic-trails", "kdwp-wildlife-areas", "kdwp-wiha-access",
     "fema-disaster-declarations",
     "blm-plss-townships",
     "blm-plss-sections",

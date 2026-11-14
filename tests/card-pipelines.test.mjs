@@ -19,7 +19,7 @@ const config = { format: 'kfm-pc-pipeline-config-v1', root: '/private/store', mo
 
 test('every real question, recipe and welcome topic has valid distinct registry bindings', () => {
   assert.equal(model.validateCardPipelines(), true);
-  for (const [kind, count] of [['recipe', 10], ['topic', 22]]) assert.equal(model.CARD_PIPELINE_BINDINGS.filter(card => card.kind === kind).length, count);
+  for (const [kind, count] of [['recipe', 11], ['topic', 22]]) assert.equal(model.CARD_PIPELINE_BINDINGS.filter(card => card.kind === kind).length, count);
   assert.deepEqual(model.PIPELINE_DEFINITIONS.filter(p => p.mode === 'pc-capture').map(p => p.id).sort(), [...PC_CAPTURE_IDS].sort());
   const ids = new Set(model.CARD_PIPELINE_BINDINGS.flatMap(card => [...card.required, ...card.optional, ...card.gaps]));
   for (const candidate of model.PIPELINE_DEFINITIONS.filter(p => p.mode === 'candidate')) assert.ok(ids.has(candidate.id), candidate.id);
@@ -69,7 +69,7 @@ test('required failures show partial, empty differs from gaps, optional context 
 test('disabled and preview environments never touch storage or announce local capture health', async () => {
   for (const environment of [{}, { KFM_PIPELINE_ENABLED: 'true', KFM_RUNTIME_ROLE: 'preview' }]) {
     const snapshot = await server.getCardPipelineSnapshot({ environment, storeFactory: () => assert.fail('no storage'), now });
-    assert.equal(snapshot.cards.length, 32); assert.equal(snapshot.state, 'setup-pending');
+    assert.equal(snapshot.cards.length, 33); assert.equal(snapshot.state, 'setup-pending');
     assert.ok(snapshot.sources.every(source => source.health.releaseId === null));
     assert.doesNotMatch(JSON.stringify(snapshot), /privatePath|workerSecret|pipeline-journal|\/run\/media/);
   }
