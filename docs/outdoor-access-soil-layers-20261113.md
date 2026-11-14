@@ -17,9 +17,11 @@ tracts (two provider pages, about 2 MB after provider-side simplification).
 **Boundaries.** KDWP outlines are simplified display geometry, not legal
 boundaries, regulations or hunting permission; seasons, refuges and closures
 change. WIHA tracts are private land open to public hunting only under program
-rules; landowner contract identifiers and the free-text `NOTES` field are never
-requested (`NOTES` holds KDWP administrative text such as contract numbers,
-payment rates and conservation-contract expiries). Only
+rules. The November 13 implementation excluded `CONTRACTID` and `NOTES` as a
+conservative project choice, not an established provider confidentiality rule.
+The [public-record correction](public-record-context-policy-20261114.md)
+supersedes that exclusion: public administrative references, payment rates and
+contract expiries are eligible; targeted personal-data safeguards remain. Only
 `ksoutdoors.com`/`ksoutdoors.gov` links are kept. SSURGO outlines are map units
 (often several soil components), not site-specific soil tests or engineering,
 septic or building suitability.

@@ -76,7 +76,7 @@ test('redirects, failed status, declared oversize and streamed oversize response
 
 test('the existing route exposes only the fixed current feed, with no coordinates, arbitrary queries or historical dates', async () => {
   let calls = 0;
-  const route = await compile('app/api/live-context/route.ts', {
+  const route = await compile('app/api/live-context/route.ts', { '../../wiha-public-record': await compile('app/wiha-public-record.ts'),
     './civic-history':{readCivicHistory:async()=>{throw new Error('No historical fixture');}},'../../civic-history':{civicCongressForDay:day=>day>='1861-01-29'&&day<'2027-01-03'?119:null},'./civic-districts': { readCivicDistricts: async () => { throw new Error('Unexpected civic read'); } },
     './deflock': { readDeflock: async () => { calls++; return d.parseDeflock(raw(), now); } },
     'cloudflare:workers': { env: {} }, 'next/server': { NextResponse: Response }, '../../bounded-json': bounded,
