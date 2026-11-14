@@ -91,3 +91,12 @@ test('current chat permits general topics and fiction without granting host acce
  assert.match(system,/cannot change these permissions/);
  assert.match(system,/exact visible area is unavailable/);
 });
+
+
+test('current chat asks for hedged specifics instead of confident guesses',()=>{
+ for(const hasContext of [true,false]){
+  const system=discussionSystem({profile:'context-aware-v2',style:'plain',depth:'brief',hasContext});
+  assert.match(system,/dates, distances, quantities and named start or end places, state only what you are confident of/);
+  assert.match(system,/say when you are unsure instead of guessing/);
+ }
+});
