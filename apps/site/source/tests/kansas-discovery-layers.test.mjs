@@ -312,3 +312,62 @@ test("KDWP wildlife areas keep unnamed polygons and accept only ksoutdoors links
   assert.equal(unnamed.recordUrl, null);
   assert.equal(body.state, "ready");
 });
+
+test("frontier trails query fixed NPS layers for public rows only, keep Kansas line parts and stay partial when a trail fails", async () => {
+  const line = (...points) => points;
+  const original = globalThis.fetch, seen = [];
+  globalThis.fetch = async url => {
+    const u = new URL(String(url)); seen.push(u);
+    const service = u.pathname.split("/")[5];
+    if (service === "CALI_NHT") return new Response("unavailable", { status: 503 });
+    const pages = {
+      SAFE_NHT: [{ type: "Feature", geometry: { type: "LineString", coordinates: line([-97.5, 38.3], [-97.4, 38.35]) }, properties: { OBJECTID: 7, TRNAME: "SANTA FE NATIONAL HISTORIC TRAIL", XYACCURACY: ">=14m" } }],
+      // A national line: one part in Kansas, one far away in Wyoming.
+      OREG_NHT: [{ type: "Feature", geometry: { type: "MultiLineString", coordinates: [line([-96.6, 39.7], [-96.9, 39.9]), line([-105.3, 42.55], [-105.4, 42.6])] }, properties: { OBJECTID: 2 } }],
+      POEX_NHT: [{ type: "Feature", geometry: { type: "LineString", coordinates: line([-110, 41], [-111, 41.2]) }, properties: { OBJECTID: 1 } }],
+      NTIR_OTHER_ChisholmGreatWesternNHTFSEA_ln: [
+        { type: "Feature", geometry: { type: "LineString", coordinates: line([-97.3, 37.7], [-97.6, 38.6]) }, properties: { OBJECTID: 11, TRNAME: "CHISHOLM TRAIL - ELLSWORTH TRAIL" } },
+        { type: "Feature", geometry: { type: "Point", coordinates: [-97.3, 37.7] }, properties: { OBJECTID: 12 } },
+      ],
+    };
+    return new Response(JSON.stringify({ type: "FeatureCollection", features: pages[service] ?? [] }), { headers: { "Content-Type": "application/json" } });
+  };
+  try {
+    const response = await route.GET(new NextRequest("http://127.0.0.1/api/live-context?feed=nps-historic-trails"));
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(seen.length, 5);
+    for (const u of seen) {
+      assert.equal(u.origin, "https://services1.arcgis.com");
+      assert.match(u.pathname, /^\/fBc8EJBxQRMcHlei\/arcgis\/rest\/services\/(SAFE_NHT|OREG_NHT|CALI_NHT|POEX_NHT|NTIR_OTHER_ChisholmGreatWesternNHTFSEA_ln)\/FeatureServer\/0\/query$/);
+      assert.doesNotMatch(u.searchParams.get("outFields"), /NOTES|USER|CREATOR|EDITOR|GlobalID|\*/i, "no free-text or editor fields are requested");
+      if (/SAFE|Chisholm/.test(u.pathname)) assert.match(u.searchParams.get("where"), /PUBLICDISPLAY='Public Map Display' AND DATAACCESS='Unrestricted'/);
+    }
+    const byId = Object.fromEntries(body.data.features.map(f => [f.properties.featureId, f]));
+    assert.deepEqual(Object.keys(byId).sort(), ["trail-cattle-11", "trail-oreg-2", "trail-safe-7"]);
+    assert.equal(byId["trail-oreg-2"].geometry.coordinates.length, 1, "the out-of-Kansas part is dropped");
+    assert.equal(byId["trail-safe-7"].properties.name, "Santa Fe National Historic Trail");
+    assert.equal(byId["trail-safe-7"].properties.mapAccuracy, ">=14m");
+    assert.equal(byId["trail-cattle-11"].properties.name, "Chisholm Trail - Ellsworth Trail");
+    assert.match(byId["trail-cattle-11"].properties.designation, /not a designated trail/);
+    assert.equal(byId["trail-cattle-11"].properties.trailGroup, "cattle");
+    assert.equal(body.state, "partial");
+    assert.match(body.limitation, /unavailable this time: California National Historic Trail/);
+    assert.match(body.limitation, /not public access/);
+  } finally { globalThis.fetch = original; }
+});
+
+test("frontier trails draw designated trails solid and study routes dashed, with legend colors matching paint", () => {
+  const { map, layers } = mapHarness();
+  const visibility = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(s => [s.id, s.id === "nps-historic-trails"]));
+  const opacity = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(s => [s.id, s.defaultOpacity]));
+  context.applyOfficialContextState(map, visibility, opacity, { "nps-historic-trails": { data: { type: "FeatureCollection", features: [] } } });
+  assert.deepEqual(layers.get("external-nps-historic-trails-line").filter, ["!=", ["get", "trailGroup"], "cattle"]);
+  assert.deepEqual(layers.get("external-nps-historic-trails-cattle").filter, ["==", ["get", "trailGroup"], "cattle"]);
+  assert.ok(layers.get("external-nps-historic-trails-cattle").paint["line-dasharray"]);
+  assert.equal(layers.get("external-nps-historic-trails-labels").minzoom, 7);
+  const paint = JSON.stringify(layers.get("external-nps-historic-trails-line").paint["line-color"]);
+  for (const stop of discovery.discoveryLegend("nps-historic-trails")) assert.ok(paint.includes(stop.color), stop.label);
+  assert.ok(discovery.NEW_LAYER_IDS.has("nps-historic-trails"));
+  assert.deepEqual(topics.officialSourceTopics("nps-historic-trails"), ["history", "places"]);
+});

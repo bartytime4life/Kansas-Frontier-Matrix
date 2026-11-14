@@ -41,8 +41,8 @@ const memoryStorage = () => {
 
 test("eleven bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
   const before = JSON.stringify(sources);
-  assert.equal(model.MAP_STARTERS.length, 11);
-  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 11);
+  assert.equal(model.MAP_STARTERS.length, 12);
+  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 12);
   for (const starter of model.MAP_STARTERS) {
     assert.ok(starter.description && starter.limitation);
     assert.ok(starter.ids.length >= 3 && starter.ids.length <= 4);
@@ -126,7 +126,7 @@ test("accessible native controls choose every starter, announce partial coverage
     let tree = render(); await settle(); tree = render();
     const select = findNode(tree, node => node.type === "select");
     assert.ok(select.props["aria-describedby"].includes("map-starters-description"));
-    assert.equal(nodes(tree, "option").length, 11);
+    assert.equal(nodes(tree, "option").length, 12);
     for (const starter of model.MAP_STARTERS) {
       select.props.onChange({ target: { value: starter.id } }); tree = render();
       const button = findNode(tree, node => node.type === "button" && node.props.children === "Use starter");
@@ -179,9 +179,11 @@ test("remembered preference cannot overwrite pending URL restoration; storage fa
 
 test("new starters are marked, Surprise me always moves to a different selectable starter, and limits stay visible", async () => {
   const fresh = model.MAP_STARTERS.filter(starter => starter.isNew);
-  assert.deepEqual(fresh.map(starter => starter.id), ["storm-watch", "rain-and-drought", "fire-season", "heritage-trail", "open-lands"]);
+  assert.deepEqual(fresh.map(starter => starter.id), ["storm-watch", "rain-and-drought", "fire-season", "heritage-trail", "trails-west", "open-lands"]);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "storm-watch").limitation, /not a warning service/);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "trails-west").limitation, /not public access/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "heritage-trail").limitation, /sensitive sites are withheld/);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "trails-west").limitation, /not public access/);
   for (const current of model.MAP_STARTERS.map(starter => starter.id)) {
     for (const r of [0, 0.25, 0.5, 0.999999]) {
       const next = model.surpriseStarterId(current, () => r);
