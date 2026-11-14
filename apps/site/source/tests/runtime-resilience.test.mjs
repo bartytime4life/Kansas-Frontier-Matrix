@@ -261,7 +261,7 @@ test("compact map chrome shares one overlay clearance with degraded and utility 
 });
 
 test("every official connection has feature-level traceability", () => {
-  assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 61);
+  assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 62);
   assert.deepEqual(registry.SITE_REGISTRY_VALIDATION, { ok: true, errors: [] });
 });
 
