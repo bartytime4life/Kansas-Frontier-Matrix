@@ -62,6 +62,7 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "kdwp-wildlife-areas": { href: "/api/source-download?source=kdwp-wildlife-areas", label: "Download wildlife areas · GeoJSON" },
   "kdwp-wiha-access": { href: "/api/source-download?source=kdwp-wiha-access", label: "Download WIHA tracts · GeoJSON" },
   "nps-historic-trails": { href: "/api/source-download?source=nps-historic-trails", label: "Download Kansas trail lines · GeoJSON" },
+  "nps-trail-places": { href: "/api/source-download?source=nps-trail-places", label: "Download trail sites · GeoJSON" },
 };
 
 const ARCHIVE_DOWNLOAD_SOURCES = new Set<OfficialContextId>(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);

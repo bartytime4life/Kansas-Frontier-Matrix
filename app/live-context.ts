@@ -19,8 +19,8 @@ import { globeOverviewPaintSize } from "./globe-context";
 // Only exports the CI fire baseline (a pinned earlier renderer) also has, so its comparison build still links.
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay } from "./fire-detection-style";
 
-export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nps-nrhp-places" | "nrcs-ssurgo-soils" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails";
-export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails";
+export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nps-nrhp-places" | "nrcs-ssurgo-soils" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
+export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -119,6 +119,24 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     legend: "Solid lines · Santa Fe, Oregon, California and Pony Express National Historic Trails. Dashed lines · Chisholm and Western cattle-trail routes from the NPS feasibility study. Click a line for its trail and status.",
     boundary: "Approximate 1:100,000 NPS alignments of 19th-century routes where they cross Kansas. Most of the land along these lines is private; a line is not public access, a property boundary or a precise ruts location. The cattle-trail routes were studied by NPS and are not designated National Historic Trails. External context only, not KFM evidence.",
     fallback: "If an NPS layer is unavailable the rest still draw and the source card names the missing trail; missing lines never mean no historic route existed.",
+  }),
+  Object.freeze({
+    id: "nps-trail-places", title: "Trail sites · NPS National Trails points of interest", shortTitle: "Trail sites · forts, crossings & ruts",
+    organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nps-trail-places",
+    layerIds: Object.freeze(["external-nps-trail-places-points", "external-nps-trail-places-labels"]),
+    interactiveLayerIds: Object.freeze(["external-nps-trail-places-points"]),
+    apiPath: "/api/live-context?feed=nps-trail-places",
+    endpointLabel: "services1.arcgis.com · NPS National Trails points of interest",
+    sourceUrl: "https://www.nps.gov/safe/planyourvisit/places-to-go.htm", serviceUrl: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/SAFE_SantaFeNHTPointsofInterest_pt/FeatureServer/0",
+    cadence: "NPS National Trails Office updates trail sites as partners and pages change",
+    freshness: "Current NPS points of interest at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.95, color: "#f2c46d",
+    attribution: "National Park Service, National Trails Office",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Gold markers · forts, crossings, ruts, museums and other public trail sites. Click one for its story and the NPS page.",
+    boundary: "Public points of interest NPS publishes for the National Historic Trails. Sites NPS describes as private or not open to visitors are left out. A marker is not a property boundary, an access permission or KFM evidence; hours and access change, so check the linked page before visiting.",
+    fallback: "A failed NPS request leaves the layer empty and labeled; missing markers do not mean no trail sites exist.",
   }),
   Object.freeze({
     id: "kdwp-wildlife-areas", title: "KDWP public wildlife areas", shortTitle: "Wildlife areas · KDWP",
@@ -753,6 +771,7 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "noaa-cpc-drought-outlook": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current seasonal outlook; not a historical drought record or current drought intensity." }),
   "usgs-padus-lands": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "PAD-US 4.0 compilation; agency submission dates vary and no historical ownership series is connected." }),
   "nrcs-ssurgo-soils": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current SSURGO edition; survey-area dates vary and no historical soil series is replayed." }),
+  "nps-trail-places": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current NPS points of interest; the story text describes the past, but the map does not replay when each site was in use." }),
   "nps-historic-trails": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current NPS mapped alignments of routes used mainly between the 1820s and 1880s; the map does not replay when each route was in use." }),
   "kdwp-wildlife-areas": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current KDWP public layer; past area boundaries and rules are not replayed." }),
   "kdwp-wiha-access": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current KDWP season layer; earlier seasons' enrollments are not replayed." }),
@@ -1043,6 +1062,18 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, minzoom: 11, layout: {
     "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 10.5, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
   }, paint: { "text-color": "#f6e4bd", "text-halo-color": "#1c140a", "text-halo-width": 1.5, "text-opacity": 0.9 } });
+
+  const trailPlaces = OFFICIAL_CONTEXT_BY_ID["nps-trail-places"];
+  if (visibility["nps-trail-places"] || map.getSource(trailPlaces.sourceId)) {
+    ensureGeoJsonSource(map, trailPlaces, payloads["nps-trail-places"]?.data ?? emptyCollection());
+    ensureLayer(map, { id: trailPlaces.layerIds[0], type: "circle", source: trailPlaces.sourceId, paint: {
+      "circle-color": trailPlaces.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3, 9, 5.5, 13, 8],
+      "circle-stroke-color": "#3b210c", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 1, 12, 2], "circle-opacity": trailPlaces.defaultOpacity,
+    } });
+    ensureLayer(map, { id: trailPlaces.layerIds[1], type: "symbol", source: trailPlaces.sourceId, minzoom: 8, layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 11, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 10,
+    }, paint: { "text-color": "#fbe7c2", "text-halo-color": "#1d140c", "text-halo-width": 1.6, "text-opacity": 0.95 } });
+  }
 
   const trails = OFFICIAL_CONTEXT_BY_ID["nps-historic-trails"];
   if (visibility["nps-historic-trails"] || map.getSource(trails.sourceId)) {

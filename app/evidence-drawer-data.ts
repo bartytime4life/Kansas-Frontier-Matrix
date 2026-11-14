@@ -1,6 +1,7 @@
 import type { OfficialContextId } from "./live-context";
+import { safeTrailPlaceRecordUrl } from "./trail-place-record";
 
-export type DrawerAttribute = Readonly<{ label: string; value: string }>;
+export type DrawerAttribute = Readonly<{ label: string; value: string; href?: string }>;
 
 const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readonly (readonly [string, string])[]>> = {
   "census-congress-119": [["district", "District number · 0 means at-large"], ["geoid", "Census GEOID"], ["congress", "Congress"], ["sourceDay", "Selected calendar day"], ["termStart", "Term start · calendar day"], ["termEndExclusive", "Term end · exclusive"], ["basis", "Boundary basis"], ["sourceRevision", "Historical source revision"], ["sourceSha256", "Source SHA-256"], ["sourceDatum", "Source datum"], ["vintage", "Boundary vintage"], ["displayScale", "Display scale"], ["retrievedAt", "Retrieved · UTC"]],
@@ -41,6 +42,7 @@ const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readon
   "nps-nrhp-places": [["resourceType", "Resource type"], ["landmarkLabel", "Designation"], ["city", "City"], ["county", "County"], ["certified", "Listed (certification date)"], ["refnum", "NRIS reference number"], ["vicinity", "Location precision"], ["recordUrl", "National Archives record"], ["dataRole", "Data role"]],
   "nrcs-ssurgo-soils": [],
   "kdwp-wildlife-areas": [["otherName", "Other name"], ["areaType", "Area type"], ["huntingAccess", "Hunting access"], ["accessRestrictions", "Access restrictions"], ["recordUrl", "KDWP page"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
+  "nps-trail-places": [["otherName", "Other name"], ["place", "Place"], ["trails", "Trails"], ["certified", "Status"], ["history", "Why it matters"], ["recordUrl", "NPS or partner page"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
   "nps-historic-trails": [["trailName", "Trail"], ["segment", "Route segment"], ["otherName", "Other name"], ["designation", "Status"], ["mapAccuracy", "Mapped accuracy"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
   "kdwp-wiha-access": [["areaId", "WIHA area"], ["contractReference", "Public contract reference"], ["notes", "KDWP public note"], ["notesStatus", "Note handling"], ["county", "County"], ["acres", "Acres"], ["species", "Species"], ["archeryOnly", "Archery"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
   registry: [["displayElevationFt", "Display elevation · ft"], ["relativeHeightM", "Relative height · m"], ["smokeDensity", "Smoke density"], ["watershedClass", "Watershed class"], ["settlementClass", "Settlement class"], ["transportMode", "Transport mode"], ["habitatClass", "Habitat class"], ["faunaClass", "Fauna class"], ["floraClass", "Flora class"], ["fireClass", "Fire class"], ["hazardClass", "Hazard class"], ["consentPosture", "Consent posture"], ["tileLabel", "Tile label"], ["displayLabel", "Display label"]],
@@ -53,8 +55,13 @@ export const drawerArtifactAttributes = (source: OfficialContextId | "registry" 
   const record = properties as Record<string, unknown>;
   return FIELDS[source].flatMap(([key, label]) => {
     const raw = record[key];
+    if (source === "nps-trail-places" && key === "recordUrl") {
+      const href = safeTrailPlaceRecordUrl(raw);
+      return href ? [{ label, value: href, href }] : [];
+    }
+    const maximum = source === "nps-trail-places" && key === "history" ? 900 : 240;
     const value = typeof raw === "number" && Number.isFinite(raw) ? raw.toLocaleString("en-US", { maximumFractionDigits: 3 })
-      : typeof raw === "string" ? raw.trim().slice(0, 240) : "";
+      : typeof raw === "string" ? raw.trim().slice(0, maximum) : "";
     return value !== "" ? [{ label, value }] : [];
   });
 };

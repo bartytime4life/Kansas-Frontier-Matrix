@@ -1031,6 +1031,10 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
     const elevation = numberContextProperty(properties, "elevationMeters");
     return `${title} · ${network}.${station}${elevation === null ? "" : ` · ${elevation.toFixed(0)} m`}. FDSN station metadata is a delayed/archive context connection; open StationView for provider realtime inspection. No waveform, alert, or KFM evidence is inferred from the marker.`;
   }
+  if (source === "nps-trail-places") {
+    const trails = stringContextProperty(properties, "trails"), place = stringContextProperty(properties, "place");
+    return `${title}${place ? ` · ${place}` : ""}${trails ? ` · ${trails} trail${trails.includes(",") ? "s" : ""}` : ""}. A public point of interest the National Park Service lists for the National Historic Trails. Hours and access change; check the NPS page before visiting. Not an access permission or KFM evidence.`;
+  }
   if (source === "nps-historic-trails") {
     const designation = stringContextProperty(properties, "designation"), trail = stringContextProperty(properties, "trailName");
     return `${title}${trail && trail !== title ? ` · ${trail}` : ""}${designation ? ` · ${designation}` : ""}. An approximate NPS alignment of a 19th-century route, simplified for display. Most of the land along it is private; this is not public access, a property boundary or KFM evidence.`;
@@ -1118,7 +1122,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
       : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : officialSource.id === "kdwp-wildlife-areas" || officialSource.id === "kdwp-wiha-access" ? "Habitat, fauna & flora"
-          : officialSource.id === "nps-nrhp-places" || officialSource.id === "nps-historic-trails" ? "Historical geography"
+          : officialSource.id === "nps-nrhp-places" || officialSource.id === "nps-historic-trails" || officialSource.id === "nps-trail-places" ? "Historical geography"
             : officialSource.id === "usgs-padus-lands" ? "Habitat, fauna & flora"
               : "Weather & hazards",
     sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",
@@ -13071,7 +13075,7 @@ export default function Home() {
                 <p className="summary">{selectedRiverObservation ? `${selectedRiverObservation.stationName ?? selected.properties.title} is a USGS monitoring location. The observation follows the selected map frame; a missing frame remains a gap.` : selectedOfficialConnection ? `Selected map snapshot: ${selected.properties.summary} Re-select this feature after a feed update to refresh its mapped properties.` : selected.properties.summary}</p>
                 {!selectedRiverObservation && <section className="drawer-data-block" aria-label="Selected artifact data"><header><h3>Selected artifact data</h3><small>{selected.kind === "registry" ? "Site-local record" : selectedAttributesCurrent ? "Current loaded provider response" : "Captured map properties"}</small></header>
                   {selectedOfficialContextId === "kgs-monitoring-wells" && safeKgsWellUrl(selectedArtifactAttributes.find(item => item.label === "KGS well record")?.value) && <a href={safeKgsWellUrl(selectedArtifactAttributes.find(item => item.label === "KGS well record")?.value)!} target="_blank" rel="noreferrer">Open this well’s KGS observations ↗</a>}
-                  {selectedArtifactAttributes.length > 0 ? <dl className="drawer-attribute-list">{selectedArtifactAttributes.map((attribute) => <div key={attribute.label}><dt>{attribute.label}</dt><dd>{attribute.value}</dd></div>)}</dl> : <p>No measured feature attributes are available in this map carrier. Source and trust metadata are available below.</p>}
+                  {selectedArtifactAttributes.length > 0 ? <dl className="drawer-attribute-list">{selectedArtifactAttributes.map((attribute) => <div key={attribute.label}><dt>{attribute.label}</dt><dd>{attribute.href ? <a href={attribute.href} target="_blank" rel="noreferrer">{attribute.value}</a> : attribute.value}</dd></div>)}</dl> : <p>No measured feature attributes are available in this map carrier. Source and trust metadata are available below.</p>}
                 </section>}
                 {selectedFireComparisonId && <section className="drawer-data-block" aria-label="Fire report builder context"><header><h3>Fire report builder</h3><small>Source report and satellite signal kept separate</small></header>
                   <p><strong>{selectedOfficialContextId === "nifc-fire-reports" ? "NIFC incident record reported" : "NASA thermal signal observed"}.</strong> {selectedOfficialContextId === "nifc-fire-reports" ? "The incident identity and attributes come from the interagency working record; live activity is not independently established." : "A thermal anomaly is not by itself a wildfire incident report."}</p>

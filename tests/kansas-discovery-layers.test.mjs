@@ -363,6 +363,136 @@ test("frontier trails draw designated trails solid and study routes dashed, with
   assert.deepEqual(topics.officialSourceTopics("nps-historic-trails"), ["history", "places"]);
 });
 
+test("trail sites keep public Kansas points, drop private sites and never request contact or editor fields", async () => {
+  const pt = (x, y, properties) => ({ type: "Feature", geometry: { type: "Point", coordinates: [x, y] }, properties });
+  const { response, body, seen } = await callFeed("nps-trail-places", { type: "FeatureCollection", features: [
+    pt(-96.49, 38.66, { OBJECTID: 5, name: "Neosho Crossing", city: "Council Grove", county: "Morris", safe: 1, oreg: 0, certified_site: 1,
+      url: "https://www.nps.gov/places/neosho-crossing.htm", histsig: "  A natural rockbed crossing on the Santa Fe Trail. ", access_: "unrestricted" }),
+    pt(-101.7, 37.1, { OBJECTID: 6, name: "Davis Ruts", access_: "This half-mile stretch is on a private ranch and is not accessible to the visiting public. (620) 555-0100" }),
+    pt(-98.2, 38.2, { OBJECTID: 7, name: "Old Store", access_: "Private" }),
+    pt(-98.3, 38.3, { OBJECTID: 11, name: "Closed House", access_: "Access is restricted." }),
+    pt(-96.7, 39.0, { OBJECTID: 8, name: "Unlinked Site", url: "javascript:alert(1)", cali: 1, poex: 1 }),
+    pt(-94.8, 37.1, { OBJECTID: 12, name: "Route 66 Station" }),
+    pt(-120, 45, { OBJECTID: 9, name: "Far Away", safe: 1 }),
+    pt(-97, 38, { OBJECTID: 10, name: "", safe: 1 }),
+  ] });
+  assert.equal(response.status, 200);
+  const u = new URL(seen[0]);
+  assert.equal(u.origin + u.pathname, "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/SAFE_SantaFeNHTPointsofInterest_pt/FeatureServer/0/query");
+  assert.doesNotMatch(u.searchParams.get("outFields"), /telephone|email|address|Notes|user|GlobalID|\*/i, "contact, notes and editor fields are never requested");
+  assert.deepEqual(body.data.features.map(f => f.properties.featureId), ["trail-place-5", "trail-place-8"]);
+  const [crossing, unlinked] = body.data.features.map(f => f.properties);
+  assert.equal(crossing.place, "Council Grove, Morris County");
+  assert.equal(crossing.trails, "Santa Fe");
+  assert.equal(crossing.certified, "NPS-certified trail site");
+  assert.equal(crossing.history, "A natural rockbed crossing on the Santa Fe Trail.");
+  assert.equal(crossing.recordUrl, "https://www.nps.gov/places/neosho-crossing.htm");
+  assert.equal(unlinked.recordUrl, null);
+  assert.equal(unlinked.trails, "California, Pony Express");
+  assert.doesNotMatch(JSON.stringify(body), /access_|620\) 555|Davis Ruts|Old Store|Closed House/, "private sites and the access field are not published");
+  assert.match(body.limitation, /3 sites NPS describes as private or not open to visitors are left out/);
+  assert.match(body.limitation, /1 on other corridors are not shown/);
+  assert.doesNotMatch(JSON.stringify(body.data), /Route 66/);
+  assert.equal(body.state, "partial");
+});
+
+test("trail sites disclose provider transfer limits even below the local cap", async () => {
+  for (const transferLimit of [{ exceededTransferLimit: true }, { properties: { exceededTransferLimit: true } }]) {
+    const { response, body } = await callFeed("nps-trail-places", { type: "FeatureCollection", ...transferLimit,
+      features: [pointFeature([-97, 38], { OBJECTID: 1, name: "Synthetic crossing", safe: 1 })],
+    });
+    assert.equal(response.status, 200);
+    assert.equal(body.featureCount, 1);
+    assert.equal(body.state, "partial");
+    assert.equal(body.truncated, true);
+    assert.match(body.limitation, /additional sites may be missing/);
+  }
+});
+
+test("trail sites keep one marker per safe identifier and do not shorten links into different destinations", async () => {
+  const properties = { OBJECTID: 42, name: "Synthetic crossing", safe: 1 };
+  const { body } = await callFeed("nps-trail-places", { type: "FeatureCollection", features: [
+    pointFeature([-97, 38], { ...properties, url: "https://www.nps.gov/places/" + "a".repeat(240) }),
+    pointFeature([-98, 39], { ...properties, name: "Duplicate crossing" }),
+    pointFeature([-97, 38], { ...properties, OBJECTID: Number.MAX_SAFE_INTEGER + 1 }),
+    pointFeature([-97, 38], { ...properties, OBJECTID: -1 }),
+    pointFeature([-97, 38], { ...properties, OBJECTID: 43, url: "https://www.nps.gov/places/synthetic.htm" }),
+  ] });
+  assert.deepEqual(body.data.features.map(feature => feature.id), ["trail-place-42", "trail-place-43"]);
+  assert.equal(new Set(body.data.features.map(feature => feature.properties.featureId)).size, body.featureCount);
+  assert.equal(body.data.features[0].properties.recordUrl, null);
+  assert.equal(body.data.features[1].properties.recordUrl, "https://www.nps.gov/places/synthetic.htm");
+  assert.equal(body.state, "partial");
+  assert.equal(body.truncated, false);
+});
+
+test("trail sites enforce the requested row bound as well as the 300-marker cap", async () => {
+  const features = Array.from({ length: 302 }, (_, index) => pointFeature([-97, 38], {
+    OBJECTID: index + 1, name: `Synthetic site ${index + 1}`, safe: 1,
+  }));
+  const { body, seen } = await callFeed("nps-trail-places", { type: "FeatureCollection", features });
+  assert.equal(body.featureCount, 300);
+  assert.equal(body.state, "partial");
+  assert.equal(body.truncated, true);
+  const request = new URL(seen[0]);
+  assert.equal(request.searchParams.get("resultRecordCount"), "301");
+  assert.equal(request.searchParams.get("orderByFields"), "OBJECTID ASC");
+  // A provider ignoring resultRecordCount must not make filtering scan an unbounded array.
+  const filtered = await callFeed("nps-trail-places", { type: "FeatureCollection", features: features.map((feature, index) => ({
+    ...feature, properties: { ...feature.properties, safe: index === 301 ? 1 : 0 },
+  })) });
+  assert.equal(filtered.body.featureCount, 0);
+  assert.equal(filtered.body.state, "partial");
+  assert.equal(filtered.body.truncated, true);
+});
+
+test("trail site markers expose their records, zoom-8 labels, legend and independent opacity", () => {
+  const id = "nps-trail-places", source = context.OFFICIAL_CONTEXT_BY_ID[id];
+  const { map, sources, layers } = mapHarness();
+  const visibility = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(item => [item.id, false]));
+  const opacity = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(item => [item.id, item.defaultOpacity]));
+  const data = { type: "FeatureCollection", features: [pointFeature([-97, 38], { featureId: "trail-place-42", name: "Synthetic crossing" })] };
+  context.applyOfficialContextState(map, visibility, opacity, { [id]: { data } });
+  assert.equal(sources.has(source.sourceId), false);
+  context.applyOfficialContextState(map, { ...visibility, [id]: true }, { ...opacity, [id]: 0.6 }, { [id]: { data } });
+  assert.equal(sources.get(source.sourceId).promoteId, "featureId");
+  assert.deepEqual(sources.get(source.sourceId).data, data);
+  assert.deepEqual(source.interactiveLayerIds, [source.layerIds[0]]);
+  assert.equal(layers.get(source.layerIds[0]).type, "circle");
+  assert.equal(layers.get(source.layerIds[0]).paint["circle-color"], discovery.discoveryLegend(id)[0].color);
+  assert.equal(layers.get(source.layerIds[0]).paint["circle-opacity"], 0.6);
+  assert.equal(layers.get(source.layerIds[1]).minzoom, 8);
+  context.applyOfficialContextState(map, visibility, opacity, { [id]: { data } });
+  for (const layerId of source.layerIds) assert.equal(layers.get(layerId).layout.visibility, "none");
+});
+
+test("trail site downloads retain partial-source metadata and reject upstream failures", async () => {
+  const downloadRoute = await import(await moduleUrl("app/api/source-download/route.ts"));
+  const original = globalThis.fetch;
+  try {
+    globalThis.fetch = async () => Response.json({ type: "FeatureCollection", properties: { exceededTransferLimit: true },
+      features: [pointFeature([-97, 38], { OBJECTID: 42, name: "Synthetic crossing", safe: 1 })],
+    });
+    const response = await downloadRoute.GET(new Request("http://127.0.0.1/api/source-download?source=nps-trail-places"));
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("Content-Type"), /^application\/geo\+json/);
+    assert.match(response.headers.get("Content-Disposition"), /kfm-nps-trail-places-.*\.geojson/);
+    const body = await response.json();
+    assert.equal(body.type, "FeatureCollection");
+    assert.equal(body.features.length, 1);
+    assert.equal(body.features[0].properties.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+    assert.equal(body.kfm.state, "partial");
+    assert.match(body.kfm.source, /National Park Service/);
+    assert.match(body.kfm.limitation, /additional sites may be missing/);
+    assert.ok(Number.isFinite(Date.parse(body.kfm.retrievedAt)));
+    globalThis.fetch = async () => new Response("Unavailable", { status: 503 });
+    const failed = await downloadRoute.GET(new Request("http://127.0.0.1/api/source-download?source=nps-trail-places"));
+    assert.equal(failed.status, 502);
+    assert.equal(failed.headers.get("Content-Disposition"), null);
+    assert.equal((await failed.json()).state, "error");
+  } finally { globalThis.fetch = original; }
+});
+
 const wihaRecord = await import(await moduleUrl("app/wiha-public-record.ts"));
 test("WIHA public notes admit administration, not obvious personal targeting details", () => {
   for (const note of ["Contract TEST-42", "Program payment $12 per acre", "CRP expires 2030", "Access closed until November 15", "Public registry reference ABC-12", "A driver's license is required", "Do not publish a home address"]) {
