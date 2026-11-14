@@ -21,7 +21,9 @@ Oregon, California and Pony Express, and 61 cattle-trail segments.
 ## How it behaves
 
 - **Map.** Designated trails draw as solid colored lines with a dark casing.
-  The study routes draw as dashed lines. Names appear along the lines at zoom 7
+  The study routes draw as dashed lines. Where the Oregon, California and Pony Express
+  trails share a route across northeast Kansas, they draw side by side so no
+  trail hides another. Names appear along the lines at zoom 7
   and closer. Each trail has its own legend chip.
 - **Clicking a line** shows the trail, the route segment, its designation
   status and the mapped accuracy.
