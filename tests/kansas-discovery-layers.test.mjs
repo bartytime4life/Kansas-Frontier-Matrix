@@ -495,7 +495,7 @@ test("trail site downloads retain partial-source metadata and reject upstream fa
 
 const wihaRecord = await import(await moduleUrl("app/wiha-public-record.ts"));
 test("WIHA public notes admit administration, not obvious personal targeting details", () => {
-  for (const note of ["Contract TEST-42", "Program payment $12 per acre", "CRP expires 2030", "Access closed until November 15", "Public registry reference ABC-12", "A driver's license is required", "Do not publish a home address"]) {
+  for (const note of ["Contract TEST-42", "Program payment $12 per acre", "CRP expires 2030", "Access closed until November 15", "Public registry reference ABC-12", "A driver's license is required", "Do not publish a home address", "$-to owner"]) {
     assert.equal(wihaRecord.wihaPublicRecord({ NOTES: note }).notes, note);
   }
   for (const note of ["Contact example@example.com", "Call 202-555-0199", "Call (202)555-0199", "SSN 000-00-0000", "Home address: synthetic example", "Owner lives at a synthetic address", "Last seen at the gate", "Live location: synthetic example", "A".repeat(250) + " personal phone 202-555-0199"]) {
@@ -506,7 +506,7 @@ test("WIHA public notes admit administration, not obvious personal targeting det
   }
   // Names and family relations tie a private tract to a person; hold the whole note.
   for (const note of ["Mary Example. Access is on SW corner", "other half is Conrad Example", "Bill Example, Elk County, 21-30-10",
-    "Melvin: N/2 Sec: 24-T1S-R1W", "Barrow Pit West, Barrow Pit Ken's", "house +5 acres is son", "$-to owner"]) {
+    "Melvin: N/2 Sec: 24-T1S-R1W", "Barrow Pit West, Barrow Pit Ken's", "house +5 acres is son"]) {
     const result = wihaRecord.wihaPublicRecord({ NOTES: note });
     assert.equal(result.notes, null, note);
     assert.match(result.notesStatus, /possible personal name or family detail; review required/);
@@ -552,4 +552,80 @@ test("WIHA route keeps the tract and administrative reference when a note needs 
   const attributes = drawer.drawerArtifactAttributes("kdwp-wiha-access", properties);
   assert.ok(attributes.some(row => row.label === "Note handling" && /review required/.test(row.value)));
   assert.ok(!attributes.some(row => row.label === "KDWP public note"));
+});
+
+test("WIHA projects every field before downloads, reports, derived labels and assistant prompts", async () => {
+  const download = await import(await moduleUrl("app/api/source-download/route.ts"));
+  const research = await import(await moduleUrl("app/research-context.ts"));
+  const { createAssistantContextResolver } = await import("../server/assistant-context.mjs");
+  // Execute the owning page's actual selection, report and assistant projections.
+  const page = await readFile("app/page.tsx", "utf8"), declarations = new Map();
+  const tree = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
+  const visit = node => { if (ts.isVariableDeclaration(node)) declarations.set(node.name.getText(tree), node.initializer); ts.forEachChild(node, visit); };
+  visit(tree);
+  const evaluate = (name, scope = {}, hook = false) => {
+    const declaration = declarations.get(name); assert.ok(declaration, `${name} exists`);
+    const expression = hook ? declaration.arguments[0] : declaration;
+    const js = ts.transpileModule(`return (${expression.getText(tree)});`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+    return new Function(...Object.keys(scope), js)(...Object.values(scope));
+  };
+  const stringContextProperty = evaluate("stringContextProperty"), numberContextProperty = evaluate("numberContextProperty");
+  const source = context.OFFICIAL_CONTEXT_BY_ID["kdwp-wiha-access"];
+  const buildSelection = evaluate("buildBasemapContext", {
+    OFFICIAL_CONTEXT_BY_SOURCE_ID: context.OFFICIAL_CONTEXT_BY_SOURCE_ID, CIVIC_ID: "census-congress-119", BASEMAP_CONTEXT_LAYER: {},
+    drawerArtifactAttributes: drawer.drawerArtifactAttributes, stringContextProperty,
+    officialContextSummary: evaluate("officialContextSummary", { CIVIC_ID: "census-congress-119", stringContextProperty, numberContextProperty }),
+    officialContextTime: evaluate("officialContextTime", { CIVIC_ID: "census-congress-119", stringContextProperty }),
+  });
+  const projectReport = evaluate("buildProviderReportSelection", {
+    officialContextIdForSelection: evaluate("officialContextIdForSelection", { OFFICIAL_CONTEXT_SOURCES: context.OFFICIAL_CONTEXT_SOURCES }),
+    researchSourceUrl: research.researchSourceUrl,
+  });
+  const geometry = { type: "Polygon", coordinates: [[[-98, 38], [-97.9, 38], [-97.9, 38.1], [-98, 38.1], [-98, 38]]] };
+  const resolve = createAssistantContextResolver();
+  const fixtures = [
+    ...["COUNTY", "SPECIES1", "SPECIES2", "SPECIES3", "SPECIES4", "SPECIES5"].map(field => ({ [field]: "example@example.com" })),
+    { COUNTY: "example@example.com", ...Object.fromEntries([1, 2, 3, 4, 5].map(n => [`SPECIES${n}`, "example@example.com"])) },
+    { SPECIES5: "Pheasant " + " ".repeat(80) + "Personal phone 2025550199" },
+    { SPECIES2: "Pheasant " + "A".repeat(45) + " example@example.com" },
+    { SPECIES3: "exam\u200bple@example.com" },
+    { CONTRACTID: 2025550199, NOTES: "Personal phone 202-555-0199" },
+    ...["COUNTY", "SPECIES1", "SPECIES2", "SPECIES3", "SPECIES4", "SPECIES5"].map(field => ({ [field]: "2025550199 (owner phone)", CONTRACTID: 2025550199 })),
+    { SPECIES1: "The family lives by the north gate" },
+    { SPECIES2: "Alice Park owns N/2 Sec 24" },
+    { SPECIES3: "Owner email example at example dot com" },
+  ];
+  const original = globalThis.fetch;
+  try {
+    for (const unsafe of fixtures) {
+      const properties = { FID: 42, AREAID: 42, CONTRACTID: "TEST-42", COUNTY: "Dickinson", SPECIES1: "Pheasant", NOTES: "Personal email: example@example.com", ...unsafe };
+      globalThis.fetch = async url => {
+        assert.equal(new URL(String(url)).pathname, "/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0/query");
+        return Response.json({ type: "FeatureCollection", features: [{ type: "Feature", geometry, properties }] });
+      };
+      const response = await route.GET(new NextRequest("http://127.0.0.1/api/live-context?feed=kdwp-wiha-access"));
+      const body = await response.json(); assert.equal(response.status, 200);
+      const output = body.data.features[0].properties;
+      const downloaded = await download.GET(new Request("http://127.0.0.1/api/source-download?source=kdwp-wiha-access"));
+      assert.equal(downloaded.status, 200);
+      const geojson = await downloaded.json();
+      const attributes = drawer.drawerArtifactAttributes("kdwp-wiha-access", output);
+      assert.ok(attributes.some(row => row.label === "Other field handling" && /review required/.test(row.value)));
+      const selected = buildSelection({ source: source.sourceId, id: 42, geometry, properties: output }, -98, 38);
+      const report = projectReport({ selected, timeMismatch: false, locationPrivate: false, source, attributes, attributesCurrent: true });
+      const focus = evaluate("assistantFocus", {
+        locationCameraRedacted: false, locationDerivedViewRef: { current: false }, subsurfaceInspection: null, subsurfacePrivate: false,
+        temporalQuery: { frame: 2026 }, primaryRepresentationLabel: "2D", mapEvidenceFilter: "ALL", temporalMode: "snapshot",
+        activeLayers: [], visibleOfficialSources: [source], selected, selectedTimeMismatch: false,
+      }, true)();
+      const assistant = await resolve(focus.context);
+      for (const sink of [body, geojson, attributes, selected, report, focus, assistant]) {
+        const serialized = JSON.stringify(sink);
+        assert.doesNotMatch(serialized, /example@example|exam\u200bple@example|2025550199|202-555-0199|family lives by|Alice Park|example at example dot com/, JSON.stringify(unsafe));
+      }
+      assert.equal(output.notes, null);
+      if (!unsafe.CONTRACTID) assert.equal(output.contractReference, "TEST-42");
+      assert.equal(output.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+    }
+  } finally { globalThis.fetch = original; }
 });
