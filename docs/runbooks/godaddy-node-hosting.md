@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-13
+updated: 2026-11-14
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -138,6 +138,39 @@ Input parity is not browser-asset, provider, release or accessibility acceptance
 Lesson: before merging a new external feed, read back a real provider payload
 and review every free-text field, not only the declared identifier fields. The
 fix was found only after publication.
+
+<a id="public-readback-2026-11-14"></a>
+
+### Publications on 2026-11-14: frontier trails and a chat answer fix
+
+Each change was merged into `a0-hosted-ai-web-20261017` and published by the
+owner. After each publish, the identity checker reported
+`APPLICATION_INPUTS_MATCH` for the merge commit.
+
+| Change | Merge commit | Live readback |
+|---|---|---|
+| [#5840](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5840) frontier trails layer | `0e119c59` | `nps-historic-trails` returned 101 segments in 127 KB, with no notes or editor fields. A headless browser showed the trails statewide, with no page errors |
+| [#5842](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5842) side-by-side shared trails | `0c3f3a4c` | Oregon, California and Pony Express were visible side by side along the Topeka route |
+| [#5844](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5844) trail sites | `a0b6779e` | `nps-trail-places` returned 96 sites. It left out 16 private sites and 6 sites on other corridors. No phone, email or access-note text was found |
+| [#5848](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5848) chat repetition check | `24aa5e99` | "What was the Santa Fe Trail?" returned an answer twice, after failing twice before the fix |
+
+**Chat diagnosis.** Chat with KFM reported `ready` on the home compute model
+`qwen3.5:4b`, but some ordinary questions came back as "did not pass the
+public output checks" (`MODEL_OUTPUT_UNQUALIFIED`). The cause was the
+repetition guard. It treated any four-word phrase that appeared three times as a
+loop, which rejected correct answers that repeat a name such as "the Santa Fe
+Trail". After #5848, capitalized names and phrases from the visitor's own
+question need five repeats, and other phrases still need three.
+
+**After every publish.** `/api/ai/status` reads `KFM home compute (connecting)`
+until the restarted app finishes its first health check of the home gateway.
+On 2026-11-14 that took about 10 seconds. It is not an outage unless the status
+moves to unavailable.
+
+**Answer quality.** Answers are labeled unverified AI discussion, and the small
+model can still get details wrong. In test replies it got the Santa Fe Trail's
+starting point wrong and gave overstated route lengths. Model choice belongs to
+the home PC, not to this repository.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
