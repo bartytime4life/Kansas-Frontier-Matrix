@@ -2596,6 +2596,87 @@ for (const [width,height] of [[1280,800],[390,844]]) {
 }
 
 
+test('trail site markers open complete histories and validated record links in the hydrated drawer', { timeout: 120000 }, async t => {
+  // Synthetic public-context records exercise the real map click and React
+  // drawer. Provider traffic stays blocked by the shared network fixture.
+  const history = 'Synthetic historical context. '.repeat(40).slice(0, 895) + ' END.';
+  const recordUrl = 'https://www.nps.gov/places/synthetic-trail-regression.htm';
+  const retrievedAt = '2026-11-14T12:00:00.000Z';
+  const fixtures = [
+    { id: 'trail-place-9001', name: 'Synthetic linked trail site', longitude: -98.12, recordUrl },
+    { id: 'trail-place-9002', name: 'Synthetic unsafe-link trail site', longitude: -98, recordUrl: 'javascript:window.__trailUnsafeNavigation=true' },
+    { id: 'trail-place-9003', name: 'Synthetic unlinked trail site', longitude: -97.88 },
+  ];
+  const payload = {
+    feed: 'nps-trail-places', state: 'ready', retrievedAt, upstreamUpdatedAt: null,
+    featureCount: fixtures.length, truncated: false,
+    source: 'National Park Service · National Trails points of interest',
+    limitation: 'Synthetic browser acceptance only; not provider observations or KFM evidence.',
+    data: { type: 'FeatureCollection', features: fixtures.map(site => ({
+      type: 'Feature', id: site.id, geometry: { type: 'Point', coordinates: [site.longitude, 38.5] },
+      properties: { featureId: site.id, name: site.name, place: 'Synthetic Kansas location',
+        trails: 'Santa Fe', history, recordUrl: site.recordUrl ?? null,
+        latitude: 38.5, longitude: site.longitude, retrievedAt,
+        dataRole: 'NPS National Trails point of interest', evidenceRole: 'EXTERNAL_CONTEXT_ONLY' },
+    })) },
+  };
+  let feedRequests = 0;
+  const diagnostics = renderPerformanceFixtures(origin);
+  const b = await browser(t), p = await pageSession(b, 1280, 800, {
+    ...diagnostics,
+    async intercept(request, call) {
+      if (await diagnostics.intercept(request, call)) return true;
+      const url = new URL(request.request.url);
+      if (url.origin !== origin.origin || url.pathname !== '/api/live-context' || url.searchParams.get('feed') !== 'nps-trail-places') return false;
+      feedRequests++;
+      await call('Fetch.fulfillRequest', { requestId: request.requestId, responseCode: 200,
+        responseHeaders: [{ name: 'Content-Type', value: 'application/json' }],
+        body: Buffer.from(JSON.stringify(payload)).toString('base64') });
+      return true;
+    },
+  });
+  await p.open('/?topics=history&ctx=nps-trail-places&l=&c=-98,38.5&z=10&base=civic&motion=off');
+  await leaveCompactLayers(p);
+  const map = `window.__kfmRenderDiagnostics?.maps.find(entry => entry.kind === 'explorer' && !entry.removed)?.map`;
+  const layer = 'external-nps-trail-places-points';
+  await p.wait(`(() => { const map = ${map}; return map?.getLayer(${JSON.stringify(layer)}) && map.queryRenderedFeatures({ layers: [${JSON.stringify(layer)}] }).length >= 3; })()`, 'all synthetic trail markers render');
+  assert.equal(await p.evaluate(`(${map}).getLayer('external-nps-trail-places-labels').minzoom`), 8, 'site labels retain their zoom-eight threshold');
+  for (const site of fixtures) {
+    // Project the actual rendered point after any drawer-driven resize, then
+    // dispatch a native pointer event instead of invoking application handlers.
+    await p.wait(`(() => { const map = ${map}, point = map?.project([${site.longitude}, 38.5]); return point && map.queryRenderedFeatures(point, { layers: [${JSON.stringify(layer)}] }).some(feature => feature.properties.featureId === ${JSON.stringify(site.id)}); })()`, 'the next trail marker is hit-testable');
+    const point = await p.evaluate(`(() => { const map = ${map}, point = map.project([${site.longitude}, 38.5]), rect = map.getCanvas().getBoundingClientRect(); return { x: point.x + rect.left, y: point.y + rect.top }; })()`);
+    await p.call('Input.dispatchMouseEvent', { type: 'mousePressed', ...point, button: 'left', clickCount: 1 });
+    await p.call('Input.dispatchMouseEvent', { type: 'mouseReleased', ...point, button: 'left', clickCount: 1 });
+    await p.wait(`document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden') === 'false' && document.querySelector('.drawer-heading h2')?.textContent === ${JSON.stringify(site.name)}`, 'native map selection opens the matching trail site');
+    const drawer = await p.evaluate(`(() => {
+      const root = document.querySelector('.evidence-drawer'), rows = [...root.querySelectorAll('.drawer-attribute-list > div')];
+      const field = label => rows.find(row => row.querySelector('dt')?.textContent === label)?.querySelector('dd');
+      const link = field('NPS or partner page')?.querySelector('a');
+      return { history: field('Why it matters')?.textContent, link: link ? { href: link.getAttribute('href'), target: link.target, rel: link.rel } : null,
+        source: root.querySelector('.drawer-live-source')?.textContent, boundary: root.querySelector('.drawer-claim-boundary')?.textContent,
+        unsafeVisible: root.textContent.includes('javascript:'), unsafeExecuted: window.__trailUnsafeNavigation === true };
+    })()`);
+    assert.equal(drawer.history, history, 'all 900 allowed history characters survive selection and rendering');
+    assert.match(drawer.source, /National Park Service/);
+    assert.match(drawer.boundary, /No KFM EvidenceBundle attached/);
+    assert.equal(drawer.unsafeVisible, false, 'rejected URLs are omitted from the drawer');
+    assert.equal(drawer.unsafeExecuted, false, 'provider text cannot execute navigation code');
+    if (site.recordUrl === recordUrl) {
+      assert.deepEqual(drawer.link, { href: recordUrl, target: '_blank', rel: 'noreferrer' }, 'the allowed record is a native external anchor');
+      await p.evaluate(`document.querySelector('.drawer-attribute-list a').focus()`);
+      assert.equal(await p.evaluate(`document.activeElement?.getAttribute('href')`), recordUrl, 'the record page is keyboard-focusable');
+    } else {
+      assert.equal(drawer.link, null, 'missing and unsafe records create no navigation target');
+      assert.equal((await p.evaluate('location.origin')), origin.origin, 'inspection stays on the local Explorer');
+    }
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden') === 'true'`, 'close returns to the map before another marker');
+  }
+  assert.ok(feedRequests >= 1, 'the built application requested its actual trail feed');
+  t.diagnostic('Synthetic trail records; actual MapLibre clicks and hydrated drawer; no live-provider or real-device acceptance claimed.');
+});
+
 for(const [width,height] of [[1280,800],[390,844]]) {
  test(`civic inspection survives browser Back Forward and reload at ${width}x${height}`,{timeout:120000},async t=>{
   // Contract-valid synthetic district boxes isolate navigation from provider availability.

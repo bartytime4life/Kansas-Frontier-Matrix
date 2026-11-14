@@ -134,7 +134,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     defaultVisibility: false, defaultOpacity: 0.95, color: "#f2c46d",
     attribution: "National Park Service, National Trails Office",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    legend: "Diamond-ringed markers · forts, crossings, ruts, museums and other public trail sites. Click one for its story and the NPS page.",
+    legend: "Gold markers · forts, crossings, ruts, museums and other public trail sites. Click one for its story and the NPS page.",
     boundary: "Public points of interest NPS publishes for the National Historic Trails. Sites NPS describes as private or not open to visitors are left out. A marker is not a property boundary, an access permission or KFM evidence; hours and access change, so check the linked page before visiting.",
     fallback: "A failed NPS request leaves the layer empty and labeled; missing markers do not mean no trail sites exist.",
   }),
@@ -171,7 +171,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     attribution: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     legend: "Gold fill · private land enrolled in Walk-In Hunting Access. Click a tract for acres, species and archery-only status.",
-    boundary: "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going.",
+    boundary: "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; public administrative references and notes are tract context, not owner identification or permission to track people. Check the current KDWP atlas and regulations before going.",
     fallback: "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
   }),
   Object.freeze({

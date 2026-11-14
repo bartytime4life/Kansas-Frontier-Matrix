@@ -97,7 +97,7 @@ test('actual archive loader rejects late responses after a newer Congress date r
   assert.equal(days.current[civic.CIVIC_ID],'1875-03-04');assert.equal(payloads.current[civic.CIVIC_ID].sourceDay,'1875-03-04');assert.equal(states[civic.CIVIC_ID],'ready');
 });
 test('date route validates before acquisition and historical requests remain no-store',async()=>{
-  const calls=[];const route=await compile('app/api/live-context/route.ts',{
+  const calls=[];const route=await compile('app/api/live-context/route.ts',{ '../../wiha-public-record': await compile('app/wiha-public-record.ts'), '../../trail-place-record': await compile('app/trail-place-record.ts'),
     './civic-history':{readCivicHistory:async day=>{calls.push(day);return history.parseCivicHistory(rawFor(43),day,now)}},'../../civic-history':history,'./civic-districts':{},'./deflock':{},
     'cloudflare:workers':{env:{}},'next/server':{NextResponse:Response},'../../bounded-json':bounded,'../../event-atlas':{eventDay:day=>/^\d{4}-\d{2}-\d{2}$/.test(day)},'../event-atlas/upstream':{},'../../county-baseline':{},'../../fema-declarations':{},'@mapbox/vector-tile':{},pbf:{},
   });
@@ -143,7 +143,7 @@ test('actual historical selection records preserve their year, author and immuta
 });
 test('the no-date API request also refuses an unsupported Congress instead of serving an expired default',async()=>{
  let calls=0;
- const route=await compile('app/api/live-context/route.ts',{
+ const route=await compile('app/api/live-context/route.ts',{ '../../wiha-public-record': await compile('app/wiha-public-record.ts'), '../../trail-place-record': await compile('app/trail-place-record.ts'),
   './civic-history':{},'../../civic-history':{civicCongressForDay:()=>null},'./civic-districts':{readCivicDistricts:async()=>{calls++;throw Error('expired default')}},'./deflock':{},
   'cloudflare:workers':{env:{}},'next/server':{NextResponse:Response},'../../bounded-json':bounded,'../../event-atlas':{},'../event-atlas/upstream':{},'../../county-baseline':{},'../../fema-declarations':{},'@mapbox/vector-tile':{},pbf:{},
  });

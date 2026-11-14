@@ -1,3 +1,5 @@
+import { wihaPublicRecord } from "../../wiha-public-record";
+import { safeTrailPlaceRecordUrl } from "../../trail-place-record";
 import { readCivicHistory } from "./civic-history";
 import { civicCongressForDay } from "../../civic-history";
 import { readCivicDistricts } from "./civic-districts";
@@ -777,9 +779,9 @@ const KDWP_WILDLIFE_AREAS: KdwpLayer = {
 };
 const KDWP_WIHA: KdwpLayer = {
   feed: "kdwp-wiha-access", url: KDWP_WIHA_URL, source: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access (2026–2027 public web map layer)",
-  // Contract identifiers and the free-text NOTES field are not requested: NOTES holds KDWP
-  // administrative text such as landowner contract numbers, payment rates and CRP expiries.
-  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY",
+  // Public administrative references and notes are eligible; targeted safeguards
+  // apply to possible personal contact/identity/location detail, not payment data.
+  outFields: "FID,AREAID,ACRES,SPECIES1,SPECIES2,SPECIES3,SPECIES4,SPECIES5,ISARCHERYS,COUNTY,CONTRACTID,NOTES",
   properties: record => {
     const fid = asNumber(record.FID);
     if (fid === null || !Number.isInteger(fid)) return null;
@@ -789,9 +791,9 @@ const KDWP_WIHA: KdwpLayer = {
     return { featureId: `kdwp-wiha-${fid}`, name: `WIHA tract${area === null ? "" : ` ${area}`}${cleanText(record.COUNTY, 40) ? ` · ${cleanText(record.COUNTY, 40)} County` : ""}`,
       areaId: area, acres: acres === null ? null : Math.round(acres), county: cleanText(record.COUNTY, 40),
       species: species.length ? species.join(", ") : null, archeryOnly: archery === 1 ? "Archery only" : archery === 0 ? "Not archery-only" : null,
-      dataRole: "KDWP walk-in hunting access tract" };
+      ...wihaPublicRecord(record), dataRole: "KDWP walk-in hunting access tract" };
   },
-  limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
+  limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; public administrative references and notes describe the tract, not an identified owner. Notes with detected personal contact, identity or location indicators are withheld for review; this screening is not exhaustive. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
 };
 
 
@@ -883,7 +885,6 @@ const historicTrails = async () => {
     retrievedAt, null, partial, capped);
 };
 
-const TRAIL_PLACE_LINKS = /^https:\/\/(?:www\.)?(?:nps\.gov|kshs\.org|kansasmemory\.org)\/[\w/?=&%.:#~-]*$/i;
 const TRAIL_PLACE_FLAGS = [["safe", "Santa Fe"], ["oreg", "Oregon"], ["cali", "California"], ["poex", "Pony Express"]] as const;
 /** Public NPS National Trails points of interest in the Kansas window. Sites NPS describes as private
  * are left out, and phone, email, address, notes and editor fields are never requested; the access
@@ -899,37 +900,41 @@ const trailPlaces = async () => {
   url.searchParams.set("outFields", "OBJECTID,name,altname,city,county,url,histsig,access_,certified_site,safe,oreg,cali,poex");
   url.searchParams.set("returnGeometry", "true");
   url.searchParams.set("outSR", "4326");
+  url.searchParams.set("orderByFields", "OBJECTID ASC");
   url.searchParams.set("resultRecordCount", String(MAX_TRAIL_PLACES + 1));
   url.searchParams.set("f", "geojson");
   const payload = await fetchBoundedJson(url.toString(), 15_000);
   if (!Array.isArray(payload.features)) throw new UpstreamError("NPS trail places response had no feature array.");
   const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  const identifiers = new Set<number>();
   let skipped = 0, privateSites = 0, otherCorridors = 0;
-  for (const candidate of payload.features) {
+  // Enforce the requested input bound even if the provider ignores resultRecordCount.
+  for (const candidate of payload.features.slice(0, MAX_TRAIL_PLACES + 1)) {
     if (features.length >= MAX_TRAIL_PLACES) break;
     if (!isRecord(candidate) || !isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) { skipped++; continue; }
     const properties = isRecord(candidate.properties) ? candidate.properties : {};
     const longitude = asNumber(candidate.geometry.coordinates[0]), latitude = asNumber(candidate.geometry.coordinates[1]);
     const objectId = asNumber(properties.OBJECTID), name = cleanText(properties.name, 100);
-    if (longitude === null || latitude === null || !inKansas([longitude, latitude]) || objectId === null || !Number.isInteger(objectId) || !name) { skipped++; continue; }
+    if (longitude === null || latitude === null || !inKansas([longitude, latitude]) || objectId === null || !Number.isSafeInteger(objectId) || objectId <= 0 || identifiers.has(objectId) || !name) { skipped++; continue; }
     if (/priva|(?<!un)restricted|not (?:directly )?accessible|not open/i.test(asString(properties.access_) ?? "")) { privateSites++; continue; }
     const trails = TRAIL_PLACE_FLAGS.filter(([key]) => asNumeric(properties[key]) === 1).map(([, label]) => label);
     // The NPS layer also lists sites for other corridors (for example Route 66); keep the four trails drawn here.
     if (!trails.length) { otherCorridors++; continue; }
-    const link = cleanText(properties.url, 240);
+    identifiers.add(objectId);
     const featureId = `trail-place-${objectId}`;
     features.push({ type: "Feature", id: featureId, geometry: { type: "Point", coordinates: [longitude, latitude] }, properties: {
       featureId, name, otherName: cleanText(properties.altname, 100),
       place: [cleanText(properties.city, 60), cleanText(properties.county, 40) ? `${cleanText(properties.county, 40)} County` : null].filter(Boolean).join(", ") || null,
       trails: trails.join(", "),
       certified: asNumeric(properties.certified_site) === 1 ? "NPS-certified trail site" : null,
-      history: cleanText(properties.histsig, 900), recordUrl: link && TRAIL_PLACE_LINKS.test(link) ? link : null,
+      history: cleanText(properties.histsig, 900), recordUrl: safeTrailPlaceRecordUrl(properties.url),
       latitude, longitude, dataRole: "NPS National Trails point of interest", retrievedAt, evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     } });
   }
-  const truncated = payload.features.length > MAX_TRAIL_PLACES;
+  const providerLimited = [payload.exceededTransferLimit, isRecord(payload.properties) ? payload.properties.exceededTransferLimit : undefined].includes(true);
+  const truncated = payload.features.length > MAX_TRAIL_PLACES || providerLimited;
   return envelope("nps-trail-places", { type: "FeatureCollection", features }, "National Park Service · National Trails points of interest",
-    `${features.length} public trail site${features.length === 1 ? "" : "s"} in the Kansas window; ${privateSites} site${privateSites === 1 ? "" : "s"} NPS describes as private or not open to visitors ${privateSites === 1 ? "is" : "are"} left out${otherCorridors ? `; ${otherCorridors} on other corridors are not shown` : ""}${skipped ? `; ${skipped} withheld for invalid location, identifier or name` : ""}${truncated ? "; capped" : ""}. Hours and access change; check the NPS page before visiting. Not KFM evidence.`,
+    `${features.length} public trail site${features.length === 1 ? "" : "s"} in the Kansas window; ${privateSites} site${privateSites === 1 ? "" : "s"} NPS describes as private or not open to visitors ${privateSites === 1 ? "is" : "are"} left out${otherCorridors ? `; ${otherCorridors} on other corridors are not shown` : ""}${skipped ? `; ${skipped} withheld for invalid location, identifier or name, or duplicate identifier` : ""}${truncated ? "; capped or provider-limited, so additional sites may be missing" : ""}. Hours and access change; check the NPS page before visiting. Not KFM evidence.`,
     retrievedAt, null, skipped > 0 || truncated, truncated);
 };
 

@@ -768,7 +768,7 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "kind": "OPERATIONAL_GEOJSON",
       "cadence": "KDWP publishes WIHA enrollments by hunting season; tracts can change during the season",
       "freshness": "Layer used by KDWP's public 2026–2027 WIHA map at retrieval time",
-      "boundary": "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; landowner contract identifiers are not requested. Check the current KDWP atlas and regulations before going.",
+      "boundary": "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; public administrative references and notes are tract context, not owner identification or permission to track people. Check the current KDWP atlas and regulations before going.",
       "fallback": "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
       "attribution": "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
       "sourceUrl": "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access",

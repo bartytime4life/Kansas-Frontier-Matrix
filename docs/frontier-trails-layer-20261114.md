@@ -27,7 +27,7 @@ Oregon, California and Pony Express, and 61 cattle-trail segments.
   and closer. Each trail has its own legend chip.
 - **Clicking a line** shows the trail, the route segment, its designation
   status and the mapped accuracy.
-- **Trails west starter.** It turns on the trails, National Register places,
+- **Trails west starter.** It turns on the trails, trail sites,
   rivers and terrain shading.
 
 ## Trail sites layer
@@ -46,17 +46,28 @@ and terrain.
   fields.
 - **Off-topic corridors are dropped.** Sites tagged for none of the four
   trails, such as Route 66 stops, are not shown.
-- **Links** are kept only when they point to `nps.gov`, `kshs.org` or
-  `kansasmemory.org`.
-- **Live check (November 14):** a readback returned 96 sites. 16 private sites
-  and 6 sites on other corridors were left out.
+- **Links** are clickable in the site drawer and kept only when they use HTTPS
+  and point to `nps.gov`, `kshs.org` or `kansasmemory.org` (including `www`).
+  Invalid or overlong links are omitted rather than shortened into another URL.
+  The same validator runs in the adapter and in the drawer.
+- **History** preserves the feed's full bounded excerpt of up to 900 characters;
+  other drawer fields retain their existing 240-character display limit.
+- **Bounds and completeness.** The query orders by `OBJECTID`, requests at most
+  301 rows and emits at most 300 unique sites. Unsafe or duplicate identifiers
+  are omitted and disclosed. An upstream transfer-limit flag, including the
+  GeoJSON `properties.exceededTransferLimit` form, produces `partial` and
+  `truncated: true` even when fewer than 300 sites are returned. Downloaded
+  GeoJSON retains that partial-state label and limitation.
+- **Initial PR live check (November 14):** the contributor reported 96 sites,
+  with 16 private sites and 6 sites on other corridors left out. That dated
+  provider observation is separate from the synthetic repair tests below.
 
 ## Source and safety boundaries
 
-- **Rows requested.** For the two layers that carry access fields, the adapter
+- **Trail-line rows requested.** For the two line layers that carry access fields, the adapter
   asks only for rows marked `PUBLICDISPLAY='Public Map Display'` and
   `DATAACCESS='Unrestricted'`.
-- **Fields requested.** Only the identifier, trail name, alternate name and
+- **Trail-line fields requested.** Only the identifier, trail name, alternate name and
   mapped accuracy. The free-text `NOTES`, editor, user and `GlobalID` fields
   are never requested, and a test checks this.
 - **Clipping.** National trails are clipped to the line parts that touch the
@@ -67,7 +78,26 @@ and terrain.
 - **Failures.** If one NPS layer fails, the others still draw. The feed is then
   labeled `partial` and names the missing trail.
 
+## PR #5844 repair verification
+
+The repair reconciles original candidate `16aa698b1c1ac49817672ba5086944397344ee53`
+with hosted base `aad6064`, preserving the merged WIHA public-record correction
+in PR #5845. It does not merge the trail feature into the hosted branch or publish it.
+
+Regression checks reproduced the original false-complete transfer-limit label,
+duplicate and unsafe map identifiers, and absent deterministic ordering. A
+separate check reproduced a 543-character history being cut to 240 characters
+and the site record URL being rendered as non-clickable text.
+
+The focused repair tests cover both transfer-limit placements, unique and safe
+IDs, the input and marker caps, URL validation, the full bounded history,
+production drawer link markup, marker visibility and opacity, zoom-8 labels,
+GeoJSON attribution and partial-state metadata, and failed download responses.
+All use synthetic fixtures; provider availability and public deployment are
+separate acceptance states.
+
 ## Rollback
 
 Revert the commit. The change touches no data, settings or provider
-configuration. The local companion's official-source cap goes from 57 to 58.
+configuration. Trail lines raised the local companion's official-source cap
+from 57 to 58; trail sites raise it from 58 to 59.
