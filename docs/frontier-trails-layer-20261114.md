@@ -30,6 +30,27 @@ Oregon, California and Pony Express, and 61 cattle-trail segments.
 - **Trails west starter.** It turns on the trails, National Register places,
   rivers and terrain shading.
 
+## Trail sites layer
+
+**Trail sites · forts, crossings & ruts** (`nps-trail-places`) adds the public
+points of interest NPS lists for these four trails: forts, river crossings,
+wagon ruts, museums and similar sites. Click a site to see its place, its
+trails, whether it is NPS-certified, a short history and the NPS or partner
+page. The **Trails west** starter now pairs it with the trail lines, rivers
+and terrain.
+
+- **Private sites are left out.** Sites whose NPS access note says they are
+  private, restricted, not accessible or not open to visitors are dropped. The
+  access note itself is never published, because it can contain phone numbers.
+- **Fields never requested:** telephone, email, address, notes and editor
+  fields.
+- **Off-topic corridors are dropped.** Sites tagged for none of the four
+  trails, such as Route 66 stops, are not shown.
+- **Links** are kept only when they point to `nps.gov`, `kshs.org` or
+  `kansasmemory.org`.
+- **Live check (November 14):** a readback returned 96 sites. 16 private sites
+  and 6 sites on other corridors were left out.
+
 ## Source and safety boundaries
 
 - **Rows requested.** For the two layers that carry access fields, the adapter

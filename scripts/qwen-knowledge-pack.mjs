@@ -190,7 +190,8 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "name": "History & cultural heritage",
       "sourceIds": [
         "nps-nrhp-places",
-        "nps-historic-trails"
+        "nps-historic-trails",
+        "nps-trail-places"
       ],
       "ideas": [
         "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
@@ -726,6 +727,21 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "fallback": "If an NPS layer is unavailable the rest still draw and the source card names the missing trail; missing lines never mean no historic route existed.",
       "attribution": "National Park Service, National Trails Office",
       "sourceUrl": "https://www.nps.gov/subjects/nationaltrailssystem/national-historic-trails.htm",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-trail-places",
+      "title": "Trail sites · NPS National Trails points of interest",
+      "shortTitle": "Trail sites · forts, crossings & ruts",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS National Trails Office updates trail sites as partners and pages change",
+      "freshness": "Current NPS points of interest at retrieval time",
+      "boundary": "Public points of interest NPS publishes for the National Historic Trails. Sites NPS describes as private or not open to visitors are left out. A marker is not a property boundary, an access permission or KFM evidence; hours and access change, so check the linked page before visiting.",
+      "fallback": "A failed NPS request leaves the layer empty and labeled; missing markers do not mean no trail sites exist.",
+      "attribution": "National Park Service, National Trails Office",
+      "sourceUrl": "https://www.nps.gov/safe/planyourvisit/places-to-go.htm",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {
