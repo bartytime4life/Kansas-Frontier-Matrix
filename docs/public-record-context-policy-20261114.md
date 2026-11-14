@@ -50,26 +50,62 @@ them. Query parameters cannot select arbitrary providers, fields, identities or
 history. Public tract polygons remain, because program access geography is not
 itself a person's location history.
 
-The notes helper holds an entire note for review when it detects common email,
-formatted phone, personal-ID or explicit home-address/location-targeting
-indicators. It also holds a note that contains a common given name (unless
-the next word is a place word, such as "Clark County") or a family or ownership
-relation ("son", "owner", "estate of"). A name written beside a tract or its legal
-description ties that private land to a person. A live readback on 2026-11-14
-found 21 such notes among 823; the other 802 public notes remain published. It does **not** block payment amounts, contract references or dates
-merely because they are administrative. These heuristics are limited defense in
-depth, not a complete detector, a legal classification or an automated finding
-that someone has been doxed. Ambiguous contact-looking text can be held; names,
-unusual formats and indirect inferences may evade detection. Review the specific
-record and source if reported, rather than blanket-blocking its registry. No raw
-held note is copied into the response or test artifacts.
+The shared projection screens the complete note and each species field before
+shortening. Screening normalizes common Unicode and obfuscated-contact forms;
+the display retains the provider's bounded text. Detected personal contact,
+identifier, residence and movement details hold the whole affected field.
+Probable names with surname, possessive or legal-description context and family
+residence details still need review. Ownership/payment wording, billing words,
+marking instructions and geographic names alone do not establish a personal
+target. Historical-reference handling is local to that reference; it does not
+exempt a different personal detail elsewhere in the note. Wildlife observations
+are distinct from a person's last-seen location.
+
+County output is limited to the canonical 105 Kansas names already in the
+application's county inventory. All five species slots independently use the
+same bounded contact/identifier/residence/tracking screen, with basic
+species-label checks. A name-like biological label (for example Ross's goose
+or Virginia rail) requires additional person-role or tract context before
+a name guess can hold it. Unfamiliar harmless labels remain eligible because
+the source supplies no controlled taxonomy; an unmarked bare personal name in
+such a field remains semantically ambiguous. `fieldsStatus` exposes omitted-field review status without copying
+their raw values. The route derives names only from that projected county and
+does not copy original county/species strings around the screen. GeoJSON,
+drawer/report attributes and automatically derived assistant summaries consume
+this projection. Ordinary WIHA assistant summaries do not include note text.
+
+Opaque numeric administrative references are not automatically phones. A
+reference that duplicates a detected held phone in any of the selected note,
+county or species fields is instead held for review. Payment amounts, contract references and dates remain eligible.
+Unverified contact text stays review-held even if a note calls it a public
+office contact; that assertion cannot authenticate a contact's provenance.
+
+These rules supersede PR #5852's unconditional given-name/ownership holds. Its
+reported 21-of-823 live-note result is historical contributor evidence, not an
+independent acceptance result for this candidate. Synthetic regressions cover
+public payment/expiry text and identifying fragments across API, GeoJSON,
+report and assistant-prompt projections. No real personal notes are included.
+The heuristics are defense in depth, not exhaustive detection or a legal
+classification: uncommon names, indirect inferences and unusual encodings may
+still require record-specific review. No live-provider cleanliness, rendered
+browser acceptance, actual-model behavior or public deployment is established
+by these source-level checks.
 
 ## Publication and scope
 
 This source change does not deploy or backfill anything. Verify the current
 provider item/service usage terms and current branch/runtime before publication;
 a blank copyright field or a successful public query is not a license grant.
-The applicable item-level reuse terms have not been established by this patch.
+Read-only metadata on 2026-11-14 identified publicly shared ArcGIS item
+`5fa91f6851ba4ac996f1be92d9b6b152` (2026–2027 WIHA Access), with blank item
+license/attribution and service copyright fields. [ArcGIS terms](https://doc.esri.com/en/arcgis-online/latest/reference/terms-of-use.html)
+describe public sharing as granting reuse subject to supplied constraints; this is not a
+public-domain determination. Confirm any parent-map terms and authoritative
+attribution requirements before unrestricted/commercial publication claims.
+KDWP's indexed photo/graphics/logo restriction is separate from administrative
+record facts. Current KDWP page retrieval was blocked during that review, so
+its continuing scope was not freshly established. No new publication right is
+conferred by this patch.
 Use a reviewed source change if a later schema or terms change affects admission.
 
 The correction applies to the hosted WIHA adapter. It does not silently replace

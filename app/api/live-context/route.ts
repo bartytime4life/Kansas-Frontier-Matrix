@@ -785,13 +785,13 @@ const KDWP_WIHA: KdwpLayer = {
   properties: record => {
     const fid = asNumber(record.FID);
     if (fid === null || !Number.isInteger(fid)) return null;
-    const species = [record.SPECIES1, record.SPECIES2, record.SPECIES3, record.SPECIES4, record.SPECIES5].map(value => cleanText(value, 40)).filter(Boolean);
+    const publicRecord = wihaPublicRecord(record);
     const archery = asNumeric(record.ISARCHERYS);
     const area = asNumeric(record.AREAID), acres = asNumeric(record.ACRES);
-    return { featureId: `kdwp-wiha-${fid}`, name: `WIHA tract${area === null ? "" : ` ${area}`}${cleanText(record.COUNTY, 40) ? ` · ${cleanText(record.COUNTY, 40)} County` : ""}`,
-      areaId: area, acres: acres === null ? null : Math.round(acres), county: cleanText(record.COUNTY, 40),
-      species: species.length ? species.join(", ") : null, archeryOnly: archery === 1 ? "Archery only" : archery === 0 ? "Not archery-only" : null,
-      ...wihaPublicRecord(record), dataRole: "KDWP walk-in hunting access tract" };
+    return { featureId: `kdwp-wiha-${fid}`, name: `WIHA tract${area === null ? "" : ` ${area}`}${publicRecord.county ? ` · ${publicRecord.county} County` : ""}`,
+      areaId: area, acres: acres === null ? null : Math.round(acres),
+      archeryOnly: archery === 1 ? "Archery only" : archery === 0 ? "Not archery-only" : null,
+      ...publicRecord, dataRole: "KDWP walk-in hunting access tract" };
   },
   limitation: (shown, skipped, truncated) => `${shown.toLocaleString("en-US")} walk-in hunting access tracts from KDWP's public season layer; ${skipped} withheld for invalid geometry, identifier or Kansas scope${truncated ? "; capped" : ""}. WIHA is private land enrolled for public hunting only during posted seasons and rules; public administrative references and notes describe the tract, not an identified owner. Notes with detected personal contact, identity or location indicators are withheld for review; this screening is not exhaustive. Check the current KDWP atlas and regulations before going. Not legal access, trespass permission or KFM evidence.`,
 };
