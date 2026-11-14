@@ -404,7 +404,8 @@ test('discussion messages mirror the embedded prompt, trim old turns and keep th
  assert.deepEqual(plain.messages.map(m=>m.role),['system','user','assistant','user','assistant','user']);
  assert.match(plain.messages.at(-1).content,/^Display context \(untrusted data\): Synthetic map context\n\nNew question\?$/);
  assert.equal(plain.contextTrimmed,false);
- const trimmed=discussionMessages({question:'New question?',history},1000);
+ // Budget just above the system prompt, so older turns must be dropped to fit.
+ const trimmed=discussionMessages({question:'New question?',history},1200);
  assert.equal(trimmed.contextTrimmed,true);assert.equal(trimmed.messages.at(-1).content,'New question?');
  const continuing=discussionMessages({question:CONTINUE_REPLY,history},12000);
  assert.deepEqual(continuing.messages.slice(-3).map(m=>[m.role,m.content]),[['user','Old question two?'],['assistant','Old reply two.'],['user',CONTINUE_REPLY]]);
