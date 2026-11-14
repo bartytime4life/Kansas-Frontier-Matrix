@@ -52,7 +52,11 @@ itself a person's location history.
 
 The notes helper holds an entire note for review when it detects common email,
 formatted phone, personal-ID or explicit home-address/location-targeting
-indicators. It does **not** block payment amounts, contract references or dates
+indicators. It also holds a note that contains a common given name (unless
+the next word is a place word, such as "Clark County") or a family or ownership
+relation ("son", "owner", "estate of"). A name written beside a tract or its legal
+description ties that private land to a person. A live readback on 2026-11-14
+found 21 such notes among 823; the other 802 public notes remain published. It does **not** block payment amounts, contract references or dates
 merely because they are administrative. These heuristics are limited defense in
 depth, not a complete detector, a legal classification or an automated finding
 that someone has been doxed. Ambiguous contact-looking text can be held; names,

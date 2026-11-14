@@ -504,6 +504,17 @@ test("WIHA public notes admit administration, not obvious personal targeting det
     assert.match(result.notesStatus, /review required/);
     assert.ok(!JSON.stringify(result).includes(note));
   }
+  // Names and family relations tie a private tract to a person; hold the whole note.
+  for (const note of ["Mary Example. Access is on SW corner", "other half is Conrad Example", "Bill Example, Elk County, 21-30-10",
+    "Melvin: N/2 Sec: 24-T1S-R1W", "Barrow Pit West, Barrow Pit Ken's", "house +5 acres is son", "$-to owner"]) {
+    const result = wihaRecord.wihaPublicRecord({ NOTES: note });
+    assert.equal(result.notes, null, note);
+    assert.match(result.notesStatus, /possible personal name or family detail; review required/);
+    assert.ok(!JSON.stringify(result).includes(note));
+  }
+  for (const note of ["Clark County line on the north edge", "Access from Dale Road", "Pheasant Quail and Deer", "Just Corners", "brome hay draw", "Includes season closures"]) {
+    assert.equal(wihaRecord.wihaPublicRecord({ NOTES: note }).notes, note, note);
+  }
   assert.equal(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(4097) }).notes, null);
   assert.match(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(4097) }).notesStatus, /4096-character screening limit/);
   assert.equal(wihaRecord.wihaPublicRecord({ NOTES: "A".repeat(241) }).notes.length, 240);
