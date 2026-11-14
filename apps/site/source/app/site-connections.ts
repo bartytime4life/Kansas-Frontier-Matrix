@@ -87,6 +87,7 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
   "kdwp-wildlife-areas": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
   "kdwp-wiha-access": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
   "nps-historic-trails": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
+  "nps-trail-places": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
 };
 
 const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>> = {
@@ -105,6 +106,7 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
   "kdwp-wildlife-areas": "kdwp-wildlife-areas",
   "kdwp-wiha-access": "kdwp-wiha-access",
   "nps-historic-trails": "nps-historic-trails",
+  "nps-trail-places": "nps-trail-places",
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
@@ -171,6 +173,7 @@ const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
   "kdwp-wildlife-areas": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "kdwp-wiha-access": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "nps-historic-trails": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
+  "nps-trail-places": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
 };
 
 const connectionKind = (source: (typeof OFFICIAL_CONTEXT_SOURCES)[number]): SiteConnectionKind => {

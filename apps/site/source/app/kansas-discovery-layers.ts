@@ -189,7 +189,7 @@ export const KANSAS_DISCOVERY_SOURCES: readonly OfficialContextSource[] = Object
 export const DISCOVERY_LAYER_IDS: readonly DiscoveryLayerId[] = Object.freeze(KANSAS_DISCOVERY_SOURCES.map(source => source.id as DiscoveryLayerId));
 
 /** Point-feed legends mirror the MapLibre paint expressions in live-context.ts. */
-const FEED_LEGENDS: Readonly<Record<"nws-storm-reports" | "nps-nrhp-places" | "nps-historic-trails", readonly LegendStop[]>> = Object.freeze({
+const FEED_LEGENDS: Readonly<Record<"nws-storm-reports" | "nps-nrhp-places" | "nps-historic-trails" | "nps-trail-places", readonly LegendStop[]>> = Object.freeze({
   "nws-storm-reports": [
     { label: "Tornado", color: "#ff3b5c" }, { label: "Hail", color: "#5ec8ff" }, { label: "Wind", color: "#ffd166" },
     { label: "Flood", color: "#7ae582" }, { label: "Winter", color: "#c9b6ff" }, { label: "Other", color: "#e7e1d6" },
@@ -202,9 +202,10 @@ const FEED_LEGENDS: Readonly<Record<"nws-storm-reports" | "nps-nrhp-places" | "n
     { label: "Santa Fe", color: "#e07a3f" }, { label: "Oregon", color: "#5aa9e6" }, { label: "California", color: "#b48ee0" },
     { label: "Pony Express", color: "#e5c34b" }, { label: "Cattle trails (study)", color: "#c98b5a" },
   ],
+  "nps-trail-places": [{ label: "Public trail site", color: "#f2c46d" }],
 });
 
 /** Layers added in the November 2026 refresh, shown with a NEW marker in layer lists. */
-export const NEW_LAYER_IDS: ReadonlySet<string> = new Set<string>([...DISCOVERY_LAYER_IDS, "nws-storm-reports", "nps-nrhp-places", "nps-historic-trails"]);
+export const NEW_LAYER_IDS: ReadonlySet<string> = new Set<string>([...DISCOVERY_LAYER_IDS, "nws-storm-reports", "nps-nrhp-places", "nps-historic-trails", "nps-trail-places"]);
 export const discoveryLegend = (id: string): readonly LegendStop[] | undefined =>
   DISCOVERY_LEGENDS[id as DiscoveryLayerId] ?? FEED_LEGENDS[id as keyof typeof FEED_LEGENDS];

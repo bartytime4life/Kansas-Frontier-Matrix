@@ -40,7 +40,7 @@ export const QWEN_LOCAL_PREVIEW_ORIGIN = "http://127.0.0.1:5173";
 // page's Origin is often http://localhost:5173 rather than the loopback IP.
 export const QWEN_LOCAL_PREVIEW_LOCALHOST_ORIGIN = "http://localhost:5173";
 export const QWEN_LOCAL_EXPLORER_ORIGIN = "http://127.0.0.1:4173";
-export const QWEN_LOCAL_MAX_OFFICIAL_SOURCES = 61;
+export const QWEN_LOCAL_MAX_OFFICIAL_SOURCES = 62;
 export const QWEN_LOCAL_ACCEPTED_REVIEW_STATE = "ACCEPTED";
 export const QWEN_LOCAL_ALLOWED_ORIGINS = Object.freeze([
   QWEN_LOCAL_SITE_ORIGIN,

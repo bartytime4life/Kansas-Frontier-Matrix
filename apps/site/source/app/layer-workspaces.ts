@@ -99,6 +99,7 @@ const discoveryTopics: Readonly<Record<string, readonly TopicId[]>> = Object.fre
   "usgs-padus-lands": ["ecology", "land", "places"],
   "nps-nrhp-places": ["history", "places"],
   "nps-historic-trails": ["history", "places"],
+  "nps-trail-places": ["history", "places"],
   "nrcs-ssurgo-soils": ["agriculture", "land", "science"],
   "kdwp-wildlife-areas": ["ecology", "land", "places"],
   "kdwp-wiha-access": ["ecology", "land", "places"],

@@ -377,3 +377,36 @@ test("frontier trails draw designated trails solid and study routes dashed, with
   assert.ok(discovery.NEW_LAYER_IDS.has("nps-historic-trails"));
   assert.deepEqual(topics.officialSourceTopics("nps-historic-trails"), ["history", "places"]);
 });
+
+test("trail sites keep public Kansas points, drop private sites and never request contact or editor fields", async () => {
+  const pt = (x, y, properties) => ({ type: "Feature", geometry: { type: "Point", coordinates: [x, y] }, properties });
+  const { response, body, seen } = await callFeed("nps-trail-places", { type: "FeatureCollection", features: [
+    pt(-96.49, 38.66, { OBJECTID: 5, name: "Neosho Crossing", city: "Council Grove", county: "Morris", safe: 1, oreg: 0, certified_site: 1,
+      url: "https://www.nps.gov/places/neosho-crossing.htm", histsig: "  A natural rockbed crossing on the Santa Fe Trail. ", access_: "unrestricted" }),
+    pt(-101.7, 37.1, { OBJECTID: 6, name: "Davis Ruts", access_: "This half-mile stretch is on a private ranch and is not accessible to the visiting public. (620) 555-0100" }),
+    pt(-98.2, 38.2, { OBJECTID: 7, name: "Old Store", access_: "Private" }),
+    pt(-98.3, 38.3, { OBJECTID: 11, name: "Closed House", access_: "Access is restricted." }),
+    pt(-96.7, 39.0, { OBJECTID: 8, name: "Unlinked Site", url: "javascript:alert(1)", cali: 1, poex: 1 }),
+    pt(-94.8, 37.1, { OBJECTID: 12, name: "Route 66 Station" }),
+    pt(-120, 45, { OBJECTID: 9, name: "Far Away", safe: 1 }),
+    pt(-97, 38, { OBJECTID: 10, name: "", safe: 1 }),
+  ] });
+  assert.equal(response.status, 200);
+  const u = new URL(seen[0]);
+  assert.equal(u.origin + u.pathname, "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/SAFE_SantaFeNHTPointsofInterest_pt/FeatureServer/0/query");
+  assert.doesNotMatch(u.searchParams.get("outFields"), /telephone|email|address|Notes|user|GlobalID|\*/i, "contact, notes and editor fields are never requested");
+  assert.deepEqual(body.data.features.map(f => f.properties.featureId), ["trail-place-5", "trail-place-8"]);
+  const [crossing, unlinked] = body.data.features.map(f => f.properties);
+  assert.equal(crossing.place, "Council Grove, Morris County");
+  assert.equal(crossing.trails, "Santa Fe");
+  assert.equal(crossing.certified, "NPS-certified trail site");
+  assert.equal(crossing.history, "A natural rockbed crossing on the Santa Fe Trail.");
+  assert.equal(crossing.recordUrl, "https://www.nps.gov/places/neosho-crossing.htm");
+  assert.equal(unlinked.recordUrl, null);
+  assert.equal(unlinked.trails, "California, Pony Express");
+  assert.doesNotMatch(JSON.stringify(body), /access_|620\) 555|Davis Ruts|Old Store|Closed House/, "private sites and the access field are not published");
+  assert.match(body.limitation, /3 sites NPS describes as private or not open to visitors are left out/);
+  assert.match(body.limitation, /1 on other corridors are not shown/);
+  assert.doesNotMatch(JSON.stringify(body.data), /Route 66/);
+  assert.equal(body.state, "partial");
+});

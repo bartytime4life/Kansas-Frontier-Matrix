@@ -2739,3 +2739,18 @@ def test_trail_offsets_successor_preserves_frontier_trails_inventory_and_all_hol
         {"app/live-context.ts", "docs/explorer-frontier-trails-2026-11-14.md", "tests/kansas-discovery-layers.test.mjs"},
         "33b69ce6c93a0961706548360f7f55a73e1286a7",
     )
+
+
+def test_trail_places_successor_preserves_trail_offsets_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-trail-places-overlay-20261114.json",
+        "site-v268-trail-offsets-overlay-20261114.json",
+        "e3b8e9a692bfe18944d9748e7860e1273d3d1d5b5d069a39c3543cee982d51a4",
+        {"app/api/live-context/route.ts", "app/api/source-download/route.ts", "app/evidence-drawer-data.ts",
+         "app/kansas-discovery-layers.ts", "app/layer-workspaces.ts", "app/live-context.ts", "app/map-starters.ts",
+         "app/page.tsx", "app/site-connections.ts", "app/site-features.ts", "app/source-downloads.ts",
+         "docs/explorer-frontier-trails-2026-11-14.md", "scripts/qwen-knowledge-pack.mjs", "scripts/qwen-local-contract.mjs",
+         "tests/kansas-discovery-layers.test.mjs", "tests/local-qwen-bridge.test.mjs", "tests/rendered-html.test.mjs",
+         "tests/runtime-resilience.test.mjs"},
+        "774220c04f46df4ab7160fbe6c4a9a49b41417e5",
+    )
