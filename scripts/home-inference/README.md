@@ -222,6 +222,57 @@ or cancelling that generation triggers a fresh health probe immediately.
 
 Logs (`journalctl -u kfm-inference-worker`) carry fixed codes and timings only.
 
+## Change the chat model
+
+The model is pinned in **two places**, and both must name the same digest:
+
+1. **On the inference PC:** the profile's `model` and `digest` in the
+   gateway's profiles file. The file's path comes from the gateway process's
+   `KFM_GATEWAY_PROFILES` setting, and defaults to
+   `/etc/kfm-inference/profiles.json`.
+2. **On the website:** `KFM_HOME_INFERENCE_DIGEST` in the GoDaddy app's
+   environment. The site also checks the profile `id` against
+   `KFM_HOME_INFERENCE_PROFILE`.
+
+If the two digests differ, public chat reports *unavailable* until they
+match, and the app log records `PROFILE_IDENTITY`. Nothing falls back to another model.
+
+**Size the model to the GPU first.** Use about 8B for 8 GB of VRAM and about
+14B for 12–16 GB. On CPU only, larger models usually miss the 90-second limit
+for brief answers.
+
+To change the model, on the inference PC:
+
+```bash
+ollama pull qwen3:14b
+```
+
+```bash
+curl -s http://127.0.0.1:11434/api/tags | node -e 'for (const m of JSON.parse(require("fs").readFileSync(0)).models) console.log(m.name, "sha256:" + m.digest)'
+```
+
+1. Back up the profiles file.
+2. In the profile the site uses (normally `kfm-default-chat`), change only
+   `model` and `digest`. Keep its `id` and every other field.
+3. Reload the gateway service.
+4. Without delay, set `KFM_HOME_INFERENCE_DIGEST` in GoDaddy to the same
+   `sha256:…` value.
+5. **Publish.** The app restarts and shows *connecting* for about 10 seconds
+   before *ready*.
+
+Then confirm the change from anywhere:
+
+```bash
+curl -s https://kansasfrontiermatrix.com/api/ai/status
+```
+
+The response should show the new `modelLabel` and `"ready":true`. Then ask one
+brief question on the site and time the reply.
+
+**To undo:** restore the backed-up profiles file, reload the gateway, put the
+old digest back in GoDaddy, and publish. Keep the old model downloaded until
+the new one has proved itself.
+
 ## Stopping and rollback on this PC
 
 - Disconnect from the website (poll transport): `sudo systemctl disable --now kfm-inference-worker`.
