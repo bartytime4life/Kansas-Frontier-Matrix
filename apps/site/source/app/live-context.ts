@@ -1033,10 +1033,13 @@ export const applyOfficialContextState = (
     ensureGeoJsonSource(map, trails, payloads["nps-historic-trails"]?.data ?? emptyCollection());
     const trailColor = ["match", ["get", "trailGroup"], "santa-fe", "#e07a3f", "oregon", "#5aa9e6", "california", "#b48ee0", "pony-express", "#e5c34b", "cattle", "#c98b5a", trails.color] as ExpressionSpecification;
     const designated: ExpressionSpecification = ["!=", ["get", "trailGroup"], "cattle"];
+    // Oregon, California and Pony Express share the same ruts across northeast Kansas; side-by-side
+    // offsets keep each trail visible instead of the last-drawn line hiding the others.
+    const trailOffset = ["match", ["get", "trailGroup"], "oregon", -3, "california", 3, 0] as ExpressionSpecification;
     ensureLayer(map, { id: trails.layerIds[0], type: "line", source: trails.sourceId, filter: designated, layout: { "line-cap": "round", "line-join": "round" },
-      paint: { "line-color": "#1d140c", "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3.2, 9, 6, 13, 9], "line-opacity": 0.55 } });
+      paint: { "line-color": "#1d140c", "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3.2, 9, 6, 13, 9], "line-offset": trailOffset, "line-opacity": 0.55 } });
     ensureLayer(map, { id: trails.layerIds[1], type: "line", source: trails.sourceId, filter: designated, layout: { "line-cap": "round", "line-join": "round" },
-      paint: { "line-color": trailColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.6, 9, 3.2, 13, 5], "line-opacity": trails.defaultOpacity } });
+      paint: { "line-color": trailColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.6, 9, 3.2, 13, 5], "line-offset": trailOffset, "line-opacity": trails.defaultOpacity } });
     ensureLayer(map, { id: trails.layerIds[2], type: "line", source: trails.sourceId, filter: ["==", ["get", "trailGroup"], "cattle"], layout: { "line-join": "round" },
       paint: { "line-color": trailColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.4, 9, 2.6, 13, 4], "line-dasharray": [2, 1.5], "line-opacity": trails.defaultOpacity } });
     ensureLayer(map, { id: trails.layerIds[3], type: "symbol", source: trails.sourceId, minzoom: 7, layout: {

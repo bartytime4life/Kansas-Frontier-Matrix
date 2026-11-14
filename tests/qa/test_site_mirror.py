@@ -2729,3 +2729,13 @@ def test_frontier_trails_successor_preserves_wiha_notes_inventory_and_all_holds(
          "tests/rendered-html.test.mjs", "tests/runtime-resilience.test.mjs"},
         "08d5d9d5e682308b870299a40aab394308973578",
     )
+
+
+def test_trail_offsets_successor_preserves_frontier_trails_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-trail-offsets-overlay-20261114.json",
+        "site-v268-frontier-trails-overlay-20261114.json",
+        "1ea1f2de3bed96004eb2f579a0e127229d4795d509d79b933beaa3f51099bd33",
+        {"app/live-context.ts", "docs/explorer-frontier-trails-2026-11-14.md", "tests/kansas-discovery-layers.test.mjs"},
+        "33b69ce6c93a0961706548360f7f55a73e1286a7",
+    )
