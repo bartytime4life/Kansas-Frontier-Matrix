@@ -64,6 +64,7 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "nrcs-ssurgo-soils": { href: "https://websoilsurvey.nrcs.usda.gov/", label: "Web Soil Survey map-unit data" },
   "kdwp-wildlife-areas": { href: "/api/source-download?source=kdwp-wildlife-areas", label: "Download wildlife areas · GeoJSON" },
   "kdwp-wiha-access": { href: "/api/source-download?source=kdwp-wiha-access", label: "Download WIHA tracts · GeoJSON" },
+  "nps-historic-trails": { href: "/api/source-download?source=nps-historic-trails", label: "Download Kansas trail lines · GeoJSON" },
 };
 
 const ARCHIVE_DOWNLOAD_SOURCES = new Set<OfficialContextId>(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);

@@ -2713,3 +2713,19 @@ def test_wiha_notes_privacy_successor_preserves_outdoor_access_inventory_and_all
          "docs/explorer-outdoor-access-soil-layers-2026-11-13.md", "tests/kansas-discovery-layers.test.mjs"},
         "d787e1c4c6f11e74265abd283ec22add3d90692a",
     )
+
+
+def test_frontier_trails_successor_preserves_wiha_notes_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-frontier-trails-overlay-20261114.json",
+        "site-v268-wiha-notes-privacy-overlay-20261113.json",
+        "26ce1160975a1bdd68e78f2a202350dfc6addd126baca262d6b40e0b8d3971ea",
+        {"app/api/live-context/route.ts", "app/api/source-download/route.ts", "app/evidence-drawer-data.ts",
+         "app/kansas-discovery-layers.ts", "app/layer-workspaces.ts", "app/live-context.ts", "app/map-starters.ts",
+         "app/page.tsx", "app/site-connections.ts", "app/site-features.ts", "app/source-downloads.ts",
+         "docs/README.md", "docs/explorer-frontier-trails-2026-11-14.md",
+         "scripts/qwen-knowledge-pack.mjs", "scripts/qwen-local-contract.mjs",
+         "tests/kansas-discovery-layers.test.mjs", "tests/local-qwen-bridge.test.mjs", "tests/map-starters.test.mjs",
+         "tests/rendered-html.test.mjs", "tests/runtime-resilience.test.mjs"},
+        "08d5d9d5e682308b870299a40aab394308973578",
+    )

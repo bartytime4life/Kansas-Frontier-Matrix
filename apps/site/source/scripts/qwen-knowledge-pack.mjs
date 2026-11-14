@@ -284,7 +284,8 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
     {
       "name": "History & cultural heritage",
       "sourceIds": [
-        "nps-nrhp-places"
+        "nps-nrhp-places",
+        "nps-historic-trails"
       ],
       "ideas": [
         "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
@@ -1186,6 +1187,21 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "fallback": "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
       "attribution": "National Park Service · National Register of Historic Places",
       "sourceUrl": "https://www.nps.gov/subjects/nationalregister/database-research.htm",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-historic-trails",
+      "title": "Frontier trails across Kansas · NPS National Trails",
+      "shortTitle": "Frontier trails · Santa Fe, Oregon, Pony Express",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS National Trails Office updates trail alignments as mapping is revised",
+      "freshness": "Current NPS mapped alignments at retrieval time",
+      "boundary": "Approximate 1:100,000 NPS alignments of 19th-century routes where they cross Kansas. Most of the land along these lines is private; a line is not public access, a property boundary or a precise ruts location. The cattle-trail routes were studied by NPS and are not designated National Historic Trails. External context only, not KFM evidence.",
+      "fallback": "If an NPS layer is unavailable the rest still draw and the source card names the missing trail; missing lines never mean no historic route existed.",
+      "attribution": "National Park Service, National Trails Office",
+      "sourceUrl": "https://www.nps.gov/subjects/nationaltrailssystem/national-historic-trails.htm",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {
