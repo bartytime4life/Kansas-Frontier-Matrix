@@ -344,6 +344,12 @@ test("frontier trails draw designated trails solid and study routes dashed, with
   assert.deepEqual(layers.get("external-nps-historic-trails-line").filter, ["!=", ["get", "trailGroup"], "cattle"]);
   assert.deepEqual(layers.get("external-nps-historic-trails-cattle").filter, ["==", ["get", "trailGroup"], "cattle"]);
   assert.ok(layers.get("external-nps-historic-trails-cattle").paint["line-dasharray"]);
+  // Shared Oregon/California/Pony Express ruts draw side by side, casing and line together.
+  const offset = layers.get("external-nps-historic-trails-line").paint["line-offset"];
+  assert.deepEqual(layers.get("external-nps-historic-trails-casing").paint["line-offset"], offset);
+  const offsetFor = group => { const i = offset.indexOf(group); return i < 0 ? offset.at(-1) : offset[i + 1]; };
+  assert.equal(new Set(["oregon", "california", "pony-express"].map(offsetFor)).size, 3, "each shared-route trail has its own offset");
+  assert.equal(offsetFor("santa-fe"), 0);
   assert.equal(layers.get("external-nps-historic-trails-labels").minzoom, 7);
   const paint = JSON.stringify(layers.get("external-nps-historic-trails-line").paint["line-color"]);
   for (const stop of discovery.discoveryLegend("nps-historic-trails")) assert.ok(paint.includes(stop.color), stop.label);
