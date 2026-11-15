@@ -710,16 +710,18 @@ class Handler(BaseHTTPRequestHandler):
             raw_attachment = re.sub(r"[\r\n\x00-\x1f\x7f]+", "", str(attachment)).strip()
             if not raw_attachment:
                 raw_attachment = "download"
+            # Safe ASCII fallback for legacy filename parameter.
             fallback_attachment = re.sub(r"[^A-Za-z0-9._-]+", "_", raw_attachment).strip("._-")
             if not fallback_attachment:
                 fallback_attachment = "download"
+            # RFC 5987 encoding for full-fidelity UTF-8 filename.
             encoded_attachment = quote(raw_attachment, safe="")
             content_disposition = (
                 f'attachment; filename="{fallback_attachment}"; filename*=UTF-8\'\'{encoded_attachment}'
             )
-            # Final sink hardening: keep only visible ASCII plus whitespace separators.
-            # This prevents CR/LF and other control-char based header injection.
-            content_disposition = re.sub(r"[^\t\x20-\x7e]+", "", content_disposition).strip()
+            # Final sink hardening: remove anything outside visible ASCII.
+            # Guarantees no CR/LF/control-char header injection at write time.
+            content_disposition = re.sub(r"[^\x20-\x7e]+", "", content_disposition).strip()
             self.send_header("Content-Disposition", content_disposition)
         self.end_headers()
         self.wfile.write(body)
