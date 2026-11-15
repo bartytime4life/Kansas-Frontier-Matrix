@@ -5751,7 +5751,7 @@ export default function Home() {
     window.setTimeout(() => mapContainerRef.current?.focus(), 0);
   }, []);
 
-  const openSourceStatus = useCallback((returnElement?: HTMLElement | null) => {
+  const openSourceStatus = useCallback((returnElement?: HTMLElement | null, sourceId?: OfficialContextId) => {
     markExplorerNavigation();
     setPrimaryWorkspace("map");
     setGuideOpen(false);
@@ -5762,9 +5762,21 @@ export default function Home() {
     setRightOpen(false);
     setScenePanelOpen(false);
     setLeftPanelMode("layers");
+    if (sourceId) setSourceStatusScope("all");
     setSourceStatusOpen(true);
     setLeftOpen(true);
     window.requestAnimationFrame(() => {
+      const row = sourceId
+        ? sourceStatusPanelRef.current?.querySelector<HTMLElement>(`[data-source-id="${sourceId}"]`)
+        : null;
+      const details = row?.querySelector<HTMLDetailsElement>("details");
+      const summary = details?.querySelector<HTMLElement>("summary");
+      if (row && details && summary) {
+        details.open = true;
+        row.scrollIntoView({ block: "nearest" });
+        summary.focus({ preventScroll: true });
+        return;
+      }
       sourceStatusPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Back to layers"]')?.focus({ preventScroll: true });
     });
   }, [markExplorerNavigation, setRightOpen]);
@@ -12082,7 +12094,7 @@ export default function Home() {
                   </details>}
                   <button type="button" onClick={() => setWindArrowReloadToken(value => value + 1)} disabled={!officialVisibility[source.id] || windArrowState === "LOADING" || heldAtFrame}>Refresh wind forecast</button>
                 </div>}
-                <div className="official-context-actions"><button type="button" onClick={event => openSourceStatus(event.currentTarget)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                <div className="official-context-actions"><button type="button" onClick={event => openSourceStatus(event.currentTarget, source.id)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
                 </div></details>
               </article>;
             })}</div>

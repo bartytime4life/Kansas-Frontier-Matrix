@@ -646,7 +646,12 @@ test("every official source has exactly one catalog category, and the download r
 
   const download = await import(await moduleUrl("app/api/source-download/route.ts"));
   const onSite = Object.entries(downloads.SOURCE_DOWNLOADS).filter(([, { href }]) => href.startsWith("/api/source-download?")).map(([id]) => id);
-  assert.ok(onSite.length >= 13 && onSite.includes("nps-trail-places"));
+  const approvedDownloads = [
+    "census-counties", "usgs-streamflow", "usgs-earthquakes", "noaa-hms-smoke",
+    "nasa-gibs-fire-points", "nifc-fire-reports", "raspberry-shake-stations", "nws-alerts",
+    "nps-nrhp-places", "kdwp-wildlife-areas", "kdwp-wiha-access", "nps-historic-trails", "nps-trail-places",
+  ];
+  assert.deepEqual([...onSite].sort(), [...approvedDownloads].sort(), "on-site downloads retain exactly the approved 13-source permission set");
   const original = globalThis.fetch;
   globalThis.fetch = async () => { throw new Error("provider unavailable in test"); };
   try {
