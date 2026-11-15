@@ -410,3 +410,35 @@ test("trail sites keep public Kansas points, drop private sites and never reques
   assert.doesNotMatch(JSON.stringify(body.data), /Route 66/);
   assert.equal(body.state, "partial");
 });
+
+test("every official source has exactly one catalog category, and the download route serves exactly the on-site downloads", async () => {
+  const categories = new Set(["Reference boundaries & locators", "Hydrology & water", "Geology & landforms", "Habitat, fauna & flora", "Agriculture", "Weather & hazards", "Fire, smoke & hazards", "People & DNA", "Roads, rail & movement", "Settlements & cities", "Historical geography", "Public-safe planning", "Review & diagnostics"]);
+  const ids = context.OFFICIAL_CONTEXT_SOURCES.map(source => source.id).sort();
+  assert.deepEqual(Object.keys(topics.OFFICIAL_SOURCE_CATEGORY).sort(), ids);
+  for (const [id, category] of Object.entries(topics.OFFICIAL_SOURCE_CATEGORY)) assert.ok(categories.has(category), `${id}: ${category}`);
+  // Sources that an old if-chain sent to "Weather & hazards" by default.
+  assert.equal(topics.OFFICIAL_SOURCE_CATEGORY["kdot-roads"], "Roads, rail & movement");
+  assert.equal(topics.OFFICIAL_SOURCE_CATEGORY["blm-plss-sections"], "Reference boundaries & locators");
+  assert.equal(topics.OFFICIAL_SOURCE_CATEGORY["usgs-3dep-slope"], "Geology & landforms");
+  assert.equal(topics.OFFICIAL_SOURCE_CATEGORY["kgs-aquifer-dakota"], "Hydrology & water");
+  assert.equal(topics.OFFICIAL_SOURCE_CATEGORY["nasa-gibs-fire-points"], "Fire, smoke & hazards");
+  assert.equal(topics.OFFICIAL_SOURCE_CATEGORY["nrcs-ssurgo-soils"], "Agriculture");
+  assert.match(await readFile("app/page.tsx", "utf8"), /category: OFFICIAL_SOURCE_CATEGORY\[officialSource\.id\],/);
+
+  const download = await import(await moduleUrl("app/api/source-download/route.ts"));
+  const onSite = Object.entries(downloads.SOURCE_DOWNLOADS).filter(([, { href }]) => href.startsWith("/api/source-download?")).map(([id]) => id);
+  assert.ok(onSite.length >= 14 && onSite.includes("nps-trail-places") && onSite.includes("nws-storm-reports"));
+  const original = globalThis.fetch;
+  globalThis.fetch = async () => { throw new Error("provider unavailable in test"); };
+  try {
+    for (const id of onSite) {
+      assert.equal(downloads.SOURCE_DOWNLOADS[id].href, `/api/source-download?source=${id}`);
+      const response = await download.GET(new Request(`http://127.0.0.1/api/source-download?source=${id}`));
+      assert.notEqual(response.status, 400, id);
+    }
+    for (const id of [...ids.filter(id => !onSite.includes(id)), "not-a-source", ""]) {
+      const response = await download.GET(new Request(`http://127.0.0.1/api/source-download?source=${encodeURIComponent(id)}`));
+      assert.equal(response.status, 400, id);
+    }
+  } finally { globalThis.fetch = original; }
+});

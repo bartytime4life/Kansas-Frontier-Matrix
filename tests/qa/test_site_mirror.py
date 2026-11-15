@@ -2754,3 +2754,17 @@ def test_trail_places_successor_preserves_trail_offsets_inventory_and_all_holds(
          "tests/runtime-resilience.test.mjs"},
         "774220c04f46df4ab7160fbe6c4a9a49b41417e5",
     )
+
+
+def test_guides_categories_successor_preserves_trail_places_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-guides-categories-overlay-20261115.json",
+        "site-v268-trail-places-overlay-20261114.json",
+        "af303217aa3358db11bffb337485c40ee0fed0c319018ce9abd68e1c853bb030",
+        {"app/api/source-download/route.ts", "app/explore/drought-and-water/page.tsx", "app/explore/explore.module.css",
+         "app/explore/frontier-trails/page.tsx", "app/explore/guide-page.tsx", "app/explore/historic-places/page.tsx",
+         "app/explore/hunting-and-wildlife-areas/page.tsx", "app/explore/page.tsx", "app/landing-guides.ts",
+         "app/layer-workspaces.ts", "app/page.tsx", "app/topics/page.tsx", "tests/kansas-discovery-layers.test.mjs",
+         "tests/landing-guides.test.mjs"},
+        "54725be513186123529998c68aa391aa9bc97a1a",
+    )

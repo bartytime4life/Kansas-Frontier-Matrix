@@ -1,3 +1,4 @@
+import type { LayerCategory } from "./explorer-data";
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
 
 export type LayerWorkspace = "groundwater" | "all" | "disaster" | "land" | "transport" | "water" | "terrain" | "places"
@@ -75,6 +76,73 @@ export const LAND_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
 ]);
 
 export const TRANSPORT_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze(["kdot-bridges-state", "kdot-bridges-local", "kdot-bridges-historic", "kdot-bridges-old", "kdot-bridges-closed", "kdot-roads-1918", "kdot-roads", "kdot-rail-active", "kdot-rail-abandoned"]);
+
+/** Catalog category of a clicked official-source feature. Exhaustive by source identity, so a new
+ * source cannot silently fall into an unrelated category. */
+export const OFFICIAL_SOURCE_CATEGORY: Readonly<Record<OfficialContextId, LayerCategory>> = Object.freeze({
+  "census-counties": "Reference boundaries & locators",
+  "blm-plss-townships": "Reference boundaries & locators",
+  "blm-plss-sections": "Reference boundaries & locators",
+  "blm-plss-intersected": "Reference boundaries & locators",
+  "blm-mlrs-leases-authorized": "Reference boundaries & locators",
+  "blm-mlrs-leases-closed": "Reference boundaries & locators",
+  "kdot-roads": "Roads, rail & movement",
+  "kdot-roads-1918": "Roads, rail & movement",
+  "kdot-rail-active": "Roads, rail & movement",
+  "kdot-rail-abandoned": "Roads, rail & movement",
+  "kdot-bridges-state": "Roads, rail & movement",
+  "kdot-bridges-local": "Roads, rail & movement",
+  "kdot-bridges-historic": "Roads, rail & movement",
+  "kdot-bridges-old": "Roads, rail & movement",
+  "kdot-bridges-closed": "Roads, rail & movement",
+  "kgs-aquifer-alluvial": "Hydrology & water",
+  "kgs-aquifer-dakota": "Hydrology & water",
+  "kgs-aquifer-glacial-drift": "Hydrology & water",
+  "kgs-aquifer-high-plains": "Hydrology & water",
+  "kgs-aquifer-ozark": "Hydrology & water",
+  "kgs-aquifer-osage": "Hydrology & water",
+  "kgs-aquifer-flint-hills": "Hydrology & water",
+  "kgs-water-table": "Hydrology & water",
+  "kgs-saturated-thickness": "Hydrology & water",
+  "kgs-depth-to-water": "Hydrology & water",
+  "kgs-monitoring-wells": "Hydrology & water",
+  "usgs-streamflow": "Hydrology & water",
+  "noaa-nwps-gauges": "Hydrology & water",
+  "usgs-3dhp-hydrography": "Hydrology & water",
+  "usgs-wbd-watersheds": "Hydrology & water",
+  "noaa-nwm-analysis": "Hydrology & water",
+  "noaa-nwm-short-range": "Hydrology & water",
+  "usgs-3dep-hillshade": "Geology & landforms",
+  "usgs-3dep-slope": "Geology & landforms",
+  "usgs-earthquakes": "Geology & landforms",
+  "raspberry-shake-stations": "Geology & landforms",
+  "usgs-padus-lands": "Habitat, fauna & flora",
+  "mrlc-nlcd-land-cover": "Habitat, fauna & flora",
+  "kdwp-wildlife-areas": "Habitat, fauna & flora",
+  "kdwp-wiha-access": "Habitat, fauna & flora",
+  "nrcs-ssurgo-soils": "Agriculture",
+  "nps-nrhp-places": "Historical geography",
+  "nps-historic-trails": "Historical geography",
+  "nps-trail-places": "Historical geography",
+  "noaa-hms-smoke": "Fire, smoke & hazards",
+  "nasa-firms-active-fire": "Fire, smoke & hazards",
+  "nasa-gibs-fire-points": "Fire, smoke & hazards",
+  "nifc-fire-reports": "Fire, smoke & hazards",
+  "noaa-spc-fire-weather": "Fire, smoke & hazards",
+  "fema-flood-zones": "Weather & hazards",
+  "fema-disaster-declarations": "Weather & hazards",
+  "noaa-cpc-drought-outlook": "Weather & hazards",
+  "noaa-goes-geocolor": "Weather & hazards",
+  "nws-alerts": "Weather & hazards",
+  "nws-storm-reports": "Weather & hazards",
+  "noaa-spc-convective-outlook": "Weather & hazards",
+  "noaa-mrms-qpe-24h": "Weather & hazards",
+  "noaa-wpc-qpf-5day": "Weather & hazards",
+  "nws-radar": "Weather & hazards",
+  "nws-forecast-wind": "Weather & hazards",
+  "noaa-lightning-density": "Weather & hazards",
+  "nasa-lightning-climatology": "Weather & hazards",
+});
 
 export const LAYER_WORKSPACES: readonly (readonly [LayerWorkspace, string])[] = Object.freeze([
   ["all", "All topics"], ...TOPIC_STRUCTURE.map(topic => [topic.id, topic.title] as const),

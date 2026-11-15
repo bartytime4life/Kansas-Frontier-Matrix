@@ -261,7 +261,7 @@ import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
 import { officialSourceTopics, specialtyLayerTopics, registryLayerTopics, atlasViewTopics, featureTopics, functionTopics, topicDefinition, topicSearchText, restoreTopic, imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
 import { TopicSelect, TopicGuide } from "./topic-navigation";
-import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
+import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, OFFICIAL_SOURCE_CATEGORY, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
   clearOfficialContextFeed,
@@ -1036,13 +1036,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     title: officialSource.title,
     description: officialSource.boundary,
     domain: officialSource.domain,
-    category: officialSource.id === "census-counties" ? "Reference boundaries & locators"
-      : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
-        : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
-          : officialSource.id === "kdwp-wildlife-areas" || officialSource.id === "kdwp-wiha-access" ? "Habitat, fauna & flora"
-          : officialSource.id === "nps-nrhp-places" || officialSource.id === "nps-historic-trails" || officialSource.id === "nps-trail-places" ? "Historical geography"
-            : officialSource.id === "mrlc-nlcd-land-cover" || officialSource.id === "usgs-padus-lands" ? "Habitat, fauna & flora"
-              : "Weather & hazards",
+    category: OFFICIAL_SOURCE_CATEGORY[officialSource.id],
     sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",
     sourceId: officialSource.sourceId,
     datasetName: officialSource.title,
