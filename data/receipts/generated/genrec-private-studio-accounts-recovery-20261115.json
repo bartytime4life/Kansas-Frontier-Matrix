@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-private-studio-accounts-recovery-20261115",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/intake_studio/accounts.py",
+    "tools/local_data/intake_studio/recovery.py",
+    "tools/local_data/intake_studio/studio_access.py",
+    "tools/local_data/intake_studio/private_server.py",
+    "tools/local_data/intake_studio/intake_server.py",
+    "tools/local_data/intake_studio/launch_local.py",
+    "tools/local_data/intake_studio/workspace.py",
+    "tools/local_data/intake_studio/local-web/index.html",
+    "tools/local_data/intake_studio/local-web/studio-shell.html",
+    "tools/local_data/intake_studio/local-web/studio-ui.css",
+    "tools/local_data/intake_studio/local-web/studio-ui.js",
+    "tools/local_data/intake_studio/README.md",
+    "tests/local_data/test_studio_accounts_recovery.py",
+    "docs/runbooks/private-studio-accounts-recovery.md"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/intake_studio/accounts.py": "sha256:b5ca485b3a3037f718b822da3fc8ae06c16bae757e2532808dbf7db2eef69f4d",
+    "tools/local_data/intake_studio/recovery.py": "sha256:caddb4a139c159dc00c36116c35d32e253dfa7ba476580bf90ad6f2b7ccbc4c9",
+    "tools/local_data/intake_studio/studio_access.py": "sha256:bba2f6f138c2c8d94e41e86ffbe41b6913fd625deb19bf616f314a390e8190b0",
+    "tools/local_data/intake_studio/private_server.py": "sha256:1344dc523c2c6d8f05c4c8986af81d55e4919f1cb8eaf65ed41ed0ee05b17c9b",
+    "tools/local_data/intake_studio/intake_server.py": "sha256:beff2ad5870a991931c9244188fdb14e5035fa49aa1031f3ad352bce8264ed1b",
+    "tools/local_data/intake_studio/launch_local.py": "sha256:0732546991791e0410dd40a6f74831c33b5a02c75bdbe4de24ee3ad95f12f8ae",
+    "tools/local_data/intake_studio/workspace.py": "sha256:5b1af84e193efc9e08726016732e2dbae7972f4ca8c464ad6e10d79ba3988f86",
+    "tools/local_data/intake_studio/local-web/index.html": "sha256:2de4a07aba1c6b08db5e54d81965292f5c5f7b5d3a66e0332e30db33daf4694c",
+    "tools/local_data/intake_studio/local-web/studio-shell.html": "sha256:ab6792ce14b49ae8b6812e4e683f823ca1ca5f89d9113d1d0ac34e2e5ddd5844",
+    "tools/local_data/intake_studio/local-web/studio-ui.css": "sha256:0ea187345887d0e0160021736cf8c2ed8919abd005a9dc823d2adba18963d438",
+    "tools/local_data/intake_studio/local-web/studio-ui.js": "sha256:f65ae0f3b0eced3beff2b168be93a450a0d2efed02d6bb350e2aa75573723dd5",
+    "tools/local_data/intake_studio/README.md": "sha256:e36446a2f139ed895a81822d888c33ca64d5d93b2bf0c9122206ad6f88b5f3c8",
+    "tests/local_data/test_studio_accounts_recovery.py": "sha256:4e924f9db95a9f9a84d1d8bb1f9e7cfa207c26dcab042b93a7109c06c2af015f",
+    "docs/runbooks/private-studio-accounts-recovery.md": "sha256:3a7226d9f0a317ccfc49ee4d2d4957d8dd739f76fa57909beccb0dba81c598b2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:93969066aa6286ac15c278f73f4914594d9bceb9d6ac3f17086e35cbdb7d938c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0e83baa9a5e06a8893954174019437894f7f191aedb5a17c2e7dfc0d126f21d0"
+    ],
+    "evidence_refs": [
+      "repo:tools/local_data/intake_studio/intake_server.py@bdb41a9490ca4e3661196da0f7ab2b0aa0a189d3",
+      "repo:tools/local_data/intake_studio/workspace.py@bdb41a9490ca4e3661196da0f7ab2b0aa0a189d3",
+      "repo:tools/local_data/intake_studio/launch_local.py@bdb41a9490ca4e3661196da0f7ab2b0aa0a189d3",
+      "repo:tests/local_data/test_intake_studio_security.py@bdb41a9490ca4e3661196da0f7ab2b0aa0a189d3"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/intake_studio/accounts.py": "CONFIRMED",
+    "tools/local_data/intake_studio/recovery.py": "CONFIRMED",
+    "tools/local_data/intake_studio/studio_access.py": "CONFIRMED",
+    "tools/local_data/intake_studio/private_server.py": "CONFIRMED",
+    "tools/local_data/intake_studio/intake_server.py": "CONFIRMED",
+    "tools/local_data/intake_studio/launch_local.py": "CONFIRMED",
+    "tools/local_data/intake_studio/workspace.py": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/index.html": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/studio-shell.html": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/studio-ui.css": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/studio-ui.js": "CONFIRMED",
+    "tools/local_data/intake_studio/README.md": "CONFIRMED",
+    "tests/local_data/test_studio_accounts_recovery.py": "CONFIRMED",
+    "docs/runbooks/private-studio-accounts-recovery.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused account, recovery and HTTP gateway tests",
+      "outcome": "PASS",
+      "reason": "84 tests passed, zero failures/skips. Actual loopback HTTP against the new gateway; unrelated legacy data handler explicitly stubbed. One test uses production scrypt cost; most use a test-only lower KDF cost."
+    },
+    {
+      "gate": "Existing acceptance evidence regression tests",
+      "outcome": "PASS",
+      "reason": "50 unchanged tests passed. Workspace dispatch harness isolates unrelated legacy Desk dependencies; not full native Studio qualification."
+    },
+    {
+      "gate": "Repository no-network environment mode",
+      "outcome": "PASS",
+      "reason": "55 tests passed, 29 explicit loopback skips, zero failures with KFM_NO_NETWORK=1. Does not claim the full repository no-network harness or make local-data-check."
+    },
+    {
+      "gate": "Python syntax, JavaScript syntax and static HTML",
+      "outcome": "PASS",
+      "reason": "Python AST parse succeeded for scoped files; node --check succeeded; 41 unique shell IDs, six explicit POST forms, zero remote static assets. No rendered-browser test."
+    },
+    {
+      "gate": "Full Studio integration, native local-data suite, browser, installed machine, security review and actual backup/restore",
+      "outcome": "SKIPPED",
+      "reason": "Not run. Existing tests that assumed anonymous sessions need authenticated fixtures and full validation; no weakening or suppression authorized. No user account, disk, installed service, hosted Site or public deployment changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-shared-workspace",
+      "validated": true,
+      "evidence_ref": "repo:tools/local_data/intake_studio/workspace.py@bdb41a9490ca4e3661196da0f7ab2b0aa0a189d3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-11-15T22:26:43.132077+00:00",
+  "emitter": "ChatGPT private Studio source preparation",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Draft source candidate only. CONFIRMED refers to inspected implementation and bounded checks, not visual/security/operational acceptance. Fourteen authored/edited source/test/documentation artifacts are SHA-256 bound here. The additional intake_backend.py is the exact original intake_server.py Git blob 231da6b1d8a370e38c6d7a45217e13b4e0c4a5c0, preserved via Git tree reference; it was not independently reexecuted. Supported intake_server.py, private_server.py and launcher require local accounts. The raw backend is internal, not a supported server entrypoint. Literal loopback HTTP only; no proxy/LAN/internet exposure, MFA, encryption-at-rest, public signup, automatic restore, mounted-volume change or service-enable action. Recovery records are declarations/evidence, not live device checks. Hosted acceptance/recovery ledgers unchanged. No owner credentials in source."
+}

@@ -21,8 +21,8 @@ See the [setup, review and handoff runbook](../../../docs/runbooks/local-intake-
 This Linux loopback operator prepares private held proposals and can explicitly
 send a saved ready review into private Working Data capture and indexing.
 `handoff.py` preserves original bytes, review history and sharing holds using
-the established capture and intake primitives. `intake_server.py` owns storage
-and review, `intake_worker.py` performs
+the established capture and intake primitives. `intake_server.py` is the protected
+entrypoint; `intake_backend.py` retains storage and review; `intake_worker.py` performs
 sandboxed extraction, and `local-web/` supplies the local client. The launcher is
 on demand; it does not install packages, services or public routes.
 `workspace.py` mounts the existing Working Data and read-only Library desks
@@ -40,3 +40,17 @@ changing original bytes or treating historical claims as new verification.
 Its separate append-only ledger cannot change intake review, sensitivity,
 source admission or publication. See the [local acceptance runbook](../../../docs/runbooks/local-acceptance-evidence.md)
 for limits, evidence export, remaining acceptance checks and rollback.
+
+## Private accounts and recovery evidence
+
+The supported server and launcher now require local Studio accounts. A one-time
+local setup code creates the first owner; owner-managed admin/operator/viewer
+roles protect both pages and APIs. The same navigation adds Backup & recovery
+with recorded storage identities, seven evidence stages and display-only command
+plans. No disk operations or public deployment are performed.
+
+See the [accounts and recovery runbook](../../../docs/runbooks/private-studio-accounts-recovery.md)
+for setup, threat boundary, backup requirements, remaining validation and safe
+rollback. `intake_backend.py` is the preserved internal implementation, not a
+supported anonymous server entrypoint. Do not launch it directly. The existing
+hosted Sites and installed machines are not changed by this source candidate.
