@@ -4,8 +4,9 @@ import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-
 import { hiDpiExportUrl } from "./hd-rasters";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import { KANSAS_DISCOVERY_SOURCES } from "./kansas-discovery-layers";
+import { BRIDGE_CLOSED_COLOR, BRIDGE_CLUSTER_MAX_ZOOM, BRIDGE_CLUSTER_RADIUS, BRIDGE_ERA_STOPS, BRIDGE_FEED_IDS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR } from "./kdot-bridges";
 import type { FeatureCollection } from "geojson";
-import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
+import type { ExpressionSpecification, GeoJSONSource, GeoJSONSourceSpecification, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { lightningTilePath, NASA_LIGHTNING_METADATA_URL, NASA_LIGHTNING_TILES } from "./lightning-data";
 import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite";
@@ -20,7 +21,7 @@ import { globeOverviewPaintSize } from "./globe-context";
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay } from "./fire-detection-style";
 
 export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nps-nrhp-places" | "nrcs-ssurgo-soils" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
-export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
+export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -907,12 +908,24 @@ export const defaultOfficialContextOpacity = (): Record<OfficialContextId, numbe
 
 const EMPTY_CONTEXT: FeatureCollection = { type: "FeatureCollection", features: [] };
 const emptyCollection = (): FeatureCollection => EMPTY_CONTEXT;
+/** Build-year colour for one bridge or, given a cluster's average year, for a cluster. */
+const bridgeEraColor = (year: ExpressionSpecification): ExpressionSpecification =>
+  ["case", ["<", year, 0], BRIDGE_UNKNOWN_ERA_COLOR, ["step", year, BRIDGE_ERA_STOPS[0].color, ...BRIDGE_ERA_STOPS.slice(1).flatMap(stop => [stop.from, stop.color])] as unknown as ExpressionSpecification];
+/** Totals MapLibre keeps for each cluster, read by the cluster colour, ring and summary. */
+export const BRIDGE_CLUSTER_PROPERTIES = {
+  builtSum: ["+", ["coalesce", ["get", "built"], 0]],
+  builtCount: ["+", ["case", ["has", "built"], 1, 0]],
+  earliest: ["min", ["coalesce", ["get", "built"], 9999]],
+  longestFt: ["max", ["coalesce", ["get", "lengthFt"], 0]],
+  closed: ["+", ["case", ["==", ["get", "statusClass"], "closed"], 1, 0]],
+  posted: ["+", ["case", ["==", ["get", "statusClass"], "posted"], 1, 0]],
+} as const;
 const firstRegistryLayer = (map: MapLibreMap) => map.getStyle().layers?.find((layer) => layer.id.startsWith("kfm-") && layer.id !== "kfm-background")?.id;
-const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, data: FeatureCollection) => {
+const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, data: FeatureCollection, options: Partial<GeoJSONSourceSpecification> = {}) => {
   const existing = map.getSource(source.sourceId) as GeoJSONSource | undefined;
   if (existing) updateGeoJSON(existing, data);
   else {
-    map.addSource(source.sourceId, { type: "geojson", data, promoteId: "featureId", attribution: source.attribution });
+    map.addSource(source.sourceId, { type: "geojson", data, promoteId: "featureId", attribution: source.attribution, ...options });
     rememberGeoJSON(map.getSource(source.sourceId) as GeoJSONSource, data);
   }
 };
@@ -1125,7 +1138,42 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: declarations.layerIds[0], type: "fill", source: declarations.sourceId, paint: { "fill-color": declarations.color, "fill-opacity": 0.28 } });
   ensureLayer(map, { id: declarations.layerIds[1], type: "line", source: declarations.sourceId, paint: { "line-color": declarations.color, "line-width": 1.7, "line-opacity": 0.72 } });
 
+  // KDOT bridges: one clustered point source per layer. A numbered circle counts the bridges
+  // under it and splits on zoom; past the cluster limit each bridge sits at its recorded point.
+  for (const id of BRIDGE_FEED_IDS) {
+    const bridges = OFFICIAL_CONTEXT_BY_ID[id];
+    if (!visibility[id] && !map.getSource(bridges.sourceId)) continue;
+    ensureGeoJsonSource(map, bridges, payloads[id]?.data ?? emptyCollection(), { cluster: true, clusterMaxZoom: BRIDGE_CLUSTER_MAX_ZOOM, clusterRadius: BRIDGE_CLUSTER_RADIUS, clusterProperties: BRIDGE_CLUSTER_PROPERTIES });
+    const clustered: ExpressionSpecification = ["has", "point_count"], single: ExpressionSpecification = ["!", ["has", "point_count"]];
+    ensureLayer(map, { id: bridges.layerIds[0], type: "circle", source: bridges.sourceId, filter: clustered, paint: {
+      "circle-color": bridgeEraColor(["case", [">", ["get", "builtCount"], 0], ["/", ["get", "builtSum"], ["get", "builtCount"]], -1]),
+      "circle-radius": ["step", ["get", "point_count"], 13, 10, 16, 50, 20, 250, 25, 1000, 31, 5000, 38],
+      "circle-stroke-color": ["case", [">", ["get", "closed"], 0], BRIDGE_CLOSED_COLOR, "#0f1a20"],
+      "circle-stroke-width": ["case", [">", ["get", "closed"], 0], 3, 1.5], "circle-opacity": bridges.defaultOpacity,
+    } });
+    ensureLayer(map, { id: bridges.layerIds[1], type: "symbol", source: bridges.sourceId, filter: clustered, layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": ["step", ["get", "point_count"], 11.5, 50, 12.5, 1000, 14],
+      "text-allow-overlap": true, "text-ignore-placement": true,
+    }, paint: { "text-color": "#0b1418", "text-halo-color": "rgba(255,255,255,0.55)", "text-halo-width": 1.1 } });
+    ensureLayer(map, { id: bridges.layerIds[2], type: "circle", source: bridges.sourceId, filter: single, paint: {
+      "circle-color": bridgeEraColor(["coalesce", ["get", "built"], -1]),
+      // Longer bridges draw larger: about 20 ft at the small end, a quarter mile and more at the large end.
+      "circle-radius": ["interpolate", ["linear"], ["zoom"],
+        4, ["interpolate", ["linear"], ["sqrt", ["coalesce", ["get", "lengthFt"], 20]], 4.5, 3, 40, 6.5],
+        11, ["interpolate", ["linear"], ["sqrt", ["coalesce", ["get", "lengthFt"], 20]], 4.5, 4.5, 40, 10],
+        16, ["interpolate", ["linear"], ["sqrt", ["coalesce", ["get", "lengthFt"], 20]], 4.5, 7, 40, 16]],
+      "circle-stroke-color": ["match", ["get", "statusClass"], "closed", BRIDGE_CLOSED_COLOR, "posted", BRIDGE_POSTED_COLOR, "#0f1a20"],
+      "circle-stroke-width": ["match", ["get", "statusClass"], "closed", 3, "posted", 2.2, 1], "circle-opacity": bridges.defaultOpacity,
+    } });
+    ensureLayer(map, { id: bridges.layerIds[3], type: "symbol", source: bridges.sourceId, filter: single, minzoom: 12.5, layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["case", ["has", "built"], ["concat", ["get", "name"], "\n", ["to-string", ["get", "built"]]], ["get", "name"]],
+      "text-size": 10.5, "text-offset": [0, 1.2], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
+    }, paint: { "text-color": "#f3f7f8", "text-halo-color": "#0f1a20", "text-halo-width": 1.5, "text-opacity": 0.92 } });
+  }
+
   for (const raster of [...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES, ...KANSAS_DISCOVERY_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
+    // Bridges are drawn above as clustered points, not provider images.
+    if (raster.kind === "OPERATIONAL_GEOJSON") continue;
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
