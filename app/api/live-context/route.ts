@@ -941,6 +941,9 @@ const trailPlaces = async () => {
 
 const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400, "nps-historic-trails": 86_400, "nps-trail-places": 86_400, "kdot-bridges-state": 3600, "kdot-bridges-local": 3600, "kdot-bridges-historic": 3600, "kdot-bridges-old": 3600, "kdot-bridges-closed": 3600 };
 
+// The site's host replaces the body of a 502 or 504 with its own "error code" page, which hid the
+// reason and the next-check time from visitors. 503 keeps this JSON body; the header keeps the cause.
+const FEED_UNAVAILABLE_STATUS = 503;
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
@@ -953,6 +956,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(result, { headers: { "Cache-Control": (feed === "deflock-alpr" || feed === "census-congress-119") ? "no-store" : `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Official upstream request failed.", state: "error", fallback: "No fallback inference or substitute dataset was produced." }, { status: timeout ? 504 : 502, headers: { "Cache-Control": "no-store", "X-KFM-Context-State": "error", "X-Content-Type-Options": "nosniff" } });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Official upstream request failed.", state: "error", fallback: "No fallback inference or substitute dataset was produced." }, { status: FEED_UNAVAILABLE_STATUS, headers: { "Cache-Control": "no-store", "X-KFM-Context-State": "error", "X-KFM-Upstream-Failure": timeout ? "timeout" : "error", "X-Content-Type-Options": "nosniff" } });
   }
 }

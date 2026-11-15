@@ -864,6 +864,10 @@ const providerReportHtml = (selection: ProviderReportSelection | { kind: "regist
   ];
   return `${heading}<h3>${escapeReportHtml(context.title)}</h3><p>${escapeReportHtml(context.summary)}</p><p>${escapeReportHtml(context.layer)} · <code>${escapeReportHtml(context.id)}</code></p><dl>${facts.map(([label, value]) => `<dt>${escapeReportHtml(label)}</dt><dd>${escapeReportHtml(value)}</dd>`).join("")}</dl>${context.sourceUrl ? `<p><a href="${escapeReportHtml(context.sourceUrl)}" rel="noreferrer">Open provider source</a></p>` : ""}<p><strong>Source use boundary:</strong> ${escapeReportHtml(context.sourceBoundary)}</p><p><strong>Response / availability limitation:</strong> ${escapeReportHtml(context.limitation)}</p><p><strong>Attribution:</strong> ${escapeReportHtml(context.attribution)}</p></section>`;
 };
+/** A feed's own outage sentence (what is unavailable and when it is checked next), not a generic transport error. */
+const feedOutageExplanation = (message: string | undefined): string | null =>
+  message && /unavailable/i.test(message) && /next provider check/i.test(message) ? message : null;
+
 const validLayerPayload = (value: unknown, feed: OfficialContextFeedId, day?: string): boolean => {
   if (!value || typeof value !== "object") return false;
   const payload = value as Partial<OfficialContextPayload>;
@@ -12025,7 +12029,7 @@ export default function Home() {
                     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}{NEW_LAYER_IDS.has(source.id) && <span className="new-layer-badge" title="Added in the November 2026 layer refresh">NEW</span>}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
                 {officialVisibility[source.id] && state === "loading" && source.apiPath && <small role="status">{officialReadPhases[source.id] === "queued" ? "Waiting for a loading slot…" : "Receiving source data…"} You can hide this layer to cancel.</small>}
                 {officialVisibility[source.id] && state === "error" && <div className="layer-request-recovery">
-                  <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
+                  <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : feedOutageExplanation(officialErrors[source.id]) ?? "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
                   <button type="button" disabled={heldAtFrame} onClick={(event) => {
                     // The recovery button disappears after retry; keep keyboard
                     // focus on this layer's stable control throughout acquisition.

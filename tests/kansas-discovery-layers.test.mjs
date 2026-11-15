@@ -487,9 +487,13 @@ test("trail site downloads retain partial-source metadata and reject upstream fa
     assert.ok(Number.isFinite(Date.parse(body.kfm.retrievedAt)));
     globalThis.fetch = async () => new Response("Unavailable", { status: 503 });
     const failed = await downloadRoute.GET(new Request("http://127.0.0.1/api/source-download?source=nps-trail-places"));
-    assert.equal(failed.status, 502);
+    // 503, not 502 or 504: the site's host replaces those bodies, which hid the reason from visitors.
+    assert.equal(failed.status, 503);
+    assert.equal(failed.headers.get("X-KFM-Upstream-Failure"), "error");
     assert.equal(failed.headers.get("Content-Disposition"), null);
-    assert.equal((await failed.json()).state, "error");
+    const failure = await failed.json();
+    assert.equal(failure.state, "error"); assert.equal(typeof failure.error, "string");
+    assert.match(failure.fallback, /No fallback inference or substitute dataset/);
   } finally { globalThis.fetch = original; }
 });
 

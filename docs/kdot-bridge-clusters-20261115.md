@@ -50,3 +50,11 @@ be shown from zoom 8. They are now read as records and drawn by the Explorer.
   They are not a live closure feed, a structural safety determination or navigation advice.
 - Provider rows without a usable point in Kansas are left out and counted in the status text.
 - External context only; no KFM dataset is acquired or released.
+
+## Outage message (all live-context feeds)
+
+A feed failure answers with HTTP 503 and a JSON sentence saying what is unavailable, what cannot
+be inferred and when the provider is checked next. The site's host replaces the body of a 502 or
+504 with its own "error code" page, so those statuses hid the sentence; the cause (error or
+timeout) is kept in the `X-KFM-Upstream-Failure` header. The layer card and the Status tab show
+the sentence; any other failure keeps the generic "Could not load source data" text.

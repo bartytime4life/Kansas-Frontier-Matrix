@@ -5,6 +5,12 @@ type Result = Awaited<ReturnType<typeof browserJsonRequest>> & { cache: "network
 type Consumer = ((result: Result | undefined, error?: unknown) => void) & { progress?: (phase: "queued" | "fetching") => void };
 type Job = { key: string; url: string; maxBytes: number; controller: AbortController; started: boolean;
   consumers: Set<Consumer>; cacheMs: number; validate: (body: unknown) => boolean };
+/** The site adapter's own bounded error sentence, when a failed response carries one. */
+export function adapterErrorText(body: unknown): string | null {
+  const error = body && typeof body === "object" && !Array.isArray(body) ? (body as { error?: unknown }).error : null;
+  const text = typeof error === "string" ? error.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim() : "";
+  return text ? text.slice(0, 400) : null;
+}
 export class LayerJsonReads {
   private active = 0;
   private jobs = new Map<string, Job>();
@@ -70,7 +76,9 @@ export class LayerJsonReads {
         .then(response => {
           const result: Result = { ...response, cache: "network" };
           job.controller.signal.throwIfAborted();
-          if (!result.response.ok || !job.validate(result.body)) throw new Error(`Source adapter returned an unavailable or incompatible response (HTTP ${result.response.status}).`);
+          // A failed feed explains itself (what is unavailable, what cannot be inferred, when it is checked next); show that.
+          if (!result.response.ok) throw new Error(adapterErrorText(result.body) ?? `Source adapter returned an unavailable or incompatible response (HTTP ${result.response.status}).`);
+          if (!job.validate(result.body)) throw new Error(`Source adapter returned an unavailable or incompatible response (HTTP ${result.response.status}).`);
           // At most four 8 MiB responses, with original source/retrieval timestamps.
           if (job.cacheMs && job.maxBytes <= 8 * 1024 * 1024) {
             this.cache.set(job.key, { result, expires: this.now() + Math.min(job.cacheMs, 300_000) });
