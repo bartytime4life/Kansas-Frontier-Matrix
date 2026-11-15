@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-intake-acceptance-workspace-20261115",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-acceptance-evidence.md",
+    "tests/local_data/test_intake_acceptance.py",
+    "tools/local_data/intake_studio/README.md",
+    "tools/local_data/intake_studio/acceptance.py",
+    "tools/local_data/intake_studio/local-web/acceptance.css",
+    "tools/local_data/intake_studio/local-web/acceptance.html",
+    "tools/local_data/intake_studio/local-web/acceptance.js",
+    "tools/local_data/intake_studio/local-web/index.html",
+    "tools/local_data/intake_studio/workspace.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-acceptance-evidence.md": "sha256:175bb22b54f0ed17bc0f3a319875e9d1b48fec2ee02e08e100b3609e892d5677",
+    "tests/local_data/test_intake_acceptance.py": "sha256:94118c944bc7ab87e20736c4174dd991c4c6819f1f24fbd9fa9eb4b1165ec7bb",
+    "tools/local_data/intake_studio/README.md": "sha256:079d7d7182424c0ecdccf9615b8672e423f1fd4571fed8dfc8b69cccdaf3e0e0",
+    "tools/local_data/intake_studio/acceptance.py": "sha256:39dc74f321d49efbf53cf6750816d17229c9848f4e7d064a8155828250d10ccf",
+    "tools/local_data/intake_studio/local-web/acceptance.css": "sha256:32b6d1c340e1263d98daa3c91656da0150c02dbf30c65daf5f090032e2158fa9",
+    "tools/local_data/intake_studio/local-web/acceptance.html": "sha256:3e5a48583799ea7413a1018a03693e2aec990db68eac2c0308a98e4f867dc70c",
+    "tools/local_data/intake_studio/local-web/acceptance.js": "sha256:582010c31f176eff179973468fcfec26074181836d3217f9363d297f6bf1043b",
+    "tools/local_data/intake_studio/local-web/index.html": "sha256:d46ad3f66ab0b259fa31e59eeb6370e6e1371d0ca0e7e54672382394dfb10b7b",
+    "tools/local_data/intake_studio/workspace.py": "sha256:44733f0cc75e960351867ec5451cc8769b5a972b2d544408a9c2bf35ecfbcbbf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Exact runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:41607bc2184bac7890b3946f8883908f3ae7b54c7d1f84b59c2864d0d059cc3f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8572099c4fd73c5465d182ccd08e726b46d88b72200cad9e2c3752d067b71808"
+    ],
+    "evidence_refs": [
+      "repo:tools/local_data/intake_studio/workspace.py@da13ca0d2aa86743c69dcd723a028baa86285479",
+      "repo:tools/local_data/intake_studio/intake_server.py@da13ca0d2aa86743c69dcd723a028baa86285479",
+      "repo:CONTRIBUTING.md@da13ca0d2aa86743c69dcd723a028baa86285479"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-acceptance-evidence.md": "CONFIRMED",
+    "tests/local_data/test_intake_acceptance.py": "CONFIRMED",
+    "tools/local_data/intake_studio/README.md": "CONFIRMED",
+    "tools/local_data/intake_studio/acceptance.py": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/acceptance.css": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/acceptance.html": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/acceptance.js": "CONFIRMED",
+    "tools/local_data/intake_studio/local-web/index.html": "CONFIRMED",
+    "tools/local_data/intake_studio/workspace.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Synthetic evidence ledger and request-dispatch tests",
+      "outcome": "PASS",
+      "reason": "50 unittest methods passed. Includes stubbed unrelated Desk imports for the existing Workspace dispatch mount; not a full Studio server or browser test."
+    },
+    {
+      "gate": "Supplied historical receipt in disposable storage",
+      "outcome": "PASS",
+      "reason": "59 source cases and 13 download observations preserved; original bytes retained; duplicate import idempotent; no new observation or accepted public state; unchanged export byte-identical."
+    },
+    {
+      "gate": "JavaScript and HTML static checks",
+      "outcome": "PASS",
+      "reason": "node --check passed; no duplicate HTML IDs; explicit POST forms; no imported-content HTML insertion in client."
+    },
+    {
+      "gate": "Full local-data suite, native extraction, browser, installed machine, hosted CI, independent review",
+      "outcome": "SKIPPED",
+      "reason": "Not executed in this preparation environment. No public acceptance, installation or deployment claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-workspace",
+      "validated": true,
+      "evidence_ref": "repo:tools/local_data/intake_studio/workspace.py@da13ca0d2aa86743c69dcd723a028baa86285479"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-11-15T21:02:21.536013+00:00",
+  "emitter": "ChatGPT repository integration preparation",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "CONFIRMED denotes inspected implementation and targeted checks only. First scoped integration of a new local acceptance module, not recovered hosted Site source or complete hosted parity. Existing intake and Qwen review authority unchanged. Originals, private records and actual evidence receipt excluded from repository changes. Base advanced from 06a8b0cee348b09a8e347eb087ab02f3623d61e5 to da13ca0d2aa86743c69dcd723a028baa86285479 with only CHANGELOG.md and docs/runbooks/godaddy-node-hosting.md changed; all target base bytes unchanged. No merge, install, provider check, Site write or publication."
+}
