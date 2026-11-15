@@ -133,3 +133,15 @@ test('map cells and counts restore after style replacement, respect hide/opacity
     context.clearOfficialContextFeed(harness.map, 'deflock-alpr'); assert.equal(harness.sources.get('external-deflock-alpr').data.features.length, 0);
   }
 });
+
+test('repeated provider failures back off up to 15 minutes, answer instantly meanwhile, and reset after success', async () => {
+  let time = now.getTime(), calls = 0, fail = true;
+  const read = reader.createDeflockReader(async () => { calls++; if (fail) throw new Error('down'); return Response.json(raw()); }, () => time);
+  assert.deepEqual([1, 2, 3, 4, 5, 6].map(reader.deflockCooldownMs), [60_000, 120_000, 240_000, 480_000, 900_000, 900_000]);
+  await assert.rejects(read(), /Next provider check in about 1 minute\./); assert.equal(calls, 1);
+  time += 60_000; await assert.rejects(read(), /about 2 minutes/); assert.equal(calls, 2);
+  time += 60_000; await assert.rejects(read(), /about 1 minute/); assert.equal(calls, 2, 'still inside the doubled window: no provider request');
+  time += 60_000; await assert.rejects(read(), /about 4 minutes/); assert.equal(calls, 3);
+  time += 240_000; fail = false; assert.equal((await read()).feed, 'deflock-alpr'); assert.equal(calls, 4);
+  time += 3_600_000; fail = true; await assert.rejects(read(), /about 1 minute\./); assert.equal(calls, 5, 'success reset the backoff');
+});
