@@ -217,6 +217,31 @@ test('thinking and sampling can differ by depth; malformed per-depth settings ar
  assert.equal(plain.think,false);assert.deepEqual(plain.depthOptions,{});
 });
 
+test('a bounded JSON schema is forwarded as Ollama format; unsafe or oversized schemas are refused',async()=>{
+ const schema={type:'object',properties:{suggestions:{type:'array',maxItems:2,items:{type:'string',maxLength:160}}},required:['suggestions'],additionalProperties:false};
+ let deep={type:'string'};for(let i=0;i<9;i++)deep={type:'object',properties:{n:deep}};
+ const refused=[[],'json',{type:'array',items:{type:'string'}},{type:'object',properties:{a:{type:'string',pattern:'^a+$'}}},
+  {type:'object',properties:{a:{$ref:'#'}}},{type:'object',anyOf:[{type:'object'}]},{type:'object',required:['missing']},
+  {type:'object',properties:{a:{type:'string',maxLength:1e9}}},{type:'object',properties:{'bad name':{type:'string'}}},
+  {type:'object',properties:{a:{type:'object',additionalProperties:{type:'string'}}}},{type:'object',properties:{a:{type:'date'}}},
+  {type:'object',description:'x'.repeat(9000)},deep];
+ const g=await gateway();
+ try{
+  const health=await g.signed('GET','/v1/health');
+  assert.ok(health.body.profiles.every(p=>p.structuredOutput===true));
+  const ok=await g.signed('POST','/v1/chat',chatBody({format:schema}));
+  assert.equal(ok.status,200);
+  assert.deepEqual(g.ollama.calls.find(call=>call.path==='/api/chat').body.format,schema);
+  for(const format of refused){
+   const result=await g.signed('POST','/v1/chat',chatBody({format}));
+   assert.equal(result.status,400,JSON.stringify(format).slice(0,80));assert.equal(result.body.error,'INVALID_REQUEST');
+  }
+  const plain=await g.signed('POST','/v1/chat',chatBody());
+  assert.equal(plain.status,200);
+  assert.equal('format' in g.ollama.calls.filter(call=>call.path==='/api/chat').at(-1).body,false);
+ }finally{await g.close();}
+});
+
 test('always-thinking models use the supported parser mode and hide an implicit reasoning preamble',async()=>{
  const g=await gateway({thinking:null,thinkingMetadata:{values:[true],default:true},chunks:['Private preamble', '</thi', 'nk>\n', 'Public answer.']});
  try{

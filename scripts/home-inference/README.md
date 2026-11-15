@@ -176,6 +176,16 @@ sampling for `brief`. The website chooses the depth; the profile decides what ea
 depth does. Changing either field changes model behaviour, so re-qualify the
 profile before pointing a website at it.
 
+**Structured output.** A chat request may include `format`, a JSON schema whose
+root is an object. The gateway forwards it to Ollama, which constrains sampling so
+the answer parses as that shape. Only a bounded subset is accepted: at most 8 KB
+and 8 levels; keywords `type`, `properties`, `required`, `items`,
+`additionalProperties` (boolean), `minItems`, `maxItems`, `minLength`,
+`maxLength`, `enum`, `description`. References, `pattern` and combinators are
+refused with `INVALID_REQUEST`. Health lists `structuredOutput: true` on each
+profile so a website sends a schema only to a gateway that accepts one. The
+caller still validates the parsed answer; a schema fixes shape, not content.
+
 **Coordinated limits.** `budgets.mjs` allows up to 640 seconds through the gateway,
 650 through the relay, 660 through the PC worker and 670 through the hosted client.
 Each public job has 700 seconds once running. Admission reserves another 700
