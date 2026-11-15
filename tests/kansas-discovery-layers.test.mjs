@@ -666,3 +666,27 @@ test("every official source has exactly one catalog category, and the download r
     }
   } finally { globalThis.fetch = original; }
 });
+
+test("site connections derive feed, actions and code paths from each source, with explicit entries only for exceptions", async () => {
+  const connections = await import(await moduleUrl("app/site-connections.ts"));
+  const byId = new Map(connections.SITE_CONNECTIONS.map(connection => [connection.id, connection]));
+  assert.equal(byId.size, context.OFFICIAL_CONTEXT_SOURCES.length);
+  for (const source of context.OFFICIAL_CONTEXT_SOURCES) {
+    const connection = byId.get(source.id);
+    const apiFeed = source.apiPath?.match(/[?&]feed=([a-z0-9-]+)/)?.[1] ?? null;
+    if (apiFeed) {
+      assert.equal(connection.feed, apiFeed, `${source.id} feed comes from its apiPath`);
+      assert.ok(connection.actionIds.includes("refresh-visible-context"), `${source.id} feed can be refreshed`);
+    }
+    // A raster, snapshot or adapter source must say where it is implemented; only standard feeds get the default.
+    if (!source.apiPath) assert.ok(connections.CONNECTION_CODE_PATHS[source.id], `${source.id} lists its own code paths`);
+    for (const required of ["toggle-context-connection", "set-context-opacity", "open-provider-source"]) assert.ok(connection.actionIds.includes(required), `${source.id} ${required}`);
+    assert.ok(connection.codePaths.includes("app/live-context.ts"));
+  }
+  // A new standard feed needs no connection entries: trails sites are the reference case.
+  assert.deepEqual(byId.get("nps-trail-places").actionIds, ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"]);
+  assert.deepEqual(byId.get("census-counties").codePaths, ["app/live-context.ts", "app/api/live-context/route.ts", "app/page.tsx"]);
+  for (const id of ["usgs-earthquakes", "raspberry-shake-stations"]) assert.equal(byId.get(id).feed, id);
+  assert.equal(byId.get("usgs-streamflow").feed, "usgs-streamflow");
+  assert.equal(byId.get("kdot-roads").feed, null);
+});

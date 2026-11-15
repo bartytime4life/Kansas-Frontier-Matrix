@@ -1333,10 +1333,12 @@ test("keeps the feature, connection, action, and coding registries aligned", asy
   assert.match(features, /id: "smoke-weather-context"/);
   assert.match(features, /id: "held-raspberry-waveform-bridge"/);
   assert.match(connections, /CONNECTION_CODE_PATHS/);
-  assert.match(connections, /"usgs-earthquakes"/);
+  // Standard feeds such as earthquakes and Raspberry Shake are derived from their apiPath
+  // (checked at runtime in kansas-discovery-layers.test.mjs); exceptions stay explicit.
+  assert.match(connections, /STANDARD_FEED_CODE_PATHS/);
+  assert.match(connections, /const connectionFeed = /);
   assert.match(connections, /"usgs-streamflow"/);
   assert.match(connections, /"noaa-hms-smoke"/);
-  assert.match(connections, /"raspberry-shake-stations"/);
   assert.match(actions, /id: "toggle-context-group"/);
   assert.match(actions, /id: "refresh-streamflow"/);
   assert.match(actions, /id: "refresh-radar-frames"/);
