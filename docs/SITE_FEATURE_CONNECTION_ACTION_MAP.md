@@ -33,7 +33,10 @@ data, KFM evidence, policy, release, or deployment.
   allowlist. It does not add an arbitrary URL loader or silently create a new
   upstream integration.
 - Every feature and connection points to owning code paths and declares a
-  boundary. Missing, partial, stale, empty, and error outcomes remain states;
+  boundary. A standard live-context feed takes its feed id from its `apiPath`,
+  the standard show, refresh, opacity and provider-link actions, and the standard
+  feed code paths; `app/site-connections.ts` lists only the exceptions (adapter
+  feeds, extra tools, and the code paths of every non-feed source). Missing, partial, stale, empty, and error outcomes remain states;
   they are never inferred into a positive observation or all-clear.
 - Actions distinguish local UI changes, read-only connector calls, external
   navigation, and device-local drafts. No action in this manifest authorizes a
