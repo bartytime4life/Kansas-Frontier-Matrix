@@ -133,6 +133,10 @@ def asset(path):
              "/workspace/desk.css": ("desk.css", "text/css")}
     filename, mime = files[path]
     content = (DESK / filename).read_text()
+    if filename.endswith(".js"):
+        # Same-origin workspace now requires the HttpOnly account cookie.
+        # The standalone Desk keeps its separate token-only implementation.
+        content = re.sub(r"credentials\s*:\s*([\"'])omit\1", 'credentials: "same-origin"', content)
     if filename == "desk.css":
         # Scope the mature desk styles so the shared Studio sidebar keeps its
         # layout. The desk's own main is a div inside the shared page main.
