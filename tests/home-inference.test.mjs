@@ -197,6 +197,26 @@ test('signed chat returns a bounded reply with pinned model identity and no priv
  }finally{await g.close();}
 });
 
+test('thinking and sampling can differ by depth; malformed per-depth settings are refused',async()=>{
+ const bad=[{think:{brief:false}},{think:{brief:false,expanded:true,deep:true}},{think:{brief:'no',expanded:true}},{think:[false,true]},
+  {depthOptions:{deep:{temperature:0}}},{depthOptions:{brief:{num_ctx:4096}}},{depthOptions:{brief:{temperature:'0'}}},{depthOptions:{brief:null}},{depthOptions:[]}];
+ for(const overrides of bad)assert.throws(()=>parseProfiles({profiles:[profile(overrides)]}),/PROFILE_INVALID/,JSON.stringify(overrides));
+ const split={think:{brief:false,expanded:true},options:{temperature:0.6,top_k:20},depthOptions:{brief:{temperature:0,top_p:0.8}}};
+ const g=await gateway({},profiles({profiles:[profile(split)]}));
+ try{
+  for(const depth of ['brief','expanded']){
+   const result=await g.signed('POST','/v1/chat',chatBody({depth}));
+   assert.equal(result.status,200);assert.equal(result.body.text,'Synthetic reply.');
+  }
+  const [brief,expanded]=g.ollama.calls.filter(call=>call.path==='/api/chat').map(call=>call.body);
+  assert.equal(brief.think,false);assert.deepEqual(brief.options,{temperature:0,top_k:20,top_p:0.8,num_ctx:8192,num_predict:256});
+  assert.equal(expanded.think,true);assert.deepEqual(expanded.options,{temperature:0.6,top_k:20,num_ctx:8192,num_predict:640});
+ }finally{await g.close();}
+ // A boolean still applies to both depths, and depth options are optional.
+ const plain=profiles().profiles.get('kfm-default-chat');
+ assert.equal(plain.think,false);assert.deepEqual(plain.depthOptions,{});
+});
+
 test('always-thinking models use the supported parser mode and hide an implicit reasoning preamble',async()=>{
  const g=await gateway({thinking:null,thinkingMetadata:{values:[true],default:true},chunks:['Private preamble', '</thi', 'nk>\n', 'Public answer.']});
  try{

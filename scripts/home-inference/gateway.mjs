@@ -46,9 +46,16 @@ export function parseProfiles(value){
   if(!positive(p.contextTokens,131072)||!positive(p.maxInputChars,262144))throw invalid();
   if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],GATEWAY_LIMITS.chatMs)))throw invalid();
   if(DEPTHS.some(depth=>p.outputTokens[depth]>=p.contextTokens))throw invalid();
+  const validOptions=value=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).every(key=>OPTION_KEYS.includes(key)&&Number.isFinite(value[key]));
   const options=p.options??{};
-  if(typeof options!=='object'||Object.keys(options).some(key=>!OPTION_KEYS.includes(key)||!Number.isFinite(options[key])))throw invalid();
-  if(p.think!==undefined&&typeof p.think!=='boolean')throw invalid();
+  if(!validOptions(options))throw invalid();
+  // Thinking and sampling may differ by depth: one profile can then serve a
+  // short structured step without reasoning and a long answer with it.
+  const think=p.think;
+  if(think!==undefined&&typeof think!=='boolean'&&!(think&&typeof think==='object'&&!Array.isArray(think)&&
+   Object.keys(think).every(key=>DEPTHS.includes(key))&&DEPTHS.every(depth=>typeof think[depth]==='boolean')))throw invalid();
+  const depthOptions=p.depthOptions??{};
+  if(!depthOptions||typeof depthOptions!=='object'||Array.isArray(depthOptions)||Object.keys(depthOptions).some(key=>!DEPTHS.includes(key)||!validOptions(depthOptions[key])))throw invalid();
   if(p.keepAlive!==undefined&&!/^(?:0|-1|[1-9][0-9]{0,4}[smh])$/.test(p.keepAlive))throw invalid();
   const referenceText=p.referenceText===undefined?'':p.referenceText;
   if(typeof referenceText!=='string'||referenceText&&!safeText(referenceText,4096))throw invalid();
@@ -56,7 +63,9 @@ export function parseProfiles(value){
   // owner reference must fit inside the original limit, not extend that limit.
   const referenceChars=referenceText?REFERENCE_PREFIX.length+referenceText.length:0;
   if(referenceChars&&p.maxInputChars-referenceChars<1024)throw invalid();
-  profiles.set(p.id,Object.freeze({...p,digest:digestHex(p.digest),scopes:[...p.scopes],options:{...options},referenceText,maxInputChars:p.maxInputChars-referenceChars}));
+  profiles.set(p.id,Object.freeze({...p,digest:digestHex(p.digest),scopes:[...p.scopes],options:{...options},
+   think:typeof think==='object'?Object.freeze({...think}):think,
+   depthOptions:Object.freeze(Object.fromEntries(Object.entries(depthOptions).map(([depth,value])=>[depth,Object.freeze({...value})]))),referenceText,maxInputChars:p.maxInputChars-referenceChars}));
  }
  return {profiles,concurrency,maxQueue};
 }
@@ -173,13 +182,13 @@ export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.n
 
 // Ollama streams NDJSON; reading it incrementally lets the gateway stop at the
 // output bound, honour cancellation and never buffer an unbounded reply.
-async function thinkingMode({fetchImpl,ollamaUrl,profile,signal}){
+async function thinkingMode({fetchImpl,ollamaUrl,profile,depth,signal}){
  const response=await fetchImpl(ollamaUrl+'/api/show',{method:'POST',redirect:'error',
   signal:AbortSignal.any([signal,AbortSignal.timeout(GATEWAY_LIMITS.inspectMs)]),
   headers:{'Content-Type':'application/json'},body:JSON.stringify({model:profile.model})});
  if(!response.ok)throw fail('MODEL_UNAVAILABLE',503);
  const metadata=await response.json(),values=metadata.thinking?.values;
- let think=profile.think;
+ let think=typeof profile.think==='object'?profile.think[depth]:profile.think;
  // Some pinned templates always reason. Asking those models for think:false
  // disables Ollama's reasoning parser without disabling their reasoning, so
  // their private preamble lands in content. Use their supported parser mode.
@@ -213,12 +222,12 @@ function answerText(raw,{implicit,separated,complete}){
 }
 
 async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,progress}){
- const mode=await thinkingMode({fetchImpl,ollamaUrl,profile,signal});
+ const mode=await thinkingMode({fetchImpl,ollamaUrl,profile,depth,signal});
  const response=await fetchImpl(ollamaUrl+'/api/chat',{method:'POST',signal,redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({
   model:profile.model,messages,stream:true,
   ...(mode.think===undefined?{}:{think:mode.think}),
   ...(profile.keepAlive===undefined?{}:{keep_alive:profile.keepAlive}),
-  options:{...profile.options,num_ctx:profile.contextTokens,num_predict:profile.outputTokens[depth]},
+  options:{...profile.options,...profile.depthOptions[depth],num_ctx:profile.contextTokens,num_predict:profile.outputTokens[depth]},
  })});
  if(!response.ok||!response.body)throw fail('MODEL_UNAVAILABLE',503);
  const decoder=new TextDecoder();let buffer='',raw='',text='',separated=false,final=null,limited=false;
