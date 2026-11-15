@@ -166,6 +166,26 @@ caps visible answers at public chat's 16384-byte limit, preserving UTF-8 and
 returning longer answers as partials that the visitor can continue. Hidden
 reasoning never becomes a partial answer. Keep the deadline bounded for the PC.
 
+**Thinking by depth.** `think` may be `true`/`false` for every request, or
+`{"brief": false, "expanded": true}` to set it for each depth separately. An
+optional `depthOptions` object (`brief` and/or `expanded`) holds sampling options
+that replace the profile's `options` for that depth only, using the same allowed
+keys. One profile can then answer a short structured step quickly without
+reasoning and a long answer with it, for example Qwen 3.5 with its non-thinking
+sampling for `brief`. The website chooses the depth; the profile decides what each
+depth does. Changing either field changes model behaviour, so re-qualify the
+profile before pointing a website at it.
+
+**Structured output.** A chat request may include `format`, a JSON schema whose
+root is an object. The gateway forwards it to Ollama, which constrains sampling so
+the answer parses as that shape. Only a bounded subset is accepted: at most 8 KB
+and 8 levels; keywords `type`, `properties`, `required`, `items`,
+`additionalProperties` (boolean), `minItems`, `maxItems`, `minLength`,
+`maxLength`, `enum`, `description`. References, `pattern` and combinators are
+refused with `INVALID_REQUEST`. Health lists `structuredOutput: true` on each
+profile so a website sends a schema only to a gateway that accepts one. The
+caller still validates the parsed answer; a schema fixes shape, not content.
+
 **Coordinated limits.** `budgets.mjs` allows up to 640 seconds through the gateway,
 650 through the relay, 660 through the PC worker and 670 through the hosted client.
 Each public job has 700 seconds once running. Admission reserves another 700

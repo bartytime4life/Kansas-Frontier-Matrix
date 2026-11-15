@@ -12,7 +12,7 @@ import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,isSys
 import {INFERENCE_BUDGETS} from './budgets.mjs';
 
 export const GATEWAY_VERSION='kfm-home-inference/1';
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:16384,chatMs:INFERENCE_BUDGETS.runMs});
+export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:16384,formatBytes:8192,formatDepth:8,chatMs:INFERENCE_BUDGETS.runMs});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
@@ -46,9 +46,16 @@ export function parseProfiles(value){
   if(!positive(p.contextTokens,131072)||!positive(p.maxInputChars,262144))throw invalid();
   if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],GATEWAY_LIMITS.chatMs)))throw invalid();
   if(DEPTHS.some(depth=>p.outputTokens[depth]>=p.contextTokens))throw invalid();
+  const validOptions=value=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).every(key=>OPTION_KEYS.includes(key)&&Number.isFinite(value[key]));
   const options=p.options??{};
-  if(typeof options!=='object'||Object.keys(options).some(key=>!OPTION_KEYS.includes(key)||!Number.isFinite(options[key])))throw invalid();
-  if(p.think!==undefined&&typeof p.think!=='boolean')throw invalid();
+  if(!validOptions(options))throw invalid();
+  // Thinking and sampling may differ by depth: one profile can then serve a
+  // short structured step without reasoning and a long answer with it.
+  const think=p.think;
+  if(think!==undefined&&typeof think!=='boolean'&&!(think&&typeof think==='object'&&!Array.isArray(think)&&
+   Object.keys(think).every(key=>DEPTHS.includes(key))&&DEPTHS.every(depth=>typeof think[depth]==='boolean')))throw invalid();
+  const depthOptions=p.depthOptions??{};
+  if(!depthOptions||typeof depthOptions!=='object'||Array.isArray(depthOptions)||Object.keys(depthOptions).some(key=>!DEPTHS.includes(key)||!validOptions(depthOptions[key])))throw invalid();
   if(p.keepAlive!==undefined&&!/^(?:0|-1|[1-9][0-9]{0,4}[smh])$/.test(p.keepAlive))throw invalid();
   const referenceText=p.referenceText===undefined?'':p.referenceText;
   if(typeof referenceText!=='string'||referenceText&&!safeText(referenceText,4096))throw invalid();
@@ -56,7 +63,9 @@ export function parseProfiles(value){
   // owner reference must fit inside the original limit, not extend that limit.
   const referenceChars=referenceText?REFERENCE_PREFIX.length+referenceText.length:0;
   if(referenceChars&&p.maxInputChars-referenceChars<1024)throw invalid();
-  profiles.set(p.id,Object.freeze({...p,digest:digestHex(p.digest),scopes:[...p.scopes],options:{...options},referenceText,maxInputChars:p.maxInputChars-referenceChars}));
+  profiles.set(p.id,Object.freeze({...p,digest:digestHex(p.digest),scopes:[...p.scopes],options:{...options},
+   think:typeof think==='object'?Object.freeze({...think}):think,
+   depthOptions:Object.freeze(Object.fromEntries(Object.entries(depthOptions).map(([depth,value])=>[depth,Object.freeze({...value})]))),referenceText,maxInputChars:p.maxInputChars-referenceChars}));
  }
  return {profiles,concurrency,maxQueue};
 }
@@ -173,13 +182,13 @@ export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.n
 
 // Ollama streams NDJSON; reading it incrementally lets the gateway stop at the
 // output bound, honour cancellation and never buffer an unbounded reply.
-async function thinkingMode({fetchImpl,ollamaUrl,profile,signal}){
+async function thinkingMode({fetchImpl,ollamaUrl,profile,depth,signal}){
  const response=await fetchImpl(ollamaUrl+'/api/show',{method:'POST',redirect:'error',
   signal:AbortSignal.any([signal,AbortSignal.timeout(GATEWAY_LIMITS.inspectMs)]),
   headers:{'Content-Type':'application/json'},body:JSON.stringify({model:profile.model})});
  if(!response.ok)throw fail('MODEL_UNAVAILABLE',503);
  const metadata=await response.json(),values=metadata.thinking?.values;
- let think=profile.think;
+ let think=typeof profile.think==='object'?profile.think[depth]:profile.think;
  // Some pinned templates always reason. Asking those models for think:false
  // disables Ollama's reasoning parser without disabling their reasoning, so
  // their private preamble lands in content. Use their supported parser mode.
@@ -212,13 +221,14 @@ function answerText(raw,{implicit,separated,complete}){
  return text;
 }
 
-async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,progress}){
- const mode=await thinkingMode({fetchImpl,ollamaUrl,profile,signal});
+async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,format,signal,progress}){
+ const mode=await thinkingMode({fetchImpl,ollamaUrl,profile,depth,signal});
  const response=await fetchImpl(ollamaUrl+'/api/chat',{method:'POST',signal,redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({
   model:profile.model,messages,stream:true,
   ...(mode.think===undefined?{}:{think:mode.think}),
+  ...(format?{format}:{}),
   ...(profile.keepAlive===undefined?{}:{keep_alive:profile.keepAlive}),
-  options:{...profile.options,num_ctx:profile.contextTokens,num_predict:profile.outputTokens[depth]},
+  options:{...profile.options,...profile.depthOptions[depth],num_ctx:profile.contextTokens,num_predict:profile.outputTokens[depth]},
  })});
  if(!response.ok||!response.body)throw fail('MODEL_UNAVAILABLE',503);
  const decoder=new TextDecoder();let buffer='',raw='',text='',separated=false,final=null,limited=false;
@@ -262,9 +272,35 @@ async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,pro
 // role-control markers so visitor or retrieved text cannot open a new turn.
 export const neutralizeTemplate=value=>value.replaceAll('<|','< |').replace(/<(\/?)(start_of_turn|end_of_turn|think)>/g,'< $1$2>').replace(/\[(\/?)INST\]/g,'[ $1INST]');
 
+// A caller may ask Ollama to constrain the answer to a JSON schema. Accept only
+// a small, bounded subset: Ollama compiles the schema into a sampling grammar,
+// so references, regular expressions and combinators are refused.
+const SCHEMA_TYPES=['object','array','string','number','integer','boolean'];
+const SCHEMA_KEYS=['type','properties','required','items','additionalProperties','minItems','maxItems','minLength','maxLength','enum','description'];
+const plainObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+function validSchema(schema,depth){
+ if(depth>GATEWAY_LIMITS.formatDepth||!plainObject(schema)||Object.keys(schema).some(key=>!SCHEMA_KEYS.includes(key)))return false;
+ if(!SCHEMA_TYPES.includes(schema.type))return false;
+ for(const key of ['minItems','maxItems','minLength','maxLength'])if(schema[key]!==undefined&&!(Number.isSafeInteger(schema[key])&&schema[key]>=0&&schema[key]<=10000))return false;
+ if(schema.description!==undefined&&!safeText(schema.description,200))return false;
+ if(schema.enum!==undefined&&!(Array.isArray(schema.enum)&&schema.enum.length&&schema.enum.length<=32&&schema.enum.every(item=>typeof item==='string'&&item.length<=200||Number.isFinite(item))))return false;
+ if(schema.properties!==undefined&&(schema.type!=='object'||!plainObject(schema.properties)||Object.keys(schema.properties).length>32||
+  Object.entries(schema.properties).some(([name,child])=>!/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(name)||!validSchema(child,depth+1))))return false;
+ if(schema.required!==undefined&&(schema.type!=='object'||!Array.isArray(schema.required)||schema.required.some(name=>typeof name!=='string'||!Object.hasOwn(schema.properties??{},name))))return false;
+ if(schema.additionalProperties!==undefined&&(schema.type!=='object'||typeof schema.additionalProperties!=='boolean'))return false;
+ if(schema.items!==undefined&&(schema.type!=='array'||!validSchema(schema.items,depth+1)))return false;
+ return true;
+}
+function validateFormat(format){
+ if(format===undefined)return undefined;
+ let size;try{size=Buffer.byteLength(JSON.stringify(format));}catch{throw fail('INVALID_REQUEST',400);}
+ if(size>GATEWAY_LIMITS.formatBytes||!plainObject(format)||format.type!=='object'||!validSchema(format,1))throw fail('INVALID_REQUEST',400);
+ return format;
+}
+
 function validateChat(value,profiles,scope){
  if(!value||typeof value!=='object'||Array.isArray(value))throw fail('INVALID_REQUEST',400);
- if(Object.keys(value).some(key=>!['requestId','profile','depth','messages'].includes(key)))throw fail('INVALID_REQUEST',400);
+ if(Object.keys(value).some(key=>!['requestId','profile','depth','messages','format'].includes(key)))throw fail('INVALID_REQUEST',400);
  if(!REQUEST_ID.test(value.requestId??'')||!DEPTHS.includes(value.depth))throw fail('INVALID_REQUEST',400);
  const profile=profiles.get(value.profile);
  // An unknown profile and one outside this key's scope look the same to the caller.
@@ -280,6 +316,7 @@ function validateChat(value,profiles,scope){
  });
  if(messages.at(-1).role!=='user')throw fail('INVALID_REQUEST',400);
  if(chars>profile.maxInputChars)throw fail('MODEL_CONTEXT_LIMIT',422);
+ const format=validateFormat(value.format);
  const prepared=messages.map(({role,content})=>({role,content:role==='system'?content:neutralizeTemplate(content)}));
  if(profile.referenceText){
   const reference=REFERENCE_PREFIX+profile.referenceText;
@@ -289,7 +326,7 @@ function validateChat(value,profiles,scope){
    prepared.unshift({role:'system',content:reference});
   }
  }
- return {profile,depth:value.depth,requestId:value.requestId,messages:prepared};
+ return {profile,depth:value.depth,requestId:value.requestId,messages:prepared,...(format?{format}:{})};
 }
 
 function readBody(req){
@@ -327,7 +364,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   const profiles=[...profileSnapshot.values()].filter(p=>p.scopes.includes(scope)).map(p=>({
    id:p.id,label:p.label,model:p.model,digest:'sha256:'+p.digest,license:p.license,capabilities:[...p.capabilities],
    contextTokens:p.contextTokens,maxInputChars:p.maxInputChars,outputTokens:{...p.outputTokens},timeoutMs:{...p.timeoutMs},
-   ready:inspection.state.get(p.id)===null,reason:inspection.state.get(p.id)??null,
+   structuredOutput:true,ready:inspection.state.get(p.id)===null,reason:inspection.state.get(p.id)??null,
   }));
   return {gateway:GATEWAY_VERSION,online:inspection.online,runtime:inspection.runtime?{name:'ollama',version:inspection.runtime}:null,active:admission.active,queued:admission.queued,profiles};
  };
@@ -355,7 +392,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
    if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
    if(controller.signal.aborted)throw fail('MODEL_TIMEOUT',504);
    let output;const progress={text:''};
-   try{output=await streamChat({fetchImpl,ollamaUrl,profile:request.profile,depth:request.depth,messages:request.messages,signal:controller.signal,progress});}
+   try{output=await streamChat({fetchImpl,ollamaUrl,profile:request.profile,depth:request.depth,messages:request.messages,format:request.format,signal:controller.signal,progress});}
    catch(error){
     if(signal.aborted)throw fail('REQUEST_CANCELLED',499);
     // At the deadline, return what was written as a length-limited reply the visitor may continue.
