@@ -41,6 +41,9 @@ class Workspace:
 
     def dispatch(self, request, method):
         parsed = urlsplit(request.path)
+        if parsed.path.startswith("/api/workspace/acceptance/"):
+            from tools.local_data.intake_studio.acceptance import dispatch
+            return dispatch(request, method, self.store)
         match = re.fullmatch(r"/api/workspace/(working|library)(/.*)", parsed.path)
         if not match:
             return request.respond(404, {"error": "WORKSPACE_ROUTE_NOT_FOUND"})

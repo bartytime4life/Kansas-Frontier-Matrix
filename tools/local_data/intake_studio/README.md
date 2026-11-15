@@ -6,7 +6,7 @@ version: v1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
-updated: 2026-11-06
+updated: 2026-11-15
 policy_label: public
 owning_root: tools/
 responsibility: Describe local photo and PDF preparation implementation.
@@ -31,3 +31,12 @@ inside the same sidebar and loopback origin when their roots are configured.
 Owning root: `tools/`, following the adjacent local-data operators and desk.
 No registry, contract, policy or proof authority lives here. Originals and state
 remain outside Git. Tests live in `tests/local_data/test_intake_studio.py`.
+
+## Acceptance & evidence
+
+The same workspace now includes a private receipt-and-observation desk at
+`/api/workspace/acceptance/page`. It imports the saved PR #5856 receipt without
+changing original bytes or treating historical claims as new verification.
+Its separate append-only ledger cannot change intake review, sensitivity,
+source admission or publication. See the [local acceptance runbook](../../../docs/runbooks/local-acceptance-evidence.md)
+for limits, evidence export, remaining acceptance checks and rollback.

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KFM · Acceptance &amp; evidence</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/api/workspace/acceptance/style.css">
+<script src="/api/workspace/acceptance/app.js" defer></script>
+</head>
+<body><a class="skip" href="#acceptance-main">Skip to acceptance workspace</a>
+<!-- WORKSPACE_SIDEBAR -->
+<main id="acceptance-main" class="acceptance-main">
+<header class="topbar"><span>WORKSPACE / ACCEPTANCE</span><span id="connection" role="status">Connecting locally…</span></header>
+<section class="acceptance-heading"><div class="eyebrow">SAME WORKSPACE · SEPARATE DECISIONS</div><h1>From evidence<br>to a checked claim.</h1>
+<p>Intake prepares files. This desk records software and source checks. Neither step grants public release or sensitivity clearance.</p></section>
+<p class="acceptance-boundary"><strong>Public acceptance: HOLD.</strong> Imported reports are historical, unreviewed evidence. A valid checksum proves matching bytes—not truth, identity, or approval.</p>
+<div id="message" role="status" aria-live="polite"></div>
+<section class="acceptance-panel" aria-labelledby="import-heading"><h2 id="import-heading">Bring the existing evidence with you</h2>
+<p>Import the saved PR #5856 JSON receipt (maximum 2 MiB). Its 59 source plans, 13 download observations, build comparison and original timestamps stay intact. No provider or cloud is contacted.</p>
+<label for="receipt-file">Saved evidence receipt</label><input id="receipt-file" type="file" accept=".json,application/json">
+<div class="acceptance-actions"><button id="import" type="button" disabled>Import locally</button><button id="reconnect" type="button">Reconnect</button><button id="export" type="button" disabled>Export ledger</button></div>
+<label for="receipt">Evidence snapshot</label><select id="receipt" disabled><option>No receipt imported</option></select>
+<button id="original" type="button" disabled>Download unchanged original</button>
+<p id="receipt-identity" class="acceptance-mono"></p>
+</section>
+<section id="loaded" hidden>
+<div class="acceptance-metrics" aria-label="Evidence scope"><div><strong id="source-count">0</strong><span>source assignments</span></div><div><strong id="download-count">0</strong><span>saved download observations</span></div><div><strong id="event-count">0</strong><span>local ledger events</span></div></div>
+<nav class="acceptance-tabs" aria-label="Acceptance sections"><a href="#source-section">Source cases</a><a href="#build-section">Build comparison</a><a href="#download-section">Downloads</a><a href="#record-section">Record a check</a><a href="#history-section">Reviews &amp; risks</a></nav>
+<section class="acceptance-panel" id="source-section"><h2>Source-by-source checks</h2><label for="search-sources">Search source, category or provider</label><input id="search-sources" type="search" placeholder="KDOT, aquifer, soils…"><div id="sources" class="acceptance-table"></div>
+<details id="case-plan"><summary>Selected source test plan</summary><div id="plan"></div></details></section>
+<section class="acceptance-panel" id="build-section"><h2>Keep build identities separate</h2><p>These values come from the selected historical receipt. They are not live deployment checks.</p><pre id="builds"></pre></section>
+<section class="acceptance-panel" id="download-section"><h2>The 13 permitted downloads</h2><p>HTTP success, provider completeness and public deployment identity are different claims. Empty results do not establish an all-clear.</p><div id="downloads" class="acceptance-table"></div></section>
+<section class="acceptance-panel" id="record-section"><h2>Record an actual check</h2><p>No tests run automatically. Record only work actually performed; use HOLD or UNVERIFIED for missing evidence. Reviewer names are local attribution, not independent authentication.</p>
+<form id="observation" method="post" autocomplete="off"><div class="acceptance-fields">
+<label>Source<select name="sourceId" id="source-select"><option value="">Whole-build check</option></select></label>
+<label>Evidence lane<select name="lane"><option value="repository">Repository inspection</option><option value="focused_tests">Focused tests</option><option value="browser_catalog">Browser catalog / fallback</option><option value="rendered_browser">Rendered feature / drawer</option><option value="installed">Installed-machine verification</option><option value="deployment">Deployment identity</option><option value="download_provider">Download / provider</option></select></label>
+<label>Environment<select name="environment"><option value="candidate">Candidate</option><option value="installed">Installed</option><option value="deployed">Deployed</option><option value="public">Public</option></select></label>
+<label>Observed result<select name="result"><option>UNVERIFIED</option><option>HOLD</option><option>FAIL</option><option>PASS</option></select></label>
+<label>Run ID<input name="runId" required maxlength="128"></label><label>Observer<input name="actor" required maxlength="128"></label>
+<label>Observation time (with UTC offset)<input name="observedAt" required placeholder="2026-11-15T20:00:00Z" maxlength="64"></label>
+<label>Build / artifact identity<input name="buildIdentity" maxlength="256"></label>
+<label>Full observed revision<input name="revision" pattern="[a-f0-9]{40}" placeholder="40-character commit, or leave unknown" maxlength="40"></label>
+<label>Browser, OS and device<input name="browser" maxlength="256"></label>
+<label>Viewport and pixel ratio<input name="viewport" placeholder="1363 × 936; DPR 1" maxlength="256"></label>
+<label>Target WebGL2<select name="webgl2"><option value="unknown">Not checked</option><option value="available">Available—observed in target</option><option value="unavailable">Unavailable</option><option value="not_applicable">Not applicable</option></select></label>
+<label>Retest of local event number<input name="retestOf" inputmode="numeric" maxlength="10"></label>
+<label>Related Intake file ID (optional, reference only)<input name="intakeFileId" pattern="[a-f0-9]{32}" maxlength="32"></label>
+</div>
+<label>Reproduction steps<textarea name="steps" required maxlength="8000"></textarea></label>
+<label>Expected result<textarea name="expected" required maxlength="8000"></textarea></label>
+<label>Observed result<textarea name="observed" required maxlength="8000"></textarea></label>
+<label>Evidence references, hashes, network and console record<textarea name="evidence" maxlength="8000"></textarea></label>
+<label>Unresolved risks / limitations<textarea name="risk" maxlength="8000"></textarea></label>
+<button type="submit">Save observation locally</button></form>
+</section>
+<section class="acceptance-panel" id="history-section"><h2>Review history and unresolved risks</h2><p>Earlier records are retained. A later HOLD or RETEST supersedes an earlier evidence acceptance; a new retest starts unreviewed. No decision here edits Intake or authorizes release.</p><div id="history"></div>
+<form id="review" method="post" autocomplete="off"><h3>Append a scoped review</h3><div class="acceptance-fields"><label>Observation event number<input name="observation" required pattern="[1-9][0-9]*" maxlength="10"></label><label>Reviewer<input name="actor" required maxlength="128"></label><label>Review time (with UTC offset)<input name="observedAt" required maxlength="64"></label><label>Decision<select name="decision"><option>HOLD</option><option>RETEST</option><option value="ACCEPT_EVIDENCE">Accept this evidence only</option></select></label></div><label>Scope and reason<textarea name="reason" required maxlength="4000"></textarea></label><button type="submit">Save review locally</button></form>
+<details><summary>Original report and claims (not promoted)</summary><pre id="imported"></pre></details></section>
+</section>
+<footer>PRIVATE LOCAL EVIDENCE <span>No intake clearance, source admission, merge, deployment or publication.</span></footer>
+</main></body></html>
