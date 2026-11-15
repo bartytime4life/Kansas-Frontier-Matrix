@@ -47,7 +47,7 @@ const contextTime = pageValue('officialContextTime', { CIVIC_ID: civic.CIVIC_ID,
 const contextSummary = pageValue('officialContextSummary', { ...civic, ...history, stringContextProperty: str });
 const select = pageValue('buildBasemapContext', {
   ...civic, ...history, OFFICIAL_CONTEXT_BY_SOURCE_ID: { [civic.CIVIC_SOURCE.sourceId]: civic.CIVIC_SOURCE },
-  BASEMAP_CONTEXT_LAYER: {}, officialContextTime: contextTime, officialContextSummary: contextSummary,
+  BASEMAP_CONTEXT_LAYER: {}, OFFICIAL_SOURCE_CATEGORY: { [civic.CIVIC_ID]: 'Reference boundaries & locators' }, officialContextTime: contextTime, officialContextSummary: contextSummary,
   stringContextProperty: str, drawerArtifactAttributes: () => [],
 });
 const polygon = { type: 'Polygon', coordinates: [[[-99,38],[-98,38],[-98,39],[-99,39],[-99,38]]] };
