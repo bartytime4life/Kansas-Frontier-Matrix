@@ -92,7 +92,7 @@ test("malformed NIFC transfer-limit metadata fails without claiming empty covera
     for (const metadata of [{ exceededTransferLimit: flag }, { properties: { exceededTransferLimit: flag } }]) {
       await withCatalog({ features: [], ...metadata }, async () => {
         const response = await request();
-        assert.equal(response.status, 502);
+        assert.equal(response.status, 503);
         assert.equal(response.headers.get("x-kfm-context-state"), "error");
         assert.equal(response.headers.get("cache-control"), "no-store");
         const body = await response.json();
@@ -176,7 +176,7 @@ test("unavailable NIFC upstreams remain errors instead of empty incident lists",
   globalThis.fetch = async input => { calls.push(new URL(input)); return new Response("Unavailable", { status: 503 }); };
   try {
     const response = await request();
-    assert.equal(response.status, 502);
+    assert.equal(response.status, 503);
     assert.equal(response.headers.get("x-kfm-context-state"), "error");
     const body = await response.json();
     assert.equal(body.state, "error");
