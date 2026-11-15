@@ -1482,6 +1482,7 @@ export default function Home() {
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const sourceStatusPanelRef = useRef<HTMLElement>(null);
   const sourceStatusReturnRef = useRef<HTMLElement | null>(null);
+  const sourceStatusReturnPendingRef = useRef(false);
   const qwenPanelRef = useRef<HTMLElement>(null);
   const [chatReadingView, setChatReadingView] = useState(false);
   const qwenReturnRef = useRef<HTMLElement | null>(null);
@@ -5776,6 +5777,7 @@ export default function Home() {
   }, []);
 
   const openSourceStatus = useCallback((returnElement?: HTMLElement | null, sourceId?: OfficialContextId) => {
+    sourceStatusReturnPendingRef.current = false;
     markExplorerNavigation();
     setPrimaryWorkspace("map");
     setGuideOpen(false);
@@ -5806,16 +5808,24 @@ export default function Home() {
   }, [markExplorerNavigation, setRightOpen]);
 
   const closeSourceStatus = useCallback((returnElement?: HTMLElement | null) => {
+    sourceStatusReturnRef.current = returnElement ?? sourceStatusReturnRef.current;
+    sourceStatusReturnPendingRef.current = true;
     setSourceStatusOpen(false);
-    const returnTarget = returnElement ?? sourceStatusReturnRef.current;
-    sourceStatusReturnRef.current = null;
-    window.setTimeout(() => {
-      const targetIsUsable = returnTarget?.isConnected
-        && !returnTarget.closest("[inert]")
-        && returnTarget.getClientRects().length > 0;
-      (targetIsUsable ? returnTarget : returnTarget?.closest("details")?.querySelector<HTMLElement>("summary") ?? mapContainerRef.current)?.focus({ preventScroll: true });
-    }, 0);
   }, []);
+
+  useLayoutEffect(() => {
+    if (!sourceStatusReturnPendingRef.current) return;
+    sourceStatusReturnPendingRef.current = false;
+    const returnTarget = sourceStatusReturnRef.current;
+    sourceStatusReturnRef.current = null;
+    if (sourceStatusOpen || primaryWorkspace !== "map" || guideOpen !== false || !leftOpen
+      || (leftPanelMode !== "layers" && leftPanelMode !== "live")) return;
+    // Measure the catalog after React removes its hidden state.
+    const target = modalReturnTarget(returnTarget, mapContainerRef.current);
+    const panel = leftPanelRef.current;
+    if (target && panel?.contains(target)) revealPanelControl(panel, target);
+    target?.focus({ preventScroll: true });
+  }, [sourceStatusOpen, primaryWorkspace, guideOpen, leftOpen, leftPanelMode]);
 
   const closeMapUtility = useCallback(() => {
     setMapUtilityOpen(false);

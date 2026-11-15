@@ -1,5 +1,51 @@
 # Explorer welcome and explicit navigation — 2026-10-19
 
+## Source-details return focus — November 15, 2026 candidate
+
+Independent public-UI verification, alongside inspection of hosted source
+`0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7`, confirmed #5859's source-opening
+behavior for disabled KDOT roads and NASA fire points. Public build metadata
+matched the inspected source-input digest but did not establish an exact deployed
+commit or built-byte identity. At a 681 × 468 CSS viewport produced by 200% desktop zoom,
+Back to layers focused the correct source action below the visible Layers panel.
+This is an observed return-path defect; the evidence does not establish that
+#5859 introduced it. The review record is `KFM-5859-INDEPENDENT-20261115`.
+
+This candidate queues the source return until React commits the closed Status
+view. It resolves the existing return target, uses `revealPanelControl` to reveal
+that target inside Layers, and then focuses it without a second implicit scroll.
+A newer source opening or a different committed workspace/panel cancels the
+pending return. The existing source-opening behavior, layer selection, history
+rules and exact source-download allowlist are retained. The separate generic
+Layers return timer discussed in #5864 is outside this correction.
+
+The added callback tests check committed ordering, one-time consumption and
+superseded navigation. The rendered regression covers both sources at 1280 × 800,
+390 × 844 and 681 × 468, two keyboard round trips each, actual ancestor clipping,
+Status wheel scrolling, generic Status return and unchanged rendered official
+source controls. It never scrolls the expected return target after Back.
+Its name remains in the existing focused source-status CI selector.
+
+Local validation passed 119 focused tests, the production build and TypeScript
+verification. All three new focus-control unit cases failed against baseline
+runtime and passed with the candidate. The attempted baseline browser check
+aborted before page creation because Chromium could not create its local socket;
+it is not a rendered failure reproduction. Candidate rendered acceptance remains
+pending; the PR records immutable base/head and exact execution evidence.
+A 681 × 468 emulated viewport does not reproduce 200% browser zoom;
+390 × 844 emulation does not establish physical-phone or software-keyboard use.
+Isolated unavailable-provider fixtures establish navigation and selection state,
+not live provider data or complete rendered map-layer visibility. Missing-source
+fallback retains its existing callback regression; rendered fallback acceptance
+remains separate. Baseline, candidate, CI and public results must stay distinct.
+
+Placement retains this standalone hosted composition's existing `app/`, `tests/`
+and `docs/` responsibilities under its AGENTS record and accepted ADR-0029 /
+Directory Rules §§5, 7.2, 10.1 and 14. No root, source, policy, schema, release or
+publication authority is introduced. Rollback reverts the bounded candidate
+change; preserve data, settings and the original verification record. Merge and
+public deployment require their own authority and evidence.
+
 ## Finding and scope
 
 Confirmed on hosted branch commit `0ad31b2c993e6d6973b678192f689650ab66e8da`

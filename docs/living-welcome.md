@@ -1,5 +1,51 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Desktop explanation wheel handoff — November 15, 2026 candidate
+
+Independent public-UI verification, alongside inspection of hosted source
+`0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7`, reproduced a wheel dead zone over
+`.welcome-focus` at 1363 × 936. Public build metadata did not establish an exact
+deployed commit or built-byte identity. The explanation
+had no internal scroll range; outer scrollTop stayed 187 over the panel and
+changed from 187 to 667 over surrounding space with the same requested gesture.
+The explanation remained visible. This is distinct from the historical removed
+`.welcome-preview-brief` card and does not establish a disappearing-panel failure.
+
+This candidate preserves the fixed atlas layout and installs a native wheel
+listener only on its current chosen-map panel. Inner scrollable content keeps
+native wheel handling while it has range. At an inner boundary, an unmodified
+vertical gesture moves the welcome scroller only when that scroller has room.
+The handler respects deliberate overscroll boundaries and does not intercept
+horizontal-dominant input, Ctrl/Meta/Alt/Shift gestures, editable controls or
+already-canceled/noncancelable events. Cleanup follows topic/layout changes and
+unmount. No touch listener, permission change or data admission is introduced.
+
+This is a bounded candidate, not a demonstrated browser-engine root-cause repair.
+A non-passive listener has input-path cost; line-mode conversion approximates
+text metrics. A gesture still consumed by inner content is left native; later
+boundary gestures are forwarded rather than dividing residual distance. A native
+layout solution would be preferable if separately shown to preserve positioning,
+credit clearance and scrolling across input methods.
+
+The new 1280 × 800 and 1363 × 936 browser cases assert a hit inside the panel,
+real no-overflow geometry, both wheel directions, fixed visibility and unchanged
+document position. A separately labeled 220px height fixture checks inner
+consumption and boundary handoff. Native horizontal input and synthetic modifier
+events check noninterception; synthetic events do not establish browser zoom.
+The existing trusted touch-carousel matrix gains 390 × 844. All cases retain the
+`welcome categories scroll` prefix used by the current focused CI selector.
+
+Local validation passed the approved 119-test focused suite, production build
+and TypeScript verification. Chromium aborted before page creation on the
+baseline browser attempt because local socket creation was denied. The new
+wheel cases have therefore not established a rendered baseline failure or
+candidate pass locally. GitHub browser results, native zoom/pinch, physical
+trackpad/touch, expanded-credit combinations and public behavior require their
+own evidence. No public deployment is asserted by this candidate note.
+Placement reuses the existing hosted application, tests and docs under AGENTS
+and accepted ADR-0029 / Directory Rules §§5, 7.2, 10.1 and 14. Rollback reverts
+the bounded candidate change without changing source permissions or stored data.
+
 ## Desktop atlas · 2026-11-05 candidate
 
 On wide, tall screens (at least 1101 px wide and 761 px tall, outside the
