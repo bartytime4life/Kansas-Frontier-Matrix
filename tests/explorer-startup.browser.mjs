@@ -2644,7 +2644,12 @@ test('trail site markers open complete histories and validated record links in t
   for (const site of fixtures) {
     // Project the actual rendered point after any drawer-driven resize, then
     // dispatch a native pointer event instead of invoking application handlers.
-    await p.wait(`(() => { const map = ${map}, point = map?.project([${site.longitude}, 38.5]); return point && map.queryRenderedFeatures(point, { layers: [${JSON.stringify(layer)}] }).some(feature => feature.properties.featureId === ${JSON.stringify(site.id)}); })()`, 'the next trail marker is hit-testable');
+    // Closing the drawer widens the map container before MapLibre resizes its
+    // canvas; until the two sizes agree, project() still describes the old
+    // layout and a click there can land on the previous marker.
+    await p.wait(`(() => { const map = ${map}, canvas = map?.getCanvas(), container = map?.getContainer();
+      if (!canvas || canvas.clientWidth !== container.clientWidth || canvas.clientHeight !== container.clientHeight || map.isMoving()) return false;
+      const point = map.project([${site.longitude}, 38.5]); return map.queryRenderedFeatures(point, { layers: [${JSON.stringify(layer)}] }).some(feature => feature.properties.featureId === ${JSON.stringify(site.id)}); })()`, 'the next trail marker is hit-testable at the current map size');
     const point = await p.evaluate(`(() => { const map = ${map}, point = map.project([${site.longitude}, 38.5]), rect = map.getCanvas().getBoundingClientRect(); return { x: point.x + rect.left, y: point.y + rect.top }; })()`);
     await p.call('Input.dispatchMouseEvent', { type: 'mousePressed', ...point, button: 'left', clickCount: 1 });
     await p.call('Input.dispatchMouseEvent', { type: 'mouseReleased', ...point, button: 'left', clickCount: 1 });
