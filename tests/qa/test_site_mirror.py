@@ -2768,3 +2768,20 @@ def test_guides_categories_successor_preserves_trail_places_inventory_and_all_ho
          "tests/landing-guides.test.mjs"},
         "54725be513186123529998c68aa391aa9bc97a1a",
     )
+
+
+def test_bridge_clusters_successor_preserves_guides_categories_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-bridge-clusters-overlay-20261115.json",
+        "site-v268-guides-categories-overlay-20261115.json",
+        "0992b5b20871d05e9858fa88c47cbf1b0bf4cdcc0effe66d27c23e7e58ca9ac6",
+        {"app/api/bridge-detail/route.ts", "app/api/live-context/kdot-bridges.ts", "app/api/live-context/route.ts",
+         "app/evidence-drawer-data.ts", "app/kansas-discovery-layers.ts", "app/kansas-reference-layers.ts", "app/kdot-bridges.ts",
+         "app/layer-json-reads.ts", "app/live-context.ts", "app/map-starters.ts", "app/page.tsx", "app/site-connections.ts",
+         "app/site-features.ts", "docs/kdot-bridge-clusters-20261115.md", "docs/smoke-imagery-bridges.md",
+         "scripts/qwen-knowledge-pack.mjs", "tests/bridge-records.test.mjs", "tests/kansas-reference-layers.test.mjs",
+         "tests/kdot-bridges.test.mjs", "tests/layer-lifecycle.test.mjs", "tests/live-alert-context.test.mjs",
+         "tests/live-earthquake-context.test.mjs", "tests/live-fire-context.test.mjs", "tests/live-streamflow-context.test.mjs",
+         "tests/rendered-html.test.mjs", "tests/security-upstream.test.mjs", "tests/temporal-sweep.test.mjs"},
+        "55dad5950ca31ec2b976a309c48818c77cb04477",
+    )

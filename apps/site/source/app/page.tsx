@@ -38,6 +38,7 @@ import { LocalAtlasControl } from "./local-atlas-control";
 import { localAtlasHit } from "./local-atlas-map";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
+import { bridgeClusterSummary } from "./kdot-bridges";
 import { BlmPlssInspector } from "./blm-plss-inspector";
 import { isBlmPlssLayer } from "./blm-plss-records";
 import { HmsSmokePlayback } from "./hms-smoke-playback-control";
@@ -706,6 +707,10 @@ const escapeReportHtml = (value: unknown) => String(value)
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
+/** A feed's own outage sentence (what is unavailable and when it is checked next), not a generic transport error. */
+const feedOutageExplanation = (message: string | undefined): string | null =>
+  message && /unavailable/i.test(message) && /next provider check/i.test(message) ? message : null;
+
 const validLayerPayload = (value: unknown, feed: OfficialContextFeedId, day?: string): boolean => {
   if (!value || typeof value !== "object") return false;
   const payload = value as Partial<OfficialContextPayload>;
@@ -944,6 +949,10 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
     const station = stringContextProperty(properties, "station") ?? "station";
     const elevation = numberContextProperty(properties, "elevationMeters");
     return `${title} · ${network}.${station}${elevation === null ? "" : ` · ${elevation.toFixed(0)} m`}. FDSN station metadata is a delayed/archive context connection; open StationView for provider realtime inspection. No waveform, alert, or KFM evidence is inferred from the marker.`;
+  }
+  if (source.startsWith("kdot-bridges-")) {
+    const built = numberContextProperty(properties, "built"), length = numberContextProperty(properties, "lengthFt"), status = stringContextProperty(properties, "statusClass");
+    return `Bridge at ${title}${built === null ? "" : `, built ${built}`}${length === null ? "" : `, ${Math.round(length).toLocaleString("en-US")} ft long`}${status === "closed" ? ", recorded closed to all traffic" : status === "posted" ? ", posted with a restriction" : ""}. A KDOT inventory point, not the deck footprint. Recorded values may lag; they are not a safety determination, a live closure notice or navigation advice.`;
   }
   if (source === "nps-trail-places") {
     const trails = stringContextProperty(properties, "trails"), place = stringContextProperty(properties, "place");
@@ -2630,6 +2639,21 @@ export default function Home() {
     : null, [selectedOfficialContextId, selected?.externalStationId, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState]);
   const selectedOfficialFeature = selected?.externalFeatureId && selectedOfficialPayload?.data.features.find((feature) =>
     feature.properties?.featureId === selected.externalFeatureId);
+  // The map carries a slim bridge record; the selected bridge's full KDOT record is read on demand.
+  const selectedBridgeId = selectedOfficialFeature && selectedOfficialContextId && isBridgeLayer(selectedOfficialContextId) ? selected?.externalFeatureId ?? null : null;
+  const [bridgeDetail, setBridgeDetail] = useState<{ id: string; properties: Record<string, string> } | null>(null);
+  useEffect(() => {
+    if (!selectedBridgeId) return;
+    const controller = new AbortController();
+    void fetch(`/api/bridge-detail?id=${encodeURIComponent(selectedBridgeId)}`, { signal: controller.signal, headers: { Accept: "application/json" } })
+      .then(response => response.ok ? response.json() : null)
+      .then((body: { id?: unknown; properties?: unknown } | null) => {
+        if (controller.signal.aborted || !body || body.id !== selectedBridgeId || !body.properties || typeof body.properties !== "object") return;
+        const properties = Object.fromEntries(Object.entries(body.properties as Record<string, unknown>).filter((entry): entry is [string, string] => typeof entry[1] === "string"));
+        setBridgeDetail({ id: selectedBridgeId, properties });
+      }).catch(() => undefined);
+    return () => controller.abort();
+  }, [selectedBridgeId]);
   const selectedFireComparisonId = selectedOfficialContextId === "nifc-fire-reports" ? "nasa-gibs-fire-points" : selectedOfficialContextId === "nasa-gibs-fire-points" ? "nifc-fire-reports" : null;
   const selectedFireComparisonPayload = selectedFireComparisonId ? officialPayloads[selectedFireComparisonId] : undefined;
   const selectedFireNeighbors = selectedFireComparisonId && selectedOfficialFeature && selectedFireComparisonPayload
@@ -2637,7 +2661,7 @@ export default function Home() {
   const selectedArtifactAttributes = selected?.kind === "registry"
     ? drawerArtifactAttributes("registry", selected.properties)
     : selectedOfficialContextId && selectedOfficialFeature
-      ? drawerArtifactAttributes(selectedOfficialContextId, selectedOfficialFeature.properties)
+      ? drawerArtifactAttributes(selectedOfficialContextId, bridgeDetail && bridgeDetail.id === selected?.externalFeatureId ? { ...selectedOfficialFeature.properties, ...bridgeDetail.properties } : selectedOfficialFeature.properties)
       : selected?.externalAttributes ?? [];
   const selectedAttributesCurrent = Boolean(selectedOfficialFeature);
   const selectedFireSourceDay = selectedOfficialContextId === "nasa-gibs-fire-points"
@@ -5472,12 +5496,14 @@ export default function Home() {
           if (!candidate) {
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
-            const externalTitle = String(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.event ?? externalCandidate?.properties?.monitoringLocationId ?? externalCandidate?.properties?.class ?? "Basemap feature");
+            // A numbered bridge circle previews what it counts instead of a single feature's name.
+            const clusterPreview = bridgeClusterSummary(externalCandidate?.properties);
+            const externalTitle = clusterPreview?.title ?? String(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.event ?? externalCandidate?.properties?.monitoringLocationId ?? externalCandidate?.properties?.class ?? "Basemap feature");
             const officialSource = externalCandidate?.source ? OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate.source] : undefined;
             showHoverInDrawer({
-              id: `external:${externalCandidate?.source ?? "context"}:${externalTitle}`,
+              id: `external:${externalCandidate?.source ?? "context"}:${clusterPreview ? `cluster-${String(externalCandidate?.properties?.cluster_id)}` : externalTitle}`,
               title: externalTitle,
-              subtitle: officialSource?.shortTitle ?? "External basemap context",
+              subtitle: clusterPreview ? `${clusterPreview.detail} · select to zoom in` : officialSource?.shortTitle ?? "External basemap context",
               state: "No KFM evidence attached",
             }, Boolean(officialSource));
             return;
@@ -5573,6 +5599,17 @@ export default function Home() {
               const isSiteLocal = sourceId.startsWith("kfm-") || sourceId.startsWith("scene-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
               return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
             });
+            // A numbered bridge circle is a count, not a record: zoom to where it splits and say what it holds.
+            const clusterSummary = bridgeClusterSummary(externalCandidate?.properties);
+            if (externalCandidate && clusterSummary) {
+              const clusterSource = map.getSource(externalCandidate.source) as GeoJSONSource | undefined;
+              const center = (externalCandidate.geometry as GeoJSON.Point).coordinates as [number, number];
+              announce(`${clusterSummary.title}: ${clusterSummary.detail}. Zooming in.`);
+              void clusterSource?.getClusterExpansionZoom(Number(externalCandidate.properties?.cluster_id)).then((zoom) => {
+                map.easeTo({ center, zoom: Math.min(zoom, 17), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500 });
+              }).catch(() => undefined);
+              return;
+            }
             const context = externalCandidate
               ? buildBasemapContext(externalCandidate, event.lngLat.lng, event.lngLat.lat)
               : null;
@@ -9751,7 +9788,7 @@ export default function Home() {
                     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}{NEW_LAYER_IDS.has(source.id) && <span className="new-layer-badge" title="Added in the November 2026 layer refresh">NEW</span>}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
                 {officialVisibility[source.id] && state === "loading" && source.apiPath && <small role="status">{officialReadPhases[source.id] === "queued" ? "Waiting for a loading slot…" : "Receiving source data…"} You can hide this layer to cancel.</small>}
                 {officialVisibility[source.id] && state === "error" && <div className="layer-request-recovery">
-                  <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
+                  <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : feedOutageExplanation(officialErrors[source.id]) ?? "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
                   <button type="button" disabled={heldAtFrame} onClick={(event) => {
                     // The recovery button disappears after retry; keep keyboard
                     // focus on this layer's stable control throughout acquisition.

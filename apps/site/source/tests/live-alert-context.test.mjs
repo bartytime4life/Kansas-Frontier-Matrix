@@ -144,7 +144,7 @@ test("an unavailable NWS alert list remains an error instead of empty coverage",
   globalThis.fetch = async input => { calls.push(String(input)); return new Response("Unavailable", { status: 503 }); };
   try {
     const response = await request(), body = await response.json();
-    assert.equal(response.status, 502); assert.equal(body.state, "error"); assert.equal("data" in body, false);
+    assert.equal(response.status, 503); assert.equal(body.state, "error"); assert.equal("data" in body, false);
     assert.equal(response.headers.get("cache-control"), "no-store");
     assert.deepEqual(calls, ["https://api.weather.gov/alerts/active?area=KS"]);
   } finally { globalThis.fetch = originalFetch; }

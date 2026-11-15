@@ -2,6 +2,12 @@ import type { OfficialContextId } from "./live-context";
 
 export type DrawerAttribute = Readonly<{ label: string; value: string }>;
 
+/** A selected KDOT bridge: the full inventory record is read for that one bridge (kdot-bridges.ts). */
+const BRIDGE_FIELDS: readonly (readonly [string, string])[] = [["highlight", "Stands out"], ["carries", "Carries"], ["crosses", "Crosses"], ["location", "Location note"], ["county", "County"],
+  ["builtLabel", "Built"], ["rebuilt", "Rebuilt"], ["structureType", "Material and design"], ["lengthLabel", "Length"], ["lanesLabel", "Lanes"], ["trafficLabel", "Traffic"],
+  ["status", "Recorded status"], ["loadPosting", "Load posting class"], ["historic", "Historic designation"], ["condition", "Recorded condition ratings"],
+  ["sufficiencyLabel", "KDOT sufficiency rating"], ["inspected", "Last inspection"], ["owner", "Owner"], ["network", "Road system"], ["structureId", "KDOT structure number"]];
+
 const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readonly (readonly [string, string])[]>> = {
   "kgs-aquifer-alluvial": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
   "kgs-aquifer-dakota": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
@@ -25,11 +31,11 @@ const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readon
   "raspberry-shake-stations": [["network", "Network"], ["station", "Station"], ["elevationMeters", "Elevation · m"], ["startTime", "Station start"], ["endTime", "Station end"], ["dataRole", "Data role"], ["waveformAvailability", "Waveform availability"]],
   "nws-alerts": [["event", "Event"], ["severity", "Severity"], ["urgency", "Urgency"], ["certainty", "Certainty"], ["headline", "Headline"], ["zoneName", "Zone"], ["effective", "Effective"], ["expires", "Expires"], ["senderName", "Issuer"]],
   "fema-disaster-declarations": [["disasterNumber", "FEMA disaster number"], ["declarationType", "Declaration type"], ["incidentType", "Incident type"], ["designatedArea", "Designated area"], ["declarationAt", "Declaration date"], ["incidentBeginAt", "Incident began"], ["incidentEndAt", "Incident ended"], ["countyGeoid", "2020 county GEOID"], ["geometryRole", "Map geometry meaning"], ["retrievedAt", "Retrieved · UTC"]],
-  "kdot-bridges-state": [],
-  "kdot-bridges-local": [],
-  "kdot-bridges-historic": [],
-  "kdot-bridges-old": [],
-  "kdot-bridges-closed": [],
+  "kdot-bridges-state": BRIDGE_FIELDS,
+  "kdot-bridges-local": BRIDGE_FIELDS,
+  "kdot-bridges-historic": BRIDGE_FIELDS,
+  "kdot-bridges-old": BRIDGE_FIELDS,
+  "kdot-bridges-closed": BRIDGE_FIELDS,
   "kdot-roads-1918": [],
   "kdot-roads": [], "kdot-rail-active": [], "kdot-rail-abandoned": [], "fema-flood-zones": [],
   "blm-plss-townships": [], "blm-plss-sections": [], "blm-plss-intersected": [],

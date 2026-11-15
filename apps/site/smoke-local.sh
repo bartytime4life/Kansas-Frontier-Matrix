@@ -14,7 +14,7 @@ api_root="$site_root/source/app/api"
 # go unchecked by accident. Routes in smoke_routes are exercised below.
 smoke_routes=(
   acquisition acquisition/terrain
-  3dep-dem-tile airflow-tile blm-plss-records bridge-records
+  3dep-dem-tile airflow-tile blm-plss-records bridge-detail bridge-records
   crop-casma/availability crop-casma/preview crop-casma/tile
   connections connections/run
   daily-archive data-submissions "data-submissions/[id]"
@@ -181,6 +181,8 @@ expect GET /api/governed/land-records/v1/evidence 403 reason_code LAND_RELEASE_N
 expect GET /api/3dep-dem-tile 400
 expect GET /api/airflow-tile 400
 expect GET /api/blm-plss-records 400 state error
+expect GET /api/bridge-detail 400 state error
+expect GET '/api/bridge-detail?id=1%20OR%201=1' 400 state error
 expect GET /api/bridge-records 400 state error
 expect GET '/api/crop-casma/preview?unsupported=1' 400 code INVALID_REQUEST
 expect GET /api/crop-casma/tile 400 code INVALID_TILE_REQUEST

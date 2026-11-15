@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { readBoundedJson } from "../../bounded-json";
+import { isBridgeFeed, kdotBridges, type BridgeFeedId } from "./kdot-bridges";
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
 import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeOverlaps, smokeUrl } from "../../event-atlas";
@@ -44,7 +45,7 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "nws-storm-reports" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "nws-storm-reports" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places" | BridgeFeedId;
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -1086,20 +1087,23 @@ const trailPlaces = async () => {
     retrievedAt, null, skipped > 0 || truncated, truncated);
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "nws-storm-reports": 300, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400, "nps-historic-trails": 86_400, "nps-trail-places": 86_400 };
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "nws-storm-reports": 300, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400, "nps-historic-trails": 86_400, "nps-trail-places": 86_400, "kdot-bridges-state": 3600, "kdot-bridges-local": 3600, "kdot-bridges-historic": 3600, "kdot-bridges-old": 3600, "kdot-bridges-closed": 3600 };
 
+// A hosting proxy can replace the body of a 502 or 504 with its own "error code" page, which hides the
+// reason and the next-check time from visitors. 503 keeps this JSON body; the header keeps the cause.
+const FEED_UNAVAILABLE_STATUS = 503;
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : feed === "noaa-hms-smoke" ? "2005-08-05" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places" && feed !== "nws-storm-reports" && feed !== "kdwp-wildlife-areas" && feed !== "kdwp-wiha-access" && feed !== "nps-historic-trails" && feed !== "nps-trail-places") {
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places" && feed !== "nws-storm-reports" && feed !== "kdwp-wildlife-areas" && feed !== "kdwp-wiha-access" && feed !== "nps-historic-trails" && feed !== "nps-trail-places" && (feed === null || !isBridgeFeed(feed))) {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "nws-storm-reports" ? await recentStormReports() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : feed === "nps-historic-trails" ? await historicTrails() : feed === "nps-trail-places" ? await trailPlaces() : await raspberryShakeStations(day);
+    const result = isBridgeFeed(feed) ? await kdotBridges.feed(feed) : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "nws-storm-reports" ? await recentStormReports() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : feed === "nps-historic-trails" ? await historicTrails() : feed === "nps-trail-places" ? await trailPlaces() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Official upstream request failed.", state: "error", fallback: "No fallback inference or substitute dataset was produced." }, { status: timeout ? 504 : 502, headers: { "Cache-Control": "no-store", "X-KFM-Context-State": "error", "X-Content-Type-Options": "nosniff" } });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Official upstream request failed.", state: "error", fallback: "No fallback inference or substitute dataset was produced." }, { status: FEED_UNAVAILABLE_STATUS, headers: { "Cache-Control": "no-store", "X-KFM-Context-State": "error", "X-KFM-Upstream-Failure": timeout ? "timeout" : "error", "X-Content-Type-Options": "nosniff" } });
   }
 }

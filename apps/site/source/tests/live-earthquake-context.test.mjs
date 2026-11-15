@@ -120,7 +120,7 @@ test("unavailable earthquake upstreams return an error instead of an empty catal
   globalThis.fetch = async input => { calls.push(new URL(input)); return new Response("Unavailable", { status: 503 }); };
   try {
     const response = await request();
-    assert.equal(response.status, 502);
+    assert.equal(response.status, 503);
     assert.equal(response.headers.get("x-kfm-context-state"), "error");
     assert.equal(response.headers.get("cache-control"), "no-store");
     const body = await response.json();

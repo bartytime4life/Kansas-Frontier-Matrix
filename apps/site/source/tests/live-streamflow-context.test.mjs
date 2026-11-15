@@ -213,7 +213,7 @@ test("an unavailable USGS latest-observation source remains an error", async () 
   globalThis.fetch = async input => { calls.push(new URL(input)); return new Response("Unavailable", { status: 503 }); };
   try {
     const response = await request(), body = await response.json();
-    assert.equal(response.status, 502); assert.equal(body.state, "error"); assert.equal("data" in body, false);
+    assert.equal(response.status, 503); assert.equal(body.state, "error"); assert.equal("data" in body, false);
     assert.equal(response.headers.get("cache-control"), "no-store");
     assert.equal(calls.length, 1);
     assert.equal(calls[0].origin, "https://api.waterdata.usgs.gov");
