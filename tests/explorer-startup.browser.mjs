@@ -2001,6 +2001,10 @@ test('responsive layer sheet retains map focus and a foreground share keeps its 
  await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-modal')==='false'`,'Layers remains nonmodal');
  assert.equal(await p.evaluate(`document.activeElement===window.__mapResizeFocus&&document.querySelector('#map-canvas').contains(document.activeElement)`),true);assert.equal(await p.evaluate(`document.querySelector('.topbar').inert`),false);
  await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true'`,'Escape still closes Layers');
+ // Closing Layers returns focus on a later timer task (about 100 ms on a busy page). A timer queued
+ // now runs after it, so the return finishes at this width. Resizing first let it land on the Layers
+ // button after More was focused, and Enter then reopened Layers instead of More.
+ await p.evaluate(`new Promise(resolve=>setTimeout(resolve,0))`);
  await p.call('Emulation.setDeviceMetricsOverride',{width:1280,height:900,deviceScaleFactor:1,mobile:false});
  await p.evaluate(`Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}})`);
  await enter('summary[aria-label="More site actions"]');await p.wait(`document.querySelector('.header-overflow-menu').open`,'More opens');await enter('.share-action');
@@ -2362,6 +2366,9 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
  await p.wait(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow===false`,'leaving Water shuts off inherited animation');
  await enter('[aria-label="Effects & rendering"]');
  for(const name of ['Cinematic','Natural']){
+  // Like every other step: wait for the control before driving it. Reaching for a preset the
+  // Effects panel had not rendered yet threw a TypeError instead of a readable failure.
+  await p.wait(`[...document.querySelectorAll('.scene-panel-body button')].some(node=>node.textContent.startsWith(${JSON.stringify(name)}))`,`Effects panel offers the ${name} preset`);
   await p.evaluate(`(()=>{const button=[...document.querySelectorAll('.scene-panel-body button')].find(node=>node.textContent.startsWith(${JSON.stringify(name)}));button.focus();})()`);await p.key('Enter','Enter',13);
   assert.equal(await p.evaluate(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow`),false,'visual preset does not enable flow');
  }
