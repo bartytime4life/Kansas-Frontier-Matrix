@@ -172,6 +172,51 @@ model can still get details wrong. In test replies it got the Santa Fe Trail's
 starting point wrong and gave overstated route lengths. Model choice belongs to
 the home PC, not to this repository.
 
+<a id="public-readback-2026-11-15"></a>
+
+### Publications on 2026-11-15: map guides, bridge clusters and outage messages
+
+The owner published twice. After each publish, the identity checker reported
+`APPLICATION_INPUTS_MATCH` for the merge commit named below.
+
+**First publish, verified at `b95017ea`**
+
+| Change | Live readback |
+|---|---|
+| [#5854](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5854) map guide pages | `/explore` and its four guides returned 200 with their titles. An unknown guide returned 404. The sitemap listed all five pages |
+| [#5855](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5855) DeFlock outage backoff | The feed failed in about 0.4 s instead of about 25 s. Its explanation did not reach visitors; see the correction below |
+| [#5856](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5856) one catalog category per source | The download route served a trail-site download and refused a source with no on-site download with 400 |
+| [#5860](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5860) derived connection tables | No visible change; the generated connection list was byte-identical before and after |
+
+**Second publish, verified at `1761a351`**
+
+| Change | Live readback |
+|---|---|
+| [#5861](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5861) KDOT bridges as numbered clusters | All five bridge feeds returned 200: 5,580 state and 19,291 local bridges, 51 historic, 4,486 built before 1950 and 91 recorded closed. The local list was about 420 KB compressed. In a headless browser, hovering a circle summarised its bridges, selecting it zoomed in and split it, and selecting a bridge showed its full KDOT record. No page errors |
+| [#5862](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5862) feed outage explanation | The DeFlock feed returned 503 with its JSON explanation, and the layer card showed "Next provider check in about 1 minute" |
+
+**Correction to #5855.** Its description said visitors would see when the
+provider is checked next. They did not, for three reasons: the host replaced the
+body of a 502 with a bare `error code: 502` page, the browser reader discarded
+the body of any failed response, and the layer card showed a fixed sentence.
+#5862 fixed all three. That the host passes a 503 body through could only be
+confirmed after publishing.
+
+**First bridge read of the day.** The first request for a bridge layer reads
+KDOT's inventory and took about 7 seconds for state bridges. Later requests are
+served from the site's copy for a day and took under one second.
+
+**Chat model.** On 2026-11-15 `/api/ai/status` reported the home compute model
+as `qwen3.5:9b-q4_K_M`, replacing `qwen3.5:4b`. The "connecting" status after a
+publish cleared within about 20 seconds.
+
+**CI note.** The `explorer-browser` suite failed twice on #5862's commit, in
+two different tests that change does not touch. Both were timing races in the
+tests: one resized the window while a focus return was still pending, and one
+reached for a panel button without waiting for it.
+[#5864](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5864)
+fixed both.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 ## Historical verified starting point, 2026-10-19
