@@ -1,4 +1,5 @@
 import type { OfficialContextSource } from "./live-context";
+import { BRIDGE_CLOSED_COLOR, BRIDGE_ERA_STOPS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR, isBridgeFeed } from "./kdot-bridges";
 
 /**
  * November 2026 discovery layers. Every entry is a fixed, provider-rendered
@@ -118,5 +119,10 @@ const FEED_LEGENDS: Readonly<Record<"nps-nrhp-places" | "nps-historic-trails" | 
 
 /** Layers added in the November 2026 refresh, shown with a NEW marker in layer lists. */
 export const NEW_LAYER_IDS: ReadonlySet<string> = new Set<string>([...DISCOVERY_LAYER_IDS, "nps-nrhp-places", "nps-historic-trails", "nps-trail-places"]);
+/** Bridge circles: fill is the recorded build year (a numbered circle uses its average); the ring is recorded status. */
+const BRIDGE_LEGEND: readonly LegendStop[] = Object.freeze([
+  ...BRIDGE_ERA_STOPS.map(stop => ({ label: stop.label, color: stop.color })), { label: "Year not recorded", color: BRIDGE_UNKNOWN_ERA_COLOR },
+  { label: "Ring: recorded closed", color: BRIDGE_CLOSED_COLOR }, { label: "Ring: posted restriction", color: BRIDGE_POSTED_COLOR },
+]);
 export const discoveryLegend = (id: string): readonly LegendStop[] | undefined =>
-  DISCOVERY_LEGENDS[id as DiscoveryLayerId] ?? FEED_LEGENDS[id as keyof typeof FEED_LEGENDS];
+  DISCOVERY_LEGENDS[id as DiscoveryLayerId] ?? FEED_LEGENDS[id as keyof typeof FEED_LEGENDS] ?? (isBridgeFeed(id) ? BRIDGE_LEGEND : undefined);

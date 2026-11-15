@@ -15,7 +15,11 @@ async function moduleUrl(file) {
 }
 const context = await import(await moduleUrl("app/live-context.ts"));
 const workspaces = await import(await moduleUrl("app/layer-workspaces.ts"));
-const { KANSAS_REFERENCE_SOURCES: references, BLM_MLRS_DIRECT_KANSAS_WHERE } = await import(await moduleUrl("app/kansas-reference-layers.ts"));
+const { KANSAS_REFERENCE_SOURCES: allReferences, BLM_MLRS_DIRECT_KANSAS_WHERE } = await import(await moduleUrl("app/kansas-reference-layers.ts"));
+// Provider-drawn reference images. The five KDOT bridge layers are clustered point feeds and are checked separately below.
+const references = allReferences.filter(source => source.mapUrl);
+const bridgeLayers = allReferences.filter(source => source.id.startsWith("kdot-bridges-"));
+const bridgeModel = await import(await moduleUrl("app/kdot-bridges.ts"));
 
 function mapHarness() {
   const sources = new Map(), layers = new Map();
@@ -137,4 +141,45 @@ test("HMS transition opacity survives ordinary layer reapplication and restores 
   context.setHmsSmokeFade(map, 1, .38);
   context.applyOfficialContextState(map, visible, choices, {});
   assert.equal(layers.get(ids[0]).paint["fill-opacity"], .38);
+});
+
+test("KDOT bridges draw as numbered clusters that split into exact points, and load nothing while off", () => {
+  assert.deepEqual(bridgeLayers.map(source => source.id), bridgeModel.BRIDGE_FEED_IDS);
+  assert.equal(references.some(source => source.id.startsWith("kdot-bridges-")), false, "no bridge layer is a provider image any more");
+  const { map, sources, layers } = mapHarness();
+  context.applyOfficialContextState(map, visibility([]), opacity, {});
+  for (const source of bridgeLayers) assert.equal(sources.has(source.sourceId), false, `${source.id} adds no source while off`);
+  const point = (featureId, built, extra = {}) => ({ type: "Feature", geometry: { type: "Point", coordinates: [-96.5, 39.1] }, properties: { featureId, name: "Synthetic Creek", built, lengthFt: 120, ...extra } });
+  const data = { type: "FeatureCollection", features: [point("kdot-local-1", 1925), point("kdot-local-2", 1988, { statusClass: "closed" })] };
+  context.applyOfficialContextState(map, visibility(["kdot-bridges-local"]), opacity, { "kdot-bridges-local": { feed: "kdot-bridges-local", state: "ready", featureCount: 2, data } });
+  const source = context.OFFICIAL_CONTEXT_BY_ID["kdot-bridges-local"], added = sources.get(source.sourceId);
+  assert.equal(source.kind, "OPERATIONAL_GEOJSON");
+  assert.equal(source.minDisplayZoom, undefined, "counted circles are readable statewide, so no closer-view hold applies");
+  assert.equal(added.type, "geojson"); assert.equal(added.cluster, true); assert.equal(added.promoteId, "featureId");
+  assert.equal(added.clusterMaxZoom, bridgeModel.BRIDGE_CLUSTER_MAX_ZOOM); assert.equal(added.clusterRadius, bridgeModel.BRIDGE_CLUSTER_RADIUS);
+  assert.deepEqual(Object.keys(added.clusterProperties).sort(), ["builtCount", "builtSum", "closed", "earliest", "longestFt", "posted"]);
+  assert.equal(added.data, data);
+  const [clusters, count, points, labels] = source.layerIds.map(id => layers.get(id));
+  assert.deepEqual(clusters.filter, ["has", "point_count"]); assert.deepEqual(count.filter, ["has", "point_count"]);
+  assert.deepEqual(points.filter, ["!", ["has", "point_count"]]); assert.deepEqual(labels.filter, ["!", ["has", "point_count"]]);
+  assert.deepEqual(count.layout["text-field"], ["get", "point_count_abbreviated"]);
+  assert.equal(clusters.paint["circle-radius"][0], "step"); assert.deepEqual(clusters.paint["circle-radius"][1], ["get", "point_count"]);
+  assert.equal(labels.minzoom > bridgeModel.BRIDGE_CLUSTER_MAX_ZOOM - 1, true, "names appear once bridges have split apart");
+  assert.deepEqual(source.interactiveLayerIds, [source.layerIds[0], source.layerIds[2]]);
+  // The map key repeats the colours the paint expression uses.
+  const colors = JSON.stringify(points.paint["circle-color"]);
+  for (const stop of bridgeModel.BRIDGE_ERA_STOPS) assert.equal(colors.includes(stop.color), true, stop.label);
+  assert.equal(JSON.stringify(points.paint["circle-stroke-color"]).includes(bridgeModel.BRIDGE_CLOSED_COLOR), true);
+  // Vector points stay visible on the globe, unlike the Mercator-only images.
+  map.setProjection("globe");
+  context.applyOfficialContextState(map, visibility(["kdot-bridges-local"]), opacity, {});
+  assert.equal(layers.get(source.layerIds[0]).layout?.visibility ?? "visible", "visible");
+});
+
+test("a numbered bridge circle is summarised from its totals and never treated as one record", () => {
+  assert.equal(bridgeModel.bridgeClusterSummary({ featureId: "kdot-local-1", name: "Synthetic Creek" }), null);
+  assert.equal(bridgeModel.bridgeClusterSummary(null), null);
+  assert.deepEqual(bridgeModel.bridgeClusterSummary({ cluster: true, cluster_id: 4, point_count: 1280, earliest: 1899, longestFt: 1204.4, closed: 3, posted: 22 }),
+    { title: "1,280 bridges in this area", detail: "earliest recorded build year 1899 · longest 1,204 ft · 3 recorded closed · 22 posted with a restriction" });
+  assert.deepEqual(bridgeModel.bridgeClusterSummary({ cluster: true, point_count: 2, earliest: 9999, longestFt: 0, closed: 0, posted: 0 }), { title: "2 bridges in this area", detail: "Select to zoom in" });
 });

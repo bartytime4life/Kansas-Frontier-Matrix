@@ -52,27 +52,32 @@ const transport = {
 } as const;
 
 const STRUCTURES = "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures";
-function bridgeLayer(id: BridgeLayerId, title: string, boundary: string): OfficialContextSource {
-  const { service, where } = BRIDGE_FILTERS[id];
+// Bridges are read once as records and drawn here, so nearby bridges can be counted in one
+// circle and split apart on zoom; the provider-drawn image could only overprint them.
+function bridgeLayer(id: BridgeLayerId, title: string, boundary: string, color: string): OfficialContextSource {
+  const { service } = BRIDGE_FILTERS[id];
   const base = `${STRUCTURES}/${service}/MapServer`;
-  return { ...transport, id, title: `KDOT Kansas ${title}`, shortTitle: title,
-    sourceId: `external-${id}`, layerIds: [`external-${id}-raster`], interactiveLayerIds: [],
-    mapUrl: `${base}/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A0&layerDefs=${encodeURIComponent(JSON.stringify({ 0: where }))}&f=image`,
-    minDisplayZoom: 8, color: "#e2aaf1", endpointLabel: `KDOT ${service.replaceAll("_", " ")} · inventory point locations`,
-    sourceUrl: `${base}/0`, serviceUrl: base, legendUrl: `${base}/legend`,
-    legend: "Provider bridge symbols · point locations, not deck footprints. Open the provider legend for symbols.",
-    boundary: `${boundary} Inventory observations may lag changes; not navigation, structural safety, public access, or evidence that a bridge has been demolished. External context only.`,
+  return { ...transport, id, title: `KDOT Kansas ${title}`, shortTitle: title, kind: "OPERATIONAL_GEOJSON", maxNativeZoom: undefined,
+    sourceId: `external-${id}`, layerIds: [`external-${id}-clusters`, `external-${id}-cluster-count`, `external-${id}-points`, `external-${id}-labels`],
+    interactiveLayerIds: [`external-${id}-clusters`, `external-${id}-points`],
+    apiPath: `/api/live-context?feed=${id}`, color, endpointLabel: `KDOT ${service.replaceAll("_", " ")} · inventory point locations`,
+    sourceUrl: `${base}/0`, serviceUrl: base,
+    cadence: "Inventory read when the layer is shown; the site keeps one copy for about a day",
+    freshness: "Provider-current inventory; build years, status and inspection dates vary by bridge and may lag",
+    legend: "Numbered circles count bridges and split as you zoom in. Colour is the recorded build year; a red ring is recorded closed and an amber ring is posted with a restriction. Point locations, not deck footprints.",
+    boundary: `${boundary} Inventory observations may lag changes; not navigation, a structural safety determination, public access, or evidence that a bridge has been demolished. External context only.`,
+    fallback: "If the inventory cannot be read the layer stays empty. No bridge locations, closure status, or absence are inferred.",
   };
 }
 
 export const KANSAS_REFERENCE_SOURCES: readonly OfficialContextSource[] = Object.freeze([
   blmMlrsLeaseLayer(0, "blm-mlrs-leases-authorized", "authorized"),
   blmMlrsLeaseLayer(3, "blm-mlrs-leases-closed", "closed"),
-  bridgeLayer("kdot-bridges-state", "Bridges · state highways", "KDOT state highway structures over 20 feet; inventory dates vary."),
-  bridgeLayer("kdot-bridges-local", "Bridges · local roads", "KDOT non-state highway bridge inventory; structures over 20 feet."),
-  bridgeLayer("kdot-bridges-historic", "Bridges · historic designation", "Non-state bridges recorded as National Register listed or eligible. Possible or undetermined significance is excluded. Historic designation does not mean closed."),
-  bridgeLayer("kdot-bridges-old", "Bridges · built before 1950", "Non-state bridges with a recorded construction year before 1950; unknown years are excluded. An age filter is not historic designation; later reconstruction may have changed the structure."),
-  bridgeLayer("kdot-bridges-closed", "Bridges · recorded closed", "Non-state bridges explicitly recorded closed to all traffic. A posted load restriction is not treated as a closure; this is not a live closure feed."),
+  bridgeLayer("kdot-bridges-state", "Bridges · state highways", "KDOT state highway structures over 20 feet; inventory dates vary.", "#4fbf9f"),
+  bridgeLayer("kdot-bridges-local", "Bridges · local roads", "KDOT non-state highway bridge inventory; structures over 20 feet.", "#3d9be0"),
+  bridgeLayer("kdot-bridges-historic", "Bridges · historic designation", "Non-state bridges recorded as National Register listed or eligible. Possible or undetermined significance is excluded. Historic designation does not mean closed.", "#f2b632"),
+  bridgeLayer("kdot-bridges-old", "Bridges · built before 1950", "Non-state bridges with a recorded construction year before 1950; unknown years are excluded. An age filter is not historic designation; later reconstruction may have changed the structure.", "#e2711d"),
+  bridgeLayer("kdot-bridges-closed", "Bridges · recorded closed", "Non-state bridges explicitly recorded closed to all traffic. A posted load restriction is not treated as a closure; this is not a live closure feed.", "#ff4d4d"),
   {
     ...transport, id: "kdot-roads-1918", title: "KDOT Kansas historical roads · 1918", shortTitle: "Historical roads · 1918",
     sourceId: "external-kdot-roads-1918", layerIds: ["external-kdot-roads-1918-raster"], interactiveLayerIds: [],

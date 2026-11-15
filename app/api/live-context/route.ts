@@ -4,6 +4,7 @@ import { readCivicHistory } from "./civic-history";
 import { civicCongressForDay } from "../../civic-history";
 import { readCivicDistricts } from "./civic-districts";
 import { readDeflock } from "./deflock";
+import { isBridgeFeed, kdotBridges, type BridgeFeedId } from "./kdot-bridges";
 import { env } from "cloudflare:workers";
 import { readBoundedJson } from "../../bounded-json";
 import { NextRequest, NextResponse } from "next/server";
@@ -47,7 +48,7 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
+type Feed = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places" | BridgeFeedId;
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -938,17 +939,17 @@ const trailPlaces = async () => {
     retrievedAt, null, skipped > 0 || truncated, truncated);
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400, "nps-historic-trails": 86_400, "nps-trail-places": 86_400 };
+const cacheSeconds: Record<Feed, number> = { "census-congress-119": 0, "deflock-alpr": 0, "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400, "nps-historic-trails": 86_400, "nps-trail-places": 86_400, "kdot-bridges-state": 3600, "kdot-bridges-local": 3600, "kdot-bridges-historic": 3600, "kdot-bridges-old": 3600, "kdot-bridges-closed": 3600 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (feed === "census-congress-119" && civicCongressForDay(day ?? new Date().toISOString().slice(0, 10)) === null || request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : feed === "noaa-hms-smoke" ? "2005-08-05" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["census-congress-119", "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-congress-119" && feed !== "deflock-alpr" && feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places" && feed !== "kdwp-wildlife-areas" && feed !== "kdwp-wiha-access" && feed !== "nps-historic-trails" && feed !== "nps-trail-places") {
+  if (feed !== "census-congress-119" && feed !== "deflock-alpr" && feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations" && feed !== "nps-nrhp-places" && feed !== "kdwp-wildlife-areas" && feed !== "kdwp-wiha-access" && feed !== "nps-historic-trails" && feed !== "nps-trail-places" && (feed === null || !isBridgeFeed(feed))) {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-congress-119" ? day ? await readCivicHistory(day) : await readCivicDistricts() : feed === "deflock-alpr" ? await readDeflock() : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : feed === "nps-historic-trails" ? await historicTrails() : feed === "nps-trail-places" ? await trailPlaces() : await raspberryShakeStations(day);
+    const result = isBridgeFeed(feed) ? await kdotBridges.feed(feed) : feed === "census-congress-119" ? day ? await readCivicHistory(day) : await readCivicDistricts() : feed === "deflock-alpr" ? await readDeflock() : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : feed === "nps-historic-trails" ? await historicTrails() : feed === "nps-trail-places" ? await trailPlaces() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": (feed === "deflock-alpr" || feed === "census-congress-119") ? "no-store" : `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

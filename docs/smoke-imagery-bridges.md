@@ -41,6 +41,9 @@ blend into invented classes. Live Earth Engine execution remains separate.
 
 ## Transport layers
 
+Since 2026-11-15 the bridge layers are counted clusters, not provider images; see
+[kdot-bridge-clusters-20261115.md](kdot-bridge-clusters-20261115.md).
+
 Map layers → Roads, rail & bridges adds independent visibility and opacity for:
 state bridges, local bridges, local bridges recorded NRHP listed/eligible,
 local bridges built before 1950, local bridges explicitly recorded closed, and
