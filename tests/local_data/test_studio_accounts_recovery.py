@@ -228,6 +228,7 @@ class RecoveryTests(Base):
 class LegacyHandler(BaseHTTPRequestHandler):
     def log_message(self,*args):pass
     def respond(self,code,body,kind='application/json',attachment=None):
+        kind=(kind or 'application/octet-stream').replace('\r','').replace('\n','')
         if isinstance(body,(dict,list)):body=json.dumps(body).encode()
         if isinstance(body,str):body=body.encode()
         self.send_response(code);self.send_header('Content-Type',kind);self.send_header('Content-Length',str(len(body)));self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(body)

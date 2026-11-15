@@ -683,6 +683,7 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
     def respond(self, code, body, kind="application/json", attachment=None):
+        kind = (kind or "application/octet-stream").replace("\r", "").replace("\n", "")
         if isinstance(body, (dict, list)):
             body = json.dumps(body, ensure_ascii=False).encode()
         if isinstance(body, str):
