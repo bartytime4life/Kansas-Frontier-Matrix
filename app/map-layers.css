@@ -258,7 +258,8 @@
 @media (max-height: 600px) {
   .layer-panel[data-panel-mode="layers"], .layer-panel[data-panel-mode="live"] { display: block; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 90px 8px; }
   .layer-panel[data-panel-mode="layers"] .panel-heading, .layer-panel[data-panel-mode="live"] .panel-heading { position: sticky; z-index: 3; top: 0; background: #0d2529; }
-  .layer-panel[data-panel-mode="layers"] .layer-catalog-body, .layer-panel[data-panel-mode="live"] .layer-catalog-body { overflow: visible; }
+  .layer-panel[data-panel-mode="layers"] .layer-catalog-body, .layer-panel[data-panel-mode="live"] .layer-catalog-body,
+  .layer-panel[data-panel-mode="layers"] .layer-source-status, .layer-panel[data-panel-mode="live"] .layer-source-status { overflow: visible; }
   .layer-panel-explore { max-height: none; overflow: visible; }
   .layer-panel-explore > summary { position: static; }
 }

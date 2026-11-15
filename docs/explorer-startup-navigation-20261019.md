@@ -1,5 +1,74 @@
 # Explorer welcome and explicit navigation — 2026-10-19
 
+## Short-window Status scrolling follow-up — November 15, 2026 candidate
+
+This follow-up is based on merged source
+`1b61903fe5fc6196ddd2cc03104807abd2fc9fb5`. That base's complete tree is identical to
+PR #5867 head `ce5e646d07a094c909bc60d91323f061e2a95762`. Existing CI supplies
+the failing baseline below. The user authorized the prepared six-path follow-up;
+its CSS and test bytes match the reviewed patch. Local candidate outcomes and
+pending rendered acceptance are recorded separately below.
+
+Navigation job 132975734771 in run 43767480914 reported 18 passes, two failures
+and one cancelled test. The four KDOT roads / NASA fire-point cases at
+1280 × 800 and 390 × 844 passed both keyboard round trips, visible returned
+focus, Status wheel movement, unchanged source controls and generic Status
+return. At 681 × 468 both sources opened with visible, focused details, but
+the real Status-ancestor wheel assertion failed before Back was activated.
+Those failures do not establish a failure of the new return-focus effect.
+
+Full Explorer job 132975735129 in the same PR run reported 157 passes, three
+failures and five opt-in skips. It repeats those two wheel failures and the
+1280 × 800 expanded-welcome geometry premise failure described in the welcome
+guide. It adds no other failure or cancellation.
+
+Merge-commit navigation job 132976153506 in run 43767614572 repeated the same
+four source passes and two short-window wheel failures: 19 passes, two failures,
+no cancellations. The retained intercepted-API case that timed out in the
+PR run passed on the identical merged tree. That intermittent observation has
+no established root cause and is outside this correction. A NASA 390 × 844
+return screenshot also shows an unavailable-provider notice partly covering
+the return label despite automated geometry/hit-test passes. That separate
+visual-usability qualification is retained rather than claimed fixed here.
+
+Captured geometry shows an inner Status element with no scroll range while
+the outer Layers panel has range. The existing max-height:600px layout releases
+the catalogue body's overflow but leaves Status as a contained scroll container.
+That source/geometry combination supports a scroll-chaining explanation; the
+candidate CSS correction still requires rendered verification at authoring. It adds Status to
+the existing overflow:visible rule for Layers/live at that height breakpoint.
+The six source-case assertions, scroll-padding and sticky heading are retained;
+tall-window scrolling rules are unchanged.
+
+Core job 132975735016 separately reported 2,992 passes, one failure and 25 skips.
+Its unchanged workspace-help callback fixture omits the newly read
+`sourceStatusReturnPendingRef` and throws a ReferenceError; the same test
+passed on the preceding base. The application declares the ref. This candidate
+supplies the fixture dependency while retaining all frame/focus assertions.
+This is an introduced harness integration omission, not evidence of the same
+ReferenceError in the rendered application.
+
+At candidate authoring, the seven-file focused suite passed 129 tests with no
+failures or skips. The production build and TypeScript verification passed.
+The complete standalone Node suite passed 2,993 tests with zero failures and
+25 explicit skips. Its first local attempt had 2,982 passes, five failures and
+23 skips because the sparse checkout omitted an existing tracked hosting-metadata
+fixture. Restoring that file's exact base bytes in the isolated checkout allowed
+the complete rerun; no configuration value or candidate source path changed.
+Both attempts are retained in `KFM-STATUS-SCROLL-FOLLOWUP-EXECUTION-20261115`.
+
+Candidate rendered CI is pending at authoring. Existing CI supplies the failing
+comparison and does not validate this follow-up. Local Chromium's recorded
+pre-page socket denial remains a separate environment limit; no repeat launch
+or browser-policy bypass was attempted.
+
+Placement retains the existing app/tests/docs roots and generated-receipt lane
+under AGENTS, accepted ADR-0029 and Directory Rules. No permission, source,
+schema, authority or workflow changes are included. A reviewed revert restores
+this bounded correction while preserving evidence history. CI, merge and public
+deployment remain separate. No public deployment, physical-device acceptance,
+live-provider delivery or complete map-rendering claim is established here.
+
 ## Source-details return focus — November 15, 2026 candidate
 
 Independent public-UI verification, alongside inspection of hosted source
@@ -20,18 +89,19 @@ rules and exact source-download allowlist are retained. The separate generic
 Layers return timer discussed in #5864 is outside this correction.
 
 The added callback tests check committed ordering, one-time consumption and
-superseded navigation. The rendered regression covers both sources at 1280 × 800,
+superseded navigation. The browser suite defines cases for both sources at 1280 × 800,
 390 × 844 and 681 × 468, two keyboard round trips each, actual ancestor clipping,
 Status wheel scrolling, generic Status return and unchanged rendered official
 source controls. It never scrolls the expected return target after Back.
 Its name remains in the existing focused source-status CI selector.
 
-Local validation passed 119 focused tests, the production build and TypeScript
-verification. All three new focus-control unit cases failed against baseline
-runtime and passed with the candidate. The attempted baseline browser check
-aborted before page creation because Chromium could not create its local socket;
-it is not a rendered failure reproduction. Candidate rendered acceptance remains
-pending; the PR records immutable base/head and exact execution evidence.
+For PR #5867, local validation passed 119 focused tests, the production build
+and TypeScript verification. All three new focus-control unit cases failed
+against baseline runtime and passed with that candidate. The local browser
+attempt aborted before page creation because Chromium could not create its
+socket; it is not a rendered failure reproduction. Subsequent exact-head CI
+passed the four 1280 × 800 / 390 × 844 cases and exposed the two 681 × 468 wheel
+failures described above. The PR and follow-up evidence keep those stages distinct.
 A 681 × 468 emulated viewport does not reproduce 200% browser zoom;
 390 × 844 emulation does not establish physical-phone or software-keyboard use.
 Isolated unavailable-provider fixtures establish navigation and selection state,
