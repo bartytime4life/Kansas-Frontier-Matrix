@@ -431,8 +431,120 @@ for (const { width, height, input } of [
   });
 }
 
+// Regression for the viewport-fixed chosen-map panel. The ordinary chooser
+// tests wheel over the right gutter; every gesture below must hit the panel.
+for (const [width,height] of [[1280,800],[1363,936]]) {
+  test('welcome categories scroll through the chosen-map panel at '+width+'x'+height, {timeout:90000}, async t=>{
+    const b=await browser(t),p=await pageSession(b,width,height);
+    await p.open('/?motion=off');await readyWelcome(p);
+    await p.wait('!!document.querySelector(".welcome-focus") && !document.querySelector(".welcome-focus").getAnimations().some(a=>a.pending||a.playState==="running")','chosen-map panel is settled');
+    const read=()=>p.evaluate('('+(()=>{
+      const host=document.querySelector('.living-welcome'),panel=host.querySelector('.welcome-focus');
+      const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+      const box=rect(panel),point={x:box.left+box.width/2,y:box.top+box.height/2};
+      return {layout:host.dataset.layout,host:{top:host.scrollTop,max:host.scrollHeight-host.clientHeight,rect:rect(host)},panel:{top:panel.scrollTop,max:panel.scrollHeight-panel.clientHeight,rect:box},point,hit:panel.contains(document.elementFromPoint(point.x,point.y)),viewport:{width:innerWidth,height:innerHeight},page:{x:scrollX,y:scrollY,top:document.scrollingElement.scrollTop,left:document.scrollingElement.scrollLeft,overflow:document.documentElement.scrollWidth>innerWidth+1}};
+    }).toString()+')()');
+    const geometry=state=>{
+      assert.equal(state.layout,'atlas');assert.ok(state.hit,'wheel point belongs to the actual panel, not its gutter');
+      assert.deepEqual(state.viewport,{width,height});
+      for(const box of [state.host.rect,state.panel.rect]){
+        assert.ok(box.width>0&&box.height>0,'scroll surface has real area');
+        assert.ok(box.left>=-.5&&box.right<=width+.5&&box.top>=-.5&&box.bottom<=height+.5,'scroll surface stays inside the viewport: '+JSON.stringify(box));
+      }
+      assert.ok(state.panel.rect.top>=state.host.rect.top-.5&&state.panel.rect.bottom<=state.host.rect.bottom+.5,'panel stays above the attribution strip');
+      assert.deepEqual(state.page,{x:0,y:0,top:0,left:0,overflow:false},'wheel cannot displace the document or create horizontal overflow');
+    };
+    const pinned=(before,after)=>{
+      geometry(after);
+      for(const key of ['left','right','top','bottom'])assert.ok(Math.abs(after.panel.rect[key]-before.panel.rect[key])<=1,'panel remains pinned: '+key);
+    };
+    const centerOuter=()=>p.evaluate('('+(()=>{const host=document.querySelector('.living-welcome');host.scrollTo({top:(host.scrollHeight-host.clientHeight)/2,behavior:'instant'});}).toString()+')()');
+    const wheel=async(deltaY,deltaX=0)=>{
+      const before=await read();geometry(before);
+      await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...before.point});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',...before.point,deltaX,deltaY});
+      return before;
+    };
+    const capture=async label=>{
+      if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+      const shot=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,'welcome-focus-wheel-'+width+'x'+height+'-'+label+'.png'),Buffer.from(shot.data,'base64'));
+    };
+    let phase='real-layout';
+    try {
+      // These use real, unmodified panel geometry. Fail rather than silently
+      // substituting a non-overflow fixture when the chosen content changes.
+      for(const expanded of [false,true]){
+        if(expanded){
+          await p.evaluate('document.querySelector(".welcome-focus-more > summary").focus({preventScroll:true})');
+          await p.key('Enter','Enter',13);
+          await p.wait('document.querySelector(".welcome-focus-more").open','real explanation disclosure opens');
+        }
+        await centerOuter();
+        let state=await read();geometry(state);
+        assert.ok(state.host.max>400,'the real chooser has enough range in both directions');
+        assert.ok(state.panel.max<=1,'real '+(expanded?'expanded':'closed')+' explanation has no inner overflow');
+        for(const direction of [1,-1]){
+          const before=await wheel(direction*120);
+          await p.wait('document.querySelector(".living-welcome").scrollTop '+(direction>0?'>':'<')+' '+(before.host.top+direction*20),'trusted wheel over the panel moves the outer chooser');
+          await pause(200);const after=await read();pinned(before,after);
+          assert.ok(Math.abs(after.panel.top-before.panel.top)<=1,'non-overflow explanation does not acquire inner scroll');
+          t.diagnostic(JSON.stringify({case:'native-no-overflow',expanded,direction,before,after}));
+        }
+        await capture(expanded?'native-expanded':'native-closed');
+      }
+      phase='synthetic-inner-overflow';
+      // Deliberate loopback-only geometry fixture: bound the actual panel to
+      // 220px without changing its real content. This is not production proof.
+      await p.evaluate('('+(()=>{const panel=document.querySelector('.welcome-focus');panel.dataset.scrollFixture='limited-height';panel.style.maxHeight='220px';panel.scrollTop=(panel.scrollHeight-panel.clientHeight)/2;}).toString()+')()');
+      await centerOuter();
+      let state=await read();geometry(state);
+      assert.ok(state.panel.max>200,'explicit height fixture has a real inner scroll range');
+      for(const direction of [1,-1]){
+        const before=await wheel(direction*40);
+        await p.wait('document.querySelector(".welcome-focus").scrollTop '+(direction>0?'>':'<')+' '+(before.panel.top+direction*10),'native panel scrolling consumes input away from its boundary');
+        await pause(200);const after=await read();pinned(before,after);
+        assert.ok(Math.abs(after.host.top-before.host.top)<=1,'outer chooser does not steal native inner scrolling');
+        t.diagnostic(JSON.stringify({case:'synthetic-inner-consumption',direction,before,after}));
+      }
+      for(const direction of [1,-1]){
+        await centerOuter();
+        await p.evaluate('document.querySelector(".welcome-focus").scrollTop='+(direction>0?'document.querySelector(".welcome-focus").scrollHeight':'0'));
+        const before=await wheel(direction*120);
+        assert.ok(direction>0?Math.abs(before.panel.top-before.panel.max)<=1:before.panel.top<=1,'inner fixture starts at the requested boundary');
+        await p.wait('document.querySelector(".living-welcome").scrollTop '+(direction>0?'>':'<')+' '+(before.host.top+direction*20),'boundary wheel hands off to the chooser');
+        await pause(200);const after=await read();pinned(before,after);
+        assert.ok(Math.abs(after.panel.top-before.panel.top)<=1,'handoff leaves the inner panel at its boundary');
+        t.diagnostic(JSON.stringify({case:'synthetic-boundary-handoff',direction,before,after}));
+      }
+      await capture('synthetic-inner-overflow');
+      await p.evaluate('('+(()=>{const panel=document.querySelector('.welcome-focus');panel.style.removeProperty('max-height');delete panel.dataset.scrollFixture;panel.scrollTop=0;}).toString()+')()');
+      phase='input-guards';await centerOuter();
+      const horizontal=await wheel(0,120);await pause(200);
+      const afterHorizontal=await read();pinned(horizontal,afterHorizontal);
+      assert.ok(Math.abs(afterHorizontal.host.top-horizontal.host.top)<=1&&Math.abs(afterHorizontal.panel.top-horizontal.panel.top)<=1,'native horizontal wheel is not converted into vertical scrolling');
+      // Synthetic guard-contract checks only: dispatchEvent cannot establish
+      // native browser zoom/pinch behavior, which remains a separate check.
+      const guards=await p.evaluate('('+(()=>{
+        const panel=document.querySelector('.welcome-focus'),host=document.querySelector('.living-welcome');
+        return [{deltaX:80,deltaY:0},{deltaX:80,deltaY:40},{deltaY:80,ctrlKey:true},{deltaY:80,metaKey:true},{deltaY:80,altKey:true},{deltaY:80,shiftKey:true},{deltaY:0}].map(input=>{
+          const before=host.scrollTop,event=new WheelEvent('wheel',{bubbles:true,cancelable:true,...input});
+          const accepted=panel.dispatchEvent(event);
+          return {input,accepted,prevented:event.defaultPrevented,changed:host.scrollTop-before};
+        });
+      }).toString()+')()');
+      for(const result of guards){assert.equal(result.accepted,true);assert.equal(result.prevented,false);assert.equal(result.changed,0);}
+      t.diagnostic(JSON.stringify({case:'synthetic-input-noninterception',guards}));
+    } finally {
+      await capture('last-'+phase);
+      await p.evaluate('(()=>{const panel=document.querySelector(".welcome-focus");if(panel){panel.style.removeProperty("max-height");delete panel.dataset.scrollFixture;}})()');
+    }
+  });
+}
+
 // Native touch input must center a preview without selecting or opening a map.
-for(const [width,height] of [[320,568],[390,690],[640,360]]){
+for(const [width,height] of [[320,568],[390,690],[390,844],[640,360]]){
  test(`welcome categories scroll horizontally and preview the centered card at ${width}x${height}`,{timeout:90000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,height);
   await p.open('/?motion=off');await readyWelcome(p);
@@ -2865,4 +2977,101 @@ for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
     await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('.map-dock-map-menu').open`,'Escape closes the menu');
     assert.equal(await p.evaluate(`document.activeElement?.matches('.map-dock-map-menu>summary')`),true,'focus returns to Map');
   });
+}
+
+
+// Keep this regression in the existing focused source-status CI group.
+for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
+  for (const [id,title] of [
+    ['kdot-roads','KDOT Kansas roads and highways'],
+    ['nasa-gibs-fire-points','NASA GIBS selectable NOAA-20 thermal detections'],
+  ]) {
+    test(`source status releases the previous map entry: source-details return for ${id} at ${width}x${height}`,{timeout:120000},async t=>{
+      const b=await browser(t),p=await pageSession(b,width,height);
+      const row=`.official-context-row:has(.visibility-switch input[aria-label$=${JSON.stringify(title)}])`;
+      const action=`${row} .official-context-actions > button:first-child`;
+      const details=`${row} .official-context-options`;
+      const statusRow=`.source-quality-row[data-source-id="${id}"]`;
+      const summary=`${statusRow} details > summary`;
+      const back='[aria-label="Back to layers"]';
+      const status='.layer-source-switch > button:last-child';
+      const selection=`[...document.querySelectorAll('.official-context-row .visibility-switch input')].map(e=>[e.getAttribute('aria-label'),e.checked])`;
+      // The viewport alone is insufficient: compact layouts can scroll the
+      // outer Layers panel while desktop layouts scroll an inner container.
+      const geometry=selector=>`(() => {
+        const e=document.querySelector(${JSON.stringify(selector)});
+        if(!e)return {visible:false,focused:false,missing:true};
+        const r=e.getBoundingClientRect(),clip={left:0,top:0,right:innerWidth,bottom:innerHeight},ancestors=[];
+        for(let n=e.parentElement;n;n=n.parentElement){
+          const s=getComputedStyle(n),a=n.getBoundingClientRect();
+          if(/^(auto|scroll|hidden|clip)$/.test(s.overflowX)){
+            clip.left=Math.max(clip.left,a.left+n.clientLeft);clip.right=Math.min(clip.right,a.left+n.clientLeft+n.clientWidth);
+          }
+          if(/^(auto|scroll|hidden|clip)$/.test(s.overflowY)){
+            clip.top=Math.max(clip.top,a.top+n.clientTop);clip.bottom=Math.min(clip.bottom,a.top+n.clientTop+n.clientHeight);
+            ancestors.push({tag:n.tagName,className:n.className,top:a.top,bottom:a.bottom,clientHeight:n.clientHeight,scrollHeight:n.scrollHeight,scrollTop:n.scrollTop});
+          }
+        }
+        const available=!e.closest('[hidden], [inert], [aria-hidden="true"]')&&getComputedStyle(e).visibility==='visible';
+        const visible=available&&r.width>0&&r.height>0&&r.left>=clip.left-1&&r.right<=clip.right+1&&r.top>=clip.top-1&&r.bottom<=clip.bottom+1&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));
+        return {visible,focused:document.activeElement===e,rect:r.toJSON(),clip,ancestors};
+      })()`;
+      const focusControl=async selector=>{
+        await p.wait(`!!document.querySelector(${JSON.stringify(selector)})`,'control exists');
+        await p.evaluate(`(() => {const e=document.querySelector(${JSON.stringify(selector)});e.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});e.focus({preventScroll:true});})()`);
+        await p.wait(`(${geometry(selector)}).visible && (${geometry(selector)}).focused`,'control is reachable before keyboard activation');
+      };
+      const evidence=[];
+      const capture=async label=>{
+        const entry={label,viewport:await p.evaluate(`({width:innerWidth,height:innerHeight,devicePixelRatio,mobile:${width<600}})`),returnControl:await p.evaluate(geometry(action)),sourceSummary:await p.evaluate(geometry(summary)),selection:await p.evaluate(selection)};
+        evidence.push(entry);
+        if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
+        await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+        const name=`source-return-${id}-${width}x${height}-${label}`;
+        const shot=await p.call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`${name}.png`),Buffer.from(shot.data,'base64'));
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`${name}.json`),JSON.stringify({browser:await b.call('Browser.getVersion'),evidence},null,2));
+      };
+      try {
+        await p.open('/?panel=layers&motion=off');
+        await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'Layers opens from its direct route');
+        await focusControl('[data-layer-view="official"]');await p.key('Enter','Enter',13);
+        await focusControl('[aria-label="Search map layers"]');
+        await p.call('Input.insertText',{text:title});
+        await p.wait(`document.querySelector(${JSON.stringify(row)})?.hidden===false`,'disabled source is listed');
+        assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(row+' .visibility-switch input')}).checked`),false,'requested source starts disabled');
+        const before=await p.evaluate(selection);
+        await focusControl(details+' > summary');await p.key('Enter','Enter',13);
+        await p.wait(`document.querySelector(${JSON.stringify(details)}).open`,'source controls expanded by keyboard');
+        await focusControl(action);
+        for(let cycle=0;cycle<2;cycle++){
+          // The second opening uses the focus returned by the application.
+          await p.key('Enter','Enter',13);
+          await p.wait(`document.querySelector(${JSON.stringify(statusRow+' details')})?.open && (${geometry(summary)}).focused && (${geometry(summary)}).visible`,'requested source details are open, scrolled into view and focused');
+          assert.equal(await p.evaluate(`document.querySelector('.source-status-scope > button:last-child')?.getAttribute('aria-pressed')`),'true','source navigation selects All sources');
+          assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(statusRow+' input[type="checkbox"]')}).checked`),false,'inspection does not enable the source');
+          assert.deepEqual(await p.evaluate(selection),before,'opening leaves all layer selections unchanged');
+          await capture(`opened-${cycle}`);
+          const beforeWheel=await p.evaluate(geometry(summary));
+          const scrollOffsets=JSON.stringify(beforeWheel.ancestors.map(a=>a.scrollTop));
+          await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x:beforeWheel.rect.x+beforeWheel.rect.width/2,y:beforeWheel.rect.y+beforeWheel.rect.height/2,deltaX:0,deltaY:160});
+          await p.wait(`JSON.stringify((${geometry(summary)}).ancestors.map(a=>a.scrollTop))!==${JSON.stringify(scrollOffsets)}`,'wheel input scrolls the actual Status ancestor');
+          await focusControl(back);await p.key('Enter','Enter',13);
+          // Do not scroll or focus the return control in the test after Back.
+          await p.wait(`!document.querySelector('#map-source-status') && (${geometry(action)}).focused && (${geometry(action)}).visible`,'Back returns visible keyboard focus inside every clipping ancestor');
+          assert.deepEqual(await p.evaluate(selection),before,'returning leaves all layer selections unchanged');
+          await capture(`returned-${cycle}`);
+        }
+        await focusControl(status);await p.key('Enter','Enter',13);
+        await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(back)})`,'generic Status retains its Back focus destination');
+        await focusControl(back);await p.key('Enter','Enter',13);
+        await p.wait(`!document.querySelector('#map-source-status') && (${geometry(status)}).focused && (${geometry(status)}).visible`,'generic Back returns to the visible Status control');
+        assert.deepEqual(await p.evaluate(selection),before,'generic Status also preserves layer selections');
+      } catch(error) {
+        await capture('failure').catch(captureError=>t.diagnostic(`Evidence capture failed: ${captureError}`));
+        t.diagnostic(JSON.stringify(evidence.at(-1)));
+        throw error;
+      }
+    });
+  }
 }

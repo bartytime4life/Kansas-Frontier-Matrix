@@ -1,0 +1,159 @@
+{
+  "receipt_id": "kfm:generated:explorer-focus-scroll:20261115",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/living-welcome/welcome.jsx",
+    "app/page.tsx",
+    "docs/explorer-startup-navigation-20261019.md",
+    "docs/living-welcome.md",
+    "tests/explorer-startup.browser.mjs",
+    "tests/workspace-map-navigation.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/living-welcome/welcome.jsx": "sha256:2c7d69b07d0a2d2dedd647bec54326614a7839700e33ba522d15c6dc01fcfa33",
+    "app/page.tsx": "sha256:926680fadc0d7751bc1ddc644f02a5a5385ee3cbd5990271c3968701f6e56eef",
+    "docs/explorer-startup-navigation-20261019.md": "sha256:fa1e24b22d4d21d89071801e8fd4e781e0b3c1265c02102705d9a75509364bdf",
+    "docs/living-welcome.md": "sha256:c64725aa1cbf3309ad736086b85ff9b366c8e5bbe18e07855c2d54c6dc3cd8f1",
+    "tests/explorer-startup.browser.mjs": "sha256:a5e759e0a8c845e5e4f9819d50a5c7b47d220e2b51f87d9552407b2e1d2c7d34",
+    "tests/workspace-map-navigation.test.mjs": "sha256:e398cd5ea51297e7205e0ca7f037f4ad370be2ea2d5b5493321d2789a91b13cc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Exact serving revision unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "isolated authorized worktree",
+      "repository tests",
+      "local production build and TypeScript verification",
+      "unchanged Chromium test harness",
+      "generated-receipt schema validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:de4c2183dffb571650fc66902d5172c4eec244ad248ccd5bc3c60b504e693392",
+      "sha256:a70160d16ec3003b9c56c1f4655d82501cc4a44da0d997a8908ab71eca268b69",
+      "sha256:78a75e8c51fce0bc84d8d0829f7e661752d71eec1cc49bcf636259ad0019cdfe",
+      "sha256:412b360179d2a9c4f11649845939a940967b1364a81f44c12d07bf0d56a98937",
+      "sha256:d67dcc1b4583272a50d2ebf1ccd73a9f9c5f9a27265f4930b37f03b7152e9663",
+      "sha256:44d9794137ead9c97f78cbe7e1d04896ca5ba72b9506149052d8552b7cbed208",
+      "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256:a559dfe2932df73b47f16caf1052bd83f13a327c84d51677498a806c2552ba7d"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf — Library libfile_fde3_f-5694dfa8e354819192edcb65708406ad_de49ea5c1e608191b986d6cc6d59f810"
+    ],
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5859",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5864",
+      "KFM-5859-INDEPENDENT-20261115",
+      "KFM-5859-FOLLOWUP-EXECUTION-20261115"
+    ]
+  },
+  "truth_labels": {
+    "app/living-welcome/welcome.jsx": "NEEDS VERIFICATION",
+    "app/page.tsx": "NEEDS VERIFICATION",
+    "docs/explorer-startup-navigation-20261019.md": "CONFIRMED",
+    "docs/living-welcome.md": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "NEEDS VERIFICATION",
+    "tests/workspace-map-navigation.test.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Pinned base and bounded overlap inspection",
+      "outcome": "PASS",
+      "reason": "Hosted tip remains 0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7; no open hosted PR and approved branch absent at 21:58:48 UTC. Recheck before remote mutation."
+    },
+    {
+      "gate": "Baseline production build",
+      "outcome": "PASS",
+      "reason": "npm run build exited 0 with only the proposed two test-file changes; baseline application runtime unchanged."
+    },
+    {
+      "gate": "Baseline new source-return unit cases",
+      "outcome": "FAIL",
+      "reason": "Expected negative comparison: 0 passed, 3 failed. Actual baseline callback still schedules a timer, does not cancel the pending marker, and has no committed-return effect. This is unit evidence, not rendered reproduction."
+    },
+    {
+      "gate": "Baseline rendered browser preflight",
+      "outcome": "FAIL",
+      "reason": "One KDOT 1280x800 case attempted; Chromium156.0.8078.79 aborted before CDP response/page creation with SIGABRT and socket() failed: Operation not permitted. Zero rendered application assertions; infrastructure failure only."
+    },
+    {
+      "gate": "Candidate focused repository tests",
+      "outcome": "PASS",
+      "reason": "Approved six-file node --test command: 119 pass, 0 fail, 0 skip; includes three new focus cases and exact13-source route/mapping allowlist."
+    },
+    {
+      "gate": "Candidate production build",
+      "outcome": "PASS",
+      "reason": "npm run build exited0. Application-input digest sha256:44b871f528ae80037f9526a89d29f7ac940686fa677a785757ae09598c06d049. Build-input identity excludes built bytes, live providers and deployment."
+    },
+    {
+      "gate": "Candidate TypeScript verification",
+      "outcome": "PASS",
+      "reason": "node node_modules/typescript/bin/tsc --noEmit exited0."
+    },
+    {
+      "gate": "Candidate loopback build identity",
+      "outcome": "PASS",
+      "reason": "Cleared-environment production server bound127.0.0.1:5182 returned HTTP200 /api/build with the expected candidate digest; process then closed. No rendered or public assertion."
+    },
+    {
+      "gate": "Candidate local rendered acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Known Chromium process-level socket denial prevents page creation. No repeated launch attempts, sandbox bypass, candidate screenshot or rendered pass claimed. Existing GitHub browser CI remains pending."
+    },
+    {
+      "gate": "Prior independent public behavior",
+      "outcome": "FAIL",
+      "reason": "Prior record KFM-5859-INDEPENDENT-20261115 confirmed F1/F2 at recorded viewport/browser. It did not establish an exact deployed commit and does not verify this candidate."
+    },
+    {
+      "gate": "Public deployment and live-provider acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No merge, deployment, publication, source activation or permission change authorized."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-hosted-source",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7"
+    },
+    {
+      "id": "accepted-directory-adoption",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/da13ca0d2aa86743c69dcd723a028baa86285479/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "prior-independent-verification",
+      "validated": true,
+      "evidence_ref": "KFM-5859-INDEPENDENT-20261115"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-15T21:39:50.184809+00:00",
+  "emitter": "ChatGPT — independent KFM verification follow-up",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/da13ca0d2aa86743c69dcd723a028baa86285479/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Applied candidate after the owner approved the exact seven-file patch/test/draft-PR sequence. Runtime and test bytes match the approved patch; documentation now records actual local outcomes and separates inspected source from unverified public commit identity. This receipt covers actual six-artifact hashes; it omits its own hash to avoid self-reference. Human implementation review remains pending: authorization to author is not review approval. Baseline negative unit checks, baseline browser infrastructure failure, candidate repository/build/typecheck passes and pending rendered/public behavior are separate. Existing GitHub checks will be recorded in the PR for its immutable head. No merge or deployment. Receipt schema validity is not release authority; the previously recorded contract §32.3 versus schema/CONTRIBUTING pending-state discrepancy is retained without fabricating approval."
+}

@@ -75,6 +75,40 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   // agreement. Full-screen previews retain their independent category rail.
   const engaged=hasTopicFilters&&!fullscreen&&!filteredTopics.some(t=>t.id===requested)?filteredTopics[0]?.id||null:requested,control=engaged||last;
   const atlas=desktop&&!carousel&&!fullscreen,atlasTopic=TOPICS.find(t=>t.id===control),atlasIndex=TOPICS.findIndex(t=>t.id===control),record=atlas?recordLinksFor(control):null;
+  // Keep vertical wheel input over the fixed explanation connected to the
+  // chooser after its own content reaches an edge. Other input stays native.
+  useEffect(()=>{
+    const host=root.current,panel=host?.querySelector('.welcome-focus');
+    if(!atlas||!panel)return;
+    const canScroll=(node,delta)=>{
+      const max=Math.max(0,node.scrollHeight-node.clientHeight);
+      const top=Math.max(0,Math.min(max,node.scrollTop));
+      return max>0&&(delta<0?top>.5:top<max-.5);
+    };
+    const wheel=event=>{
+      if(event.defaultPrevented||!event.cancelable
+        ||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey
+        ||!Number.isFinite(event.deltaY)||event.deltaY===0
+        ||Math.abs(event.deltaX)>=Math.abs(event.deltaY))return;
+      const target=event.target instanceof Element?event.target:panel;
+      if(target.closest('input,select,textarea,[contenteditable=""],[contenteditable="true"]'))return;
+      for(let node=target;node&&panel.contains(node);node=node.parentElement){
+        const style=getComputedStyle(node);
+        if(!['auto','scroll'].includes(style.overflowY))continue;
+        if(style.overscrollBehaviorY!=='auto'||canScroll(node,event.deltaY))return;
+      }
+      if(!canScroll(host,event.deltaY))return;
+      const style=getComputedStyle(panel);
+      const lineHeight=parseFloat(style.lineHeight)||parseFloat(style.fontSize)*1.2||16;
+      const delta=event.deltaY*(event.deltaMode===1?lineHeight:event.deltaMode===2?host.clientHeight:1);
+      const next=Math.max(0,Math.min(host.scrollHeight-host.clientHeight,host.scrollTop+delta));
+      if(next===host.scrollTop)return;
+      event.preventDefault();
+      host.scrollTo({top:next,behavior:'instant'});
+    };
+    panel.addEventListener('wheel',wheel,{passive:false});
+    return()=>panel.removeEventListener('wheel',wheel);
+  },[atlas,control,filteredTopics.length]);
   // One owned frame; held/reduced-motion views do not keep repainting card
   // highlights, and a dismissed welcome cannot write to a detached card.
   function glow(event){
