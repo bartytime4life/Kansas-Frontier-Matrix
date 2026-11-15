@@ -283,3 +283,84 @@ test('opening source details from a layer keeps the outer Layers return target',
   assert.equal(h.scope.leftPanelReturnRef.current,outer);
   assert.equal(h.scope.sourceStatusReturnRef.current,inner);
 });
+
+test('per-source details reveal an unselected source without activating its layer', () => {
+  for (const id of ['kdot-roads', 'nasa-gibs-fire-points']) {
+    const h = harness('map'), events = [];
+    const outer = { id: 'layers-trigger' };
+    const inner = { closest: () => ({}) };
+    const summary = { focus: options => events.push(['focus', options.preventScroll]) };
+    const details = {
+      open: false,
+      querySelector: selector => {
+        assert.equal(selector, 'summary');
+        return summary;
+      },
+    };
+    const row = {
+      querySelector: selector => {
+        assert.equal(selector, 'details');
+        return details;
+      },
+      scrollIntoView: options => events.push(['scroll', options.block]),
+    };
+    const visibility = Object.freeze({ [id]: false });
+    h.state.scope = 'selected';
+    Object.assign(h.scope, {
+      officialVisibility: visibility,
+      setSourceStatusScope: value => { h.state.scope = value; },
+      setSourceStatusOpen: value => { h.state.sources = value; },
+      setOfficialContextVisible: () => {
+        throw Error('opening source details must not activate a provider layer');
+      },
+      sourceStatusReturnRef: { current: null },
+      sourceStatusPanelRef: {
+        current: {
+          querySelector: selector => {
+            assert.equal(selector, `[data-source-id="${id}"]`);
+            assert.equal(h.state.scope, 'all', 'the requested row is eligible before focus');
+            return row;
+          },
+        },
+      },
+      mapContainerRef: { current: {} },
+      HTMLElement: class {},
+    });
+    h.scope.leftPanelReturnRef.current = outer;
+    execute('openSourceStatus', h.scope)(inner, id);
+    assert.equal(h.state.scope, 'all');
+    assert.equal(h.state.sources, true);
+    assert.equal(h.scope.leftPanelReturnRef.current, outer);
+    assert.equal(h.scope.sourceStatusReturnRef.current, inner);
+    assert.deepEqual(events, [], 'target focus waits for the opening render');
+    h.flush();
+    assert.equal(details.open, true);
+    assert.equal(visibility[id], false);
+    assert.deepEqual(events, [['scroll', 'nearest'], ['focus', true]]);
+  }
+});
+
+test('generic source status preserves its scope and a missing target keeps the focus fallback', () => {
+  for (const [initialScope, sourceId] of [['selected', undefined], ['all', undefined], ['selected', 'kdot-roads']]) {
+    const h = harness('map'), focused = [], trigger = { closest: () => null };
+    h.state.scope = initialScope;
+    Object.assign(h.scope, {
+      setSourceStatusScope: value => { h.state.scope = value; },
+      sourceStatusReturnRef: { current: null },
+      sourceStatusPanelRef: {
+        current: {
+          querySelector: selector => selector === '[aria-label="Back to layers"]'
+            ? { focus: options => focused.push(['back', options.preventScroll]) }
+            : null,
+        },
+      },
+      mapContainerRef: { current: {} },
+      HTMLElement: class {},
+    });
+    execute('openSourceStatus', h.scope)(trigger, sourceId);
+    assert.equal(h.state.scope, sourceId ? 'all' : initialScope);
+    assert.deepEqual(focused, []);
+    h.flush();
+    assert.deepEqual(focused, [['back', true]]);
+  }
+});
