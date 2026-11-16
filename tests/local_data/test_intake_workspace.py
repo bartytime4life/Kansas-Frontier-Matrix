@@ -11,6 +11,8 @@ from unittest.mock import Mock
 from tools.local_data import intake, manage
 from tools.local_data.intake_studio.intake_server import Store, Handler
 from tools.local_data.intake_studio.workspace import Workspace, page, asset
+from tools.local_data.intake_studio.accounts import Accounts
+from tests.local_data.studio_auth import signed_in_headers
 
 
 class WorkspaceTests(unittest.TestCase):
@@ -27,10 +29,13 @@ class WorkspaceTests(unittest.TestCase):
                            library_root=self.base / "library")
         self.server = SimpleNamespace(origin="http://127.0.0.1:18776", token="synthetic-session", store=self.store)
         self.server.workspace = Workspace(self.store, 18776, self.server.token)
+        self.server.accounts = Accounts(self.store.root)
+        self.account_headers = signed_in_headers(self, self.server.accounts)
 
     def request(self, path, *, method="GET", headers=None, body=None):
         h = Handler.__new__(Handler)
         h.path = path
+        h.client_address = ("127.0.0.1", 32123)
         h.headers = Message()
         data = json.dumps(body or {}).encode()
         for key, value in {"Host": "127.0.0.1:18776", "Content-Length": str(len(data)),
@@ -49,11 +54,11 @@ class WorkspaceTests(unittest.TestCase):
 
     @property
     def auth(self):
-        return {"X-KFM-Session": self.server.token, "Origin": self.server.origin}
+        return {**self.account_headers, "Origin": self.server.origin}
 
     def test_shared_shell_navigation_uses_one_origin_without_frames(self):
         for route, active in (("/working-data", "working-nav"), ("/library", "library-nav")):
-            code, body, headers = self.request(route)
+            code, body, headers = self.request(route, headers=self.auth)
             self.assertEqual(code, 200)
             text = body.decode()
             self.assertIn('href="/working-data"', text)
@@ -65,8 +70,9 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_workspace_data_require_session_host_and_origin(self):
         for route in ("/api/workspace/working/overview", "/api/workspace/library/items?limit=1"):
-            self.assertEqual(self.request(route)[0], 403)
-            for bad in ({"X-KFM-Session":"wrong"}, {**self.auth,"Host":"example.org"},
+            self.assertEqual(self.request(route)[0], 401)
+            self.assertEqual(self.request(route, headers={"X-KFM-Session": self.server.token})[0], 401)
+            for bad in ({**self.auth,"X-KFM-CSRF":"wrong"}, {**self.auth,"Host":"example.org"},
                         {**self.auth,"Origin":"https://example.org"}):
                 self.assertEqual(self.request(route, headers=bad)[0], 403)
             self.assertEqual(self.request(route, headers=self.auth)[0], 200)
@@ -99,9 +105,17 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(json.loads(body)['sha256'], item['sha256'])
 
     def test_workspace_does_not_add_arbitrary_file_or_api_routes(self):
-        for route in ('/workspace/../../intake_server.py','/api/workspace/other/overview',
-                      '/api/workspace/working/../../files','/api/workspace/working/not-a-route'):
+        for route in ('/api/workspace/other/overview', '/api/workspace/working/not-a-route'):
             self.assertEqual(self.request(route, headers=self.auth)[0], 404)
+        for route in ('/workspace/../../intake_server.py', '/api/workspace/working/../../files'):
+            self.assertEqual(self.request(route, headers=self.auth)[0], 400)
+
+    def test_revoked_account_cannot_read_workspace(self):
+        route = '/api/workspace/working/overview'
+        self.assertEqual(self.request(route, headers=self.auth)[0], 200)
+        token = self.account_headers['Cookie'].split('=', 1)[1]
+        self.server.accounts.logout(token)
+        self.assertEqual(self.request(route, headers=self.auth)[0], 401)
 
     def test_native_assets_are_scoped_and_explicit(self):
         css, mime = asset('/workspace/desk.css')

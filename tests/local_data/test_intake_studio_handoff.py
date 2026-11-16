@@ -13,6 +13,8 @@ from unittest.mock import patch, Mock
 
 from tools.local_data import intake, manage
 from tools.local_data.intake_studio.intake_server import Store, Handler
+from tools.local_data.intake_studio.accounts import Accounts
+from tests.local_data.studio_auth import signed_in_headers
 
 PNG = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aGZkAAAAASUVORK5CYII=")
 
@@ -209,11 +211,14 @@ class HandoffTests(unittest.TestCase):
     def test_http_send_requires_session_origin_and_saved_revision(self):
         r = self.ready()
         server = SimpleNamespace(origin="http://127.0.0.1:18776", token="synthetic-session", store=self.store)
+        server.accounts = Accounts(self.store.root)
+        auth = {**signed_in_headers(self, server.accounts), "Origin": server.origin}
         body = json.dumps({"version": r["version"]}).encode()
 
         def request(headers):
             h = Handler.__new__(Handler)
             h.path = "/api/files/" + r["id"] + "/send"
+            h.client_address = ("127.0.0.1", 32123)
             h.headers = Message()
             for key, value in {"Host": "127.0.0.1:18776", "Content-Length": str(len(body)), **headers}.items():
                 h.headers[key] = value
@@ -227,10 +232,11 @@ class HandoffTests(unittest.TestCase):
             h.do_POST()
             return result["code"], json.loads(h.wfile.getvalue())
 
-        for headers in ({}, {"X-KFM-Token": server.token, "Origin": "https://example.org"},
-                        {"X-KFM-Token": server.token, "Host": "example.org"}):
+        for headers in ({}, {**auth, "Origin": "https://example.org"},
+                        {**auth, "Host": "example.org"}, {**auth, "X-KFM-CSRF": "wrong"}):
             self.assertEqual(request(headers)[0], 403)
-        code, result = request({"X-KFM-Token": server.token})
+        self.assertEqual(request({"Origin": server.origin, "X-KFM-Token": server.token})[0], 401)
+        code, result = request(auth)
         self.assertEqual(code, 200)
         self.assertTrue(result["file"]["transfer"]["indexed"])
 
