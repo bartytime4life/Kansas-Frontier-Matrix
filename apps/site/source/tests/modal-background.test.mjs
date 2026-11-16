@@ -22,7 +22,7 @@ class Details extends Element {
   querySelector(selector) { assert.equal(selector, ":scope > summary"); return this.children[0] ?? null; }
 }
 const source = await readFile("app/modal-background.ts", "utf8");
-const { isolateModalBackground, modalReturnTarget } = new Function("HTMLElement", "HTMLDetailsElement", compile(source).replaceAll("export ", "") + "return { isolateModalBackground, modalReturnTarget };")(Element, Details);
+const { isolateModalBackground, modalReturnTarget, focusReturnStillWanted } = new Function("HTMLElement", "HTMLDetailsElement", compile(source).replaceAll("export ", "") + "return { isolateModalBackground, modalReturnTarget, focusReturnStillWanted };")(Element, Details);
 function fixture() {
   const root = new Element(); root.root = true;
   const page = new Element(), header = new Element(), main = new Element(), panel = new Element(), map = new Element(), held = new Element();
@@ -71,4 +71,22 @@ test("actual Layers effect owns external focus and releases it when another tool
     listeners.get("focusin")({ target: f.panel }); assert.deepEqual(focused, ["close"]);
     cleanup(); assert.equal(listeners.size, 0); assert.equal(f.header.inert, false); assert.equal(f.map.inert, false);
   }
+});
+
+test("a deferred focus return yields to a control the visitor has since moved to", async () => {
+  const panel = { contains: node => node === inside }, inside = {}, canvas = {}, more = {}, page = {};
+  // Unchanged, dropped to the page, or left inside the closed panel: the return still runs.
+  assert.equal(focusReturnStillWanted(canvas, canvas, panel, page), true);
+  assert.equal(focusReturnStillWanted(inside, page, panel, page), true);
+  assert.equal(focusReturnStillWanted(inside, inside, panel, page), true);
+  assert.equal(focusReturnStillWanted(canvas, inside, panel, page), true);
+  assert.equal(focusReturnStillWanted(canvas, null, panel, page), true);
+  // The visitor focused the More menu after closing Layers: their choice keeps focus.
+  assert.equal(focusReturnStillWanted(canvas, more, panel, page), false);
+  assert.equal(focusReturnStillWanted(inside, more, panel, page), false);
+  assert.equal(focusReturnStillWanted(null, more, null, page), false);
+  const page_tsx = await readFile("app/page.tsx", "utf8");
+  const close = page_tsx.slice(page_tsx.indexOf("const closeLeftPanel = useCallback"), page_tsx.indexOf("const toggleTimelinePanel"));
+  assert.match(close, /const focusedAtClose = document\.activeElement;\n    window\.setTimeout/, "focus is sampled when the panel closes, before the deferred task");
+  assert.match(close, /if \(!focusReturnStillWanted\(focusedAtClose, document\.activeElement, leftPanelRef\.current, document\.body\)\) return;\n\s+modalReturnTarget/);
 });

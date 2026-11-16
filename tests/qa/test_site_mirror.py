@@ -2785,3 +2785,17 @@ def test_bridge_clusters_successor_preserves_guides_categories_inventory_and_all
          "tests/rendered-html.test.mjs", "tests/security-upstream.test.mjs", "tests/temporal-sweep.test.mjs"},
         "55dad5950ca31ec2b976a309c48818c77cb04477",
     )
+
+
+def test_register_clusters_successor_preserves_bridge_clusters_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-register-clusters-overlay-20261116.json",
+        "site-v268-bridge-clusters-overlay-20261115.json",
+        "a8b1a222a00f1c2ec842b7a1df7f45a816b6a22c18c4ee8039219e82f254ab10",
+        {"app/context-clusters.ts", "app/explore/kansas-bridges/page.tsx", "app/landing-guides.ts", "app/live-context.ts",
+         "app/modal-background.ts", "app/page.tsx", "docs/kdot-bridge-clusters-20261115.md",
+         "tests/kansas-discovery-layers.test.mjs", "tests/kdot-bridges.test.mjs", "tests/landing-guides.test.mjs",
+         "tests/modal-background.test.mjs", "tests/rendered-html.test.mjs", "tests/temporal-sweep.test.mjs",
+         "tests/water-flow-sync.test.mjs"},
+        "665a9124c5bed7e56cd1df7bc2569f0108ab8163",
+    )

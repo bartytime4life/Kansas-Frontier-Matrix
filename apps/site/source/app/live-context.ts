@@ -1,6 +1,7 @@
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import { KANSAS_DISCOVERY_SOURCES, type DiscoveryLayerId } from "./kansas-discovery-layers";
+import { HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS } from "./context-clusters";
 import { BRIDGE_CLOSED_COLOR, BRIDGE_CLUSTER_MAX_ZOOM, BRIDGE_CLUSTER_RADIUS, BRIDGE_ERA_STOPS, BRIDGE_FEED_IDS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR } from "./kdot-bridges";
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, GeoJSONSource, GeoJSONSourceSpecification, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
@@ -93,8 +94,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     id: "nps-nrhp-places", title: "National Register of Historic Places · Kansas listings", shortTitle: "Historic places · National Register",
     organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-nps-nrhp-places",
-    layerIds: Object.freeze(["external-nps-nrhp-places-halo", "external-nps-nrhp-places-points", "external-nps-nrhp-places-labels"]),
-    interactiveLayerIds: Object.freeze(["external-nps-nrhp-places-points"]),
+    layerIds: Object.freeze(["external-nps-nrhp-places-halo", "external-nps-nrhp-places-points", "external-nps-nrhp-places-labels", "external-nps-nrhp-places-clusters", "external-nps-nrhp-places-cluster-count"]),
+    interactiveLayerIds: Object.freeze(["external-nps-nrhp-places-clusters", "external-nps-nrhp-places-points"]),
     apiPath: "/api/live-context?feed=nps-nrhp-places",
     endpointLabel: "mapservices.nps.gov · nrhp_locations · Kansas points",
     sourceUrl: "https://www.nps.gov/subjects/nationalregister/database-research.htm", serviceUrl: "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer",
@@ -103,7 +104,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     defaultVisibility: false, defaultOpacity: 0.95, color: "#e8c27a",
     attribution: "National Park Service · National Register of Historic Places",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    legend: "Gold markers · listed buildings, districts, sites, structures and objects. Larger rings mark National Historic Landmarks.",
+    legend: "Numbered circles count markers and split as you zoom in. Gold markers · listed buildings, districts, sites, structures and objects. Larger rings mark National Historic Landmarks.",
     boundary: "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
     fallback: "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
   }),
@@ -1046,19 +1047,31 @@ export const applyOfficialContextState = (
   } });
 
   const historicPlaces = OFFICIAL_CONTEXT_BY_ID["nps-nrhp-places"];
-  ensureGeoJsonSource(map, historicPlaces, payloads["nps-nrhp-places"]?.data ?? emptyCollection());
-  ensureLayer(map, { id: historicPlaces.layerIds[0], type: "circle", source: historicPlaces.sourceId, filter: ["==", ["get", "landmark"], true], paint: {
+  // In towns the markers pile up at statewide scale, so nearby ones are counted in one circle that splits on zoom.
+  ensureGeoJsonSource(map, historicPlaces, payloads["nps-nrhp-places"]?.data ?? emptyCollection(), { cluster: true, clusterMaxZoom: HISTORIC_PLACE_CLUSTER_MAX_ZOOM, clusterRadius: HISTORIC_PLACE_CLUSTER_RADIUS, clusterProperties: HISTORIC_PLACE_CLUSTER_PROPERTIES });
+  const onePlace: ExpressionSpecification = ["!", ["has", "point_count"]];
+  ensureLayer(map, { id: historicPlaces.layerIds[0], type: "circle", source: historicPlaces.sourceId, filter: ["all", onePlace, ["==", ["get", "landmark"], true]], paint: {
     "circle-color": "rgba(0,0,0,0)", "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 6.5, 12, 15],
     "circle-stroke-color": "#fff0c2", "circle-stroke-width": 2, "circle-opacity": 0.3,
   } });
-  ensureLayer(map, { id: historicPlaces.layerIds[1], type: "circle", source: historicPlaces.sourceId, paint: {
+  ensureLayer(map, { id: historicPlaces.layerIds[1], type: "circle", source: historicPlaces.sourceId, filter: onePlace, paint: {
     "circle-color": ["match", ["get", "resourceType"], "district", "#d99a4e", "site", "#c7a46b", "structure", "#e2b866", "object", "#f0d9a0", historicPlaces.color],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 2.4, 9, 4.5, 13, 7.5],
     "circle-stroke-color": "#3a2a12", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 0.6, 12, 1.4],
   } });
-  ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, minzoom: 11, layout: {
+  ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, filter: onePlace, minzoom: 11, layout: {
     "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 10.5, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
   }, paint: { "text-color": "#f6e4bd", "text-halo-color": "#1c140a", "text-halo-width": 1.5, "text-opacity": 0.9 } });
+  // A light ring marks a circle that holds a National Historic Landmark, as the larger ring does for one marker.
+  ensureLayer(map, { id: historicPlaces.layerIds[3], type: "circle", source: historicPlaces.sourceId, filter: ["has", "point_count"], paint: {
+    "circle-color": historicPlaces.color, "circle-radius": ["step", ["get", "point_count"], 12, 10, 15, 50, 19, 150, 24],
+    "circle-stroke-color": ["case", [">", ["get", "landmarks"], 0], "#fff0c2", "#3a2a12"],
+    "circle-stroke-width": ["case", [">", ["get", "landmarks"], 0], 3, 1.4], "circle-opacity": historicPlaces.defaultOpacity,
+  } });
+  ensureLayer(map, { id: historicPlaces.layerIds[4], type: "symbol", source: historicPlaces.sourceId, filter: ["has", "point_count"], layout: {
+    "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": ["step", ["get", "point_count"], 11.5, 50, 12.5],
+    "text-allow-overlap": true, "text-ignore-placement": true,
+  }, paint: { "text-color": "#2a1d0a", "text-halo-color": "rgba(255,255,255,0.5)", "text-halo-width": 1 } });
 
   const trailPlaces = OFFICIAL_CONTEXT_BY_ID["nps-trail-places"];
   if (visibility["nps-trail-places"] || map.getSource(trailPlaces.sourceId)) {

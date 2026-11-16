@@ -34,6 +34,7 @@ async function moduleUrl(file) {
 const context = await import(await moduleUrl("app/live-context.ts"));
 const discovery = await import(await moduleUrl("app/kansas-discovery-layers.ts"));
 const topics = await import(await moduleUrl("app/layer-workspaces.ts"));
+const clusters = await import(await moduleUrl("app/context-clusters.ts"));
 const downloads = await import(await moduleUrl("app/source-downloads.ts"));
 const drawer = await import(await moduleUrl("app/evidence-drawer-data.ts"));
 const registry = await import(await moduleUrl("app/site-registry.ts"));
@@ -140,8 +141,19 @@ test("point feeds draw categorized storm reports and National Register places fr
     for (const layerId of source.layerIds) assert.ok(layers.has(layerId), layerId);
     for (const layerId of source.interactiveLayerIds) assert.ok(source.layerIds.includes(layerId));
   }
-  assert.deepEqual(layers.get("external-nps-nrhp-places-halo").filter, ["==", ["get", "landmark"], true]);
+  // Single markers keep their styling; nearby markers are counted in a numbered circle that splits on zoom.
+  const one = ["!", ["has", "point_count"]], many = ["has", "point_count"];
+  assert.deepEqual(layers.get("external-nps-nrhp-places-halo").filter, ["all", one, ["==", ["get", "landmark"], true]]);
+  assert.deepEqual(layers.get("external-nps-nrhp-places-points").filter, one);
+  assert.deepEqual(layers.get("external-nps-nrhp-places-labels").filter, one);
   assert.equal(layers.get("external-nps-nrhp-places-labels").minzoom, 11);
+  assert.deepEqual(layers.get("external-nps-nrhp-places-clusters").filter, many);
+  assert.deepEqual(layers.get("external-nps-nrhp-places-cluster-count").layout["text-field"], ["get", "point_count_abbreviated"]);
+  const added = sources.get(context.OFFICIAL_CONTEXT_BY_ID["nps-nrhp-places"].sourceId);
+  assert.equal(added.cluster, true); assert.equal(added.clusterMaxZoom, clusters.HISTORIC_PLACE_CLUSTER_MAX_ZOOM); assert.equal(added.clusterRadius, clusters.HISTORIC_PLACE_CLUSTER_RADIUS);
+  assert.deepEqual(Object.keys(added.clusterProperties).sort(), ["buildings", "districts", "landmarks", "objects", "sites", "structures"]);
+  assert.deepEqual(context.OFFICIAL_CONTEXT_BY_ID["nps-nrhp-places"].interactiveLayerIds, ["external-nps-nrhp-places-clusters", "external-nps-nrhp-places-points"]);
+  assert.equal(JSON.stringify(layers.get("external-nps-nrhp-places-clusters").paint["circle-stroke-color"]).includes("landmarks"), true, "a circle holding a landmark gets the light ring");
   const legend = discovery.discoveryLegend("nws-storm-reports").map(stop => stop.color);
   const paint = JSON.stringify(layers.get("external-nws-storm-reports-points").paint["circle-color"]);
   for (const color of legend) assert.ok(paint.includes(color), `legend chip ${color} matches the map paint`);
@@ -441,4 +453,16 @@ test("every official source has exactly one catalog category, and the download r
       assert.equal(response.status, 400, id);
     }
   } finally { globalThis.fetch = original; }
+});
+
+test("a numbered circle is summarised for its own source and is never read as one record", () => {
+  const cluster = { cluster: true, cluster_id: 9, point_count: 128, landmarks: 2, buildings: 90, districts: 20, structures: 10, sites: 5, objects: 1 };
+  assert.deepEqual(clusters.officialClusterSummary("nps-nrhp-places", cluster), { title: "128 National Register markers in this area",
+    detail: "2 National Historic Landmarks · 90 buildings · 20 districts · 5 sites · 10 structures · 1 object" });
+  assert.deepEqual(clusters.officialClusterSummary("nps-nrhp-places", { cluster: true, point_count: 2 }), { title: "2 National Register markers in this area", detail: "Select to zoom in" });
+  assert.equal(clusters.officialClusterSummary("nps-nrhp-places", { featureId: "nrhp-1", name: "Test", landmark: true }), null, "one marker is a record, not a count");
+  // Bridges keep their own wording, and a source without clusters is never summarised.
+  assert.match(clusters.officialClusterSummary("kdot-bridges-local", { cluster: true, point_count: 40, earliest: 1920, longestFt: 300, closed: 1, posted: 2 }).title, /^40 bridges in this area$/);
+  assert.equal(clusters.officialClusterSummary("nps-trail-places", cluster), null);
+  assert.equal(clusters.officialClusterSummary(undefined, cluster), null);
 });

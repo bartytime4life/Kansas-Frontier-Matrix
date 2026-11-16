@@ -36,3 +36,10 @@ export function modalReturnTarget(trigger: HTMLElement | null, fallback: HTMLEle
   }
   return target.isConnected && !target.closest("[hidden], [inert]") && target.getClientRects().length > 0 ? target : fallback;
 }
+
+/** A panel returns focus to its opener on a later task. By then the visitor may have moved to
+ * another control; that newer choice keeps focus. The return still runs when focus is where it
+ * was at close, was dropped to the page, or is left inside the panel that just closed. */
+export function focusReturnStillWanted(focusedAtClose: Element | null, active: Element | null, closedPanel: Element | null, page: Element | null): boolean {
+  return !active || active === page || active === focusedAtClose || Boolean(closedPanel?.contains(active));
+}
