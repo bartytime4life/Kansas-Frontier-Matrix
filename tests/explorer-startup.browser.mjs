@@ -473,9 +473,10 @@ for (const [width,height] of [[1280,800],[1363,936]]) {
     };
     let phase='real-layout';
     try {
-      // These use real, unmodified panel geometry. Fail rather than silently
-      // substituting a non-overflow fixture when the chosen content changes.
+      // These use real, unmodified panel geometry: the expanded explanation
+      // naturally overflows at 1280x800 but fits at 1363x936.
       for(const expanded of [false,true]){
+        phase=expanded?'real-expanded-layout':'real-closed-layout';
         if(expanded){
           await p.evaluate('document.querySelector(".welcome-focus-more > summary").focus({preventScroll:true})');
           await p.key('Enter','Enter',13);
@@ -484,13 +485,37 @@ for (const [width,height] of [[1280,800],[1363,936]]) {
         await centerOuter();
         let state=await read();geometry(state);
         assert.ok(state.host.max>400,'the real chooser has enough range in both directions');
-        assert.ok(state.panel.max<=1,'real '+(expanded?'expanded':'closed')+' explanation has no inner overflow');
+        const expectsOverflow=expanded&&width===1280;
+        t.diagnostic(JSON.stringify({case:'native-layout',expanded,expectsOverflow,state}));
+        if(expectsOverflow){
+          assert.ok(state.panel.max>1,'real expanded explanation naturally overflows at 1280x800');
+          // Keep the real height. Small native deltas fit even a short range;
+          // each direction starts in the middle, before its boundary handoff.
+          const delta=Math.min(40,Math.max(1,Math.floor(state.panel.max/4)));
+          for(const direction of [1,-1]){
+            await centerOuter();
+            await p.evaluate('(()=>{const panel=document.querySelector(".welcome-focus");panel.scrollTop=(panel.scrollHeight-panel.clientHeight)/2;})()');
+            const before=await wheel(direction*delta);
+            assert.ok(before.panel.top>.5&&before.panel.top<before.panel.max-.5,'real expanded explanation starts inside its natural scroll range');
+            await p.wait('document.querySelector(".welcome-focus").scrollTop '+(direction>0?'>':'<')+' '+(before.panel.top+direction*delta/2),'native wheel consumes the real expanded explanation range');
+            await pause(200);const after=await read();pinned(before,after);
+            assert.ok(Math.abs(after.host.top-before.host.top)<=1,'outer chooser does not steal real expanded explanation scrolling');
+            t.diagnostic(JSON.stringify({case:'native-expanded-inner-consumption',direction,delta,before,after}));
+          }
+        }else{
+          assert.ok(state.panel.max<=1,'real '+(expanded?'expanded':'closed')+' explanation has no inner overflow');
+        }
         for(const direction of [1,-1]){
+          if(expectsOverflow){
+            await centerOuter();
+            await p.evaluate('document.querySelector(".welcome-focus").scrollTop='+(direction>0?'document.querySelector(".welcome-focus").scrollHeight':'0'));
+          }
           const before=await wheel(direction*120);
+          if(expectsOverflow)assert.ok(direction>0?Math.abs(before.panel.top-before.panel.max)<=1:before.panel.top<=1,'real expanded explanation starts at the requested natural boundary');
           await p.wait('document.querySelector(".living-welcome").scrollTop '+(direction>0?'>':'<')+' '+(before.host.top+direction*20),'trusted wheel over the panel moves the outer chooser');
           await pause(200);const after=await read();pinned(before,after);
-          assert.ok(Math.abs(after.panel.top-before.panel.top)<=1,'non-overflow explanation does not acquire inner scroll');
-          t.diagnostic(JSON.stringify({case:'native-no-overflow',expanded,direction,before,after}));
+          assert.ok(Math.abs(after.panel.top-before.panel.top)<=1,'outer handoff leaves the real explanation scroll position unchanged');
+          t.diagnostic(JSON.stringify({case:expectsOverflow?'native-expanded-boundary-handoff':'native-no-overflow',expanded,direction,before,after}));
         }
         await capture(expanded?'native-expanded':'native-closed');
       }
