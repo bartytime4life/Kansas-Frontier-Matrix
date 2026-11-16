@@ -1,4 +1,5 @@
 /** Catalogue helpers use only metadata and observations supplied by the source adapter. */
+import { PUBLIC_LAB_SNAPSHOTS } from './public-snapshots.mjs';
 export function atlasFacts(bundle) {
   if (!bundle?.data) return [];
   const data = bundle.data;
@@ -46,6 +47,7 @@ export function matchesAtlasStory(story, { query = '', group = 'All', availabili
   const text = [story.title, story.kicker, story.summary, story.group, ...(story.sources || [])].join(' ').toLocaleLowerCase();
   if (terms.some(term => !text.includes(term))) return false;
   if (group !== 'All' && story.group !== group) return false;
+  if (availability === 'available' && !Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, story.id)) return false;
   if (availability === 'ready' && (story.status !== 'ready' || states[story.id] !== 'ready')) return false;
   if (availability === 'planned' && story.status !== 'planned') return false;
   return true;

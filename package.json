@@ -13,7 +13,7 @@
     "dev": "npm run build && npm start",
     "predev:local": "node scripts/build-identity.mjs",
     "dev:local": "npm run prepare:maplibre && npm run prepare:lightning && WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "prebuild": "node scripts/stage-public-client-assets.mjs --if-built && npm run prepare:maplibre && npm run prepare:lightning && node scripts/build-identity.mjs",
+    "prebuild": "node scripts/validate-labs-data.mjs && node scripts/stage-public-client-assets.mjs --if-built && npm run prepare:maplibre && npm run prepare:lightning && node scripts/build-identity.mjs",
     "build": "vinext build",
     "postbuild": "node scripts/stage-public-client-assets.mjs --compress",
     "start": "node server/start.mjs",

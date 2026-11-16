@@ -133,7 +133,9 @@ test('an effect remount starts a fresh request after the previous consumer abort
   }));
   const source = read('app/living-welcome/stories/useStoryBundle.js')
     .replace("import { useEffect, useState } from 'react';", `const { useEffect, useState } = globalThis.${key};`)
-    .replace("'./story-bundle.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/story-bundle.mjs', import.meta.url).href));
+    .replace("'./story-bundle.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/story-bundle.mjs', import.meta.url).href))
+    .replace("'../../labs/snapshot-loader.mjs'", JSON.stringify(new URL('../app/labs/snapshot-loader.mjs', import.meta.url).href))
+    .replace("'../../labs/public-snapshots.mjs'", JSON.stringify(new URL('../app/labs/public-snapshots.mjs', import.meta.url).href));
   const { useStoryBundle } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
   useStoryBundle('iron-horse');
   const firstCleanup = effect();
@@ -144,7 +146,7 @@ test('an effect remount starts a fresh request after the previous consumer abort
   assert.equal(pending[0].signal.aborted, true);
   assert.equal(pending[1].signal.aborted, false);
   const bundle = validRail();
-  pending[1].resolve({ status: 200, text: async () => JSON.stringify(bundle) });
+  pending[1].resolve(new Response(JSON.stringify(bundle), { status: 200 }));
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(settled.value.state, 'ready');
   assert.deepEqual(settled.value.bundle, bundle);
@@ -253,7 +255,9 @@ test('a mounted consumer keeps a cache hit after other large snapshots evict it'
   });
   const source = read('app/living-welcome/stories/useStoryBundle.js')
     .replace("import { useEffect, useState } from 'react';", `const { useEffect, useState } = globalThis.${key};`)
-    .replace("'./story-bundle.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/story-bundle.mjs', import.meta.url).href));
+    .replace("'./story-bundle.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/story-bundle.mjs', import.meta.url).href))
+    .replace("'../../labs/snapshot-loader.mjs'", JSON.stringify(new URL('../app/labs/snapshot-loader.mjs', import.meta.url).href))
+    .replace("'../../labs/public-snapshots.mjs'", JSON.stringify(new URL('../app/labs/public-snapshots.mjs', import.meta.url).href));
   const { useStoryBundle } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
   // The hook runs against the deterministic React stub above, outside a renderer.
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -262,7 +266,7 @@ test('a mounted consumer keeps a cache hit after other large snapshots evict it'
   mount('iron-horse',{});await flush();
   const cachedConsumer = {};
   assert.equal(mount('iron-horse',cachedConsumer).state,'ready');await flush();
-  mount('shaking-ground',{});await flush();
+  mount('inland-sea',{});await flush();
   active=cachedConsumer;
   assert.equal(useStoryBundle('iron-horse').state,'ready','active cached value survives eviction without a stuck loading state');
   assert.equal(requests,2,'a mounted cache consumer does not refetch its retained value');

@@ -239,7 +239,7 @@ function RecordInstrument({ bundle, time, onTime, controls = {}, onControls }) {
   const isMa = model.data.timeUnit === 'Ma';
   const activeFilters = Boolean(controls.query || controls.category || controls.from || controls.to || controls.minValue || controls.maxValue);
   return <div className="record-lab">
-    <div className="record-intro"><div><span className="record-eyebrow">THE KANSAS RECORD / RESEARCH INSTRUMENT</span><h3>{model.data.title || 'Follow the evidence.'}</h3><p>{model.data.description}</p></div><div className="record-snapshot"><i/><span>REAL SOURCE SNAPSHOT<small>{bundle.built_at?.slice(0, 10) || 'Date not supplied'} · local exploration</small></span></div></div>
+    <div className="record-intro"><div><span className="record-eyebrow">THE KANSAS RECORD / RESEARCH INSTRUMENT</span><h3>{model.data.title || 'Follow the evidence.'}</h3><p>{model.data.description}</p></div><div className="record-snapshot"><i/><span>REAL SOURCE SNAPSHOT<small>{bundle.built_at?.slice(0, 10) || 'Date not supplied'} · public data</small></span></div></div>
     <div className="record-workspace">
       <aside className="record-controls" aria-label="Filter the source records"><div className="record-control-heading"><span>01</span><h4>Shape your question</h4></div>
         <label>Find a record<input type="search" value={controls.query || ''} placeholder="Name, place, source field…" onChange={event => change({ query: event.target.value })}/></label>
@@ -263,7 +263,7 @@ function RecordInstrument({ bundle, time, onTime, controls = {}, onControls }) {
     <Compare model={model} records={records} controls={controls} change={change} metric={metric}/>
     <RecordTable model={model} records={records} controls={controls} change={change} selectedId={selected?.id} onSelect={setSelected}/>
     <Provenance bundle={bundle} model={model} records={records}/>
-    <p className="record-map-credit">{KANSAS_OUTLINE_CREDIT} Real source snapshots support exploration; they do not imply a governed release or complete coverage.</p>
+    <p className="record-map-credit">{KANSAS_OUTLINE_CREDIT} Coverage dates and source limitations apply to every view and comparison.</p>
   </div>;
 }
 
