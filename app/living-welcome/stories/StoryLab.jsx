@@ -6,6 +6,9 @@ import { STORIES } from './registry.mjs';
 import { KANSAS_OUTLINE_CREDIT, downloadCSV, fmt } from './story-kit.mjs';
 import { StoryBoundary, WaitingSketch, useStoryModule } from './story-parts.jsx';
 import { useStoryBundle } from './useStoryBundle.js';
+import { PUBLIC_LAB_SNAPSHOTS } from '../../labs/public-snapshots.mjs';
+import { decodeLabView, encodeLabView } from '../../labs/view-state.mjs';
+import './record-lab.css';
 
 const SPEEDS = [{ id: .5, label: '½×' }, { id: 1, label: '1×' }, { id: 2, label: '2×' }];
 
@@ -24,7 +27,7 @@ function downloadJSON(filename, value) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function Sources({ story, bundle, controls, time }) {
+function Sources({ story, bundle, controls, time, snapshotSha256 }) {
   const sources = bundle?.sources || story.sources.map(name => ({ name }));
   const observed = bundle?.observed;
   const observedText = value => bundle?.data?.timeUnit === 'Ma' && Number.isFinite(Number(value))
@@ -39,7 +42,7 @@ function Sources({ story, bundle, controls, time }) {
           <button type="button" className="story-tool" onClick={() => downloadJSON(`${story.id}-snapshot.json`, bundle)}>Download source snapshot</button>
           <button type="button" className="story-tool" onClick={() => downloadJSON(`${story.id}-view-receipt.json`, {
             format: 'kfm-local-lab-view-v1', story: story.id, exportedAt: new Date().toISOString(),
-            snapshotBuiltAt: bundle.built_at, sourceSnapshot: bundle.data.sourceSnapshot || null,
+            snapshotBuiltAt: bundle.built_at, snapshotSha256, sourceSnapshot: bundle.data.sourceSnapshot || null,
             sourceSnapshots: bundle.data.sourceSnapshots || (bundle.data.sourceSnapshot ? [bundle.data.sourceSnapshot] : []),
             observed: bundle.observed, sources: bundle.sources, controls, time,
             interpretation: 'View settings and source metadata; not a release or admission receipt.',
@@ -57,9 +60,59 @@ function LabContent({ story, paused, reduced }) {
   const range = Visual && storyModule.range ? storyModule.range(bundle) : null;
   const canCSV = Boolean(Visual && storyModule.toCSV);
   const [time, setTime] = useState(null), [controls, setControls] = useState({}), [playRequested, setPlaying] = useState(false), [speed, setSpeed] = useState(1);
+  const [replayNotice, setReplayNotice] = useState(''), [shareURL, setShareURL] = useState(''), [shareStatus, setShareStatus] = useState('');
+  const replayAttempted = useRef(false), shareRequest = useRef(0), shareButton = useRef(null);
+  const snapshotSha256 = PUBLIC_LAB_SNAPSHOTS[story.id]?.sha256 || null;
   const motionHeld = Boolean(paused || reduced), playing = playRequested && !motionHeld && Boolean(range);
   const shownTime = time ?? range?.max ?? null;
   const rangeMin = range?.min, rangeMax = range?.max, rangeRate = range?.rate, rangeStep = range?.step || 1;
+
+  useEffect(() => {
+    if (!bundle || !snapshotSha256 || !Visual || replayAttempted.current) return;
+    const token = new URLSearchParams(window.location.search).get('view');
+    if (!token) { replayAttempted.current = true; return; }
+    const replay = decodeLabView(token, { story: story.id, snapshotSha256 });
+    const climateSettingsValid = replay && (story.id !== 'climate-stripes' ||
+      (replay.controls.element === undefined || Object.hasOwn(bundle.data.elements, replay.controls.element)) &&
+      (replay.controls.baseline === undefined || bundle.data.baselines.includes(replay.controls.baseline)) &&
+      (replay.controls.area === undefined || bundle.data.areas.some(area => area.id === replay.controls.area)));
+    const timeValid = replay && (replay.time === null || rangeMin === undefined || replay.time >= rangeMin && replay.time <= rangeMax);
+    let live = true;
+    // Restoring external URL state is deferred until this source-bound consumer
+    // has settled; abandoned or Strict Mode mounts cannot apply a queued replay.
+    queueMicrotask(() => {
+      if (!live) return;
+      replayAttempted.current = true;
+      if (!replay || !climateSettingsValid || !timeValid) {
+        setReplayNotice('This shared view could not be restored. Its settings are invalid or its source snapshot has changed. The current source opens with its default settings.');
+        return;
+      }
+      setControls(replay.controls); setTime(replay.time); setPlaying(false);
+      setReplayNotice('Shared view restored against the exact public source snapshot. Filters, measurements and time follow the saved view.');
+    });
+    return () => { live = false; };
+  }, [bundle, snapshotSha256, Visual, story.id, rangeMin, rangeMax]);
+  useEffect(() => () => { shareRequest.current++; }, []);
+
+  const share = async () => {
+    const request = ++shareRequest.current;
+    try {
+      const token = encodeLabView({ story: story.id, controls, time: shownTime, snapshotSha256 });
+      const url = new URL(window.location.href);
+      url.pathname = '/labs'; url.searchParams.set('story', story.id); url.searchParams.set('view', token); url.hash = '';
+      const href = url.href;
+      setShareURL(href); setShareStatus('Preparing a link to this source snapshot and view…');
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(href);
+        if (request === shareRequest.current) setShareStatus('Link copied. It reopens this exact source snapshot and view.');
+      } catch {
+        if (request === shareRequest.current) setShareStatus('Select and copy the link below to share this exact view.');
+      }
+    } catch {
+      if (request === shareRequest.current) { setShareURL(''); setShareStatus('This view could not be encoded. Shorten the search text or reset the view, then try again.'); }
+    }
+  };
 
   // Playback advances the shared time only while the tab is visible and motion is allowed.
   const startFrom = useRef(null);
@@ -85,17 +138,23 @@ function LabContent({ story, paused, reduced }) {
     return () => { if (frame) cancelAnimationFrame(frame); document.removeEventListener('visibilitychange', visibility); };
   }, [playing, speed, rangeMin, rangeMax, rangeRate, rangeStep]);
 
-  const reset = () => { setPlaying(false); setTime(null); setControls({}); };
-  const download = () => { const result = storyModule.toCSV(bundle, { time: shownTime, controls }); if (result) downloadCSV(result.filename, result.rows); };
+  const dismissShare = () => { shareRequest.current++; setShareStatus(''); setShareURL(''); shareButton.current?.focus(); };
+  const reset = () => {
+    shareRequest.current++; setPlaying(false); setTime(null); setControls({}); setReplayNotice(''); setShareStatus(''); setShareURL('');
+    const url = new URL(window.location.href); url.searchParams.delete('view');
+    window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`);
+  };
+  const download = () => { const result = storyModule.toCSV(bundle, { time: shownTime, controls, snapshotSha256 }); if (result) downloadCSV(result.filename, result.rows); };
   const scrubberLabel = range ? `${range.label}: ${range.format ? range.format(shownTime) : fmt(shownTime)}` : '';
   return <>
     <div className="story-lab-body">
+      {replayNotice && <p className="story-replay-notice" role="status">{replayNotice}</p>}
       <StoryBoundary fallback={<WaitingPanel story={story} state="offline"/>}>
         {Visual
-          ? <Visual bundle={bundle} mode="lab" paused={paused} reduced={reduced} time={shownTime} onTime={value => { setPlaying(false); setTime(value); }} controls={controls} onControls={setControls}/>
+          ? <Visual bundle={bundle} mode="lab" paused={paused} reduced={reduced} time={shownTime} onTime={value => { setPlaying(false); setTime(value); }} controls={controls} onControls={setControls} snapshotSha256={snapshotSha256}/>
           : <WaitingPanel story={story} state={story.status === 'planned' ? 'planned' : state}/>}
       </StoryBoundary>
-      <Sources story={story} bundle={state === 'ready' ? bundle : null} controls={controls} time={shownTime}/>
+      <Sources story={story} bundle={state === 'ready' ? bundle : null} controls={controls} time={shownTime} snapshotSha256={snapshotSha256}/>
     </div>
     {Visual && <div className="story-lab-bar" role="group" aria-label="Lab controls">
       {range && <>
@@ -105,7 +164,9 @@ function LabContent({ story, paused, reduced }) {
         <div className="story-speed" role="group" aria-label="Playback speed">{SPEEDS.map(option => <button type="button" key={option.id} aria-pressed={speed === option.id} aria-label={`Speed ${option.id} times`} disabled={motionHeld} onClick={() => setSpeed(option.id)}>{option.label}</button>)}</div>
       </>}
       <button type="button" className="story-tool" onClick={reset}>Reset</button>
+      {snapshotSha256 && <button type="button" className="story-tool" ref={shareButton} onClick={share}>Share this view ↗</button>}
       {canCSV && <button type="button" className="story-tool" onClick={download}><span className="story-tool-long">Download </span>CSV</button>}
+      {shareStatus && <div className="story-share-result"><p role="status">{shareStatus}</p><button type="button" className="story-share-dismiss" aria-label="Dismiss sharing feedback" onClick={dismissShare}>×</button>{shareURL && shareStatus.startsWith('Select') && <label>Reproducible view link<input type="text" readOnly value={shareURL} onFocus={event => event.currentTarget.select()} onClick={event => event.currentTarget.select()}/></label>}</div>}
     </div>}
   </>;
 }

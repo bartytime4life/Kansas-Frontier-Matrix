@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createHash, webcrypto } from 'node:crypto';
 import { PUBLIC_LAB_SNAPSHOTS as snapshots } from '../app/labs/public-snapshots.mjs';
 import { loadPublicLabSnapshot } from '../app/labs/snapshot-loader.mjs';
-import { validStoryBundle, STORY_BUNDLE_BYTES } from '../app/living-welcome/stories/story-bundle.mjs';
+import { validStoryBundle, storyBundleByteLimit } from '../app/living-welcome/stories/story-bundle.mjs';
 import { recordModel, filterRecords, recordsCSV } from '../app/living-welcome/stories/record-model.mjs';
 import { matchesAtlasStory } from '../app/labs/atlas-model.mjs';
 import { storyById } from '../app/living-welcome/stories/registry.mjs';
@@ -12,20 +12,20 @@ import { storyById } from '../app/living-welcome/stories/registry.mjs';
 const files = new Map(await Promise.all(Object.entries(snapshots).map(async ([id, entry]) => [id, await readFile(new URL('../public' + entry.path, import.meta.url))])));
 const data = id => JSON.parse(files.get(id));
 
-test('all five shipping bundles are bounded, valid and bound to their exact file bytes', () => {
-  assert.deepEqual(Object.keys(snapshots).sort(), ['census-mosaic', 'climate-stripes', 'river-memory', 'shaking-ground', 'tornado-tracks']);
+test('all eight shipping bundles are bounded, valid and bound to their exact file bytes', () => {
+  assert.deepEqual(Object.keys(snapshots).sort(), ['air-and-health', 'built-kansas', 'census-mosaic', 'climate-stripes', 'energy-shift', 'river-memory', 'shaking-ground', 'tornado-tracks']);
   for (const [id, entry] of Object.entries(snapshots)) {
     const raw = files.get(id), bundle = data(id);
     assert.equal(raw.length, entry.bytes);
-    assert.ok(raw.length <= STORY_BUNDLE_BYTES);
+    assert.ok(raw.length <= storyBundleByteLimit(id));
     assert.equal(createHash('sha256').update(raw).digest('hex'), entry.sha256);
     assert.ok(validStoryBundle(bundle, id), id);
-    assert.match(entry.path, new RegExp(`^/labs-data/${id}-[a-f0-9]{16}\\.json$`));
+    assert.match(entry.path, new RegExp(`^/labs-data(?:-extension|-bridges)?/${id}-[a-f0-9]{16}\\.json$`));
     for (const source of bundle.data.sourceSnapshots) {
       assert.match(source.rawSha256, /^[a-f0-9]{64}$/);
       assert.ok(source.rawBytes > 0);
       assert.ok(Date.parse(source.retrievedAt));
-      assert.match(new URL(source.url).hostname, /(?:^|\.)(?:noaa\.gov|census\.gov|usgs\.gov)$/);
+      assert.match(new URL(source.url).hostname, /(?:^|\.)(?:noaa\.gov|census\.gov|usgs\.gov|eia\.gov|epa\.gov|ksdot\.gov)$/);
     }
     assert.equal(matchesAtlasStory(storyById(id), { availability: 'available' }), true);
   }

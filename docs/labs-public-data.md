@@ -1,7 +1,7 @@
 # Labs with public data
 
 The owner requested a functional, populated `/labs` on 2026-11-16. The page now
-opens on five instruments with bundled public federal source snapshots. The
+opens on eight instruments with bundled public source snapshots. The
 question shortcuts, previews, controls, tables, record inspection and downloads
 use these same bundles. Additional instruments and planned stories remain
 accessible through **All research**.
@@ -13,6 +13,9 @@ accessible through **All research**.
 | River Memory | Three USGS gauges, January 2020–November 2026 | 7,526 daily observations |
 | Tornado Tracks | SPC whole tornadoes starting in Kansas, 1950–2025 | 4,582 |
 | Shaking Ground | USGS M≥1 events, Kansas and immediate border region, 2010–2026 | 6,762 |
+| Built Kansas | Complete returned KDOT state and local bridge inventories, retrieved November 16, 2026; recorded built years 1870–2026 | 24,877 inventory records; 27 undated |
+| Energy Shift | 26 selected EIA Kansas annual series, 1960–2024 | 1,690 annual observations |
+| Air Quality | EPA monitored Kansas county annual AQI, 2000–2025 | 333 county-years; 17 counties historically, 12 in 2025 |
 
 These are dated source snapshots, not live observations. Source revision,
 coverage, missingness, qualifiers and interpretation limits remain visible.
@@ -22,11 +25,13 @@ query reaching its 10,000-row cap fails acquisition rather than claiming complet
 
 ## Source and rights basis
 
-The importer reads only public NOAA, Census and USGS endpoints. Each bundle
+The importers read only named public NOAA, Census, USGS, EIA, EPA and KDOT endpoints. Each bundle
 records the exact URLs, retrieval times, raw byte counts and SHA-256 hashes.
 The generated manifest binds each shipping filename, size and SHA-256. The
 browser verifies the file before accepting its data. Build validation rejects
-unexpected files in `public/labs-data/`, invalid contracts and modified bytes.
+unexpected files in the three manifest data directories, invalid contracts and modified bytes.
+The bridge instrument has an explicit 16 MB / 40,000-record bound; other instruments
+retain the 3 MB / 10,000-record bound. No generic request can enlarge these limits.
 
 - [NOAA nClimDiv downloads and format documentation](https://www.ncei.noaa.gov/pub/data/cirs/climdiv/)
 - [Census public open-data policy](https://www.census.gov/topics/research/research-transparency-public-access/open-data.html)
@@ -34,6 +39,51 @@ unexpected files in `public/labs-data/`, invalid contracts and modified bytes.
 - [SPC source descriptions and actual-track downloads](https://www.spc.noaa.gov/wcm/)
 - [USGS daily values service](https://waterservices.usgs.gov/docs/dv-service/)
 - [USGS ComCat API documentation](https://earthquake.usgs.gov/fdsnws/event/1/)
+- [KDOT state bridge inventory](https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/State_Bridges/MapServer/0)
+- [KDOT local bridge inventory](https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0)
+- [EIA SEDS](https://www.eia.gov/state/seds/) and [reuse policy](https://www.eia.gov/about/copyrights_reuse.php)
+- [EPA AirData formats](https://aqs.epa.gov/aqsweb/airdata/FileFormats.html#_annual_aqi_by_county) and [data license](https://edg.epa.gov/EPA_Data_License.html)
+
+Bridge acquisition enumerates every source OBJECTID before and after paged retrieval
+and reconciles identifier multiplicities on every page. The state service returns
+5,586 rows for 5,582 distinct OBJECTIDs, and different identifiers can also refer to
+the same physical structure. All returned rows remain; counts mean inventory records.
+Their identities bind the source network, OBJECTID and returned feature bytes.
+Construction-year filtering describes present inventory with recorded years, not
+historical construction rates or all structures that ever existed. KDOT attributes
+are credited public service data, not a federal public-domain or safety certification.
+
+Energy uses one source unit, billion Btu, and starts with Total consumption selected.
+Fuel totals, sector totals and production overlap and must not be summed. Annual
+series retain numeric years without invented observation dates. EPA selects one
+county-year cohort at a time. Unmonitored counties remain absent. Coverage and
+above-100 percentages use their declared calendar-day and monitored-day denominators;
+AQI does not supply a health outcome or personal exposure measure.
+
+## Scientific tools and replay
+
+Relationships use all complete pairs in the current selection, with Pearson r,
+Spearman rho calculated as Pearson correlation of average tied ranks, and an optional
+ordinary least-squares line with intercept and R². Fewer than three pairs or a constant
+axis suppress the coefficients. Scatter marks use a disclosed deterministic sample
+of at most 1,800 pairs; analytical counts and statistics use all pairs. Correlation is
+descriptive and supplies no causal effect, p-value or independence assumption.
+
+Quartiles interpolate at `(n - 1) p` (R type 7); sample standard deviation divides
+the centered sum of squares by `n - 1`. Missingness, ranked observations and grouped
+summaries follow the same filters and time selection as the table and CSV. See the
+[R quantile specification](https://search.r-project.org/R/refmans/stats/help/quantile.html)
+and [NIST rank-correlation formula](https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/rankcorr.pdf).
+Climate trends fit only complete 12-month annual observations in the selected period,
+using the source scale and sum/mean rules. Incomplete years are counted and excluded
+from the fit and extremes. The trend is per decade, with descriptive R².
+
+Share links encode only bounded, allowlisted control state, time, instrument ID and
+the exact shipping SHA-256. A link for another revision or instrument is rejected.
+It never supplies an arbitrary data URL or instructions to execute. Old links may
+become stale after a source refresh; downloadable receipts retain their source binding.
+Public record CSVs carry the shipping snapshot digest and its acquisition completion
+time; individual raw-page hashes remain in the source snapshot and view receipt.
 
 Climate baselines are monthly means calculated from the same downloaded series
 for 1901–2000 and 1991–2020. They are explicitly distinguished from NOAA's
@@ -54,12 +104,14 @@ Run from this standalone application's root:
 
 ```sh
 python3 scripts/prepare-labs-data.py --through YYYY-MM-DD
+python3 scripts/prepare-labs-science-data.py
+python3 scripts/prepare-labs-bridges.py --through YYYY-MM-DD
 node scripts/validate-labs-data.mjs
 npm run build
 node --test --test-concurrency=4 tests/*.test.mjs app/labs/atlas-model.test.mjs
 ```
 
-Raw downloads stay under ignored `work/labs-raw/`; `--cache` can select another
+Raw downloads stay under ignored work directories or `/tmp/kfm-labs-science-raw`; `--cache` can select another
 local directory. `--offline` rebuilds from hash-verified raw responses. Raw
 files, credentials and local databases are excluded from deployment. Acquisitions
 finish before replacing the shipping snapshots and manifest. Review the changed

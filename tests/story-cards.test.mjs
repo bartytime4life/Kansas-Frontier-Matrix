@@ -40,7 +40,7 @@ test('the registry lists 22 stories with unique ids, known groups and complete c
 
 test('implemented instruments are lazy and planned stories cannot load a pretend instrument', () => {
   const ready = STORIES.filter(story => story.status === 'ready');
-  assert.deepEqual(ready.map(story => story.id).sort(), ['census-mosaic', 'climate-stripes', 'deep-time-column', 'inland-sea', 'iron-horse', 'river-memory', 'shaking-ground', 'shifting-lines', 'tornado-tracks']);
+  assert.deepEqual(ready.map(story => story.id).sort(), ['air-and-health', 'built-kansas', 'census-mosaic', 'climate-stripes', 'deep-time-column', 'energy-shift', 'inland-sea', 'iron-horse', 'river-memory', 'shaking-ground', 'shifting-lines', 'tornado-tracks']);
   for (const story of ready) {
     assert.equal(typeof story.load, 'function');
     const lazyFile = story.load.toString().match(/import\(['"]\.\/([a-z-]+\.jsx)['"]\)/)?.[1];
@@ -194,7 +194,9 @@ test('CSV rows and ranges come from the bundle', reactOnly, async t => {
   const directory = await mkdtemp(join(path('node_modules'), '.story-cards-')), kitUrl = new URL('../app/living-welcome/stories/story-kit.mjs', import.meta.url).href;
   t.after(() => rm(directory, { recursive: true, force: true }));
   const load = async name => {
-    const source = read(`app/living-welcome/stories/${name}.jsx`).replace("'./story-kit.mjs'", `'${kitUrl}'`);
+    const source = read(`app/living-welcome/stories/${name}.jsx`).replace("'./story-kit.mjs'", `'${kitUrl}'`)
+      .replace("'./science-model.mjs'", JSON.stringify(new URL('../app/living-welcome/stories/science-model.mjs', import.meta.url).href))
+      .replace(/^import ['"].*\.css['"];?$/gm, '');
     const output = ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
     const file = join(directory, `${name}.mjs`);
     await writeFile(file, output);
