@@ -58,3 +58,17 @@ be inferred and when the provider is checked next. The site's host replaces the 
 504 with its own "error code" page, so those statuses hid the sentence; the cause (error or
 timeout) is kept in the `X-KFM-Upstream-Failure` header. The layer card and the Status tab show
 the sentence; any other failure keeps the generic "Could not load source data" text.
+
+## National Register places use the same counted circles (2026-11-16)
+
+The National Register of Historic Places layer has 1,344 public markers, which piled up in
+Wichita, Topeka, Lawrence and Kansas City at statewide scale. Nearby markers are now counted in
+one numbered circle that splits on zoom; past zoom 12 every marker sits at its own point with
+its name, styled as before.
+
+- A light ring marks a circle that holds a National Historic Landmark.
+- Hovering a circle gives its makeup, for example "142 National Register markers in this area ·
+  129 buildings · 5 districts · 1 site · 7 structures". Selecting it zooms to where it splits.
+- The count is markers, not listings: a listing such as a district can publish several points.
+- The feed, its fields and its limits are unchanged. `app/context-clusters.ts` holds the cluster
+  settings and the per-source summary used for both bridges and National Register places.
