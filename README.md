@@ -1040,6 +1040,13 @@ React, React DOM and RSC are pinned to 19.2.8 for
 Scoped dependency overrides install patched bytes: `vinext -> image-size@2.0.4`,
 `miniflare -> sharp@0.35.4`, and `@esbuild-kit/core-utils -> esbuild@0.25.12`
 ([esbuild advisory](https://github.com/advisories/GHSA-67mh-4wv8-2f99)).
+The public composition also scopes `minimatch@11.0.1` to
+`@typescript-eslint/typescript-estree` for
+[GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249).
+Callable legacy `minimatch@3.1.5` remains separate; the advisory's affected range
+starts at version 7. Regression checks exercise the actual TypeScript project
+service's default-project allowlist, glob behavior and both installed APIs.
+This records a source dependency repair, not installed-host or exploitation proof.
 Other vulnerable transitive packages are updated within their existing ranges.
 These are package replacements, not audit suppressions. Revisit overrides when
 upstream dependency ranges incorporate these fixes. The Site uses a checked-in
