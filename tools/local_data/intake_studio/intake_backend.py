@@ -791,11 +791,12 @@ class Handler(BaseHTTPRequestHandler):
                 if not m[2]:
                     return self.respond(200, {"file": record})
                 if m[2] == "export":
+                    safe_id = m[1] if re.fullmatch(r"[a-f0-9]{32}", m[1]) else "00000000000000000000000000000000"
                     return self.respond(
                         200,
-                        self.server.store.export(m[1]),
+                        self.server.store.export(safe_id),
                         "application/zip",
-                        "kfm-held-review-" + m[1][:8] + ".zip",
+                        "kfm-held-review-" + safe_id[:8] + ".zip",
                     )
                 if m[2] == "preview":
                     return self.respond(
