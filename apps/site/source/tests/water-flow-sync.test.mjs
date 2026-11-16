@@ -35,6 +35,14 @@ export const effectiveSceneLight = (_map, preset) => ({ preset, azimuth: 0, alti
 globalThis.requestAnimationFrame ??= (callback) => setTimeout(() => callback(performance.now()), 0);
 globalThis.cancelAnimationFrame ??= (handle) => clearTimeout(handle);
 const settle = () => new Promise((resolve) => setTimeout(resolve, 5));
+// Cells load in limited batches, so how long a view takes to finish depends on the machine. Wait for
+// the condition itself, not a fixed pause, wherever the next assertion needs every cell to have finished.
+const until = async (done, label, limitMs = 5000) => {
+  for (const start = Date.now(); !done();) {
+    if (Date.now() - start > limitMs) assert.fail(`timed out waiting for ${label}`);
+    await settle();
+  }
+};
 
 const GAUGE_SOURCE = "external-usgs-streamflow";
 const GAUGE_LAYER = "external-usgs-streamflow-points";
@@ -257,7 +265,7 @@ test("a hidden gauge layer lends no emphasis, and provider failure is reported a
   flow.setWaterFlowFetcher(async () => { failures += 1; throw new Error("blocked"); });
   const broken = fakeMap({ center: [-99.6, 38.6] });
   flow.syncWaterFlow(broken, OPTIONS);
-  await settle();
+  await until(() => flow.waterFlowStatus(broken).state !== "loading", "every failed cell to be recorded");
   assert.equal(flow.waterFlowStatus(broken).state, "unavailable");
   assert.match(flow.waterFlowReading(flow.waterFlowStatus(broken)), /unavailable/);
   const attempts = failures;

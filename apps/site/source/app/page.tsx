@@ -1,6 +1,6 @@
 "use client";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
-import { isolateModalBackground, modalReturnTarget } from "./modal-background";
+import { focusReturnStillWanted, isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
 import { explorerHistoryParams, restoreArchiveViewDays, saveExplorerHistoryView } from "./explorer-layer-history";
@@ -38,7 +38,7 @@ import { LocalAtlasControl } from "./local-atlas-control";
 import { localAtlasHit } from "./local-atlas-map";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
-import { bridgeClusterSummary } from "./kdot-bridges";
+import { officialClusterSummary } from "./context-clusters";
 import { BlmPlssInspector } from "./blm-plss-inspector";
 import { isBlmPlssLayer } from "./blm-plss-records";
 import { HmsSmokePlayback } from "./hms-smoke-playback-control";
@@ -4394,7 +4394,12 @@ export default function Home() {
     setCurrentWorkspace("explore");
     const returnTarget = leftPanelReturnRef.current;
     leftPanelReturnRef.current = null;
-    window.setTimeout(() => modalReturnTarget(returnTarget, mapContainerRef.current)?.focus({ preventScroll: true }), 0);
+    const focusedAtClose = document.activeElement;
+    window.setTimeout(() => {
+      // A control the visitor moved to while this task was waiting keeps focus.
+      if (!focusReturnStillWanted(focusedAtClose, document.activeElement, leftPanelRef.current, document.body)) return;
+      modalReturnTarget(returnTarget, mapContainerRef.current)?.focus({ preventScroll: true });
+    }, 0);
   }, []);
 
   const toggleTimelinePanel = useCallback(() => {
@@ -5496,8 +5501,8 @@ export default function Home() {
           if (!candidate) {
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
-            // A numbered bridge circle previews what it counts instead of a single feature's name.
-            const clusterPreview = bridgeClusterSummary(externalCandidate?.properties);
+            // A numbered circle previews what it counts instead of a single feature's name.
+            const clusterPreview = officialClusterSummary(externalCandidate?.source ? OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate.source]?.id : undefined, externalCandidate?.properties);
             const externalTitle = clusterPreview?.title ?? String(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.event ?? externalCandidate?.properties?.monitoringLocationId ?? externalCandidate?.properties?.class ?? "Basemap feature");
             const officialSource = externalCandidate?.source ? OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate.source] : undefined;
             showHoverInDrawer({
@@ -5599,8 +5604,8 @@ export default function Home() {
               const isSiteLocal = sourceId.startsWith("kfm-") || sourceId.startsWith("scene-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
               return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
             });
-            // A numbered bridge circle is a count, not a record: zoom to where it splits and say what it holds.
-            const clusterSummary = bridgeClusterSummary(externalCandidate?.properties);
+            // A numbered circle is a count, not a record: zoom to where it splits and say what it holds.
+            const clusterSummary = officialClusterSummary(externalCandidate?.source ? OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate.source]?.id : undefined, externalCandidate?.properties);
             if (externalCandidate && clusterSummary) {
               const clusterSource = map.getSource(externalCandidate.source) as GeoJSONSource | undefined;
               const center = (externalCandidate.geometry as GeoJSON.Point).coordinates as [number, number];

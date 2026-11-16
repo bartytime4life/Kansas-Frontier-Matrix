@@ -13,7 +13,9 @@ test("every map guide is crawlable, plain-language and links only to public cont
   const context = await readFile("app/live-context.ts", "utf8");
   const reference = await readFile("app/kansas-reference-layers.ts", "utf8").catch(() => "");
   const slugs = new Set();
-  assert.ok(guides.LANDING_GUIDES.length >= 4);
+  assert.ok(guides.LANDING_GUIDES.length >= 5);
+  // The bridges guide opens the counted-circle bridge layers without the 19,000-point local list.
+  assert.deepEqual(guides.landingGuide("kansas-bridges").layers, ["kdot-bridges-state", "kdot-bridges-historic", "kdot-bridges-closed"]);
   for (const guide of guides.LANDING_GUIDES) {
     assert.match(guide.slug, /^[a-z0-9-]+$/);
     assert.ok(!slugs.has(guide.slug)); slugs.add(guide.slug);

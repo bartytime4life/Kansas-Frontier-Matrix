@@ -89,6 +89,25 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     ],
     caution: "The drought outlook is a forecast of change, not current drought conditions or a designation. Gauge readings and the aquifer extent are separate products on their own clocks, not irrigation or well advice.",
   },
+  {
+    slug: "kansas-bridges",
+    title: "Kansas bridges on one map",
+    description: "Map Kansas highway and local road bridges as counted circles that split into single bridges, with build year, length, traffic and recorded status.",
+    kicker: "ROADS · BRIDGES",
+    intro: [
+      "Kansas has close to 25,000 bridges longer than 20 feet. In November 2026 the Kansas Department of Transportation's inventory listed about 5,600 on state highways and about 19,300 on county and city roads.",
+      "This map counts nearby bridges in numbered circles that split apart as you zoom in, until each bridge sits at its recorded point. Colour shows the recorded build year, larger dots are longer bridges, a red ring means recorded closed and an amber ring means posted with a restriction.",
+      "Select a bridge for its record: what it carries and crosses, when it was built, its material and design, length, lanes and daily traffic.",
+    ],
+    layers: ["kdot-bridges-state", "kdot-bridges-historic", "kdot-bridges-closed"],
+    center: [-97.6, 38.6], zoom: 6.3,
+    ideas: [
+      "Find the longest state highway structure in the inventory, the Interstate 135 viaduct in Wichita at about 12,500 feet.",
+      "Zoom into a river town such as Topeka and compare the build years of its Kansas River crossings.",
+      "Turn on Bridges · local roads in Map layers to add the county and city bridges, including about 4,500 with a recorded build year before 1950.",
+    ],
+    caution: "Bridge records are the provider's inventory and may lag. A recorded status or rating is not a live closure notice, a safety determination or navigation advice, and a point is not the deck footprint.",
+  },
 ] satisfies LandingGuide[]);
 
 export const landingGuide = (slug: string) => LANDING_GUIDES.find(guide => guide.slug === slug);

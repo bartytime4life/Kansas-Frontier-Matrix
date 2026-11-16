@@ -149,6 +149,6 @@ test("the detail route accepts only a bridge id from the map and reads no visito
   const page = await readFile("app/page.tsx", "utf8");
   assert.match(page, /fetch\(`\/api\/bridge-detail\?id=\$\{encodeURIComponent\(selectedBridgeId\)\}`/);
   assert.match(page, /body\.id !== selectedBridgeId/, "a late answer for another bridge is ignored");
-  assert.match(page, /const clusterSummary = bridgeClusterSummary\(externalCandidate\?\.properties\);/);
+  assert.match(page, /const clusterSummary = officialClusterSummary\(externalCandidate\?\.source \? OFFICIAL_CONTEXT_BY_SOURCE_ID\[externalCandidate\.source\]\?\.id : undefined, externalCandidate\?\.properties\);/);
   assert.match(page, /getClusterExpansionZoom\(Number\(externalCandidate\.properties\?\.cluster_id\)\)/);
 });
