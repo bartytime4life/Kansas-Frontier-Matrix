@@ -13,6 +13,7 @@ from unittest.mock import patch
 from urllib.parse import quote
 
 from tests.local_data.test_intake_studio import fake_extract
+from tests.local_data.studio_auth import signed_in_headers
 from tools.local_data.intake_studio.intake_server import Handler, Server, Store
 
 
@@ -104,7 +105,7 @@ class HeaderTests(unittest.TestCase):
                     response = connection.getresponse()
                     return response.status, dict(response.getheaders()), response.read()
 
-                auth = {"X-KFM-Token": server.token}
+                auth = {**signed_in_headers(self, server.accounts), "Origin": server.origin}
                 name = 'photo.png"\r\nX-Injected: yes\r\nContent-Type: text/html'
                 with patch(
                     "tools.local_data.intake_studio.intake_server.subprocess.run",
@@ -169,7 +170,7 @@ class HeaderTests(unittest.TestCase):
                     "/%0d%0aX-Injected:yes",
                 ]:
                     status, headers, _ = request("GET", path, headers=auth)
-                    self.assertEqual(status, 404)
+                    self.assertEqual(status, 400)
                     self.assertNotIn("X-Injected", headers)
 
 

@@ -12,6 +12,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tests.local_data.test_intake_studio import fake_extract
+from tests.local_data.studio_auth import signed_in_headers
 from tools.local_data.intake_studio.intake_server import Store
 
 
@@ -46,17 +47,23 @@ class IntegrityTests(unittest.TestCase):
 
 class LauncherTests(unittest.TestCase):
     def test_source_fingerprint_tracks_workspace_qwen_and_desk_changes(self):
-        from tools.local_data.intake_studio import intake_server
+        from tools.local_data.intake_studio import intake_backend, intake_server
 
         with tempfile.TemporaryDirectory() as directory:
             local_data = Path(directory) / "local_data"
             shutil.copytree(intake_server.APP.parent, local_data,
                             ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
             expected = intake_server.source_fingerprint()
-            with patch.object(intake_server, "APP", local_data / "intake_studio"):
+            # The public facade re-exports this function; its globals belong to
+            # intake_backend. Patch the owner so edits really target the copy.
+            self.assertIs(intake_server.source_fingerprint, intake_backend.source_fingerprint)
+            with patch.object(intake_backend, "APP", local_data / "intake_studio"):
                 self.assertEqual(intake_server.source_fingerprint(), expected)
                 for relative in ("ai_acceptance.py", "text_sample.py", "grounded_review.py",
                                  "intake_studio/workspace.py", "intake_studio/handoff.py",
+                                 "intake_studio/intake_server.py", "intake_studio/studio_access.py",
+                                 "intake_studio/accounts.py", "intake_studio/recovery.py",
+                                 "intake_studio/launch_local.py",
                                  "intake_desk/ai-review.js"):
                     with self.subTest(relative=relative):
                         path = local_data / relative
@@ -71,6 +78,9 @@ class LauncherTests(unittest.TestCase):
         for session in [
             {"app": "kfm-local-intake-studio"},
             {"app": "kfm-local-intake-studio", "sourceFingerprint": "different"},
+            {"sourceFingerprint": "expected"},
+            {"sourceFingerprint": "expected", "authentication": "legacy-token"},
+            {"sourceFingerprint": "different", "authentication": "local-accounts-required"},
         ]:
             with self.subTest(session=session), tempfile.TemporaryDirectory() as root:
                 with (
@@ -81,7 +91,7 @@ class LauncherTests(unittest.TestCase):
                     ),
                     patch.object(launch_local.subprocess, "Popen") as spawn,
                 ):
-                    with self.assertRaisesRegex(SystemExit, "different or older"):
+                    with self.assertRaisesRegex(SystemExit, "different, older, or unauthenticated"):
                         launch_local.main()
                     spawn.assert_not_called()
                     self.assertFalse(
@@ -99,7 +109,7 @@ class LauncherTests(unittest.TestCase):
                 patch.object(
                     launch_local,
                     "running",
-                    return_value={"sourceFingerprint": "expected"},
+                    return_value={"sourceFingerprint": "expected", "authentication": "local-accounts-required"},
                 ),
                 patch.object(
                     launch_local, "source_fingerprint", return_value="expected"
@@ -126,12 +136,16 @@ class IntegrityHTTPTests(unittest.TestCase):
         )
 
         server = Server(0, self.store)
+        auth = {**signed_in_headers(self, server.accounts), "Origin": server.origin}
         worker = threading.Thread(target=server.serve_forever, daemon=True)
         worker.start()
         try:
-            with urllib.request.urlopen(server.origin + "/api/session") as response:
+            request = urllib.request.Request(server.origin + "/api/session", headers=auth)
+            with urllib.request.urlopen(request) as response:
                 session = json.load(response)
             self.assertEqual(session["sourceFingerprint"], source_fingerprint())
+            self.assertEqual(session["token"], auth["X-KFM-CSRF"])
+            self.assertNotEqual(session["token"], server.token)
             self.original.write_bytes(b"corrupt")
             for path, body in [
                 ("/api/files/" + self.record["id"] + "/original", None),
@@ -142,7 +156,7 @@ class IntegrityHTTPTests(unittest.TestCase):
                     request = urllib.request.Request(
                         server.origin + path,
                         data=body,
-                        headers={"X-KFM-Token": server.token},
+                        headers=auth,
                     )
                     with self.assertRaises(urllib.error.HTTPError) as caught:
                         urllib.request.urlopen(request)

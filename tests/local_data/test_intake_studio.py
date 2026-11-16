@@ -12,6 +12,7 @@ from tools.local_data.intake_studio.intake_server import (
     signature,
     clean_name,
 )
+from tests.local_data.studio_auth import signed_in_headers
 
 RUNTIME = Path(
     os.environ.get(
@@ -213,6 +214,7 @@ class Tests(unittest.TestCase):
     )
     def test_http_boundaries(self):
         server = Server(0, self.store)
+        auth = signed_in_headers(self, server.accounts)
         server.origin = f"http://127.0.0.1:{server.server_port}"
         threading.Thread(target=server.serve_forever, daemon=True).start()
 
@@ -225,21 +227,26 @@ class Tests(unittest.TestCase):
             with patch.object(
                 self.store, "capabilities", return_value={"note": "synthetic test"}
             ):
-                with request("/api/session") as r:
+                with request("/api/session", auth) as r:
                     session = json.load(r)
-            for path, headers in [
-                ("/api/files", {}),
-                ("/api/session", {"Origin": "https://example.org"}),
-                ("/api/session", {"Host": "evil.test"}),
+            self.assertEqual(session["token"], auth["X-KFM-CSRF"])
+            self.assertNotEqual(session["token"], server.token)
+            for path, headers, status in [
+                ("/api/files", {}, 401),
+                ("/api/files", {"X-KFM-Token": server.token}, 401),
+                ("/api/files", {**auth, "X-KFM-CSRF": "wrong"}, 403),
+                ("/api/session", {**auth, "Origin": "https://example.org"}, 403),
+                ("/api/session", {**auth, "Host": "evil.test"}, 403),
             ]:
                 with self.assertRaises(urllib.error.HTTPError) as e:
                     request(path, headers)
-                self.assertEqual(e.exception.code, 403)
+                self.assertEqual(e.exception.code, status)
                 e.exception.close()
-            with request("/api/files", {"X-KFM-Token": session["token"]}) as r:
+            with request("/api/files", auth) as r:
                 self.assertTrue(json.load(r)["files"])
             with self.assertRaises(urllib.error.HTTPError) as error:
-                request("/acceptance/../../intake_server.py")
+                request("/acceptance/../../intake_server.py", auth)
+            self.assertEqual(error.exception.code, 400)
             error.exception.close()
         finally:
             server.shutdown()

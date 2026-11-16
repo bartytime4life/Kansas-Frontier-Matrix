@@ -6,7 +6,7 @@ version: v1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
-updated: 2026-11-15
+updated: 2026-11-16
 policy_label: public
 owning_root: tools/
 responsibility: Describe local photo and PDF preparation implementation.
@@ -54,3 +54,20 @@ for setup, threat boundary, backup requirements, remaining validation and safe
 rollback. `intake_backend.py` is the preserved internal implementation, not a
 supported anonymous server entrypoint. Do not launch it directly. The existing
 hosted Sites and installed machines are not changed by this source candidate.
+
+## Regression checks
+
+The Studio, handoff and Workspace tests use temporary local accounts and real
+cookie/CSRF validation. Fixtures lower only the password KDF cost; the supported
+server, account gateway and production KDF configuration stay unchanged. The
+strict no-network target exercises in-memory requests; separately run the
+loopback cases in `test_intake_studio.py`, `test_intake_studio_integrity.py` and
+`test_intake_studio_security.py` to cover the actual protected server, original
+integrity and HTTP serialization. These synthetic checks do not qualify native
+extraction, an installed service, a browser journey or private production data.
+
+Fingerprint tests patch the owning `intake_backend` module while calling through
+the supported `intake_server` facade, so changes to copied authentication,
+recovery, workspace and Qwen files must alter the observed identity. Matching
+launcher health must also declare `local-accounts-required`; an older or
+unauthenticated process is preserved and refused.
