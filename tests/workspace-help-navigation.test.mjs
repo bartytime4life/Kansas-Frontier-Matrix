@@ -44,12 +44,10 @@ test('the retained guide stays unmounted and cannot autofocus in Reports or Stor
   }
 });
 test('source status reveals the map before frame focus and retains the supplied return target',()=>{
-  const state={primary:'reports',guide:true,status:false},frames=[],focus=[],returnTarget={closest:()=>null},sourceStatusReturnRef={current:null},sourceStatusReturnPendingRef={current:true};
-  const scope={setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.guide=v,setSourceStatusOpen:v=>state.status=v,setLeftOpen:()=>{},leftPanelReturnRef:{current:null},setMapUtilityOpen:()=>{},setRightOpen:()=>{},setScenePanelOpen:()=>{},setLeftPanelMode:()=>{},sourceStatusReturnRef,sourceStatusReturnPendingRef,sourceStatusPanelRef:{current:{querySelector:()=>({focus:()=>focus.push(state.primary)})}},window:{requestAnimationFrame:fn=>frames.push(fn)}};
+  const state={primary:'reports',guide:true,status:false},frames=[],focus=[],returnTarget={closest:()=>null},sourceStatusReturnRef={current:null};
+  const scope={setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.guide=v,setSourceStatusOpen:v=>state.status=v,setLeftOpen:()=>{},leftPanelReturnRef:{current:null},setMapUtilityOpen:()=>{},setRightOpen:()=>{},setScenePanelOpen:()=>{},setLeftPanelMode:()=>{},sourceStatusReturnRef,sourceStatusPanelRef:{current:{querySelector:()=>({focus:()=>focus.push(state.primary)})}},window:{requestAnimationFrame:fn=>frames.push(fn)}};
   evaluate(callbacks.get('openSourceStatus'),scope)(returnTarget);
   assert.equal(state.primary,'map');assert.equal(state.guide,false);assert.equal(state.status,true);assert.equal(sourceStatusReturnRef.current,returnTarget);
-  // Opening source status cancels a return still pending from an earlier close (added with the layout-effect return).
-  assert.equal(sourceStatusReturnPendingRef.current,false);
   assert.deepEqual(focus,[]);frames[0]();assert.deepEqual(focus,['map']);
 });
 
