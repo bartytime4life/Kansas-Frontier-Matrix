@@ -11,7 +11,7 @@ import { EarthEngineComparisonPanel } from "./earth-engine-comparison-panel";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
 import { countySearchGeometry, countySearchResults, globalSearchStatus } from "./county-search";
 import { atlasDiscoveryResults, type GlobalSearchItem } from "./atlas-discovery";
-import { isolateModalBackground, modalReturnTarget } from "./modal-background";
+import { focusReturnStillWanted, isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { compactPanelOwner, revealPanelControl, type CompactPanel } from "./compact-panels";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
@@ -5757,9 +5757,12 @@ export default function Home() {
     setCurrentWorkspace("explore");
     const returnTarget = leftPanelReturnRef.current;
     leftPanelReturnRef.current = null;
+    const focusedAtClose = document.activeElement;
     window.setTimeout(() => {
       // A newer Layers/welcome opening owns focus by the time this runs.
       if (leftPanelRef.current?.getAttribute("aria-hidden") !== "true" || document.querySelector(".living-welcome")) return;
+      // So does a control the visitor moved to while this task was waiting (about 100 ms on a busy page).
+      if (!focusReturnStillWanted(focusedAtClose, document.activeElement, leftPanelRef.current, document.body)) return;
       modalReturnTarget(returnTarget, mapContainerRef.current)?.focus({ preventScroll: true });
     }, 0);
   }, []);
