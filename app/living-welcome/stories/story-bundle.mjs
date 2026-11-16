@@ -1,5 +1,7 @@
 // Bounded UI input validation, not source admission or release approval.
 export const STORY_BUNDLE_BYTES = 3_000_000;
+export const storyBundleByteLimit = id => id === 'built-kansas' ? 16_000_000 : STORY_BUNDLE_BYTES;
+export const storyRecordLimit = id => id === 'built-kansas' ? 40000 : 10000;
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const text = value => typeof value === 'string' && value.length <= 4000;
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -30,7 +32,7 @@ export function validStoryBundle(bundle, id) {
   const d = bundle.data;
   if (!list(d.limits, 50) || !d.limits.every(text)) return false;
   if (d.kind === 'records' && !['climate-stripes', 'iron-horse'].includes(id)) {
-    if (!list(d.columns, 60) || !Array.isArray(d.records) || d.records.length > 10000 || !text(d.coverage)) return false;
+    if (!list(d.columns, 60) || !Array.isArray(d.records) || d.records.length > storyRecordLimit(id) || !text(d.coverage)) return false;
     const keys = new Set();
     for (const column of d.columns) {
       if (!object(column) || !/^[a-zA-Z][a-zA-Z0-9_]*$/.test(column.key) || keys.has(column.key) ||
@@ -77,11 +79,11 @@ export function validStoryBundle(bundle, id) {
 }
 
 /** Stop oversized transfers before JSON parsing, including chunked responses. */
-export async function boundedStoryText(response) {
-  if (Number(response.headers?.get('content-length')) > STORY_BUNDLE_BYTES) throw new Error('Story snapshot exceeds the preview limit');
+export async function boundedStoryText(response, maxBytes = STORY_BUNDLE_BYTES) {
+  if (Number(response.headers?.get('content-length')) > maxBytes) throw new Error('Story snapshot exceeds the preview limit');
   if (!response.body?.getReader) {
     const value = await response.text();
-    if (new TextEncoder().encode(value).byteLength > STORY_BUNDLE_BYTES) throw new Error('Story snapshot exceeds the preview limit');
+    if (new TextEncoder().encode(value).byteLength > maxBytes) throw new Error('Story snapshot exceeds the preview limit');
     return value;
   }
   const reader = response.body.getReader(), chunks = [];
@@ -91,7 +93,7 @@ export async function boundedStoryText(response) {
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > STORY_BUNDLE_BYTES) { await reader.cancel(); throw new Error('Story snapshot exceeds the preview limit'); }
+      if (size > maxBytes) { await reader.cancel(); throw new Error('Story snapshot exceeds the preview limit'); }
       chunks.push(value);
     }
   } finally { reader.releaseLock(); }

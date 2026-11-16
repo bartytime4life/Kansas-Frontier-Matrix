@@ -1,16 +1,21 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { KANSAS_BOUNDS, KANSAS_OUTLINE_CREDIT, cividis, fmt, kansasPath, kansasProjection, useStoryCanvas } from './story-kit.mjs';
-import { compareGroups, comparisonMode, comparisonModes, describe, distribution, filterRecords, metricOf, monthlySeries, numeric, recordGeometry, recordModel, recordOutsideBounds, recordRange, recordsCSV, timeText, yearCounts } from './record-model.mjs';
+import { KANSAS_BOUNDS, KANSAS_OUTLINE_CREDIT, cividis, downloadCSV, fmt, kansasPath, kansasProjection, useStoryCanvas } from './story-kit.mjs';
+import { compareGroups, comparisonMode, comparisonModes, describe, distribution, filterRecords, metricOf, monthlySeries, numeric, recordGeometry, recordModel, recordOutsideBounds, recordRange, recordsCSV, safeCell, timeText, yearCounts } from './record-model.mjs';
+import { groupSummaries, rankRecords, relationship, sampledPairs, scienceMetrics, scientificSummary, yearlySeries } from './science-model.mjs';
 import './record-lab.css';
 
 export const range = recordRange;
-export const toCSV = recordsCSV;
+export function toCSV(bundle, options = {}) {
+  return recordsCSV(bundle, { ...options, controls: { ...(bundle.data.defaultCategory ? { category: bundle.data.defaultCategory } : {}), ...options.controls } });
+}
 const number = value => fmt(value, { digits: value !== null && !Number.isInteger(value) && Math.abs(value) < 10 ? 2 : 0 });
 const nameOf = record => String(record?.name || record?.label || record?.id || 'Unnamed record');
 const display = value => value === null || value === undefined || value === '' ? 'Not recorded' : typeof value === 'number' ? number(value) : typeof value === 'object' ? JSON.stringify(value) : String(value);
 const columnLabel = (model, column) => column.key === model.yearField && model.data.timeUnit === 'Ma' ? 'Age midpoint before present' : column.label;
 const INK = '#071c29', GOLD = '#ebca87', WATER = '#78cbd2';
+const statistic = value => value === null ? 'Not defined' : fmt(value, { digits: 3 });
+const scienceNumber = value => value === null ? 'Not recorded' : fmt(value, { digits: Number.isInteger(value) ? 0 : 2 });
 
 // Keep SVG units equal to rendered CSS pixels so axes remain legible on phones.
 // Thumbnail graphics retain their original composition and do not need an observer.
@@ -152,20 +157,74 @@ function DistributionView({ records, metric, selected, compact = false }) {
 function SeriesView({ model, records, metric, compact = false }) {
   const [chartRef, width] = useChartWidth(compact), height = compact ? 340 : 310;
   const left = compact ? 65 : 64, right = width - 20, top = compact ? 35 : 20, bottom = height - 42, plotHeight = bottom - top;
-  const rows = monthlySeries(records, model.data.dateField, metric?.key, model.categoryField), measured = rows.filter(row => row.mean !== null);
+  const annual = model.data.seriesPeriod === 'year';
+  const rows = annual ? yearlySeries(records, model.yearField, metric?.key, model.categoryField) : monthlySeries(records, model.data.dateField, metric?.key, model.categoryField), measured = rows.filter(row => row.mean !== null);
   const categories = [...new Set(rows.map(row => row.category))], colors = [WATER, GOLD, '#db9e8b', '#b7c5eb', '#b2d6a6'];
   const minX = Math.min(...rows.map(row => row.timestamp)), maxX = Math.max(...rows.map(row => row.timestamp));
   const minY = Math.min(0, ...measured.map(row => row.mean)), maxY = Math.max(1, ...measured.map(row => row.mean));
   const x = time => left + (time - minX) / Math.max(1, maxX - minX) * (right - left), y = value => bottom - (value - minY) / (maxY - minY) * plotHeight;
-  const paths = categories.map(category => { let last = null; return rows.filter(row => row.category === category).map(row => { const previous = last; last = row; if (row.mean === null) return ''; const continuous = previous?.mean !== null && previous && row.timestamp - previous.timestamp < 32 * 86400000; return `${continuous ? 'L' : 'M'}${x(row.timestamp).toFixed(2)},${y(row.mean).toFixed(2)}`; }).join(' '); });
+  const paths = categories.map(category => { let last = null; return rows.filter(row => row.category === category).map(row => { const previous = last; last = row; if (row.mean === null) return ''; const continuous = previous?.mean !== null && previous && row.timestamp - previous.timestamp <= (annual ? 1 : 32 * 86400000); return `${continuous ? 'L' : 'M'}${x(row.timestamp).toFixed(2)},${y(row.mean).toFixed(2)}`; }).join(' '); });
   return <figure className={`record-series${compact ? ' record-distribution-compact' : ''}`}>
-    {!compact && <div className="record-chart-title"><strong>{metric?.label}{metric?.unit ? ` (${metric.unit})` : ''}</strong><span>MONTHLY MEAN</span></div>}
-    <svg ref={chartRef} viewBox={`0 0 ${width} ${height}`} height={compact ? undefined : height} role={compact ? undefined : 'img'} aria-hidden={compact || undefined} aria-label={compact ? undefined : `${metric?.label}: monthly arithmetic means of selected reported values, ${categories.length} source groups. Gaps are not filled. The record table provides the exact observations.`}>
+    {!compact && <div className="record-chart-title"><strong>{metric?.label}{metric?.unit ? ` (${metric.unit})` : ''}</strong><span>{annual ? 'ANNUAL SOURCE VALUES' : 'MONTHLY MEAN'}</span></div>}
+    <svg ref={chartRef} viewBox={`0 0 ${width} ${height}`} height={compact ? undefined : height} role={compact ? undefined : 'img'} aria-hidden={compact || undefined} aria-label={compact ? undefined : `${metric?.label}: ${annual ? 'annual' : 'monthly'} arithmetic means of selected reported values, ${categories.length} source groups. Gaps are not filled. The record table provides the exact observations.`}>
     <rect width={width} height={height} fill={INK}/>{(width < 450 ? [0, .5, 1] : [0, .25, .5, .75, 1]).map(tick => <g key={tick}><line x1={left} x2={right} y1={bottom - tick * plotHeight} y2={bottom - tick * plotHeight} stroke="#b7d0dc22"/>{!compact && <text x={left - 9} y={bottom + 4 - tick * plotHeight} textAnchor="end" fill="#adc5cf" fontSize="12">{number(minY + tick * (maxY - minY))}</text>}</g>)}
     {paths.map((path, index) => <path key={categories[index]} d={path} fill="none" stroke={colors[index % colors.length]} strokeWidth={compact ? 2.5 : 2} strokeDasharray={index >= colors.length ? '5 3' : undefined}/>)}
     {!compact && <><text x={left} y={height - 16} fill="#adc5cf" fontSize="12">{rows[0]?.date}</text><text x={right} y={height - 16} textAnchor="end" fill="#adc5cf" fontSize="12">{rows.at(-1)?.date}</text></>}
     {!measured.length && !compact && <text x={width / 2} y={height / 2} textAnchor="middle" fill="#adc5cf" fontSize="14">No dated measurements<tspan x={width / 2} dy="22">match this selection</tspan></text>}
-  </svg>{!compact && <figcaption><ul>{categories.map((category, index) => <li key={category}><i style={{ borderColor: colors[index % colors.length], borderStyle: index >= colors.length ? 'dashed' : 'solid' }}/>{category}</li>)}</ul><p>Each line joins monthly arithmetic means of reported records within one source group. Missing months break the line. Counts and daily records remain in the table; incomplete periods are not normalized.</p></figcaption>}</figure>;
+  </svg>{!compact && <figcaption><ul>{categories.map((category, index) => <li key={category}><i style={{ borderColor: colors[index % colors.length], borderStyle: index >= colors.length ? 'dashed' : 'solid' }}/>{category}</li>)}</ul><p>{annual ? 'Each line joins annual source values within one series; duplicate series-year records, if present, are averaged. Missing years break the line. Series may overlap or represent different accounting concepts; do not add them together.' : 'Each line joins monthly arithmetic means of reported records within one source group. Missing months break the line. Counts and daily records remain in the table; incomplete periods are not normalized.'}</p></figcaption>}</figure>;
+}
+
+function RelationshipsView({ model, records, controls, change, selected, onSelect }) {
+  const { metrics, xMetric, yMetric, analysis, marks } = useMemo(() => {
+    const metrics = scienceMetrics(model), xMetric = metrics.find(column => column.key === controls.xMetric) || metrics[0];
+    const yMetric = metrics.find(column => column.key === controls.yMetric && column.key !== xMetric?.key) || metrics.find(column => column.key !== xMetric?.key);
+    const analysis = relationship(records, xMetric?.key, yMetric?.key);
+    return { metrics, xMetric, yMetric, analysis, marks: sampledPairs(analysis.pairs) };
+  }, [model, records, controls.xMetric, controls.yMetric]);
+  const [chartRef, width] = useChartWidth(false), height = width < 450 ? 330 : 390;
+  if (metrics.length < 2) return <section className="record-science-empty"><span className="record-eyebrow">A RELATIONSHIP NEEDS TWO MEASURES</span><h3>One measurement. Many questions.</h3><p>This source snapshot has {metrics.length} comparable numeric measure{metrics.length === 1 ? '' : 's'}. Use Trend, Distribution and the summaries below to investigate its variation. A second axis cannot be inferred from this record.</p></section>;
+  const left = width < 450 ? 60 : 76, right = width - 24, top = 20, bottom = height - 56;
+  const pad = (min, max) => min === max ? [min - 1, max + 1] : [min, max];
+  const [minX, maxX] = pad(analysis.minX ?? 0, analysis.maxX ?? 1), [minY, maxY] = pad(analysis.minY ?? 0, analysis.maxY ?? 1);
+  const x = value => left + (value - minX) / (maxX - minX) * (right - left), y = value => bottom - (value - minY) / (maxY - minY) * (bottom - top);
+  const label = column => `${column.label}${column.unit ? ` (${column.unit})` : ''}`;
+  const fitLine = analysis.slope === null ? null : [[minX, analysis.intercept + analysis.slope * minX], [maxX, analysis.intercept + analysis.slope * maxX]];
+  return <section className="record-relationships" aria-label="Relationships between measurements">
+    <div className="record-relationship-controls"><label>X axis<select value={xMetric.key} onChange={event => change({ xMetric: event.target.value })}>{metrics.map(column => <option key={column.key} value={column.key}>{label(column)}</option>)}</select></label><label>Y axis<select value={yMetric.key} onChange={event => change({ yMetric: event.target.value })}>{metrics.filter(column => column.key !== xMetric.key).map(column => <option key={column.key} value={column.key}>{label(column)}</option>)}</select></label><label className="record-check"><input type="checkbox" checked={Boolean(controls.showFit)} onChange={event => change({ showFit: event.target.checked })}/>Show descriptive fit</label></div>
+    <figure><svg ref={chartRef} viewBox={`0 0 ${width} ${height}`} height={height} role="img" aria-label={`${label(xMetric)} against ${label(yMetric)}. ${analysis.count} complete pairs, ${analysis.excluded} excluded. Pearson r ${statistic(analysis.pearson)}. Individual records are available in the table below.`}>
+      <defs><clipPath id="record-scatter-clip"><rect x={left} y={top} width={right - left} height={bottom - top}/></clipPath></defs><rect width={width} height={height} fill={INK}/>
+      {[0, .25, .5, .75, 1].map(tick => <g key={tick}><line x1={left} x2={right} y1={bottom - tick * (bottom - top)} y2={bottom - tick * (bottom - top)} stroke="#b7d0dc22"/><text x={left - 8} y={bottom - tick * (bottom - top) + 4} textAnchor="end" fill="#b9d0d9" fontSize="11">{number(minY + tick * (maxY - minY))}</text>{(width >= 450 || tick !== .25 && tick !== .75) && <text x={left + tick * (right - left)} y={bottom + 21} textAnchor="middle" fill="#b9d0d9" fontSize="11">{number(minX + tick * (maxX - minX))}</text>}</g>)}
+      <g clipPath="url(#record-scatter-clip)">{marks.map((pair, index) => <circle key={pair.record.id ?? index} cx={x(pair.x)} cy={y(pair.y)} r={pair.record.id === selected?.id ? 6 : 3.5} fill={pair.record.id === selected?.id ? GOLD : WATER} opacity={pair.record.id === selected?.id ? 1 : .55} onClick={() => onSelect(pair.record.id)}><title>{nameOf(pair.record)}: {label(xMetric)} {number(pair.x)}; {label(yMetric)} {number(pair.y)}</title></circle>)}{controls.showFit && fitLine && <line x1={x(fitLine[0][0])} x2={x(fitLine[1][0])} y1={y(fitLine[0][1])} y2={y(fitLine[1][1])} stroke={GOLD} strokeWidth="2" strokeDasharray="7 4" pointerEvents="none"/>}{selected && numeric(selected[xMetric.key]) !== null && numeric(selected[yMetric.key]) !== null && <circle cx={x(selected[xMetric.key])} cy={y(selected[yMetric.key])} r="7" fill={GOLD} stroke={INK} strokeWidth="2"/>}</g>
+      <text x={(left + right) / 2} y={height - 8} textAnchor="middle" fill="#ebca87" fontSize="12">{xMetric.label}{xMetric.unit ? ` · ${xMetric.unit}` : ''}</text><text transform={`translate(14 ${(top + bottom) / 2}) rotate(-90)`} textAnchor="middle" fill="#ebca87" fontSize="12">{yMetric.label}{yMetric.unit ? ` · ${yMetric.unit}` : ''}</text>
+      {!analysis.count && <text x={(left + right) / 2} y={height / 2} textAnchor="middle" fill="#c1d3dc" fontSize="13">No complete measurement pairs</text>}
+    </svg><figcaption>{marks.length.toLocaleString()} marks drawn{marks.length < analysis.count ? ` from ${analysis.count.toLocaleString()} complete pairs using a deterministic evenly spaced sample` : ''}. Statistics use every complete pair in the selection. Select a mark or inspect a row in the record table.</figcaption></figure>
+    <dl className="record-relationship-stats">{[['Paired observations', analysis.count.toLocaleString()], ['Excluded / missing', analysis.excluded.toLocaleString()], ['Pearson r', statistic(analysis.pearson)], ['Spearman ρ', statistic(analysis.spearman)], ['OLS R²', statistic(analysis.rSquared)]].map(([labelText, value]) => <div key={labelText}><dt>{labelText}</dt><dd>{value}</dd></div>)}</dl>
+    <p className="record-method-note">{analysis.reason ? `${analysis.reason} ` : ''}Pearson describes linear association; Spearman uses average ranks for ties. The optional ordinary least squares line fits Y against X. These observational records can repeat places and times; coefficients do not establish cause, independence or statistical significance.</p>
+  </section>;
+}
+
+function SciencePanel({ bundle, snapshotSha256, model, records, time, controls, change, metric, selectedId, onSelect }) {
+  const summary = useMemo(() => scientificSummary(records, metric?.key), [records, metric?.key]);
+  const ranking = useMemo(() => rankRecords(records, metric?.key, controls.rankDirection), [records, metric?.key, controls.rankDirection]);
+  const groupColumns = model.columns.filter(column => column.type === 'string' && !/(?:url|date|id$|code$|time$)/i.test(column.key));
+  const groupField = groupColumns.find(column => column.key === controls.summaryGroup)?.key || groupColumns.find(column => column.key === model.categoryField)?.key || groupColumns[0]?.key;
+  const groups = groupSummaries(records, metric?.key, groupField);
+  const [requestedPage, setGroupPage] = useState(0), pageSize = 100, pages = Math.max(1, Math.ceil(groups.length / pageSize)), page = Math.min(requestedPage, pages - 1);
+  const shownGroups = groups.slice(page * pageSize, (page + 1) * pageSize);
+  const snapshots = model.data.sourceSnapshots || (model.data.sourceSnapshot ? [model.data.sourceSnapshot] : []);
+  const exportHash = snapshotSha256 || snapshots.map(snapshot => snapshot.rawSha256 || '').join(' | ');
+  const exportTimestamp = snapshotSha256 ? bundle.built_at : snapshots.map(snapshot => snapshot.retrievedAt || '').join(' | ');
+  const exportSummary = () => downloadCSV(`kfm-${bundle.story}-group-summary.csv`, [
+    ['group', 'group_field', 'metric', 'unit', 'records', 'measured', 'missing', 'mean', 'median', 'q1', 'q3', 'sample_standard_deviation', 'source_urls', 'source_sha256', 'snapshot_retrieved_at', 'selection_time', 'selection_controls'],
+    ...groups.map(group => [safeCell(group.label), groupField || '', metric?.key || '', metric?.unit || '', group.total, group.count, group.missing, group.mean ?? '', group.median ?? '', group.q1 ?? '', group.q3 ?? '', group.standardDeviation ?? '', bundle.sources.map(source => source.url).join(' | '), exportHash, exportTimestamp || '', time ?? '', JSON.stringify(controls)]),
+  ]);
+  return <section className="record-science" aria-label="Scientific summaries">
+    <div className="record-section-title"><div><span className="record-eyebrow">DESCRIBE / COMPARE / INVESTIGATE</span><h3>Put the pattern to the test.</h3></div><span>{metric?.label}{metric?.unit ? ` · ${metric.unit}` : ''}</span></div>
+    <dl className="record-science-stats">{[['Lower quartile', summary.q1], ['Median', summary.median], ['Upper quartile', summary.q3], ['Sample standard deviation', summary.standardDeviation]].map(([labelText, value]) => <div key={labelText}><dt>{labelText}</dt><dd>{scienceNumber(value)}</dd></div>)}</dl>
+    <p className="record-method-note">{summary.count.toLocaleString()} measured records; {summary.missing.toLocaleString()} missing. Quartiles use linear interpolation at (n − 1)p (type 7). Standard deviation uses n − 1 and needs at least two measurements. No values are filled in; these are unweighted record summaries.</p>
+    <div className="record-science-columns"><section className="record-ranking" aria-label="Ranked source observations"><div className="record-section-title"><h4>Follow the extremes</h4><label className="record-sr-label">Rank order<select value={controls.rankDirection || 'desc'} onChange={event => change({ rankDirection: event.target.value })}><option value="desc">Highest first</option><option value="asc">Lowest first</option></select></label></div><ol>{ranking.map((record, index) => <li key={record.id}><button type="button" aria-pressed={record.id === selectedId} onClick={() => onSelect(record.id)}><span className="record-rank-number">{String(index + 1).padStart(2, '0')}</span><span>{nameOf(record)}<small>{model.yearField && numeric(record[model.yearField]) !== null ? timeText(model, record[model.yearField]) : 'Date not recorded'}</small></span><strong>{number(record[metric?.key])}</strong><span aria-hidden="true">↗</span></button></li>)}</ol>{!ranking.length && <p className="record-empty">No measured records in this selection.</p>}<p className="record-method-note">Up to 12 individual observations. Ties retain source order. These ranks describe recorded values, not safety or overall performance.</p></section>
+      <section className="record-group-summary" aria-label="Summaries by source group"><div className="record-section-title"><h4>Compare source groups</h4>{groupColumns.length > 0 && <label>Group by<select aria-label="Summary group" value={groupField} onChange={event => { setGroupPage(0); change({ summaryGroup: event.target.value }); }}>{groupColumns.map(column => <option key={column.key} value={column.key}>{column.label}</option>)}</select></label>}</div><div className="record-table-scroll" tabIndex={0} aria-label="Scrollable group summary table"><table><caption className="sr-only">Unweighted group summaries of the current selection for {metric?.label}. Missing values are excluded from statistics, retained in record counts.</caption><thead><tr>{['Group', 'Records', 'Measured', 'Missing', 'Mean', 'Median', 'Sample SD'].map(labelText => <th scope="col" key={labelText}>{labelText}</th>)}</tr></thead><tbody>{shownGroups.map(group => <tr key={group.label}><th scope="row">{group.label}</th>{[group.total, group.count, group.missing, group.mean, group.median, group.standardDeviation].map((value, index) => <td key={index} className="record-numeric">{scienceNumber(value)}</td>)}</tr>)}</tbody></table></div><div className="record-summary-actions"><span>{groups.length.toLocaleString()} groups · {records.length.toLocaleString()} selected rows</span><button type="button" onClick={exportSummary} disabled={!groups.length}>Download summary CSV ↓</button></div><div className="record-pagination"><span>Group page {page + 1} of {pages} · up to 100 groups per page · CSV includes every group</span><div><button type="button" disabled={page === 0} onClick={() => setGroupPage(page - 1)}>← Previous groups</button><button type="button" disabled={page >= pages - 1} onClick={() => setGroupPage(page + 1)}>Next groups →</button></div></div><p className="record-method-note">Different sampling coverage, source categories and repeated observations may make group means incomparable. Source rows and qualifiers remain in the record table.</p></section></div>
+  </section>;
 }
 
 function Timeline({ model, records, time, onTime }) {
@@ -226,15 +285,17 @@ function Provenance({ bundle, model, records }) {
   </div></details>;
 }
 
-function RecordInstrument({ bundle, time, onTime, controls = {}, onControls }) {
+function RecordInstrument({ bundle, snapshotSha256, time, onTime, controls: inputControls = {}, onControls }) {
   const model = recordModel(bundle), scene = useMemo(() => mapModel(model), [model]);
+  const controls = useMemo(() => ({ ...(model.data.defaultCategory ? { category: model.data.defaultCategory } : {}), ...inputControls }), [model.data.defaultCategory, inputControls]);
+  const inspector = useRef(null);
   const change = patch => onControls?.({ ...controls, ...patch });
   const selectedId = controls.selectedId ?? null;
   const setSelected = selectedId => change({ selectedId });
   const records = useMemo(() => filterRecords(model, { controls, time }), [model, controls, time]);
   const timelineRecords = useMemo(() => filterRecords({ ...model, data: { ...model.data, temporalMode: 'events' } }, { controls }), [model, controls]);
   const metric = metricOf(model, controls), summary = describe(records, metric?.key), selected = records.find(row => row.id === selectedId) || null;
-  const hasSeries = Boolean(model.data.dateField && model.data.temporalMode === 'events');
+  const hasSeries = Boolean((model.data.dateField || model.data.seriesPeriod === 'year') && model.data.temporalMode === 'events');
   const view = controls.view || (model.data.preferredView === 'chart' && hasSeries ? 'trend' : scene.mapped.length ? 'map' : 'chart'), yearRange = recordRange(bundle);
   const isMa = model.data.timeUnit === 'Ma';
   const activeFilters = Boolean(controls.query || controls.category || controls.from || controls.to || controls.minValue || controls.maxValue);
@@ -247,19 +308,20 @@ function RecordInstrument({ bundle, time, onTime, controls = {}, onControls }) {
         {model.categories.length > 0 && <label>{model.columns.find(column => column.key === model.categoryField)?.label || 'Category'}<select value={controls.category || ''} onChange={event => change({ category: event.target.value })}><option value="">All categories</option>{model.categories.map(category => <option key={category}>{category}</option>)}</select></label>}
         {model.first !== null && !['snapshot', 'interval'].includes(model.data.temporalMode) && <fieldset><legend>{isMa ? 'Approximate age midpoint (Ma)' : 'Observation period'}</legend><div className="record-pair">{['from', 'to'].map((key, index) => <label key={key}>{isMa ? index ? 'Younger bound' : 'Older bound' : index ? 'To year' : 'From year'}<input type="number" step={model.data.timeStep || 1} placeholder={String(isMa ? Math.abs(index ? model.last : model.first) : index ? model.last : model.first)} value={controls[key] === '' || controls[key] === undefined ? '' : isMa ? Math.abs(controls[key]) : controls[key]} onChange={event => change({ [key]: event.target.value === '' ? '' : isMa ? -Math.abs(Number(event.target.value)) : event.target.value })}/></label>)}</div></fieldset>}
         {metric && <fieldset><legend>{metric.label}{metric.unit ? ` (${metric.unit})` : ''}</legend><div className="record-pair"><label>Minimum<input type="number" step="any" placeholder="Any" value={controls.minValue ?? ''} onChange={event => change({ minValue: event.target.value })}/></label><label>Maximum<input type="number" step="any" placeholder="Any" value={controls.maxValue ?? ''} onChange={event => change({ maxValue: event.target.value })}/></label></div></fieldset>}
-        {activeFilters && <button type="button" className="record-clear" onClick={() => { onControls?.({}); onTime?.(yearRange?.max ?? null); }}>Clear selection filters ↺</button>}
+        {activeFilters && <button type="button" className="record-clear" onClick={() => { onControls?.({ category: '' }); onTime?.(yearRange?.max ?? null); }}>Clear selection filters ↺</button>}
         <div className="record-selection-count" role="status" aria-live="polite"><strong>{records.length.toLocaleString()}</strong><span>of {model.records.length.toLocaleString()} source records selected</span></div>
         <p className="record-control-note">The map, statistics, table and CSV follow this selection. {model.data.temporalMode === 'snapshot' ? 'The timeline selects one observation year, so repeated county estimates are never combined.' : model.data.temporalMode === 'interval' ? 'The timeline shows boundaries in force on December 31 of the selected year. Earlier versions are excluded.' : isMa ? 'The timeline advances from older to younger approximate age midpoints. Collection counts are not fossil abundance.' : 'Playback adds an upper-year boundary.'}</p>
         <details className="record-coverage"><summary>Read coverage</summary><p>{model.data.coverage}</p></details>
       </aside>
       <main className="record-stage" aria-label="Linked data visualizations">
-        <div className="record-stage-heading"><span><b>02</b> READ THE PATTERN</span><div className="record-view-switch" role="group" aria-label="Visualization"><button type="button" disabled={!scene.mapped.length} aria-pressed={view === 'map'} onClick={() => change({ view: 'map' })}>Geography</button>{hasSeries && <button type="button" aria-pressed={view === 'trend'} onClick={() => change({ view: 'trend' })}>Trend</button>}<button type="button" aria-pressed={view === 'chart'} onClick={() => change({ view: 'chart' })}>Distribution</button></div></div>
-        {view === 'map' && scene.mapped.length ? <SpatialView scene={scene} records={records} metric={metric} selected={selected} onSelect={setSelected} defaultExtent={model.data.temporalMode === 'interval' ? 'all' : 'kansas'}/> : view === 'trend' && hasSeries ? <SeriesView model={model} records={records} metric={metric}/> : <DistributionView records={records} metric={metric} selected={selected}/>}
+        <div className="record-stage-heading"><span><b>02</b> READ THE PATTERN</span><div className="record-view-switch" role="group" aria-label="Visualization"><button type="button" disabled={!scene.mapped.length} aria-pressed={view === 'map'} onClick={() => change({ view: 'map' })}>Geography</button>{hasSeries && <button type="button" aria-pressed={view === 'trend'} onClick={() => change({ view: 'trend' })}>Trend</button>}<button type="button" aria-pressed={view === 'chart'} onClick={() => change({ view: 'chart' })}>Distribution</button><button type="button" aria-pressed={view === 'relationships'} onClick={() => change({ view: 'relationships' })}>Relationships</button></div></div>
+        {view === 'map' && scene.mapped.length ? <SpatialView scene={scene} records={records} metric={metric} selected={selected} onSelect={setSelected} defaultExtent={model.data.temporalMode === 'interval' ? 'all' : 'kansas'}/> : view === 'trend' && hasSeries ? <SeriesView model={model} records={records} metric={metric}/> : view === 'relationships' ? <RelationshipsView model={model} records={records} controls={controls} change={change} selected={selected} onSelect={setSelected}/> : <DistributionView records={records} metric={metric} selected={selected}/>}
         <div className="record-stat-strip"><div><span>Measured records</span><strong>{summary.count.toLocaleString()}</strong></div><div><span>Median {metric?.unit || ''}</span><strong>{number(summary.median)}</strong></div><div><span>Range {metric?.unit || ''}</span><strong>{number(summary.min)} <i>→</i> {number(summary.max)}</strong></div><div><span>Missing measure</span><strong>{summary.missing.toLocaleString()}</strong></div></div>
         <Timeline model={model} records={timelineRecords} time={time} onTime={onTime}/>
-        <div className="record-inspector" aria-live="polite"><div><span className="record-eyebrow">03 / FIELD INSPECTOR</span><h4>{selected ? nameOf(selected) : 'A closer look changes everything.'}</h4><p>{selected ? `Source record ${selected.id}` : 'Select a mark on the map, or use Inspect in the keyboard-accessible record table.'}</p></div>{selected && <dl>{model.columns.map(column => <div key={column.key}><dt>{columnLabel(model, column)}{column.unit ? ` (${column.unit})` : ''}</dt><dd>{column.key === model.yearField || column.key === model.data.endYearField ? timeText(model, selected[column.key]) : typeof selected[column.key] === 'string' && /^https?:\/\//i.test(selected[column.key]) ? <a href={selected[column.key]} target="_blank" rel="noopener noreferrer">Open source record ↗</a> : display(selected[column.key])}</dd></div>)}</dl>}</div>
+        <div className="record-inspector" ref={inspector} tabIndex={-1} aria-label="Selected source record" aria-live="polite"><div><span className="record-eyebrow">03 / FIELD INSPECTOR</span><h4>{selected ? nameOf(selected) : 'A closer look changes everything.'}</h4><p>{selected ? `Source record ${selected.id}` : 'Select a mark on the map, or use Inspect in the keyboard-accessible record table.'}</p></div>{selected && <dl>{model.columns.map(column => <div key={column.key}><dt>{columnLabel(model, column)}{column.unit ? ` (${column.unit})` : ''}</dt><dd>{column.key === model.yearField || column.key === model.data.endYearField ? timeText(model, selected[column.key]) : typeof selected[column.key] === 'string' && /^https?:\/\//i.test(selected[column.key]) ? <a href={selected[column.key]} target="_blank" rel="noopener noreferrer">Open source record ↗</a> : display(selected[column.key])}</dd></div>)}</dl>}</div>
       </main>
     </div>
+    <SciencePanel bundle={bundle} snapshotSha256={snapshotSha256} model={model} records={records} time={time} controls={controls} change={change} metric={metric} selectedId={selected?.id} onSelect={id => { setSelected(id); requestAnimationFrame(() => { inspector.current?.scrollIntoView({ block: 'start', behavior: 'instant' }); inspector.current?.focus({ preventScroll: true }); }); }}/>
     <Compare model={model} records={records} controls={controls} change={change} metric={metric}/>
     <RecordTable model={model} records={records} controls={controls} change={change} selectedId={selected?.id} onSelect={setSelected}/>
     <Provenance bundle={bundle} model={model} records={records}/>
@@ -269,8 +331,8 @@ function RecordInstrument({ bundle, time, onTime, controls = {}, onControls }) {
 
 function RecordCard({ bundle }) {
   const model = recordModel(bundle), scene = useMemo(() => mapModel(model), [model]), metric = metricOf(model);
-  const records = useMemo(() => filterRecords(model), [model]);
-  return model.data.preferredView === 'chart' && model.data.dateField ? <SeriesView model={model} records={records} metric={metric} compact/> : scene.mapped.length ? <SpatialView scene={scene} records={records} metric={metric} compact/> : <DistributionView records={records} metric={metric} compact/>;
+  const records = useMemo(() => filterRecords(model, { controls: { category: model.data.defaultCategory || '' } }), [model]);
+  return model.data.preferredView === 'chart' && model.data.temporalMode === 'events' && (model.data.dateField || model.data.seriesPeriod === 'year') ? <SeriesView model={model} records={records} metric={metric} compact/> : scene.mapped.length ? <SpatialView scene={scene} records={records} metric={metric} compact/> : <DistributionView records={records} metric={metric} compact/>;
 }
 
 export default function RecordLab(props) {

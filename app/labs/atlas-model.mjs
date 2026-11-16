@@ -60,6 +60,7 @@ export function storyFromSearch(search, stories) {
 
 export function storyLocation(href, id) {
   const url = new URL(href);
+  if (!id || url.searchParams.get('story') !== id) url.searchParams.delete('view');
   if (id) url.searchParams.set('story', id);
   else url.searchParams.delete('story');
   return `${url.pathname}${url.search}${url.hash}`;

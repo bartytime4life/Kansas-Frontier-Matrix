@@ -8,7 +8,7 @@ export function recordModel(bundle) {
   const data = bundle?.data || {}, records = Array.isArray(data.records) ? data.records : [];
   const columns = (data.columns || []).filter(column => typeof column.key === 'string');
   const yearField = data.yearField || 'year', categoryField = data.categoryField || 'category';
-  const metrics = columns.filter(column => column.type === 'number' && !['latitude', 'longitude', yearField].includes(column.key));
+  const metrics = columns.filter(column => column.type === 'number' && column.metric !== false && !['latitude', 'longitude', yearField, 'estimatedRatingFlag'].includes(column.key));
   const valueField = metrics.some(column => column.key === data.valueField) ? data.valueField : metrics[0]?.key || null;
   const years = records.map(row => numeric(row[yearField])).filter(value => value !== null);
   const endYears = data.temporalMode === 'interval' ? records.map(row => numeric(row[data.endYearField || 'endYear'])).filter(value => value !== null) : [];
@@ -173,6 +173,11 @@ export function recordsCSV(bundle, options = {}) {
   if (hasGeometry && !keys.includes('geometry')) extras.push('geometry');
   const allKeys = [...keys, ...extras];
   const snapshots = model.data.sourceSnapshots || (model.data.sourceSnapshot ? [model.data.sourceSnapshot] : []);
+  const publicHash = typeof options.snapshotSha256 === 'string' && /^[a-f0-9]{64}$/.test(options.snapshotSha256) ? options.snapshotSha256 : null;
+  // One shipping digest binds every source receipt in the downloadable bundle.
+  // Avoid repeating dozens of paged-acquisition receipts in every inventory row.
+  const retrievedAt = publicHash ? bundle.built_at || '' : snapshots.map(snapshot => snapshot.retrievedAt || '').join(' | ');
+  const snapshotHash = publicHash || snapshots.map(snapshot => snapshot.rawSha256 || '').join(' | ');
   return { filename: `kfm-${String(bundle.story || bundle.id || 'records').replace(/[^a-zA-Z0-9_-]/g, '-')}-selection.csv`,
-    rows: [[...allKeys, 'source_urls', 'snapshot_retrieved_at', 'snapshot_sha256'], ...records.map(row => [...allKeys.map(key => safeCell(row[key])), (bundle.sources || []).map(source => source.url).filter(Boolean).join(' | '), snapshots.map(snapshot => snapshot.retrievedAt || '').join(' | '), snapshots.map(snapshot => snapshot.rawSha256 || '').join(' | ')])] };
+    rows: [[...allKeys, 'source_urls', 'snapshot_retrieved_at', 'snapshot_sha256'], ...records.map(row => [...allKeys.map(key => safeCell(row[key])), (bundle.sources || []).map(source => source.url).filter(Boolean).join(' | '), retrievedAt, snapshotHash])] };
 }
