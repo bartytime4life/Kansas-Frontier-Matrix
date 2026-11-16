@@ -33,7 +33,7 @@ function Sources({ story, bundle, controls, time }) {
     <div><h3>Sources</h3><ul>{sources.map(source => <li key={source.name}>{source.url ? <a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}</a> : source.name}{source.license ? <span> · {source.license}</span> : null}</li>)}</ul>
       {observed?.from != null && <p className="story-num">{bundle.data.timeUnit === 'Ma' ? 'Age midpoint coverage' : 'Observed'} {observedText(observed.from)} to {observedText(observed.to)}{bundle.built_at ? ` · built ${bundle.built_at.slice(0, 10)}` : ''}</p>}
       {bundle && <details className="story-provenance"><summary>Snapshot & reproducibility</summary>
-        <p>{bundle.data.sourceSnapshot?.retrievedAt ? `Retrieved ${bundle.data.sourceSnapshot.retrievedAt}. ` : ''}This source snapshot carries its own dates, rights and limits. Display and export do not establish admission or release approval.</p>
+        <p>{bundle.data.sourceSnapshot?.retrievedAt ? `Retrieved ${bundle.data.sourceSnapshot.retrievedAt}. ` : ''}This public source snapshot carries its own dates, rights and limits. Download it to retain the exact data used in this view.</p>
         {sources.map(source => <p key={source.name}>{source.citation}</p>)}
         <div className="story-export-actions">
           <button type="button" className="story-tool" onClick={() => downloadJSON(`${story.id}-snapshot.json`, bundle)}>Download source snapshot</button>

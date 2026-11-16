@@ -86,7 +86,9 @@ function drawCard(ctx, scene, { t, still }) {
   const { w, h, rows, stripes } = scene, cycle = SWEEP_SECONDS + HOLD_SECONDS, at = still ? 1 : clamp((t % cycle) / SWEEP_SECONDS);
   const reveal = ease.inOutCubic(at), front = reveal * w;
   ctx.fillStyle = GROUND; ctx.fillRect(0, 0, w, h);
-  ctx.drawImage(stripes, 0, 0, Math.round(front * scene.dpr), stripes.height, 0, 0, front, h);
+  // Keep the full record visible from the first frame; the sweep highlights it
+  // without making a just-opened card look like another empty instrument.
+  ctx.drawImage(stripes, 0, 0, stripes.width, stripes.height, 0, 0, w, h);
   if (at < 1) {
     const light = ctx.createLinearGradient(front - 28, 0, front + 8, 0);
     light.addColorStop(0, '#ffffff00'); light.addColorStop(.8, '#ffffff66'); light.addColorStop(1, '#ffffff00');

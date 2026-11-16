@@ -4,6 +4,8 @@ import { request } from 'node:http';
 import { startProdServer } from 'vinext/server/prod-server';
 import { installPublicDelivery } from '../server/browser-headers.mjs';
 import { DATASETS, PENDING_DATASETS } from '../scripts/local-data/datasets.mjs';
+import { PUBLIC_LAB_SNAPSHOTS } from '../app/labs/public-snapshots.mjs';
+import { createHash } from 'node:crypto';
 
 test('production atlas serves its assets and retains the story publication boundary', async t => {
   const { server, port } = await startProdServer({ port: 0, host: '127.0.0.1', outDir: 'dist' });
@@ -14,12 +16,21 @@ test('production atlas serves its assets and retains the story publication bound
   assert.equal(response.status, 200);
   const html = await response.text();
   for (const text of ['One place.', 'Climate Stripes', 'Research instruments', 'Source observatory', 'Return to the Kansas map']) assert.ok(html.includes(text), text);
-  assert.ok(html.includes('Private local previews remain on the owner'));
+  assert.ok(html.includes('Open labs with data ('));
+  assert.ok(html.includes('These open labs include public records from NOAA'));
   assert.ok(!html.includes('kfm-story-bundle-v1'), 'no private snapshot is embedded in the HTML');
   assert.ok(!html.includes('127.0.0.1:4360'), 'no owner-PC address is a public dependency');
   const assets = [...new Set([...html.matchAll(/(?:src|href)="(\/assets\/[^"?]+\.(?:js|css))"/g)].map(match => match[1]))];
   assert.ok(assets.length > 0);
   for (const path of assets) assert.equal((await fetch(origin + path)).status, 200, path);
+  for (const [id, snapshot] of Object.entries(PUBLIC_LAB_SNAPSHOTS)) {
+    const reply = await fetch(origin + snapshot.path);
+    assert.equal(reply.status, 200, id);
+    const bytes = Buffer.from(await reply.arrayBuffer());
+    assert.equal(bytes.length, snapshot.bytes);
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), snapshot.sha256);
+    assert.equal(JSON.parse(bytes).story, id);
+  }
   assert.ok(PENDING_DATASETS.has('stories'));
   assert.ok(!DATASETS.has('stories'));
   const data = await fetch(origin + '/api/local-data/stories?story=climate-stripes');

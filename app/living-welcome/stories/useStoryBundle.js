@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { boundedStoryText, validStoryBundle } from './story-bundle.mjs';
+import { loadPublicLabSnapshot } from '../../labs/snapshot-loader.mjs';
+import { PUBLIC_LAB_SNAPSHOTS } from '../../labs/public-snapshots.mjs';
 
 // Bundles are the only thing a story fetches. A small LRU shares reusable snapshots. Mounted consumers retain
 // their active value until disabled/unmounted; the cache limit is not a bound on all mounted consumers.
@@ -52,14 +54,19 @@ function request(id) {
   // A remount can arrive before an aborted request's finally handler removes it.
   if (running && !running.controller.signal.aborted) { running.users += 1; return running; }
   const controller = new AbortController();
-  const promise = fetch(`/api/local-data/stories?story=${encodeURIComponent(id)}`, { signal: controller.signal, headers: { Accept: 'application/json' } })
-    .then(async response => {
-      const text = await boundedStoryText(response);
-      let reply = null;
-      try { reply = JSON.parse(text); } catch { reply = null; }
-      const value = storyBundleState(response.status, reply, id);
+  const promise = (Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, id)
+    ? loadPublicLabSnapshot(id, { signal: controller.signal })
+    : fetch(`/api/local-data/stories?story=${encodeURIComponent(id)}`, { signal: controller.signal, headers: { Accept: 'application/json' } })
+      .then(async response => {
+        if (!response.ok) return storyBundleState(response.status, null, id);
+        const text = await boundedStoryText(response);
+        let reply = null;
+        try { reply = JSON.parse(text); } catch { reply = null; }
+        return storyBundleState(response.status, reply, id);
+      }))
+    .then(value => {
       known.set(id, { state: value.state, observedTo: value.bundle?.observed?.to ?? null });
-      if (value.state !== 'offline') remember(id, value, value.state === 'ready' ? text.length : 0);
+      if (value.state !== 'offline') remember(id, value, value.state === 'ready' ? new TextEncoder().encode(JSON.stringify(value.bundle)).byteLength : 0);
       return value;
     })
     .finally(() => { if (inflight.get(id)?.promise === promise) inflight.delete(id); });
