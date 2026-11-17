@@ -126,7 +126,10 @@ class AccessMixin:
                 return self.respond(200,{'app':'kfm-local-intake-studio','sourceFingerprint':self.server.source_fingerprint,'authentication':'local-accounts-required'})
             if path=='/auth/status': return self.respond(200,{'setupRequired':not self.server.accounts.initialized()})
             if not self._authenticate(path):return
-            if path=='/auth/session':return self.respond(200,{'user':self.principal,'csrf':self.principal['csrf']})
+            if path=='/auth/session':
+                desks=getattr(getattr(self.server,'workspace',None),'desks',{})
+                return self.respond(200,{'user':self.principal,'csrf':self.principal['csrf'],
+                    'workspace':{'workingData':'working' in desks,'library':'library' in desks}})
             if path=='/users' and self.principal['role']!='admin':raise AccessError('ADMIN_REQUIRED',403)
             if path in PAGES:return self._page(path)
             if path=='/auth/users':return self.respond(200,{'users':self.server.accounts.users(self.principal)})

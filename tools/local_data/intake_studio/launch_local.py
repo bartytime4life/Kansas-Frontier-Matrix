@@ -11,8 +11,10 @@ from pathlib import Path
 
 if __package__:
     from .intake_server import source_fingerprint
+    from . import workspace_config
 else:
     from intake_server import source_fingerprint
+    import workspace_config
 
 APP = Path(__file__).resolve().parent
 URL = 'http://127.0.0.1:8776'
@@ -53,12 +55,21 @@ def main():
     state_dir = Path.home() / '.local/state/kfm-intake-studio'
     state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
     expected = source_fingerprint()
+    # Owner-private Working Data / Library roots saved by studio_admin.py.
+    try:
+        config = workspace_config.load()
+        issues = workspace_config.problems(config)
+    except workspace_config.ConfigError as error:
+        raise SystemExit('Data workspace settings are invalid: ' + str(error) + '. Fix them with ./tools/local_data/intake_studio/studio-admin.sh workspace show')
+    if issues:
+        raise SystemExit('Data workspace settings need attention before Studio can start:\n  ' + '\n  '.join(issues) + '\nFix them with ./tools/local_data/intake_studio/studio-admin.sh')
     with (state_dir / 'launch.lock').open('w') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         session = running(); require_current(session, expected)
+        reused = session is not None
         if session is None:
             with (state_dir / 'server.log').open('a') as log:
-                proc = subprocess.Popen(['/usr/bin/python3', str(APP / 'private_server.py')], cwd=APP,
+                proc = subprocess.Popen(['/usr/bin/python3', str(APP / 'private_server.py'), *workspace_config.server_args(config)], cwd=APP,
                     stdin=subprocess.DEVNULL, stdout=log, stderr=log, start_new_session=True)
             (state_dir / 'server.pid').write_text(str(proc.pid))
             for _ in range(100):
@@ -77,6 +88,10 @@ def main():
         accounts = Accounts(Path.home() / '.local/share/kfm-intake-studio')
         if not accounts.initialized():
             print('First-owner setup code (10 minutes, one use): ' + accounts.issue_setup_code())
+    if reused:
+        print('Studio was already running. Data workspace changes apply after: ./tools/local_data/intake_studio/studio-admin.sh stop')
+    if not config.get('kfm_root'):
+        print('Working Data is not connected, so held reviews cannot be sent to KFM yet. Run: ./tools/local_data/intake_studio/studio-admin.sh workspace setup')
     if '--no-open' not in sys.argv:
         subprocess.Popen(['xdg-open', URL+'/studio'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print(URL+'/studio')

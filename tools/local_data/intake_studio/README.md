@@ -6,7 +6,7 @@ version: v1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
-updated: 2026-11-16
+updated: 2026-11-17
 policy_label: public
 owning_root: tools/
 responsibility: Describe local photo and PDF preparation implementation.
@@ -54,6 +54,16 @@ for setup, threat boundary, backup requirements, remaining validation and safe
 rollback. `intake_backend.py` is the preserved internal implementation, not a
 supported anonymous server entrypoint. Do not launch it directly. The existing
 hosted Sites and installed machines are not changed by this source candidate.
+
+## Local administration and data workspace
+
+`studio-admin.sh` (implemented by `studio_admin.py`) is the owner's local program
+for passwords, accounts, sign-in lockouts and stopping Studio. It also records the
+Working Data and Library roots in `~/.config/kfm-intake-studio/workspace.json`;
+`workspace_config.py` validates that file and the launcher passes it to the server,
+so held reviews can be sent to Working Data. See the
+[administrator quick start](../../../docs/runbooks/private-studio-accounts-recovery.md#administrator-quick-start--local-admin-program).
+Tests live in `tests/local_data/test_studio_admin.py`.
 
 ## Regression checks
 
