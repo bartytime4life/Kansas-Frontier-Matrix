@@ -1,0 +1,24 @@
+{
+  "envelope_id": "kfm:temporal-authority:synthetic-replay:withdrawn-v2",
+  "subject_ref": "observation:synthetic-replay:1",
+  "source_role": "SYNTHETIC",
+  "authority_id": "fixture:synthetic:temporal-replay",
+  "geography_ref": "fixture:synthetic:cell",
+  "temporal_posture": "WITHDRAWN",
+  "times": {
+    "observed_at": "2026-08-08T00:01:00.123456Z",
+    "valid_from": "2026-08-08T00:00:00Z",
+    "valid_to": "2026-08-08T00:05:00Z",
+    "source_updated_at": "2026-08-08T00:09:00+00:00",
+    "retrieved_at": "2026-08-08T00:10:00Z",
+    "released_at": "2026-08-08T00:11:00Z",
+    "corrected_at": "2026-08-08T00:15:00Z"
+  },
+  "freshness_deadline": "2026-08-08T01:00:00Z",
+  "lineage_refs": [
+    "kfm:temporal-authority:synthetic-replay:v2",
+    "correction:synthetic:temporal-withdrawal"
+  ],
+  "supersedes_ref": "kfm:temporal-authority:synthetic-replay:v2",
+  "withdrawal_ref": "correction:synthetic:temporal-withdrawal"
+}

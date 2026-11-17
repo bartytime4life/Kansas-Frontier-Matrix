@@ -1,15 +1,20 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-release-readme
 title: tests/release/ — Release-Prerequisite Test Inventory and Authority Boundary
-type: readme; directory-readme; release-test-boundary; executable-inventory
-version: v1.2
+type: readme
+document_roles: directory-readme; release-test-boundary; executable-inventory
+version: v1.3
 status: repository-grounded; executable; mixed-dependency; no-release-authority
 owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; independent QA, release, and separation-of-duties stewardship remain NEEDS VERIFICATION"
 created: 2026-07-06
-updated: 2026-08-30
-supersedes: v1.1 documentation at the same path; no test, fixture, validator, workflow, release object, or public surface is superseded
+updated: 2026-11-17
+supersedes: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/0b48f017d33b17dfc109600e2271cfed70fa5e80/tests/release/README.md
+supersedes_note: Documentation-only predecessor binding; no test, fixture, validator, workflow, release object, or public surface is superseded.
+prior_v1_2_supersedes_note: v1.1 documentation at the same path; no test, fixture, validator, workflow, release object, or public surface is superseded
 policy_label: public-doc; tests; release-prerequisites; promotion-safety; synthetic; fail-closed; non-authoritative
 current_path: tests/release/README.md
+owning_root: tests/
+responsibility: Index executable release-prerequisite tests and distinguish bounded fixture proof from release and operational acceptance.
 truth_posture: CONFIRMED fifteen direct modules and 123 source-defined tests at the pinned snapshot / PARTIAL aggregate local execution and cross-family coverage / UNKNOWN required-check status, complete collection count, and independent stewardship
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -103,6 +108,14 @@ fixture validity, workflow success, or a generated report does not collapse
 those distinctions.
 
 ## Direct module inventory
+
+The table retains its original pinned inventory. Added on 2026-11-17:
+[`test_temporal_replay.py`](test_temporal_replay.py) exercises the
+[synthetic temporal replay fixture](../../fixtures/release/temporal_replay/README.md),
+including exact legacy bytes, distinct correction chronologies, receipt
+tampering, withdrawal/rollback readback, input refusal and process no-network
+execution. External persisted-consumer inventory remains required before
+legacy retirement.
 
 | Module | Source-defined tests | Implemented boundary |
 |---|---:|---|
