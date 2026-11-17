@@ -312,6 +312,11 @@ class GatewayTests(Base):
     def test_encoded_paths_rejected(self):self.assertEqual(self.call('/api/%66iles')[0],400)
     def test_recovery_export_is_private(self):self.assertEqual(self.call('/api/recovery/export')[0],200)
     def test_no_remote_password_reset(self):self.assertEqual(self.call('/auth/reset-admin','POST',{})[0],403)
+    def test_session_reports_workspace_connection_without_paths(self):
+        status,_,body=self.call('/auth/session');value=json.loads(body)
+        self.assertEqual(status,200);self.assertEqual(value['workspace'],{'workingData':False,'library':False})
+        self.assertNotIn(str(self.root).encode(),body)
+        self.assertEqual(self.call('/auth/session',auth=False)[0],401)
     def test_public_status_returns_only_setup_state(self):self.assertEqual(json.loads(self.call('/auth/status',auth=False)[2]),{'setupRequired':False})
     def test_transfer_encoding_refused_before_legacy_upload(self):
         self.assertEqual(self.call('/api/upload','POST',{},headers={'Transfer-Encoding':'chunked'})[0],400)

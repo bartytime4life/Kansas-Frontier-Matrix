@@ -345,6 +345,86 @@ class Accounts:
         with self.db() as db:
             return [dict(row) for row in db.execute("SELECT * FROM audit ORDER BY sequence DESC LIMIT 500")]
 
+    # ---- Local console administration (studio_admin.py). No HTTP route reaches these.
+    # Authority comes from owning the private account files on this PC, the same
+    # boundary as local_reset. Every change is audited as "local-console".
+
+    @staticmethod
+    def _active_admins(db):
+        return db.execute("SELECT COUNT(*) FROM users WHERE role='admin' AND enabled=1 AND must_change=0").fetchone()[0]
+
+    def _local_row(self, db, name):
+        row = db.execute("SELECT * FROM users WHERE username=?", (username(name),)).fetchone()
+        if not row: raise AccessError("ACCOUNT_NOT_FOUND", 404)
+        return row
+
+    def local_users(self):
+        with self.db() as db:
+            return [dict(row) for row in db.execute("SELECT username,role,enabled,must_change,created FROM users ORDER BY username")]
+
+    def local_audit(self, limit=50):
+        limit = max(1, min(int(limit), 500))
+        with self.db() as db:
+            return [dict(row) for row in db.execute("SELECT * FROM audit ORDER BY sequence DESC LIMIT ?", (limit,))]
+
+    def local_set_password(self, name, new, temporary=False):
+        """Set any account's password from this PC. Revokes that account's sessions."""
+        name = username(name); encoded = hash_password(password(new, name, True))
+        with self.lock, self.db() as db:
+            row = self._local_row(db, name)
+            permanent_admin = row["role"] == "admin" and row["enabled"] and not row["must_change"]
+            if temporary and permanent_admin and self._active_admins(db) <= 1:
+                raise AccessError("LAST_ACTIVE_ADMIN_MUST_REMAIN", 409)
+            db.execute("UPDATE users SET password_hash=?,must_change=?,version=version+1 WHERE id=?",
+                       (encoded, int(bool(temporary)), row["id"]))
+            db.execute("DELETE FROM sessions WHERE user_id=?", (row["id"],))
+            db.execute("DELETE FROM attempts WHERE key IN (?,?,?)", ("login:" + digest(name), "global-login", "reauth:" + row["id"]))
+            self._audit(db, "local-console", "local_password_set_temporary" if temporary else "local_password_set", name)
+        return {"username": name, "temporary": bool(temporary), "sessionsRevoked": True}
+
+    def local_create(self, name, role, temporary_password):
+        name = username(name)
+        if role not in ROLES: raise AccessError("INVALID_ROLE")
+        encoded = hash_password(password(temporary_password, name, True))
+        with self.lock, self.db() as db:
+            if db.execute("SELECT 1 FROM users WHERE username=?", (name,)).fetchone():
+                raise AccessError("USERNAME_ALREADY_EXISTS", 409)
+            if db.execute("SELECT COUNT(*) FROM users").fetchone()[0] >= MAX_USERS:
+                raise AccessError("ACCOUNT_LIMIT_REACHED")
+            if not db.execute("SELECT 1 FROM users LIMIT 1").fetchone():
+                raise AccessError("CREATE_FIRST_OWNER_WITH_SETUP_CODE", 409)
+            db.execute("INSERT INTO users VALUES (?,?,?,?,?,?,?,?)", (uuid.uuid4().hex, name, encoded, role, 1, 1, 1, self.clock()))
+            self._audit(db, "local-console", "local_account_create", name)
+        return {"username": name, "role": role, "temporary": True}
+
+    def local_update(self, name, role=None, enabled=None):
+        with self.lock, self.db() as db:
+            row = self._local_row(db, name)
+            role = row["role"] if role is None else role
+            enabled = bool(row["enabled"]) if enabled is None else enabled
+            if role not in ROLES: raise AccessError("INVALID_ROLE")
+            if type(enabled) is not bool: raise AccessError("INVALID_ENABLED_VALUE")
+            permanent_admin = row["role"] == "admin" and row["enabled"] and not row["must_change"]
+            if permanent_admin and (not enabled or role != "admin") and self._active_admins(db) <= 1:
+                raise AccessError("LAST_ACTIVE_ADMIN_MUST_REMAIN", 409)
+            db.execute("UPDATE users SET role=?,enabled=?,version=version+1 WHERE id=?", (role, int(enabled), row["id"]))
+            db.execute("DELETE FROM sessions WHERE user_id=?", (row["id"],))
+            self._audit(db, "local-console", "local_account_update", row["username"])
+        return {"username": row["username"], "role": role, "enabled": enabled, "sessionsRevoked": True}
+
+    def local_unlock(self):
+        """Clear sign-in throttling after a lockout. Does not change any password."""
+        with self.lock, self.db() as db:
+            cleared = db.execute("DELETE FROM attempts").rowcount
+            self._audit(db, "local-console", "local_sign_in_limits_cleared")
+        return {"cleared": cleared}
+
+    def local_revoke_sessions(self):
+        with self.lock, self.db() as db:
+            revoked = db.execute("DELETE FROM sessions").rowcount
+            self._audit(db, "local-console", "local_all_sessions_revoked")
+        return {"revoked": revoked}
+
     def local_reset(self, name, new):
         """Break-glass OS-owner command. No HTTP route, no return of old password."""
         name = username(name); encoded = hash_password(password(new, name, True))

@@ -159,7 +159,7 @@
         if(recovery.storage)for(const role of ['source','backup'])for(const [key,val] of Object.entries(recovery.storage[role])){const field=$('storage-form').elements.namedItem(role+'.'+key);if(field)field.value=val??'';}
       }else if(page==='users'){ $('users-view').hidden=false;await loadUsers(); }
       else if(page==='account/password'){ $('account-view').hidden=false;if(user.mustChangePassword)$('password-guidance').textContent='Change your temporary password before opening private records. Your current session cannot access them yet.'; }
-      else { $('overview-view').hidden=false;const data=await(await api('/api/recovery/state')).json();$('recovery-count').textContent=data.gates.filter(g=>g.status==='REVIEWED_EVIDENCE').length+' / 7';$('role-summary').textContent='Signed in as '+user.role+'. Access is enforced by the server.'; }
+      else { $('overview-view').hidden=false;const data=await(await api('/api/recovery/state')).json();$('recovery-count').textContent=data.gates.filter(g=>g.status==='REVIEWED_EVIDENCE').length+' / 7';$('role-summary').textContent='Signed in as '+user.role+'. Access is enforced by the server.';const ws=session.workspace||{};$('workspace-state').textContent=ws.workingData?'Connected':'Not connected';$('workspace-summary').textContent=ws.workingData?('Held reviews can be sent to Working Data.'+(ws.library?' Library mounted.':'')):'Send to KFM is off. On this PC run studio-admin.sh workspace setup, then restart Studio.'; }
     } catch(error){say(error.message);}
   })();
 })();

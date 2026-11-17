@@ -6,7 +6,7 @@ version: v1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-15
-updated: 2026-11-15
+updated: 2026-11-17
 policy_label: public
 owning_root: docs/
 responsibility: Describe local identities, the protected workspace, recovery evidence, validation limits and rollback.
@@ -85,6 +85,77 @@ password or reversible old password is stored. The two-operation KDF semaphore
 bounds concurrent KDF memory. Five failed attempts trigger persisted temporary
 throttling with bounded backoff. Local attacker-induced denial of service remains
 possible; account authentication does not defend the machine from its OS owner.
+
+## Administrator quick start — local admin program
+
+Everything below runs **on the PC that hosts Studio**, from the repository root.
+The admin program has no HTTP route: its authority is owning the private Studio
+files on this machine, the same boundary as the break-glass reset. Passwords are
+typed only at its hidden terminal prompt (twice); they are never command
+arguments, environment variables or files, and are never printed or logged.
+
+```sh
+./tools/local_data/intake_studio/studio-admin.sh
+```
+
+With no arguments it opens a menu. The same actions are available as commands:
+
+| Task | Command |
+|---|---|
+| Show Studio, accounts and data workspace | `studio-admin.sh status` |
+| Create the first administrator (one-time code) | `studio-admin.sh setup-code` |
+| Change any account's password | `studio-admin.sh password USERNAME` (add `--temporary` to force a change at next sign-in) |
+| Add a user with a temporary password | `studio-admin.sh add-user USERNAME --role operator` |
+| Enable, disable or change a role | `studio-admin.sh enable USERNAME`, `disable USERNAME`, `role USERNAME viewer` |
+| Clear lockouts after failed sign-ins | `studio-admin.sh unlock` |
+| Sign out every browser session | `studio-admin.sh sign-out-all` |
+| Recent account activity | `studio-admin.sh audit` |
+| Connect Working Data / Library | `studio-admin.sh workspace setup` (guided), `workspace init PATH`, `workspace set KEY VALUE [KEY VALUE ...]`, `workspace unset KEY`, `workspace show` |
+| Stop a launcher-started Studio so new settings apply | `studio-admin.sh stop` |
+
+Changing a password signs that account out everywhere and clears its sign-in
+limit. The last active administrator cannot be disabled, demoted or given a
+temporary password from this program either. Every change is recorded in the
+account audit as `local-console`. The web **Users & access** page remains the
+admin-only browser equivalent and still requires the administrator's current
+password for each change.
+
+### Connect the data workspace so held reviews can move
+
+Intake reviews stay held in the private preparation inbox until an administrator
+chooses **Send to KFM**. That button only works when Studio is started with a
+Working Data store. Earlier, `start-local.sh` never passed one, so the button
+always reported that Working Data was not connected. The launcher now reads
+owner-private settings from `~/.config/kfm-intake-studio/workspace.json`
+(mode 600, outside Git) and passes them to the server:
+
+| Setting | Server option | Meaning |
+|---|---|---|
+| `kfm_root` | `--kfm-root` | Working Data store; receives items sent from held reviews. Required for **Send to KFM**. |
+| `library_root` | `--library-root` | Read-only Data Library catalog. |
+| `archive_root` | `--archive-root` | Original archive for Library file locations (needs `library_root`). |
+| `inbox` | `--inbox` | Read-only downloads folder scanned by Working Data. |
+| `raster_python`, `pipeline_lock`, `store_check`, `working_connection`, `qwen_model` + `qwen_digest` | same names | Optional advanced settings documented in the [intake runbook](local-intake-studio.md#handoff-to-the-existing-governed-workflow). |
+
+1. Run `studio-admin.sh workspace setup`. Enter your existing Working Data store
+   (for example the private `KFM-pipeline` store) or a new empty folder; the
+   program offers to initialize a new folder as a private KFM data store. Add the
+   Library and inbox folders if you use them.
+2. The program checks every path before saving: folders must exist, data stores
+   must be initialized, owned by you with mode 700 and outside the Git checkout.
+   Nothing is saved when a check fails.
+3. Apply it: `studio-admin.sh stop`, then `./tools/local_data/intake_studio/start-local.sh`.
+   The launcher re-checks the settings and refuses to start, with a plain
+   explanation, if a drive is unmounted or a path changed.
+4. Sign in. The Overview shows **Data workspace: Connected**; Working Data and
+   Data Library open in the sidebar, and **Send to KFM** is available to
+   administrators for saved **Ready for integration review** records.
+
+Sending still follows the [intake handoff rules](local-intake-studio.md#handoff-to-the-existing-governed-workflow):
+sensitivity holds, unknown rights and unsaved edits still block it; the original
+becomes a source-bound quarantine object, and nothing is admitted or published.
+Set the optional Qwen pair in one change with `workspace set qwen_model NAME qwen_digest DIGEST`; clearing either one clears both. Remove a setting with `workspace unset KEY`, or delete the settings file to return
+to the previous unconnected behavior.
 
 ## Roles and owner control
 
@@ -177,8 +248,9 @@ omitting its journal/WAL is not qualified. Record backup time, snapshot method,
 coverage, exclusions and restore evidence. Account audit export is not a complete
 credential backup, and the current UI displays only a bounded audit window.
 
-For forgotten administrator access, the OS owner may run the explicit local
-break-glass command (no HTTP equivalent):
+For forgotten administrator access, use `studio-admin.sh password YOUR_ADMIN`
+(see the quick start above). The original break-glass command remains available
+and has no HTTP equivalent:
 
 ```sh
 python3 -m tools.local_data.intake_studio.accounts --store /ABSOLUTE/PRIVATE/STUDIO_ROOT reset-admin --username YOUR_EXISTING_ADMIN
