@@ -54,3 +54,26 @@ test('inventory covers every IPv6 zero-run position without leaking listener add
  const input=[...addresses].map(address=>`[${address}]:8787`).join('\n')+'\n';
  assert.deepEqual(redact(input).trimEnd().split('\n'),[...addresses].map(()=>'[<ip6>]:8787'));
 });
+
+
+test('inventory redacts IPv4 and bare UUID tokens at portable word boundaries',()=>{
+ const cases=[
+  ['192.0.2.1,198.51.100.2,203.0.113.3','<ip>,<ip>,<ip>'],
+  ['host=(192.0.2.5):443/path','host=(<ip>):443/path'],
+  ['192.0.2.1','<ip>'],
+  ['127.0.0.1,192.0.2.1,0.0.0.0,198.51.100.2','127.0.0.1,<ip>,0.0.0.0,<ip>'],
+  ['ids=12345678-abcd-1234-abcd-123456789abc,87654321-DCBA-4321-DCBA-cba987654321','ids=<uuid>,<uuid>'],
+  ['12345678-abcd-1234-abcd-123456789abc','<uuid>'],
+ ];
+ assert.deepEqual(redact(cases.map(([input])=>input).join('\n')+'\n').trimEnd().split('\n'),cases.map(([,output])=>output));
+});
+
+test('inventory preserves adjacent loopback and wildcard tokens with their ports',()=>{
+ const cases=[
+  '0.0.0.0,0.0.0.0,127.0.0.1,127.2.3.4',
+  '0.0.0.0:8787,127.0.0.1:11434,127.2.3.4:443',
+  'host192.0.2.5x label_192.0.2.5x',
+  'id_12345678-abcd-1234-abcd-123456789abc_suffix',
+ ];
+ assert.deepEqual(redact(cases.join('\n')+'\n').trimEnd().split('\n'),cases);
+});
