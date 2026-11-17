@@ -9,3 +9,9 @@
 .controlActions{grid-column:1/-1;display:flex;gap:9px;flex-wrap:wrap}.controlActions button{border:1px solid #809ea9;background:#153948;color:#e7ddc5;font-size:11px;padding:8px 12px;min-height:36px}.controlActions button:hover{border-color:var(--gold);background:#245163}.readout{margin-top:15px!important;padding:15px 18px;border-left:3px solid #70d6da;background:#143746;color:#c9dce0;font-size:12px;line-height:1.85}.readout b{color:#f2e4c2}@media print{.controlActions{display:none}.readout{color:#173640;background:#eef4f4}.readout b{color:#173640}}
 
 @media(max-width:580px){.plot svg text{font-size:18px}.plot svg{margin-top:8px}.plot svg text[transform]{font-size:15px}}
+/* The shared explorer stylesheet hides other workspaces while printing. */
+@media print{
+  .page,.page *{visibility:visible!important}
+  :global(html):has(.page),:global(body):has(.page){height:auto!important;min-height:0!important;overflow:visible!important}
+  .page{height:auto!important;min-height:0;overflow:visible!important}
+}
