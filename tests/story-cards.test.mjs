@@ -19,9 +19,9 @@ const validRail = () => ({ format: 'kfm-story-bundle-v1', story: 'iron-horse', v
   data: {years:[1861],states:['Kansas'],names:['Example'],gauges:[56.5],grid:{origin:[-103,36],unit:.001},
     lines:[[0,0,0,0,1,[1000,2000,1,1]]],milesByYear:[{year:1861,kansasTotal:1}],counts:{segments:1},limits:['Synthetic test only']} });
 
-test('the registry lists 22 stories with unique ids, known groups and complete copy', () => {
-  assert.equal(STORIES.length, 22);
-  assert.equal(new Set(STORIES.map(story => story.id)).size, 22);
+test('the registry lists 23 stories with unique ids, known groups and complete copy', () => {
+  assert.equal(STORIES.length, 23);
+  assert.equal(new Set(STORIES.map(story => story.id)).size, 23);
   for (const story of STORIES) {
     assert.match(story.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert.ok(STORY_GROUPS.includes(story.group), `${story.id} group`);
@@ -40,7 +40,7 @@ test('the registry lists 22 stories with unique ids, known groups and complete c
 
 test('implemented instruments are lazy and planned stories cannot load a pretend instrument', () => {
   const ready = STORIES.filter(story => story.status === 'ready');
-  assert.deepEqual(ready.map(story => story.id).sort(), ['air-and-health', 'built-kansas', 'census-mosaic', 'climate-stripes', 'deep-time-column', 'energy-shift', 'inland-sea', 'iron-horse', 'river-memory', 'shaking-ground', 'shifting-lines', 'tornado-tracks']);
+  assert.deepEqual(ready.map(story => story.id).sort(), ['air-and-health', 'built-kansas', 'census-mosaic', 'climate-stripes', 'county-conditions', 'deep-time-column', 'energy-shift', 'inland-sea', 'iron-horse', 'river-memory', 'shaking-ground', 'shifting-lines', 'tornado-tracks']);
   for (const story of ready) {
     assert.equal(typeof story.load, 'function');
     const lazyFile = story.load.toString().match(/import\(['"]\.\/([a-z-]+\.jsx)['"]\)/)?.[1];

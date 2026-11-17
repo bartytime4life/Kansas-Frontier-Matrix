@@ -125,6 +125,16 @@ export const STORIES = Object.freeze([
     load: () => import('./record-lab.jsx'),
   }),
   ready({
+    id: 'county-conditions', group: 'People', title: 'County Conditions', kicker: 'LIFE ACROSS 105 COUNTIES',
+    summary: 'Income, poverty, education, housing and age across three nonoverlapping ACS five-year periods.',
+    try: 'Compare counties and periods, inspect 90% margins of error, and connect measures in the County Observatory.',
+    limit: 'Five-year survey estimates describe periods, not single years. Dollar values use each vintage’s dollars; uncertainty matters.',
+    palette: ['#0c1b29', '#e7bd68', '#68c9bb'],
+    sources: ['U.S. Census Bureau American Community Survey'],
+    tables: ['kfm_census_acs_values'], feeds: ['census-acs'],
+    load: () => import('./record-lab.jsx'),
+  }),
+  ready({
     id: 'climate-stripes', group: 'Living record', title: 'Climate Stripes', kicker: 'TEMPERATURE & DROUGHT',
     summary: 'Every year since 1895 as a stripe, for Kansas and each of its nine climate divisions.',
     try: 'Switch temperature, precipitation and drought index, change the baseline, and read a month in the calendar.',

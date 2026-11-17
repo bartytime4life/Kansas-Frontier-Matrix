@@ -15,7 +15,7 @@ test('production atlas serves its assets and retains the story publication bound
   const response = await fetch(origin + '/labs?story=climate-stripes');
   assert.equal(response.status, 200);
   const html = await response.text();
-  for (const text of ['One place.', 'Climate Stripes', 'Research instruments', 'Source observatory', 'Return to the Kansas map']) assert.ok(html.includes(text), text);
+  for (const text of ['Ask more of the record.', 'County Observatory', 'Signal Studio', 'Climate Stripes', 'Research instruments', 'Source observatory', 'Return to the Kansas map']) assert.ok(html.includes(text), text);
   assert.ok(html.includes('Open labs with data ('));
   assert.ok(html.includes('These open labs include public records from NOAA'));
   assert.ok(!html.includes('kfm-story-bundle-v1'), 'no private snapshot is embedded in the HTML');
@@ -23,6 +23,13 @@ test('production atlas serves its assets and retains the story publication bound
   const assets = [...new Set([...html.matchAll(/(?:src|href)="(\/assets\/[^"?]+\.(?:js|css))"/g)].map(match => match[1]))];
   assert.ok(assets.length > 0);
   for (const path of assets) assert.equal((await fetch(origin + path)).status, 200, path);
+  for (const [route, expected] of [['/labs/observatory', 'Where do the patterns live?'], ['/labs/signals', 'Question the connection.']]) {
+    const reply = await fetch(origin + route); assert.equal(reply.status, 200, route);
+    const content = await reply.text();
+    // The county content waits for exact-byte public data in the browser.
+    assert.ok(content.includes(route === '/labs/observatory' ? 'County Observatory' : expected), route);
+    assert.ok(!content.includes('127.0.0.1'), route);
+  }
   for (const [id, snapshot] of Object.entries(PUBLIC_LAB_SNAPSHOTS)) {
     const reply = await fetch(origin + snapshot.path);
     assert.equal(reply.status, 200, id);

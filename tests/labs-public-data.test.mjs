@@ -12,15 +12,15 @@ import { storyById } from '../app/living-welcome/stories/registry.mjs';
 const files = new Map(await Promise.all(Object.entries(snapshots).map(async ([id, entry]) => [id, await readFile(new URL('../public' + entry.path, import.meta.url))])));
 const data = id => JSON.parse(files.get(id));
 
-test('all eight shipping bundles are bounded, valid and bound to their exact file bytes', () => {
-  assert.deepEqual(Object.keys(snapshots).sort(), ['air-and-health', 'built-kansas', 'census-mosaic', 'climate-stripes', 'energy-shift', 'river-memory', 'shaking-ground', 'tornado-tracks']);
+test('all nine shipping bundles are bounded, valid and bound to their exact file bytes', () => {
+  assert.deepEqual(Object.keys(snapshots).sort(), ['air-and-health', 'built-kansas', 'census-mosaic', 'climate-stripes', 'county-conditions', 'energy-shift', 'river-memory', 'shaking-ground', 'tornado-tracks']);
   for (const [id, entry] of Object.entries(snapshots)) {
     const raw = files.get(id), bundle = data(id);
     assert.equal(raw.length, entry.bytes);
     assert.ok(raw.length <= storyBundleByteLimit(id));
     assert.equal(createHash('sha256').update(raw).digest('hex'), entry.sha256);
     assert.ok(validStoryBundle(bundle, id), id);
-    assert.match(entry.path, new RegExp(`^/labs-data(?:-extension|-bridges)?/${id}-[a-f0-9]{16}\\.json$`));
+    assert.match(entry.path, new RegExp(`^/labs-data(?:-extension|-bridges|-observatory)?/${id}-[a-f0-9]{16}\\.json$`));
     for (const source of bundle.data.sourceSnapshots) {
       assert.match(source.rawSha256, /^[a-f0-9]{64}$/);
       assert.ok(source.rawBytes > 0);
