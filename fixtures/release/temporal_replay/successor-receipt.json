@@ -1,0 +1,23 @@
+{
+  "profile": "kfm.synthetic-temporal-successor-receipt/v1",
+  "synthetic": true,
+  "source_schema_id": "https://kfm.invalid/schemas/contracts/v1/evidence/temporal_authority_envelope.schema.json",
+  "target_schema_id": "https://kfm.invalid/schemas/contracts/v1/evidence/evidence_temporal_posture_assessment.schema.json",
+  "compatibility": "EVIDENCE_DUAL_READ_ONLY",
+  "common_translation": false,
+  "predecessor": {
+    "record_ref": "kfm:temporal-authority:synthetic-replay:v1",
+    "sha256": "sha256:ea4726b2f739e6d247c56f310f59e3eac279f28971b793da38ded8a9c6e69f7b"
+  },
+  "successor": {
+    "record_ref": "kfm:temporal-authority:synthetic-replay:v2",
+    "sha256": "sha256:48716579be8e81ad67d9b1fc556532f1da42a73f474a6d34456d49f97ce1010c"
+  },
+  "common_context": {
+    "schema_id": "https://schemas.kfm.local/contracts/v1/common/temporal_authority_envelope.schema.json",
+    "predecessor_revision_ref": "kfm:revision:synthetic-replay:v1",
+    "predecessor_sha256": "sha256:ddbcfbd75047cd98eb6eb5b496d40523fc75125d80f1cbf238ef0882b1f17309",
+    "successor_revision_ref": "kfm:revision:synthetic-replay:v2",
+    "successor_sha256": "sha256:ffb9bd4ed783590ee23cc116306ca5a38322378f9aea54e280c5838970e706ff"
+  }
+}

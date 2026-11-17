@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-release-steward-plus-docs-steward
 created: 2026-07-07
-updated: 2026-08-09
+updated: 2026-11-17
 policy_label: repository-facing; release-tooling; review-support
 owning_root: tools/
 responsibility: release tooling boundary for dry-runs, manifest checks, rollback-card helpers, correction-note helpers, and release-review summaries
@@ -67,6 +67,7 @@ The answer should be a tool report, draft scaffold, or reviewer handoff. Actual 
 |---|---|---|
 | `tools/release/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
 | `release_dry_run.py` | **CONFIRMED bounded executable** | Replays five synthetic negative mutations through the promotion gate; it does not assemble a release. |
+| `temporal_replay.py` | **CONFIRMED synthetic executable, added 2026-11-17** | Replays the legacy evidence alias and distinct evidence assessment, binds a successor receipt, and reads back temporary withdrawal/rollback branches. [Fixture and command](../../fixtures/release/temporal_replay/README.md); external consumer inventory and legacy removal remain held. |
 | `tools/` root authority | **CONFIRMED in repo evidence** | Parent README names `tools/release/` as release dry-runs, manifest validators, rollback-card builders, and correction-notice helpers. |
 | `release/` root authority | **CONFIRMED in repo evidence** | `release/` owns release governance records, review, decisions, manifests, corrections, notices, signatures, and changelog records. |
 | Artifact-family separation | **CONFIRMED in repo evidence / proposed ADR** | ADR-0011 separates receipts, proofs, catalogs, release/publication artifacts, and published carriers. |

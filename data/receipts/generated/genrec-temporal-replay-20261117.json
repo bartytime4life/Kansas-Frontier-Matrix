@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-temporal-replay-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/rollback-drill.yml",
+    "docs/registers/milestone-progress-2026-10-08.md",
+    "fixtures/release/temporal_replay/README.md",
+    "fixtures/release/temporal_replay/case.json",
+    "fixtures/release/temporal_replay/common-v1.json",
+    "fixtures/release/temporal_replay/common-v2.json",
+    "fixtures/release/temporal_replay/legacy.json",
+    "fixtures/release/temporal_replay/successor-receipt.json",
+    "fixtures/release/temporal_replay/successor.json",
+    "fixtures/release/temporal_replay/withdrawn.json",
+    "tests/release/README.md",
+    "tests/release/test_temporal_replay.py",
+    "tools/release/README.md",
+    "tools/release/temporal_replay.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/rollback-drill.yml": "sha256:6399e39116d6459fcc638da37ad5bfb4745474ffa3cf5e5889ba204d549e3b95",
+    "docs/registers/milestone-progress-2026-10-08.md": "sha256:06e6ffd4f848637b9e858fb43a7c80c248f181cf1a30f8bc113747976807418a",
+    "fixtures/release/temporal_replay/README.md": "sha256:de8a978f886f39196ffa58e1649366c036cc64a4293d86397a04bb86a4ab7582",
+    "fixtures/release/temporal_replay/case.json": "sha256:124abea987dfb41906aed68977a85a5afd4e52a8a911c46627fae2f00ac8462b",
+    "fixtures/release/temporal_replay/common-v1.json": "sha256:ddbcfbd75047cd98eb6eb5b496d40523fc75125d80f1cbf238ef0882b1f17309",
+    "fixtures/release/temporal_replay/common-v2.json": "sha256:ffb9bd4ed783590ee23cc116306ca5a38322378f9aea54e280c5838970e706ff",
+    "fixtures/release/temporal_replay/legacy.json": "sha256:ea4726b2f739e6d247c56f310f59e3eac279f28971b793da38ded8a9c6e69f7b",
+    "fixtures/release/temporal_replay/successor-receipt.json": "sha256:a3c071ee7cc38570b36ed61b51b97616df3cfeb6479c7ba565d3e6b53a70338e",
+    "fixtures/release/temporal_replay/successor.json": "sha256:48716579be8e81ad67d9b1fc556532f1da42a73f474a6d34456d49f97ce1010c",
+    "fixtures/release/temporal_replay/withdrawn.json": "sha256:83effc11d6400bee2a2ad1370b3c0835127da04136933a846284a0c93cfaf5ea",
+    "tests/release/README.md": "sha256:6cf11e0cedbe1a4a1058d0af65bae5addb7c8515b1d8b7b2fcb64f3b1c16dc4c",
+    "tests/release/test_temporal_replay.py": "sha256:91eb11c6327996bccb78dea52b12817b80f801d35fab64efcf7ffd78f6e64340",
+    "tools/release/README.md": "sha256:2a0ad835803b1bd814772ae9750f6f1d3e817cc95138efa54c58796bd4cf761b",
+    "tools/release/temporal_replay.py": "sha256:64823a55e96824eb5ebc641f9b53cd60976ededc1c5e2c47b319c410a890cc7a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "Exact serving build not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git/source inspection",
+      "GitHub issue and PR readback",
+      "hash-locked native Python tests",
+      "Python process no-network guard",
+      "isolated synthetic recovery"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:b07e67a4e97e59bbcd93d683c07bde3f979d0294350dc4a77ddd9458de1f6b11",
+      "sha256:4a8f0c15723ee74164b5d16aeec6552626b4114e01a6f8c8239fc0eebdfd5386",
+      "sha256:1e94a7d93532a9c55f7f32cbc793defb58ebd951153b25c4e0d6852a52f92ce5",
+      "sha256:6864f3e8c4de17031cdefc0d4de3ccd765c5222c917a13790ddcf8a923149290"
+    ],
+    "evidence_refs": [
+      "repo:main@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2990",
+      "repo:contracts/evidence/evidence_temporal_posture_assessment.md@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "repo:contracts/common/temporal_authority_envelope.md@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "repo:tools/release/rollback_apply.py@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "repo:docs/doctrine/directory-rules.md@0b48f017d33b17dfc109600e2271cfed70fa5e80"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/rollback-drill.yml": "CONFIRMED",
+    "docs/registers/milestone-progress-2026-10-08.md": "PROPOSED",
+    "tests/release/README.md": "PROPOSED",
+    "tools/release/README.md": "PROPOSED",
+    "tools/release/temporal_replay.py": "CONFIRMED",
+    "tests/release/test_temporal_replay.py": "CONFIRMED",
+    "fixtures/release/temporal_replay/README.md": "PROPOSED",
+    "fixtures/release/temporal_replay/case.json": "CONFIRMED",
+    "fixtures/release/temporal_replay/common-v1.json": "CONFIRMED",
+    "fixtures/release/temporal_replay/common-v2.json": "CONFIRMED",
+    "fixtures/release/temporal_replay/legacy.json": "CONFIRMED",
+    "fixtures/release/temporal_replay/successor-receipt.json": "CONFIRMED",
+    "fixtures/release/temporal_replay/successor.json": "CONFIRMED",
+    "fixtures/release/temporal_replay/withdrawn.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "guarded_focused_temporal_replay",
+      "outcome": "PASS",
+      "reason": "73 tests and 59 subtests across new replay, existing rollback, legacy/canonical evidence and common envelopes. Python process no-network guard active."
+    },
+    {
+      "gate": "compatibility_and_workflow_regressions",
+      "outcome": "PASS",
+      "reason": "79 tests and 94 subtests across pinned rollback execution, native dependency installer, workflow security and temporal split assessment."
+    },
+    {
+      "gate": "central_validator_registry",
+      "outcome": "PASS",
+      "reason": "REGISTRY_VALID from tools/validate_all.py --validate-registry. No semantic validator registration was added for this fixture runner."
+    },
+    {
+      "gate": "existing_split_assessment",
+      "outcome": "PASS",
+      "reason": "SPLIT / HOLD_COMPATIBILITY, exit 3, with no invariant findings or unresolved runtime references; external inventory and held references retain their separate dispositions."
+    },
+    {
+      "gate": "new_replay_and_temporary_store_guards",
+      "outcome": "PASS",
+      "reason": "24 collected replay cases include receipt/clock/namespace tampering, future-event refusal, full correction/alias readback, existing-store refusal, safe CLI errors and deterministic no-network replay."
+    },
+    {
+      "gate": "indexed_topology_and_scaffold",
+      "outcome": "PASS",
+      "reason": "Indexed topology: 0 invariant, 0 new drift, 89 retained warnings, 0 stale entries. Scaffold check: no new or resolved baseline entries; no baseline edited."
+    },
+    {
+      "gate": "changed_document_qa",
+      "outcome": "PASS",
+      "reason": "130 local links checked in the initial navigation scope. Four changed metadata blocks valid with 0 failures; nine inherited nesting warnings retained. Corrected required type/root/responsibility fields in the modified test index. Kept the fixture parent unchanged to preserve its unknown original creation date. Bound the modified test index supersedes relationship to its exact predecessor and preserved its older prose lineage note."
+    },
+    {
+      "gate": "dependency_and_production_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No package or lock changes. Prior unpatched picomatch advisory and production-source mismatch are not repaired or waived by this proof."
+    },
+    {
+      "gate": "external_persisted_consumers",
+      "outcome": "SKIPPED",
+      "reason": "Five external categories remain NOT_INSPECTED with unknown counts/digests; no retirement, migration or removal authority."
+    },
+    {
+      "gate": "human_review_and_exact_pr_head_ci",
+      "outcome": "SKIPPED",
+      "reason": "Not yet observed at authoring; no approval, merge, source, release, publication or production transition performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:main@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "validated": true,
+      "evidence_ref": "repo:main@0b48f017d33b17dfc109600e2271cfed70fa5e80"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2990",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2990"
+    },
+    {
+      "id": "repo:contracts/evidence/evidence_temporal_posture_assessment.md@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/evidence_temporal_posture_assessment.md@0b48f017d33b17dfc109600e2271cfed70fa5e80"
+    },
+    {
+      "id": "repo:contracts/common/temporal_authority_envelope.md@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "validated": true,
+      "evidence_ref": "repo:contracts/common/temporal_authority_envelope.md@0b48f017d33b17dfc109600e2271cfed70fa5e80"
+    },
+    {
+      "id": "repo:tools/release/rollback_apply.py@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "validated": true,
+      "evidence_ref": "repo:tools/release/rollback_apply.py@0b48f017d33b17dfc109600e2271cfed70fa5e80"
+    },
+    {
+      "id": "repo:docs/doctrine/directory-rules.md@0b48f017d33b17dfc109600e2271cfed70fa5e80",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@0b48f017d33b17dfc109600e2271cfed70fa5e80"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T18:29:47.857429Z",
+  "emitter": "OpenAI Codex",
+  "notes": "Synthetic first-slice proof for M29. New fixture report and successor receipt are test artifacts, not governed migration/release decisions. Legacy/common/evidence schemas, identifiers, existing validators, historical fixtures, pinned rollback helper and all historical receipts are preserved. Tracked consumer inventory is explicitly bounded; external consumers remain unknown. Tests overlap and are not unique coverage totals."
+}

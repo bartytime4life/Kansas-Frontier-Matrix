@@ -1,0 +1,7 @@
+{
+  "profile": "kfm.synthetic-temporal-replay/v1",
+  "synthetic": true,
+  "evaluated_at": "2026-08-08T00:20:00Z",
+  "predecessor_release_id": "release:synthetic:temporal-v1",
+  "successor_release_id": "release:synthetic:temporal-v2"
+}

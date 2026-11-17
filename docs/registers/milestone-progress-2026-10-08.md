@@ -107,6 +107,40 @@ base bytes. The changed documents pass local metadata, graph and link checks
 (55 local link targets). The broader registry-backed result remains distinct;
 this contribution does not modify or waive registry debt.
 
+## November 17 follow-through: temporal replay after #5887
+
+The previous readiness contribution entered main as
+`0b48f017d33b17dfc109600e2271cfed70fa5e80` through
+[#5887](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5887).
+That merge is an integration event; its dependency audit, production and
+acceptance boundaries remain separate. No open PR was returned when this next
+slice began at that exact main revision.
+
+The next dependency-ready contribution advances
+[#3394](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394)
+with one [synthetic replay and recovery fixture](../../fixtures/release/temporal_replay/README.md).
+The legacy evidence schema and the distinctly named evidence assessment retain
+their existing dual-read behavior. Common envelopes retain their own source
+correction chronology. The fixture binds predecessor/successor records and
+common context by exact digests, retains fractional clock precision and unknown
+values, refuses cross-family false acceptance, and reads back withdrawal and
+rollback in separate temporary copies through the existing synthetic helper.
+
+The new CLI has no production-store or apply argument. A fixture PASS records
+this bounded proof only. Six declared first-party consumers have source hashes;
+the inventory is not a complete repository census. Databases, object storage,
+deployed clients, downstream repositories and generated CI artifacts remain
+`NOT_INSPECTED`, with unknown counts and digests. Legacy removal remains
+`HOLD_EXTERNAL_INVENTORY_REQUIRED`. The broader M29 checkpoint remains partial;
+real persisted migration, authenticated API/UI/AI replay, domain-specific drought
+proof, operator acceptance and external-consumer reconciliation remain open.
+
+The existing `rollback-drill` workflow adds the synthetic temporal test job.
+It retains both existing jobs and their pinned rehearsal boundary. The new
+tests and fixture command run under the Python-process no-network guard.
+Final source hashes and performed/not-performed validation are bound in the
+[authoring receipt](../../data/receipts/generated/genrec-temporal-replay-20261117.json).
+
 ## Currentness addendum — 2026-10-22
 
 The October 8 sections below remain historical. This addendum records a fresh
