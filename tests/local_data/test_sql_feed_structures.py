@@ -286,6 +286,29 @@ class DamTests(FeedCase):
                      dam("Unlocated Dam", "KS00003", "", "")]
         self.web.routes = {st.NID_URL: lambda url: nid_csv(self.rows)}
 
+    def test_new_inspection_histories_are_preserved_in_raw_with_stable_sql_projection(self):
+        header = NID_HEADER + ',Inspection Periodic History,Inspection Annual History'
+        rows = [row + ['Periodic inspection: 2025', 'Annual inspection: 2026'] for row in self.rows]
+        self.web.routes[st.NID_URL] = nid_csv(rows, header=header)
+        result = st.dams(self.ctx)
+        self.assertEqual((result['state'], result['records']), ('loaded', 3))
+        self.assertEqual(self.q('SELECT nid_id,dam_name FROM kfm_nid_dams ORDER BY nid_id'),
+                         [('KS00001', 'Council Grove Dam'), ('KS00002', 'Elk City Dam'), ('KS00003', 'Unlocated Dam')])
+        kept = gzip.decompress(next((self.root / 'data/raw/sql-feeds/dams').glob('*.csv.gz')).read_bytes()).decode()
+        parsed = list(csv.reader(io.StringIO(kept)))
+        self.assertEqual(parsed[0][-2:], ['Inspection Periodic History', 'Inspection Annual History'])
+        self.assertTrue(all(row[-2:] == ['Periodic inspection: 2025', 'Annual inspection: 2026'] for row in parsed[1:]))
+        self.assertEqual(len(self.q('PRAGMA table_info(kfm_nid_dams)')), len(st.NID_COLUMNS) + 3)
+
+    def test_unrecognized_history_trailers_still_stop_without_loading(self):
+        for suffix in [',Inspection Periodic History', ',Unrecognized Inspection Field',
+                       ',Inspection Annual History,Inspection Periodic History']:
+            width = suffix.count(',')
+            self.web.routes[st.NID_URL] = nid_csv([row + ['x'] * width for row in self.rows], header=NID_HEADER + suffix)
+            with self.assertRaisesRegex(core.FeedError, 'NID_COLUMNS_CHANGED'):
+                st.dams(self.ctx)
+        self.assertEqual(self.q('SELECT COUNT(*) FROM kfm_sql_sources'), [(0,)])
+
     def test_kansas_dams_load_sorted_by_nid_id_and_are_rechecked_weekly(self):
         result = st.dams(self.ctx)
         self.assertEqual((result["state"], result["rows"], result["records"]), ("loaded", 3, 3))
