@@ -1,5 +1,5 @@
 import type {ArchiveAnswer,ArchiveRow} from '../archive-layer-data';
-type CollectionDescriptor={id:string;title:string;database:string;geometry:unknown;columns:readonly string[]};
+type CollectionDescriptor={id:string;title:string;database:string;geometry:unknown;columns:readonly string[];topics?:readonly string[]};
 const normalize=(value:string)=>value.normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase();
 
 /** Search catalog metadata only; matching a field does not establish retained data or coverage. */
@@ -7,7 +7,7 @@ export function matchingCollections<T extends CollectionDescriptor>(collections:
  const words=normalize(query).match(/[\p{L}\p{N}]+/gu)??[];
  return collections.filter(collection=>{
   if(mappedOnly&&!collection.geometry)return false;
-  const text=normalize([collection.title,collection.id,collection.database,...collection.columns].join(' '));
+  const text=normalize([collection.title,collection.id,collection.database,...collection.columns,...(collection.topics??[])].join(' '));
   return words.every(word=>text.includes(word));
  });
 }

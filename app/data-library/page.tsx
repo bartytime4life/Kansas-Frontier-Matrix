@@ -1,11 +1,13 @@
 'use client';
 import Link from 'next/link';
 import {useEffect,useLayoutEffect,useRef,useState} from 'react';
-import {RECOVERED_COLLECTIONS,recoveredCollection,recoveredMapUrl} from '../recovered-collections';
+import {RECOVERED_COLLECTIONS,recoveredCollection,recoveredMapUrl,recoveredTopics} from '../recovered-collections';
 import {fetchArchive,rowLabel,textValue,type ArchiveAnswer} from '../archive-layer-data';
 import ArchiveSearch from './search';
 import {fetchCatalogFreshness,freshnessLine,loadedThrough,type CatalogFreshness} from './freshness';
 import styles from './library.module.css';
+import CollectionMetadataPanel from '../collection-metadata-panel';
+import {labUrl} from '../collection-metadata';
 import {collectionLocation,matchingCollections,comparisonKey,pinComparison,comparisonFields,comparisonValue,comparisonExport,COMPARISON_LIMIT,type ComparedRecord} from './collection-browser';
 import browserStyles from './collection-browser.module.css';
 
@@ -43,7 +45,7 @@ export default function DataLibrary(){
  const request=useRef<AbortController|null>(null),generation=useRef(0);
  const finder=useRef<HTMLInputElement>(null),collectionHeading=useRef<HTMLHeadingElement>(null);
  const collection=recoveredCollection(id);
- const matching=matchingCollections(RECOVERED_COLLECTIONS,search,mappedOnly),hasFilters=Boolean(search.trim()||mappedOnly);
+ const matching=matchingCollections(RECOVERED_COLLECTIONS.map(c=>({...c,topics:recoveredTopics(c.id)})),search,mappedOnly),hasFilters=Boolean(search.trim()||mappedOnly);
  function syncLocation(nextId=id,find=search,mapped=mappedOnly){
   try{history.replaceState(history.state,'',collectionLocation(location.search,location.hash,nextId,find,mapped));}
   catch{/* Browsing remains usable when the browser cannot update history. */}
@@ -94,7 +96,7 @@ export default function DataLibrary(){
  }
  function download(){if(!answer)return;const url=URL.createObjectURL(new Blob([JSON.stringify(answer,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`${id}-page-${page}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  return <main className={styles.library}>
-  <header><Link href="/?panel=layers">← Back to the map</Link><span>KANSAS FRONTIER MATRIX</span><h1>Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
+  <header><Link href="/?panel=layers">← Back to the map</Link> · <Link href="/data-lab">Record lab &amp; research stories →</Link><span>KANSAS FRONTIER MATRIX</span><h1>Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
   <div className={styles.summary}><strong>{RECOVERED_COLLECTIONS.length} record collections</strong><span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} map options · availability shown on read</span><span>Full-text search of newspaper pages and archive texts</span><span>Public source data · archived editions</span>{fresh&&<span>Load dates as of {fresh.at.slice(0,16).replace('T',' ')} UTC{fresh.state==='stale'?' (PC away; last known)':''}</span>}</div>
   <ArchiveSearch loadedThrough={{newspapers:loadedThrough(collectionFreshness('bulk-newspaper-pages')),texts:loadedThrough(fresh?.datasets.get('archive-search')?.freshness)}}/>
   {selected.length>0&&<aside className={`${styles.tray} ${browserStyles.selectionTray}`} aria-label="Selected archive map collections"><div><strong>{selected.length} {selected.length===1?'collection':'collections'} selected</strong><small>Map their first record pages; load further pages in Layers.</small></div><Link href={recoveredMapUrl(selected)}>Open together on map →</Link><button type="button" onClick={()=>setSelected([])}>Clear</button></aside>}
@@ -124,7 +126,7 @@ export default function DataLibrary(){
     <div className={browserStyles.filters}>
      <div className={browserStyles.filterTools}><label>Find a collection<input ref={finder} type="search" value={search} onChange={e=>{setSearch(e.target.value);syncLocation(id,e.target.value,mappedOnly);}} maxLength={80} placeholder="Wells, Census, wind speed…" aria-describedby="collection-results-summary"/></label>{hasFilters&&<button type="button" aria-label="Clear collection filters" onClick={clearFilters}>Clear</button>}</div>
      <label className={browserStyles.mapFilter}><input type="checkbox" checked={mappedOnly} onChange={e=>{setMappedOnly(e.target.checked);syncLocation(id,search,e.target.checked);}}/>With map geometry</label>
-     <p className={browserStyles.hint}>Search names, sources and field names. Record availability is checked when you read a collection.</p>
+     <p className={browserStyles.hint}>Search names, topics, sources and field names. Record availability is checked when you read a collection.</p>
     </div>
     <p id="collection-results-summary" role="status" aria-live="polite" aria-atomic="true">{matching.length} of {RECOVERED_COLLECTIONS.length} collections</p>
     <div className={styles.results}>{matching.map(c=>{const through=loadedThrough(collectionFreshness(c.id));return <button type="button" key={c.id} aria-pressed={c.id===id} onClick={()=>choose(c.id)}><strong>{c.title}</strong><small>{c.geometry?'Records + map geometry':'Records & reference tables'} · {c.database==='bulk'?'bulk archive':'observation archive'}{through?` · loaded ${through}`:''}</small></button>;})}</div>
@@ -136,6 +138,7 @@ export default function DataLibrary(){
      <div className={styles.actions}><button type="button" disabled={busy} onClick={()=>void read()}>Read first page</button>{compared.length>0&&<a className={browserStyles.mapLink} href="#archive-comparison-heading">Compare pinned records ({compared.length}) ↑</a>}{selected.length>0&&<Link className={browserStyles.mapLink} href={recoveredMapUrl(selected)}>Open selected map ({selected.length}) →</Link>}{collection.geometry&&<button type="button" aria-pressed={selected.includes(id)} onClick={()=>setSelected(current=>current.includes(id)?current.filter(v=>v!==id):[...current,id])}>{selected.includes(id)?'Remove from map selection':'Add to map selection'}</button>}</div>
      {!collection.geometry&&<p className={styles.note}>Available as source records. This table has no stored GeoJSON geometry; geographic joins require the matching place identity and edition.</p>}
      <details><summary>{collection.columns.length} available fields</summary><p className={styles.fields}>{collection.columns.join(' · ')}</p></details>
+     <CollectionMetadataPanel collection={collection}/><p><Link href={labUrl(id)}>Profile records &amp; build a research brief →</Link></p>
     </>:<><h2>Every collection has a place here</h2><p>Start with a collection. Measurements and text remain useful even when they have no location to draw. Geometry collections can be selected together and opened on the map.</p></>}
     <p role="status">{status}</p>
     {answer&&<><div className={styles.actions}><strong>Page {page}</strong><button type="button" onClick={download}>Download this page · JSON</button>{answer.nextCursor&&<button type="button" disabled={busy} onClick={()=>void read(answer.nextCursor!)}>Next records</button>}</div>

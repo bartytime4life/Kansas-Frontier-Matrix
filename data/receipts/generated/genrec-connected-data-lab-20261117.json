@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-connected-data-lab-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/api/collection-metadata/route.ts",
+    "app/collection-lab.ts",
+    "app/collection-metadata-panel.tsx",
+    "app/collection-metadata.ts",
+    "app/data-lab/lab.module.css",
+    "app/data-lab/page.tsx",
+    "app/data-library/collection-browser.ts",
+    "app/data-library/library.module.css",
+    "app/data-library/page.tsx",
+    "app/recovered-topics.mjs",
+    "docs/collection-data-lab.md",
+    "tests/collection-browser.test.mjs",
+    "tests/collection-integration.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/api/collection-metadata/route.ts": "sha256:73e8b13b0cf71a38d3e3ab60b8dcd79d6140dc6f5b9b414af2773e5df43392a9",
+    "app/collection-lab.ts": "sha256:755032dc793504dec1afebb5e56af5f66248b70353c0fa47a0080763ca780be2",
+    "app/collection-metadata-panel.tsx": "sha256:aa0f3934b1410faaeecaef9132c3acb2584cc2292768b1119b0833541ade8bf8",
+    "app/collection-metadata.ts": "sha256:c994faae98b0659c0f9b30d6ffcdad44dc66aded24ea38db47c021693fe90753",
+    "app/data-lab/lab.module.css": "sha256:9b5af521772d82764023ee93d38039a1e4d3fd1e5fd73caa64415505ba5d98a4",
+    "app/data-lab/page.tsx": "sha256:6727873b442510446ca8645a260bff4032cead2001bc0265ae51a1f9588f6dc6",
+    "app/data-library/collection-browser.ts": "sha256:da8235acf6c9f5a00f3b7629bf8d66a881f0928dfc6ec0aff00b128874e89d90",
+    "app/data-library/library.module.css": "sha256:ea7f4b9d5ae2aee2d96b927a82e810a37f5128d794466a59bd1ef5fb31176ee7",
+    "app/data-library/page.tsx": "sha256:194c306bca1774fd16bda76e1266cbfa01b7ca310c8c6aec07ffea9099c8a43e",
+    "app/recovered-topics.mjs": "sha256:8c0d751f26d33c68cb1c086e10dec9b87ae15c1eb3dd27f855dc75cd71813be2",
+    "docs/collection-data-lab.md": "sha256:dd3b98fe7407bc062d1aa138d01433f3b62e91ba6a9799f8afc5cfca95abaac5",
+    "tests/collection-browser.test.mjs": "sha256:41efbbe476359a85b0d0121b35289adfb615c3b8b040b41412258891b626980f",
+    "tests/collection-integration.test.mjs": "sha256:0299e4ca8c52bdf3ed768f59aee1d086d4035e704c843f4be5524e45a8517bc5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-6 family; exact runtime version not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell",
+      "git",
+      "GitHub connector",
+      "headless Chrome CDP"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:e5b9025a7060aab33c50c8d9e65e6a48f22d6b07:AGENTS.md",
+      "git:e5b9025a7060aab33c50c8d9e65e6a48f22d6b07:app/data-library/page.tsx",
+      "git:e5b9025a7060aab33c50c8d9e65e6a48f22d6b07:app/recovered-topics.mjs",
+      "git:ee01cfe48206792d8d9aa52f4bfd10ac72737f92:CONTRIBUTING.md",
+      "git:ee01cfe48206792d8d9aa52f4bfd10ac72737f92:schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "app/api/collection-metadata/route.ts": "CONFIRMED",
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/collection-metadata-panel.tsx": "CONFIRMED",
+    "app/collection-metadata.ts": "CONFIRMED",
+    "app/data-lab/lab.module.css": "CONFIRMED",
+    "app/data-lab/page.tsx": "CONFIRMED",
+    "app/data-library/collection-browser.ts": "CONFIRMED",
+    "app/data-library/library.module.css": "CONFIRMED",
+    "app/data-library/page.tsx": "CONFIRMED",
+    "app/recovered-topics.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED",
+    "tests/collection-browser.test.mjs": "CONFIRMED",
+    "tests/collection-integration.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Node model/application suite",
+      "outcome": "PASS",
+      "reason": "3061 passed, 25 existing skips, zero failures. Node 22; tests/*.test.mjs with test-concurrency=4."
+    },
+    {
+      "gate": "TypeScript",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit after generated build identity exists."
+    },
+    {
+      "gate": "Targeted ESLint",
+      "outcome": "PASS",
+      "reason": "Zero errors; one existing generation-ref cleanup warning in the retained library behavior."
+    },
+    {
+      "gate": "Production build",
+      "outcome": "PASS",
+      "reason": "npm run build; source composition, dependencies and workflow unchanged."
+    },
+    {
+      "gate": "Desktop/mobile browser",
+      "outcome": "PASS",
+      "reason": "250 real public records; lab JSON, source-linked brief and 250-feature GeoJSON export; offline and collection-switch cancellation; no JavaScript exceptions."
+    },
+    {
+      "gate": "Hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Draft not yet opened at emission; exact-head hosted results remain on the PR."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending independent owner/reviewer disposition; no approval inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "active-app-base",
+      "validated": true,
+      "evidence_ref": "git:e5b9025a7060aab33c50c8d9e65e6a48f22d6b07"
+    },
+    {
+      "id": "current-contributor-contract",
+      "validated": true,
+      "evidence_ref": "git:ee01cfe48206792d8d9aa52f4bfd10ac72737f92:CONTRIBUTING.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T19:49:02.520647+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "This receipt records code-generation provenance, not dataset admission, scientific review, permission, release or publication. The source files are locally verified; deployment remains proposed. The receipt excludes itself from artifact hashing to avoid a self-reference. No prompt text, private records, credentials or tool transcript is included."
+}
