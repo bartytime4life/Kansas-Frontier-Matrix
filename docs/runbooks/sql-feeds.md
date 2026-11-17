@@ -492,8 +492,8 @@ installation and preserve any later local fixes and storage paths.
   [Wikidata query optimization](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/query_optimization).
 
 After merge, retain the current launcher and release and stage only committed source that includes
-all active feed fixes. A later local NID overlay (`sql-feeds-nid-cf5f5e682a…`) must also be preserved
-or absorbed into that source; do not replace it with an archive that drops the NID fix. Keep the
+all active feed fixes. This proposed source includes the exact NID compatibility fix from local
+commit `cf5f5e682a…`, matching the active `sql-feeds-nid-cf5f5e682a…` overlay. Do not drop that fix. Keep the
 current data-volume paths. The historical installer matches only `sql-feeds-<40 hex>` launcher pins,
 so a differently named overlay needs a checked pin replacement using the same archive/hash/rollback
 procedure. After staging,
