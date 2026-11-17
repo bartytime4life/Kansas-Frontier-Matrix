@@ -5,6 +5,7 @@ import { componentHarness, findNode, settle } from './component-harness.mjs';
 
 const model=await import(await modelUrl('app/data-library/collection-browser.ts'));
 const library=await import(await modelUrl('app/recovered-collections.ts'));
+const metadata=await import(await modelUrl('app/collection-metadata.ts'));
 const collections=library.RECOVERED_COLLECTIONS;
 const css={default:new Proxy({},{get:(_target,key)=>String(key)})};
 const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
@@ -46,6 +47,7 @@ async function fixture({search='',hash='#collections',historyFails=false}={}){
  }};
  const h=await componentHarness('app/data-library/page.tsx',{
   'next/link':{default:'a'},'../recovered-collections':library,
+  '../collection-metadata-panel':{default:'collection-metadata-panel'},'../collection-metadata':metadata,
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise(resolve=>pending.push(resolve));},rowLabel:row=>row.values.name,textValue:String},
   './search':{default:'archive-search'},'./freshness':{fetchCatalogFreshness:async()=>null,loadedThrough:()=>null,freshnessLine:()=>''},
   './collection-browser':model,'./library.module.css':css,'./collection-browser.module.css':css,
@@ -153,6 +155,7 @@ async function fieldFixture(){
  const calls=[],pending=[],timers=[];
  const h=await componentHarness('app/data-library/page.tsx',{
   'next/link':{default:'a'},'../recovered-collections':library,
+  '../collection-metadata-panel':{default:'collection-metadata-panel'},'../collection-metadata':metadata,
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise((resolve,reject)=>pending.push({resolve,reject}));},rowLabel:()=>'',textValue:String},
   './search':{default:'archive-search'},'./freshness':{},'./collection-browser':model,'./library.module.css':css,'./collection-browser.module.css':css,
  },{setTimeout:(fn,ms)=>{assert.equal(ms,25000);const timer={fn,cleared:false};timers.push(timer);return timer;},clearTimeout:timer=>{timer.cleared=true;}},'\nexport {RecordField};');
