@@ -1,7 +1,7 @@
 # Labs with public data
 
 The owner requested a functional, populated `/labs` on 2026-11-16. The page now
-opens on eight instruments with bundled public source snapshots. The
+opens on two connected workspaces and nine instruments with bundled public source snapshots. The
 question shortcuts, previews, controls, tables, record inspection and downloads
 use these same bundles. Additional instruments and planned stories remain
 accessible through **All research**.
@@ -16,6 +16,7 @@ accessible through **All research**.
 | Built Kansas | Complete returned KDOT state and local bridge inventories, retrieved November 16, 2026; recorded built years 1870–2026 | 24,877 inventory records; 27 undated |
 | Energy Shift | 26 selected EIA Kansas annual series, 1960–2024 | 1,690 annual observations |
 | Air Quality | EPA monitored Kansas county annual AQI, 2000–2025 | 333 county-years; 17 counties historically, 12 in 2025 |
+| County Conditions | ACS five-year periods 2010–2014, 2015–2019 and 2020–2024; nine measures with 90% margins of error | 315 county-period rows; all 105 counties per period |
 
 These are dated source snapshots, not live observations. Source revision,
 coverage, missingness, qualifiers and interpretation limits remain visible.
@@ -29,7 +30,7 @@ The importers read only named public NOAA, Census, USGS, EIA, EPA and KDOT endpo
 records the exact URLs, retrieval times, raw byte counts and SHA-256 hashes.
 The generated manifest binds each shipping filename, size and SHA-256. The
 browser verifies the file before accepting its data. Build validation rejects
-unexpected files in the three manifest data directories, invalid contracts and modified bytes.
+unexpected files in the four manifest data directories, invalid contracts and modified bytes.
 The bridge instrument has an explicit 16 MB / 40,000-record bound; other instruments
 retain the 3 MB / 10,000-record bound. No generic request can enlarge these limits.
 
@@ -59,6 +60,47 @@ series retain numeric years without invented observation dates. EPA selects one
 county-year cohort at a time. Unmonitored counties remain absent. Coverage and
 above-100 percentages use their declared calendar-day and monitored-day denominators;
 AQI does not supply a health outcome or personal exposure measure.
+
+## Connected investigations
+
+`/labs/observatory` joins Census population and ACS conditions, KDOT inventory and
+EPA annual AQI by exact county FIPS. KDOT county labels must match a normalized
+Census county label; unmatched labels remain in diagnostics. The current snapshot
+matches all 24,877 inventory records. Every metric retains its own source period;
+these are not simultaneous measurements. The map, A/B profiles, county rankings,
+cross-source scatter and exports share the selected measures. Missing county AQI
+is unavailable, never zero. Inventory counts describe returned rows, not unique
+physical bridges; score means are unweighted and age uses the inventory year.
+
+ACS acquisition uses official summary-file downloads, with exact estimate and
+90% margin-of-error inputs. The 2024 national table files use bounded byte-range
+responses containing all 105 Kansas county rows; receipts identify the response
+slice and Content-Range, and its hash does not claim to bind the whole national
+file. All vintages require all 105 expected FIPS codes before replacement. Dollar
+amounts use the vintage's dollars and are not inflation-adjusted across periods.
+See the [Census ACS accuracy documentation](https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf).
+
+`/labs/signals` offers 66 annual series across NOAA climate, EIA energy, three USGS
+gauges, tornado records and earthquakes. Positive lag joins X(t) to Y(t + lag),
+with both years inside the selected period. River annual means require a completed
+calendar year and at least 90% of its 365/366 daily observations. Event counts
+include zero years only within declared completed source coverage. Unknown
+measurements remain missing. Annual climate requires all 12 monthly values.
+
+Raw, separate linear detrending and consecutive-year differencing use complete
+paired years. Differences never bridge a gap. Overlay z-scores use the transformed
+paired mean and sample standard deviation; statistics use the transformed values.
+The lag profile recalculates all 11 lags with the same rules. Neighboring years
+can be autocorrelated, source series can overlap and shared trends can inflate
+associations. Lag exploration supplies no significance or causal conclusion.
+
+Both workspaces support bounded share/replay links, CSV and analysis-receipt
+downloads, printing and a browser-local notebook of up to 12 investigations.
+County CSV uploads accept exact Kansas FIPS plus up to 12 numeric measures and
+512 KB. Uploads stay in the browser and never enter share links. Saving a county
+investigation explicitly includes its private attachment in local storage;
+downloading the notebook includes those attachments. Clearing browser storage
+removes local copies. Source fingerprints distinguish saved from current data.
 
 ## Scientific tools and replay
 
@@ -106,6 +148,7 @@ Run from this standalone application's root:
 python3 scripts/prepare-labs-data.py --through YYYY-MM-DD
 python3 scripts/prepare-labs-science-data.py
 python3 scripts/prepare-labs-bridges.py --through YYYY-MM-DD
+python3 scripts/prepare-labs-county-data.py
 node scripts/validate-labs-data.mjs
 npm run build
 node --test --test-concurrency=4 tests/*.test.mjs app/labs/atlas-model.test.mjs

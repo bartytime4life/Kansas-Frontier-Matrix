@@ -5,7 +5,7 @@ import { PUBLIC_LAB_SNAPSHOTS } from '../app/labs/public-snapshots.mjs';
 import { loadPublicLabSnapshot } from '../app/labs/snapshot-loader.mjs';
 
 const expected = new Set();
-const directories = ['labs-data', 'labs-data-extension', 'labs-data-bridges'];
+const directories = ['labs-data', 'labs-data-extension', 'labs-data-bridges', 'labs-data-observatory'];
 for (const [id, snapshot] of Object.entries(PUBLIC_LAB_SNAPSHOTS)) {
   if (!/^[a-z]+(?:-[a-z]+)*$/.test(id) || !new RegExp(`^/(?:${directories.join('|')})/${id}-[a-f0-9]{16}\\.json$`).test(snapshot.path)) {
     throw new Error('Invalid public Labs manifest path');
