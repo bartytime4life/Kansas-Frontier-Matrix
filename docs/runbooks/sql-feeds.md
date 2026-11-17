@@ -17,7 +17,8 @@ The owner asked for this on 2026-11-01, approving four things:
 - PRISM at both 4 km and 800 m, keeping only Kansas;
 - a private NetCDF reader, so NWM loads one run a day.
 
-The public local-data API serves these tables. The feeds only add data.
+The public local-data API serves these tables. The feeds add new data and apply
+the provider revisions described below.
 
 ## Rules every feed follows
 
@@ -34,9 +35,10 @@ The public local-data API serves these tables. The feeds only add data.
   receipt, under `data/receipts/ingest/sql-feeds/<feed>/`, records the URL, the
   retrieval time, `Last-Modified`, and the full download's size and SHA-256
   (`"kept": false`).
-- **One transaction per source file**, keyed by SHA-256 in `kfm_sql_sources`. A
-  rerun skips what is loaded, an interrupted load leaves nothing behind, and an
-  identical answer is never loaded twice.
+- **Source-file transactions**, keyed by SHA-256 in `kfm_sql_sources`. Most feeds
+  load a file atomically; the full Census feeds use the bounded resumable batches
+  described below. Reruns skip completed work, and interrupted transactions roll
+  back without discarding earlier committed batches.
 - **The lock covers writes only.** Downloads run outside `run/pipeline.lock`;
   only database writes take it. Captures and backups are held for seconds, not
   for a download.
@@ -228,13 +230,13 @@ nightly.
 
 ## Install and run
 
-**Install:**
+For the existing PC, use the [pinned-release update procedure](#updating-an-existing-pinned-release)
+below. The original bootstrap entrypoint was the host-side
+`pc-pipeline-data/run/install-sql-feeds.sh SOURCE_CHECKOUT`, outside this Git
+checkout. It was absent from the PC workspace at the November 17 inspection;
+fresh-machine provisioning needs a separately verified bootstrap.
 
-    pc-pipeline-data/run/install-sql-feeds.sh SOURCE_CHECKOUT
-
-This copies the 22 modules and 2 budget catalogs the feeds need into
-`pc-pipeline-data/runtime/releases/sql-feeds-<digest>/`, writes
-`runtime/sql-feeds.env`, and enables these timers (local time):
+The installed timers run at these local times:
 
 | Feed | Runs |
 |---|---|
@@ -270,24 +272,57 @@ for itself what is due.
 
 **Run one feed by hand:**
 
-    pc-pipeline-data/runtime/sql-feed.sh FEED
+    pc-pipeline-data/runtime/sql-feed.sh run FEED
 
 **Status of every feed:**
 
-    python -m tools.local_data.sql_feeds --root STORE --db DB status
+    pc-pipeline-data/runtime/sql-feed.sh status
+
+These commands run from the PC workspace containing `pc-pipeline-data`, rather
+than from an arbitrary source checkout. `status` uses the installed pin and
+checks both databases configured in that launcher without loading a feed.
 
 **Logs:**
 
     journalctl --user -u 'kfm-sql-feed@*'
 
-The `nwm` feed runs with `~/.cache/kfm-nwm-venv/bin/python`. That environment
-has binary wheels only:
+As inspected on November 17, 2026, the launcher selects
+`~/.local/share/kfm/venvs/nwm/bin/python` for all scheduled feeds, with Python
+3.14.4. Its NWM dependencies are:
 
-- `netCDF4` 1.7.5.1.post1, its stable-ABI wheel, since dev runs Python 3.14 and
-  the pinned 1.7.4 has no wheel for it;
+- `netCDF4` 1.7.5.1.post1;
 - `numpy` 2.5.4.
 
 Every other feed uses only the standard library.
+
+### Updating an existing pinned release
+
+The November 17 updates used an archive of the approved merged commit's complete
+`tools/local_data` tree, rather than a copy of a working checkout. For a later update:
+
+1. Inspect the current launcher and retain its exact bytes, mode and release directory.
+   Confirm the target merged commit includes every active local feed fix and record
+   the current launcher SHA256 so a concurrent change can be detected.
+2. Stage `git archive <merged-commit> tools/local_data` in a new
+   `runtime/releases/sql-feeds-<full-commit>/` directory. Generate `release.json` with
+   `sourceCommit` and each archived file's SHA256, then independently match those
+   files to both the manifest and committed archive.
+3. Resolve all registered handlers with the production interpreter and run the
+   appropriate offline regressions against that release, checking imported module
+   paths. Verify the data-volume identity before activation.
+4. Render a temporary launcher that changes only its release `cd` line. Preserve
+   the mount guard, current data-volume arguments and file mode; check shell syntax
+   and refuse activation if the launcher hash changed since inspection. Replace
+   the pin atomically and verify installed hashes and read-only `status`.
+5. Keep the prior launcher and release for rollback. Each subsequent service start
+   reads the launcher; a pin-only update needs no timer change, daemon reload or
+   restart of an active feed. Observe normal scheduled invocations separately.
+
+The historical installer matches only bare `sql-feeds-<40 hex>` pins. A named
+overlay needs a checked replacement of its actual path. Rollback must retain the
+current data-volume arguments; restoring an older launcher from before a storage
+move can reintroduce invalid paths. This procedure does not authorize a database
+rewrite, feed retry or data publication.
 
 ## Spatial sidecars
 
@@ -430,12 +465,17 @@ switch it back to WAL on their next open.
 
 ## Failure and recovery
 
-A failed run logs `feed_failed` with a fixed reason. It changes no state, so the
-next timer run retries. Common reasons:
+Handled feed errors log `feed_failed` with a fixed reason. Unexpected exceptions
+may instead leave a traceback and a nonzero systemd service result; inspect both
+the journal and terminal result. A failed run retains completed source transactions
+and saved progress. The in-flight load transaction rolls back, and a later
+scheduled run resumes from the retained checkpoints. Common reasons:
 
 - `HTTP_<code>`, `FETCH_FAILED`: the provider was unavailable.
 - `STORM_COLUMNS_CHANGED`: NCEI removed or renamed a column.
 - `RAW_OBJECT_CHANGED`: a provider's bytes changed under a name already kept.
+- `CACHED_RAW_PATH_INVALID`: a migrated water capture's receipt path cannot safely
+  resolve inside the current raw tree.
 - `PIPELINE_LOCK_BUSY`: the lock was held for more than 15 minutes.
 
 Partial runs recover without stalling or skipping:
@@ -468,9 +508,10 @@ The first run on dev, 2026-11-01:
 
 ## Provider recovery follow-up, November 16, 2026
 
-These source changes require review and a new pinned feed release before the PC uses them.
-The recovery baseline is `sql-feeds-205e344ea8…`; inspect the current launcher before
-installation and preserve any later local fixes and storage paths.
+These changes merged in [PR #5882](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5882)
+and were installed on November 17. The dated recovery baseline was
+`sql-feeds-205e344ea8…`; the [November 17 installation snapshot](#installed-release-and-acceptance-snapshot-november-17-2026)
+records the subsequent release identities and pending scheduled acceptance.
 
 - USGS record requests cover up to 125 years (fewer than 46,000 daily dates) instead of 25;
   full pages still split and only a complete record replaces the prior one. Every USGS page
@@ -491,13 +532,11 @@ installation and preserve any later local fixes and storage paths.
   values. Synthetic RDF equivalence checks do not establish live WDQS performance. See
   [Wikidata query optimization](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/query_optimization).
 
-After merge, retain the current launcher and release and stage only committed source that includes
-all active feed fixes. This proposed source includes the exact NID compatibility fix from local
-commit `cf5f5e682a…`, matching the active `sql-feeds-nid-cf5f5e682a…` overlay. Do not drop that fix. Keep the
-current data-volume paths. The historical installer matches only `sql-feeds-<40 hex>` launcher pins,
-so a differently named overlay needs a checked pin replacement using the same archive/hash/rollback
-procedure. After staging,
-verify hashes and feed resolution, then inspect normal scheduled runs for `feed_throttled`,
+PR #5882 also includes the exact NID compatibility fix from local commit
+`cf5f5e682a…`, matching the then-active `sql-feeds-nid-cf5f5e682a…` overlay.
+Preserve it and the current storage paths in later releases using the
+[pinned-release update procedure](#updating-an-existing-pinned-release).
+Inspect normal scheduled runs for `feed_throttled`,
 `feed_query_split`, `feed_done` and `feed_failed`. A completed or `not_due` run does not prove that
 a rate-limit retry recovered. Tables, source identities, per-file transactions and saved cycle/range
 progress remain compatible; no production migration is required.
@@ -506,7 +545,8 @@ progress remain compatible; no production migration is required.
 
 Water-feed deduplication can encounter an absolute `kfm_sql_sources.source_path` from
 the previous store root. Reusing that path while the old disk is still mounted makes
-receipt lookup fail against the current root. The proposed fix resolves the capture
+receipt lookup fail against the current root. The fix merged in
+[PR #5889](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5889) resolves the capture
 using its receipt's store-relative `path` under the current `data/raw/sql-feeds` tree.
 It verifies the migrated file's SHA256 before reuse and rejects absolute, parent-traversing,
 out-of-tree or escaping-symlink receipt paths. A changed local copy stops with
@@ -521,6 +561,68 @@ Synthetic migration regressions cover both an attached and retired old store, un
 loaded history without a second capture, altered bytes, unsafe paths, escaping symlinks
 and fresh capture when a migrated raw file is missing. A read-only replay of the actual
 groundwater source record resolved the current copy and its `year/1953` receipt without
-changing that record or requesting provider data. Complete scheduled ingestion remains
-separate acceptance evidence. Install only after the normal review/merge and pinned-release
-procedure, retaining the current launcher, DATA14TB arguments and prior release for rollback.
+changing that record or requesting provider data. It is included in the installed
+November 17 release below. Complete scheduled ingestion remains separate acceptance
+evidence; later updates retain the current launcher, storage arguments and prior release.
+
+## Installed release and acceptance snapshot, November 17, 2026
+
+**CONFIRMED / IMPLEMENTED, operator-local installation evidence:** at 13:21 CST the
+launcher selected `sql-feeds-ab1c0137106c75f498a746b6814da8c398132609`, the merged
+PR #5889 commit. Its 115 source files matched the committed archive and manifest.
+The previous `sql-feeds-e87494a7d29390fabe7f6398d0b345ff884f2fe8` release from PR #5882
+and its exact launcher were retained for rollback. Earlier NID and November 7
+releases were also retained. The DATA14TB arguments and mount guard were preserved.
+
+Validation recorded with that installation:
+
+- All 63 handlers resolved, including nine bulk handlers. All 92 focused tests
+  passed against the archived release under production Python 3.14.4 with the
+  no-network guard and release-module path assertions.
+- The source tree's full offline suite passed: 1,095 tests, 40 skipped and
+  686 subtests. Exact-head hosted
+  [local-data-store](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44157020945)
+  and [water-pilot](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44157021945)
+  passed; this does not assert every repository workflow passed.
+- Read-only observations and bulk database status passed, as did the affected
+  groundwater source lookup and current capture/receipt hash check. No production
+  database rewrite or manual provider-feed invocation was performed.
+- The prior release's 113 source/manifest files and all 124 captured feed unit and
+  override files were unchanged. Generated Python bytecode is outside source-file
+  integrity accounting.
+
+On this PC, the workspace's `recovery/feed-cache-recovery-20261117/` contains
+`installation-report.json`, `integrity.json`, the validation logs, retained launcher
+and checked `rollback.py`. These are operator-local artifacts outside the Git
+checkout; this runbook records their dated readback and does not replace them.
+
+**NEEDS VERIFICATION:** all five first scheduled invocations were still pending at
+the post-install readback. Expected starts in America/Chicago, with variable seconds:
+
+| Feed | First scheduled start after installation |
+|---|---|
+| `wikidata-kansas` | November 17, 22:10 CST |
+| `iem-wind` | November 18, 01:05 CST |
+| `usgs-groundwater` | November 18, 01:35 CST |
+| `usgs-daily` | November 18, 06:05 CST |
+| `usgs-peaks` | November 22, 17:05 CST |
+
+A bounded local read-only watcher was active at the readback. It saves journals,
+invocation IDs, terminal results, failures and progress in `monitor-state.json`,
+`latest-findings.json` and `watcher-events.jsonl` in that evidence directory.
+For a running target it records `/proc` cwd, executable and command line when
+observed. Without that observation, configuration and hash evidence must remain
+distinct from direct process-path evidence. It flags missing starts after five
+minutes, unavailable journals and runs without a terminal result after six hours.
+
+The watcher stops after all five first invocations are terminal, on a pin/integrity
+change, or at November 23 01:30 CST. It cannot send chat alerts or restart after a
+reboot; `watcher-status.json` and a matching live PID/start time establish current
+liveness. No feed timer or systemd unit was added for it. Inspect `final-findings.json`
+after it stops and record remaining failures or evidence gaps before closing acceptance.
+The browser recovery desk retains its separately labelled historical baseline.
+
+No successful live rate-limit recovery was established by this installation.
+Require observed throttling and positive waiting followed by `feed_done` and a
+successful terminal result. A successful `throttled=0` or peaks `not_due` run does
+not prove that behavior.
