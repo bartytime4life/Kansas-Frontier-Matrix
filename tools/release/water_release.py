@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Owner-run release steps for a prepared water package.
 
-``decide`` writes a kfm.water-release-decision/v1 record only after the serving
-gate answers for it. ``stage``/``activate``/``rollback`` operate a local
+``assess`` replays candidate/serving checks without writes and retains explicit
+operational acceptance holds. ``decide`` writes a kfm.water-release-decision/v1
+record only after the serving gate answers for it. ``stage``/``activate``/``rollback`` operate a local
 serving store (the one ``KFM_RELEASE_STORE`` points kfm-governed-api at).
 ``stage-hosted`` uploads the package to the Site for owner activation there; it
 cannot activate. ``cycle`` runs capture through decision (and hosted staging) in
@@ -23,7 +24,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from connectors.usgs.water_data.pilot_capture import capture
-from connectors_core.captured_json import canonical_bytes, decode_object
+from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes
 from pipelines.domains.hydrology.admission import SOURCE_REF, load_admission
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.package import prepare_water_package
@@ -220,16 +221,53 @@ def _decision(path: Path) -> dict:
     return decision
 
 
+def assess(root: Path, package_id: str, *, decision: dict | None, now: datetime) -> dict:
+    """Read-only candidate proof, with operational acceptance kept as explicit holds.
+
+    Reuse the capture-reproduction check and all three serving projections. An
+    ANSWER establishes this bounded candidate check only; it cannot establish
+    hosted identity, operator recovery, device acceptance or accountable review.
+    No capture, decision, serving alias or release record is written here.
+    """
+    raw = _snapshot(root, package_id)
+    manifest, values = validate_snapshot(raw)
+    stamp = _utc(now)
+    views = {}
+    for view in ("bootstrap", "layers", "evidence"):
+        response = project(raw, decision, view=view, now=stamp)
+        envelope = response["envelope"]
+        views[view] = {"outcome": envelope["outcome"], "reason_code": envelope["reason_code"]}
+        if envelope["outcome"] == "ANSWER" and response["data"]["package_id"] != package_id:
+            raise ValueError("READINESS_PACKAGE_BINDING_MISMATCH")
+    failures = sorted({value["reason_code"] for value in views.values() if value["outcome"] != "ANSWER"})
+    outcomes = {value["outcome"] for value in views.values()}
+    candidate_outcome = "ERROR" if "ERROR" in outcomes else "DENY" if "DENY" in outcomes else "HOLD" if failures else "READY"
+    remaining = ["HOSTED_READBACK_REQUIRED", "OPERATOR_ROLLBACK_READBACK_REQUIRED",
+                 "DEVICE_ACCESSIBILITY_ACCEPTANCE_REQUIRED", "REVIEW_ACCEPTANCE_REQUIRED"]
+    return {"profile": "kfm.water-readiness-assessment/v1", "scope": "candidate-evidence-and-serving-only",
+            "outcome": "HOLD" if candidate_outcome == "READY" else candidate_outcome,
+            "reason_codes": failures + remaining, "assessed_at": stamp,
+            "package_id": package_id, "snapshot_sha256": digest_bytes(raw),
+            "candidate_id": manifest["candidate_id"], "capture_id": values["candidate.json"]["capture_id"],
+            "rollback_target": manifest["rollback_target"], "decision_present": decision is not None,
+            "candidate_outcome": candidate_outcome, "views": views,
+            "evidence_ref_count": len(values["evidence.json"]["entries"]),
+            "review_acceptance": "NOT_EVALUATED", "operational_state": "NOT_INSPECTED",
+            "effects": {"store_written": False, "decision_written": False, "activated": False, "published": False}}
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    for name in ("decide", "stage", "activate", "rollback", "stage-hosted"):
+    for name in ("assess", "decide", "stage", "activate", "rollback", "stage-hosted"):
         sub = commands.add_parser(name)
         sub.add_argument("--root", required=True, help="private acquisition/candidate store")
         if name in ("stage", "activate", "rollback"):
             sub.add_argument("--store", required=True, help="private serving store (KFM_RELEASE_STORE)")
-        if name in ("decide", "stage", "stage-hosted"):
+        if name in ("assess", "decide", "stage", "stage-hosted"):
             sub.add_argument("--package-id", required=True)
+        if name == "assess":
+            sub.add_argument("--decision", help="optional existing decision path relative to --root; no decision is created")
         if name == "stage-hosted":
             sub.add_argument("--site-url", required=True, help="https origin of the KFM Site")
         if name == "decide":
@@ -254,7 +292,15 @@ def main(argv=None) -> int:
     now = datetime.now(timezone.utc)
     try:
         root = external_root(args.root)
-        if args.command == "cycle":
+        if args.command == "assess":
+            decision = None
+            if args.decision:
+                relative = Path(args.decision)
+                if relative.is_absolute() or ".." in relative.parts:
+                    raise ValueError("DECISION_PATH_INVALID")
+                decision = _decision(root / relative)
+            result = assess(root, args.package_id, decision=decision, now=now)
+        elif args.command == "cycle":
             init_store(root)
             end = args.end or _utc(now.replace(minute=0, second=0, microsecond=0))
             start = args.start or _utc(datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) - timedelta(hours=24))
@@ -280,6 +326,8 @@ def main(argv=None) -> int:
         print(canonical_bytes({"outcome": "ERROR", "reason_code": reason}).decode())
         return 1
     print(canonical_bytes(result).decode())
+    if args.command == "assess":
+        return {"READY": 0, "HOLD": 3, "DENY": 4, "ERROR": 1}[result["outcome"]]
     return 0
 
 

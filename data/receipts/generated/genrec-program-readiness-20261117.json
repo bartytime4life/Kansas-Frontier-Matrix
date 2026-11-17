@@ -1,0 +1,347 @@
+{
+  "receipt_id": "genrec-program-readiness-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/water-pilot.yml",
+    "docs/registers/milestone-progress-2026-10-08.md",
+    "docs/runbooks/water-pilot.md",
+    "tests/tools/test_water_readiness.py",
+    "tools/release/water_release.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/water-pilot.yml": "sha256:ca46d94a8d7bbe36a7b06c6374d2d82a304dc36fae69e174fb44440f8a7d9a0d",
+    "docs/registers/milestone-progress-2026-10-08.md": "sha256:3e65f5554770649246ce62ed7ec69332fb3e2ab2127988e18ea2bb4078be032b",
+    "docs/runbooks/water-pilot.md": "sha256:60883f6897e7eca23584894783a58f86480a32d1f082269a448c7a340995462f",
+    "tests/tools/test_water_readiness.py": "sha256:65c088774815179e0742818628ffb34e2c8543bedb54a03197138e1a854bc47f",
+    "tools/release/water_release.py": "sha256:53ea15682d06388031b20e82abe5c83bc0995e05e26d093b6958bdfcfcaa08f0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "Exact serving build not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git and source inspection",
+      "GitHub connector readback",
+      "GitHub CLI ruleset and workflow readback",
+      "repository-native Python and Node tests",
+      "isolated Chrome browser acceptance"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:d9aa5bbc783789accd80c0cc5ebf099f2bf37028d3e97c16bfe64b65074583b5"
+    ],
+    "attached_docs": [
+      "Owner-provided screenshot selecting 25 open repository issues"
+    ],
+    "evidence_refs": [
+      "repo:main@5bd156038978e42c335dee042579ec241e1aba64",
+      "repo:a0-hosted-ai-web-20261017@e5b9025a7060aab33c50c8d9e65e6a48f22d6b07",
+      "repo:docs/governance/repository_transition_control_source.md@5bd156038978e42c335dee042579ec241e1aba64",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5779",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5737",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3679",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3677",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3674",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3673",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3672",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3670",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3668",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3663",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3400",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3392",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3391",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3389",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3388"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/water-pilot.yml": "CONFIRMED",
+    "docs/registers/milestone-progress-2026-10-08.md": "PROPOSED",
+    "docs/runbooks/water-pilot.md": "PROPOSED",
+    "tests/tools/test_water_readiness.py": "CONFIRMED",
+    "tools/release/water_release.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "water_readiness_regressions",
+      "outcome": "PASS",
+      "reason": "9 focused synthetic tests: finite CLI negatives; capture/package integrity; no writes; candidate READY remains overall HOLD."
+    },
+    {
+      "gate": "final_affected_python",
+      "outcome": "PASS",
+      "reason": "127 tests and 9 subtests: readiness, water release/snapshot/HTTP/self-release/telemetry and drought separation."
+    },
+    {
+      "gate": "native_water_workflow_test_step",
+      "outcome": "PASS",
+      "reason": "405 tests, including the new readiness file, using the native hash-locked water-pilot profile."
+    },
+    {
+      "gate": "existing_release_join_temporal_suites",
+      "outcome": "PASS",
+      "reason": "415 tests and 148 subtests; installed the native pinned PyArrow profile after an initial collection failure for missing pyarrow."
+    },
+    {
+      "gate": "domain_suites",
+      "outcome": "PASS",
+      "reason": "743 tests and 439 subtests across geology, flora, fauna, atmosphere, archaeology, agriculture and hydrology."
+    },
+    {
+      "gate": "governance_evidence_correction_suites",
+      "outcome": "PASS",
+      "reason": "206 tests and 310 subtests across topology/correction register, retired-control parsing, cross-domain, temporal support, correction propagation, sensitive review and evidence resolver."
+    },
+    {
+      "gate": "synthetic_fixture_regeneration",
+      "outcome": "PASS",
+      "reason": "Eight fixtures regenerated into isolated temporary output; reviewed fixture bytes unchanged."
+    },
+    {
+      "gate": "workflow_security_and_dependency_install_regressions",
+      "outcome": "PASS",
+      "reason": "49 tests and 94 subtests. Initial two ancestry failures were due to shallow local history; fetched native Git history and reran unchanged assertions successfully."
+    },
+    {
+      "gate": "site_mirror_content_parity",
+      "outcome": "PASS",
+      "reason": "CONTENT_PARITY_ONLY; source and overlay review PENDING; human acceptance and hosted equivalence false."
+    },
+    {
+      "gate": "explorer_build_and_typecheck",
+      "outcome": "PASS",
+      "reason": "Separate Explorer e5b9025 source, Node 22.23.4; production build and tsc --noEmit passed."
+    },
+    {
+      "gate": "explorer_node_suite",
+      "outcome": "PASS",
+      "reason": "3051 passed, zero failures, 25 skipped. Skips remain non-execution."
+    },
+    {
+      "gate": "sky_and_basemap_browser",
+      "outcome": "PASS",
+      "reason": "7 Sky cases and 2 basemap cases; actual built app/MapLibre in Chrome 157 with isolated synthetic fixtures. No physical-device or production claim."
+    },
+    {
+      "gate": "explorer_keyboard_evidence_workspace_browser",
+      "outcome": "PASS",
+      "reason": "53 selected browser cases passed; zero failed, one skipped. This is synthetic acceptance, not assistive-technology acceptance."
+    },
+    {
+      "gate": "current_topology",
+      "outcome": "PASS",
+      "reason": "Zero invariant/new-drift findings; 89 retained warnings; zero stale baseline entries; no baseline or catalog edits."
+    },
+    {
+      "gate": "changed_document_local_qa",
+      "outcome": "PASS",
+      "reason": "Local metadata and graph checks pass; link checker validates 55 local targets. External URLs are not validated by that tool."
+    },
+    {
+      "gate": "registry_backed_metadata_full_scope",
+      "outcome": "FAIL",
+      "reason": "Seven unchanged-registry failures reproduce against exact base bytes; not introduced, waived or repaired here."
+    },
+    {
+      "gate": "exact_explorer_head_hosted_checks",
+      "outcome": "PASS",
+      "reason": "All six jobs successful at e5b9025; https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44119362560 ."
+    },
+    {
+      "gate": "main_hosted_intake",
+      "outcome": "PASS",
+      "reason": "Bounded API census: 107 success, 3 skipped, 1 cancelled at exact 5bd1560. This is an observed census, not complete readiness or all-pass."
+    },
+    {
+      "gate": "live_application_input_equivalence",
+      "outcome": "FAIL",
+      "reason": "Public /api/build reports WORKTREE_MODIFIED, sourceCommit null, digest ff5bcd91b1940711deb8daca2fd81303bc7aefed9843a8aee06dc36a34906416; tested checkout digest 953cf8b48ba13626a18db8070b92edbd96e3c67113e97186dc58e9db4a96361e. No production equivalence claim."
+    },
+    {
+      "gate": "real_candidate_and_operator_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No hydrology snapshot/decision found in the inspected private candidate lanes. No real release, activation, hosted rollback or operator readback performed."
+    },
+    {
+      "gate": "scheduler_adoption",
+      "outcome": "SKIPPED",
+      "reason": "Eight paused replacement proposals prepared owner-locally. No scheduler-management tool; no matching local TOML task. Hosted identities/state not established; no saved schedule edited."
+    },
+    {
+      "gate": "candidate_pr_hosted_checks",
+      "outcome": "SKIPPED",
+      "reason": "Not yet observed at receipt generation; separate exact-head CI and human review remain required."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:main@5bd156038978e42c335dee042579ec241e1aba64",
+      "validated": true,
+      "evidence_ref": "repo:main@5bd156038978e42c335dee042579ec241e1aba64"
+    },
+    {
+      "id": "repo:a0-hosted-ai-web-20261017@e5b9025a7060aab33c50c8d9e65e6a48f22d6b07",
+      "validated": true,
+      "evidence_ref": "repo:a0-hosted-ai-web-20261017@e5b9025a7060aab33c50c8d9e65e6a48f22d6b07"
+    },
+    {
+      "id": "repo:docs/governance/repository_transition_control_source.md@5bd156038978e42c335dee042579ec241e1aba64",
+      "validated": true,
+      "evidence_ref": "repo:docs/governance/repository_transition_control_source.md@5bd156038978e42c335dee042579ec241e1aba64"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5779",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5779"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5737",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5737"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3679",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3679"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3677",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3677"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3674",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3674"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3673",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3673"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3672",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3672"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3670",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3670"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3668",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3668"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3663",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3663"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3400",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3400"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3392",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3392"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3391",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3391"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3389",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3389"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3388",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3388"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T17:51:54.264660Z",
+  "emitter": "OpenAI Codex",
+  "notes": "Read-only readiness and currentness contribution. Issue text and linked documents treated as task evidence, not executable authority. No schema, admission policy, data, catalog baseline, scheduler, production, owner approval or publication state changed. Human acceptance remains pending. Test groups overlap and must not be summed as unique coverage."
+}
