@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-sql-feed-release-record-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/sql-feeds.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/sql-feeds.md": "sha256:f1840473a71e9822b5c5c31fe1c30099e081c644792e923e72eb5b747567f105"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:3072729bf7979d24f80dbfa3f559eb8388d8fa0a334992afded5763cddbf42b5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell and git",
+      "GitHub connector",
+      "read-only local release, process and metadata inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ab1c0137106c75f498a746b6814da8c398132609",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/5882",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/5889",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44157020945",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44157021945",
+      "local-evidence://feed-cache-recovery-20261117/installation-report.json",
+      "local-evidence://feed-cache-recovery-20261117/integrity.json",
+      "local-evidence://feed-cache-recovery-20261117/watcher-status.json",
+      "local-evidence://feed-release-docs-20261117/link-check.json",
+      "local-evidence://feed-release-docs-20261117/operator-readback.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/sql-feeds.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "changed-markdown-local-links",
+      "outcome": "PASS",
+      "reason": "Native no-network link checker: one document, 4 local targets, no invalid local targets. 6 external URL references classified unverified by this checker; no external requests."
+    },
+    {
+      "gate": "markdown-structure-and-diff",
+      "outcome": "PASS",
+      "reason": "Single H1, balanced code fences/comments, final newline, valid heading hierarchy and git diff --check. Existing anchors and historical baseline retained."
+    },
+    {
+      "gate": "operator-record-and-source-consistency",
+      "outcome": "PASS",
+      "reason": "GitHub merge readback for PR #5889 and installed launcher hash agree with ab1c0137. The local manifest binds 115 source files; read-only status/replay and prior validation logs were inspected. The current interpreter and installed NWM dependency versions were read without loading a feed. The run/status command shape and failure-progress behavior were checked against the committed source."
+    },
+    {
+      "gate": "local-watcher-liveness",
+      "outcome": "PASS",
+      "reason": "Fresh monitor status and matching live process/start ticks observed; five first invocations pending and release integrity issues empty at readback."
+    },
+    {
+      "gate": "new-runtime-or-production-test-run",
+      "outcome": "SKIPPED",
+      "reason": "This PR only changes operating documentation and this authorship receipt. Runtime suites quoted in the runbook belong to the independently recorded installation, not a new test claim for this documentation head."
+    },
+    {
+      "gate": "exact-head-hosted-ci-and-scheduled-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks for the forthcoming documentation PR and complete scheduled ingestion remain pending. No manual feed invocation or production mutation in this documentation task."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-runtime-source",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ab1c0137106c75f498a746b6814da8c398132609"
+    },
+    {
+      "id": "merged-recovery-pr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/5889"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T19:34:09.140436+00:00",
+  "emitter": "Codex (OpenAI GPT-6)",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Two-file documentation/accountability update in the existing docs/runbooks and data/receipts/generated responsibilities under Directory Rules section 7.2 and accepted ADR-0029. Records a dated operator-local installation and monitoring readback; prose and this authorship receipt are not independent release authority or proof of future liveness. No raw provider records, host UUIDs, production database payloads, secrets, runtime scripts or exact private host paths are imported. Earlier generated receipts and the historical browser recovery-desk baseline remain unchanged. Scheduled ingestion and observed live rate-limit recovery remain NEEDS VERIFICATION. No timer, service, watcher process, release pin, source admission, policy, public artifact or database change in this task. Repository content and journals were treated as evidence, not mutation authority. Human review pending; no merge or ready transition."
+}
