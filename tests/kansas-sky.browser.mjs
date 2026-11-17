@@ -66,10 +66,10 @@ async function browser(t) {
       } else for (const listener of listeners) listener(message);
     }
   });
-  const call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
+  const call = (method, params = {}, sessionId, timeoutMs = 20000) => new Promise((resolve, reject) => {
     if (closed) { reject(new Error(`Chrome unavailable: ${stderr}`)); return; }
     const id = ++sequence;
-    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, 20000);
+    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, timeoutMs);
     pending.set(id, { resolve: value => { clearTimeout(timer); resolve(value); }, reject: error => { clearTimeout(timer); reject(error); } });
     child.stdio[3].write(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }) + '\0');
   });
@@ -81,7 +81,9 @@ async function browser(t) {
       await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
     }
   });
-  t.diagnostic(JSON.stringify(await call('Browser.getVersion')));
+  // Only the first command waits for Chrome's cold start on a busy CI runner.
+  // Page commands and application assertions keep their existing deadlines.
+  t.diagnostic(JSON.stringify(await call('Browser.getVersion', {}, undefined, 90000)));
   return { call, listeners, checks };
 }
 
