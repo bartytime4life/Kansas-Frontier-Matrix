@@ -132,6 +132,7 @@ class FeedError(RuntimeError):
     """A fixed, loggable reason a feed stopped."""
 
     retry_after: float | None = None   # seconds the provider asked for in Retry-After, on an HTTP_<code> reason
+    provider_message: str | None = None  # bounded JSON error description; not included in logs
 
 
 @dataclass
@@ -163,6 +164,13 @@ def retry_after_seconds(value: str | None, now: datetime | None = None) -> float
 def _http_error(error: urllib.error.HTTPError, url: str) -> FeedError:
     failure = FeedError(f"HTTP_{error.code} {url}")
     failure.retry_after = retry_after_seconds(error.headers.get("Retry-After") if error.headers else None)
+    if error.code == 400:
+        try:
+            payload = json.loads(error.read(4096))
+            if isinstance(payload, dict) and isinstance(payload.get("description"), str):
+                failure.provider_message = payload["description"]
+        except (OSError, ValueError, http.client.HTTPException):
+            pass
     return failure
 
 

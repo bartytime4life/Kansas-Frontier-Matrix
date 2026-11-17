@@ -441,6 +441,9 @@ NID_COLUMNS = """dam_name other_names former_names nid_id other_structure_id fed
     non_usace_dam_with_usace_flood_control_storage_authority_section_7_flood_control_act_of_1944""".split()
 NID_DDL = ddl(NID_TABLE, NID_COLUMNS + ["geometry_geojson"], {"latitude": "REAL", "longitude": "REAL"}, [("county",), ("dam_name",), ("nid_id",)])
 NID_RECHECK_DAYS = 7
+# Observed in the official CSV on 2026-11-16. Preserve these in the raw
+# capture; the existing SQL/public projection remains the original 83 columns.
+NID_HISTORY_COLUMNS = ["inspection_periodic_history", "inspection_annual_history"]
 
 
 def column_name(header: str) -> str:
@@ -457,7 +460,7 @@ def _nid_values(fields):
 
 def _nid_rows(path: Path, header: list):
     for row in read_csv(path, header, "NID"):
-        yield _nid_values(row)
+        yield _nid_values(row[:len(NID_COLUMNS)])
 
 
 def dams(ctx, recheck_days: int = NID_RECHECK_DAYS) -> dict:
@@ -471,7 +474,8 @@ def dams(ctx, recheck_days: int = NID_RECHECK_DAYS) -> dict:
             return {"state": "not_due", "fetched": state["fetched"], "records": state.get("records")}
         fetched = fetch(ctx, NID_URL, "NID", timeout=600)
         rows = list(csv.reader(io.StringIO(fetched.body.decode("utf-8-sig"), newline="")))
-        if not rows or [column_name(h) for h in rows[0]] != NID_COLUMNS:
+        names = [column_name(h) for h in rows[0]] if rows else []
+        if names not in [NID_COLUMNS, NID_COLUMNS + NID_HISTORY_COLUMNS]:
             raise FeedError("NID_COLUMNS_CHANGED")
         header, records = rows[0], rows[1:]
         if any(len(r) != len(header) for r in records):
@@ -482,7 +486,7 @@ def dams(ctx, recheck_days: int = NID_RECHECK_DAYS) -> dict:
             raise FeedError("NID_NOT_KANSAS")
         records.sort(key=lambda r: r[NID_COLUMNS.index("nid_id")])
         for record in records:
-            _nid_values(record)
+            _nid_values(record[:len(NID_COLUMNS)])
         result = keep_version(ctx, db, feed="dams", source_id=NID_SOURCE, key=KANSAS, name="nid-dams-KS", ext=".csv.gz",
                               body=core.gz(csv_bytes([header, *records])), url=fetched.url, original=fetched.body, table=NID_TABLE,
                               width=len(NID_COLUMNS) + 1, rows=lambda path: _nid_rows(path, header),

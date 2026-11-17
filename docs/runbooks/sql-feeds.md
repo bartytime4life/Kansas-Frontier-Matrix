@@ -95,7 +95,7 @@ They follow the rules above. Two core helpers in `sql_feeds.py` serve them:
 
 | Feed | Source | Tables | Each run, and revisions |
 |---|---|---|---|
-| `usgs-daily` | USGS Water Data OGC API (`api.waterdata.usgs.gov/ogcapi/v1`): `combined-metadata`, `daily` | `kfm_usgs_series`, `kfm_usgs_sites`, `kfm_usgs_daily_values` | Backfills up to 300 series records a run, within USGS's 1,000 requests an hour without a key. A statewide "modified since" window picks up new and revised values; there is one row per series and day, and a revision replaces it. Six records are re-read in full each run |
+| `usgs-daily` | USGS Water Data OGC API (`api.waterdata.usgs.gov/ogcapi/v1`): `combined-metadata`, `daily` | `kfm_usgs_series`, `kfm_usgs_sites`, `kfm_usgs_daily_values` | Backfills up to 300 series records a run; anonymous and keyed quotas differ, so every request is paced and provider Retry-After is honored. A statewide "modified since" window picks up new and revised values; there is one row per series and day, and a revision replaces it. Six records are re-read in full each run |
 | `usgs-peaks` | OGC `peaks` | `kfm_usgs_peaks` | The statewide answer every 30 days, replacing the last |
 | `usgs-groundwater` | OGC `field-measurements` | `kfm_usgs_field_measurements` | Year files, backfilled from 1860. Years with changed rows are fetched again, and every year once a year |
 | `water-quality` | Water Quality Portal `Result` and `Station` | `kfm_wqp_results` (47 columns; the kept copy has all of them), `kfm_wqp_stations` | Year files, backfilled from 1901. The current and previous year are fetched weekly, the three before monthly, older years yearly |
@@ -465,3 +465,39 @@ The first run on dev, 2026-11-01:
 | `ghcnd` | 23 update files, 98,317 Kansas rows, current to Oct 31 |
 | `iem-wind` | 2,470 daily summaries; 408,185 backfilled 2003 readings |
 | `asos-5min` | 2001: 60 files, 465,161 readings |
+
+## Provider recovery follow-up, November 16, 2026
+
+These source changes require review and a new pinned feed release before the PC uses them.
+The recovery baseline is `sql-feeds-205e344ea8…`; inspect the current launcher before
+installation and preserve any later local fixes and storage paths.
+
+- USGS record requests cover up to 125 years (fewer than 46,000 daily dates) instead of 25;
+  full pages still split and only a complete record replaces the prior one. Every USGS page
+  has a five-second pause, and its total rate-limit waiting budget is 75 minutes so a run can
+  cross an hourly reset. The six-hour service limit remains. Quotas can still be exhausted;
+  successful provider recovery is not established by offline tests. See the
+  [USGS API-key guidance](https://api.waterdata.usgs.gov/docs/ogcapi/keys/).
+- Groundwater revision discovery also bounds measurement dates to 20-year spans. USGS HTTP 400
+  with an explicit JSON description that a long-running query was cancelled causes a date
+  window to split. Other HTTP 400 responses and an unsplittable single day still fail. The
+  modification watermark advances only after all discovery windows succeed. A small live
+  probe confirmed a year-bounded query returned while the unbounded query was cancelled;
+  this does not qualify the complete refresh.
+- Wikidata query attempts, including server-error retries, are counted and paced at 60 seconds,
+  with a 200-attempt run cap. The provider's November 16 response reports an active-outage
+  one-request-per-minute limit. The people index first projects Kansas places through a subquery
+  and then joins five fixed link predicates, retaining the same human/Kansas scope and reason
+  values. Synthetic RDF equivalence checks do not establish live WDQS performance. See
+  [Wikidata query optimization](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/query_optimization).
+
+After merge, retain the current launcher and release and stage only committed source that includes
+all active feed fixes. This proposed source includes the exact NID compatibility fix from local
+commit `cf5f5e682a…`, matching the active `sql-feeds-nid-cf5f5e682a…` overlay. Do not drop that fix. Keep the
+current data-volume paths. The historical installer matches only `sql-feeds-<40 hex>` launcher pins,
+so a differently named overlay needs a checked pin replacement using the same archive/hash/rollback
+procedure. After staging,
+verify hashes and feed resolution, then inspect normal scheduled runs for `feed_throttled`,
+`feed_query_split`, `feed_done` and `feed_failed`. A completed or `not_due` run does not prove that
+a rate-limit retry recovered. Tables, source identities, per-file transactions and saved cycle/range
+progress remain compatible; no production migration is required.
