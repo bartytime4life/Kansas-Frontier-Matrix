@@ -1,0 +1,43 @@
+{
+  "profile": "kfm.synthetic-drought-multiclock/v1",
+  "synthetic": true,
+  "predecessor_evaluated_at": "2026-08-17T18:00:00Z",
+  "successor_evaluated_at": "2026-08-22T18:00:00Z",
+  "successor_relation": "SUCCESSOR_FORECAST_CONTEXT_ONLY",
+  "source_corrected_at": "2026-08-22T11:00:00Z",
+  "input_sha256": {
+    "observations.json": "sha256:b281389a9ce8445a34c9dd837170cd11aa5d128adfd3dac65aac58d08eeb6d0b",
+    "forecast.json": "sha256:99bed456c9e351f04f7818201af7ebf62a6d05463a040c64cb3ba3fefc01393d",
+    "correction.json": "sha256:f20abc46d7fe6ef1590c2ff6d1f596d1c2a612bcad8ad341042d494e7efa925b"
+  },
+  "uncertainty_by_source": {
+    "evidence:synthetic:usdm:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    },
+    "evidence:synthetic:usgs_streamflow:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    },
+    "evidence:synthetic:kgs_groundwater:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    },
+    "evidence:synthetic:precip_eddi:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    },
+    "evidence:synthetic:soil_moisture:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    },
+    "evidence:synthetic:agriculture_context:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    },
+    "evidence:synthetic:water_management_boundary:v1": {
+      "status": "NOT_PROVIDED",
+      "value": null
+    }
+  }
+}

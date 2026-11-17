@@ -141,6 +141,39 @@ tests and fixture command run under the Python-process no-network guard.
 Final source hashes and performed/not-performed validation are bound in the
 [authoring receipt](../../data/receipts/generated/genrec-temporal-replay-20261117.json).
 
+## November 17 follow-through: drought multi-clock rehearsal
+
+The temporal replay entered main through
+[#5888](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5888), merge
+`f6c49a49fbdb8d1c1f52580ab431a4f2d62e223e`. No open PR was returned by the
+GitHub pulls endpoint at this slice's intake. Its inherited dependency audit
+failure and uninspected external-consumer removal hold remain separate from
+the merge event.
+
+The next [synthetic packet](../../fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/README.md)
+advances [#3390](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390)
+and [#2899](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2899).
+It composes the existing observation and ForecastProduct validators without
+changing their contracts or schemas. Seven source families retain their native
+support/method/unit and separate clocks. The successor forecast remains
+prediction context, the predecessor bytes stay unchanged, and a separate
+streamflow correction binds the original version while preserving observation
+time and support. Twenty-seven exact cases retain derived, conflict, stale,
+missing, superseded, abstain and explicit prohibited-inference outcomes.
+
+The existing dedicated workflow now includes the integrated tests and guarded
+CLI. Its older receipt was reproduced at the exact base with two artifact
+digest mismatches. That historical receipt remains unchanged; a successor
+authoring receipt binds this contribution's final bytes. This is not a waiver
+of historical evidence or an approval.
+
+M22 and the broader observation checkpoint remain partial. Live seven-family
+authority/cadence/rights, quantitative uncertainty propagation, real evidence
+closure, authenticated API/UI/AI replay and independent acceptance remain open.
+No real snapshot, source activation, scheduler change, release or deployment is
+performed. The final authoring and validation record is
+[the new receipt](../../data/receipts/generated/genrec-drought-multiclock-20261117.json).
+
 ## Currentness addendum — 2026-10-22
 
 The October 8 sections below remain historical. This addendum records a fresh
