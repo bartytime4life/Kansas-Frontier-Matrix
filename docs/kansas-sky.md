@@ -620,3 +620,15 @@ constructor throws the same error. Padding now reserves a nonnegative
 intersection within the current canvas, including transient hidden/narrow sizes;
 the error banner and exception handling remain intact. Grow/shrink and ownership
 cleanup are checked separately from browser revalidation and hosted acceptance.
+
+
+## Browser startup diagnostics — 2026-11-17 UTC
+
+The Kansas Sky browser harness gives its first `Browser.getVersion` command up
+to 90 seconds for Chrome cold start, following the existing fire-display harness.
+Subsequent protocol commands keep their 20-second default, and all seven browser
+cases keep their 120-second test limit and application assertions. There is no
+automatic retry or skip. This handles a timeout before page creation; it is not
+a correction or acceptance claim for the unresolved layer-absence issue #5737.
+Run the complete browser file against a built loopback candidate with synthetic
+fixtures, retaining the tested commit, browser version and individual results.
