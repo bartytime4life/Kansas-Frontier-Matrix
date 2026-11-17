@@ -224,17 +224,28 @@ def _save(args, values):
         print(f"Studio is running with its previous settings. Apply with: {ADMIN} stop, then start-local.sh")
 
 
+# Settings that are only valid together are set and cleared as one change.
+LINKED = {"qwen_model": ("qwen_digest",), "qwen_digest": ("qwen_model",), "library_root": ("archive_root",)}
+
+
 def cmd_workspace_set(args):
+    pairs = args.pairs
+    if len(pairs) % 2:
+        raise Failure("Give settings as KEY VALUE pairs, for example: workspace set qwen_model NAME qwen_digest DIGEST")
     values = wc.load(args.config)
-    values[args.key] = args.value
+    for key, value in zip(pairs[::2], pairs[1::2]):
+        if key not in wc.OPTIONS:
+            raise Failure(f"Unknown setting '{key}'. Choose from: " + ", ".join(sorted(wc.OPTIONS)))
+        values[key] = value
     _save(args, values)
 
 
 def cmd_workspace_unset(args):
     values = wc.load(args.config)
-    values.pop(args.key, None)
-    if args.key == "library_root":
-        values.pop("archive_root", None)
+    for key in args.keys:
+        values.pop(key, None)
+        for linked in LINKED.get(key, ()):
+            values.pop(linked, None)
     _save(args, values)
 
 
@@ -366,8 +377,11 @@ def parser():
     w.add_parser("show", help="show data workspace settings")
     w.add_parser("setup", help="guided setup")
     c = w.add_parser("init", help="create a new empty Working Data store and connect it"); c.add_argument("path")
-    c = w.add_parser("set", help="set one setting"); c.add_argument("key", choices=sorted(wc.OPTIONS)); c.add_argument("value")
-    c = w.add_parser("unset", help="clear one setting"); c.add_argument("key", choices=sorted(wc.OPTIONS))
+    c = w.add_parser("set", help="set one or more settings in one change (KEY VALUE [KEY VALUE ...])",
+        description="Settings: " + ", ".join(sorted(wc.OPTIONS)) + ". qwen_model and qwen_digest must be set together.")
+    c.add_argument("pairs", nargs="+", metavar="KEY VALUE")
+    c = w.add_parser("unset", help="clear settings (clearing either Qwen setting clears both)")
+    c.add_argument("keys", nargs="+", choices=sorted(wc.OPTIONS), metavar="KEY")
     return p
 
 

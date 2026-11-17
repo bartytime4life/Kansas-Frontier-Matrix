@@ -202,6 +202,20 @@ class CliTests(Base):
         self.assertEqual(code, 1); self.assertIn("folder not found", err)
         self.assertFalse(self.config.exists())
 
+    def test_qwen_pair_is_set_and_cleared_atomically(self):
+        code, _, err = self.run_cli("workspace", "set", "qwen_model", "qwen3:8b")
+        self.assertEqual(code, 1); self.assertIn("set together", err)
+        code, _, err = self.run_cli("workspace", "set", "qwen_model", "qwen3:8b", "qwen_digest", "sha256:abc123")
+        self.assertEqual(code, 0, err)
+        self.assertEqual(wc.load(self.config), {"qwen_model": "qwen3:8b", "qwen_digest": "sha256:abc123"})
+        code, _, err = self.run_cli("workspace", "unset", "qwen_digest")
+        self.assertEqual(code, 0, err); self.assertEqual(wc.load(self.config), {})
+
+    def test_set_rejects_odd_arguments_and_unknown_keys(self):
+        self.assertIn("KEY VALUE pairs", self.run_cli("workspace", "set", "kfm_root")[2])
+        self.assertIn("Unknown setting", self.run_cli("workspace", "set", "bogus", "/x")[2])
+        self.assertFalse(self.config.exists())
+
     def test_guided_setup_creates_store_and_optional_inbox(self):
         target = self.home / "pipeline"; inbox = self.home / "Downloads"; inbox.mkdir()
         code, out, err = self.run_cli("workspace", "setup", answers=[str(target), "y", "", "", str(inbox)])

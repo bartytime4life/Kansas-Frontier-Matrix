@@ -110,7 +110,7 @@ With no arguments it opens a menu. The same actions are available as commands:
 | Clear lockouts after failed sign-ins | `studio-admin.sh unlock` |
 | Sign out every browser session | `studio-admin.sh sign-out-all` |
 | Recent account activity | `studio-admin.sh audit` |
-| Connect Working Data / Library | `studio-admin.sh workspace setup` (guided), `workspace init PATH`, `workspace set KEY PATH`, `workspace show` |
+| Connect Working Data / Library | `studio-admin.sh workspace setup` (guided), `workspace init PATH`, `workspace set KEY VALUE [KEY VALUE ...]`, `workspace unset KEY`, `workspace show` |
 | Stop a launcher-started Studio so new settings apply | `studio-admin.sh stop` |
 
 Changing a password signs that account out everywhere and clears its sign-in
@@ -154,7 +154,7 @@ owner-private settings from `~/.config/kfm-intake-studio/workspace.json`
 Sending still follows the [intake handoff rules](local-intake-studio.md#handoff-to-the-existing-governed-workflow):
 sensitivity holds, unknown rights and unsaved edits still block it; the original
 becomes a source-bound quarantine object, and nothing is admitted or published.
-Remove a setting with `workspace unset KEY`, or delete the settings file to return
+Set the optional Qwen pair in one change with `workspace set qwen_model NAME qwen_digest DIGEST`; clearing either one clears both. Remove a setting with `workspace unset KEY`, or delete the settings file to return
 to the previous unconnected behavior.
 
 ## Roles and owner control
