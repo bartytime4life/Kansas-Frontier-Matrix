@@ -23,7 +23,7 @@ the index and detail query texts (the item list elided as ``wd:Q…``), ``cycle`
 ``items``, ``missing``, ``outside_kansas`` and ``queries``. The feed state keeps ``cycle`` (``started``,
 ``complete``, ``done`` keys), ``items`` per group and ``ranges`` per group, so a run that stops on WDQS's
 per-IP throttling (HTTP 429, ``WIKIDATA_RATE_LIMITED``) or on its query budget resumes from the next pending
-range; queries are two seconds apart. A 429 is first waited out (``core.Throttle``: the Retry-After when given,
+range; up to 200 query attempts run at least 60 seconds apart, including transient retries. A 429 is first waited out (``core.Throttle``: the Retry-After when given,
 else minutes of backoff) and the query sent again, within the run's waiting budget; the run stops only when
 that budget is spent. When every range is done the cycle is complete and keys the cycle did
 not produce are retired; a new cycle starts seven days after the last began. Needs ``ctx.tiger`` for county
@@ -89,8 +89,8 @@ WIKIDATA_TOP = 1 << 28
 WIKIDATA_RANGE_ITEMS = 1000
 WIKIDATA_BATCH = 375
 WIKIDATA_CYCLE_DAYS = 7
-WIKIDATA_QUERIES_PER_RUN = 400
-WIKIDATA_PAUSE = 2.0
+WIKIDATA_QUERIES_PER_RUN = 200
+WIKIDATA_PAUSE = 60.0   # WDQS's active-outage limit is one request/minute; do not hammer repeated 504s
 WIKIDATA_LIMIT = 64_000_000
 WIKIDATA_EXTRA = {"citation": "Wikidata (https://www.wikidata.org), CC0 1.0, via the Wikidata Query Service", "license": "CC0-1.0",
                   "terms": "https://www.wikidata.org/wiki/Wikidata:Licensing"}
@@ -215,8 +215,11 @@ GROUPS = (
           f'SELECT DISTINCT ?item ?why WHERE {{ {BOX} BIND("P625" AS ?why) }}',
           *PLACE_PROPS, ("P131",), True, PLACE_COLUMNS, _place_row),
     Group("people", "wikidata-people", "kfm_wikidata_people",
-          f'SELECT DISTINCT ?item ?why WHERE {{ {ROOTS} VALUES ?p {{ wdt:P19 wdt:P20 wdt:P551 wdt:P937 wdt:P69 }} ?place wdt:P131* ?root . '
-          '?item ?p ?place . ?item wdt:P31 wd:Q5 . BIND(STRAFTER(STR(?p), "direct/") AS ?why) }',
+          'SELECT DISTINCT ?item ?why WHERE { '
+          f'{{ SELECT DISTINCT ?place WHERE {{ {ROOTS} ?place wdt:P131* ?root . }} }} '
+          '{ ' + ' UNION '.join('{ ?item wdt:' + p + ' ?place . BIND("' + p + '" AS ?why) }'
+                                for p in ("P19", "P20", "P551", "P937", "P69"))
+          + ' } ?item wdt:P31 wd:Q5 . }',
           ("P19", "P20", "P551", "P937", "P69", "P106", "P39"), ("P569", "P570"), False, ("P19", "P20", "P551", "P937", "P69"), False,
           PEOPLE_COLUMNS, _person_row),
     Group("events", "wikidata-events", "kfm_wikidata_events",
@@ -269,16 +272,27 @@ class _Budget:
 
 def _sparql(ctx, budget: _Budget, query: str) -> tuple[bytes, list]:
     url = SPARQL + "?format=json&query=" + urllib.parse.quote(query, safe="")
+    failures = 0
     while True:
         budget.take()
         try:
-            fetched = ctx.fetch(url, limit=WIKIDATA_LIMIT, timeout=120)
+            # Own every attempt here so the query cap and pause cover retries too.
+            fetched = ctx.fetch(url, limit=WIKIDATA_LIMIT, timeout=120, attempts=1)
+            if budget.throttle is not None:
+                budget.throttle.consecutive = 0
             break
         except FeedError as error:
-            if budget.throttle is not None and budget.throttle.wait(error):
-                continue
+            if budget.throttle is not None and budget.throttle.throttled(error):
+                if budget.throttle.wait(error):
+                    continue
+                if not str(error).startswith("HTTP_429"):
+                    raise
             if str(error).startswith("HTTP_429"):
                 raise FeedError("WIKIDATA_RATE_LIMITED") from None
+            if (str(error).startswith(("HTTP_500 ", "HTTP_502 ", "HTTP_503 ", "HTTP_504 ", "FETCH_FAILED "))
+                    and failures < 2):
+                failures += 1
+                continue
             raise
     try:
         payload = json.loads(fetched.body)

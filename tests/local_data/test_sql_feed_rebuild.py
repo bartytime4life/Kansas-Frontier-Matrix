@@ -206,6 +206,48 @@ class GridRecoveryTests(FeedCase):
         self.assertEqual(self.sleeps, [12.0, 120.0])
 
 
+    def test_wikidata_server_retries_are_paced_and_count_against_the_query_budget(self):
+        calls, pauses = [], []
+        def fetch(url, **options):
+            calls.append(options)
+            if len(calls) < 3:
+                raise self.refusal(url, code=504)
+            return core.Fetched(url, b'{"results":{"bindings":[]}}')
+        self.ctx.fetch = fetch
+        budget = grid._Budget(4, grid.WIKIDATA_PAUSE)
+        with patch.object(grid, '_sleep', side_effect=pauses.append):
+            _, bindings = grid._sparql(self.ctx, budget, 'SELECT ?item WHERE {}')
+        self.assertEqual((bindings, budget.used, pauses), ([], 3, [60.0, 60.0]))
+        self.assertTrue(all(call['attempts'] == 1 for call in calls))
+
+    def test_wikidata_cannot_retry_past_an_unaffordable_retry_after(self):
+        def fetch(url, **options):
+            raise self.refusal(url, code=503, retry_after=3000)
+        self.ctx.fetch = fetch
+        budget = grid._Budget(4, 0, core.Throttle(self.ctx, 'wikidata-kansas'))
+        with self.assertRaisesRegex(core.FeedError, '^HTTP_503'):
+            grid._sparql(self.ctx, budget, 'SELECT ?item WHERE {}')
+        self.assertEqual((budget.used, self.sleeps), (1, []))
+
+    def test_wikidata_budget_stop_during_server_errors_never_completes_or_retires_the_cycle(self):
+        self.ctx.tiger = self.root / 'fixture.gpkg'
+        initial = {'cycle': {'started': '2026-11-03', 'complete': False, 'done': ['places/Q0-Q10']},
+                   'items': {'places': 1}, 'ranges': {'places': [[0, 10]]}}
+        db = core.open_db(self.ctx)
+        core.set_state(db, self.ctx, 'wikidata-kansas', initial)
+        db.close()
+        def fetch(url, **options):
+            raise self.refusal(url, code=504)
+        self.ctx.fetch = fetch
+        with patch.object(grid, 'kansas_counties', return_value=[]), patch.object(grid, 'retire') as retired:
+            result = grid.wikidata_kansas(self.ctx, max_queries=1)
+        self.assertEqual((result['stopped'], result['queries']), ('QUERY_BUDGET', 1))
+        retired.assert_not_called()
+        db = core.open_db(self.ctx)
+        self.assertEqual(core.get_state(db, 'wikidata-kansas'), initial)
+        db.close()
+
+
 class PreservedRecordTests(FeedCase):
     def test_osm_line_selection_checks_segments_instead_of_only_their_envelope(self):
         box = (0, 0, 10, 10)

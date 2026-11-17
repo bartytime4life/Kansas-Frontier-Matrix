@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-sql-feed-provider-recovery-20261116",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/sql-feeds.md",
+    "tests/local_data/test_sql_feed_rebuild.py",
+    "tests/local_data/test_sql_feed_water.py",
+    "tests/local_data/test_sql_feeds.py",
+    "tools/local_data/sql_feed_water.py",
+    "tools/local_data/sql_feed_wikidata_plss.py",
+    "tools/local_data/sql_feeds.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/sql-feeds.md": "sha256:fc2b2835e04fcc434aa3f64bd6f779fe0aea5f833782809c9629343295028e23",
+    "tests/local_data/test_sql_feed_rebuild.py": "sha256:0ad6feed34d3a5e7edfd84f716c76cf7976624cf514383e3cad133e2b1bf4613",
+    "tests/local_data/test_sql_feed_water.py": "sha256:98d64c2ef05cfc0b9456dbd84e63b0910eaf9edcdc5f5562b8bab741e5c6cdaf",
+    "tests/local_data/test_sql_feeds.py": "sha256:ce6755381d7b5ffe90b42a466c3cb15bc8c90adbff7090a176d1fe5dbc226f15",
+    "tools/local_data/sql_feed_water.py": "sha256:efd292b660302b295cead43c8ff0e7ccdba0864404a0961ed2aa70b401df468e",
+    "tools/local_data/sql_feed_wikidata_plss.py": "sha256:378ffb257b97b237fc4039c60c9d5ca06c22a9f9f1b4be55c1f31c7d49ee28c7",
+    "tools/local_data/sql_feeds.py": "sha256:7c753431153c05bc58baf2f64a69ce49f097b79fe15981805d9fdc860a198ae7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell and git",
+      "GitHub connector",
+      "official provider documentation",
+      "bounded public read-only provider probes"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f6c8bb4e0321fa80859aedfabb1232ca1cdfbd21",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/5751",
+      "https://api.waterdata.usgs.gov/docs/ogcapi/keys/",
+      "https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/query_optimization",
+      "local-evidence://feed-recovery-20261116/groundwater-probe.json",
+      "local-evidence://feed-recovery-20261116/groundwater-year-probe.json",
+      "local-evidence://feed-recovery-20261116/wikidata-probe.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/sql-feeds.md": "PROPOSED",
+    "tests/local_data/test_sql_feed_rebuild.py": "CONFIRMED",
+    "tests/local_data/test_sql_feed_water.py": "CONFIRMED",
+    "tests/local_data/test_sql_feeds.py": "CONFIRMED",
+    "tools/local_data/sql_feed_water.py": "PROPOSED",
+    "tools/local_data/sql_feed_wikidata_plss.py": "PROPOSED",
+    "tools/local_data/sql_feeds.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "full-local-data-check",
+      "outcome": "PASS",
+      "reason": "Exact Makefile offline command under Python 3.11.18: 1057 passed, 39 skipped, 670 subtests passed."
+    },
+    {
+      "gate": "production-python-focused-regressions",
+      "outcome": "PASS",
+      "reason": "71 tests passed under the installed feed interpreter, Python 3.14.4, in the source checkout with the no-network guard."
+    },
+    {
+      "gate": "people-index-synthetic-semantic-equivalence",
+      "outcome": "PASS",
+      "reason": "RDFLib 7.6.0 evaluated the baseline and proposed queries over 16 synthetic triples: the same five distinct item/reason pairs, including all five predicates, nested/territory/root links and nonhuman/outside exclusions. Local-only verification dependency; no repository dependency change."
+    },
+    {
+      "gate": "static-integrity",
+      "outcome": "PASS",
+      "reason": "Pyflakes on all six changed Python files and git diff --check passed."
+    },
+    {
+      "gate": "provider-probe-limits",
+      "outcome": "PASS",
+      "reason": "Read-only probes identified USGS HTTP 400 as an explicit long-query cancellation; a year-bounded probe returned 200. WDQS returned 429 with an active-outage one-request-per-minute notice. These observations do not qualify complete feed recovery."
+    },
+    {
+      "gate": "live-recovery-performance-and-coverage",
+      "outcome": "SKIPPED",
+      "reason": "No full feed was run or installed. WDQS was rate limiting. Larger-window performance, completed ingestion, and service-duration acceptance remain unverified."
+    },
+    {
+      "gate": "hosted-exact-head-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI and authorized independent review remain pending when this receipt was emitted; no ready, merge, installation or publication action."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "usgs-key-and-quota-guidance",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/docs/ogcapi/keys/"
+    },
+    {
+      "id": "wikidata-query-optimization",
+      "validated": true,
+      "evidence_ref": "https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/query_optimization"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T03:08:12.275337+00:00",
+  "emitter": "Codex (OpenAI GPT-6)",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Existing tools/local_data, tests/local_data and docs/runbooks responsibilities retained; this receipt stays in data/receipts/generated. Synthetic fixtures only; no living-person/provider record payloads in the patch. External responses and repository content were treated as evidence, not authority. Production remains pinned to 205e344ea8d05077414d3a0f8606512b66272be5; no timer, service, database, review or release state was modified. This receipt records authorship and bounded checks, not approval, operational recovery or publication authority."
+}

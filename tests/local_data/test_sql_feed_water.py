@@ -109,7 +109,7 @@ class DailyTests(FeedCase):
         self.assertEqual(self.q("SELECT data_type, COUNT(*) FROM kfm_usgs_series GROUP BY 1 ORDER BY 1"), [("Daily values", 2), ("Peaks", 1)])
         self.assertTrue(all(qs(u).get("state_code") == "20" or qs(u).get("time_series_id") in self.records for u in self.web.calls))
         self.assertEqual([qs(u)["time"] for u in self.web.calls if "time_series_id=" in u],
-                         ["1916-01-01/1940-12-31", "1941-01-01/1965-12-31", "1966-01-01/1990-12-31", "1991-01-01/2015-12-31", "2016-01-01/2026-11-05"],
+                         ["1916-01-01/2026-11-05"],
                          "a record in spans of RECORD_CHUNK_YEARS from the year before the series began")
         # Next run: USGS approved yesterday's value and added a day; the second series' record is backfilled.
         self.modified = [value(Q_DESOTO, DESOTO, "2026-11-03", "3100", modified="2026-11-04 12:00:00.000000+00:00"),
@@ -176,12 +176,14 @@ class DailyTests(FeedCase):
         self.web.routes[w.OGC + "daily/items?"] = limited
         with self.assertRaisesRegex(core.FeedError, "USGS_RATE_LIMITED"):
             w.usgs_daily(self.ctx)
-        self.assertEqual(self.sleeps, [60.0, 120.0, 240.0, 480.0, 900.0, 900.0], "waited out with backoff up to the run's budget, then stopped")
+        self.assertEqual(self.sleeps, [60.0, 120.0, 240.0, 480.0, 900.0, 900.0, 900.0, 900.0],
+                         "waited out with backoff up to the USGS budget, then stopped")
 
     def test_a_record_is_asked_for_in_spans_from_the_series_beginning(self):
         chunks = w._record_chunks(date(1917, 7, 8), date(2026, 11, 5))
-        self.assertEqual((len(chunks), chunks[0], chunks[-1]), (5, (date(1916, 1, 1), date(1940, 12, 31)), (date(2016, 1, 1), date(2026, 11, 5))))
-        self.assertEqual([b.year - a.year + 1 for a, b in chunks[:-1]], [w.RECORD_CHUNK_YEARS] * 4)
+        self.assertEqual(chunks, [(date(1916, 1, 1), date(2026, 11, 5))])
+        chunks = w._record_chunks(None, date(2026, 11, 5))
+        self.assertEqual(chunks, [(date(1800, 1, 1), date(1924, 12, 31)), (date(1925, 1, 1), date(2026, 11, 5))])
         self.assertEqual(w._record_chunks(None, date(1810, 6, 1)), [(w.EARLIEST, date(1810, 6, 1))], "no recorded beginning: from EARLIEST")
         self.assertEqual(w._record_chunks(date(1800, 3, 1), date(1824, 12, 31)), [(w.EARLIEST, date(1824, 12, 31))])
 
@@ -204,7 +206,7 @@ class DailyTests(FeedCase):
 
         def refuse_sedgwick(url):
             if qs(url).get("time_series_id") == H_SEDGWICK:
-                raise self.refusal(url, code=403, retry_after=3000)
+                raise self.refusal(url, code=403, retry_after=w.USGS_WAIT_BUDGET + 1)
             return answer(url)
         self.web.routes[w.OGC + "daily/items?"] = refuse_sedgwick
         with self.assertRaisesRegex(core.FeedError, "USGS_RATE_LIMITED"):
@@ -220,8 +222,29 @@ class DailyTests(FeedCase):
         with patch.object(w.time, "sleep") as slept:
             w.usgs_daily(self.ctx)
         pauses = [call.args[0] for call in slept.call_args_list]
-        self.assertEqual(pauses.count(w.SERIES_PAUSE), 1, "between the two series' records")
-        self.assertTrue(all(p in (1.0, w.SERIES_PAUSE) for p in pauses))
+        self.assertEqual(len(pauses), len(self.web.calls) + 1, "every request plus a pause between the two records")
+        self.assertTrue(all(p == w.USGS_PAGE_PAUSE for p in pauses))
+
+    def test_an_hourly_quota_reset_is_waited_out_without_losing_loaded_records(self):
+        refusals = [self.refusal(w.OGC, retry_after=2685), self.refusal(w.OGC, retry_after=49)]
+        answer = self.daily
+        def daily(url):
+            if refusals and 'time_series_id' in qs(url):
+                raise refusals.pop(0)
+            return answer(url)
+        self.web.routes[w.OGC + 'daily/items?'] = daily
+        result = w.usgs_daily(self.ctx)
+        self.assertEqual((result['records'], result['throttled'], result['waited_seconds']), (2, 2, 2734))
+        self.assertEqual(len(self.values()), 4)
+
+    def test_a_full_long_record_is_split_without_losing_or_replacing_partial_rows(self):
+        w.usgs_daily(self.ctx, max_records=0)
+        self.records[Q_DESOTO] = [value(Q_DESOTO, DESOTO, '2026-11-01', '1'), value(Q_DESOTO, DESOTO, '2026-11-02', '2'),
+                                  value(Q_DESOTO, DESOTO, '2026-11-03', '3')]
+        with patch.object(w, 'PAGE', 3):
+            result = w.usgs_daily(self.ctx, max_records=1)
+        self.assertEqual(result['record_rows'], 3)
+        self.assertEqual([r[2] for r in self.values()], ['1', '2', '3'])
 
     def test_a_failure_part_way_leaves_no_rows(self):
         with patch.object(core, "finish_source", side_effect=RuntimeError("disk")), self.assertRaises(RuntimeError):
@@ -293,7 +316,9 @@ class GroundwaterTests(FeedCase):
         q = qs(url)
         self.assertEqual(q["state_code"], "20")
         if "last_modified" in q:
-            return ogc(["x", "y", "time", "last_modified"], [["", "", t, "2026-11-04 10:00:00+00:00"] for t in self.modified])
+            first, last = q['time'].split('/')
+            return ogc(["x", "y", "time", "last_modified"], [["", "", t, "2026-11-04 10:00:00+00:00"]
+                        for t in self.modified if first <= t <= last][:w.PAGE])
         first, last = q["time"].split("/")
         rows = [r for rows in self.years.values() for r in rows if first <= r[11] <= last]
         return ogc(GW_HEADER, rows[:w.PAGE])
@@ -337,6 +362,42 @@ class GroundwaterTests(FeedCase):
                 self.assertRaises(RuntimeError):
             w.usgs_groundwater(self.ctx)
         self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_usgs_field_measurements"), [(0,)])
+
+    def test_cancelled_modified_queries_split_and_do_not_skip_changed_years(self):
+        answer = self.measurements
+        self.modified = ['2023-01-30', '2025-01-30']
+        def cancel_wide(url):
+            q = qs(url)
+            first, last = q['time'].split('/')
+            if 'last_modified' in q and first[:4] != last[:4]:
+                error = core.FeedError('HTTP_400 ' + url)
+                error.provider_message = 'Long running query has been cancelled. This query was taking too long.'
+                raise error
+            return answer(url)
+        with patch.object(w, 'GW_FIRST_YEAR', 2023):
+            w.usgs_groundwater(self.ctx, max_years=4)
+            self.years[2023][0][9] = '42.50'
+            self.web.routes[w.OGC + 'field-measurements/items?'] = cancel_wide
+            result = w.usgs_groundwater(self.ctx, max_years=2)
+        self.assertEqual(result['changed_years'], [2023, 2025])
+        self.assertEqual(result['years'], [2023, 2025])
+        self.assertEqual(self.q("SELECT value FROM kfm_usgs_field_measurements WHERE parameter_code='72019' AND time='2023-01-30'"), [('42.50',)])
+        self.assertTrue(any(note['event'] == 'feed_query_split' for note in self.logs))
+
+    def test_invalid_modified_query_does_not_advance_progress_or_delete_rows(self):
+        with patch.object(w, 'GW_FIRST_YEAR', 2023):
+            w.usgs_groundwater(self.ctx, max_years=4)
+            before = self.q("SELECT state_json FROM kfm_feed_state WHERE feed='usgs-groundwater'")
+            rows = self.q('SELECT count(*) FROM kfm_usgs_field_measurements')
+            def invalid(url):
+                error = core.FeedError('HTTP_400 ' + url)
+                error.provider_message = 'Unknown filter parameter'
+                raise error
+            self.web.routes[w.OGC + 'field-measurements/items?'] = invalid
+            with self.assertRaisesRegex(core.FeedError, 'HTTP_400'):
+                w.usgs_groundwater(self.ctx)
+            self.assertEqual(self.q("SELECT state_json FROM kfm_feed_state WHERE feed='usgs-groundwater'"), before)
+            self.assertEqual(self.q('SELECT count(*) FROM kfm_usgs_field_measurements'), rows)
 
 
 WQP_HEADER = ("OrganizationIdentifier,OrganizationFormalName,ActivityIdentifier,ActivityTypeCode,ActivityMediaName,ActivityMediaSubdivisionName,"

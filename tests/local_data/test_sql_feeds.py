@@ -241,6 +241,25 @@ class CoreTests(FeedCase):
         self.assertIsNone(core.retry_after_seconds(None))
         self.assertIsNone(core.retry_after_seconds("soon"))
 
+    def test_a_provider_query_timeout_is_available_without_changing_the_logged_reason(self):
+        body = b'{"code":"InvalidQuery","description":"Long running query has been cancelled."}'
+        error = urllib.error.HTTPError('https://example.test/items', 400, 'Bad Request', {}, io.BytesIO(body))
+        with patch('urllib.request.urlopen', side_effect=error), self.assertRaises(core.FeedError) as caught:
+            core.http_fetch('https://example.test/items', limit=100)
+        self.assertEqual(str(caught.exception), 'HTTP_400 https://example.test/items')
+        self.assertEqual(caught.exception.provider_message, 'Long running query has been cancelled.')
+
+    def test_an_unreadable_error_body_keeps_the_original_http_failure(self):
+        class BrokenBody(io.BytesIO):
+            def read(self, *args):
+                raise http.client.IncompleteRead(b'partial')
+        for body in [io.BytesIO(b'{bad json'), BrokenBody()]:
+            error = urllib.error.HTTPError('https://example.test/items', 400, 'Bad Request', {}, body)
+            with self.subTest(body=type(body).__name__), patch('urllib.request.urlopen', side_effect=error), self.assertRaises(core.FeedError) as caught:
+                core.http_fetch('https://example.test/items', limit=100)
+            self.assertEqual(str(caught.exception), 'HTTP_400 https://example.test/items')
+            self.assertIsNone(caught.exception.provider_message)
+
     def test_a_throttle_waits_out_refusals_within_the_runs_budget(self):
         throttle = core.Throttle(self.ctx, "demo", first=10, longest=35, budget=100)
         self.assertTrue(throttle.wait(self.refusal("https://x/a", retry_after=7)), "Retry-After is honoured")

@@ -6,12 +6,12 @@ November 2026 to February 2027. WaterServices shuts down on 2027-02-22, with int
 outages from January 2027 (https://waterservices.usgs.gov, https://waterdata.usgs.gov/blog/nwisweb-decommission-summary/).
 So the USGS feeds use only the Water Data OGC APIs (``OGC``). That is version 1, the one the API's own
 documentation and queryables link to; v0 still answers, with older formatting. The APIs include an
-annual ``peaks`` collection. No key is needed. Anonymous use is limited per IP address to 1,000
-requests an hour: the 429 answer says so in X-RateLimit-Limit, with a Retry-After. A 403 or 429 is waited
+annual ``peaks`` collection. Anonymous access needs no key, but current documented keyed and anonymous
+allowances differ (https://api.waterdata.usgs.gov/docs/ogcapi/keys/). A 403 or 429 is waited
 out (``core.Throttle``: the Retry-After when given, else minutes of backoff) and the request made again, until
 the run's waiting budget is spent; then the run stops with ``USGS_RATE_LIMITED``, and what it loaded stays.
 Requests go one at a time, with a pause between them (``SERIES_PAUSE`` between one series' record and the
-next), and a run makes a few hundred at most. A page holds at most 50,000 rows, and a CSV page has no
+next). A page holds at most 50,000 rows, and a CSV page has no
 next-page link, so each request is shaped to fit one page: one time series over ``RECORD_CHUNK_YEARS``, one
 year, or one modification window. A full page is split, never loaded.
 
@@ -104,12 +104,14 @@ def _url(collection: str, params: dict) -> str:
 
 USGS_THROTTLE_CODES = ("HTTP_403", "HTTP_429")   # the answers the feeds have always read as USGS_RATE_LIMITED
 SERIES_PAUSE = 5.0                                # seconds between one series' record and the next
-RECORD_CHUNK_YEARS = 25                           # a record is asked for in spans of this many years
+USGS_PAGE_PAUSE = 5.0                             # pace every request, including record chunks
+USGS_WAIT_BUDGET = 75 * 60.0                       # one hourly quota reset plus margin, within the 6h service limit
+RECORD_CHUNK_YEARS = 125                          # <46k daily dates; full pages still split automatically
 
 
 def _throttle(ctx, feed: str) -> core.Throttle:
     """The run's patience with USGS throttling (core.Throttle): 403 and 429 are waited out, Retry-After first."""
-    ctx.throttle = core.Throttle(ctx, feed, codes=USGS_THROTTLE_CODES)
+    ctx.throttle = core.Throttle(ctx, feed, codes=USGS_THROTTLE_CODES, budget=USGS_WAIT_BUDGET)
     return ctx.throttle
 
 
@@ -122,6 +124,8 @@ def _page(ctx, collection: str, params: dict, needed, reason: str):
     while True:
         try:
             fetched = ctx.fetch(url, limit=64_000_000, timeout=600)
+            if ctx.throttle is not None:
+                ctx.throttle.consecutive = 0
             break
         except FeedError as error:
             if ctx.throttle is not None and ctx.throttle.wait(error):
@@ -130,7 +134,7 @@ def _page(ctx, collection: str, params: dict, needed, reason: str):
                 raise FeedError(f"USGS_RATE_LIMITED {url}") from None
             raise
         finally:
-            time.sleep(getattr(ctx, "pause", 1.0))
+            time.sleep(getattr(ctx, "pause", USGS_PAGE_PAUSE))
     text = fetched.body.decode("utf-8")
     if not text.strip():
         # A query with no rows is answered with an empty body, without even a header.
@@ -153,7 +157,19 @@ def _dated(ctx, collection: str, params: dict, start: date, end: date, needed, r
     windows, pages, requests, fetched = [(start, end)], [], 0, None
     while windows:
         a, b = windows.pop(0)
-        fetched, header, rows = _page(ctx, collection, {**params, "time": f"{a}/{b}"}, needed, reason)
+        try:
+            fetched, header, rows = _page(ctx, collection, {**params, "time": f"{a}/{b}"}, needed, reason)
+        except FeedError as error:
+            # USGS uses 400 for a server-cancelled long query as well as invalid inputs.
+            # Only the explicit cancellation is split; a malformed query remains an error.
+            if (a == b or not str(error).startswith("HTTP_400 ")
+                    or not (error.provider_message or "").startswith("Long running query has been cancelled")):
+                raise
+            mid = a + (b - a) // 2
+            windows[:0] = [(a, mid), (mid + timedelta(days=1), b)]
+            requests += 1
+            ctx.note("feed_query_split", collection=collection, start=str(a), end=str(b), reason="USGS_QUERY_TIMEOUT")
+            continue
         requests += 1
         if not rows:
             continue
@@ -530,6 +546,7 @@ CREATE INDEX IF NOT EXISTS kfm_usgs_field_measurements_site ON kfm_usgs_field_me
 GW_LEVEL_CODES = frozenset({"72019", "72020", "62610", "62611", "30210"})
 GW_FIRST_YEAR = 1860   # the earliest Kansas measurement, 1860-08-18
 GW_REREAD_DAYS = 365
+GW_MODIFIED_CHUNK_YEARS = 20
 
 
 def _kind(reading_type, parameter_code) -> str:
@@ -566,12 +583,20 @@ def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dic
         next_year = int(state.get("next_year", GW_FIRST_YEAR))
         summary = {"years": [], "rows": 0, "changed_years": [], "empty_but_loaded": []}
         if "modified_through" in state:
-            # Which years hold rows USGS changed since the last run: one page of their dates.
+            # Find the measurement years affected by the modification window.
             a = _stamp(_moment(state["modified_through"]) - MODIFIED_OVERLAP)
-            _, header, rows = _page(ctx, "field-measurements", {"state_code": KANSAS, "skipGeometry": "true", "properties": "time,last_modified",
-                                                                 "last_modified": f"{a}/{_stamp(now)}"}, ("time",), "USGS_GW_COLUMNS_CHANGED")
-            column = header.index("time") if rows else 0
-            changed = set(range(GW_FIRST_YEAR, next_year)) if len(rows) >= PAGE else {int(r[column][:4]) for r in rows if r[column][:4].isdigit()}
+            # A statewide last_modified-only scan now exceeds the provider's 60s query
+            # deadline. Bound the measurement dates too, splitting full/cancelled pages.
+            # Do not advance modified_through until every part of this window succeeds.
+            changed = set()
+            for first in range(GW_FIRST_YEAR, today.year + 1, GW_MODIFIED_CHUNK_YEARS):
+                _, header, rows, _, _ = _dated(ctx, "field-measurements",
+                    {"state_code": KANSAS, "skipGeometry": "true", "properties": "time,last_modified",
+                     "last_modified": f"{a}/{_stamp(now)}"}, date(first, 1, 1),
+                    date(min(first + GW_MODIFIED_CHUNK_YEARS - 1, today.year), 12, 31),
+                    ("time",), "USGS_GW_COLUMNS_CHANGED")
+                column = header.index("time") if rows else 0
+                changed.update(int(r[column][:4]) for r in rows if r[column][:4].isdigit())
             summary["changed_years"] = sorted(y for y in changed if y < next_year)
             due |= set(summary["changed_years"])
         state = _save(ctx, db, "usgs-groundwater", {**state, "modified_through": _stamp(now), "due": sorted(due)})
