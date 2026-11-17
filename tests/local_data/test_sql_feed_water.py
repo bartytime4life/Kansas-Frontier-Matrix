@@ -4,6 +4,7 @@ from datetime import date, datetime, timezone
 import gzip
 import io
 import json
+import shutil
 import urllib.parse
 from unittest.mock import patch
 import zipfile
@@ -322,6 +323,93 @@ class GroundwaterTests(FeedCase):
         first, last = q["time"].split("/")
         rows = [r for rows in self.years.values() for r in rows if first <= r[11] <= last]
         return ogc(GW_HEADER, rows[:w.PAGE])
+
+    def relocate_store(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx, max_years=1)
+        old = self.root
+        moved = old.with_name("moved-store")
+        shutil.copytree(old, moved)
+        self.root = self.ctx.root = moved
+        self.db_path = self.ctx.db_path = moved / self.db_path.relative_to(old)
+        self.ctx.lock = moved / "pipeline.lock"
+        return old
+
+    def test_moved_store_reuses_the_current_raw_copy_and_preserves_loaded_history(self):
+        old = self.relocate_store()
+        sources = self.q("SELECT file_id,source_path,sha256,state FROM kfm_sql_sources ORDER BY file_id")
+        values = self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number")
+        captures = sorted((self.root / "data/raw/sql-feeds").rglob("*.gz"))
+        self.modified = ["2023-01-30"]
+        for old_available in [True, False]:
+            with self.subTest(old_mount_available=old_available):
+                if not old_available:
+                    shutil.rmtree(old)
+                self.ctx.now = lambda: datetime(2026, 11, 5, 15, 0, tzinfo=timezone.utc)
+                with patch.object(w, "GW_FIRST_YEAR", 2023):
+                    result = w.usgs_groundwater(self.ctx, max_years=1)
+                self.assertEqual((result["years"], result["next_year"]), ([2023], 2024))
+                self.assertEqual(self.q("SELECT file_id,source_path,sha256,state FROM kfm_sql_sources ORDER BY file_id"), sources)
+                self.assertEqual(self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number"), values)
+                self.assertEqual(sorted((self.root / "data/raw/sql-feeds").rglob("*.gz")), captures)
+
+    def test_a_moved_raw_copy_with_changed_bytes_is_not_reused(self):
+        self.relocate_store()
+        path = next((self.root / "data/raw/sql-feeds/usgs-groundwater").rglob("*.gz"))
+        path.write_bytes(b"changed copy")
+        before = self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number")
+        db = core.open_db(self.ctx)
+        try:
+            with self.assertRaisesRegex(core.FeedError, "RAW_OBJECT_CHANGED"):
+                w._gw_year(self.ctx, db, 2023, date(2026, 11, 5))
+        finally:
+            db.close()
+        self.assertEqual(self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number"), before)
+        self.assertEqual(path.read_bytes(), b"changed copy")
+
+    def test_moved_cache_paths_cannot_escape_the_current_raw_root(self):
+        self.relocate_store()
+        db = core.open_db(self.ctx)
+        try:
+            receipt = json.loads(db.execute("SELECT receipt_json FROM kfm_sql_sources").fetchone()[0])
+            for unsafe in ["/tmp/other.csv.gz", "data/raw/sql-feeds/../../outside.csv.gz", "data/work/other.csv.gz", 7, None]:
+                with self.subTest(path=unsafe):
+                    db.execute("UPDATE kfm_sql_sources SET receipt_json=?", (json.dumps({**receipt, "path": unsafe}),))
+                    with self.assertRaisesRegex(core.FeedError, "CACHED_RAW_PATH_INVALID"):
+                        w._gw_year(self.ctx, db, 2023, date(2026, 11, 5))
+        finally:
+            db.close()
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_usgs_field_measurements"), [(5,)])
+
+    def test_a_moved_cache_symlink_cannot_reach_the_old_mount(self):
+        old = self.relocate_store()
+        path = next((self.root / "data/raw/sql-feeds/usgs-groundwater").rglob("*.gz"))
+        original = old / path.relative_to(self.root)
+        path.unlink()
+        path.symlink_to(original)
+        db = core.open_db(self.ctx)
+        try:
+            with self.assertRaisesRegex(core.FeedError, "CACHED_RAW_PATH_INVALID"):
+                w._gw_year(self.ctx, db, 2023, date(2026, 11, 5))
+        finally:
+            db.close()
+
+    def test_a_missing_moved_copy_is_recaptured_without_replacing_loaded_rows(self):
+        self.relocate_store()
+        path = next((self.root / "data/raw/sql-feeds/usgs-groundwater").rglob("*.gz"))
+        path.unlink()
+        before = self.q("SELECT file_id,source_path,sha256,state FROM kfm_sql_sources")
+        db = core.open_db(self.ctx)
+        try:
+            result = w._gw_year(self.ctx, db, 2023, date(2026, 11, 5))
+        finally:
+            db.close()
+        self.assertEqual(result["state"], "unchanged")
+        self.assertEqual(self.q("SELECT file_id,source_path,sha256,state FROM kfm_sql_sources"), before)
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_usgs_field_measurements"), [(5,)])
+        captures = list((self.root / "data/raw/sql-feeds/usgs-groundwater").rglob("*.gz"))
+        self.assertEqual(len(captures), 1)
+        self.assertIn("20261105", captures[0].name)
 
     def test_years_backfill_at_the_cap_and_changed_years_are_fetched_again(self):
         with patch.object(w, "GW_FIRST_YEAR", 2023):

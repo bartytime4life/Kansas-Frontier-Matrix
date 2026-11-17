@@ -501,3 +501,26 @@ verify hashes and feed resolution, then inspect normal scheduled runs for `feed_
 `feed_query_split`, `feed_done` and `feed_failed`. A completed or `not_due` run does not prove that
 a rate-limit retry recovered. Tables, source identities, per-file transactions and saved cycle/range
 progress remain compatible; no production migration is required.
+
+## Water-feed capture paths after a store move, November 17, 2026
+
+Water-feed deduplication can encounter an absolute `kfm_sql_sources.source_path` from
+the previous store root. Reusing that path while the old disk is still mounted makes
+receipt lookup fail against the current root. The proposed fix resolves the capture
+using its receipt's store-relative `path` under the current `data/raw/sql-feeds` tree.
+It verifies the migrated file's SHA256 before reuse and rejects absolute, parent-traversing,
+out-of-tree or escaping-symlink receipt paths. A changed local copy stops with
+`RAW_OBJECT_CHANGED`; a missing copy follows the existing fresh-capture path.
+
+This preserves source IDs, historical absolute paths, receipts, loaded rows and saved
+progress without a database rewrite. It applies to the shared water-feed cache lookup
+used by USGS metadata, records, peaks, groundwater and Water Quality Portal captures.
+It does not make foreign files valid merely because the old mount remains available.
+
+Synthetic migration regressions cover both an attached and retired old store, unchanged
+loaded history without a second capture, altered bytes, unsafe paths, escaping symlinks
+and fresh capture when a migrated raw file is missing. A read-only replay of the actual
+groundwater source record resolved the current copy and its `year/1953` receipt without
+changing that record or requesting provider data. Complete scheduled ingestion remains
+separate acceptance evidence. Install only after the normal review/merge and pinned-release
+procedure, retaining the current launcher, DATA14TB arguments and prior release for rollback.
