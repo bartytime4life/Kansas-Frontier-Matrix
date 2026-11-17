@@ -77,6 +77,7 @@ import csv
 from datetime import date, datetime, timedelta, timezone
 import gzip
 import io
+import json
 from pathlib import Path
 import re
 import shutil
@@ -199,17 +200,39 @@ def _picker(header, names):
     return lambda row: [row[i] or None for i in index]
 
 
-def _known(db, digest: str):
+def _known(ctx, db, digest: str):
     """The kept copy already recorded with these bytes, so a re-read that changed nothing keeps no second copy."""
-    row = db.execute("SELECT source_path FROM kfm_sql_sources WHERE sha256=?", (digest,)).fetchone()
-    return Path(row[0]) if row and Path(row[0]).is_file() else None
+    row = db.execute("SELECT source_path,receipt_json FROM kfm_sql_sources WHERE sha256=?", (digest,)).fetchone()
+    if not row:
+        return None
+    path = Path(row[0])
+    raw_root = ctx.root / "data/raw/sql-feeds"
+    if path.is_relative_to(raw_root):
+        return path if path.is_file() else None
+    # A store move leaves absolute source_path provenance pointing at the old
+    # mount. Resolve its receipt-relative capture in the current store instead,
+    # even when the old disk is still attached. Do not rewrite source history.
+    try:
+        relative = Path(json.loads(row[1])["path"])
+    except (KeyError, TypeError, ValueError):
+        raise FeedError("CACHED_RAW_PATH_INVALID") from None
+    if relative.is_absolute() or ".." in relative.parts or not relative.is_relative_to("data/raw/sql-feeds"):
+        raise FeedError("CACHED_RAW_PATH_INVALID")
+    path = ctx.root / relative
+    if not path.resolve().is_relative_to(raw_root.resolve()):
+        raise FeedError("CACHED_RAW_PATH_INVALID")
+    if not path.is_file():
+        return None
+    if core.file_sha256(path) != digest:
+        raise FeedError("RAW_OBJECT_CHANGED " + str(relative))
+    return path
 
 
 def _keep(ctx, db, feed: str, stem: str, body: bytes, fetched, **extra):
     """The kept raw copy, named by its content so a same-day rerun never collides."""
     data = core.gz(body)
     digest = core.sha256(data)
-    known = _known(db, digest)
+    known = _known(ctx, db, digest)
     if known is not None:
         return known, digest
     return core.store_raw(ctx, feed, f"{stem}-{digest[:12]}.csv.gz", data, url=fetched.url, fetched=fetched, extra=extra)
@@ -309,7 +332,7 @@ def _metadata(ctx, db, today: date) -> dict:
         sites[values[2]] = max(sites.get(values[2], values), values)
     cut = core.gz(_csv(names, [sites[k] for k in sorted(sites)]))
     digest = core.sha256(cut)
-    path = _known(db, digest) or core.store_raw(
+    path = _known(ctx, db, digest) or core.store_raw(
         ctx, "usgs-daily", f"metadata/{today.year}/kansas-sites-{today:%Y%m%d}-{digest[:12]}.csv.gz", cut,
         url=fetched.url, fetched=fetched, original=fetched.body, extra={"key": "sites", "sites": len(sites)})[0]
     loaded = _version(ctx, db, "usgs-sites", "sites", path, digest, fetched.url, "kfm_usgs_sites",
@@ -721,7 +744,7 @@ def _wqp_file(ctx, db, url: str, *, key: str, stem: str, table: str, columns, so
         except (zipfile.BadZipFile, EOFError, UnicodeDecodeError) as error:
             raise FeedError(f"WQP_ARCHIVE_DAMAGED {key}: {error}") from None
         digest = core.file_sha256(kept)
-        path = _known(db, digest) or core.store_raw(ctx, "water-quality", f"{stem}-{digest[:12]}.csv.gz", kept, url=fetched.url,
+        path = _known(ctx, db, digest) or core.store_raw(ctx, "water-quality", f"{stem}-{digest[:12]}.csv.gz", kept, url=fetched.url,
                                                     fetched=fetched, original=zipped, extra={"key": key, "rows": count})[0]
         index = [header.index(p) for p, _ in columns]
 

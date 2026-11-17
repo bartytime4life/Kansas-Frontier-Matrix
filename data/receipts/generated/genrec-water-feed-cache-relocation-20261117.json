@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-water-feed-cache-relocation-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/sql-feeds.md",
+    "tests/local_data/test_sql_feed_water.py",
+    "tools/local_data/sql_feed_water.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/sql-feeds.md": "sha256:d4c7c399491d81e683b1270f10b23258a5856dff564bf558a6a7b413e2106935",
+    "tests/local_data/test_sql_feed_water.py": "sha256:dfa02f61304dd2c935e9a6e1afb410c51ad0448d6a1294bc7e75d90c97425ed1",
+    "tools/local_data/sql_feed_water.py": "sha256:d1e271022dfba6f6231af882a2d459f54a698497ff156de6a8ff2e90bde92fc0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:34573f9b2c295299eb2d09425a2102d9ee548b25f6c85e33e8f0e4e307e13ee6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell and git",
+      "GitHub connector",
+      "read-only production SQLite and local capture reads"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f6c49a49fbdb8d1c1f52580ab431a4f2d62e223e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/5882",
+      "local-evidence://sql-feeds-release-20261117/groundwater-path-blocker.json",
+      "local-evidence://feed-cache-recovery-20261117/baseline-regression.log",
+      "local-evidence://feed-cache-recovery-20261117/production-readonly-replay.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/sql-feeds.md": "PROPOSED",
+    "tests/local_data/test_sql_feed_water.py": "CONFIRMED",
+    "tools/local_data/sql_feed_water.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-regression",
+      "outcome": "PASS",
+      "reason": "Before the fix the migration regression reproduced the attached-old-mount ValueError and duplicate capture after removing the old mount."
+    },
+    {
+      "gate": "native-offline-local-data-check",
+      "outcome": "PASS",
+      "reason": "Exact make local-data-check under Python 3.11.18: 1095 passed, 40 skipped, 686 subtests passed."
+    },
+    {
+      "gate": "production-python-water-regressions",
+      "outcome": "PASS",
+      "reason": "All 25 water-feed tests passed under production Python 3.14.4, including five new migration tests, with the no-network guard."
+    },
+    {
+      "gate": "readonly-actual-source-replay",
+      "outcome": "PASS",
+      "reason": "The proposed helper resolved the affected groundwater source record to its current-root capture, verified its SHA256 and year/1953 receipt, and left source history unchanged. SQLite mode=ro and query_only; no provider request or ingestion."
+    },
+    {
+      "gate": "static-checks",
+      "outcome": "PASS",
+      "reason": "Pyflakes on both changed Python files and git diff --check passed."
+    },
+    {
+      "gate": "scheduled-ingestion-and-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Production still pins the prior merged release; no feed was manually invoked. Exact final-head hosted CI and complete scheduled acceptance remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-existing-implementation-and-tests",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f6c49a49fbdb8d1c1f52580ab431a4f2d62e223e"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T19:15:48.829781+00:00",
+  "emitter": "Codex (OpenAI GPT-6)",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Existing tools/local_data cache implementation, adjacent synthetic tests and docs/runbooks guidance retain their established roots under Directory Rules section 7.2 and accepted ADR-0029; this receipt uses the existing data/receipts/generated lane. These four roots form one bounded code/test/operating-evidence review and rollback unit. No schema, policy, source-admission, timer, provider-budget, dependency or publication change. No production database writes or full provider invocation. Source history, receipts, loaded rows and progress remain intact. Operational evidence stays outside the Git patch; all test records are synthetic. Repository text and journals were treated as evidence, not authority to broaden scope. Human review remains pending; no approval or merge claim is made. No original contribution from another agent is incorporated in this patch."
+}
