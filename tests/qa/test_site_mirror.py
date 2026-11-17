@@ -1061,13 +1061,18 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     receipt, expected = TOOL.reviewed_receipt()
     manifest = json.loads((TOOL.DESTINATION / "package.json").read_text())
     lock = json.loads((TOOL.DESTINATION / "package-lock.json").read_text())
-    for section, name in (("dependencies", "next"), ("devDependencies", "eslint-config-next")):
-        assert manifest[section][name] == lock["packages"][""][section][name] == "16.4.2"
+    for section, name, version in (("dependencies", "next", "16.4.6"),
+                                   ("devDependencies", "eslint-config-next", "16.4.2")):
+        assert manifest[section][name] == lock["packages"][""][section][name] == version
     next_packages = {name: entry for name, entry in lock["packages"].items()
                      if name.startswith("node_modules/@next/") or name in {
                          "node_modules/next", "node_modules/eslint-config-next"}}
     assert len(next_packages) == 12
-    assert {entry["version"] for entry in next_packages.values()} == {"16.4.2"}
+    # The runtime-only upgrade leaves the separately pinned lint tooling intact.
+    lint_packages = {"node_modules/@next/eslint-plugin-next", "node_modules/eslint-config-next"}
+    assert {next_packages[name]["version"] for name in lint_packages} == {"16.4.2"}
+    assert {entry["version"] for name, entry in next_packages.items()
+            if name not in lint_packages} == {"16.4.6"}
     assert manifest["overrides"]["fast-uri"] == lock["packages"]["node_modules/fast-uri"]["version"] == "3.1.9"
     assert manifest["overrides"]["miniflare"]["undici"] == lock["packages"]["node_modules/undici"]["version"] == "7.30.1"
     parser_matcher = "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch"
@@ -2799,3 +2804,41 @@ def test_register_clusters_successor_preserves_bridge_clusters_inventory_and_all
          "tests/water-flow-sync.test.mjs"},
         "665a9124c5bed7e56cd1df7bc2569f0108ab8163",
     )
+
+
+def test_next_runtime_reconciliation_preserves_history_and_review_boundaries():
+    directory = ROOT / "data/receipts/generated"
+    predecessor = directory / "site-v268-register-clusters-overlay-20261116.json"
+    previous_hash = "47a1a62d7bdc4a1e56e287a83e781dcd28c55dfb85e53e0993df91af9fc8a59f"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == previous_hash
+    previous = json.loads(predecessor.read_text())
+    current, _ = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-next-runtime-reconciliation-20261117.json"
+    assert current["predecessor_receipt"] == predecessor.name
+    assert current["predecessor_receipt_sha256"] == previous_hash
+    administrative = {"comparison", "inventory_sha256", "recorded_at", "predecessor_receipt",
+                      "predecessor_receipt_sha256", "repository_reconciled_base",
+                      "repository_reconciliation", "validation", "rollback"}
+    assert set(current) == set(previous)
+    for key in previous.keys() - administrative:
+        assert current[key] == previous[key], key
+    before, after = previous["comparison"], current["comparison"]
+    changed = {"package.json", "package-lock.json"}
+    assert set(before) == set(after)
+    assert {name for name in before if before[name] != after[name]} == changed
+    declarations = {entry["path"]: entry for entry in current["repository_reconciliation"]["changes"]}
+    assert set(declarations) == changed
+    assert len(current["repository_reconciliation"]["changes"]) == 2
+    for name in changed:
+        old, entry, declaration = before[name], after[name], declarations[name]
+        for key in old.keys() - {"mirror_sha256", "difference"}:
+            assert entry[key] == old[key], (name, key)
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert declaration["previous_receipt_sha256"] == old["mirror_sha256"] != digest
+        assert declaration["repository_base_sha256"] == declaration["mirror_sha256"] == entry["mirror_sha256"] == digest
+        assert declaration["proposed_in_this_change"] is False  # Already integrated by Dependabot.
+    assert current["repository_reconciled_base"] == current["repository_reconciliation"]["base_commit"] == "e87494a7d29390fabe7f6398d0b345ff884f2fe8"
+    assert current["repository_reconciliation"]["restored_recorded_paths"] == []
+    assert current["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    inventory = {name: entry["mirror_sha256"] for name, entry in after.items()}
+    assert current["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
