@@ -469,7 +469,8 @@ The first run on dev, 2026-11-01:
 ## Provider recovery follow-up, November 16, 2026
 
 These source changes require review and a new pinned feed release before the PC uses them.
-The currently installed release remains `sql-feeds-205e344ea8…`.
+The recovery baseline is `sql-feeds-205e344ea8…`; inspect the current launcher before
+installation and preserve any later local fixes and storage paths.
 
 - USGS record requests cover up to 125 years (fewer than 46,000 daily dates) instead of 25;
   full pages still split and only a complete record replaces the prior one. Every USGS page
@@ -490,7 +491,12 @@ The currently installed release remains `sql-feeds-205e344ea8…`.
   values. Synthetic RDF equivalence checks do not establish live WDQS performance. See
   [Wikidata query optimization](https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/query_optimization).
 
-After merge, use the existing committed-release installer, retain the previous launcher and release,
+After merge, retain the current launcher and release and stage only committed source that includes
+all active feed fixes. A later local NID overlay (`sql-feeds-nid-cf5f5e682a…`) must also be preserved
+or absorbed into that source; do not replace it with an archive that drops the NID fix. Keep the
+current data-volume paths. The historical installer matches only `sql-feeds-<40 hex>` launcher pins,
+so a differently named overlay needs a checked pin replacement using the same archive/hash/rollback
+procedure. After staging,
 verify hashes and feed resolution, then inspect normal scheduled runs for `feed_throttled`,
 `feed_query_split`, `feed_done` and `feed_failed`. A completed or `not_due` run does not prove that
 a rate-limit retry recovered. Tables, source identities, per-file transactions and saved cycle/range

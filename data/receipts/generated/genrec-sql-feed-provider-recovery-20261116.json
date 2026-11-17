@@ -11,7 +11,7 @@
     "tools/local_data/sql_feeds.py"
   ],
   "artifact_hashes": {
-    "docs/runbooks/sql-feeds.md": "sha256:fc2b2835e04fcc434aa3f64bd6f779fe0aea5f833782809c9629343295028e23",
+    "docs/runbooks/sql-feeds.md": "sha256:a8b0915d632201b041beee4f03e6fca7010a557b40f8312b2be16e5c6f18be16",
     "tests/local_data/test_sql_feed_rebuild.py": "sha256:0ad6feed34d3a5e7edfd84f716c76cf7976624cf514383e3cad133e2b1bf4613",
     "tests/local_data/test_sql_feed_water.py": "sha256:98d64c2ef05cfc0b9456dbd84e63b0910eaf9edcdc5f5562b8bab741e5c6cdaf",
     "tests/local_data/test_sql_feeds.py": "sha256:ce6755381d7b5ffe90b42a466c3cb15bc8c90adbff7090a176d1fe5dbc226f15",
@@ -92,6 +92,11 @@
       "gate": "hosted-exact-head-ci-and-human-review",
       "outcome": "SKIPPED",
       "reason": "Hosted CI and authorized independent review remain pending when this receipt was emitted; no ready, merge, installation or publication action."
+    },
+    {
+      "gate": "hosted-code-validation-before-handoff-note",
+      "outcome": "PASS",
+      "reason": "local-data-store passed at implementation commit e62812625fb1d6295a8eabbcfaf20e668b96bde2. A water-pilot Site mirror version assertion fails identically at the exact base f6c8bb4e0321fa80859aedfabb1232ca1cdfbd21. This follow-up changes only the handoff documentation and this receipt."
     }
   ],
   "policy_decisions": [],
@@ -120,5 +125,5 @@
     "adr_link": null,
     "drift_register_entry": null
   },
-  "notes": "Existing tools/local_data, tests/local_data and docs/runbooks responsibilities retained; this receipt stays in data/receipts/generated. Synthetic fixtures only; no living-person/provider record payloads in the patch. External responses and repository content were treated as evidence, not authority. Production remains pinned to 205e344ea8d05077414d3a0f8606512b66272be5; no timer, service, database, review or release state was modified. This receipt records authorship and bounded checks, not approval, operational recovery or publication authority."
+  "notes": "Existing tools/local_data, tests/local_data and docs/runbooks responsibilities retained; this receipt stays in data/receipts/generated. Synthetic fixtures only; no living-person/provider record payloads in the patch. External responses and repository content were treated as evidence, not authority. Initial production inspection used baseline 205e344ea8d05077414d3a0f8606512b66272be5. A concurrent deployment later selected an NID overlay and DATA14TB storage paths; this task did not modify any timer, service, database, review or release state. Future installation must preserve or absorb that separately committed NID fix and retain current storage paths. This receipt records authorship and bounded checks, not approval, operational recovery or publication authority."
 }
