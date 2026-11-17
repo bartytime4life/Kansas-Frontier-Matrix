@@ -8,6 +8,42 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
+## Read-only readiness assessment — 2026-11-17
+
+`tools/release/water_release.py assess` checks one existing water package for
+[#4415](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415).
+It replays the stored capture, candidate validation, package reproduction and
+the existing bootstrap, layers and evidence serving gates. It reads an existing
+decision only when explicitly supplied; it never creates one or stages,
+activates or publishes a package.
+
+```bash
+python tools/release/water_release.py assess \
+  --root /path/to/private-candidate-store \
+  --package-id sha256:<existing-package-digest> \
+  --decision release/decisions/hydrology/<package-digest>/<existing-decision>.json
+```
+
+Omit `--decision` to assess without a decision. The bounded JSON report carries
+the snapshot hash, capture/candidate/package identities, rollback target and
+each view's existing `ANSWER`, `ABSTAIN`, `DENY` or `ERROR` outcome. The report
+does not return observations, coordinates, private paths or decision payloads.
+`candidate_outcome: READY` means these local candidate checks passed. The overall
+outcome remains `HOLD` for hosted identity/readback, operator rollback/readback,
+device/accessibility acceptance and accountable review, which this command
+does not inspect. Exit codes are 0 for READY, 3 for HOLD, 4 for DENY and 1 for
+ERROR; the current bounded scope cannot establish an overall READY.
+
+The nine focused regressions exercise missing/expired/withdrawn/mismatched
+decisions, unadmitted self-release, corrupt carrier recovery, deterministic
+repeat assessment, no-write behavior and finite CLI errors. They use synthetic
+captures. No real candidate was found in the inspected private pipeline store's
+hydrology candidate/decision lanes on November 17; a real assessment and later
+operator acceptance remain open. This is also a bounded prerequisite for
+[#3371](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3371),
+[#3378](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3378) and
+[#3396](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396).
+
 ## Current cutaway caption lint candidate — v221 / 2026-10-10
 
 The owner-private Site now serves v221 source

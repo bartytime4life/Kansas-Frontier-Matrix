@@ -6,7 +6,7 @@ version: v1.3
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-08
-updated: 2026-10-22
+updated: 2026-11-17
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Record per-milestone progress across the 37 native GitHub milestones and 56 open issues since the 2026-09-16 portfolio audit, name the merged work that moved each milestone, record the issue state changes made in this pass, and list counter anomalies and owner actions, without creating review, policy, source, lifecycle, release, or publication authority."
@@ -28,6 +28,84 @@ notes:
 <a id="top"></a>
 
 # KFM Milestone and Issue Progress — 2026-10-08
+
+## Screenshot queue follow-through — 2026-11-17
+
+This addendum covers the **25 issues selected by the owner**, from the 54 open
+issues returned by the repository-wide intake search. All 25 bodies and complete
+comment histories were retrieved and their latest dispositions reviewed. No open PR was returned at intake. The source pins
+are main `5bd156038978e42c335dee042579ec241e1aba64` and the separate public
+Explorer branch `a0-hosted-ai-web-20261017` at
+`e5b9025a7060aab33c50c8d9e65e6a48f22d6b07`. Older snapshots below retain their
+dated scope. No issue or milestone is closed by this addendum.
+
+The source and test changes in this contribution add a read-only water-candidate
+assessment; see [the runbook](../runbooks/water-pilot.md#read-only-readiness-assessment--2026-11-17).
+It reuses capture reproduction, package validation and all three serving views.
+An eligible local candidate still returns overall `HOLD` for uninspected
+operational acceptance. It cannot create review, release or activation authority.
+
+| Issue | Current evidence / bounded advancement | Remaining next proof |
+|---|---|---|
+| [#5779 basemap warning](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5779) | Existing #5833 repair verified: both real-MapLibre local browser regressions pass; visible gaps still warn. | Exact published identity and live Follow/Orbit/zoom/resize acceptance. |
+| [#5737 Sky layer absence](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/5737) | All seven built-browser cases pass, including desktop/phone, continuous repaint and delayed tiles; lifecycle logs contain no app-initiated layer removal. All six [exact-Explorer-head hosted jobs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44119362560) are successful, including Sky. | Published acceptance against reconciled source identity. |
+| [#4418 deployment](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) | Build and source identity checked. Tested inputs `953cf8b4…61e` differ from live `ff5bcd91…416`; live reports `WORKTREE_MODIFIED`, no source commit. | Reconcile deployed bytes; retain an exact predecessor and rehearse hosted rollback with operator readback. |
+| [#4416 error handling](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416) | Release/HTTP negatives rerun; new assessment preserves intentional ABSTAIN and finite errors, with no candidate-store writes. Selected keyboard/evidence/workspace browser checks pass 53 cases, with one retained skip. | Same-candidate operator-health, production and accountable-review packet. |
+| [#4415 production decision](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4415) | New candidate-specific `assess` command and nine focused regressions. No real hydrology candidate/decision was present in the inspected pipeline lanes. | Assess an actual prepared candidate, then supply the explicitly retained operational proofs. |
+| [#4228 catalog correction](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228) | Topology passes with 0 invariant findings, 0 new drift, 89 retained warnings and 0 stale entries. Correction register entries remain proposed/unbound. | Accepted atomic binding/chain semantics and trusted-base consumption; green topology does not grant this authority. |
+| [#4024 delivery incident](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) | Live readback confirms workflow 324077182 is `disabled_manually`; main ruleset requires three CodeQL contexts and build, non-strict, with owner bypass. Current CONTRIBUTING permits ordinary draft PRs. | Incident attribution and acceptance remain open; do not restore the retired issue-comment gate. |
+| [#3679 geology builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3679) | Domain tests rerun; paused replacement prepared with geology/resource and sensitive-location distinctions. | Authenticate saved task/owner/prompt lineage; manual dry-run before recurrence. |
+| [#3677 flora builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3677) | Domain tests rerun; paused replacement preserves taxonomy, evidence, rights and geoprivacy. | Authenticate a runner and saved lineage; dry-run the location/rights boundary. |
+| [#3674 fauna builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3674) | Domain tests rerun; paused replacement preserves observation/model and sensitive-occurrence distinctions. | Authenticate saved task/prompt and geoprivacy dry-run. |
+| [#3673 atmosphere builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3673) | Domain tests rerun; paused replacement preserves observation/forecast/reanalysis and all time kinds. | Authenticate saved lineage and source-role dry-run. |
+| [#3672 coordinator](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3672) | Prepared one coordinator to select work in dependency order, with one active implementation lane across the builder family. | Authenticate scheduler ownership, save paused specification and verify an actual manual run. |
+| [#3670 archaeology builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3670) | Domain tests rerun; paused replacement retains exact/reconstructive location denial and cultural/rights gates. | Authenticate predecessor/successor lineage and sensitivity dry-run. |
+| [#3668 agriculture builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3668) | Domain tests rerun; paused replacement preserves water/soil/crop/drought roles, uncertainty and farm/operator join denials. | Authenticate saved lineage and current resume contract. |
+| [#3663 repository builder](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3663) | Prepared a serialized, one-draft-at-a-time replacement under the coordinator and current contributor rules. | Authenticated scheduler adoption and manual delivery readback. |
+| [#3400 governed API](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3400) | Existing release/HTTP tests rerun. Docker now uses stable digest-pinned Python 3.14.10; the old prerelease-image observation is stale. | Authenticated server-owned authority context and real-package activation/withdrawal/rollback readback. |
+| [#3397 Explorer](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) | Built latest public-branch candidate, typechecked, ran Node suite, desktop/phone Sky and 53 selected keyboard/evidence/workspace browser checks, with one retained browser skip. | Physical device/assistive-tech acceptance, long soak and hosted recovery. |
+| [#3396 Atlas release](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396) | Current dependencies reconciled; candidate readiness now emits explicit local versus operational dispositions. | Full same-candidate evidence/API/UI/AI chain, all release dimensions, review and real rollback. |
+| [#3394 temporal replay](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3394) | Existing temporal storage and authority tests rerun. | One cross-version fixture binding all clocks, namespaces, legacy identity, correction, withdrawal, successor receipt and rollback; external-consumer inventory. |
+| [#3393 source admission](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393) | Existing five-family release tests rerun; the new read-only assessment checks reproducibility before readiness. | Accountable disposition of the checkpoint and real-package operational acceptance. |
+| [#3392 evidence authentication](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3392) | Candidate assessment replays bootstrap/layers/evidence and capture/package identity without returning protected payloads. | Authenticate one same-candidate evidence chain across API, UI and AI, including correction negatives. |
+| [#3391 cross-lane joins](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3391) | Existing join and cross-domain tests replay support, temporal ambiguity, roles and sensitive-join refusal. | Stronger integrated drought/domain proof with uncertainty, rights and sensitivity. |
+| [#3390 drought/water/soil](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390) | Agriculture/hydrology tests and existing release/temporal checks rerun. | Deterministic multi-clock predecessor/successor drought-observation proof. |
+| [#3389 trust membrane](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3389) | Existing sensitive-domain and serving-denial tests rerun; no protected data copied into this contribution. | Accountable sensitivity/security review and disposition of historical hosted/cache exposure. |
+| [#3388 portfolio](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3388) | All 25 selected bodies/comments reconciled against current code, source pins and new validation. | Remaining program-wide milestone dispositions and accountable terminal acceptance. |
+
+The builder proposal retains all eight expertise lanes, but proposes hourly
+selection by one coordinator and serial dispatch of workers instead of eight
+independent hourly writers. The owner asked for the best results and most
+information; this proposed arrangement preserves domain-specific evidence and
+reduces duplicate/conflicting patches. Scheduler management is unavailable in
+this session. A read-only census found no matching local TOML automations; that
+does not establish hosted state. Exact proposals, intake JSON, sanitized platform
+readbacks, logs and screenshots remain in the owner-local recovery packet
+`program-readiness-20261117/`. No saved schedule was edited or activated.
+
+Completed local checks at this checkpoint: 743 domain tests / 439 subtests;
+415 release/join/evidence/temporal tests / 148 subtests; nine new assessment tests;
+3,051 Explorer Node passes, zero failures, 25 skips; seven Sky browser cases;
+two basemap browser cases; Explorer build and typecheck; topology diagnostics.
+Final checks also pass 127 affected tests / 9 subtests, 405 tests from the
+updated native water workflow, 206 governance/evidence/correction/cross-domain
+tests / 310 subtests, eight isolated regenerated fixtures and current Site
+mirror content parity. The selected recovery/keyboard browser run passes 53
+cases, zero failures, with one skip. The complete changed-path hashes and
+validation dispositions are retained in the
+[generated contribution receipt](../../data/receipts/generated/genrec-program-readiness-20261117.json).
+These groups are separate bounded commands, with some shared fixtures; their
+counts must not be summed into a claim of unique coverage or full program
+acceptance. Chrome is 157.0.8103.78, Node 22.23.4, Python 3.12.16. Python setup
+initially lacked the pinned PyArrow profile; it was installed through the native
+hash-locked installer before the successful release replay. Final affected checks
+and any later command outcomes are recorded in the generated contribution receipt.
+
+The explicit registry-backed metadata check reports seven failures in the
+unchanged document registry; the same seven findings reproduce against exact
+base bytes. The changed documents pass local metadata, graph and link checks
+(55 local link targets). The broader registry-backed result remains distinct;
+this contribution does not modify or waive registry debt.
 
 ## Currentness addendum — 2026-10-22
 
