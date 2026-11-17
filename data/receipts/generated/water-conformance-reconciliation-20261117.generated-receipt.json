@@ -1,0 +1,72 @@
+{
+  "receipt_id": "water-conformance-reconciliation-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py",
+    "data/receipts/generated/site-v268-next-runtime-reconciliation-20261117.json"
+  ],
+  "artifact_hashes": {
+    "tests/qa/test_site_mirror.py": "sha256:3f6b24e8e1cbf7d64250a34f99396709ecf57f4a964d460105f3791bc985d1dc",
+    "tools/qa/site_mirror.py": "sha256:f584c1ae20de90683d78c0761dd137f6a31c25a31aa9fccf92c6a82ec4f54117",
+    "data/receipts/generated/site-v268-next-runtime-reconciliation-20261117.json": "sha256:71014ac5978ac478d273d70214acde6145d1c6f25a9e7999f6561f6185084dee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Current Codex session; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:a52000a8c32a0a0ef1519d79906c38a3ab55d6f3c3648d7c63b9fc42c0e03b60",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@e87494a7d29390fabe7f6398d0b345ff884f2fe8",
+      "commit:5ad537215188f449fb9dc39f113f83bfaf090ec5",
+      "actions/runs/44010150282/job/133794950321",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-next-runtime-reconciliation-20261117.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Local complete water-conformance test selection Python 3.12.15",
+      "outcome": "PASS",
+      "reason": "396 passed; initial sparse-checkout/loopback restrictions corrected before final complete rerun."
+    },
+    {
+      "gate": "Selected mirror content parity",
+      "outcome": "PASS",
+      "reason": "976 files; 262 withheld paths absent; review NOT_EVALUATED; declaration PENDING; hosted equivalence false."
+    },
+    {
+      "gate": "Hosted exact-head CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Not yet available at receipt generation; pending draft PR. This is authoring provenance, not approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Next-runtime-upgrade",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/5ad537215188f449fb9dc39f113f83bfaf090ec5"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-17T04:04:18.487239+00:00",
+  "emitter": "Codex",
+  "notes": "Reconciles two dependency digests already in the pinned base, using an immutable successor receipt. Runtime Next 16.4.6 and lint tooling 16.4.2 are separately asserted. No application/dependency changes, source admission, release, merge, deployment or publication. Historical receipt declarations are preserved, not accepted as current validation. Local fixture regeneration uses TMPDIR=/private/tmp on macOS because the default temporary path traverses a symlink refused by the existing file-safety guard."
+}
