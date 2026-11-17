@@ -64,6 +64,13 @@ Each step below is something the owner runs deliberately on the home PC.
 
 ## Phase 0: inventory (read-only)
 
+The redactor uses portable extended regular expressions for BSD and GNU `sed`,
+including adjacent IPv4/UUID tokens. Loopback and wildcard listeners retain
+their addresses and ports. This portability applies to redaction; the complete
+hardware inventory remains intended for the second Linux PC. The focused
+`node --test tests/home-inference-inventory.test.mjs` check runs from the repository
+root and exercises synthetic input only, without collecting host inventory.
+
 ```bash
 bash inventory.sh > ~/kfm-inventory-$(date +%F).txt
 ```

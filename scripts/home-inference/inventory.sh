@@ -13,6 +13,8 @@ have() { command -v "$1" >/dev/null 2>&1; }
 redact() {
   # Handle IPv6 before MAC/IPv4 so mixed addresses and two-digit hextets cannot
   # be split into partially redacted fragments. Keep listener brackets/ports.
+  # POSIX ERE boundaries work with BSD and GNU sed. Revisit consumed separators
+  # so adjacent tokens are all handled, including protected local listeners.
   sed -E \
     -e 's/[0-9a-fA-F:]*::[0-9a-fA-F:]*([0-9]{1,3}\.){3}[0-9]{1,3}/<ip6>/g' \
     -e 's/([0-9a-fA-F]{1,4}:){6}([0-9]{1,3}\.){3}[0-9]{1,3}/<ip6>/g' \
@@ -20,10 +22,19 @@ redact() {
     -e 's/([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}/<ip6>/g' \
     -e 's/[0-9a-fA-F:]*::[0-9a-fA-F:]*/<ip6>/g' \
     -e 's/([0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2}/<mac>/g' \
-    -e 's/\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b/<uuid>/g' \
+    -e ':uuid' \
+    -e 's/(^|[^[:alnum:]_])[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}([^[:alnum:]_]|$)/\1<uuid>\2/g' \
+    -e 't uuid' \
     -e 's/(Serial( Number)?|UUID|serial)[[:space:]]*[:=][[:space:]]*.*/\1: <redacted>/' \
-    -e 's/\b0\.0\.0\.0\b/@ANY@/g' -e 's/\b127(\.[0-9]{1,3}){3}\b/@LO&@/g' \
-    -e 's/\b([0-9]{1,3}\.){3}[0-9]{1,3}\b/<ip>/g' \
+    -e ':anyfour' \
+    -e 's/(^|[^[:alnum:]_])0\.0\.0\.0([^[:alnum:]_]|$)/\1@ANY@\2/g' \
+    -e 't anyfour' \
+    -e ':loopfour' \
+    -e 's/(^|[^[:alnum:]_])(127(\.[0-9]{1,3}){3})([^[:alnum:]_]|$)/\1@LO\2@\4/g' \
+    -e 't loopfour' \
+    -e ':ipvfour' \
+    -e 's/(^|[^[:alnum:]_])([0-9]{1,3}\.){3}[0-9]{1,3}([^[:alnum:]_]|$)/\1<ip>\3/g' \
+    -e 't ipvfour' \
     -e 's/@ANY@/0.0.0.0/g' -e 's/@LO([0-9.]+)@/\1/g' -e 's/@LOSIX@/[::1]/g' -e 's/@ANYSIX@/[::]/g' \
     -e 's/((KEY|TOKEN|SECRET|PASSWORD)[A-Z_]*=)[^[:space:]]+/\1<redacted>/g'
 }
