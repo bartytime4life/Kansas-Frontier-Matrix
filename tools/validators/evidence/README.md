@@ -2,38 +2,37 @@
 doc_id: kfm://doc/tools-validators-evidence-readme
 title: tools/validators/evidence README
 type: README
-version: v0.2
+version: v0.3
 status: draft
 owner: TODO-tooling-qa-owner-plus-evidence-steward-plus-proof-steward-plus-policy-steward-plus-release-steward-plus-ui-evidence-drawer-steward
 created: 2026-07-08
-updated: 2026-08-02
+updated: 2026-11-17
 policy_label: repository-facing; evidence-validator-index; EvidenceRef; EvidenceBundle; citation-validation; cite-or-abstain; fail-closed; release-gated; non-authoritative
 owning_root: tools/
 responsibility: proposed evidence validator index for EvidenceRef resolution, EvidenceBundle closure, citation validation, source-role preservation, rights/sensitivity posture, transform/digest/spec-hash posture, policy/review/release linkage, correction and rollback linkage, governed-answer readiness, finite negative outcomes, and public-surface denial checks while deferring evidence semantics, schemas, proof storage, receipts, policy decisions, release authority, and public outputs to their owning roots
 truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
-  - ../validators/README.md
-  - ../validators/_common/README.md
-  - ../validators/ai/evidence_before_model/README.md
-  - ../../contracts/evidence/README.md
-  - ../../contracts/evidence/evidence_ref.md
-  - ../../contracts/evidence/evidence_bundle.md
-  - ../../contracts/evidence/citation_validation_report.md
-  - ../../contracts/evidence/verification_state_history.md
-  - ../../schemas/contracts/v1/evidence/README.md
-  - ../../schemas/contracts/v1/evidence/verification_state_history.schema.json
+  - ../_common/README.md
+  - ../ai/evidence_before_model/README.md
+  - ../../../contracts/evidence/README.md
+  - ../../../contracts/evidence/evidence_ref.md
+  - ../../../contracts/evidence/evidence_bundle.md
+  - ../../../contracts/evidence/citation_validation_report.md
+  - ../../../contracts/evidence/verification_state_history.md
+  - ../../../schemas/contracts/v1/evidence/README.md
+  - ../../../schemas/contracts/v1/evidence/verification_state_history.schema.json
   - ../validate_verification_state_history.py
-  - ../../tests/schemas/test_verification_state_history.py
-  - ../../data/proofs/README.md
-  - ../../data/proofs/evidence_bundle/README.md
-  - ../../data/proofs/citation_validation/README.md
-  - ../../data/registry/sources/
-  - ../../data/receipts/
-  - ../../release/
-  - ../../policy/evidence/
-  - ../../packages/evidence-resolver/src/README.md
-  - ../../packages/citation/README.md
+  - ../../../tests/schemas/test_verification_state_history.py
+  - ../../../data/proofs/README.md
+  - ../../../data/proofs/evidence_bundle/README.md
+  - ../../../data/proofs/citation_validation/README.md
+  - ../../../data/registry/sources/
+  - ../../../data/receipts/
+  - ../../../release/
+  - ../../../policy/evidence/
+  - ../../../packages/evidence-resolver/src/README.md
+  - ../../../packages/citation/README.md
 notes:
   - "This README originally replaced a stray one-character file; the bounded top-level VerificationStateHistory validator is now confirmed executable and indexed here."
   - "Evidence validators check readiness and closure. They do not define evidence semantics, create EvidenceBundles, store proofs, store receipts, decide policy, approve release, publish public outputs, or authorize generated answers."
@@ -69,6 +68,19 @@ The answer should be a deterministic validation result. This folder should not c
 [Back to top](#top)
 
 ---
+
+## Drought multi-clock rehearsal — 2026-11-17
+
+The additive [fixture runner](rehearse_drought_multiclock.py) composes the existing
+[observation assessment](validate_western_kansas_observation_assessment.py) and
+[ForecastProduct validator](../validate_forecast_product.py) for the
+[issue-specific synthetic packet](../../../fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/README.md).
+It checks source support, distinct clocks, successor context, correction lineage,
+unknown uncertainty and 27 exact positive/negative outcomes. It accepts only
+`--fixtures`, returns deterministic JSON and writes no store. This bounded
+addition does not establish a general evidence resolver or complete the broader
+child-lane proposals below. Live rights/cadence, evidence closure, quantitative
+uncertainty and independent acceptance remain open.
 
 ## Status
 
@@ -109,7 +121,7 @@ This README does not move, replace, or override those roots. It only defines whe
 
 ## Proposed child lanes
 
-No child executable lane under `tools/validators/evidence/` is established by this slice. One bounded top-level entrypoint is confirmed at `tools/validators/validate_verification_state_history.py`, following the repository's existing top-level EvidenceRef/EvidenceBundle wrapper convention.
+The August 2 index established no child executable lane under `tools/validators/evidence/`. Its bounded top-level entrypoint is `tools/validators/validate_verification_state_history.py`, following the repository's existing top-level EvidenceRef/EvidenceBundle wrapper convention. The November 17 rehearsal above records a later bounded addition; the following broader lanes remain proposals.
 
 Possible future children remain **PROPOSED** until created and verified:
 

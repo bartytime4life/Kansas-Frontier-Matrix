@@ -26,6 +26,7 @@ The following Hydrology fixture lanes have populated README coverage. This table
 
 | Child lane | Purpose | Expected posture |
 |---|---|---|
+| [western_kansas_observation_assessment/multiclock/](western_kansas_observation_assessment/multiclock/README.md) | Issue #3390 synthetic predecessor, successor-forecast and correction rehearsal through existing observation/forecast validators. | 27 exact cases retain observed, derived, conflict, stale, abstain and error/deny distinctions; live authority, cadence, rights, uncertainty propagation and acceptance remain open. |
 | `decision_envelope/` | Synthetic Hydrology bounded runtime envelopes for governed API, drawer, Focus Mode, layer resolver, export, and review-facing outcomes. | `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, validation pass/failure, review-required, or blocked render. |
 | `evidence_bundle/` | Synthetic Hydrology claim-scope evidence-support examples. | Validation pass/failure, review-ready, evidence-resolved, citation-ready, `ABSTAIN`, `DENY`, `ERROR`, or release-readiness failure when consumed. |
 | `run_receipt/` | Synthetic Hydrology governed-run provenance examples. | Validation pass/failure, provenance-resolved, replay-reviewable, review-required, release-readiness failure, or rollback-readiness failure. |

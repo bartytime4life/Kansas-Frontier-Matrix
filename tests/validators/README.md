@@ -2,12 +2,13 @@
 doc_id: kfm://doc/tests-validators-readme
 title: tests/validators/ — Validator Test Lane
 type: README
-version: v0.14
+version: v0.15
 status: draft; repository-grounded; executable-test-index; mixed-workflow-coverage; non-authoritative
 owners: ["OWNER_TBD — validator and QA stewardship remains unverified"]
 created: 2026-07-07
-updated: 2026-08-31
-supersedes: v0.13 documentation at the same path; no test, validator, registry, workflow, fixture, or authority state is superseded
+updated: 2026-11-17
+supersedes: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f6c49a49fbdb8d1c1f52580ab431a4f2d62e223e/tests/validators/README.md
+prior_supersedes_note: v0.13 documentation at the same path; no test, validator, registry, workflow, fixture, or authority state is superseded
 policy_label: public-doc; tests; validators; deterministic; no-network-default; fail-closed; non-authoritative
 owning_root: tests/
 responsibility: index executable validator tests, current registry and compatibility execution surfaces, failure interpretation, maintenance obligations, and authority limits
@@ -55,6 +56,14 @@ clearance, policy approval, evidence closure, review completion, lifecycle
 promotion, release, deployment, publication, or production parity.
 
 ## Quick start
+
+The November 17 [drought multi-clock suite](test_drought_multiclock_replay.py)
+exercises the [synthetic observation/forecast packet](../../fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/README.md)
+through existing validators, including byte preservation, correction binding,
+clock/source-role/uncertainty negatives and guarded deterministic CLI execution.
+The [dedicated workflow](../../.github/workflows/western-kansas-observation-assessment.yml)
+collects it with the existing observation, registry and ForecastProduct suites.
+This addition is separate from the older pinned inventory and counts below.
 
 Validate the canonical registry without running child validators:
 

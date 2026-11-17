@@ -1,0 +1,81 @@
+{
+  "profile": "kfm.common.forecast-product.v1",
+  "status": "PROPOSED_INACTIVE",
+  "version": "1.0.0",
+  "forecast_family": "HYDROLOGIC_OUTLOOK",
+  "product_ref": "kfm://product/synthetic-drought-outlook",
+  "source_ref": "kfm://source/synthetic-weather-service",
+  "source_native_id": "forecast:synthetic:drought:2026-08-20",
+  "issuing_authority_ref": "kfm://authority/synthetic-weather-service",
+  "source_role": "FORECAST",
+  "support_type": "PREDICTION",
+  "source_snapshot_refs": [
+    "kfm:source-snapshot:3333333333333333333333333333333333333333333333333333333333333333"
+  ],
+  "temporal_authority_ref": "kfm://temporal-authority/forecast/synthetic/drought/2026-08-20",
+  "times": {
+    "source_data_cutoff_at": "2026-08-18T06:00:00Z",
+    "issued_at": "2026-08-20T12:30:00Z",
+    "valid_from": "2026-08-20T13:00:00Z",
+    "valid_to": "2026-11-30T23:59:59Z",
+    "retrieved_at": "2026-08-21T13:58:25.892Z",
+    "corrected_at": null,
+    "superseded_at": null,
+    "native_timezone": "America/Chicago"
+  },
+  "space": {
+    "geography_ref": null,
+    "scale": "REGIONAL",
+    "geometry_role": "UNRESOLVED",
+    "geometry_digest": null,
+    "geometry_confidence": "UNRESOLVED"
+  },
+  "method": {
+    "kind": "EXPERT",
+    "model_ref": null,
+    "model_version": null,
+    "forecaster_ref": "kfm://forecaster/synthetic-drought-desk",
+    "method_ref": "kfm://method/synthetic-drought-outlook/v1",
+    "variable_id": "synthetic_drought_tendency",
+    "unit": "category",
+    "ensemble_ref": null,
+    "scenario_ref": null
+  },
+  "uncertainty": {
+    "kind": "NOT_PROVIDED",
+    "value_ref": null,
+    "confidence": "UNKNOWN"
+  },
+  "forecast_artifact_refs": [
+    "kfm://artifact/forecast/synthetic/drought/2026-08-20"
+  ],
+  "content_digests": [
+    "sha256:7cdcf6c92396a699831116e0828d94b44dc7daffaf3a1401b9908ec2848231a7"
+  ],
+  "evidence_refs": [
+    "kfm://evidence-ref/forecast/synthetic/drought/2026-08-20"
+  ],
+  "lineage": {
+    "state": "CURRENT",
+    "corrects": [],
+    "superseded_by": [],
+    "conflict_refs": []
+  },
+  "release_state": "UNRELEASED",
+  "release_ref": null,
+  "limitations": [
+    "Fixture-only forecast candidate.",
+    "Not an observed measurement or public guidance."
+  ],
+  "public_use_allowed": false,
+  "effects": {
+    "source_activated": false,
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promoted": false,
+    "released": false,
+    "published": false
+  },
+  "spec_hash": "sha256:8202775d55628604e8147b21c0d7c035170acba56aae31b32eb646099adf73eb",
+  "forecast_product_id": "forecast-product:8202775d55628604e8147b21"
+}

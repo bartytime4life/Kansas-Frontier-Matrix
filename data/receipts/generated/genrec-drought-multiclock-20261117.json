@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-drought-multiclock-20261117",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/western-kansas-observation-assessment.yml",
+    "docs/registers/milestone-progress-2026-10-08.md",
+    "fixtures/domains/hydrology/README.md",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/README.md",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/bindings.json",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/correction.json",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/forecast.json",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/observations.json",
+    "tests/validators/README.md",
+    "tests/validators/test_drought_multiclock_replay.py",
+    "tools/validators/evidence/README.md",
+    "tools/validators/evidence/rehearse_drought_multiclock.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "sha256:8e778bf07f5c89d8fc38c94f1af6bc9cb78d6370a3aea35fae6633d453eecba6",
+    "docs/registers/milestone-progress-2026-10-08.md": "sha256:cc383270ff105b24cb858af95726fe0a6308437086ea52b975397d51fd001def",
+    "fixtures/domains/hydrology/README.md": "sha256:3dbe6e72bec388d09bdbcacd2b6a132c047ffa4265c7cb5a59b2cfa92233254f",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/README.md": "sha256:d0ace08e9b0f678b13f2c8ac92c7abb56eda9ae2e969779d9f98c515befa5c3b",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/bindings.json": "sha256:2a234dc76bb6e47e009392424aa514113ec4a20d75a25a16b9e426d6fe54dbc1",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/correction.json": "sha256:f20abc46d7fe6ef1590c2ff6d1f596d1c2a612bcad8ad341042d494e7efa925b",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/forecast.json": "sha256:99bed456c9e351f04f7818201af7ebf62a6d05463a040c64cb3ba3fefc01393d",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/observations.json": "sha256:b281389a9ce8445a34c9dd837170cd11aa5d128adfd3dac65aac58d08eeb6d0b",
+    "tests/validators/README.md": "sha256:38c7ee5b06ced68668235bfef1a65754114ce0ab98cbb10d700372830bef9ebb",
+    "tests/validators/test_drought_multiclock_replay.py": "sha256:d2391c89e4adb442e17d222766bf292a0a460e825104a468b69b18e0d887465b",
+    "tools/validators/evidence/README.md": "sha256:51229b6723dfe30e2594b47e314eaf4cd7538f0f8f4c6996211bcba3ce60dea9",
+    "tools/validators/evidence/rehearse_drought_multiclock.py": "sha256:1359e339ebfae2e0e0c694800a34ceb54d00ca945428bb04d9dc5fbcc2e3092d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact serving build not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:7ddcc32632aa2fad1dd8900ab32a0dbc891806e55dd7e5ba4018c042f89e0e9b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local source and Git inspection",
+      "GitHub issue and PR readback",
+      "native hash-locked Python profiles",
+      "Python process no-network guard"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:a644a11c87a3cedfaea7b0301b649e5abf72efea3d52b794591b6c7609b4717c",
+      "sha256:036f876d8bf649f7ebd39a6eeea730e73098c7d246478af8634d8b57bd98f317",
+      "sha256:765d03e935ac5847a577cf49ebb8d63f0427925a0ae80246c730ec91cabdc96d",
+      "sha256:0105c6ba9a9da886713e166f65251121c2421354f77e17d62a9fc22e346c7b8f"
+    ],
+    "evidence_refs": [
+      "repo:main@f6c49a49fbdb8d1c1f52580ab431a4f2d62e223e",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2899",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5888",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f6c49a49fbdb8d1c1f52580ab431a4f2d62e223e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "CONFIRMED",
+    "docs/registers/milestone-progress-2026-10-08.md": "PROPOSED",
+    "fixtures/domains/hydrology/README.md": "PROPOSED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/README.md": "PROPOSED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/bindings.json": "CONFIRMED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/correction.json": "CONFIRMED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/forecast.json": "CONFIRMED",
+    "fixtures/domains/hydrology/western_kansas_observation_assessment/multiclock/observations.json": "CONFIRMED",
+    "tests/validators/README.md": "PROPOSED",
+    "tests/validators/test_drought_multiclock_replay.py": "CONFIRMED",
+    "tools/validators/evidence/README.md": "PROPOSED",
+    "tools/validators/evidence/rehearse_drought_multiclock.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "guarded_focused_observation_forecast_replay",
+      "outcome": "PASS",
+      "reason": "58 tests and 14 subtests across new integrated rehearsal, existing observation/registry and ForecastProduct suites; explicit validity/observation and forecast cutoff/issue collapse refusal."
+    },
+    {
+      "gate": "surrounding_temporal_drought_workflow_compatibility",
+      "outcome": "PASS",
+      "reason": "128 tests and 103 subtests across temporal replay, drought schema/validator, temporal join guard, workflow security and native installer."
+    },
+    {
+      "gate": "deterministic_guarded_fixture_cli",
+      "outcome": "PASS",
+      "reason": "27 exact positive/negative cases across seven source families, separate successor forecast and bound observation correction; all authority flags false."
+    },
+    {
+      "gate": "central_registry_topology_scaffold",
+      "outcome": "PASS",
+      "reason": "Registry valid (29 entries); indexed topology 0 invariant/new drift/stale, 89 retained warnings; scaffold 0 new/resolved entries. No baseline changed."
+    },
+    {
+      "gate": "repository_baseline",
+      "outcome": "PASS",
+      "reason": "Native guarded make validate passed the compatibility schema fixture lane and 502 tests / 53 subtests."
+    },
+    {
+      "gate": "changed_documentation_qa",
+      "outcome": "PASS",
+      "reason": "Five changed documents: 59 local link targets pass; four present metadata blocks valid. Corrected the touched evidence index metadata references and test index predecessor relationship. Changed-file metadata and graph both report zero failures; historical findings and bounded navigation warnings remain visible."
+    },
+    {
+      "gate": "historical_receipt_at_base",
+      "outcome": "FAIL",
+      "reason": "Exact-base replay of unchanged genrec-issue-2899-invalid-timestamp-boundary-20260906.json reports ARTIFACT_DIGEST_MISMATCH at artifacts 3 and 4. Historical receipt remains unchanged; dedicated workflow now validates this successor contribution receipt."
+    },
+    {
+      "gate": "precommit_full_tree",
+      "outcome": "SKIPPED",
+      "reason": "No full-tree hook sweep; focused native tests, repository baseline and changed-file documentation/topology checks are proportionate to this additive rehearsal."
+    },
+    {
+      "gate": "hosted_current_head_and_human_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not observed at authoring; human review pending. No review, merge, source, release or production action."
+    },
+    {
+      "gate": "live_seven_family_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Live authority/cadence/rights, quantitative uncertainty propagation, actual spatial overlap, real evidence closure and authenticated API/UI/AI replay remain open."
+    },
+    {
+      "gate": "committed_workflow_replay",
+      "outcome": "PASS",
+      "reason": "49 tests and 94 subtests across native installer and workflow-security after the contribution was committed; no workflow privilege or install-profile changes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "issue-3390",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3390"
+    },
+    {
+      "id": "issue-2899",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2899"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-17T19:12:11.630020Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic fixture rehearsal only. Existing observation/forecast schemas and validators, original fixtures, historical receipts and catalog baseline retain their bytes. No common/evidence translation, live source ingest, store, data activation, settings, scheduler, release, deployment or publication action. M22/#2899 remain partial; passing checks are not human acceptance."
+}

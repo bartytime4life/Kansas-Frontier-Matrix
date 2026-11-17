@@ -1,0 +1,23 @@
+{
+  "source_family": "USGS_STREAMFLOW",
+  "source_id": "source:synthetic:usgs_streamflow",
+  "source_version_ref": "source:synthetic:usgs_streamflow:v2",
+  "observation_status": "PRESENT",
+  "observation_start": "2026-07-28T00:00:00Z",
+  "observation_end": "2026-07-28T23:59:59.123456Z",
+  "valid_start": "2026-07-27T23:00:00Z",
+  "valid_end": "2026-07-30T00:00:00Z",
+  "publication_time": "2026-08-22T12:00:00Z",
+  "retrieval_time": "2026-08-22T13:00:00+00:00",
+  "revision_status": "CORRECTED",
+  "support_kind": "STATION",
+  "support_id": "support:synthetic:usgs_streamflow",
+  "crs": "EPSG:4326",
+  "resolution_m": null,
+  "method": "synthetic station mean",
+  "unit": "m3/s",
+  "evidence_ref": "evidence:synthetic:usgs_streamflow:v2",
+  "payload_digest": "sha256:80f7d7fc18f06e38ce0e2f3f055ac4c39672b17f48525f6512f8b4526c47abd2",
+  "correction_ref": "correction:synthetic:flow-v2",
+  "supersedes_ref": "source:synthetic:usgs_streamflow:v1"
+}

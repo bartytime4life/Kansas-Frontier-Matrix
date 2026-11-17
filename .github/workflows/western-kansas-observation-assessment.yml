@@ -8,7 +8,14 @@ name: western-kansas-observation-assessment
       - "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
       - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
       - "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
+      - "tools/validators/evidence/rehearse_drought_multiclock.py"
+      - "tools/validators/validate_forecast_product.py"
+      - "schemas/contracts/v1/common/forecast_product.schema.json"
+      - "tests/validators/test_drought_multiclock_replay.py"
+      - "tests/validators/test_validate_forecast_product.py"
+      - "data/receipts/generated/genrec-drought-multiclock-20261117.json"
       - "tests/validators/test_western_kansas_observation_assessment.py"
+      - "tests/validators/test_western_kansas_observation_assessment_registry.py"
       - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       - "data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
   push:
@@ -19,7 +26,14 @@ name: western-kansas-observation-assessment
       - "schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json"
       - "fixtures/domains/hydrology/western_kansas_observation_assessment/**"
       - "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
+      - "tools/validators/evidence/rehearse_drought_multiclock.py"
+      - "tools/validators/validate_forecast_product.py"
+      - "schemas/contracts/v1/common/forecast_product.schema.json"
+      - "tests/validators/test_drought_multiclock_replay.py"
+      - "tests/validators/test_validate_forecast_product.py"
+      - "data/receipts/generated/genrec-drought-multiclock-20261117.json"
       - "tests/validators/test_western_kansas_observation_assessment.py"
+      - "tests/validators/test_western_kansas_observation_assessment_registry.py"
       - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       - "data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
   workflow_dispatch:
@@ -57,13 +71,37 @@ jobs:
       - name: Install declared test dependencies
         run: python tools/ci/install_python_ci.py project-test
       - name: Run focused tests
-        run: python -m pytest -q tests/validators/test_western_kansas_observation_assessment.py
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: >-
+          python -m pytest -q
+          tests/validators/test_western_kansas_observation_assessment.py
+          tests/validators/test_western_kansas_observation_assessment_registry.py
+          tests/validators/test_drought_multiclock_replay.py
+          tests/validators/test_validate_forecast_product.py
       - name: Run exact synthetic case polarity
         run: python tools/validators/evidence/validate_western_kansas_observation_assessment.py --cases
+      - name: Rehearse synthetic multi-clock observation and forecast
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python tools/validators/evidence/rehearse_drought_multiclock.py --fixtures > "$RUNNER_TEMP/drought-multiclock.json"
+          python - "$RUNNER_TEMP/drought-multiclock.json" <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1], encoding="utf-8"))
+          assert report['outcome'] == 'PASS'
+          assert report['predecessor_bytes_unchanged'] is True
+          assert all(value is False for value in report['authority'].values())
+          assert len(report['family_matrix']) == 7
+          assert len(report['cases']) == 27
+          PY
       - name: Verify generated authoring receipt integrity
         run: |
+          # Prior authoring receipts remain historical. This successor binds
+          # current contribution bytes; it does not rewrite their old digests.
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json \
+            data/receipts/generated/genrec-drought-multiclock-20261117.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
@@ -73,5 +111,7 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: synthetic observation, join, freshness, correction, material-change, and claim-boundary classification."
+            echo "- Multi-clock rehearsal: seven source families retain support and unknown uncertainty; a successor forecast remains prediction, historical observations remain immutable, and corrections bind their predecessor."
+            echo "- Remaining: live seven-family authority/cadence/rights, quantitative uncertainty, real evidence closure, authenticated API/UI/AI replay and independent acceptance."
             echo "- Boundary: no live source, connector, groundwater or crop-loss claim, emergency guidance, lifecycle write, release, deployment, or publication."
           } >> "$GITHUB_STEP_SUMMARY"
