@@ -197,6 +197,16 @@ export const STORIES = Object.freeze([
     tables: ['kfm_nass_quickstats'], feeds: ['nass'],
   }),
   guided({
+    id: 'drought-replay-2012', group: 'Living record', title: '2012 Drought Replay', kicker: 'FINNEY COUNTY · ARKANSAS RIVER',
+    href: '/labs/drought-replay',
+    summary: 'Follow 17 Finney County drought assessments alongside 119 daily discharge values at Garden City.',
+    try: 'Move between assessment dates and open the matching historical map or daily records.',
+    limit: 'County drought categories and observations at one gauge describe different places, measures and times.',
+    palette: ['#211c18', '#e9914c', '#bb454a'],
+    sources: ['U.S. Drought Monitor', 'U.S. Geological Survey'],
+    tables: ['kfm_usgs_daily_values'], feeds: ['usgs-streamflow'],
+  }),
+  guided({
     id: 'water-chemistry', group: 'Living record', title: 'Water Chemistry', kicker: 'WHAT’S IN THE WATER',
     href: '/labs/water-chemistry',
     summary: 'Compare two periods of dissolved nitrate samples from the Little Arkansas River near Sedgwick.',

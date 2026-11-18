@@ -8,7 +8,7 @@ accessible through **All research**.
 
 ## Guided investigations candidate, November 18, 2026
 
-The Labs catalog and the Kansas Record on the map welcome link to these three
+The Labs catalog and the Kansas Record on the map welcome link to these
 dedicated investigations. Their publication is a separate release step.
 
 | Investigation | Source scope |
@@ -16,11 +16,35 @@ dedicated investigations. Their publication is a separate release step.
 | Water Chemistry, `/labs/water-chemistry` | 28 Water Quality Portal records at USGS 07144100 near Sedgwick. The 2019–2020 and 2021–2022 windows use the same dissolved nitrate analyte, units, analytical method, collection method and sampler. One non-detect retains its reporting limit and stays outside the numeric histogram. |
 | Boom & Ghost Towns, `/labs/ghost-towns` | All 59 Douglas County rows matching the county fields in the original geocoded Blevins–Helbock file. The map includes 45 provider-matched locations, and the record view retains unlocated and undated records. County outlines are present-day context. |
 | Newspaper Pulse, `/labs/newspaper-pulse` | All 20 Library of Congress digitized pages from two Abilene Weekly Reflector issues dated January 2, 1890 and January 4, 1900. Rates count pages containing each OCR token and use the matching issue's page inventory as the denominator. |
+| 2012 Drought Replay, `/labs/drought-replay` | 17 Finney County U.S. Drought Monitor assessments and 119 approved daily means from USGS 07139000. Each map date keeps its validity interval and the selected week shows its seven dated gauge records. |
 
 Each investigation exposes source records and a free export. Snapshot builders
 capture the provider file or request and digest. A source-file receipt documents
 the material used by the page. For historical dates, use the definitions and
 coverage limits shown on the corresponding investigation.
+
+## Finney County drought replay
+
+The [county area statistics](https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=20055&startdate=6%2F5%2F2012&enddate=9%2F25%2F2012&statisticsType=1)
+cover the Tuesday map dates June 5 through September 25, 2012. Format 1
+percentages are cumulative by severity. The bars plot D3-only as D3 minus D4,
+and D4 as reported. The source's validity end is inclusive. USDM releases its
+weekly assessment on Thursday and uses Tuesday as the valid date.
+[USDM methods](https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx)
+
+The [USGS daily series](https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?monitoring_location_id=USGS-07139000&parameter_code=00060&statistic_id=00003&time=2012-06-05%2F2012-10-01&limit=150&f=json)
+covers June 5 through October 1, 2012 and uses daily mean discharge `00060/00003`
+in cubic feet per second. The 119 unique rows are approved, have no qualifiers,
+and all report zero. The legacy USGS daily values response agreed for every
+date. The two series align by calendar date for retrospective reading. The
+gauge describes its own location, and the daily series supplies observation
+dates only.
+
+The report queries, capture timestamp, source record IDs, and raw SHA-256 values
+travel with the download. To reproduce a capture, save the two provider
+responses and run `python3 scripts/prepare-drought-replay.py COUNTY.csv DAILY.json CAPTURE_ISO app/labs/drought-replay/snapshot.json`.
+USGS source records may be revised. The builder rejects unexpected grain, partial
+coverage, mismatched station metadata and nonmonotone severity shares.
 
 ## Bundled instruments
 

@@ -19,9 +19,9 @@ const validRail = () => ({ format: 'kfm-story-bundle-v1', story: 'iron-horse', v
   data: {years:[1861],states:['Kansas'],names:['Example'],gauges:[56.5],grid:{origin:[-103,36],unit:.001},
     lines:[[0,0,0,0,1,[1000,2000,1,1]]],milesByYear:[{year:1861,kansasTotal:1}],counts:{segments:1},limits:['Synthetic test only']} });
 
-test('the registry lists 23 stories with unique ids, known groups and complete copy', () => {
-  assert.equal(STORIES.length, 23);
-  assert.equal(new Set(STORIES.map(story => story.id)).size, 23);
+test('the registry lists 24 stories with unique ids, known groups and complete copy', () => {
+  assert.equal(STORIES.length, 24);
+  assert.equal(new Set(STORIES.map(story => story.id)).size, 24);
   for (const story of STORIES) {
     assert.match(story.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert.ok(STORY_GROUPS.includes(story.group), `${story.id} group`);
@@ -51,6 +51,7 @@ test('implemented instruments are lazy and planned stories cannot load a pretend
   }
   assert.deepEqual(STORIES.filter(entry => entry.status === 'guided').map(({ id, href, load }) => [id, href, load]), [
     ['boom-and-ghost-towns', '/labs/ghost-towns', null],
+    ['drought-replay-2012', '/labs/drought-replay', null],
     ['water-chemistry', '/labs/water-chemistry', null],
     ['newspaper-pulse', '/labs/newspaper-pulse', null],
   ]);

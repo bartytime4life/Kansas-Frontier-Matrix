@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-finney-2012-drought-replay-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/labs/drought-replay/DroughtReplay.jsx",
+    "app/labs/drought-replay/drought-replay.module.css",
+    "app/labs/drought-replay/page.tsx",
+    "app/labs/drought-replay/snapshot.json",
+    "app/layer-workspaces.ts",
+    "app/living-welcome/stories/registry.mjs",
+    "docs/labs-public-data.md",
+    "scripts/prepare-drought-replay.py",
+    "tests/drought-replay.test.mjs",
+    "tests/story-cards.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/labs/drought-replay/DroughtReplay.jsx": "sha256:eb439f8e5f4c682d7e0474be6bee0154ca30255df8f7503c2338f18bf07ddc14",
+    "app/labs/drought-replay/drought-replay.module.css": "sha256:d2a12288696004119095807b9f0b0c843aee6908bab9458355bb2cf65d8e7be2",
+    "app/labs/drought-replay/page.tsx": "sha256:8ce0adadc2cebba80827ecfee9e4b87dea359a9980c1dafd985def8079fc107b",
+    "app/labs/drought-replay/snapshot.json": "sha256:56a9b855324874a1e3c96b5b734bdf3a38e03ba409e1a63f5a908cd3bdf7103e",
+    "app/layer-workspaces.ts": "sha256:e4d64f5b184f50a3df818fe08ecc1d5af4fa4949b19514f569cba58781fd9987",
+    "app/living-welcome/stories/registry.mjs": "sha256:aca3c7c09b4cf4df2dab6b118769a25357ec90370c5e2f6cb4c08405d46ecbad",
+    "docs/labs-public-data.md": "sha256:3947575cb1059fc5416f2738b42ca0a742d9bfcde8615dffb8fe85ee011b82ef",
+    "scripts/prepare-drought-replay.py": "sha256:78362cc20f43af4780081ddf64c54be2a0502f562b2ab5ebc611a15b70e37345",
+    "tests/drought-replay.test.mjs": "sha256:05ec71fb91f8070bbe5dd4e8c0600a19b59a80e5d91543266df1d8466da95223",
+    "tests/story-cards.test.mjs": "sha256:8e8c9a625667b6739a970c931c56f0a3e2d3277260e5b2e5adbccb55553fc433"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-6 family"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local shell",
+      "git",
+      "GitHub connector",
+      "Notion connector",
+      "browser",
+      "web search"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f8cf992bcbc8e475f45800b73e83a9f5f3a4a4ff62da57605caf6c009fa3e0ba",
+      "sha256:323cc2e46a2a899a089cce9444186976732d6b2e89d252b8e0639c8b53c1b1ef"
+    ],
+    "evidence_refs": [
+      "git:9d47288715e96e8788771c0406eea99edc6f9753",
+      "git:f9e02f17f4767ba4c4142210ba01d2f8c870468d:examples/story_decks/kansas_drought_2012.md",
+      "git:f9e02f17f4767ba4c4142210ba01d2f8c870468d:docs/doctrine/ai-build-operating-contract.md",
+      "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=20055&startdate=6%2F5%2F2012&enddate=9%2F25%2F2012&statisticsType=1",
+      "https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?monitoring_location_id=USGS-07139000&parameter_code=00060&statistic_id=00003&time=2012-06-05%2F2012-10-01&limit=150&f=json"
+    ]
+  },
+  "truth_labels": {
+    "app/labs/drought-replay/DroughtReplay.jsx": "CONFIRMED",
+    "app/labs/drought-replay/drought-replay.module.css": "CONFIRMED",
+    "app/labs/drought-replay/page.tsx": "CONFIRMED",
+    "app/labs/drought-replay/snapshot.json": "CONFIRMED",
+    "app/layer-workspaces.ts": "CONFIRMED",
+    "app/living-welcome/stories/registry.mjs": "CONFIRMED",
+    "docs/labs-public-data.md": "CONFIRMED",
+    "scripts/prepare-drought-replay.py": "CONFIRMED",
+    "tests/drought-replay.test.mjs": "CONFIRMED",
+    "tests/story-cards.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Bounded source capture and reconciliation",
+      "outcome": "PASS",
+      "reason": "17 contiguous county assessment intervals and 119 approved station-day values. All station dates and values agree with the legacy USGS daily service. Rebuilding the snapshot from captured bytes was identical."
+    },
+    {
+      "gate": "Production build, TypeScript and scoped ESLint",
+      "outcome": "PASS",
+      "reason": "The hosted application builds with the guided drought route and existing discovery."
+    },
+    {
+      "gate": "Full Node suite",
+      "outcome": "PASS",
+      "reason": "3088 passed, 25 skipped, 0 failed."
+    },
+    {
+      "gate": "Desktop and mobile browser journeys",
+      "outcome": "PASS",
+      "reason": "Verified discovery, keyboard navigation, selected dates, exact historical map request, JSON download and narrow layout."
+    },
+    {
+      "gate": "Hosted Actions and human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "previous-hosted-build",
+      "validated": true,
+      "evidence_ref": "git:9d47288715e96e8788771c0406eea99edc6f9753"
+    },
+    {
+      "id": "historical-scenario",
+      "validated": true,
+      "evidence_ref": "git:f9e02f17f4767ba4c4142210ba01d2f8c870468d:examples/story_decks/kansas_drought_2012.md"
+    },
+    {
+      "id": "finney-county-drought-statistics",
+      "validated": true,
+      "evidence_ref": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=20055&startdate=6%2F5%2F2012&enddate=9%2F25%2F2012&statisticsType=1"
+    },
+    {
+      "id": "usgs-approved-daily-mean-discharge",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?monitoring_location_id=USGS-07139000&parameter_code=00060&statistic_id=00003&time=2012-06-05%2F2012-10-01&limit=150&f=json"
+    },
+    {
+      "id": "drought-monitor-method",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T19:36:47.538946+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Covers the hosted guided investigation, its fixed public-record snapshot, and its discovery links. The map uses its existing history endpoint. Human review and publication have their own records."
+}
