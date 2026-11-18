@@ -34,6 +34,16 @@ test("event interval rejects ambiguous/future/rollover dates and unbounded windo
   assert.deepEqual(atlas.intervalDays("2024-01-01T00:00:00Z","2024-01-02T00:00:00Z"),["2024-01-01"]);
 });
 
+test("event intervals clamp to an elapsed whole second for storm availability", () => {
+  const start = "2024-05-19T23:00:00.000Z";
+  const now = Date.parse("2024-05-19T23:20:00.999Z");
+  const interval = atlas.eventInterval(start, 1, now);
+  assert.deepEqual(interval, { start, end: "2024-05-19T23:20:00.000Z" });
+  assert.equal(atlas.exactUtc(interval.end), interval.end);
+  assert.equal(atlas.eventInterval(start, 1, Date.parse("2024-05-20T00:20:00.999Z")).end, "2024-05-20T00:00:00.000Z");
+  assert.throws(() => atlas.eventInterval(start, 1, Date.parse(start) + 999), /interval must contain past time/);
+});
+
 test("calendar weeks retain all 24 UTC hours when a checked day has gaps", () => {
   assert.equal(atlas.eventDay("2007-05-05"), "2007-05-05");
   assert.equal(atlas.eventDay("2007-02-29"), null);

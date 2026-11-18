@@ -31,6 +31,11 @@ export function exactUtc(value: string): string | null {
   return iso.replace(".000Z", "Z") === value.replace(".000Z", "Z") ? iso : null;
 }
 
+export function wholeSecondUtc(value: string | number): string {
+  const milliseconds = typeof value === "string" ? Date.parse(value) : value;
+  return new Date(Math.floor(milliseconds / 1000) * 1000).toISOString();
+}
+
 /** Accept only a real UTC calendar day.  Date-only values are deliberately
  * kept separate from local-time parsing so a calendar selection cannot drift
  * across a daylight-saving transition. */
@@ -80,7 +85,7 @@ export function eventDayHours(value: string): readonly EventHourSlot[] {
 export function eventInterval(start: string, hours: number, now = Date.now()) {
   const from = exactUtc(start);
   if (!from || ![1, 6, 24].includes(hours) || Date.parse(from) < Date.parse(`${EVENT_EARLIEST_DAY}T00:00:00Z`) || Date.parse(from) >= now) throw new Error("Choose a valid UTC start since 1800 and a 1, 6, or 24 hour interval, not in the future.");
-  const end = new Date(Math.min(Date.parse(from) + hours * 3_600_000, now)).toISOString();
+  const end = wholeSecondUtc(Math.min(Date.parse(from) + hours * 3_600_000, now));
   if (Date.parse(end) <= Date.parse(from)) throw new Error("The interval must contain past time.");
   return { start: from, end };
 }
