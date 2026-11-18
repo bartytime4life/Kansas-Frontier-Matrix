@@ -24,6 +24,8 @@ from tools.validators.control_plane.validate_program_baseline import (
 )
 
 PRIOR_BASE_SHA = "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e"
+# The baseline the current instance supersedes (the 2026-10-14 v2 refresh).
+SUPERSEDED_BASE_SHA = "514b2367638778a0a0b6e45a6451aea70c762909"
 
 
 def _init_repo(root: Path) -> None:
@@ -114,7 +116,7 @@ class ProgramBaselineValidatorTests(unittest.TestCase):
     def test_profile_supersedes_prior_baseline_and_rolls_back_to_its_own_base(self) -> None:
         baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
         self.assertEqual(
-            {"baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4", "base_sha": PRIOR_BASE_SHA},
+            {"baseline_id": "kfm-program-baseline-main-" + SUPERSEDED_BASE_SHA[:12], "base_sha": SUPERSEDED_BASE_SHA},
             baseline["supersedes"],
         )
         self.assertEqual("PRESENT", baseline["placement"]["base_path_status"])

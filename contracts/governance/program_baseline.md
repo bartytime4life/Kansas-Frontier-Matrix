@@ -6,12 +6,12 @@ type: semantic-contract
 status: proposed; repository-grounded; implementation-partial; non-authoritative
 owners: "@bartytime4life via CODEOWNERS; accountable human review pending"
 created: 2026-08-22
-updated: 2026-10-14
+updated: 2026-11-18
 responsibility_root: contracts/
 owning_root: contracts/
 responsibility: define a pinned and reversible M01 repository program-baseline projection without creating authority accepting decisions mutating issue state waiving failures activating sources changing lifecycle state or authorizing release deployment promotion or publication
 policy_label: internal-governance; cite-or-abstain; no-self-authority; no-network-validation
-truth_posture: CONFIRMED main@514b2367638778a0a0b6e45a6451aea70c762909 accepted ADR inventory derived from the pinned index Directory Rules digest CODEOWNERS route root and alias projections open-review queue tracker state local validation results and exact-main hosted check-runs at observation time / PROPOSED this contract schema profile v2 instance validator fixtures workflow and receipt / CARRIED FORWARD Drive lineage from the 2026-08-22 baseline without re-observation / UNKNOWN independent review branch-protection enforcement deployed consumers and production behavior
+truth_posture: CONFIRMED main@3e4137714e97c960dad7cf10e973481559a14782 accepted ADR inventory derived from the pinned index Directory Rules digest CODEOWNERS route root and alias projections open-review queue tracker state local validation results and exact-main hosted check-runs at observation time / PROPOSED this contract schema profile v2 instance validator fixtures workflow and receipt / CARRIED FORWARD Drive lineage from the 2026-08-22 baseline without re-observation / UNKNOWN independent review branch-protection enforcement deployed consumers and production behavior
 related:
   - ../../control_plane/program_baseline.json
   - ../../schemas/contracts/v1/governance/program_baseline.schema.json
@@ -42,7 +42,7 @@ notes:
 
 `ProgramBaseline` is the pinned, machine-readable coordination checkpoint for **M01 — Authority, Directory Rules & Program Baseline**. It records the repository state inspected at one exact main commit and makes later drift, correction, and review decisions reproducible.
 
-The canonical instance is [`control_plane/program_baseline.json`](../../control_plane/program_baseline.json). It is a governance projection, not governance authority. Profile `kfm.program-baseline.m01.v2` pins it to `main@514b2367638778a0a0b6e45a6451aea70c762909`. It names the baseline it replaces in `supersedes`: `kfm-program-baseline-main-6aa1ce50dfc4` at `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`.
+The canonical instance is [`control_plane/program_baseline.json`](../../control_plane/program_baseline.json). It is a governance projection, not governance authority. Profile `kfm.program-baseline.m01.v2` pins it to `main@3e4137714e97c960dad7cf10e973481559a14782`. It names the baseline it replaces in `supersedes`: `kfm-program-baseline-main-514b23676387` at `main@514b2367638778a0a0b6e45a6451aea70c762909` (the 2026-10-14 refresh, which itself superseded the 2026-08-22 baseline at `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`).
 
 ## What changed from v1
 
@@ -160,7 +160,7 @@ The packet carries forward the three Drive entries from the v1 baseline unchange
 
 The baseline goes stale when main advances, an accepted ADR's status changes, an authority or tracked-surface digest changes, an issue's state or body changes, the open-PR queue changes, or a recorded validator or workflow outcome changes. The correction is a same-path forward fix: refresh the instance at a new base, record the replaced baseline in `supersedes`, and add a new generated receipt.
 
-Before merge, rollback is closing the draft PR or deleting the review branch. After an authorized merge, use a same-path forward correction, or a reviewed Git revert to `514b2367638778a0a0b6e45a6451aea70c762909`, which restores the v1 packet. Correct GitHub tracker claims with an append-only corrective comment; do not rewrite or erase historical evidence. Generated receipts remain append-only process memory, and the 2026-08-22 receipt is kept unchanged.
+Before merge, rollback is closing the draft PR or deleting the review branch. After an authorized merge, use a same-path forward correction, or a reviewed Git revert to `3e4137714e97c960dad7cf10e973481559a14782`, which restores the 2026-10-14 v2 instance. A further revert to `514b2367638778a0a0b6e45a6451aea70c762909` restores the v1 packet. Correct GitHub tracker claims with an append-only corrective comment; do not rewrite or erase historical evidence. Generated receipts remain append-only process memory, and the 2026-08-22 and 2026-10-14 receipts are kept unchanged.
 
 ## Non-effects
 
