@@ -1,8 +1,12 @@
 import {RECOVERED_COLLECTIONS,recoveredMapUrl,recoveredTopics} from './recovered-collections';
+import {documentedField,fieldDocuments,collectionFieldNotes,fieldDictionaryRevision} from './collection-field-dictionary';
 
 export type Collection = (typeof RECOVERED_COLLECTIONS)[number];
-export type FieldRole = 'identity'|'time'|'location'|'unit'|'quality'|'value';
-export function fieldRole(name:string, keys:readonly string[]=[]):FieldRole {
+export type FieldRole = 'identity'|'time'|'location'|'unit'|'quality'|'category'|'value';
+export function fieldRole(name:string, keys:readonly string[]=[],collectionId?:string):FieldRole {
+ if(keys.includes(name))return 'identity';
+ const documented=documentedField(collectionId,name);
+ if(documented)return documented.role;
  if(keys.includes(name)||/(_number(?:_\d+)?|_no|_identifier)$/i.test(name)||/^(county|state|tract|block|site|station|block_group|variable|parameter|parameter_cd|element|measureid|characteristic_name)$/i.test(name)||/(^|_)(id|ids|code|fips|geoid|zip|row_number|file_id|site_no|station_id|objectid|lccn)($|_)/i.test(name))return 'identity';
  if(name==='first_max_hour'||/(^|_)(date|time|year|month|day|start|end|begin|issued|valid|edition)($|_)/i.test(name))return 'time';
  if(/geometry|latitude|longitude|(^|_)(lat|lon|lng|coordinates)($|_)/i.test(name))return 'location';
@@ -21,7 +25,13 @@ export function labUrl(id = '', packId?: string) {
 }
 export function collectionMetadata(c:Collection){
  const topics=[...recoveredTopics(c.id)];
- const fields=c.columns.map(name=>({name,label:fieldLabel(name),role:fieldRole(name,c.keys),definition:null,unit:null}));
+ const fields=c.columns.map(name=>{
+  const known=documentedField(c.id,name);
+  return {name,label:known?.label??fieldLabel(name),role:fieldRole(name,c.keys,c.id),
+   definition:known?.definition??null,unit:known?.unit??null,reference:known?.reference??null,
+   encoding:known?.encoding??null,codes:known?.codes??null,
+   roleBasis:known?'documented':'field_name_hint',sources:known?.sources??[]};
+ });
  return {format:'kfm-collection-metadata-v1',id:c.id,title:c.title,
   description:`${c.title}: archived source records with ${fields.length} retained fields, including original identifiers and source values. ${c.geometry?'Stored geometry can be inspected on the map.':'Use the record table and lab; map geometry is not stored for this collection.'}`,
   topics,sourceFamily:family(c.id),recordIdentity:c.keys,
@@ -29,7 +39,10 @@ export function collectionMetadata(c:Collection){
   spatial:{geometryField:c.geometry,coverage:null,crs:null,note:'A stored geometry field is a map option, not proof of complete geographic coverage.'},
   temporal:{candidateFields:fields.filter(f=>f.role==='time').map(f=>f.name),observationPeriod:null,edition:null,retrievedAt:null,note:'Source observation time, archive edition and retrieval time must be read separately.'},
   provenance:{provider:null,sourceUrls:[],digests:[],reviewCredit:null,note:'Source identity, links and file digests are supplied per record when available. This catalog does not establish an AI review or source approval.'},
-  fields,unknowns:['Provider field definitions and units require source documentation.','Coverage, rights, edition and review are not inferred from collection names.'],
+  fields,documentation:fieldDocuments(c.id),fieldNotes:collectionFieldNotes(c.id),fieldDictionaryRevision:fieldDictionaryRevision(c.id),
+  unknowns:[...(fields.some(f=>!f.definition)?['Undocumented field definitions and units still require source documentation.']:[]),
+   'Documentation describes a format, not the edition or accuracy of each archived record.',
+   'Coverage, rights, edition and review are not inferred from collection names.'],
   uses:{map:!!c.geometry,recordBrowser:true,lab:true,storyBrief:true},
  };
 }
@@ -55,6 +68,6 @@ export function relatedCollections(c:Collection){
   const sharedPacks=packs.filter(p=>p.match.test(other.id));
   const sameFamily=family(c.id)===family(other.id);
   return {collection:other,score:sharedTopics.length+sharedPacks.length*3+(sameFamily?2:0),reason:sharedPacks[0]?.title??(sharedTopics.length?sharedTopics.join(', '):`Shared ${family(c.id)} source family; verify definitions`),
-   joinCandidates:sameFamily?c.columns.filter(k=>other.columns.includes(k)&&fieldRole(k,c.keys)==='identity'&&!c.keys.includes(k)&&!other.keys.includes(k)):[]};
+   joinCandidates:sameFamily?c.columns.filter(k=>other.columns.includes(k)&&fieldRole(k,c.keys,c.id)==='identity'&&!c.keys.includes(k)&&!other.keys.includes(k)):[]};
  }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score||a.collection.id.localeCompare(b.collection.id)).slice(0,6);
 }

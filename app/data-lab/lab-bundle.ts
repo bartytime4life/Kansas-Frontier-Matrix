@@ -3,6 +3,7 @@ import {
   type LabSnapshot, type MeasurementBin,
 } from '../collection-lab';
 import { type Collection } from '../collection-metadata';
+import {fieldDictionaryRevision} from '../collection-field-dictionary';
 import { recoveredCollection } from '../recovered-collections';
 
 const FORMAT = 'kfm-record-lab-bundle-v1';
@@ -30,6 +31,7 @@ export function createLabBundle(
   return JSON.stringify({
     format: FORMAT,
     collection: collection.id,
+    fieldDictionaryRevision:fieldDictionaryRevision(collection.id),
     question,
     view: view ?? defaultView,
     capture: { pages: snapshot.pages, hasMore: snapshot.hasMore, reads: snapshot.answers.map(captureRead) },
@@ -129,5 +131,17 @@ export function openLabBundle(contents: string) {
   } catch {
     throw new Error('The bundle contains record values that could not be read.');
   }
-  return { collection, snapshot, question: value.question, view: viewFromBundle(value.view, collection, snapshot, profile) };
+  // Earlier FAA exports pooled accuracy categories and had no documented units.
+  // Keep their exact records/question, but explicitly reset the obsolete view
+  // rather than pretending an old range describes one of the new quality groups.
+  const oldView=value.view;
+  const oldRange=record(oldView)?oldView.range:undefined;
+  const validOldRange=oldRange===null||(record(oldRange)&&typeof oldRange.lower==='number'&&Number.isFinite(oldRange.lower)
+    &&typeof oldRange.upper==='number'&&Number.isFinite(oldRange.upper)&&oldRange.lower<=oldRange.upper&&typeof oldRange.includeUpper==='boolean');
+  const upgrade=collection.id==='observations-faa-obstacles'&&value.fieldDictionaryRevision==null
+    &&record(oldView)&&['quantity','agl_height_ft','amsl_height_ft','horizontal_accuracy'].includes(String(oldView.field))
+    &&oldView.context==='Unit and measurement context not supplied'&&validOldRange;
+  return { collection, snapshot, question: value.question,
+    view:upgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
+    notice:upgrade?'FAA field definitions have changed. Your records and question were preserved; choose a measurement context again.':null };
 }

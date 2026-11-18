@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { fieldLabel, type Collection } from '../collection-metadata';
+import {documentedField,documentedCode} from '../collection-field-dictionary';
 import {
   measurementDistribution,
   measurementLayer,
@@ -15,11 +16,14 @@ import { sameRange, type LabMeasurementView } from './lab-bundle';
 type FieldProfile = ReturnType<typeof profileCollection>['fields'][number];
 const isUnit = (name: string) => /(^|_)units?(_|$)/.test(name);
 
-function contextLabel(context: string) {
+function contextLabel(context: string,collectionId:string) {
   if (!context.startsWith('{')) return context;
   return Object.entries(JSON.parse(context) as Record<string, string>)
     .sort(([a], [b]) => Number(isUnit(b)) - Number(isUnit(a)))
-    .map(([name, value]) => `${isUnit(name) ? 'Unit' : fieldLabel(name)}: ${value}`)
+    .map(([name, value]) => {
+      const meaning=documentedCode(collectionId,name,value);
+      return `${isUnit(name) ? 'Unit' : fieldLabel(name)}: ${value}${meaning?` (${meaning})`:''}`;
+    })
     .join(' · ');
 }
 
@@ -73,16 +77,17 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
           const selected = fields.find(candidate => candidate.name === event.target.value);
           if (selected) onViewChange({ field: selected.name, context: selected.groups[0].context, range: null });
         }}>
-          {fields.map(option => <option key={option.name} value={option.name}>{fieldLabel(option.name)}</option>)}
+          {fields.map(option => <option key={option.name} value={option.name}>{documentedField(collection.id,option.name)?.label??fieldLabel(option.name)}</option>)}
         </select>
       </label>
       <label>Unit &amp; measurement context
         <select value={group.context} onChange={event => onViewChange({ field: field.name, context: event.target.value, range: null })}>
-          {field.groups.map(option => <option key={option.context} value={option.context}>{contextLabel(option.context)}</option>)}
+          {field.groups.map(option => <option key={option.context} value={option.context}>{contextLabel(option.context,collection.id)}</option>)}
         </select>
       </label>
     </div>
 
+    <p className={styles.note}>Selected context: {contextLabel(group.context,collection.id)}.</p>
     {firstBin && lastBin && <div className={styles.measurementPlot} role="region" aria-label="Measurement distribution">
       <p className={styles.plotLabel}>Records per range</p>
       <div className={styles.plotScroll}>
@@ -113,7 +118,7 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
         </div>
       </div>
       <p className={styles.plotLabel}>
-        {fieldLabel(field.name)} · {firstBin.lower === lastBin.upper ? 'One recorded value' : 'Recorded value ranges'}
+        {documentedField(collection.id,field.name)?.label??fieldLabel(field.name)} · {firstBin.lower === lastBin.upper ? 'One recorded value' : 'Recorded value ranges'}
       </p>
     </div>}
 
