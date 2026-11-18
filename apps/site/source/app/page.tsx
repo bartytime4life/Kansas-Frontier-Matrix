@@ -9419,9 +9419,10 @@ export default function Home() {
       </div>
 
       <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-inspector={inspectionPanel ?? "closed"} data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
+        <h1 className="sr-only">Kansas Frontier Matrix Explorer</h1>
         <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label={leftPanelMode === "layers" || leftPanelMode === "live" ? "Map layers" : "Living Atlas navigation"} aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
-            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "KANSAS FRONTIER MATRIX" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? <>Map layers <span className="layer-panel-count">{selectedMapLayerCount} selected</span></> : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
+            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "KANSAS FRONTIER MATRIX" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h2>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? <>Map layers <span className="layer-panel-count">{selectedMapLayerCount} selected</span></> : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h2></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
           </div>
           {leftPanelMode !== "layers" && leftPanelMode !== "live" && <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>}

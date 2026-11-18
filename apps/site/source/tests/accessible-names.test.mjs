@@ -66,3 +66,22 @@ test("the Observatory storm key is a labelled section, not a nested complementar
   assert.match(panel, /<section className="event-storm-key" aria-label="Storm cell map key">/);
   assert.doesNotMatch(panel, /<aside className="event-storm-key"/);
 });
+
+test("the map view keeps one exposed page heading while the layer panel is closed", async () => {
+  // The layer panel starts closed and is aria-hidden, so a heading inside it
+  // cannot be the page's only h1. The page heading sits directly in <main>.
+  const page = await readFile("app/page.tsx", "utf8");
+  const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const headings = [];
+  const visit = (node) => {
+    if (ts.isJsxElement(node) && node.openingElement.tagName.getText(ast) === "h1") {
+      const parent = ts.isJsxElement(node.parent) ? node.parent.openingElement.tagName.getText(ast) : undefined;
+      headings.push({ text: node.getText(ast), parent });
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(ast);
+  assert.deepEqual(headings, [{ text: '<h1 className="sr-only">Kansas Frontier Matrix Explorer</h1>', parent: "main" }]);
+  assert.match(page, /<p className="panel-kicker">[^\n]*<\/p><h2>\{leftPanelMode === "views"/, "the panel title is a section heading");
+  assert.match(page, /\[leftOpen, setLeftOpen\] = useState\(false\)/, "the panel starts closed, which is why the page heading lives outside it");
+});
