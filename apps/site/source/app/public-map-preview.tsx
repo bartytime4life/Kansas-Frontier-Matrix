@@ -54,7 +54,7 @@ export function PublicMapPreview({record}:{record:PublicMapRecord|null}) {
   return <section aria-label="Source map preview">
     <p>{PREVIEW_SOURCES[kind].limitation}</p>
     <button type="button" onClick={()=>setOpened(!opened)}>{opened?"Close map preview":"Open source map preview"}</button>
-    {opened&&<><div ref={container} style={{height:360,width:"100%",marginTop:12,border:"1px solid #b3bfc3",borderRadius:8}} aria-label="Interactive source map" />
+    {opened&&<><div role="region" ref={container} style={{height:360,width:"100%",marginTop:12,border:"1px solid #b3bfc3",borderRadius:8}} aria-label="Interactive source map" />
       <p>Pan and zoom to a Kansas area, then load its records. {kind!=="osmre-nmmr"?"Amber areas: interpreted map units; select one for its source description.":"Blue points: mine-map index locations; select one for its source document information."}</p>
       <button type="button" disabled={!ready||busy} onClick={()=>void load()}>{busy?"Loading source records…":"Load this map area"}</button>
       {busy&&<button type="button" onClick={()=>{pending.current?.abort();setBusy(false);setMessage("Preview cancelled.");}}>Cancel preview</button>}

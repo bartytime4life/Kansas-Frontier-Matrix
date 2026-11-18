@@ -39,7 +39,7 @@ export default function StormEventsQueue({ records, downloads, blocked, showNoti
   if (!years.length) return null;
   const toggle = (kind: Kind) => setKinds(current => current.includes(kind) ? current.filter(item => item !== kind) : [...current, kind]);
   return <details className={p.coverage}><summary>Download several Storm Events years<span>{queued ? `${queued} files waiting` : "One file at a time, in the background"}</span></summary>
-    <div className={p.selection} aria-label="Storm Events queue">
+    <div role="group" className={p.selection} aria-label="Storm Events queue">
       <fieldset><legend>Files for each year</legend>{KINDS.map(([kind, label]) => <label key={kind}><input type="checkbox" checked={kinds.includes(kind)} onChange={() => toggle(kind)} />{label}</label>)}</fieldset>
       <label>From year<select value={String(first)} onChange={e => setFrom(e.target.value)}>{[...years].reverse().map(year => <option key={year} value={year}>{year}</option>)}</select></label>
       <label>To year<select value={String(last)} onChange={e => setTo(e.target.value)}>{years.map(year => <option key={year} value={year}>{year}</option>)}</select></label>

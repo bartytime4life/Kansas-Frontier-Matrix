@@ -9262,7 +9262,7 @@ export default function Home() {
             <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" title="Search · shortcut /" />
           </label>
           <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
-          {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results">
+          {globalQuery && <div role="group" className="search-results" id="global-search-results" aria-label="Search results">
             {searchResults.map((item) => <button type="button" key={item.id} onClick={() => chooseSearchResult(item)}><span>{item.kind}</span><strong>{item.title}</strong><small>{item.subtitle}</small></button>)}
             {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
           </div>}
@@ -9384,7 +9384,7 @@ export default function Home() {
             </dl>
             <section className="status-map-actions" aria-label="Map source and baseline controls">
               <header><div><span>MAP STATUS</span><strong>Sources, live playback, and baseline</strong></div><small>{baselineDay} UTC</small></header>
-              <div className="status-live-toggles" aria-label="Quick live data layer toggles">
+              <div role="group" className="status-live-toggles" aria-label="Quick live data layer toggles">
                 {QUICK_LIVE_CONTEXT_IDS.map((sourceId) => {
                   const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
                   const heldAtFrame = officialVisibility[sourceId] && !effectiveOfficialVisibility[sourceId];
@@ -9397,7 +9397,7 @@ export default function Home() {
                 <button type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong><small>Reset to the current daily view</small></button>
               </div>
             </section>
-            <div className="site-identity-strip" aria-label="Site identity and domain status">
+            <div role="group" className="site-identity-strip" aria-label="Site identity and domain status">
               <div>
                 <span>SITES BINDING</span>
                 <strong>{SITE_IDENTITY.provider}</strong>
@@ -9463,7 +9463,7 @@ export default function Home() {
               <div className="repository-update-grid">
                 {filteredRepositoryUpdates.map((update) => <article key={update.id} className="repository-update-card" data-state={update.state}>
                   <div className="update-meta"><span>{update.area}</span><time>{update.date}</time></div>
-                  <div className="update-assessment" aria-label={`Authority posture ${update.state}; capability maturity ${update.maturity}`}>
+                  <div role="group" className="update-assessment" aria-label={`Authority posture ${update.state}; capability maturity ${update.maturity}`}>
                     <span><small>Authority</small><strong className="update-state">{update.state}</strong></span>
                     <span><small>Maturity</small><strong className="update-maturity">{update.maturity}</strong></span>
                   </div>
@@ -9482,7 +9482,7 @@ export default function Home() {
             {repositoryView === "functions" && <section id="repository-functions-panel" role="tabpanel" className="function-registry-section" aria-labelledby="repository-tab-functions">
               <div className="repository-section-heading"><div><span>AUTHORITY × MATURITY × INVENTORY</span><h3 id="function-registry-title">Function and interface navigator</h3></div><small>20 map functions · 9 Site workflows · 6 no-effect handoffs</small></div>
               <p className="function-registry-intro">The draft repository matrix supplies the full map-function inventory, while Site evidence decides what is implemented here. Higher-level workflows and operational handoffs stay visibly separate from atomic functions.</p>
-              <div className="function-state-summary" aria-label="Function registry state counts">
+              <div role="group" className="function-state-summary" aria-label="Function registry state counts">
                 {(["ACTIVE", "BOUNDED", "DOCUMENTED", "GATED"] as const).map((state) => <article key={state} data-state={state}><span>{state}</span><strong>{functionCounts[state]}</strong></article>)}
               </div>
               <div className="function-registry-controls">
@@ -9493,14 +9493,14 @@ export default function Home() {
               </div>
               <TopicSelect label="Function topic" value={functionTopic} onChange={setFunctionTopic} />
               <div className="function-workbench">
-                <div className="function-selector" aria-label="Available function records">
+                <div role="group" className="function-selector" aria-label="Available function records">
                   {filteredFunctions.map((record) => <button key={record.id} type="button" data-active={record.id === activeFunction?.id} data-state={record.state} aria-pressed={record.id === activeFunction?.id} onClick={() => setActiveFunctionId(record.id)}><span>{record.state}</span><strong>{record.title}</strong><small>{record.inventory} · {record.interface}</small></button>)}
                   {filteredFunctions.length === 0 && <p>No function matches this topic and search. Choose another topic or clear the search.</p>}
                 </div>
                 {activeFunction && <article className="function-detail" data-state={activeFunction.state}>
                   <header><span>{activeFunction.group.replaceAll("_", " ")}</span><strong>{activeFunction.state}</strong></header>
                   <h4>{activeFunction.title}</h4><p>{activeFunction.summary}</p>
-                  <div className="function-axis-grid" aria-label={`Authority ${activeFunction.authority}; maturity ${activeFunction.maturity}; inventory ${activeFunction.inventory}`}>
+                  <div role="group" className="function-axis-grid" aria-label={`Authority ${activeFunction.authority}; maturity ${activeFunction.maturity}; inventory ${activeFunction.inventory}`}>
                     <span><small>Authority posture</small><strong>{activeFunction.authority}</strong></span>
                     <span><small>Implementation maturity</small><strong>{activeFunction.maturity}</strong></span>
                     <span><small>Inventory source</small><strong>{activeFunction.inventory}</strong></span>
@@ -9531,8 +9531,8 @@ export default function Home() {
                     <section><h5>Equity questions + limits</h5><ul>{planningScenarioReview.equityQuestions.map((question) => <li key={question.id}><p>{question.description}</p><small>{question.limitation}</small></li>)}</ul></section>
                   </div>
                   <details className="planning-scenario-details"><summary>Inspect participation, evidence, and limitations</summary><div><section><h5>Participation references</h5>{planningScenarioReview.participationRefs.map((reference) => <code key={reference}>{reference}</code>)}</section><section><h5>Evidence references</h5>{planningScenarioReview.evidenceRefs.map((reference) => <code key={reference}>{reference}</code>)}</section><section><h5>Limitations</h5>{planningScenarioReview.limitations.map((limitation) => <p key={limitation}>{limitation}</p>)}</section></div></details>
-                  <div className="planning-scenario-authority" aria-label="Planning scenario authority flags"><span>Evidence resolved <b>FALSE</b></span><span>Policy approved <b>FALSE</b></span><span>Review approved <b>FALSE</b></span><span>Recommendation authorized <b>FALSE</b></span><span>Publication authorized <b>FALSE</b></span></div>
-                  <div className="planning-scenario-labels" aria-label="Non-authority labels">{planningScenarioReview.nonAuthorityLabels.map((label) => <span key={label}>{label.replaceAll("_", " ")}</span>)}</div>
+                  <div role="group" className="planning-scenario-authority" aria-label="Planning scenario authority flags"><span>Evidence resolved <b>FALSE</b></span><span>Policy approved <b>FALSE</b></span><span>Review approved <b>FALSE</b></span><span>Recommendation authorized <b>FALSE</b></span><span>Publication authorized <b>FALSE</b></span></div>
+                  <div role="group" className="planning-scenario-labels" aria-label="Non-authority labels">{planningScenarioReview.nonAuthorityLabels.map((label) => <span key={label}>{label.replaceAll("_", " ")}</span>)}</div>
                 </>}
               </article>
               <aside className="function-boundary-note"><strong>Review context ≠ scenario authority</strong><p>This Site-local replay performs no transport, source retrieval, scenario computation, preference aggregation, policy evaluation, lifecycle write, release, deployment, or publication action. It does not mean the repository feature is mounted on a KFM production route.</p></aside>
@@ -9565,7 +9565,7 @@ export default function Home() {
             {repositoryView === "transitions" && <section id="repository-transitions-panel" role="tabpanel" className="transition-section" aria-labelledby="repository-tab-transitions">
               <div className="repository-section-heading"><div><span>STATE BOUNDARIES</span><h3 id="transition-inspector-title">Inspect without collapsing state families</h3></div><small>Documentation view · no transition is applied</small></div>
               <div className="transition-workbench">
-                <div className="transition-selector" aria-label="Documented transition boundaries">
+                <div role="group" className="transition-selector" aria-label="Documented transition boundaries">
                   {TRANSITION_BOUNDARIES.map((transition) => <button key={transition.id} type="button" data-active={transition.id === activeTransition.id} data-posture={transition.posture} onClick={() => setActiveTransitionId(transition.id)}>
                     <span>{transition.family} · {transition.posture}</span><strong><b>{transition.from}</b><i aria-hidden="true">→</i><b>{transition.to}</b></strong><small>{transition.title}</small>
                   </button>)}
@@ -9590,7 +9590,7 @@ export default function Home() {
               </div>
               <section className="feature-radar" aria-labelledby="feature-radar-title">
                 <div className="repository-section-heading"><div><span>COMPLETE FEATURE CATALOG</span><h3 id="feature-radar-title">All 38 repository feature families</h3></div><small>Repository maturity labels · not Site implementation claims</small></div>
-                <div className="function-state-summary feature-state-summary" aria-label="Feature maturity counts">
+                <div role="group" className="function-state-summary feature-state-summary" aria-label="Feature maturity counts">
                   {(["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"] as const).map((maturity) => <article key={maturity} data-state={maturity}><span>{featureMaturityLabel(maturity)}</span><strong>{featureMaturityCounts[maturity]}</strong></article>)}
                 </div>
                 <div className="feature-catalog-controls">
@@ -9621,7 +9621,7 @@ export default function Home() {
                 <button type="button" role="tab" aria-selected={sourceObservatoryView === "gaps"} data-active={sourceObservatoryView === "gaps"} onClick={() => setSourceObservatoryView("gaps")}>Gap register <b>{SOURCE_GAPS.length}</b></button>
               </nav>
 
-              <div className="source-admission-legend" aria-label="Source admission states and record counts">
+              <div role="group" className="source-admission-legend" aria-label="Source admission states and record counts">
                 {SOURCE_ADMISSION_STATES.filter((state): state is SourceAdmissionState => state !== "ALL").map((state) => <button key={state} type="button" data-active={sourceAdmissionState === state} onClick={() => setSourceAdmissionState((current) => current === state ? "ALL" : state)}><span>{state.replaceAll("-", " ")}</span><b>{sourceAdmissionCounts[state]}</b></button>)}
               </div>
 
@@ -9685,7 +9685,7 @@ export default function Home() {
                 <h3>{atlasView.title}</h3>
                 <p className="atlas-view-question">{atlasView.question}</p>
                 <dl><div><dt>Scope</dt><dd>{atlasView.scope}</dd></div><div><dt>Time</dt><dd>{atlasView.time}</dd></div><div><dt>Source posture</dt><dd>{atlasView.sourcePosture}</dd></div></dl>
-                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasViewTopics(atlasView.id).map(topic => <span key={topic}>{topicDefinition(topic)?.title}</span>)}</div>
+                <div role="group" className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasViewTopics(atlasView.id).map(topic => <span key={topic}>{topicDefinition(topic)?.title}</span>)}</div>
                 <p className="atlas-view-note">{atlasView.note}</p>
                 <footer><span>{atlasView.report}</span><button type="button" onClick={() => applyLivingAtlasView(atlasView)}>Open on map</button></footer>
                 {atlasView.syntheticProof && <LivingWatersControl mapRef={mapRef} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} onInspect={() => { setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true); }} />}
@@ -9703,12 +9703,12 @@ export default function Home() {
                   <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · {visibleCount + visibleOfficialSources.length} selected public / registry layers</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"} · Selection does not confirm loaded or verified data.</small></header>
                   <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Place or investigation step name" /><button type="button" onClick={saveCurrentWorkspace}>Add place</button></div>
                 </article>
-                <div className="place-trail-controls" aria-label="Places trail controls">
+                <div role="group" className="place-trail-controls" aria-label="Places trail controls">
                   <button type="button" onClick={() => stepPlaceTrail(-1)} disabled={savedWorkspaces.length === 0}>← Previous</button>
                   <button type="button" onClick={() => placeTourPlaying ? stopPlaceTour() : playPlaceTrail()} disabled={savedWorkspaces.length < 2}>{placeTourPlaying ? "Stop trail" : "▶ Play trail"}</button>
                   <button type="button" onClick={() => stepPlaceTrail(1)} disabled={savedWorkspaces.length === 0}>Next →</button>
                 </div>
-                <div className="place-trail-list" aria-label="Saved investigation places">
+                <div role="group" className="place-trail-list" aria-label="Saved investigation places">
                   {savedWorkspaces.map((snapshot, index) => <article key={snapshot.id} data-active={activePlaceId === snapshot.id}>
                     <span className="place-stop-number">{String(index + 1).padStart(2, "0")}</span>
                     <button className="place-stop-main" type="button" onClick={() => { stopPlaceTour(false); loadSavedWorkspace(snapshot); }} aria-pressed={activePlaceId === snapshot.id}>
@@ -9836,7 +9836,7 @@ export default function Home() {
                   {needsCloserView && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const center = map.getCenter(); const inKansasView = center.lng >= -102.06 && center.lng <= -94.58 && center.lat >= 36.99 && center.lat <= 40.01; map.easeTo({ zoom: minimumZoom + 0.5, ...(inKansasView ? {} : { center: [-98.3, 38.5] as [number, number] }), duration: reducedMotion ? 0 : 600 }); announce(`Zooming to ${source.shortTitle}; provider coverage may still contain gaps`); }}>Zoom to layer</button>}
                 </div>}
                 {officialVisibility[source.id] && source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
-                <details className="official-context-options"><summary>Details &amp; controls</summary><div className="official-context-option-body">                {source.id === "nws-radar" && <div className="noaa-radar-launch" aria-label="NOAA radar playback">
+                <details className="official-context-options"><summary>Details &amp; controls</summary><div className="official-context-option-body">                {source.id === "nws-radar" && <div role="group" className="noaa-radar-launch" aria-label="NOAA radar playback">
                   <strong>Watch radar over time</strong>
                   <p>Live nowCOAST scans use their exact observation times. Choose an older UTC day to watch NOAA/NWS-derived archive mosaics in Event Observatory.</p>
                   <div>
@@ -9930,7 +9930,7 @@ export default function Home() {
               <header><div><strong>Daylight &amp; twilight</strong><small>Calculated solar geometry · {daylightEnabled ? styleReady ? "Selected" : "Selected · map loading" : "Off"}</small></div><label className="visibility-switch"><input type="checkbox" checked={daylightEnabled} aria-label={daylightEnabled ? "Hide Daylight and twilight" : "Show Daylight and twilight"} onChange={(event) => toggleDaylightVisibility(event.target.checked)} /><span aria-hidden="true" /></label></header>
               <details className="specialty-layer-details"><summary>Dates, playback &amp; details</summary><div className="official-context-option-body">
               <p>Estimated Sun position and twilight boundaries. This is not measured ground-level brightness.</p>
-              <div className="daylight-date-range" aria-label="Kansas Central date range">
+              <div role="group" className="daylight-date-range" aria-label="Kansas Central date range">
                 <label>From<input type="date" aria-label="Daylight loop start date" value={daylightDay} max={daylightToday} onChange={(event) => selectDaylightStart(event.target.value)} /></label>
                 <label>Through<input type="date" aria-label="Daylight loop end date" value={daylightThroughDay} min={daylightDay} max={daylightToday} onChange={(event) => selectDaylightThrough(event.target.value)} /></label>
               </div>
@@ -9961,7 +9961,7 @@ export default function Home() {
             {officialWorkspace === "transport" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Local road &amp; bridge map archive</button>}
             {officialWorkspace === "transport" && <p className="layer-journey-intro">Bridge age, historic designation, and recorded closure are separate filters. Historical roads are KDOT’s 1918 map, not proof of present abandonment. A verified statewide closed-road history and demolished-bridge inventory are not connected yet; no missing route is inferred closed.</p>}
             <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
-            <div className="official-context-pulse" aria-label="Live source connection status">
+            <div role="group" className="official-context-pulse" aria-label="Live source connection status">
               <div><span><small>RETURNED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>LATEST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? `${new Date(officialLatestRetrievedAt).toLocaleString("en-US", { timeZone: "UTC", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", hour12: false })} UTC` : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
@@ -10044,7 +10044,7 @@ export default function Home() {
               <span>{noaaRadarLoopFrames.length > 0 ? `${noaaRadarFrameIndex >= 0 ? noaaRadarFrameIndex + 1 : 0} / ${noaaRadarLoopFrames.length}` : "0 / 0"}</span>
             </div>
             {noaaRadarLoopSpan === "all" && noaaRadarLoopFrames.length > 1 && <p className="noaa-radar-motion-note">Available NOAA scans: {formatNoaaRadarLocalTime(noaaRadarLoopFrames[0])} to {formatNoaaRadarLocalTime(noaaRadarLoopFrames.at(-1)!)} · {noaaRadarLoopFrames.length} exact frames</p>}
-            <div className="noaa-radar-transport" aria-label="Radar playback">
+            <div role="group" className="noaa-radar-transport" aria-label="Radar playback">
               <button type="button" onClick={() => stepNoaaRadar("reverse")} disabled={!noaaRadarRenderable || noaaRadarFrameIndex <= 0 || noaaRadarFrameLoadState === "loading"} aria-label="Previous NOAA radar observation">‹</button>
               <button className="noaa-radar-play" type="button" aria-pressed={noaaRadarPlaying} onClick={toggleNoaaRadarPlayback} disabled={reducedMotion || noaaRadarLoopFrames.length < 2 || noaaRadarManifestState === "loading" || !noaaRadarRenderable}>{noaaRadarPlaying ? "Ⅱ Pause" : "▶ Restart loop"}</button>
               <button type="button" onClick={() => stepNoaaRadar("forward")} disabled={!noaaRadarRenderable || noaaRadarFrameIndex < 0 || noaaRadarFrameIndex >= noaaRadarLoopFrames.length - 1 || noaaRadarFrameLoadState === "loading"} aria-label="Next NOAA radar observation">›</button>
@@ -10085,7 +10085,7 @@ export default function Home() {
             <div className="lightning-clock"><strong>{lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No frame loaded"}</strong><span>{lightningManifest ? `${Math.max(0, lightningFrameIndex + 1)} / ${lightningManifest.frames.length} frames` : lightningManifestState === "loading" ? "Checking NOAA times" : "NOAA times unavailable"}</span></div>
             <output role="status" aria-live={lightningPlaying ? "off" : "polite"}>{!lightningSelected ? projection === "globe" ? "Lightning display is available on the flat map" : "Held by atlas time" : lightningPreview === "loading" ? "Loading and sampling the visible map area…" : lightningPreview === "signal" ? "NOAA density visible in the sampled map area for this frame" : lightningPreview === "none" ? "No NOAA density in the sampled map area for this frame · earlier frames may differ; not an all-clear" : lightningPreview === "error" || lightningManifestState === "error" ? "Visible-area signal unconfirmed or NOAA unavailable · no simulated flashes" : "Checking exact NOAA frames"}</output>
             <input type="range" min="0" max={Math.max(0, (lightningManifest?.frames.length ?? 1) - 1)} value={Math.max(0, lightningFrameIndex)} disabled={!lightningManifest || !lightningSelected} onChange={(event) => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[Number(event.target.value)] ?? null); }} aria-label="NOAA lightning 15-minute density frame" aria-valuetext={lightningFrame ?? "No frame"} />
-            <div className="lightning-transport" aria-label="Lightning playback"><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => { if (lightningPlaying) setLightningPlaying(false); else { setLightningFrame(lightningManifest?.frames[0] ?? null); setLightningPlaying(true); } }}>{lightningPlaying ? "Ⅱ Pause" : "▶ Replay frames"}</button><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest || !lightningSelected} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
+            <div role="group" className="lightning-transport" aria-label="Lightning playback"><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => { if (lightningPlaying) setLightningPlaying(false); else { setLightningFrame(lightningManifest?.frames[0] ?? null); setLightningPlaying(true); } }}>{lightningPlaying ? "Ⅱ Pause" : "▶ Replay frames"}</button><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest || !lightningSelected} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
             <details className="lightning-details"><summary>Density legend + source</summary><div className="lightning-density-key"><img src="/api/lightning/legend" width="292" height="46" alt="NOAA nowCOAST lightning density legend with the provider's numeric bins and units" loading="lazy" /><a href={NOAA_LIGHTNING_LEGEND_URL} target="_blank" rel="noreferrer">NOAA density legend ↗</a></div><p>Ground-network strike density in 8 × 8 km cells. The glow follows returned image cells only. This 15-minute product does not supply exact interval boundaries here. Frame list checked {lightningManifest ? `${lightningManifest.retrievedAt.slice(11, 16)} UTC` : "not yet"}. Empty pixels do not establish safety.</p><a href={OFFICIAL_CONTEXT_BY_ID["noaa-lightning-density"].sourceUrl} target="_blank" rel="noreferrer">NOAA layer and time metadata ↗</a></details>
             {reducedMotion && <p className="lightning-motion-note">Reduced motion: autoplay and glow are off. Frame steps remain available.</p>}
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
@@ -10124,7 +10124,7 @@ export default function Home() {
           {temporalNoData.length > 0 && <div className="no-time-data" role="status"><strong>No compatible record for {temporalScopeLabel} in {temporalNoData.map((layer) => layer.title).join(", ")}</strong><span>Other active layers remain visible; choose an available frame or change the sweep semantics.</span></div>}
 
           <nav className="map-tool-rail" aria-label="Unified map controls">
-            <div className="map-tool-group" aria-label="Map navigation">
+            <div className="map-tool-group" role="group" aria-label="Map navigation">
               <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })} aria-label="Zoom in"><span className="map-tool-glyph" aria-hidden="true">＋</span></button>
               <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })} aria-label="Zoom out"><span className="map-tool-glyph" aria-hidden="true">−</span></button>
               <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas"><span className="map-tool-glyph" aria-hidden="true">KS</span></button>
@@ -10208,7 +10208,7 @@ export default function Home() {
                   <article className="report-preview" aria-live="polite">
                     <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {temporalScopeLabel} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
-                    {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
+                    {reportSections.summary && <div role="group" className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
                     {measurementGeometryMode && <section className="report-preview-section"><span>MEASUREMENT INPUT</span><p>{measurement} · {measureUnit === "imperial" ? "miles / square miles" : "kilometers / square kilometers"}. Browser-local approximation is carried into JSON as a report input, not as evidence.</p></section>}
                     {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
                     <section className="report-preview-section report-temporal-comparison"><span>TIME A / TIME B CATALOG AVAILABILITY</span><div className="report-metrics"><article><span>{formatTimelineStep(compareTimeA)}</span><strong>{reportTemporalComparison.timeARecordCount}</strong><small>scoped records</small></article><article><span>{formatTimelineStep(compareTimeB)}</span><strong>{reportTemporalComparison.timeBRecordCount}</strong><small>scoped records</small></article><article><span>DELTA</span><strong>{reportTemporalComparison.recordDelta >= 0 ? "+" : ""}{reportTemporalComparison.recordDelta}</strong><small>catalog records</small></article><article><span>CHANGED</span><strong>{reportTemporalComparison.changedLayerCount}</strong><small>included layers</small></article></div><p>Applies this report’s layer, evidence, query, selection, visibility, viewport, or analysis-area scope to both times. Catalog availability is not observed change or imagery analysis.</p></section>
@@ -10345,7 +10345,7 @@ export default function Home() {
 
                 <section className="terrain-height-instrument" aria-labelledby="terrain-height-title">
                   <header><div><span>TOPOGRAPHIC HEIGHT</span><h4 id="terrain-height-title">Elevation color overlay</h4></div><button type="button" role="switch" aria-checked={topographicOverlay} disabled={scenePreset !== "elevation-3d" || terrainState === "ERROR"} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "ON" : "OFF"}</button></header>
-                  <div className="terrain-height-ramp" aria-label="Elevation color scale from 200 to 1,250 meters"><i /><span>200 m</span><span>400 m</span><span>650 m</span><span>1,000 m</span><span>1,250 m</span></div>
+                  <div role="img" className="terrain-height-ramp" aria-label="Elevation color scale from 200 to 1,250 meters"><i /><span>200 m</span><span>400 m</span><span>650 m</span><span>1,000 m</span><span>1,250 m</span></div>
                   <div className="terrain-height-readout">
                     <div><small>CURSOR ELEVATION</small><strong>{terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : terrainElevationUnavailable ? "Unavailable here" : "Move over map"}</strong><span>{terrainElevationReading ? `${terrainElevationReading.meters.toFixed(0)} m · ${terrainElevationReading.latitude.toFixed(5)}, ${terrainElevationReading.longitude.toFixed(5)}` : terrainElevationUnavailable ? "No loaded DEM height at this point" : "Uses the active unexaggerated DEM"}</span></div>
                     <button type="button" disabled={!terrainElevationReading} onClick={() => { setLockedTerrainElevation(terrainElevationReading); announce("Elevation reading locked into the current report context"); }}>Lock for report</button>
@@ -10357,7 +10357,7 @@ export default function Home() {
                   <header><div><span>TERRAIN INVESTIGATION</span><h4 id="terrain-investigation-title">Relief → transect → profile → evidence</h4></div><strong>{verticalExaggeration.toFixed(1)}× DISPLAY</strong></header>
                   <ol><li data-complete={scenePreset === "elevation-3d"}>Enable real display relief</li><li data-complete={measurementGeometryMode === "distance" && measureCoordinateCount >= 2}>Draw and finish a transect</li><li data-complete={terrainProfile.length > 0}>Preview unexaggerated samples</li><li data-complete={Boolean(selected)}>Select a feature for evidence</li></ol>
                   <div className="terrain-investigation-actions"><button type="button" onClick={startTerrainInvestigation}>Start terrain investigation</button><button type="button" onClick={previewTerrainProfile} disabled={terrainState !== "READY" || measurementGeometryMode !== "distance" || measureCoordinateCount < 2}>Preview display profile</button></div>
-                  {terrainProfile.length > 0 ? <div className="terrain-profile-preview" aria-label="Display-only terrain profile">
+                  {terrainProfile.length > 0 ? <div role="group" className="terrain-profile-preview" aria-label="Display-only terrain profile">
                     <header><strong>{terrainProfile.length} samples</strong><span>{terrainProfile.at(-1)?.distanceMiles.toFixed(1)} mi transect · exaggeration ignored</span></header>
                     <div>{terrainProfile.map((sample, index) => {
                       const elevations = terrainProfile.map((item) => item.elevationMeters);
@@ -10415,7 +10415,7 @@ export default function Home() {
 
               {mapUtilityView === "connections" && <section id="map-utility-view-connections" role="region" aria-labelledby="map-utility-title" className="map-utility-section source-connections-section">
                 <div className="map-utility-section-heading"><span>SOURCE CONNECTIONS</span><h3>Official feeds + network context + local registry</h3><p>Inspect bounded official adapters and raster services, external display carriers, and every site-local registry connection. Operational context remains separate from KFM evidence.</p></div>
-                <div className="source-connection-summary" aria-label="Source connection summary">
+                <div role="group" className="source-connection-summary" aria-label="Source connection summary">
                   <article><span>READY</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>MapLibre sources loaded</small></article>
                   <article><span>VISIBLE</span><strong>{visibleCount}</strong><small>Registry layers drawing now</small></article>
                   <article><span>RENDERERS</span><strong>{LAYER_REGISTRY.reduce((count, layer) => count + layer.renderers.length, 0)}</strong><small>Style layers connected</small></article>
@@ -10453,7 +10453,7 @@ export default function Home() {
                 <div className="source-connection-list">
                   {filteredSourceConnections.map(({ layer, state, activity, visible, compatibleCount, viewportCount, probeCount }) => <article key={layer.id} className="source-connection-card" data-state={state} data-visible={visible}>
                     <header><div><span>{layer.domain} · {layer.sourceType}</span><h4>{layer.title}</h4><code>{layer.sourceId}</code></div><strong>{state.toUpperCase()}</strong></header>
-                    <div className="source-connection-path" aria-label={`${layer.title} renderer connection`}><span>REGISTRY</span><i>→</i><span>{activity}</span><i>→</i><span>{layer.renderers.length} RENDERER{layer.renderers.length === 1 ? "" : "S"}</span><i>→</i><span>{visible ? "DRAWING" : "HIDDEN"}</span></div>
+                    <div role="group" className="source-connection-path" aria-label={`${layer.title} renderer connection`}><span>REGISTRY</span><i>→</i><span>{activity}</span><i>→</i><span>{layer.renderers.length} RENDERER{layer.renderers.length === 1 ? "" : "S"}</span><i>→</i><span>{visible ? "DRAWING" : "HIDDEN"}</span></div>
                     <dl><div><dt>Time-compatible</dt><dd>{compatibleCount}</dd></div><div><dt>In viewport</dt><dd>{viewportCount}</dd></div><div><dt>Source probe</dt><dd>{probeCount === undefined ? "NOT RUN" : `${probeCount} UNIQUE`}</dd></div><div><dt>Attribution</dt><dd>{layer.attribution}</dd></div></dl>
                     <footer><button type="button" onClick={() => setVisibility((current) => { const next = { ...current, [layer.id]: !current[layer.id] }; visibilityRef.current = next; return next; })}>{visible ? "Hide" : "Show"}</button><button type="button" onClick={() => zoomToLayer(layer)}>Fit</button><button type="button" onClick={() => probeSourceConnection(layer)} disabled={state !== "ready"}>Probe source</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Records</button></footer>
                   </article>)}
@@ -10464,7 +10464,7 @@ export default function Home() {
 
               {mapUtilityView === "import" && <section id="map-utility-view-import" role="region" aria-labelledby="map-utility-title" className="map-utility-section import-preview-section">
                 <div className="map-utility-section-heading"><span>LOCAL IMPORT PREVIEW</span><h3>Inspect before any admission handoff</h3><p>Open a small KML or GeoJSON file in this browser. Supported points, lines, and polygons can appear as a temporary MapLibre overlay while structure, extent, temporal fields, attribution gaps, and sensitivity signals remain explicit.</p></div>
-                <div className="import-path-grid" aria-label="Import preview boundary">
+                <div role="group" className="import-path-grid" aria-label="Import preview boundary">
                   <article><span>01</span><strong>Parse locally</strong><small>No upload, network link, or external asset fetch.</small></article>
                   <article><span>02</span><strong>Inspect + preview</strong><small>MapLibre draws only supported local geometry.</small></article>
                   <article><span>03</span><strong>Stop at review</strong><small>No registry, report-data, evidence, or publication effect.</small></article>
@@ -10476,7 +10476,7 @@ export default function Home() {
                 {importError && <div className="import-error" role="alert"><strong>Preview blocked</strong><p>{importError}</p></div>}
                 {!importPreview && !importError && <div className="map-utility-empty import-empty"><strong>No local file inspected</strong><p>Use this surface for structure and map-fit review. It is intentionally not a source-ingestion or upload workflow.</p></div>}
                 {importPreview && <>
-                  <div className="import-preview-summary" aria-label="Local import preview summary">
+                  <div role="group" className="import-preview-summary" aria-label="Local import preview summary">
                     <article><span>FORMAT</span><strong>{importPreview.sourceFormat}</strong><small>{(importPreview.fileSizeBytes / 1024).toFixed(1)} KB</small></article>
                     <article><span>FEATURES</span><strong>{importPreview.featureCount}</strong><small>{importPreview.invalidFeatureCount} invalid</small></article>
                     <article><span>GEOMETRIES</span><strong>{Object.values(importPreview.geometryCounts).reduce((sum, count) => sum + count, 0)}</strong><small>{Object.keys(importPreview.geometryCounts).length} types</small></article>
@@ -10489,7 +10489,7 @@ export default function Home() {
                     <div><dt>Potential sensitivity keys</dt><dd>{importPreview.sensitivitySignals.join(", ") || "NONE DETECTED"}</dd></div>
                   </dl></article>
                   <div className="import-geometry-grid">{Object.entries(importPreview.geometryCounts).map(([geometry, count]) => <article key={geometry}><span>{geometry}</span><strong>{count}</strong></article>)}</div>
-                  <div className="import-check-list" aria-label="Import inspection checks">{importPreview.checks.map((check) => <article key={check.id} data-state={check.state}><span>{check.label}</span><p>{check.detail}</p><strong>{check.state}</strong></article>)}</div>
+                  <div role="group" className="import-check-list" aria-label="Import inspection checks">{importPreview.checks.map((check) => <article key={check.id} data-state={check.state}><span>{check.label}</span><p>{check.detail}</p><strong>{check.state}</strong></article>)}</div>
                   <div className="map-utility-actions import-preview-actions"><button type="button" disabled={!importPreview.renderAllowed} onClick={toggleImportPreview}>{importPreviewVisible ? "Hide preview" : "Show preview"}</button><button type="button" disabled={!importPreview.renderAllowed} onClick={() => fitImportPreview()}>Fit preview</button><button type="button" onClick={() => void copyImportPreviewAudit()}>Copy inspection</button><button type="button" onClick={clearImportPreview}>Clear</button></div>
                 </>}
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Temporary Places, KFM-style: inspectable but unadmitted.</strong><p>The overlay never enters the Layer Catalog, Evidence Drawer, saved workspaces, reports, exports, registry, or repository. URL references, KML network links, overlays, models, tracks, and external resources are counted or warned about and are never fetched.</p></aside>
@@ -10531,13 +10531,13 @@ export default function Home() {
 
               {mapUtilityView === "export" && <section id="map-utility-view-export" role="region" aria-labelledby="map-utility-title" className="map-utility-section export-review-section">
                 <div className="map-utility-section-heading"><span>EXPORT REVIEW</span><h3>Preview trust before download</h3><p>The outward artifact carries workspace, map context, separate temporal fields, visible layers, attribution, evidence posture, release/correction state, and redaction results.</p></div>
-                <div className="export-review-summary" aria-label="Export review summary">
+                <div role="group" className="export-review-summary" aria-label="Export review summary">
                   <article><span>FORMAT</span><strong>PUBLIC SAFE V2</strong><small>External context</small></article>
                   <article><span>LAYERS</span><strong>{activeLayers.length}</strong><small>Each keeps attribution</small></article>
                   <article><span>SELECTION</span><strong>{selected && !selectedTimeMismatch ? "1" : "0"}</strong><small>{selectedTimeMismatch ? "OUT-OF-TIME SELECTION HELD" : selected?.properties.evidenceState ?? "MAP CONTEXT ONLY"}</small></article>
                   <article data-state={exportReview.withheldFeatureCount ? "REDACTED" : "PASS"}><span>WITHHELD</span><strong>{exportReview.withheldFeatureCount}</strong><small>Protected geometry count</small></article>
                 </div>
-                <div className="export-preflight" aria-label="Export preflight checks">
+                <div role="group" className="export-preflight" aria-label="Export preflight checks">
                   {exportReview.checks.map((check) => <article key={check.id} data-state={check.state}><span>{check.label}</span><p>{check.detail}</p><strong>{check.state}</strong></article>)}
                 </div>
                 <div className="map-control-group temporal-axis-inspector"><header><strong>Temporal-axis inspector</strong><span>Axes stay separate</span></header><dl>
@@ -10565,7 +10565,7 @@ export default function Home() {
                 </div>
                 <section className="map-control-group maplibre-runtime-proof" aria-labelledby="maplibre-runtime-proof-title">
                   <header><strong id="maplibre-runtime-proof-title">MapLibre {EXPECTED_MAPLIBRE_VERSION} runtime proof</strong><span>Live browser checks</span></header>
-                  <div className="map-status-list" aria-label="MapLibre browser capability status">{maplibreCapabilityChecks.map((check) => <article className="map-status-row" key={check.id} data-state={check.state}><div><span>{check.label}</span><p>{check.detail}</p></div><strong>{check.state}</strong></article>)}</div>
+                  <div role="group" className="map-status-list" aria-label="MapLibre browser capability status">{maplibreCapabilityChecks.map((check) => <article className="map-status-row" key={check.id} data-state={check.state}><div><span>{check.label}</span><p>{check.detail}</p></div><strong>{check.state}</strong></article>)}</div>
                 </section>
                 <section className="runtime-seam-lab" aria-labelledby="runtime-seam-title">
                   <header><div><span>REPOSITORY-PROVEN PORT · SITE-LOCAL REPLAY</span><h4 id="runtime-seam-title">Renderer-neutral runtime seam</h4><p>Replay initialize → validated selection binding → dispose without importing the repository package, MapLibre, or a network source.</p></div><strong data-state={runtimeSeamState}>{runtimeSeamState}</strong></header>
@@ -10573,7 +10573,7 @@ export default function Home() {
                   <div className="map-utility-actions"><button type="button" onClick={initializeRuntimeSeam}>Initialize Null seam</button><button type="button" onClick={bindRuntimeSeamSelection} disabled={runtimeSeamState === "IDLE" || runtimeSeamState === "DISPOSED"}>Bind current selection</button><button type="button" onClick={disposeRuntimeSeam} disabled={runtimeSeamState === "IDLE" || runtimeSeamState === "DISPOSED"}>Dispose</button><button type="button" onClick={() => { setRuntimeSeamState("IDLE"); setRuntimeSeamReason("Awaiting deterministic replay"); }}>Reset replay</button></div>
                   <footer>VERIFIED REPOSITORY SLICE: MapRuntimePort + NullMapRuntime + governed evidence binding · CONCRETE MAPLIBRE ADAPTER: HOLD</footer>
                 </section>
-                <div className="map-status-list" aria-label="MapLibre repository status">{MAPLIBRE_REPOSITORY_STATUS.map((status) => <article className="map-status-row" key={status.id} data-state={status.state}><div><span>{status.label}</span><p>{status.detail}</p></div><strong>{status.state}</strong></article>)}</div>
+                <div role="group" className="map-status-list" aria-label="MapLibre repository status">{MAPLIBRE_REPOSITORY_STATUS.map((status) => <article className="map-status-row" key={status.id} data-state={status.state}><div><span>{status.label}</span><p>{status.detail}</p></div><strong>{status.state}</strong></article>)}</div>
                 <div className="map-utility-actions"><button type="button" onClick={reapplyRendererState}>Reapply local state</button><button type="button" onClick={restoreLastKnownGoodView}>Restore prior camera</button><button type="button" onClick={() => void copyMapDiagnostics()}>Copy redacted diagnostics</button></div>
                 <div className="map-control-group"><header><strong>Capability gates</strong><span>Honest interfaces for unavailable work</span></header><div className="map-capability-grid">{MAP_CAPABILITY_GATES.map((gate) => <article className="map-capability-card" key={gate.id}><header><strong>{gate.title}</strong><span>{gate.state}</span></header><p>{gate.reason}</p><small>{gate.safeInterface}</small></article>)}</div></div>
                 <aside className="map-utility-boundary"><strong>Renderer evidence boundary</strong><p>This Site runs MapLibre {EXPECTED_MAPLIBRE_VERSION} with same-origin worker assets, a selected external basemap or local style, optional external DEM terrain, and provider-backed source overlays. GitHub proves an exact dependency, a bounded concrete adapter, the renderer-neutral port, and deterministic Null runtime; broader authenticated, performance, governed-terrain, accessibility, and long-session readiness remain held.</p></aside>
@@ -10609,7 +10609,7 @@ export default function Home() {
             <header className="qwen-panel-heading">
               <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Chat with KFM</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
             </header>
-            <div className="qwen-context-strip" aria-label="Qwen context scope">
+            <div role="group" className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
               <span><small>LAYERS SELECTED</small><strong>{selectedMapLayerCount}</strong></span>
@@ -10648,7 +10648,7 @@ export default function Home() {
               </article>)}
               {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
             </div>
-            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "View questions answered as interpretation, not evidence"}>
+            <div role="group" className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "View questions answered as interpretation, not evidence"}>
               <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "VIEW · INTERPRETATION, NOT EVIDENCE"}</span>
               {qwenQuickPrompts.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt)}>{prompt}</button>)}
             </div>
@@ -10807,10 +10807,10 @@ export default function Home() {
                 </nav>
 
                 {focusStage === "outcome" && <div className="focus-stage">
-                  <div className="focus-intents" aria-label="Safe Focus intents">
+                  <div role="group" className="focus-intents" aria-label="Safe Focus intents">
                     {FOCUS_INTENTS.map((intent) => <button key={intent.id} type="button" aria-pressed={focusIntent === intent.id} title={intent.label} onClick={() => setFocusIntent(intent.id)}>{intent.shortLabel}</button>)}
                   </div>
-                  <div className="focus-context" aria-label="Focus context rail">
+                  <div role="group" className="focus-context" aria-label="Focus context rail">
                     <span>Feature <code>{selected.featureId}</code></span>
                     <span>Layer <code>{selected.layerId}</code></span>
                     <span>Active / source time <code>{temporalScopeLabel} / {formatTimelineStep(selected.properties.year)}</code></span>
@@ -10819,7 +10819,7 @@ export default function Home() {
                     <span>Release / review <code>{selected.properties.releaseState} · {selected.properties.reviewState}</code></span>
                   </div>
                   <div className="focus-context-law"><strong>MapContextEnvelope preview</strong><span>Strict local request: profile · request ID · claim ID · question · allowed EvidenceRefs</span><span>Context is not evidence or authority · no protected geometry included</span></div>
-                  <div className="focus-resolution" aria-label={`Evidence state ${selected.properties.evidenceState} resolves to ${activeFocus.outcome}`}><span>Evidence state</span><strong>{selected.properties.evidenceState}</strong><b aria-hidden="true">→</b><span>Finite outcome</span><strong>{activeFocus.outcome}</strong></div>
+                  <div role="group" className="focus-resolution" aria-label={`Evidence state ${selected.properties.evidenceState} resolves to ${activeFocus.outcome}`}><span>Evidence state</span><strong>{selected.properties.evidenceState}</strong><b aria-hidden="true">→</b><span>Finite outcome</span><strong>{activeFocus.outcome}</strong></div>
                   <article className="focus-result" data-outcome={activeFocus.outcome} data-input-state={selected.properties.evidenceState} aria-live="polite"><div><span>{activeFocus.outcome}</span><code>{activeFocus.code}</code></div><h3>{activeFocus.title}</h3><p>{activeFocus.body}</p>{activeFocus.outcome === "ANSWER" && <small>Support: {selected.properties.citation}</small>}{activeFocus.outcome === "ABSTAIN" && <small>No unsupported answer generated.</small>}{activeFocus.outcome === "DENY" && <small>No protected attributes or exact geometry disclosed.</small>}{activeFocus.outcome === "ERROR" && <small>No fallback answer or provider output exposed.</small>}</article>
                   <div className="focus-intent-answer"><span>{FOCUS_INTENTS.find((intent) => intent.id === focusIntent)?.label}</span><p>{focusNarrative}</p></div>
                   <div className="focus-primary-actions"><button type="button" onClick={() => void copyFocusReceipt()}>Copy context receipt</button><button type="button" onClick={() => setFocusStage("checks")}>View closure checks</button></div>
@@ -10891,7 +10891,7 @@ export default function Home() {
                 <div className="timeline-semantic-controls">
                 <label>Step<select value={temporalStepRule} onChange={(event) => { setPlaying(false); setTemporalStepRule(event.target.value as TemporalStepRule); }}><option value="regular-calendar">Every year</option><option value="available-events">Event dates + bounds</option></select></label>
               </div>
-              <div className="timeline-range-controls" aria-label="Sweep range">
+              <div role="group" className="timeline-range-controls" aria-label="Sweep range">
                 <label><span>Start</span><select value={sweepRangeStart} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next <= year) setSweepRangeStart(next); }}>{TIME_STEPS.map((step) => <option key={`start:${step}`} value={step} disabled={step > year}>{formatTimelineStep(step)}</option>)}</select></label>
                 <span aria-hidden="true">→</span>
                 <label><span>End</span><select value={sweepRangeEnd} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next >= year) setSweepRangeEnd(next); }}>{TIME_STEPS.map((step) => <option key={`end:${step}`} value={step} disabled={step < year}>{formatTimelineStep(step)}</option>)}</select></label>
@@ -10908,7 +10908,7 @@ export default function Home() {
                 <label><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={(event) => setDynamicEffects(event.target.checked)} /> Ambient layer motion</label>
                 <small>{reducedMotion ? "System reduced-motion is active: autoplay and ambient movement are off; stepping remains available." : "Local layer motion and live gauge halos are presentation only. HMS smoke stays tied to provider Start/End intervals; visual motion does not encode velocity, intensity, or measured change."}</small>
               </div>
-              <div className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div>
+              <div role="group" className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div>
               </details>
               <div className="timeline-primary-actions"><Link href="/daily-archive">Daily archive ↗</Link><Link href="/observatory">Provider history ↗</Link><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
             </section>
@@ -10926,7 +10926,7 @@ export default function Home() {
                 <div><span>EXITED</span>{temporalFrameSummary.exited.slice(0, 3).map((record) => <small key={`out:${record.id}`}>− {record.title} · {record.domain}</small>)}{temporalFrameSummary.exited.length === 0 && <small>No exited records</small>}</div>
               </div>}
               {temporalFrameSummary.domainPairs.length > 0 && <div className="timeline-domain-links"><span>DOMAINS IN THIS FRAME</span>{temporalFrameSummary.domainPairs.slice(0, 4).map((pair) => <small key={pair.id}>{pair.leftDomain} ({pair.leftRecordCount}) ↔ {pair.rightDomain} ({pair.rightRecordCount})</small>)}<p>Co-presence is a catalog pattern, not spatial overlap or causation.</p></div>}
-              {hasTimelineRecords ? <div className="availability-bars" aria-label="Peak compatible record count in each labeled range; missing years are not filled">{availabilityBins.map((bin) => <i key={bin.start} data-active={previewYear >= bin.start && previewYear <= bin.end} data-committed={temporalQuery.frame >= bin.start && temporalQuery.frame <= bin.end} title={`${formatTimelineStep(bin.start)}–${formatTimelineStep(bin.end)} · peak ${bin.peak} compatible records`} style={{ height: `${Math.min(52, 12 + bin.peak * 5)}px` }}><b>{bin.peak || ""}</b></i>)}</div> : <p className="timeline-empty">No compatible time-aware records in this range. The map keeps the year selectable without implying data.</p>}
+              {hasTimelineRecords ? <div role="group" className="availability-bars" aria-label="Peak compatible record count in each labeled range; missing years are not filled">{availabilityBins.map((bin) => <i key={bin.start} data-active={previewYear >= bin.start && previewYear <= bin.end} data-committed={temporalQuery.frame >= bin.start && temporalQuery.frame <= bin.end} title={`${formatTimelineStep(bin.start)}–${formatTimelineStep(bin.end)} · peak ${bin.peak} compatible records`} style={{ height: `${Math.min(52, 12 + bin.peak * 5)}px` }}><b>{bin.peak || ""}</b></i>)}</div> : <p className="timeline-empty">No compatible time-aware records in this range. The map keeps the year selectable without implying data.</p>}
             </section>
 
             <section className="timeline-live-context" data-held={withheldOfficialCount > 0} aria-labelledby="timeline-live-title">
@@ -10949,7 +10949,7 @@ export default function Home() {
           </div>}
         </section>
 
-        <footer className="status-bar" data-terrain={scenePreset === "elevation-3d"} aria-label="Map status">
+        <footer className="status-bar" role="group" data-terrain={scenePreset === "elevation-3d"} aria-label="Map status">
           <span><b>{activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}</span>
           {scenePreset === "elevation-3d" ? <output className="status-terrain-readout" data-state={terrainState === "ERROR" ? "error" : terrainState !== "READY" ? "loading" : terrainElevationUnavailable ? "unavailable" : terrainElevationReading ? "sample" : "idle"} aria-live="off">
             <em>DEM · {(terrainElevationReading?.provider ?? terrainProvider) === "usgs-3dep" ? "USGS 3DEP" : "MAPZEN"}</em>

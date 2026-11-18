@@ -2932,4 +2932,19 @@ def test_coverage_pass_3_successor_preserves_basemap_inventory_and_all_holds():
          "tests/map-starters.test.mjs"},
         "ccb28a12cc5768ee7578f7d796d6cdcfac2304f2",
     )
-    assert TOOL.RECEIPT.name == "site-v268-coverage-pass-3-overlay-20261118.json"
+
+
+def test_accessible_names_successor_preserves_coverage_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-accessible-names-overlay-20261118.json",
+        "site-v268-coverage-pass-3-overlay-20261118.json",
+        "f09cb36d2ed83db2992de66f306af0f283e09a3216d72e080bb5af5707b67f53",
+        {"app/aquifer-volume-view.tsx", "app/downloads/workspace.tsx", "app/earth-engine-globe.tsx",
+         "app/historical-topo-control.tsx", "app/hydrology-observatory.tsx", "app/local-atlas-control.tsx",
+         "app/map-toolbar.tsx", "app/observatory/storm-panel.tsx", "app/observatory/workspace.tsx", "app/page.tsx",
+         "app/public-map-browser.tsx", "app/public-map-preview.tsx", "app/selected-surface-map.tsx",
+         "app/storm-events-queue.tsx", "app/subsurface-three.tsx", "app/underground-panel.tsx",
+         "tests/accessible-names.test.mjs", "tests/mobile-compatibility.test.mjs", "tests/rendered-html.test.mjs"},
+        "bef673cc4c1694f6bd1628ce7c50b75dddba35d9",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-accessible-names-overlay-20261118.json"

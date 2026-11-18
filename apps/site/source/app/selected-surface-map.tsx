@@ -110,7 +110,7 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
   const fit = () => { if (view.current) view.current.fitBounds(surfaceCameraBounds(bounds), { padding: 12, duration: 0 }); };
   return <div hidden={!active} className={s.surfaceWorkspace}>
     <div className={s.surfaceMapStage}>
-    <div className={s.surfaceNavigation} aria-label="Selected surface navigation">
+    <div role="group" className={s.surfaceNavigation} aria-label="Selected surface navigation">
       <button type="button" disabled={!capture} aria-label="Zoom selected surface in" onClick={() => view.current?.zoomIn({ duration: 0 })}>+</button>
       <button type="button" disabled={!capture} aria-label="Zoom selected surface out" onClick={() => view.current?.zoomOut({ duration: 0 })}>−</button>
       <button type="button" disabled={!capture} aria-label="Fit selected slice" onClick={fit}>Fit slice</button>
