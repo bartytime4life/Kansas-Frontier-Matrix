@@ -180,6 +180,28 @@ have neither:
 The selected-bridge record read is now size-bounded. The unused
 `fetchBoundedJsonArray` helper in the live-context route was removed.
 
+## Third coverage pass (after merge)
+
+Six more layers gain a starter, and one gains a guide.
+
+| Addition | Layers |
+|---|---|
+| Starter: Water table & wells (links the aquifers guide) | High Plains extent, water-table elevation, monitoring wells, watersheds |
+| Starter: Eastern Kansas aquifers (links the Kansas aquifers guide) | KGS Osage, Flint Hills, Glacial Drift and Ozark aquifer extents |
+| Starter and guide: Slopes & landforms (`/explore/terrain-and-slope`) | 3DEP hillshade and slope, watersheds, counties |
+| Starter: Fire detections up close (links the fire guide) | Clickable NOAA-20 heat detections, the daily thermal-anomaly image, HMS smoke, NLCD 2021 |
+| Starter: Survey divisions up close (links the survey guide) | PLSS sections and intersected divisions, SSURGO soils, counties |
+
+The menu now has 29 starters, and `/explore` has 16 guides. The aquifer, fire
+and survey guides each name their new starter. Each starter still follows the
+3–4 layer, two-JSON-feed and public-context rules.
+
+Two layers still have neither:
+
+- **Airflow:** a model canvas with no map layer for a starter to select.
+- **Local road bridges:** about 19,300 points. Use the bridges starters or Map
+  layers instead.
+
 ## Validation
 
 See the pull request for the full test run, type check and mirror receipt.

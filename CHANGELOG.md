@@ -49,6 +49,11 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ### Added
 
+- Explorer third coverage pass (`apps/site/source`; [note](apps/site/source/docs/explorer-old-and-new-data-2026-11-18.md#third-coverage-pass-after-merge)): starters for the remaining layers that had neither a starter nor a guide.
+  - Starters for the water table and wells, eastern Kansas aquifers, slopes and landforms, fire detections up close, and survey divisions up close.
+  - A new guide for slopes and landforms.
+  - The menu now has 29 starters and `/explore` has 16 guides.
+  - Every layer used is an existing public context source.
 - Explorer second coverage pass (`apps/site/source`; [note](apps/site/source/docs/explorer-old-and-new-data-2026-11-18.md#second-coverage-pass-after-merge)): starters and guides for layers that had neither.
   - Guides for the other KGS aquifers and for lightning and the sky.
   - Starters for bridges before 1950, declared disasters and alerts, and federal mineral leases.
