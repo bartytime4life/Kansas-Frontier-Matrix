@@ -1,0 +1,559 @@
+{
+  "authority_mode": "process_evidence_only",
+  "authority_refs": [
+    {
+      "id": "accepted-adr-0029",
+      "path": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "status": "ACCEPTED",
+      "version": "v1.5"
+    },
+    {
+      "id": "directory-rules-v2",
+      "path": "docs/doctrine/directory-rules.md",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "status": "ADOPTED_BY_ADR_0029",
+      "version": "2.0.0-draft.1"
+    }
+  ],
+  "checks": [
+    {
+      "command": "make control-plane-registry-packet",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:11:53.524996+00:00",
+        "finished-at:2026-11-18T02:12:05.445188+00:00",
+        "exit-code:0",
+        "output-digest:sha256:ed00a2e8fabf9a59302429460174ab91f9b08e4c80fae9065ecce186b06a6eda",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/1"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "control-plane-registry-packet",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "MRTS-02 registry normalization, fixtures, and receipt replay"
+    },
+    {
+      "command": null,
+      "evidence": [
+        "non-goal:no deployment, promotion, publication, or public route"
+      ],
+      "execution_state": "SKIPPED",
+      "id": "deployment-publication",
+      "outcome": "SKIPPED",
+      "required_for_closure": false,
+      "scope": "effects intentionally excluded from milestone implementation"
+    },
+    {
+      "command": "make ci-conformance-report\nmake trust-spine-baseline\nmake control-plane-registry-packet\nmake trust-spine-fixture-slice\npython tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json --repo-root . --artifact-git-ref f7c6ba4c73227858c2d7c8931adae37b57092ce1\npython tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json --repo-root . --artifact-git-ref 8383a722a619df64c7eaa668c9e6427540f2df80\npython tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-release-dry-run-mrts-successor-20260822.json --repo-root . --artifact-git-ref 8383a722a619df64c7eaa668c9e6427540f2df80\npython tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass7-release-manifest-mrts-successor-20260822.json --repo-root . --artifact-git-ref ca7a410382aef37bfa93185b149df70d35c1d279",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:11:46.489211+00:00",
+        "finished-at:2026-11-18T02:11:53.476129+00:00",
+        "exit-code:0",
+        "output-digest:sha256:b1ba6e65184ba7c749905424473161dca1ef372292a78bdf31f50a9232840794",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/0",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json:additional-retained-receipt-replays:parity-receipt,publication-receipt,dry-run-receipt,manifest-receipt"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "generated-receipt-historical-replay",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "immutable exact-ancestor replay for eight retained authoring receipts, including the 2026-10-08 successor receipt, across four prior milestone lanes, the release dry-run, and ReleaseManifest"
+    },
+    {
+      "command": null,
+      "evidence": [
+        "observed-main:3e4137714e97c960dad7cf10e973481559a14782",
+        "final-milestone-candidate:NOT_SELECTED",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json"
+      ],
+      "execution_state": "CHECK_NOT_RUN",
+      "id": "hosted-exact-head",
+      "outcome": "CHECK_NOT_RUN",
+      "required_for_closure": true,
+      "scope": "Dedicated MRTS final-candidate hosted validation"
+    },
+    {
+      "command": null,
+      "evidence": [
+        "observed-main:3e4137714e97c960dad7cf10e973481559a14782",
+        "final-milestone-candidate:NOT_SELECTED",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json"
+      ],
+      "execution_state": "CHECK_NOT_RUN",
+      "id": "human-review",
+      "outcome": "CHECK_NOT_RUN",
+      "required_for_closure": true,
+      "scope": "Independent acceptance of the final conformance packet"
+    },
+    {
+      "command": "make release-dry-run",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:12:17.983114+00:00",
+        "finished-at:2026-11-18T02:12:19.767636+00:00",
+        "exit-code:0",
+        "output-digest:sha256:70c70f800a09daedc1ac7474d9e7f7bdd6451dbaa98924052308cfdd91123b3b",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/8",
+        "scope:synthetic-publication-denial-and-identity-closure; no operational rollback"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "release-dry-run",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "offline verification only; APPROVE_READY does not approve release"
+    },
+    {
+      "command": "make repository-governance-parity",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:12:19.811126+00:00",
+        "finished-at:2026-11-18T02:12:43.350814+00:00",
+        "exit-code:0",
+        "output-digest:sha256:75f7c6a7476b13b3c6cfdd09708e8dc63e1a4a81285b1e1e727d8de51712f5e0",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/9",
+        "profile-integrity:PASS",
+        "conformance:HOLD_INHERITED",
+        "findings:0",
+        "introduced-finding-count:0",
+        "governance-base:4324e239ecc5aa6fa4d58b104e28eb12d5e596ee"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "repository-governance-parity",
+      "outcome": "HOLD_INHERITED",
+      "required_for_closure": true,
+      "scope": "MRTS-04 cross-surface parity with inherited topology debt preserved"
+    },
+    {
+      "command": "make repository-topology",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:12:43.390643+00:00",
+        "finished-at:2026-11-18T02:13:04.830819+00:00",
+        "exit-code:0",
+        "output-digest:sha256:948e9dac4c88a31320d41b896852931a8bec380ff65cee9812e57d4cf496166f",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/10",
+        "local:tracked-paths:15313",
+        "local:invariant:0",
+        "local:new-drift:0",
+        "local:baselined-warnings:89",
+        "local:stale-fingerprints:0"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "repository-topology",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "adopted directory topology ratchet; no baseline expansion"
+    },
+    {
+      "command": "make trust-spine-baseline",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:13:07.644023+00:00",
+        "finished-at:2026-11-18T02:13:10.108323+00:00",
+        "exit-code:0",
+        "output-digest:sha256:09892acd8f717b11a75e24c6e884cedc93e1fcb46e2acf025c9118923928dbf5",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/12"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "trust-spine-baseline",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "MRTS-01 pinned authority and repository baseline projection"
+    },
+    {
+      "command": "make trust-spine-fixture-slice",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:13:10.151808+00:00",
+        "finished-at:2026-11-18T02:13:26.521054+00:00",
+        "exit-code:0",
+        "output-digest:sha256:382dffab4522d63002245758e32f1170912e5c4d5fd98e2a894b012a300d3c18",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/13"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "trust-spine-fixture-slice",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "MRTS-05 synthetic fixture slice at measured head; operational and independent acceptance remain separate"
+    },
+    {
+      "command": "make validator-registry-check && python tools/validators/validate_fixture_root_contract.py --repo-root .",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:13:26.564408+00:00",
+        "finished-at:2026-11-18T02:13:26.621742+00:00",
+        "exit-code:0",
+        "output-digest:sha256:e8b9d668ca27c1fcdd3654d5423e88f0c8305da97dc95e03fedc7663c4c5ade3",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/14",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/3"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "validator-registry",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "strict offline validator orchestration registry and aggregate fixture-mode parity"
+    },
+    {
+      "command": "make workflow-security",
+      "evidence": [
+        "execution-head:3e4137714e97c960dad7cf10e973481559a14782",
+        "execution-tree:cc87c4c9fe1452f2a34c472fba25b37be38f6838",
+        "started-at:2026-11-18T02:13:26.665252+00:00",
+        "finished-at:2026-11-18T02:13:31.791839+00:00",
+        "exit-code:0",
+        "output-digest:sha256:94471f269098055fa63f2bb498889034c73f1d5ad0bd4d993f06c2e3dbad7f73",
+        "evidence:artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json#/local_checks/15",
+        "local:28-tests:PASS"
+      ],
+      "execution_state": "EXECUTED_LOCAL",
+      "id": "workflow-security",
+      "outcome": "PASS",
+      "required_for_closure": true,
+      "scope": "workflow source guardrails only; not branch-protection evidence"
+    }
+  ],
+  "closure": {
+    "closed_at": null,
+    "closer": null,
+    "exit_criteria": [
+      {
+        "evidence": "Observed execution head 3e4137714e97c960dad7cf10e973481559a14782 is bound as base_sha. An accepted final milestone target is not selected; final_sha and target_sha remain null.",
+        "id": "EXACT_FINAL_SHA",
+        "satisfied": false
+      },
+      {
+        "evidence": "Observed-main aggregate successes are retained below, and water-pilot now succeeds; dedicated MRTS and final successor candidate hosted evidence are still missing.",
+        "id": "HOSTED_CHECKS_SUCCESS",
+        "satisfied": false
+      },
+      {
+        "evidence": "NOT_RUN; no reviewer identity or acceptance timestamp is supplied.",
+        "id": "HUMAN_REVIEW_APPROVED",
+        "satisfied": false
+      },
+      {
+        "evidence": "Required MRTS implementations exist at the observed head and their local lanes pass. This criterion records implementation presence only; open prerequisite acceptance is retained in MILESTONE_ISSUES_REMAIN_OPEN.",
+        "id": "PREREQUISITES_MERGED",
+        "satisfied": true
+      },
+      {
+        "evidence": "Every bounded required local check is recorded at 3e4137714e97c960dad7cf10e973481559a14782; governance parity is HOLD_INHERITED rather than PASS. Full-repository local validation is NOT_RUN.",
+        "id": "REQUIRED_LOCAL_CHECKS_RECORDED",
+        "satisfied": true
+      },
+      {
+        "evidence": "Four blocking unresolved items remain.",
+        "id": "UNRESOLVED_ITEMS_ZERO",
+        "satisfied": false
+      }
+    ],
+    "hosted_runs": [
+      {
+        "conclusion": "SUCCESS",
+        "head_sha": "3e4137714e97c960dad7cf10e973481559a14782",
+        "run_url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44219736423",
+        "workflow": "validator-suite"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "head_sha": "3e4137714e97c960dad7cf10e973481559a14782",
+        "run_url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44219736291",
+        "workflow": "release-dry-run"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "head_sha": "3e4137714e97c960dad7cf10e973481559a14782",
+        "run_url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44219736196",
+        "workflow": "water-pilot"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "head_sha": "3e4137714e97c960dad7cf10e973481559a14782",
+        "run_url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44219736136",
+        "workflow": "object-family-register"
+      }
+    ],
+    "human_review": {
+      "reviewer_ids": [],
+      "state": "PENDING",
+      "timestamp": null
+    },
+    "state": "BLOCKED",
+    "target_sha": null,
+    "unresolved_count": 4
+  },
+  "controls": {
+    "deployment_authorized": false,
+    "milestone_close_authorized": false,
+    "network_used": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "receipt_self_approves": false,
+    "release_authorized": false
+  },
+  "edit_policy": "regenerate_only",
+  "failures": {
+    "inherited": [
+      {
+        "blocking": true,
+        "code": "BASELINED_WARNINGS",
+        "count": 89,
+        "scope": "Governance parity closure hold; topology ratchet PASS with warnings"
+      }
+    ],
+    "introduced": []
+  },
+  "fixture": {
+    "id": "trust-spine-fixture-slice",
+    "path": "fixtures/contracts/v1/governance/trust_spine_fixture_slice/flow.json",
+    "review_state": "MERGED",
+    "scope": "BASE_TREE",
+    "sha256": "sha256:f175fdadb0e28e4e5870e71696a00b9115dcc4f37d5a2d3a38ed4ec96c6abaf1",
+    "status": "PROPOSED_FIXTURE_ONLY",
+    "version": "kfm.trust-spine-fixture-slice.v1"
+  },
+  "generated_artifacts": [
+    {
+      "id": "control-plane-registry-packet-receipt",
+      "path": "data/receipts/generated/genrec-control-plane-registry-packet-rebased-20260822.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:7ad661eed8a209379e90bfb3f2a70658033e71da0d4c6b28180a9e5e05c9e2e7",
+      "truth_label": "CONFIRMED"
+    },
+    {
+      "id": "repository-governance-parity-receipt",
+      "path": "data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:8cf5addff290256e317f2cdf67b478fce31616ae40346a4f0aa2cef977cbeb92",
+      "truth_label": "CONFIRMED"
+    },
+    {
+      "id": "successor-execution-evidence",
+      "path": "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json",
+      "scope": "CANDIDATE_TREE",
+      "sha256": "sha256:836f56313765ac1766581f402eedcc178aac28b5e7cbe42c77e5e23048a99e0a",
+      "truth_label": "CONFIRMED"
+    },
+    {
+      "id": "trust-spine-baseline-receipt",
+      "path": "data/receipts/generated/genrec-trust-spine-baseline-control-plane-successor-20260822.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:250c8e94c4dc63ecb898f4f99b6c343d3ab20d8e6d00774fe688a2d4670d5c6c",
+      "truth_label": "CONFIRMED"
+    },
+    {
+      "id": "trust-spine-fixture-slice-receipt",
+      "path": "data/receipts/generated/genrec-trust-spine-fixture-slice-mrts-05-20260822.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:53c0a6060cb2d0677b6555109bdee05a5e9878a3a7e26d77c8905e262c012e6a",
+      "truth_label": "CONFIRMED"
+    }
+  ],
+  "generated_from": "milestone-1-trust-spine-evidence-checkpoint",
+  "generator": "tools/validators/governance/validate_ci_conformance_report.py",
+  "generator_version": "kfm.ci-conformance-report-generator.v1",
+  "milestone": {
+    "id": "KFM-MS-MRTS-001",
+    "number": 1,
+    "state": "OPEN",
+    "title": "Machine-Readable Trust Spine v1"
+  },
+  "observed_at": "2026-11-18T02:13:37.394238Z",
+  "policies": [
+    {
+      "id": "decision-vocabulary",
+      "path": "policy/decision/vocabulary.v1.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:c95c98c128bc2a26ecb99ed9dac4795c26226ecf9eba54b05a6cdd70492c5888",
+      "status": "PROPOSED_INACTIVE",
+      "version": "v1"
+    },
+    {
+      "id": "policy-root",
+      "path": "policy/README.md",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:b0fbcdfa665c7836c1e3af4a4c1bf99218436e25869170677d91db3ded5b9e3f",
+      "status": "DRAFT_MIXED_MATURITY",
+      "version": "v0.4.7"
+    }
+  ],
+  "registries": [
+    {
+      "id": "object-family-register",
+      "path": "control_plane/object_family_register.yaml",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:6e2cdb669e489fedc7e6478b22d1f429161cf1370bfc62935a2328949fd7e63b",
+      "status": "PROPOSED_PARTIAL",
+      "version": "v1"
+    },
+    {
+      "id": "root-registry",
+      "path": "control_plane/root_registry.yaml",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "status": "ACTIVE_PROJECTION",
+      "version": "v1"
+    },
+    {
+      "id": "validator-orchestrator",
+      "path": "tools/validators/validator_registry.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:183e8bd9e21e7fe7ddcc859ed62834c53c96bd3d446828ac3e2f999c1ec14229",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "kfm.validator-orchestrator-registry.v1"
+    }
+  ],
+  "report_digest": "sha256:2cfb2eff2dc38de12a75c81a4f1e02dd89fe45896013960a28f3947aab844e43",
+  "report_id": "kfm://qa/milestone-1/ci-conformance/2026-11-18",
+  "repository": {
+    "base_sha": "3e4137714e97c960dad7cf10e973481559a14782",
+    "candidate_ref": "claude/ci-conformance-successor-20261118",
+    "final_sha": null,
+    "full_name": "bartytime4life/Kansas-Frontier-Matrix"
+  },
+  "schema_version": "kfm.ci-conformance-report.v1",
+  "schemas": [
+    {
+      "id": "ci-conformance-report",
+      "path": "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:955f4bb2b5f8cfff92478d20528b656747c90c4a4380fa69b2f6902a3c43e698",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "1.0.0"
+    },
+    {
+      "id": "trust-spine-fixture-slice",
+      "path": "schemas/contracts/v1/governance/trust_spine_fixture_slice.schema.json",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:20296226c236e8898a8f41d8452163f3ba7653c02d1ce3b795528caf70493dc8",
+      "status": "PROPOSED_FIXTURE_ONLY",
+      "version": "kfm.trust-spine-fixture-slice.v1"
+    }
+  ],
+  "sha256": "sha256:2cfb2eff2dc38de12a75c81a4f1e02dd89fe45896013960a28f3947aab844e43",
+  "status": "BLOCKED",
+  "unresolved_items": [
+    {
+      "blocking": true,
+      "detail": "Topology is PASS with zero new drift and zero stale fingerprints. Governance parity remains HOLD_INHERITED on 89 baselined warnings (113 on 2026-10-08), with zero findings and zero introduced findings. The baseline expiry was renewed once to 2027-05-10 on main; this report infers no waiver, owner disposition, baseline expansion, Stage 1B clearance or #4024 containment from that renewal.",
+      "id": "GOVERNANCE_BASELINE_WARNINGS_HOLD"
+    },
+    {
+      "blocking": true,
+      "detail": "The exact-head readback at observed main 3e4137714e97c960dad7cf10e973481559a14782 returned 52 push workflow runs: 51 success, 1 skipped (APIsec), 0 failed. Aggregate validator-suite, release-dry-run, object-family-register and water-pilot succeeded; water-pilot no longer fails as it did on 2026-10-08. No dedicated MRTS conformance, baseline, registry-packet, parity or fixture-slice workflow run exists at that head, so those checks remain CHECK_NOT_RUN (NOT_RUN). No final milestone target has been selected, and hosted validation of this successor's PR head is NOT_RUN in this snapshot.",
+      "id": "HOSTED_EXACT_HEAD_CHECKS_NOT_RUN"
+    },
+    {
+      "blocking": true,
+      "detail": "Independent acceptance of this successor and the retained MRTS prerequisite evidence is NOT_RUN. Reviewer identities and approval timestamp remain unset; generation and validation cannot approve this packet.",
+      "id": "HUMAN_REVIEW_PENDING"
+    },
+    {
+      "blocking": true,
+      "detail": "Fresh issue readback: #3358 is closed; #3359, #3360, #3361, #3363, #3364 remain open. Native milestone 1 is open with 5 open and 6 closed issues, and its renewed due date 2026-11-10T00:00:00Z has passed without closure. MRTS-03 retains ten conflicted required families; MRTS-02 retained ABSENT/CONFLICTED/UNKNOWN states and MRTS-05 synthetic scope still need accountable disposition. #4024 and #4228 remain open and separate.",
+      "id": "MILESTONE_ISSUES_REMAIN_OPEN"
+    }
+  ],
+  "validators": [
+    {
+      "id": "ci-conformance-report",
+      "path": "tools/validators/governance/validate_ci_conformance_report.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "source-sha256"
+    },
+    {
+      "id": "control-plane-registry-packet",
+      "path": "tools/validators/control_plane/validate_control_plane_registry_packet.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:4a9ac5b7969978d483a090619fad92f93708f3fe7c815e1b1b0073668ac10c93",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "source-sha256"
+    },
+    {
+      "id": "fixture-root-contract",
+      "path": "tools/validators/validate_fixture_root_contract.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:34ae464a557236ea7cf128867028000bff9ddcd9f0795bf0ee39a7f621c0ec1b",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "source-sha256"
+    },
+    {
+      "id": "generated-receipt",
+      "path": "tools/validators/validate_generated_receipt.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:abb88d3860a8f6bae4086dac7424910d9016393fcce1ab1f63b79af2fc72809a",
+      "status": "MERGED_FORWARD_FIX",
+      "version": "source-sha256"
+    },
+    {
+      "id": "object-family-register",
+      "path": "tools/validators/control_plane/validate_object_family_register.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:a551ac525ab18e4818b2d74d005a4004b3c9103c65ffd731e1699c9bb15b6ad9",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "source-sha256"
+    },
+    {
+      "id": "repository-governance-parity",
+      "path": "tools/validators/directory_governance/validate_repository_governance_parity.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:394fd504b9022a486c2af6d272c1ffc6b70440782c158d7caff1d32f598ff98c",
+      "status": "IMPLEMENTED",
+      "version": "source-sha256"
+    },
+    {
+      "id": "repository-topology",
+      "path": "tools/validators/directory_governance/validate_repository_topology.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:af33510a159cf747512a9916d1971508b8785183845b072eff58f4d0e5a6af6c",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "source-sha256"
+    },
+    {
+      "id": "trust-spine-baseline",
+      "path": "tools/validators/control_plane/validate_trust_spine_baseline.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:8012efa3e17f21e63113017a8677cfcb1c8377f3f1e183b21159966e428c2459",
+      "status": "MERGED_IMPLEMENTATION",
+      "version": "source-sha256"
+    },
+    {
+      "id": "trust-spine-fixture-slice",
+      "path": "tools/validators/governance/validate_trust_spine_fixture_slice.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:d45e97bbd700550a69abdde8871db6ca457b1d13a974217df4daee726795294a",
+      "status": "IMPLEMENTED",
+      "version": "source-sha256"
+    },
+    {
+      "id": "validator-orchestrator",
+      "path": "tools/validators/validate_all.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:dd298692cdfda39e56f4426a151f1d714462f398c557b4082de39d7af5319fd9",
+      "status": "IMPLEMENTED",
+      "version": "source-sha256"
+    },
+    {
+      "id": "workflow-security",
+      "path": "tools/validators/governance/validate_workflow_security.py",
+      "scope": "BASE_TREE",
+      "sha256": "sha256:0e46fc04c477eb7ea7f8df9d7be741bc923d56e2aed81838f15d2dc1cdf409b8",
+      "status": "IMPLEMENTED",
+      "version": "source-sha256"
+    }
+  ]
+}

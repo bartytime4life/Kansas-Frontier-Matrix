@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-ci-conformance-report-successor-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "artifacts/qa/validation/milestone-1/README.md",
+    "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report_2026-11-18.json",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+    "docs/runbooks/mrts-06-conformance-refresh-2026-11-18.md"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:e8a17ff82aed586e1c058a75e7d48bac17ccba3c6fa2684d6a50e305360648c3",
+    "artifacts/qa/validation/milestone-1/README.md": "sha256:31afe5d37b82a75fac8b17d3954979d225641012769b9c294ec4c69a3eec8afa",
+    "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json": "sha256:836f56313765ac1766581f402eedcc178aac28b5e7cbe42c77e5e23048a99e0a",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report_2026-11-18.json": "sha256:37be411f1832482a2005aa742d8aa20dfa53cd96e2f2c96ba29ad69c2c705b39",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:1949491dd64a75b47e08ec5d5860be6d544322be59c2d64394313a0bdc7d3a78",
+    "docs/runbooks/mrts-06-conformance-refresh-2026-11-18.md": "sha256:4866def744bae44e6b44fad710b93f4914a4a1d95b2ea729830537183b3f8454"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code",
+    "version": "Exact serving build not recorded in repository artifacts"
+  },
+  "prompt_or_contract": "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git evidence inspection",
+      "no-network Python validation in a clean main worktree",
+      "GitHub MCP read-only issue and workflow-run readback",
+      "existing CI conformance report renderer"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
+      "sha256:955f4bb2b5f8cfff92478d20528b656747c90c4a4380fa69b2f6902a3c43e698",
+      "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "evidence_refs": [
+      "repo:main@3e4137714e97c960dad7cf10e973481559a14782",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3364",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs?branch=main&event=push&head_sha=3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:contracts/governance/ci_conformance_report.md@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:schemas/contracts/v1/governance/ci_conformance_report.schema.json@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:tools/validators/governance/validate_ci_conformance_report.py@3e4137714e97c960dad7cf10e973481559a14782"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/ci_conformance_evidence_2026-11-18.json": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report_2026-11-18.json": "PROPOSED",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "PROPOSED",
+    "docs/runbooks/mrts-06-conformance-refresh-2026-11-18.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "head_bound_local_profiles",
+      "outcome": "PASS",
+      "reason": "Sixteen local commands ran in a clean detached worktree of 3e4137714e97c960dad7cf10e973481559a14782 (tree cc87c4c9fe1452f2a34c472fba25b37be38f6838) with the dependency versions pyproject.toml declares; every command exited 0 and each record carries its head, tree, times, exit code and output digest. An earlier run that lacked hypothesis, rfc8785 and rfc3339-validator was discarded and is recorded in execution_limits."
+    },
+    {
+      "gate": "governance_conformance",
+      "outcome": "FAIL",
+      "reason": "Governance parity profile integrity is PASS but conformance is HOLD_INHERITED on 89 baselined topology warnings; the report records HOLD rather than a pass and keeps GOVERNANCE_BASELINE_WARNINGS_HOLD."
+    },
+    {
+      "gate": "successor_report_integrity",
+      "outcome": "PASS",
+      "reason": "The unchanged v1 validator passes the successor report; --render output equals the committed bytes; four negative probes (CHECK_NOT_RUN to PASS, READY closure, governing digest change, authority flag) are rejected."
+    },
+    {
+      "gate": "historical_report_and_receipts",
+      "outcome": "PASS",
+      "reason": "The August report, the 2026-10-08 report and sidecar, and their receipts are unchanged and replay from their exact artifact commits under make ci-conformance-report."
+    },
+    {
+      "gate": "dedicated_hosted_final_candidate_and_independent_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No dedicated MRTS workflow run exists at the observed head, no final target is selected, hosted checks of this PR head run after publication, and independent review is pending."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All six authored or modified artifacts are bound to their bytes at commit b7d2be1b2f23bd97be879bca94520c419b080720; this receipt does not bind itself or the Makefile line that replays it."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3e4137714e97c960dad7cf10e973481559a14782",
+      "id": "KFM-ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/governance/ci_conformance_report.md@3e4137714e97c960dad7cf10e973481559a14782",
+      "id": "KFM-MRTS-CONFORMANCE-CONTRACT",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T02:16:39Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only dated successor evidence. The report is populated from actual observations and rendered by the existing repository renderer; the renderer does not execute checks. Preserve every historical report and receipt and their exact-ancestor replays. This pending receipt approves no evidence, ready or merge, prerequisite disposition, settings, milestone closure, release, deployment, source activation or publication. Revert the bounded successor packet together or append a dated correction."
+}
