@@ -22,8 +22,8 @@
 .explorer-shell[data-inspector] > .layer-panel[data-panel-mode="live"] { background: #15202e; color: #e5eaf0; }
 .layer-panel[data-panel-mode="layers"] .panel-heading,
 .layer-panel[data-panel-mode="live"] .panel-heading { padding: 12px 16px 10px; }
-.layer-panel[data-panel-mode="layers"] .panel-heading h1,
-.layer-panel[data-panel-mode="live"] .panel-heading h1 { font-size: 24px; margin-top: 3px; }
+.layer-panel[data-panel-mode="layers"] .panel-heading h2,
+.layer-panel[data-panel-mode="live"] .panel-heading h2 { font-size: 24px; margin-top: 3px; }
 .layer-panel-controls { padding: 0 14px 12px; border-color: #344151; }
 .layer-panel .layer-source-switch { grid-template-columns: repeat(3,minmax(0,1fr)); padding: 3px; border-color: #3a4656; background: #0f1926; }
 .layer-panel .layer-source-switch button { display: flex; gap: 6px; align-items: center; justify-content: center; min-height: 42px; color: #bdc9d7; }
