@@ -136,6 +136,27 @@ and `--check` reports it current.
 - Geometry clones still use a JSON round trip. That step also drops values that
   cannot be serialized.
 
+## Follow-up corrections (after merge)
+
+Automated review of the merged change found two regressions in the reliability
+work above. Both are fixed in a follow-up change.
+
+- **Release console.** An HTTP 200 reply whose body could not be read (stalled,
+  truncated, oversized or not a JSON object) was treated as an empty status. The
+  console then said no package was active and enabled **Activate package**
+  while the real state was unknown.
+
+  A successful reply must now be read in full. Otherwise status reports
+  "unavailable", and an action reports that nothing is confirmed. Only refused
+  (non-OK) replies with an unreadable body fall back to a generic reason.
+- **KDWP paging.** When the shared 25 s budget shortened a later page and that
+  page timed out, the whole feed failed and the pages already read were
+  discarded.
+
+  That timeout now ends paging, and the response returns the collected areas as
+  a labeled partial result. A first-page failure, a full-length page timeout and
+  any other upstream error still fail the feed.
+
 ## Validation
 
 See the pull request for the full test run, type check and mirror receipt.

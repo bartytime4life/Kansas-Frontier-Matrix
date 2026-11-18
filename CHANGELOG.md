@@ -94,6 +94,10 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ### Fixed
 
+- Follow-up to the Explorer older-and-newer layers change (`apps/site/source`; [note](apps/site/source/docs/explorer-old-and-new-data-2026-11-18.md#follow-up-corrections-after-merge)). Two fixes:
+  - The owner release console no longer treats an unreadable successful reply as "no package active". Before, that enabled activation while the real state was unknown.
+  - KDWP paging keeps the pages it already read when the shared time budget cuts a later page short.
+- `MapLibre perf governance` now expects the `vitest` 5.1.0 that `packages/maplibre` has pinned since Dependabot's [#5797](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5797). It still pins exactly one reviewed version, matched in the manifest and the lockfile importer. The check had failed on every run since the bump.
 - Explorer reliability (`apps/site/source`; [note](apps/site/source/docs/explorer-old-and-new-data-2026-11-18.md#reliability-and-performance)). The GOES refresh no longer restarts when an unrelated layer is toggled. Lightning, soil-moisture, fire-day, release-console, Observatory and radar-manifest reads have byte limits and timeouts. Lightning and reviewed-water polls pause in hidden tabs. KDWP paging finishes inside the browser's read limit. Short laptop windows keep the full render budget. Layer toggles have stable accessible names, and the bridge connections name their feeds.
 - Water-feed capture reuse after the store is relocated ([#5889](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5889)).
 - Layers panel focus (`apps/site/source`; mirrors [#5870](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5870), published on 2026-11-16): closing Layers no longer pulls keyboard focus back from a control the visitor has since moved to.

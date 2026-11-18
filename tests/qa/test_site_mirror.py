@@ -2873,4 +2873,15 @@ def test_old_new_data_successor_preserves_runtime_reconciliation_inventory_and_a
          "tests/sitemap-robots.test.mjs", "tests/topic-organization.test.mjs"},
         "2aaf6626a5a2e8c8bd5bdefc13c3c0a6eb811619",
     )
-    assert TOOL.RECEIPT.name == "site-v268-old-new-data-overlay-20261118.json"
+
+
+def test_console_kdwp_followup_successor_preserves_old_new_data_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-console-kdwp-followup-overlay-20261118.json",
+        "site-v268-old-new-data-overlay-20261118.json",
+        "b0aff0e696153c09be88169fdf3da3d8ef5d0d6f1089f473e88293c989dc181f",
+        {"app/api/live-context/route.ts", "app/water-release-console.tsx", "docs/explorer-old-and-new-data-2026-11-18.md",
+         "tests/kansas-discovery-layers.test.mjs", "tests/water-release-console-reads.test.mjs"},
+        "1584fd15edd6a70b588e3f4177d52d0d13c0050d",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-console-kdwp-followup-overlay-20261118.json"

@@ -30,6 +30,7 @@ const MAX_KDWP_AREAS = 6000;
 /** All KDWP pages share one budget below the browser's 30 s layer-read limit; later pages become a partial response. */
 const KDWP_TOTAL_BUDGET_MS = 25_000;
 const KDWP_MIN_PAGE_MS = 3_000;
+const KDWP_PAGE_TIMEOUT_MS = 20_000;
 const NPS_TRAILS_SERVICES = "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services";
 const MAX_TRAIL_FEATURES = 500;
 const MAX_TRAIL_PLACES = 300;
@@ -905,7 +906,20 @@ const kdwpAreas = async (layer: KdwpLayer) => {
     url.searchParams.set("resultOffset", String(offset));
     url.searchParams.set("resultRecordCount", String(KDWP_PAGE_SIZE));
     url.searchParams.set("f", "geojson");
-    const payload = await fetchBoundedJson(url.toString(), Math.max(KDWP_MIN_PAGE_MS, Math.min(20_000, remaining)));
+    const pageTimeout = Math.max(KDWP_MIN_PAGE_MS, Math.min(KDWP_PAGE_TIMEOUT_MS, remaining));
+    let payload: JsonRecord;
+    try {
+      payload = await fetchBoundedJson(url.toString(), pageTimeout);
+    } catch (error) {
+      // A later page that only timed out because the shared budget shortened it keeps the pages
+      // already read as a labeled partial response. A first-page failure, a full-length page
+      // timeout and every other upstream error still fail the request.
+      if (offset > 0 && pageTimeout < KDWP_PAGE_TIMEOUT_MS && error instanceof UpstreamError && error.timeout) {
+        providerLimited = true;
+        break;
+      }
+      throw error;
+    }
     if (!Array.isArray(payload.features)) throw new UpstreamError("KDWP response had no feature array.");
     received += payload.features.length;
     for (const candidate of payload.features) {
