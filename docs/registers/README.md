@@ -25,6 +25,7 @@ related:
   - docs/registers/source-corpus-reconciliation-2026-08-15.md
   - docs/registers/repository-gap-fill-goal-2026-10-02.md
   - docs/registers/milestone-progress-2026-10-08.md
+  - docs/registers/m22-m29-inventory-overlap-20261118.md
   - .github/CODEOWNERS
 notes:
   - "At main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3 the machine verification backlog contains 747 partial projection entries; the earlier empty-backlog observation is historical and human-ledger parity remains unverified."
@@ -249,6 +250,7 @@ docs/registers/
 ├── RELEASE_STATE.md                     # substantial draft; machine entries are empty
 ├── SOURCE_AUTHORITY.md                  # substantial draft with unresolved metadata; machine entries are empty
 ├── VERIFICATION_BACKLOG.md              # dated human backlog; machine projection has 747 partial entries
+├── m22-m29-inventory-overlap-20261118.md # M22/M29 inventory and overlap map for #3390 and #3394
 ├── milestone-progress-2026-10-08.md     # dated milestone and issue progress ledger since the 2026-09-16 audit
 ├── repository-gap-fill-goal-2026-10-02.md # dated gap-fill goal, gap register, and fill procedures
 └── source-corpus-reconciliation-2026-08-15.md # dated repository-grounded source/proposal reconciliation ledger

@@ -147,3 +147,22 @@ test("Done retains completed points, Edit resumes keyboard entry, and Clear remo
   button(h.render(),"Clear").props.onClick();assert.equal(h.render(),false);assert.deepEqual(h.state.scienceProbePoints,[]);
   cleanup();
 });
+
+test("science lab phenomena link only to registered public Explorer layers", async () => {
+  const context = await readFile("app/live-context.ts", "utf8");
+  const ids = new Set(context.match(/^export type OfficialContextId = ([^;]+);/m)[1].match(/"[a-z0-9-]+"/g).map(id => id.slice(1, -1)));
+  const discovery = await readFile("app/kansas-discovery-layers.ts", "utf8");
+  for (const id of discovery.match(/^export type DiscoveryLayerId = ([^;]+);/m)[1].match(/"[a-z0-9-]+"/g)) ids.add(id.slice(1, -1));
+  let linked = 0;
+  for (const event of science.SCIENCE_EVENTS) {
+    const href = science.scienceExplorerHref(event);
+    if (!event.explorerContext) { assert.equal(href, null); continue; }
+    linked++;
+    assert.ok(event.explorerContext.length >= 1 && event.explorerContext.length <= 4);
+    for (const id of event.explorerContext) assert.ok(ids.has(id), `${event.id} → ${id} is a registered context layer`);
+    assert.equal(new URL(href, "https://example.test").searchParams.get("ctx"), event.explorerContext.join(","));
+  }
+  assert.equal(linked, science.SCIENCE_EVENTS.length);
+  assert.match(await readFile("app/observatory/workspace.tsx", "utf8"), /scienceExplorerHref\(event\) && <a href=\{scienceExplorerHref\(event\)!\}/);
+  assert.match(await readFile("app/observatory/sources/page.tsx", "utf8"), /Map layers →/);
+});

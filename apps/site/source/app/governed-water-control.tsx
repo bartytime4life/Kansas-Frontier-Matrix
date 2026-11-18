@@ -42,7 +42,8 @@ export function GovernedWaterControl({ mapRef, styleReady, onSelectionChange }: 
     } catch { if (controller.current === abort) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Browser request unavailable. Try again."); } }
     finally { clearTimeout(timeout); if (controller.current === abort) setLoading(false); }
   }, [cancelExport]);
-  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => void refresh(), 60000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; cancelExport(); clearInterval(interval); }; }, [refresh, cancelExport]);
+  // The minute poll pauses while the tab is hidden; the first visible tick reads the current release again.
+  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => { if (typeof document === "undefined" || !document.hidden) void refresh(); }, 60000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; cancelExport(); clearInterval(interval); }; }, [refresh, cancelExport]);
   useEffect(() => {
     const expiry = response?.data?.approval_expires_at;
     if (!response?.data) return;

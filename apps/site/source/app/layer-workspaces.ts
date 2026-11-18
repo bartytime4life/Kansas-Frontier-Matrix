@@ -160,21 +160,31 @@ const discoveryTopics: Readonly<Record<string, readonly TopicId[]>> = Object.fre
   "noaa-spc-convective-outlook": ["weather", "science"],
   "noaa-spc-fire-weather": ["weather", "science"],
   "nws-storm-reports": ["weather", "science"],
-  "noaa-mrms-qpe-24h": ["weather", "water", "agriculture", "science"],
-  "noaa-wpc-qpf-5day": ["weather", "water", "agriculture", "science"],
+  "noaa-mrms-qpe-24h": ["weather", "water", "agriculture", "disaster", "science"],
+  "noaa-wpc-qpf-5day": ["weather", "water", "agriculture", "disaster", "science"],
   "noaa-cpc-drought-outlook": ["weather", "agriculture", "water", "science"],
   "mrlc-nlcd-land-cover": ["ecology", "agriculture", "land", "science"],
   "usgs-padus-lands": ["ecology", "land", "places"],
   "nps-nrhp-places": ["history", "places"],
-  "nps-historic-trails": ["history", "places"],
-  "nps-trail-places": ["history", "places"],
-  "nrcs-ssurgo-soils": ["agriculture", "land", "science"],
+  "nps-historic-trails": ["history", "places", "transport"],
+  "nps-trail-places": ["history", "places", "transport"],
+  "nrcs-ssurgo-soils": ["agriculture", "land", "engineering", "science"],
   "kdwp-wildlife-areas": ["ecology", "land", "places"],
   "kdwp-wiha-access": ["ecology", "land", "places"],
 });
 
-/** Source identity, rather than provider name or a broad domain string, determines membership. */
+const officialTopicMemo = new Map<string, readonly TopicId[]>();
+/** Source identity, rather than provider name or a broad domain string, determines membership.
+ * Membership is static, so each id is computed once and reused by every filter keystroke. */
 export function officialSourceTopics(id: string): readonly TopicId[] {
+  const known = officialTopicMemo.get(id);
+  if (known) return known;
+  const result = Object.freeze(computeOfficialSourceTopics(id));
+  officialTopicMemo.set(id, result);
+  return result;
+}
+
+function computeOfficialSourceTopics(id: string): TopicId[] {
   const topics = new Set<TopicId>();
   if (DISASTER_SOURCE_IDS.includes(id as OfficialContextId)) topics.add("disaster");
   if (LAND_SOURCE_IDS.includes(id as OfficialContextId)) topics.add("land");
@@ -191,7 +201,7 @@ export function officialSourceTopics(id: string): readonly TopicId[] {
   if (discoveryTopics[id]) for (const topic of discoveryTopics[id]) topics.add(topic);
   if (historicalTransportIds.includes(id) || id === "fema-disaster-declarations" || id === "nasa-lightning-climatology" || id === "blm-mlrs-leases-closed") topics.add("history");
   if (weatherIds.includes(id) || waterIds.includes(id) || terrainIds.includes(id) || seismicIds.includes(id) || groundwaterIds.includes(id) || ["noaa-hms-smoke", "nasa-firms-active-fire", "nasa-gibs-fire-points"].includes(id)) topics.add("science");
-  return Array.from(topics);
+  return Array.from(topics) as TopicId[];
 }
 
 export function specialtyLayerTopics(id: string): readonly TopicId[] {
@@ -267,16 +277,26 @@ export function sourceNeedsCloserView(source: OfficialContextSource, selected: b
 
 /** These families remain visible as holds until an adapter and its geometry are verified. */
 export const DISASTER_COVERAGE_HOLDS = Object.freeze([
-  { title: "NOAA Storm Events", detail: "Historical event points, county records, and reported impacts cannot share one footprint.", sourceUrl: "https://www.ncei.noaa.gov/access/storm-events-database/" },
-  { title: "Drought and harmful algal blooms", detail: "Source-specific dates, scale, and waterbody extent remain to be validated.", sourceUrl: "https://www.drought.gov/states/kansas" },
+  { title: "NOAA Storm Events full archive", detail: "Reviewed storm event reports and the 72-hour NWS storm reports are available as layers. The full historical archive of paths, county records and reported impacts still cannot share one footprint.", sourceUrl: "https://www.ncei.noaa.gov/access/storm-events-database/" },
+  { title: "Drought Monitor and harmful algal blooms", detail: "The CPC seasonal drought outlook is available as a layer. Weekly U.S. Drought Monitor categories and KDHE algal-bloom advisories keep source-specific dates, scale and waterbody extent to validate.", sourceUrl: "https://www.drought.gov/states/kansas" },
 ]);
+
+const officialSearchMemo = new WeakMap<OfficialContextSource, string>();
+const officialSearchText = (source: OfficialContextSource) => {
+  let text = officialSearchMemo.get(source);
+  if (text === undefined) {
+    text = `${source.id} ${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${topicSearchText(officialSourceTopics(source.id))}`.toLowerCase();
+    officialSearchMemo.set(source, text);
+  }
+  return text;
+};
 
 export function filterOfficialSources(
   sources: readonly OfficialContextSource[], workspace: LayerWorkspace, query: string,
 ): OfficialContextSource[] {
   const term = query.trim().toLowerCase();
   return sources.filter(source => (workspace === "all" || officialSourceTopics(source.id).includes(workspace))
-    && (!term || `${source.id} ${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${topicSearchText(officialSourceTopics(source.id))}`.toLowerCase().includes(term)))
+    && (!term || officialSearchText(source).includes(term)))
     .sort((a, b) => Number(b.defaultVisibility) - Number(a.defaultVisibility));
 }
 

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { expiryText, expiryWarning } from "./water-release-expiry";
+import { readBoundedJson } from "./bounded-json";
 
 type Status = { active_package_id: string | null; previous_package_id: string | null; revision: number; decision_expires_at: string | null };
 type Result = { outcome: string; reason_code?: string; package_id?: string; revision?: number };
@@ -19,11 +20,26 @@ const reasonText: Record<string, string> = {
   RELEASE_TIME_INVALID: "The decision is expired or not yet valid. Write a new decision.",
 };
 
+/** Admin replies are small JSON documents; a non-JSON or oversized body becomes an empty reason, not an exception. */
+const ADMIN_RESPONSE_MAX_BYTES = 256 * 1024;
+const ADMIN_TIMEOUT_MS = 30_000;
+const readAdminBody = async (response: Response, signal: AbortSignal): Promise<Record<string, unknown>> => {
+  const body = await readBoundedJson(response, ADMIN_RESPONSE_MAX_BYTES, signal).catch(() => ({}));
+  return body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : {};
+};
+
 async function fetchStatus(kind: ReleaseKind): Promise<{ status: Status | null; message: string }> {
-  const response = await fetch(`/api/governed/${kind}-admin/status`, { cache: "no-store" });
-  const body = await response.json();
-  if (!response.ok) return { status: null, message: reasonText[body.reason_code] ?? `Status unavailable (${body.reason_code}).` };
-  return { status: body, message: body.active_package_id ? `A ${kind} package is active.` : `No ${kind} package is active yet.` };
+  let response: Response, body: Record<string, unknown>;
+  try {
+    const signal = AbortSignal.timeout(ADMIN_TIMEOUT_MS);
+    response = await fetch(`/api/governed/${kind}-admin/status`, { cache: "no-store", signal });
+    body = await readAdminBody(response, signal);
+  } catch {
+    return { status: null, message: "Status is unavailable right now. Check the connection and reload this page." };
+  }
+  const reason = typeof body.reason_code === "string" ? body.reason_code : "NO_REASON_SUPPLIED";
+  if (!response.ok) return { status: null, message: reasonText[reason] ?? `Status unavailable (${reason}).` };
+  return { status: body as unknown as Status, message: body.active_package_id ? `A ${kind} package is active.` : `No ${kind} package is active yet.` };
 }
 
 export default function WaterReleaseConsole() { return <ReleaseConsole kind="water" />; }
@@ -51,11 +67,14 @@ export function ReleaseConsole({ kind }: { kind: ReleaseKind }) {
   async function send(path: string, body: unknown, done: string) {
     setBusy(true);
     try {
-      const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-      const result: Result = await response.json();
+      const signal = AbortSignal.timeout(ADMIN_TIMEOUT_MS);
+      const response = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal });
+      const result = await readAdminBody(response, signal) as Result;
       setMessage(response.ok ? `${done} Revision ${result.revision ?? "–"}.` : reasonText[result.reason_code ?? ""] ?? `Refused: ${result.reason_code}.`);
       setStatus((await fetchStatus(kind)).status);
       setNow(Date.now());
+    } catch {
+      setMessage("The request did not complete, so nothing is confirmed. Check the active package before trying again.");
     } finally { setBusy(false); }
   }
 

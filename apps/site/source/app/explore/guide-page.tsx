@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { SITE_IDENTITY } from "../site-identity";
-
-const PUBLIC_SITE_ORIGIN = SITE_IDENTITY.canonicalUrl;
+import { PUBLIC_SITE_ORIGIN } from "../site-identity";
 import { LANDING_GUIDES, guideMapHref, landingGuide } from "../landing-guides";
 import { OFFICIAL_CONTEXT_BY_ID } from "../live-context";
+import { MAP_STARTERS } from "../map-starters";
+
+const guideStarters = (slug: string) => MAP_STARTERS.filter(starter => "guide" in starter && starter.guide === slug);
 import styles from "./explore.module.css";
 
 export function guideMetadata(slug: string): Metadata {
@@ -30,7 +31,7 @@ export function GuidePage({ slug }: { slug: string }) {
     <article className={styles.article}>
       <p className={styles.kicker}>{guide.kicker}</p>
       <h1>{guide.title}</h1>
-      {guide.intro.map(paragraph => <p key={paragraph.slice(0, 40)}>{paragraph}</p>)}
+      {guide.intro.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
       <p><a className={styles.cta} href={href}>Open this map →</a></p>
       <h2>Things to try</h2>
       <ul>{guide.ideas.map(idea => <li key={idea}>{idea}</li>)}</ul>
@@ -38,11 +39,12 @@ export function GuidePage({ slug }: { slug: string }) {
       <ul className={styles.layers}>{guide.layers.map(id => {
         const source = OFFICIAL_CONTEXT_BY_ID[id];
         return <li key={id}><strong>{source.title}</strong><span>{source.organization}</span><p>{source.legend}</p>
-          <a href={source.sourceUrl} target="_blank" rel="noreferrer">Provider page ↗</a></li>;
+          <a href={source.sourceUrl} target="_blank" rel="noreferrer">Provider page ↗<span className={styles.srOnly}> (opens in a new tab)</span></a></li>;
       })}</ul>
       <p className={styles.caution}>{guide.caution} Map layers are public context from their providers, not Kansas Frontier Matrix evidence.</p>
       <p><a className={styles.cta} href={href}>Open this map →</a></p>
     </article>
+    {guideStarters(guide.slug).length > 0 && <p className={styles.starterNote}>In the map, the <strong>{guideStarters(guide.slug).map(starter => starter.title).join(" or ")}</strong> starter under Map layers opens a related set of layers.</p>}
     <nav className={styles.related} aria-label="Other guides"><h2>More guides</h2>
       <ul>{LANDING_GUIDES.filter(item => item.slug !== guide.slug).map(item => <li key={item.slug}><Link href={`/explore/${item.slug}`}>{item.title}</Link></li>)}</ul>
     </nav>

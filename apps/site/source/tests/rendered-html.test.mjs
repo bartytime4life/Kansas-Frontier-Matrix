@@ -351,7 +351,8 @@ test("uses the existing social card with canonical registered-origin metadata", 
   assert.doesNotMatch(layout, /x-forwarded-host/);
   assert.match(layout, /SITE_IDENTITY\.canonicalUrl/);
   assert.match(layout, /new URL\("\/og-guided\.png", metadataBase\)/);
-  assert.match(layout, /real MapLibre Kansas vector context/);
+  assert.match(layout, /rivers, storms, trails, aquifers, historic places and more on one map/);
+  assert.doesNotMatch(layout, /description: "[^"]*(Qwen|bounded|MapLibre)/, "search and social descriptions use plain language");
   assert.ok(socialCard.byteLength > 100_000);
 });
 

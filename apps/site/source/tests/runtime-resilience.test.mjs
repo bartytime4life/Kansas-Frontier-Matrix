@@ -263,6 +263,12 @@ test("compact map chrome shares one overlay clearance with degraded and utility 
 test("every official connection has feature-level traceability", () => {
   assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 62);
   assert.deepEqual(registry.SITE_REGISTRY_VALIDATION, { ok: true, errors: [] });
+  // Every source read through /api/live-context names that feed in its connection record.
+  for (const connection of registry.SITE_REGISTRY.connections) {
+    if (connection.endpoint.startsWith("/api/live-context?feed=")) assert.equal(connection.feed, new URLSearchParams(connection.endpoint.split("?")[1]).get("feed"), connection.id);
+  }
+  for (const id of ["kdot-bridges-state", "kdot-bridges-local", "kdot-bridges-historic", "kdot-bridges-old", "kdot-bridges-closed"])
+    assert.equal(registry.SITE_REGISTRY.connections.find(connection => connection.id === id).feed, id);
 });
 
 test("River Pulse lets an identical in-flight streamflow request finish instead of re-sending it", async () => {

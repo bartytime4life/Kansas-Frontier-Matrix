@@ -5,11 +5,17 @@ import { TOPIC_GROUPS, TOPIC_STRUCTURE, SPECIALTY_LAYER_CATALOG, officialSourceT
 import { OFFICIAL_CONTEXT_SOURCES } from "../live-context";
 import { EARTH_ENGINE_CONTEXT_LAYERS } from "../earth-engine-context";
 import { FEATURE_CATALOG, featureMaturityLabel } from "../feature-catalog";
+import { LANDING_GUIDES } from "../landing-guides";
+import { PUBLIC_SITE_ORIGIN } from "../site-identity";
 import styles from "./topics.module.css";
+
+/** A guide belongs to a subject when its lead layer does; guides add no source membership. */
+const topicGuides = (topic: string) => LANDING_GUIDES.filter(guide => officialSourceTopics(guide.layers[0]).includes(topic as never));
 
 export const metadata: Metadata = {
   title: "Topics · Kansas Frontier Matrix",
   description: "Explore Kansas layers, research and feature families by subject, with source coverage and limitations.",
+  alternates: { canonical: `${PUBLIC_SITE_ORIGIN}/topics` },
 };
 
 export default function TopicsPage() {
@@ -32,7 +38,8 @@ export default function TopicsPage() {
             <h3>{topic.title}</h3><p>{topic.description}</p>
             <ul className={styles.facets} aria-label={`${topic.title} subtopics`}>{topic.facets.map(facet => <li key={facet}>{facet}</li>)}</ul>
             <p className={styles.limits}>{topic.limitation}</p>
-            <div className={styles.actions}><Link href={`/?topic=${topic.id}`} prefetch={false}>Browse map layers →</Link>{topic.resources.map(resource => <Link key={resource.href} href={resource.href} prefetch={false}>{resource.title} ↗</Link>)}</div>
+            <div className={styles.actions}><Link href={`/?topic=${topic.id}`} prefetch={false}>Browse map layers →</Link>{topic.resources.map(resource => <Link key={resource.href} href={resource.href} prefetch={false}>{resource.title} →</Link>)}</div>
+            {topicGuides(topic.id).length > 0 && <p className={styles.limits}>Map guides: {topicGuides(topic.id).map((guide, index) => <span key={guide.slug}>{index > 0 && " · "}<Link href={`/explore/${guide.slug}`} prefetch={false}>{guide.title}</Link></span>)}</p>}
             <details><summary>Source context · {sources.length}</summary>{sources.length ? <ul>{sources.map(source => <li key={source.id}><a href={source.sourceUrl} target="_blank" rel="noreferrer">{source.title} ↗</a><small>{source.organization} · {source.evidenceRole.replaceAll("_", " ")}</small></li>)}</ul> : <p>No provider map layer is assigned here. Use the related tools or research links; no new dataset is implied.</p>}</details>
             {controls.length > 0 && <details><summary>Specialist layer controls · {controls.length}</summary><p>Selection, source connection, method and release eligibility are shown on each control in Map layers.</p><ul>{controls.map(layer => <li key={layer.id}>{layer.title}</li>)}</ul></details>}
             <details><summary>Imagery catalogue · {imagery.length}</summary>{imagery.length ? <><p>These are catalogue entries. Installed packages, years and display eligibility are checked in Map layers → Imagery.</p><ul>{imagery.map(layer => <li key={layer.id}>{layer.title}<small>{layer.source}</small></li>)}</ul><Link href={`/?topic=${topic.id}&layerView=imagery`} prefetch={false}>Browse related imagery →</Link></> : <p>No imagery entry is assigned here.</p>}</details>

@@ -23,10 +23,15 @@ export function renderBudget(quality: RenderQuality, deviceRatio = 1, saveData =
 export function readRenderQuality(): RenderQuality {
   try { const value = localStorage.getItem(QUALITY_STORAGE_KEY); return value === "efficient" || value === "detail" ? value : "auto"; } catch { return "auto"; }
 }
+/** Touch-first means a coarse pointer, or a small viewport without hover. A short desktop
+ * window (for example a 1366×700 laptop) keeps the full Balanced budget. */
+export function touchFirstViewport(coarsePointer: boolean, hoverNone: boolean, width: number, height: number): boolean {
+  return coarsePointer || hoverNone && Math.min(width, height) <= 760;
+}
 export function browserRenderBudget(quality = readRenderQuality()) {
   const connection = typeof navigator === "undefined" ? undefined : (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  const coarsePointer = typeof window !== "undefined" && (
-    window.matchMedia?.("(pointer: coarse)").matches || Math.min(window.innerWidth, window.innerHeight) <= 760
+  const coarsePointer = typeof window !== "undefined" && touchFirstViewport(
+    Boolean(window.matchMedia?.("(pointer: coarse)").matches), Boolean(window.matchMedia?.("(hover: none)").matches), window.innerWidth, window.innerHeight,
   );
   let embedded = false;
   if (typeof window !== "undefined") {

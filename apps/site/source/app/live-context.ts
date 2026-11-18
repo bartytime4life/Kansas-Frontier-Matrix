@@ -1,6 +1,6 @@
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
-import { KANSAS_DISCOVERY_SOURCES, type DiscoveryLayerId } from "./kansas-discovery-layers";
+import { KANSAS_DISCOVERY_SOURCES, KDWP_AREA_COLORS, type DiscoveryLayerId } from "./kansas-discovery-layers";
 import { HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS } from "./context-clusters";
 import { BRIDGE_CLOSED_COLOR, BRIDGE_CLUSTER_MAX_ZOOM, BRIDGE_CLUSTER_RADIUS, BRIDGE_ERA_STOPS, BRIDGE_FEED_IDS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR } from "./kdot-bridges";
 import type { FeatureCollection } from "geojson";
@@ -155,7 +155,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/KDWPT_Wildlife_Areas_view/FeatureServer/0",
     cadence: "KDWP updates its public hunting atlas layers as areas and rules change",
     freshness: "Current KDWP public layer at retrieval time",
-    defaultVisibility: false, defaultOpacity: 0.55, color: "#7fbf6a",
+    defaultVisibility: false, defaultOpacity: 0.55, color: KDWP_AREA_COLORS["kdwp-wildlife-areas"].fill,
     attribution: "Kansas Department of Wildlife and Parks",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     legend: "Green fill · KDWP-managed public wildlife areas. Click an area for its name, manager and access notes.",
@@ -173,7 +173,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0",
     cadence: "KDWP publishes WIHA enrollments by hunting season; tracts can change during the season",
     freshness: "Layer used by KDWP's public 2026–2027 WIHA map at retrieval time",
-    defaultVisibility: false, defaultOpacity: 0.5, color: "#e5b54b",
+    defaultVisibility: false, defaultOpacity: 0.5, color: KDWP_AREA_COLORS["kdwp-wiha-access"].fill,
     attribution: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     legend: "Gold fill · private land enrolled in Walk-In Hunting Access. Click a tract for acres, species and archery-only status.",
@@ -1104,7 +1104,8 @@ export const applyOfficialContextState = (
     }, paint: { "text-color": "#f8e6c8", "text-halo-color": "#1d140c", "text-halo-width": 1.6, "text-opacity": 0.92 } });
   }
 
-  for (const [id, color, line] of [["kdwp-wildlife-areas", "#7fbf6a", "#cfeec4"], ["kdwp-wiha-access", "#e5b54b", "#fde7b0"]] as const) {
+  for (const id of ["kdwp-wildlife-areas", "kdwp-wiha-access"] as const) {
+    const { fill: color, line } = KDWP_AREA_COLORS[id];
     const area = OFFICIAL_CONTEXT_BY_ID[id];
     if (!visibility[id] && !map.getSource(area.sourceId)) continue;
     ensureGeoJsonSource(map, area, payloads[id]?.data ?? emptyCollection());

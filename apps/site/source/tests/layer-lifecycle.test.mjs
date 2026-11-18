@@ -114,9 +114,20 @@ test('a failed feed shows the adapter\'s own explanation; anything else keeps th
   await assert.rejects(read({response:{ok:false,status:503},body:{error:explained,state:'error'}}),{message:explained});
   // The host's replacement page, a non-text error and a wrong-shaped success carry no usable sentence.
   for (const [response,status] of [[{response:{ok:false,status:502},body:'error code: 502'},502],[{response:{ok:false,status:503},body:{error:{code:1}}},503],[{response:{ok:false,status:500},body:null},500],[{response:{ok:true,status:200},body:{day:'other',error:'ignored on success'}},200]]) {
-    await assert.rejects(read(response),{message:`Source adapter returned an unavailable or incompatible response (HTTP ${status}).`});
+    await assert.rejects(read(response),{message:response.response.ok?'Source adapter returned an incompatible response that did not match the requested layer, so nothing was drawn.':`Source adapter returned an unavailable or incompatible response (HTTP ${status}).`});
   }
   assert.equal(adapterErrorText({error:'  spaced\n\ttext  '}),'spaced text');
   assert.equal(adapterErrorText({error:'x'.repeat(900)}).length,400);
   assert.equal(adapterErrorText([{error:'array'}]),null); assert.equal(adapterErrorText({error:''}),null);
+});
+
+test('render budget keeps short desktop windows on the full Balanced budget', async () => {
+  const { readFile: read } = await import('node:fs/promises');
+  const ts = (await import('typescript')).default;
+  const js = ts.transpileModule(await read('app/map-performance.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+  const perf = await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+  assert.equal(perf.touchFirstViewport(false, false, 1366, 700), false, 'mouse laptop with a short window');
+  assert.equal(perf.touchFirstViewport(true, true, 1024, 1366), true, 'tablet');
+  assert.equal(perf.touchFirstViewport(false, true, 390, 844), true, 'small viewport without hover');
+  assert.equal(perf.touchFirstViewport(false, true, 1920, 1080), false, 'large no-hover screen');
 });

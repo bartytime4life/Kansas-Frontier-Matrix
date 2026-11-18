@@ -21,6 +21,8 @@ const features = await import(await moduleUrl("app/feature-catalog.ts"));
 const atlas = await import(await moduleUrl("app/living-atlas.ts"));
 const functions = await import(await moduleUrl("app/function-registry.ts"));
 const almanacs = await import(await moduleUrl("app/almanac-resources.ts"));
+const guides = await import(await moduleUrl("app/landing-guides.ts"));
+const identity = await import(await moduleUrl("app/site-identity.ts"));
 
 function nodes(tree, predicate) {
   const found = [];
@@ -129,8 +131,11 @@ test("grouped accessible selector validates topic values and guides dispatch exi
 });
 
 test("rendered topic index binds counts to current inventories and opens valid topic and imagery links", async () => {
-  const h = await componentHarness("app/topics/page.tsx", { "next/link": { default: "a" }, "../layer-workspaces": topics, "../live-context": context, "../earth-engine-context": imagery, "../feature-catalog": features, "../almanac-resources": almanacs, "./topics.module.css": { default: {} } });
+  const h = await componentHarness("app/topics/page.tsx", { "next/link": { default: "a" }, "../layer-workspaces": topics, "../live-context": context, "../earth-engine-context": imagery, "../feature-catalog": features, "../almanac-resources": almanacs, "../landing-guides": guides, "../site-identity": identity, "./topics.module.css": { default: {} } });
   const tree = h.render(h.exports.default, {});
+  const guideLinks = nodes(tree, node => typeof node.props?.href === "string" && node.props.href.startsWith("/explore/"));
+  assert.ok(guideLinks.length >= guides.LANDING_GUIDES.length, "every guide is reachable from a subject card");
+  assert.equal(nodes(tree, node => node.type === "a" && String([node.props.children].flat().at(-1)).endsWith("↗") && !node.props.target).length, 0, "internal links do not use the external-link arrow");
   const cards = nodes(tree, node => node.type === "article");
   assert.equal(cards.length, topics.TOPIC_STRUCTURE.length);
   for (const card of cards) {

@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SITE_IDENTITY } from "../site-identity";
-
-const PUBLIC_SITE_ORIGIN = SITE_IDENTITY.canonicalUrl;
+import { PUBLIC_SITE_ORIGIN } from "../site-identity";
 import { LANDING_GUIDES, guideMapHref } from "../landing-guides";
 import styles from "./explore.module.css";
 
 export const metadata: Metadata = {
   title: "Map guides · Kansas Frontier Matrix",
-  description: "Start exploring Kansas with ready-made maps: frontier trails, historic places, wildlife and hunting areas, and drought and water.",
+  description: "Start exploring Kansas with ready-made maps: trails, historic places, storms, fire, rivers, aquifers, earthquakes, land cover, roads, survey lines and more.",
   alternates: { canonical: `${PUBLIC_SITE_ORIGIN}/explore` },
 };
 
@@ -18,7 +16,7 @@ export default function ExploreIndex() {
     <section className={styles.index}>
       <p className={styles.kicker}>KANSAS FRONTIER MATRIX</p>
       <h1>Map guides</h1>
-      <p>Each guide opens the Kansas map with a few public layers already turned on, and explains what you are looking at.</p>
+      <p>Each of these {LANDING_GUIDES.length} guides opens the Kansas map with a few public layers already turned on, and explains what you are looking at.</p>
       <ul className={styles.cards}>{LANDING_GUIDES.map(guide => <li key={guide.slug}>
         <p className={styles.kicker}>{guide.kicker}</p>
         <h2><Link href={`/explore/${guide.slug}`}>{guide.title}</Link></h2>

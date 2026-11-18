@@ -1,44 +1,84 @@
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
+import { newMarkersActive } from "./kansas-discovery-layers";
+
+/** Display grouping for the starter menu; a theme is navigation, never a source category. */
+export const STARTER_THEMES = ["Water & ground", "Weather & hazards", "History & routes", "Outdoors & ecology", "Earth & survey", "Built & planning"] as const;
+export type StarterTheme = typeof STARTER_THEMES[number];
 
 /** UI recipes over the existing public-context allowlist, never an admission registry. */
 export const MAP_STARTERS = [
-  { id: "land-water", title: "Land & water", description: "For growers and land stewards: locate rivers, gauge observations and mapped High Plains aquifer extent.",
+  { id: "land-water", title: "Land & water", theme: "Water & ground", description: "For growers and land stewards: locate rivers, gauge observations and mapped High Plains aquifer extent.",
     ids: ["usgs-3dhp-hydrography", "usgs-streamflow", "kgs-aquifer-high-plains"],
     limitation: "Aquifer extent is not well yield or irrigation advice. Crop, soil and private land records require their own selection and review." },
-  { id: "field-science", title: "Field science", description: "Compare river observations, earthquake reports and watershed reference geography.",
+  { id: "field-science", title: "Field science", theme: "Earth & survey", description: "Compare river observations, earthquake reports and watershed reference geography.",
     ids: ["usgs-streamflow", "usgs-earthquakes", "usgs-wbd-watersheds"],
     limitation: "Each observation has its own time, units and coverage. A watershed is not a measurement; missing observations remain unknown." },
-  { id: "learning-kansas", title: "Learning Kansas", description: "For classrooms and first visits: explore counties, river networks and shaded landforms.",
+  { id: "learning-kansas", title: "Learning Kansas", theme: "Earth & survey", description: "For classrooms and first visits: explore counties, river networks and shaded landforms.",
     ids: ["census-counties", "usgs-3dhp-hydrography", "usgs-3dep-hillshade"],
     limitation: "Population belongs to the Census edition; hillshade is a terrain display, not a survey. Sources may appear only at closer zoom." },
-  { id: "historical-landscape", title: "Historical landscape", description: "For historians and archaeological background research: compare the 1918 road map, abandoned rail references and county context.",
+  { id: "historical-landscape", title: "Historical landscape", theme: "History & routes", description: "For historians and archaeological background research: compare the 1918 road map, abandoned rail references and county context.",
     ids: ["kdot-roads-1918", "kdot-rail-abandoned", "census-counties"],
     limitation: "Source editions differ. These references do not locate archaeological sites, establish past ownership or grant access to land." },
-  { id: "infrastructure", title: "Infrastructure", description: "For infrastructure professionals: inspect road and state bridge references alongside mapped flood zones.",
+  { id: "infrastructure", title: "Infrastructure", theme: "Built & planning", guide: "kansas-bridges", description: "For infrastructure professionals: inspect road and state bridge references alongside mapped flood zones.",
     ids: ["kdot-roads", "kdot-bridges-state", "fema-flood-zones"],
     limitation: "Mapped records do not establish structural safety, current road conditions or design suitability. Flood zones are not a live warning." },
-  { id: "community-planning", title: "Community planning", description: "For public agencies and communities: orient by county population, roads, watersheds and flood-zone context.",
+  { id: "community-planning", title: "Community planning", theme: "Built & planning", description: "For public agencies and communities: orient by county population, roads, watersheds and flood-zone context.",
     ids: ["census-counties", "kdot-roads", "usgs-wbd-watersheds", "fema-flood-zones"],
     limitation: "Reference boundaries have different purposes and dates. Area population does not identify individuals or establish property rights." },
-  { id: "storm-watch", title: "Storm watch", isNew: true, description: "For weather watchers: today's SPC severe-storm outlook, preliminary storm reports, active NWS alerts and past-24-hour radar rainfall.",
+  { id: "storm-watch", title: "Storm watch", theme: "Weather & hazards", guide: "storms-and-severe-weather", isNew: true, description: "For weather watchers: today's SPC severe-storm outlook, preliminary storm reports, active NWS alerts and past-24-hour radar rainfall.",
     ids: ["noaa-spc-convective-outlook", "nws-storm-reports", "nws-alerts", "noaa-mrms-qpe-24h"],
     limitation: "Outlooks are forecasts, reports are preliminary and rainfall is a radar estimate. This is not a warning service; follow NWS warnings and local officials." },
-  { id: "rain-and-drought", title: "Rain & drought", isNew: true, description: "For growers and water planners: compare recent radar rainfall, the 5-day rain forecast, the seasonal drought outlook and river observations.",
+  { id: "rain-and-drought", title: "Rain & drought", theme: "Water & ground", guide: "drought-and-water", isNew: true, description: "For growers and water planners: compare recent radar rainfall, the 5-day rain forecast, the seasonal drought outlook and river observations.",
     ids: ["noaa-mrms-qpe-24h", "noaa-wpc-qpf-5day", "noaa-cpc-drought-outlook", "usgs-streamflow"],
     limitation: "Estimates, forecasts and outlooks run on different clocks. None is a gauge measurement, crop advice or a drought designation." },
-  { id: "fire-season", title: "Fire season", isNew: true, description: "For land managers and burn planners: the SPC fire-weather outlook beside satellite heat detections, interagency fire reports and smoke footprints.",
+  { id: "fire-season", title: "Fire season", theme: "Weather & hazards", guide: "fire-and-smoke", isNew: true, description: "For land managers and burn planners: the SPC fire-weather outlook beside satellite heat detections, interagency fire reports and smoke footprints.",
     ids: ["noaa-spc-fire-weather", "nasa-firms-active-fire", "nifc-fire-reports", "noaa-hms-smoke"],
     limitation: "Fire-weather outlooks are forecasts; heat detections and reports do not confirm the same incident. Check county burn restrictions and red-flag warnings." },
-  { id: "heritage-trail", title: "Heritage trail", isNew: true, description: "For history explorers: click National Register places and historic bridges, then follow 1918 roads and abandoned railroads across Kansas.",
+  { id: "heritage-trail", title: "Heritage trail", theme: "History & routes", guide: "historic-places", isNew: true, description: "For history explorers: click National Register places and historic bridges, then follow 1918 roads and abandoned railroads across Kansas.",
     ids: ["nps-nrhp-places", "kdot-roads-1918", "kdot-bridges-historic", "kdot-rail-abandoned"],
     limitation: "Listed places are representative public points; sensitive sites are withheld by NPS. Listing does not grant access or confirm a property still stands." },
-  { id: "trails-west", title: "Trails west", isNew: true, description: "For history explorers and travelers: follow the Santa Fe, Oregon and Pony Express trails and the cattle trails across Kansas, with forts, crossings and ruts along the way and the rivers and terrain they crossed.",
+  { id: "trails-west", title: "Trails west", theme: "History & routes", guide: "frontier-trails", isNew: true, description: "For history explorers and travelers: follow the Santa Fe, Oregon and Pony Express trails and the cattle trails across Kansas, with forts, crossings and ruts along the way and the rivers and terrain they crossed.",
     ids: ["nps-historic-trails", "nps-trail-places", "usgs-3dhp-hydrography", "usgs-3dep-hillshade"],
     limitation: "Trail lines are approximate NPS alignments and mostly cross private land; a line is not public access. Cattle-trail routes are study routes, not designated trails." },
-  { id: "open-lands", title: "Land cover & open lands", isNew: true, description: "For naturalists and outdoor planners: read 2021 land cover, public and protected lands, and watershed boundaries together.",
+  { id: "open-lands", title: "Land cover & open lands", theme: "Outdoors & ecology", guide: "land-cover-and-public-lands", isNew: true, description: "For naturalists and outdoor planners: read 2021 land cover, public and protected lands, and watershed boundaries together.",
     ids: ["mrlc-nlcd-land-cover", "usgs-padus-lands", "usgs-wbd-watersheds"],
     limitation: "Land-cover classes have mapping error and PAD-US does not grant access, hunting permission or title. Check each managing agency's rules." },
-] as const satisfies readonly { id: string; title: string; description: string; ids: readonly OfficialContextId[]; limitation: string; isNew?: boolean }[];
+  { id: "beneath-the-plains", title: "Beneath the plains", theme: "Water & ground", guide: "aquifers-and-groundwater", isNew: true, description: "For water planners and students: read the High Plains aquifer extent with KGS saturated thickness, depth to water and the wells that are measured.",
+    ids: ["kgs-aquifer-high-plains", "kgs-saturated-thickness", "kgs-depth-to-water", "kgs-monitoring-wells"],
+    limitation: "Thickness and depth classes are regional 2022–2024 estimates from measured wells, not parcel measurements, current well levels or pumping advice." },
+  { id: "shaking-ground", title: "Shaking ground", theme: "Earth & survey", guide: "earthquakes-in-kansas", isNew: true, description: "For curious neighbours and teachers: recent USGS earthquake reports beside community seismometers and shaded terrain.",
+    ids: ["usgs-earthquakes", "raspberry-shake-stations", "usgs-3dep-hillshade"],
+    limitation: "Earthquake locations and magnitudes are revised by USGS. A station marker is not a measurement, and terrain does not show faults or explain a cause." },
+  { id: "river-flood-watch", title: "River & flood watch", theme: "Water & ground", guide: "rivers-and-floods", isNew: true, description: "For river towns and emergency planners: forecast gauges, modeled 18-hour river flow, radar rainfall and the mapped stream network.",
+    ids: ["noaa-nwps-gauges", "noaa-nwm-short-range", "noaa-mrms-qpe-24h", "usgs-3dhp-hydrography"],
+    limitation: "Gauge forecasts, model guidance and radar estimates are separate products on their own clocks. This is not a flood warning; follow NWS warnings and local officials." },
+  { id: "survey-and-soil", title: "Survey lines & soils", theme: "Earth & survey", guide: "land-survey-and-soils", isNew: true, description: "For land professionals and researchers: PLSS townships and sections over NRCS soil map units, with county and population context.",
+    ids: ["blm-plss-townships", "blm-plss-sections", "nrcs-ssurgo-soils", "census-counties"],
+    limitation: "Survey divisions and soil map units are references, not parcel boundaries, ownership, deeds or field soil tests. Sections and soils appear only at closer zoom." },
+  { id: "roads-and-rails", title: "Roads & rails through time", theme: "History & routes", guide: "roads-and-railroads", isNew: true, description: "For history explorers: set the 1918 road map and abandoned railroads against today's highways and active rail lines.",
+    ids: ["kdot-roads-1918", "kdot-rail-abandoned", "kdot-rail-active", "kdot-roads"],
+    limitation: "Map editions differ in date, scale and accuracy. An abandoned line is not a public trail and a mapped road is not a current condition report." },
+  { id: "lightning-and-sky", title: "Lightning & the sky", theme: "Weather & hazards", isNew: true, description: "For weather watchers: the latest 15-minute lightning density, the long-term flash average, the radar loop and satellite imagery.",
+    ids: ["noaa-lightning-density", "nasa-lightning-climatology", "nws-radar", "noaa-goes-geocolor"],
+    limitation: "The 1995–2014 flash average is a historical composite, not today's storms. Radar and satellite frames are display context, not a lightning-safety service." },
+  { id: "wild-kansas", title: "Wildlife & open country", theme: "Outdoors & ecology", guide: "hunting-and-wildlife-areas", isNew: true, description: "For naturalists and hunters: KDWP public wildlife areas with 2021 land cover, public and protected lands and the stream network.",
+    ids: ["kdwp-wildlife-areas", "mrlc-nlcd-land-cover", "usgs-padus-lands", "usgs-3dhp-hydrography"],
+    limitation: "Boundaries are simplified for display and land-cover classes are not species records. Check KDWP rules, seasons and closures before entering any area." },
+  { id: "bridges-and-crossings", title: "Bridges & crossings", theme: "Built & planning", guide: "kansas-bridges", isNew: true, description: "For road users and engineers: state highway bridges and recorded closures as counted circles, with highways and the stream network they cross.",
+    ids: ["kdot-bridges-state", "kdot-bridges-closed", "kdot-roads", "usgs-3dhp-hydrography"],
+    limitation: "Bridge records are KDOT's inventory and may lag. A recorded status is not a live closure notice or a safety determination; follow posted signs and KDOT notices." },
+] as const satisfies readonly { id: string; title: string; theme: StarterTheme; guide?: string; description: string; ids: readonly OfficialContextId[]; limitation: string; isNew?: boolean }[];
+
+export const DEFAULT_STARTER_ID = "learning-kansas";
+
+/** A starter's "new" label follows the shared NEW-marker expiry. */
+export const starterIsNew = (starter: object, now?: number) => "isNew" in starter && starter.isNew === true && newMarkersActive(now);
+
+/** Starters grouped by theme in menu order; empty themes are omitted. */
+export function startersByTheme() {
+  return STARTER_THEMES.map(theme => ({ theme, starters: MAP_STARTERS.filter(starter => starter.theme === theme) }))
+    .filter(group => group.starters.length > 0);
+}
 
 /** Pick a different starter for "Surprise me"; deterministic when a random source is injected. */
 export function surpriseStarterId(current: string, random: () => number = Math.random): string {

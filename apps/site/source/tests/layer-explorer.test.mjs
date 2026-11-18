@@ -54,7 +54,8 @@ test("specialty owners are mounted once in persistent hidden wrappers; official 
   visit(ast);
   assert.equal(owners.size, 9); assert.ok([...owners.values()].every(count => count === 1));
   assert.match(page, /filterOfficialSources\(OFFICIAL_CONTEXT_SOURCES, "all", ""\)\.map\(\(source\)/);
-  assert.match(page, /hidden=\{!listedOfficialSources\.some\(item => item\.id === source\.id\)\}/);
+  assert.match(page, /hidden=\{!listedOfficialSourceIds\.has\(source\.id\)\}/);
+  assert.match(page, /const listedOfficialSourceIds = new Set<string>\(listedOfficialSources\.map\(source => source\.id\)\);/);
 });
 
 test("Explore, Appearance and Measure are primary; every advanced view invokes the existing route key", async () => {

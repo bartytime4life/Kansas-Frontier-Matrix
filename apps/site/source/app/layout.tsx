@@ -14,18 +14,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Kansas Frontier Matrix Explorer",
-    description: "Explore Kansas through a MapLibre vector-map-first Living Atlas, then use bounded evidence, time, reports, and Qwen context when needed.",
+    description: "Explore Kansas on one map: rivers, aquifers, storms, fire, earthquakes, trails, historic places, bridges and land cover, each with its source, date and limits.",
     metadataBase,
     openGraph: {
       title: "Kansas Frontier Matrix Explorer",
-      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
+      description: "Explore Kansas rivers, storms, trails, aquifers, historic places and more on one map, with each source, date and limit kept close.",
       type: "website",
       images: [{ url: socialImage, width: 1731, height: 909, alt: "Kansas Frontier Matrix map and source context" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Kansas Frontier Matrix Explorer",
-      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
+      description: "Explore Kansas rivers, storms, trails, aquifers, historic places and more on one map, with each source, date and limit kept close.",
       images: [socialImage],
     },
   };

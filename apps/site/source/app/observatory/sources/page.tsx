@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SOURCE_DOWNLOADS } from "../../source-downloads";
 import { OFFICIAL_CONTEXT_SOURCES } from "../../live-context";
-import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS } from "../../science-events";
+import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceExplorerHref } from "../../science-events";
 
 const refs = [
   ["Iowa Environmental Mesonet", "NEXRAD composites: construction, history and limitations", "https://mesonet.agron.iastate.edu/docs/nexrad_composites/", "Living documentation; accessed September 10, 2026"],
@@ -54,7 +54,7 @@ export default function SourcesPage() {
 
     <h2 id="grammar">Science event visual grammar</h2>
     <p>The Observatory’s Science Lab uses a shared contract across {SCIENCE_EVENTS.length} requested phenomena. Instant events are ticks or points; supported intervals are bands or footprints; daily, annual, edition and static context is pinned rather than animated as if it were an observation. Paired-epoch change products require both source surfaces and a method. Status describes the carrier honestly: connected, partly connected, provider download, steward data, reference context or derived analysis.</p>
-    <div className="research-table-wrap"><table><thead><tr><th>Phenomenon</th><th>Clock</th><th>Visual method</th><th>Scientific output</th><th>Carrier</th></tr></thead><tbody>{SCIENCE_EVENTS.map((event) => <tr key={event.id}><td><strong>{event.glyph} {event.title}</strong></td><td>{event.clock}</td><td>{event.representation}</td><td>{event.measurement}</td><td>{SCIENCE_SUPPORT_LABELS[event.support]} · <a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a></td></tr>)}</tbody></table></div>
+    <div className="research-table-wrap"><table><thead><tr><th>Phenomenon</th><th>Clock</th><th>Visual method</th><th>Scientific output</th><th>Carrier</th></tr></thead><tbody>{SCIENCE_EVENTS.map((event) => <tr key={event.id}><td><strong>{event.glyph} {event.title}</strong></td><td>{event.clock}</td><td>{event.representation}</td><td>{event.measurement}</td><td>{SCIENCE_SUPPORT_LABELS[event.support]} · <a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a>{scienceExplorerHref(event) && <> · <a href={scienceExplorerHref(event)!}>Map layers →</a></>}</td></tr>)}</tbody></table></div>
     <p>The map’s distance-and-bearing probe is a browser-local great-circle approximation in miles and kilometres. It is useful for exploration and triage, not survey, cadastral, legal or evidentiary measurement. The 3D handoff opens physical 1× terrain and the existing unexaggerated display-profile workflow. Erosion/deposition stays held until two co-registered acquisition epochs and uncertainty propagation are available.</p>
 
     <p><Link href="/connections">API connections, provider setup and verified capture replay ↗</Link></p>

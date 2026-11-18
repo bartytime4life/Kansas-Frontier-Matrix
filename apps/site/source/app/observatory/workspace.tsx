@@ -9,11 +9,19 @@ import { browserRenderBudget, geoJSONHasData, updateGeoJSON, uploadedGeoJSON } f
 import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
 import { committedInspection, type InspectionFrame } from "./inspection";
 import { replayRead } from "./load-deadline";
+import { readBoundedJson } from "../bounded-json";
+
+/** Finite body budgets replace unbounded response.json() for Observatory side reads. */
+const OBSERVATORY_SMALL_BYTES = 1024 * 1024;
+const OBSERVATORY_FEED_BYTES = 8 * 1024 * 1024;
+/** Same loose typing as response.json(), with a byte budget and abort-aware body reads. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const readObservatoryJson = (response: Response, maxBytes: number, signal?: AbortSignal): Promise<any> => readBoundedJson(response, maxBytes, signal);
 import type { FeatureCollection } from "geojson";
 import { DataNotices } from "../map-toolbar";
 import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
-import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
+import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceExplorerHref, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
 import {
   EVENT_BOUNDS,
   EVENT_EARLIEST_DAY,
@@ -331,7 +339,7 @@ export default function EventObservatory() {
       setCoverageMessage("Checking station record…");
       try {
         const response = await fetch(`/api/hydrology/coverage?station=${encodeURIComponent(station)}`, { signal: controller.signal });
-        const data = await response.json();
+        const data = await readObservatoryJson(response, OBSERVATORY_SMALL_BYTES, controller.signal);
         if (!response.ok || data.station !== station) throw new Error(data.message ?? "Station coverage unavailable");
         if (!controller.signal.aborted) { setRiverCoverage(data); setCoverageMessage(data.message); }
       } catch (error) { if (!controller.signal.aborted) setCoverageMessage(error instanceof Error ? error.message : "Coverage unavailable"); }
@@ -347,7 +355,7 @@ export default function EventObservatory() {
       if (!visible[id] || !date || contextData[id]?.date === date) continue;
       const path = id === "counties" ? `/api/event-atlas/counties?edition=${date}` : id === "weather" ? `/api/event-atlas/weather?day=${date}` : `/api/live-context?feed=${id === "shake" ? "raspberry-shake-stations" : "usgs-earthquakes"}&day=${date}`;
       void fetch(path, { signal: controller.signal }).then(async (response) => {
-        const data = await response.json();
+        const data = await readObservatoryJson(response, OBSERVATORY_FEED_BYTES, controller.signal);
         if (!response.ok || data.data?.type !== "FeatureCollection" || !Array.isArray(data.data.features)) throw new Error(data.message ?? data.error ?? "Source response unavailable");
         if (controller.signal.aborted) return;
         sourceFailures.current.delete(`ea-${id}-data`);
@@ -426,7 +434,7 @@ export default function EventObservatory() {
     if (selectedTrack !== "geology" || geologyLegend.length) return;
     const controller = new AbortController();
     fetch("/api/event-atlas/geology-legend", { signal: controller.signal }).then(async (response) => {
-      if (!response.ok) return; const body = await response.json(); if (!controller.signal.aborted && Array.isArray(body.items)) setGeologyLegend(body.items);
+      if (!response.ok) return; const body = await readObservatoryJson(response, OBSERVATORY_SMALL_BYTES, controller.signal); if (!controller.signal.aborted && Array.isArray(body.items)) setGeologyLegend(body.items);
     }).catch(() => undefined);
     return () => controller.abort();
   }, [selectedTrack, geologyLegend.length]);
@@ -438,7 +446,8 @@ export default function EventObservatory() {
     const map = mapRef.current;
     if (map?.getSource("ea-resource-data")) (map.getSource("ea-resource-data") as GeoJSONSource).setData(EMPTY);
     fetch(`/api/event-atlas/resources?edition=${resourceEdition}`, { signal: controller.signal }).then(async (response) => {
-      const data = await response.json(); if (!response.ok || data.type !== "FeatureCollection") throw new Error(data.message ?? "Resource context unavailable");
+      const data = await readObservatoryJson(response, OBSERVATORY_FEED_BYTES, controller.signal);
+      if (!response.ok || data.type !== "FeatureCollection") throw new Error(data.message ?? "Resource context unavailable");
       if (!controller.signal.aborted) { setResourceData(data); setResourceMessage(`${resourceEdition} edition · ${data.features.reduce((sum: number,f: GeoJSON.Feature) => sum + Number(f.properties?.symbols ?? 0),0)} map symbols by county`); }
     }).catch((failure) => { if (!controller.signal.aborted) setResourceMessage(failure instanceof Error ? failure.message : "Resource context unavailable"); });
     return () => controller.abort();
@@ -578,7 +587,7 @@ export default function EventObservatory() {
   const getStorms = useCallback(async (time: string, signal: AbortSignal) => {
     const cached = stormCache.current.get(time); if (cached) return cached;
     const response = await fetch(`/api/event-atlas/storms?time=${encodeURIComponent(time)}`, { signal });
-    const body = await response.json();
+    const body = await readObservatoryJson(response, OBSERVATORY_FEED_BYTES, signal);
     if (!response.ok || body.format !== "kfm-nexrad-storms-v1" || body.time !== time || body.data?.type !== "FeatureCollection") throw new Error(body.message ?? "Storm scans unavailable for this time.");
     stormCache.current.set(time, body);
     for (const key of stormCache.current.keys()) if (stormCache.current.size > 24) stormCache.current.delete(key);
@@ -589,7 +598,7 @@ export default function EventObservatory() {
     if (!manifest || !visible.storms || manifest.start.slice(0, 10) < NEXRAD_EARLIEST_DAY) return;
     const controller = new AbortController();
     fetch(`/api/event-atlas/storms?${new URLSearchParams({ start: manifest.start, end: manifest.end })}`, { signal: controller.signal })
-      .then(async (response) => { const body = await response.json(); if (response.ok && body.format === "kfm-nexrad-storm-availability-v1" && !controller.signal.aborted) setStormAvailability(body); })
+      .then(async (response) => { const body = await readObservatoryJson(response, OBSERVATORY_SMALL_BYTES, controller.signal); if (response.ok && body.format === "kfm-nexrad-storm-availability-v1" && !controller.signal.aborted) setStormAvailability(body); })
       .catch(() => undefined);
     return () => controller.abort();
   }, [manifest, visible.storms]);
@@ -991,7 +1000,7 @@ export default function EventObservatory() {
           <p>{event.representation}</p>
           <dl><div><dt>Timeline</dt><dd>{event.clock}</dd></div><div><dt>Measure</dt><dd>{event.measurement}</dd></div></dl>
           <details><summary>Scientific limit</summary><p>{event.limitation}</p></details>
-          <footer>{event.trackId && <button type="button" data-active={visible[event.trackId]} onClick={() => openScienceTrack(event.trackId!)}>{visible[event.trackId] ? "Inspect related layer" : "Show related layer"}</button>}<a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a><Link href={`/data?source=${event.id}`}>Propose data</Link></footer>
+          <footer>{event.trackId && <button type="button" data-active={visible[event.trackId]} onClick={() => openScienceTrack(event.trackId!)}>{visible[event.trackId] ? "Inspect related layer" : "Show related layer"}</button>}<a href={event.sourceUrl} target="_blank" rel="noreferrer">{event.sourceLabel} ↗</a>{scienceExplorerHref(event) && <a href={scienceExplorerHref(event)!} aria-label={`Open ${event.title} context layers on the Kansas map`}>Map layers →</a>}<Link href={`/data?source=${event.id}`}>Propose data</Link></footer>
         </article>)}</div>
         <footer className="event-science-boundary"><strong>Absence stays visible.</strong><span>Download-only, unqueried and unsupported time remain gaps—not zeros, demos or simulated events.</span><Link href="/observatory/sources">Methods & coverage →</Link></footer>
       </aside>}

@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { readBoundedJson } from "../../bounded-json";
+import { PUBLIC_SITE_ORIGIN } from "../../site-identity";
 import { isBridgeFeed, kdotBridges, type BridgeFeedId } from "./kdot-bridges";
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
@@ -26,11 +27,14 @@ const KDWP_SERVICES = "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest
 const KDWP_WILDLIFE_AREAS_URL = `${KDWP_SERVICES}/KDWPT_Wildlife_Areas_view/FeatureServer/0/query`;
 const KDWP_WIHA_URL = `${KDWP_SERVICES}/24_25_7_29/FeatureServer/0/query`;
 const MAX_KDWP_AREAS = 6000;
+/** All KDWP pages share one budget below the browser's 30 s layer-read limit; later pages become a partial response. */
+const KDWP_TOTAL_BUDGET_MS = 25_000;
+const KDWP_MIN_PAGE_MS = 3_000;
 const NPS_TRAILS_SERVICES = "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services";
 const MAX_TRAIL_FEATURES = 500;
 const MAX_TRAIL_PLACES = 300;
 const KDWP_PAGE_SIZE = 2000;
-const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
+const NWS_USER_AGENT = `KansasFrontierMatrixExplorer/1.0 (${PUBLIC_SITE_ORIGIN})`;
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_STREAMFLOW_RECORDS = 1000;
 const MAX_NWS_ZONE_REQUESTS = 36;
@@ -886,7 +890,10 @@ const kdwpAreas = async (layer: KdwpLayer) => {
   const retrievedAt = new Date().toISOString();
   const features: Feature<Geometry, GeoJsonProperties>[] = [];
   let skipped = 0, providerLimited = false, received = 0;
+  const deadline = Date.now() + KDWP_TOTAL_BUDGET_MS;
   for (let offset = 0; offset < MAX_KDWP_AREAS; offset += KDWP_PAGE_SIZE) {
+    const remaining = deadline - Date.now();
+    if (offset > 0 && remaining < KDWP_MIN_PAGE_MS) { providerLimited = true; break; }
     const url = new URL(layer.url);
     url.searchParams.set("where", "1=1");
     url.searchParams.set("outFields", layer.outFields);
@@ -898,7 +905,7 @@ const kdwpAreas = async (layer: KdwpLayer) => {
     url.searchParams.set("resultOffset", String(offset));
     url.searchParams.set("resultRecordCount", String(KDWP_PAGE_SIZE));
     url.searchParams.set("f", "geojson");
-    const payload = await fetchBoundedJson(url.toString(), 20_000);
+    const payload = await fetchBoundedJson(url.toString(), Math.max(KDWP_MIN_PAGE_MS, Math.min(20_000, remaining)));
     if (!Array.isArray(payload.features)) throw new UpstreamError("KDWP response had no feature array.");
     received += payload.features.length;
     for (const candidate of payload.features) {

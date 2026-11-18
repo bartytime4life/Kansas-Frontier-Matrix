@@ -6,6 +6,8 @@ const baseline=process.argv[2];
 if(!baseline) throw new Error('Usage: node scripts/measure-layer-lifecycle.mjs <baseline-directory containing page.tsx and map-runtime.ts>');
 function compile(source,deps={}) { const code=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;const mod={exports:{}};new Function('require','module','exports',code)(id=>deps[id],mod,mod.exports);return mod.exports; }
 const bounded=compile(await readFile('app/bounded-json.ts','utf8'));
+// A renamed function must fail loudly instead of timing an unrelated slice of page.tsx.
+function slice(source,start,end){const from=source.indexOf(start),to=source.indexOf(end,from+1);if(from<0||to<0)throw new Error(`Lifecycle anchor not found: ${from<0?start.trim():end.trim()}`);return source.slice(from,to);}
 const pageNew=await readFile('app/page.tsx','utf8'),pageOld=await readFile(`${baseline}/page.tsx`,'utf8');
 async function dateReads(page,updated) {
   let requests=0;const states=[];const ref=current=>({current});
@@ -14,7 +16,7 @@ async function dateReads(page,updated) {
   const {LayerJsonReads}=compile(await readFile('app/layer-json-reads.ts','utf8'),{'./browser-json-request':transport});
   const ctx={useCallback:fn=>fn,announce:()=>{},currentUtcDay:()=>'2026-10-11',readFireDay:async()=>null,fetch,readBoundedJson:bounded.readBoundedJson,
     officialRequestsRef:ref(new Map()),officialArchiveDaysRef:ref({}),officialArchivePayloadsRef:ref({}),officialPayloadsRef:ref({}),setOfficialArchiveDays:()=>{},setOfficialPayloads:()=>{},setOfficialStates:fn=>states.push(fn({})),setOfficialErrors:()=>{},setOfficialReadPhases:()=>{},setEarthquakeArchiveFrameIndex:()=>{},setSmokeArchiveFrameIndex:()=>{},OFFICIAL_CONTEXT_BY_ID:{'usgs-earthquakes':{apiPath:'/api/live-context?feed=usgs-earthquakes',shortTitle:'Earthquakes'}},layerJsonReadsRef:ref(new LayerJsonReads()),validLayerPayload:()=>true,earthquakeEventTimes:()=>[],smokeValidityTimes:()=>[],smokeInitialFrameIndex:()=>-1,smokeValidAt:v=>v};
-  const text=page.slice(page.indexOf('  const loadOfficialArchiveDay ='),page.indexOf('  const returnOfficialSourceToCurrent ='));
+  const text=slice(page,'  const loadOfficialArchiveDay =','  const returnOfficialSourceToCurrent =');
   const code=ts.transpileModule(text,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   const load=new Function(...Object.keys(ctx),code+'\nreturn loadOfficialArchiveDay;')(...Object.values(ctx));
   const start=performance.now(),times=[];

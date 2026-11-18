@@ -46,7 +46,7 @@ export default function AboutPage() {
         <span className="mark" aria-hidden="true">KFM</span>
         <span><strong>Kansas Frontier Matrix</strong><small>Explorer guide + boundaries</small></span>
       </div>
-      <Link href="/topics">Explore by subject</Link><Link href="/">Open the map</Link>
+      <Link href="/topics">Explore by subject</Link><Link href="/explore">Map guides</Link><Link href="/">Open the map</Link>
     </nav>
 
     <main className="about-content">

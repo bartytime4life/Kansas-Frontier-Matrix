@@ -1,4 +1,5 @@
 import type { Feature, FeatureCollection, LineString, Point } from "geojson";
+import type { OfficialContextId } from "./live-context";
 
 export type ScienceSupport = "connected" | "mixed" | "download" | "derived" | "reference" | "steward";
 export type ScienceGeometry = "point" | "path" | "area" | "surface" | "network" | "aggregate" | "profile";
@@ -20,6 +21,8 @@ export type ScienceEventSpec = Readonly<{
   sourceLabel: string;
   sourceUrl: string;
   limitation: string;
+  /** Public Explorer context layers that show the same phenomenon today; display links only, never admission. */
+  explorerContext?: readonly OfficialContextId[];
 }>;
 
 export const SCIENCE_SUPPORT_LABELS: Readonly<Record<ScienceSupport, string>> = Object.freeze({
@@ -41,6 +44,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Path length, maximum width, EF rating, injuries/fatalities",
     support: "download", sourceLabel: "NOAA Storm Events bulk archive", sourceUrl: "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
     limitation: "Annual event files require parsing, spatial review and duplicate handling before a path can be admitted. A county event record is not a surveyed tornado track.",
+    explorerContext: ["nws-storm-reports", "noaa-spc-convective-outlook", "nws-alerts"],
   },
   {
     id: "floods", title: "Floods", glyph: "≋", color: "#58c8e4", geometry: "area", clockKind: "interval",
@@ -49,6 +53,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Discharge, stage, crest, duration and inundated area",
     support: "mixed", trackId: "river", sourceLabel: "USGS Water Data + NOAA Storm Events", sourceUrl: "https://api.waterdata.usgs.gov/",
     limitation: "The connected lane is discharge, not a flood classification or continuous inundation surface. Historical extents remain a separate reviewed input.",
+    explorerContext: ["noaa-nwps-gauges", "noaa-nwm-short-range", "usgs-streamflow"],
   },
   {
     id: "history", title: "Historical landscape", glyph: "◫", color: "#d9bd82", geometry: "surface", clockKind: "edition",
@@ -57,6 +62,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Edition, scale, control-point error and mapped change",
     support: "steward", sourceLabel: "USGS topoView", sourceUrl: "https://ngmdb.usgs.gov/topoview/",
     limitation: "Publication year does not date every road, town or boundary on a sheet. A scan needs reviewed georeferencing and rights metadata.",
+    explorerContext: ["kdot-roads-1918", "nps-nrhp-places"],
   },
   {
     id: "erosion", title: "Erosion & deposition", glyph: "↘", color: "#e4a86e", geometry: "profile", clockKind: "paired",
@@ -65,6 +71,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Vertical change, volume balance, slope and uncertainty",
     support: "derived", sourceLabel: "USGS 3DEP elevation program", sourceUrl: "https://www.usgs.gov/3d-elevation-program",
     limitation: "Erosion cannot be inferred from one hillshade. It requires co-registered surfaces, error propagation and a documented change method.",
+    explorerContext: ["usgs-3dep-slope", "usgs-3dep-hillshade"],
   },
   {
     id: "elevation", title: "Elevation & terrain", glyph: "△", color: "#d6c78f", geometry: "surface", clockKind: "edition",
@@ -73,6 +80,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Elevation, relief, slope, aspect and profile distance",
     support: "reference", sourceLabel: "USGS 3DEP / LiDAR Explorer", sourceUrl: "https://apps.nationalmap.gov/lidar-explorer/",
     limitation: "Display terrain is not survey grade and does not reconstruct the surface on the selected historical day.",
+    explorerContext: ["usgs-3dep-hillshade", "usgs-3dep-slope"],
   },
   {
     id: "cities", title: "Cities & settlements", glyph: "◆", color: "#f1d485", geometry: "point", clockKind: "edition",
@@ -81,6 +89,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Population, housing, incorporated area and vintage",
     support: "reference", trackId: "counties", sourceLabel: "U.S. Census TIGER/Line", sourceUrl: "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
     limitation: "The connected Census county baseline is not a historical city boundary reconstruction. Place vintages must remain explicit.",
+    explorerContext: ["census-counties", "nps-nrhp-places"],
   },
   {
     id: "roads", title: "Roads", glyph: "━", color: "#b9c9c3", geometry: "network", clockKind: "edition",
@@ -89,6 +98,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Length, class, connectivity, travel distance and edition change",
     support: "reference", sourceLabel: "U.S. Census TIGER/Line", sourceUrl: "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
     limitation: "The present basemap is modern reference context. It must never be treated as the road network for a historical event date.",
+    explorerContext: ["kdot-roads", "kdot-rail-active", "kdot-rail-abandoned"],
   },
   {
     id: "trade-routes", title: "Trade routes", glyph: "⇢", color: "#dd9fd0", geometry: "path", clockKind: "interval",
@@ -97,6 +107,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Route distance, documented stops, operating span and confidence",
     support: "steward", sourceLabel: "Library of Congress Kansas maps", sourceUrl: "https://www.loc.gov/maps/?fa=location:kansas",
     limitation: "A traced historical route is an interpretation. Provenance, scale, georeferencing error and competing route hypotheses must remain visible.",
+    explorerContext: ["nps-historic-trails", "nps-trail-places", "kdot-roads-1918"],
   },
   {
     id: "snow", title: "Snow", glyph: "✦", color: "#d9f2ff", geometry: "surface", clockKind: "daily",
@@ -105,6 +116,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Snowfall, snow depth, water equivalent and duration",
     support: "mixed", trackId: "weather", sourceLabel: "NOAA GHCN-D + Storm Events", sourceUrl: "https://www.ncei.noaa.gov/pub/data/ghcn/daily/",
     limitation: "The connected weather lane currently maps temperature and precipitation summaries, not a statewide snow field.",
+    explorerContext: ["nws-alerts", "nws-radar"],
   },
   {
     id: "ice", title: "Ice", glyph: "◇", color: "#9fd7ef", geometry: "area", clockKind: "interval",
@@ -113,6 +125,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Accretion, duration, temperature and reported impacts",
     support: "download", sourceLabel: "NOAA Storm Events bulk archive", sourceUrl: "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
     limitation: "Narrative event areas and point measurements have different precision. Neither should be rendered as a continuous thickness surface without a method.",
+    explorerContext: ["nws-alerts", "nws-storm-reports"],
   },
   {
     id: "foliage", title: "Foliage & vegetation", glyph: "✣", color: "#9ed878", geometry: "aggregate", clockKind: "annual",
@@ -121,6 +134,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Occurrence density now; vegetation index and phenophase only from future qualified data",
     support: "mixed", trackId: "flora", sourceLabel: "GBIF Maps API", sourceUrl: "https://techdocs.gbif.org/en/openapi/v2/maps",
     limitation: "Plant occurrence density is not foliage cover, greenness, abundance or absence and is strongly affected by sampling effort.",
+    explorerContext: ["mrlc-nlcd-land-cover", "usgs-padus-lands"],
   },
   {
     id: "fauna", title: "Fauna", glyph: "◉", color: "#cdb2f2", geometry: "aggregate", clockKind: "annual",
@@ -129,6 +143,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Generalized occurrence density and taxonomic richness",
     support: "connected", trackId: "fauna", sourceLabel: "GBIF Maps API", sourceUrl: "https://techdocs.gbif.org/en/openapi/v2/maps",
     limitation: "Records are not abundance, migration tracks, habitat suitability or proof of absence. Sensitive locations remain generalized.",
+    explorerContext: ["kdwp-wildlife-areas", "usgs-padus-lands", "mrlc-nlcd-land-cover"],
   },
   {
     id: "smoke", title: "Smoke", glyph: "≈", color: "#dda16b", geometry: "area", clockKind: "interval",
@@ -137,6 +152,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Column-density category, footprint area and supported duration",
     support: "connected", trackId: "smoke", sourceLabel: "NOAA HMS", sourceUrl: "https://www.ospo.noaa.gov/products/land/hms.html",
     limitation: "HMS is not surface PM2.5, plume height or measured transport. No decorative wind particles or interpolated polygon motion.",
+    explorerContext: ["noaa-hms-smoke", "nasa-firms-active-fire"],
   },
   {
     id: "water-levels", title: "Water levels & flow", glyph: "●", color: "#6fd7e5", geometry: "profile", clockKind: "instant",
@@ -145,6 +161,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Discharge, stage, trend, sample age and qualifiers",
     support: "mixed", trackId: "river", sourceLabel: "USGS Water Data APIs", sourceUrl: "https://api.waterdata.usgs.gov/",
     limitation: "Current map values are discharge parameter 00060. Radius is log-scaled display, not channel width, stage or flood extent.",
+    explorerContext: ["usgs-streamflow", "noaa-nwps-gauges", "kgs-monitoring-wells"],
   },
   {
     id: "earthquakes", title: "Earthquakes", glyph: "✹", color: "#ee9e88", geometry: "point", clockKind: "instant",
@@ -153,6 +170,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Magnitude, depth, origin time and distance/bearing",
     support: "connected", trackId: "earthquakes", sourceLabel: "USGS FDSN event service", sourceUrl: "https://earthquake.usgs.gov/fdsnws/event/1/",
     limitation: "Catalog completeness changes across time. No returned event is not proof of no earthquake, and a sensor is not an event.",
+    explorerContext: ["usgs-earthquakes", "raspberry-shake-stations"],
   },
   {
     id: "radar", title: "Radar & severe weather context", glyph: "◌", color: "#71d8b8", geometry: "surface", clockKind: "instant",
@@ -161,6 +179,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Reflectivity class, valid time and archive coverage",
     support: "connected", trackId: "radar", sourceLabel: "NOAA/NWS-derived IEM mosaics", sourceUrl: "https://mesonet.agron.iastate.edu/docs/nexrad_composites/",
     limitation: "A mosaic is not a simultaneous scan and does not by itself prove a tornado, hail report or surface precipitation amount.",
+    explorerContext: ["nws-radar", "noaa-lightning-density", "nws-storm-reports"],
   },
   {
     id: "geology", title: "Geology", glyph: "▧", color: "#cfabd9", geometry: "area", clockKind: "static",
@@ -169,6 +188,7 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Map unit, geologic age, area and source scale",
     support: "reference", trackId: "geology", sourceLabel: "Kansas Geological Survey", sourceUrl: "https://kgs.ku.edu/geology-and-mineral-resources",
     limitation: "The current cached carrier has an unconfirmed edition and does not supply a subsurface volume or deep-time reconstruction.",
+    explorerContext: ["kgs-aquifer-high-plains", "kgs-monitoring-wells", "usgs-3dep-hillshade"],
   },
   {
     id: "resources", title: "Mapped resources", glyph: "⬡", color: "#e3c269", geometry: "aggregate", clockKind: "edition",
@@ -177,8 +197,14 @@ export const SCIENCE_EVENTS: readonly ScienceEventSpec[] = Object.freeze([
     measurement: "Mapped symbol count by county and edition",
     support: "connected", trackId: "resources", sourceLabel: "USGS topographic mine symbols", sourceUrl: "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/USGS_Topographic_Mine_Symbols/FeatureServer/8",
     limitation: "Counts are historical map symbols, not unique mines, operating dates, reserves, ownership or economic potential.",
+    explorerContext: ["blm-mlrs-leases-authorized", "blm-plss-townships"],
   },
 ]);
+
+/** Explorer deep link with the phenomenon's public context layers selected; null when none is mapped. */
+export function scienceExplorerHref(event: Pick<ScienceEventSpec, "explorerContext">): string | null {
+  return event.explorerContext?.length ? `/?ctx=${event.explorerContext.join(",")}` : null;
+}
 
 export type ScienceCoordinate = readonly [longitude: number, latitude: number];
 

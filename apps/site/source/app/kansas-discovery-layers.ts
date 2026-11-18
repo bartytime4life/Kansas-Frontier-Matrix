@@ -13,6 +13,11 @@ const PADUS = "https://edits.nationalmap.gov/arcgis/rest/services/PAD-US/PAD_US/
 const SDM_WMS = "https://sdmdataaccess.sc.egov.usda.gov/Spatial/SDM.wms";
 
 export type LegendStop = Readonly<{ label: string; color: string }>;
+/** KDWP area fill/outline colours, shared by the map paint and the legend chips. */
+export const KDWP_AREA_COLORS = Object.freeze({
+  "kdwp-wildlife-areas": Object.freeze({ fill: "#7fbf6a", line: "#cfeec4" }),
+  "kdwp-wiha-access": Object.freeze({ fill: "#e5b54b", line: "#fde7b0" }),
+});
 export type DiscoveryLayerId = "noaa-spc-convective-outlook" | "noaa-spc-fire-weather" | "noaa-mrms-qpe-24h"
   | "noaa-wpc-qpf-5day" | "noaa-cpc-drought-outlook" | "mrlc-nlcd-land-cover" | "usgs-padus-lands"
   | "nrcs-ssurgo-soils";
@@ -190,7 +195,7 @@ export const KANSAS_DISCOVERY_SOURCES: readonly OfficialContextSource[] = Object
 export const DISCOVERY_LAYER_IDS: readonly DiscoveryLayerId[] = Object.freeze(KANSAS_DISCOVERY_SOURCES.map(source => source.id as DiscoveryLayerId));
 
 /** Point-feed legends mirror the MapLibre paint expressions in live-context.ts. */
-const FEED_LEGENDS: Readonly<Record<"nws-storm-reports" | "nps-nrhp-places" | "nps-historic-trails" | "nps-trail-places", readonly LegendStop[]>> = Object.freeze({
+const FEED_LEGENDS: Readonly<Record<"nws-storm-reports" | "nps-nrhp-places" | "nps-historic-trails" | "nps-trail-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access", readonly LegendStop[]>> = Object.freeze({
   "nws-storm-reports": [
     { label: "Tornado", color: "#ff3b5c" }, { label: "Hail", color: "#5ec8ff" }, { label: "Wind", color: "#ffd166" },
     { label: "Flood", color: "#7ae582" }, { label: "Winter", color: "#c9b6ff" }, { label: "Other", color: "#e7e1d6" },
@@ -204,10 +209,17 @@ const FEED_LEGENDS: Readonly<Record<"nws-storm-reports" | "nps-nrhp-places" | "n
     { label: "Pony Express", color: "#e5c34b" }, { label: "Cattle trails (study)", color: "#c98b5a" },
   ],
   "nps-trail-places": [{ label: "Public trail site", color: "#f2c46d" }],
+  "kdwp-wildlife-areas": [{ label: "Public wildlife area", color: KDWP_AREA_COLORS["kdwp-wildlife-areas"].fill }],
+  "kdwp-wiha-access": [{ label: "Walk-in tract (private land)", color: KDWP_AREA_COLORS["kdwp-wiha-access"].fill }],
 });
 
 /** Layers added in the November 2026 refresh, shown with a NEW marker in layer lists. */
-export const NEW_LAYER_IDS: ReadonlySet<string> = new Set<string>([...DISCOVERY_LAYER_IDS, "nws-storm-reports", "nps-nrhp-places", "nps-historic-trails", "nps-trail-places"]);
+export const NEW_LAYER_IDS: ReadonlySet<string> = new Set<string>([...DISCOVERY_LAYER_IDS, "nws-storm-reports", "nps-nrhp-places", "nps-historic-trails", "nps-trail-places",
+  "kdwp-wildlife-areas", "kdwp-wiha-access"]);
+/** NEW markers (layers and starters) stop showing after this UTC instant so a refresh never stays "new" indefinitely. */
+export const NEW_MARKER_UNTIL = "2027-01-01T00:00:00Z";
+export const newMarkersActive = (now: number = Date.now()) => now < Date.parse(NEW_MARKER_UNTIL);
+export const isNewLayer = (id: string, now?: number) => newMarkersActive(now) && NEW_LAYER_IDS.has(id);
 /** Bridge circles: fill is the recorded build year (a numbered circle uses its average); the ring is recorded status. */
 const BRIDGE_LEGEND: readonly LegendStop[] = Object.freeze([
   ...BRIDGE_ERA_STOPS.map(stop => ({ label: stop.label, color: stop.color })), { label: "Year not recorded", color: BRIDGE_UNKNOWN_ERA_COLOR },

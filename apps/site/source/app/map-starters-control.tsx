@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
-import { MAP_STARTERS, contextSelectionChanges, readContextPreference, starterPlan, surpriseStarterId, writeContextPreference,
+import { DEFAULT_STARTER_ID, MAP_STARTERS, contextSelectionChanges, starterIsNew, startersByTheme, readContextPreference, starterPlan, surpriseStarterId, writeContextPreference,
   type ContextSelection, type StarterAccessMap } from "./map-starters";
 
 export function MapStartersControl({ sources, access, visibility, selectionReady, sourceStatus, onApply }: Readonly<{
@@ -10,7 +10,7 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
   sourceStatus: (id: OfficialContextId) => string;
   onApply: (ids: readonly OfficialContextId[], title: string) => void;
 }>) {
-  const [choice, setChoice] = useState<string>("learning-kansas");
+  const [choice, setChoice] = useState<string>(DEFAULT_STARTER_ID);
   const [remember, setRemember] = useState(false);
   const [storageReady, setStorageReady] = useState(false);
   const [message, setMessage] = useState("");
@@ -37,7 +37,7 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
     });
     return () => { cancelled = true; };
   }, [remember, selectionReady, sources, storageReady, visibility]);
-  const starter = MAP_STARTERS.find(item => item.id === choice) ?? MAP_STARTERS[2];
+  const starter = MAP_STARTERS.find(item => item.id === choice) ?? MAP_STARTERS.find(item => item.id === DEFAULT_STARTER_ID)!;
   const plan = starterPlan(starter.ids, sources, access);
   const matches = plan.selected.length > 0 && contextSelectionChanges(plan.selected, sources, visibility).length === 0;
   const apply = (ids: readonly OfficialContextId[], title: string) => {
@@ -48,9 +48,11 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
     <h2 id="map-starters-title">Start with a purpose</h2>
     <p id="map-starters-help">Choose a small public context stack, then customize individual layers. Reviewed layers and imagery keep their own selections.</p>
     <label className="map-starters-choice">Starter view<select value={starter.id} aria-describedby="map-starters-help map-starters-description" onChange={event => setChoice(event.target.value)}>
-      {MAP_STARTERS.map(item => <option key={item.id} value={item.id}>{"isNew" in item && item.isNew ? `${item.title} · new` : item.title}</option>)}
+      {startersByTheme().map(group => <optgroup key={group.theme} label={group.theme}>
+        {group.starters.map(item => <option key={item.id} value={item.id}>{starterIsNew(item) ? `${item.title} · new` : item.title}</option>)}
+      </optgroup>)}
     </select></label>
-    <p id="map-starters-description">{starter.description}</p>
+    <p id="map-starters-description">{starter.description}{"guide" in starter && starter.guide ? <> <a className="map-starters-guide" href={`/explore/${starter.guide}`}>Read the guide →</a></> : null}</p>
     <div className="map-starters-actions">
       <button type="button" disabled={!selectionReady || plan.selected.length === 0} onClick={() => apply(plan.selected, starter.title)}>Use starter</button>
       <button type="button" disabled={!selectionReady} onClick={() => {

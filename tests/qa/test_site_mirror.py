@@ -2812,8 +2812,8 @@ def test_next_runtime_reconciliation_preserves_history_and_review_boundaries():
     previous_hash = "47a1a62d7bdc4a1e56e287a83e781dcd28c55dfb85e53e0993df91af9fc8a59f"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == previous_hash
     previous = json.loads(predecessor.read_text())
-    current, _ = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-next-runtime-reconciliation-20261117.json"
+    path = directory / "site-v268-next-runtime-reconciliation-20261117.json"
+    current = json.loads(path.read_text())
     assert current["predecessor_receipt"] == predecessor.name
     assert current["predecessor_receipt_sha256"] == previous_hash
     administrative = {"comparison", "inventory_sha256", "recorded_at", "predecessor_receipt",
@@ -2833,7 +2833,9 @@ def test_next_runtime_reconciliation_preserves_history_and_review_boundaries():
         old, entry, declaration = before[name], after[name], declarations[name]
         for key in old.keys() - {"mirror_sha256", "difference"}:
             assert entry[key] == old[key], (name, key)
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        digest = entry["mirror_sha256"]
+        if TOOL.RECEIPT == path:
+            assert hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest() == digest
         assert declaration["previous_receipt_sha256"] == old["mirror_sha256"] != digest
         assert declaration["repository_base_sha256"] == declaration["mirror_sha256"] == entry["mirror_sha256"] == digest
         assert declaration["proposed_in_this_change"] is False  # Already integrated by Dependabot.
@@ -2842,3 +2844,33 @@ def test_next_runtime_reconciliation_preserves_history_and_review_boundaries():
     assert current["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
     inventory = {name: entry["mirror_sha256"] for name, entry in after.items()}
     assert current["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def test_old_new_data_successor_preserves_runtime_reconciliation_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-old-new-data-overlay-20261118.json",
+        "site-v268-next-runtime-reconciliation-20261117.json",
+        "71014ac5978ac478d273d70214acde6145d1c6f25a9e7999f6561f6185084dee",
+        {"README.md", "app/about/page.tsx", "app/api/live-context/route.ts",
+         "app/explore/aquifers-and-groundwater/page.tsx", "app/explore/earthquakes-in-kansas/page.tsx", "app/explore/explore.module.css",
+         "app/explore/fire-and-smoke/page.tsx", "app/explore/guide-page.tsx", "app/explore/land-cover-and-public-lands/page.tsx",
+         "app/explore/land-survey-and-soils/page.tsx", "app/explore/page.tsx", "app/explore/rivers-and-floods/page.tsx",
+         "app/explore/roads-and-railroads/page.tsx", "app/explore/storms-and-severe-weather/page.tsx", "app/governed-water-control.tsx",
+         "app/kansas-discovery-layers.ts", "app/landing-guides.ts", "app/layer-json-reads.ts",
+         "app/layer-workspaces.ts", "app/layout.tsx", "app/lightning-flash-loop.tsx",
+         "app/live-context.ts", "app/map-performance.ts", "app/map-starters-control.tsx",
+         "app/map-starters.ts", "app/map-toolbar.tsx", "app/not-found.tsx",
+         "app/observatory/sources/page.tsx", "app/observatory/workspace.tsx", "app/page.tsx",
+         "app/robots.ts", "app/science-events.ts", "app/site-connections.ts",
+         "app/site-features.ts", "app/site-identity.ts", "app/sitemap.ts",
+         "app/soil-moisture-control.tsx", "app/topics/page.tsx", "app/water-release-console.tsx",
+         "docs/README.md", "docs/explorer-frontier-trails-2026-11-14.md", "docs/explorer-old-and-new-data-2026-11-18.md",
+         "docs/layer-lifecycle-performance.md", "package.json", "scripts/measure-layer-lifecycle.mjs",
+         "scripts/qwen-knowledge-curated.mjs", "scripts/qwen-knowledge-pack.mjs", "tests/docs-index.test.mjs",
+         "tests/kansas-discovery-layers.test.mjs", "tests/kansas-reference-layers.test.mjs", "tests/landing-guides.test.mjs",
+         "tests/layer-explorer.test.mjs", "tests/layer-lifecycle.test.mjs", "tests/map-starters.test.mjs",
+         "tests/observatory-science-probe.test.mjs", "tests/rendered-html.test.mjs", "tests/runtime-resilience.test.mjs",
+         "tests/sitemap-robots.test.mjs", "tests/topic-organization.test.mjs"},
+        "2aaf6626a5a2e8c8bd5bdefc13c3c0a6eb811619",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-old-new-data-overlay-20261118.json"
