@@ -2834,7 +2834,7 @@
     },
     "app/local-atlas-control.tsx": {
       "difference": "Repository-only accessibility fix proposed on branch claude/explorer-a11y-landmarks from main@bef673cc4c1694f6bd1628ce7c50b75dddba35d9: labelled generic elements gain the role that makes their accessible name announced, the data-notices button names its counts, and the Observatory storm key is no longer a nested complementary landmark. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "197e6438bab0718333e005518f8b29c1189c008792dfb5142bb2897e1fa2fbe4",
+      "mirror_sha256": "5d67e827f9a26a72f108422e2c421c98bf188ca67d2912145845bca1884a42a1",
       "site_sha256": "e71b6697ec4846117dd5c99722cb009d24ca9d501c01a11b4c279844df1e18e7",
       "state": "repository_safety_overlay"
     },
@@ -3073,7 +3073,7 @@
     },
     "app/page.tsx": {
       "difference": "Bounded shared terrain-source integrity, malformed soil-link recovery and NOAA daily-weather qualifier integrity only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "ca24a45be13534a6d3f90bb29132c108930575e415ddea1090e9ed2ea71bafee",
+      "mirror_sha256": "19243bd1f1e240902bce59855015c7ea7be7967ab2257783ef1eaa7e8f946cb3",
       "site_sha256": "2833eb08843b9fce2ee6bf8ca2903a55f9a3580afd460cf35321642972f27610",
       "state": "inherited_repository_overlay"
     },
@@ -4591,7 +4591,7 @@
     },
     "tests/accessible-names.test.mjs": {
       "difference": "Repository-only accessibility fix proposed on branch claude/explorer-a11y-landmarks from main@bef673cc4c1694f6bd1628ce7c50b75dddba35d9: labelled generic elements gain the role that makes their accessible name announced, the data-notices button names its counts, and the Observatory storm key is no longer a nested complementary landmark. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "356460f121a3d58ae4bd5cc05a7f83f97eb80b558689fa2ee16bd689113ed6e1",
+      "mirror_sha256": "d00aea7678125edec5d00a75b180f074b4e51a9e47bec90597df60c0f10e0eb6",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -6452,7 +6452,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "0ee53befba9f958c625048438cd81ff65c98b04e612413f4487bfa890ba041f2",
+  "inventory_sha256": "de1b216ce462e6fd429699d8e267a0bfd87a5c9db5b5a156e82fc93e8b671038",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8640,7 +8640,7 @@
       ]
     }
   },
-  "recorded_at": "2026-11-18T07:43:37.683380+00:00",
+  "recorded_at": "2026-11-18T07:48:53.633749+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "bef673cc4c1694f6bd1628ce7c50b75dddba35d9",
   "repository_reconciliation": {
@@ -8688,7 +8688,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "197e6438bab0718333e005518f8b29c1189c008792dfb5142bb2897e1fa2fbe4",
+        "mirror_sha256": "5d67e827f9a26a72f108422e2c421c98bf188ca67d2912145845bca1884a42a1",
         "path": "app/local-atlas-control.tsx",
         "previous_receipt_sha256": "e71b6697ec4846117dd5c99722cb009d24ca9d501c01a11b4c279844df1e18e7",
         "proposed_in_this_change": true,
@@ -8720,7 +8720,7 @@
         "state": "repository_safety_overlay"
       },
       {
-        "mirror_sha256": "ca24a45be13534a6d3f90bb29132c108930575e415ddea1090e9ed2ea71bafee",
+        "mirror_sha256": "19243bd1f1e240902bce59855015c7ea7be7967ab2257783ef1eaa7e8f946cb3",
         "path": "app/page.tsx",
         "previous_receipt_sha256": "b58b4acb9659042cb191a7b75bc5e41148a23e6bdec44bcfa2ba6ef05ef3a171",
         "proposed_in_this_change": true,
@@ -8776,7 +8776,7 @@
         "state": "repository_safety_overlay"
       },
       {
-        "mirror_sha256": "356460f121a3d58ae4bd5cc05a7f83f97eb80b558689fa2ee16bd689113ed6e1",
+        "mirror_sha256": "d00aea7678125edec5d00a75b180f074b4e51a9e47bec90597df60c0f10e0eb6",
         "path": "tests/accessible-names.test.mjs",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
@@ -8864,9 +8864,9 @@
   "source_identity_currentness": "PREDECESSOR_DECLARATION_ONLY; historical Site identity retained without fresh hosted-source readback.",
   "status": "REVIEW_ONLY",
   "validation": {
-    "app_tests": "PASS: 1963 tests (1961 pass, 2 skipped), including the new accessible-names guard; the one pinned-markup assertion was updated for the added role.",
+    "app_tests": "PASS: 1964 tests (1962 pass, 2 skipped), including the accessible-names guard; the one pinned-markup assertion was updated for the added role.",
     "browser": "PASS: axe-core 4 in headless Chromium over 9 entry pages at 1440 and 390 px: 0 WCAG 2.x A/AA violations and 0 best-practice violations after the change (2 best-practice violations and 2 aria-prohibited-attr incompletes before). Not a manual screen-reader test.",
-    "focused_tests": "PASS: accessible-names (4), mobile-compatibility and rendered-html.",
+    "focused_tests": "PASS: accessible-names (5), mobile-compatibility and rendered-html. Review follow-up: the availability chart and Local Atlas legend use role=group so their values and notes stay readable.",
     "lint": "PASS: 0 errors in changed files.",
     "mirror": "PASS: strict selected successor inventory and immutable predecessor chain; 262 withheld paths remain absent.",
     "production_build": "PASS: Vite/Vinext build and held-output containment; route-classification limitations remain inherited.",

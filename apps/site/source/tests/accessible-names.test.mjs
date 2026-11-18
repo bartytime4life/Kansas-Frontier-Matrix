@@ -45,6 +45,16 @@ test("the scan flags a roleless label and accepts each allowed form", () => {
   assert.deepEqual(unnamedLabels("x.tsx", '<b aria-hidden="true">3</b>'), []);
 });
 
+test("charts and legends with readable values stay groups, not images", async () => {
+  // role="img" makes descendants presentational; keep it only where the label
+  // already states everything the children show.
+  const page = await readFile("app/page.tsx", "utf8");
+  const atlas = await readFile("app/local-atlas-control.tsx", "utf8");
+  assert.match(page, /<div role="group" className="availability-bars"/, "per-range peak counts stay readable");
+  assert.match(atlas, /<div role="group" className="local-atlas-legend"/, "decrease/increase and no-data notes stay readable");
+  assert.match(page, /<div role="img" className="terrain-height-ramp" aria-label="Elevation color scale from 200 to 1,250 meters">/);
+});
+
 test("the data notices button names its counts and hides the badge digits", async () => {
   const toolbar = await readFile("app/map-toolbar.tsx", "utf8");
   assert.match(toolbar, /aria-label=\{`Open data and download notices: \$\{issues\.length\} source issue/);
