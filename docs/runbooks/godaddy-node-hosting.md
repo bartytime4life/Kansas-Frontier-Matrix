@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-14
+updated: 2026-11-18
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -216,6 +216,55 @@ tests: one resized the window while a focus return was still pending, and one
 reached for a panel button without waiting for it.
 [#5864](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5864)
 fixed both.
+
+<a id="public-readback-2026-11-16"></a>
+
+### Publications verified on 2026-11-16 and 2026-11-18: focus fixes, Register circles and a bridges guide
+
+After each publish, the identity checker reported `APPLICATION_INPUTS_MATCH`
+for the commit named below.
+
+**Verified on 2026-11-16 at `58ddea48`**
+
+| Change | Live readback |
+|---|---|
+| [#5870](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5870) Layers focus guard | In a headless browser, closing Layers and moving straight to the More menu left focus on More. Closing Layers without moving returned focus to the Layers button |
+| [#5867](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5867) and [#5869](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5869) welcome wheel scrolling | On the welcome screen at 1280×800, a mouse-wheel scroll moved the content down 600 px |
+| Bridge layers, rechecked | Hovering a circle showed its summary and selecting a bridge opened its record |
+
+Not rechecked by hand: the "source details" focus return and the short-window
+Status scrolling from #5867 and #5869. Their own browser tests passed on the
+merged commit.
+
+**Verified on 2026-11-18 at `54d4d71a`**
+
+| Change | Live readback |
+|---|---|
+| [#5872](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5872) National Register markers as numbered circles | The feed returned 200 with 1,344 public points. In a headless browser at statewide scale the layer drew numbered circles. Hovering the Wichita circle showed "142 National Register markers in this area · 129 buildings · 5 districts · 1 site · 7 structures". Selecting it zoomed in and split it into 122 and 20. At zoom 13.4 in Topeka, selecting a single marker opened its record. No page errors |
+| [#5873](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5873) Kansas bridges guide | `/explore/kansas-bridges` returned 200 with its title, and its map link opens the state, historic and closed bridge layers. `/explore` linked five guides, the sitemap listed all six pages, and an unknown guide returned 404 |
+
+The commit published at `54d4d71a` also carries changes from other work that
+this readback did not check beyond the identity match: Labs and data-lab changes
+([#5879](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5879), [#5880](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5880), [#5881](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5881),
+[#5892](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5892)), [#5878](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5878), [#5884](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5884) and
+[#5885](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5885).
+
+**DeFlock after a restart.** The provider was still down on 2026-11-16. The
+first request after the publish took about 25 seconds, because a restart clears
+the site's memory of the outage. The second failed in half a second with the
+"next provider check" explanation.
+
+**Feed states on 2026-11-18.** The National Register and state-bridge feeds
+report `partial` because each leaves out records it cannot place: one Register
+record with an invalid location or identifier, and two state bridges without a
+usable Kansas location. Each layer note says so. The state feed returned 5,580
+bridges, and the historic and closed feeds 51 and 91.
+
+**Chat model.** `/api/ai/status` reported ready on `qwen3.5:9b-q4_K_M` on both
+dates.
+
+**Mirror.** [#5874](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5874) carried #5870, #5872 and #5873 into
+`apps/site/source`.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
