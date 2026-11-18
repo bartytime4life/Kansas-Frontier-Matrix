@@ -19,7 +19,7 @@ from tools.local_data.manage import canonical, utc_now
 from tools.local_data.acquisition import validate_root
 from tools.local_data import grounded_review, text_sample
 
-PROMPT_VERSION = "kfm-local-acceptance-v4-declared-gzip"
+PROMPT_VERSION = "kfm-local-acceptance-v5-format-scope"
 ACTIVE = {"running", "pausing", "cancelling"}
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS ai_acceptance_jobs (
@@ -69,15 +69,16 @@ facts. The server attaches exact text from those facts; do not invent quotations
 Use an allowed domain or
 unassigned. Mention limitations without claiming a public release or rights approval.
 Use unassigned when the inspected content does not support an allowed domain.
-When gzip_text_* facts exist, describe what that text excerpt actually says and
-select at least one gzip_text_* evidence ID. It may be noisy historical OCR or
-an error page, not the document suggested by the filename. Treat path names and
-path year hints as unverified hints. Never invent dates, authors, page counts,
-subjects, or use restrictions. Separate historical text claims from established
-facts. Do not call a bounded inspected gzip excerpt entirely uninspected. Explain
-that text beyond the saved sample and any unvalidated gzip trailer remain unchecked.
+Describe only the format and inspection limits established by the packet. A text
+sample of JSON, GeoJSON or CSV does not establish the full source's contents.
+Do not import compression, OCR or integrity limitations from other formats.
+Provider query limits do not establish returned feature counts or omitted records.
+Keep query windows, response clocks and stored observation times distinct; a date
+range does not establish that every record shares one timestamp. Treat path names
+and path year hints as unverified hints. Never invent dates, authors, page counts,
+subjects, or use restrictions. Separate source claims from established facts.
 Make the title about the content, without private-use boilerplate. Spend most of
-the description on the excerpt's actual subject and document type, with at most
+the description on the inspected content's actual subject and document type, with at most
 one concise limitations sentence. Put unknown rights/provenance in concerns;
 unknown rights do not mean a declared restriction. Include names and dates only
 when present in the supplied text; flag conflicting/noisy OCR instead of guessing.

@@ -6,7 +6,7 @@ version: v1.1
 status: candidate; isolated synthetic verification; installation not verified
 owners: ["@bartytime4life"]
 created: 2026-11-08
-updated: 2026-11-09
+updated: 2026-11-18
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Explain admin-requested local AI descriptions, batch acceptance, attribution and resumable processing.
@@ -44,6 +44,16 @@ archives use metadata only. Archives without an inspected text sample are held, 
 when Qwen recommends acceptance with high confidence. Metadata-only descriptions
 can contain unsupported filename-based interpretations and need admin checking.
 This is not full-content or record-by-record dataset validation.
+
+Plain-text, CSV and GeoJSON reviews use the standard prompt, which asks for
+format-specific inspection limits. They must not borrow gzip trailer or OCR
+limitations from compressed historical text. Compressed text keeps its separate
+grounded rendering prompt. Query limits are not returned counts, and query
+windows, response clocks and stored observation times describe different things.
+The prompt fingerprint changes when these instructions change, so earlier model
+outputs remain attributable to their original instructions rather than being
+silently reused as new reviews. A schema-valid description still needs factual
+scope review; the prompt does not independently verify model assertions.
 
 Compressed-text recognition uses the declared original `relative_path`, falling
 back to the item's relative path when no original name is declared. A captured
