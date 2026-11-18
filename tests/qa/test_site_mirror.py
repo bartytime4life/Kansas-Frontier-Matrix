@@ -2947,4 +2947,14 @@ def test_accessible_names_successor_preserves_coverage_inventory_and_all_holds()
          "tests/accessible-names.test.mjs", "tests/mobile-compatibility.test.mjs", "tests/rendered-html.test.mjs"},
         "bef673cc4c1694f6bd1628ce7c50b75dddba35d9",
     )
-    assert TOOL.RECEIPT.name == "site-v268-accessible-names-overlay-20261118.json"
+
+
+def test_dead_controls_successor_preserves_accessible_names_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-dead-controls-overlay-20261118.json",
+        "site-v268-accessible-names-overlay-20261118.json",
+        "4a739e343fcec1d0b098603aa721997e459d880809be0185af46cb6b7f163029",
+        {"app/page.tsx", "tests/aviation.test.mjs", "tests/rendered-html.test.mjs"},
+        "1cef2d54bd6d9ce3827f0e4614f0ff440299cec2",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-dead-controls-overlay-20261118.json"

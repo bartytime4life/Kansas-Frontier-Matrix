@@ -409,7 +409,7 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   assert.match(page, /onClick=\{openMapSettings\}>Style/);
   assert.match(page, /Google Earth–inspired, KFM-governed/);
   assert.match(page, /locationCameraRedacted \|\| locationDerivedViewRef\.current/);
-  assert.match(page, /isolateLayer/);
+  assert.doesNotMatch(page, /const (isolateLayer|resetExplorer|moveLayer|applyDomainLens|copyTemporalComparison) =/, "handlers without a control are not kept");
   assert.match(css, /\.place-trail-list/);
   assert.match(css, /\.catalog-group-heading/);
 

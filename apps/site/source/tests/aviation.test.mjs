@@ -739,7 +739,8 @@ test("the aviation layer offers dossier points while shown and withdraws them wh
 
 test("Inspect on an aviation dossier record opens the aviation point inspector there", { timeout: 15_000 }, async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const handler = page.slice(page.indexOf("const inspectResearchRecord"), page.indexOf("const isolateLayer"));
+  const handler = page.slice(page.indexOf("const inspectResearchRecord"), page.indexOf("const restoreLastKnownGoodView"));
+  assert.ok(page.indexOf("const inspectResearchRecord") < page.indexOf("const restoreLastKnownGoodView"), "handler slice anchors exist in order");
   assert.ok(handler.indexOf("AVIATION_RESEARCH_SOURCE") > 0 && handler.indexOf("AVIATION_RESEARCH_SOURCE") < handler.indexOf("OFFICIAL_CONTEXT_SOURCES"),
     "aviation records are handled before the official-provider lookup that cannot find them");
   assert.match(handler, /setAviationInspect\(\{ lon, lat, label: record\.title, nonce: Date\.now\(\) \}\)/);

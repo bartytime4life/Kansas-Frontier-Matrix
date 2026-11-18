@@ -88,7 +88,6 @@ import { sameRecord, sameValues } from "./state-equality";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
-  CATEGORY_ORDER,
   findFeature,
   findLayerByRenderer,
   LAYER_REGISTRY,
@@ -108,7 +107,6 @@ import {
   BASEMAPS,
   buildMeasurementData,
   distanceMiles,
-  reorderRegistryLayers,
   setStructureExtrusions,
   setTerrainHeightOverlay as applyTerrainHeightOverlay,
   setTerrainPresentation as applyTerrainPresentation,
@@ -263,7 +261,7 @@ import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
 import { officialSourceTopics, specialtyLayerTopics, registryLayerTopics, atlasViewTopics, featureTopics, functionTopics, topicDefinition, topicSearchText, restoreTopic, imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
 import { TopicSelect, TopicGuide } from "./topic-navigation";
-import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, OFFICIAL_SOURCE_CATEGORY, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
+import { DISASTER_COVERAGE_HOLDS, OFFICIAL_SOURCE_CATEGORY, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
   clearOfficialContextFeed,
@@ -277,7 +275,6 @@ import {
   OFFICIAL_CONTEXT_PRESENT_FRAME,
   OFFICIAL_CONTEXT_SOURCES,
   OFFICIAL_CONTEXT_TEMPORAL_SUPPORT,
-  TERRAIN_DISPLAY_MIN_ZOOM,
   commitNoaaRadarObservationTime,
   discardNoaaRadarStagedFrame,
   noaaRadarObservationTimeIsApplied,
@@ -556,32 +553,7 @@ const BASEMAP_CONTEXT_LAYER: LayerRecord = {
   renderers: [],
 };
 
-const DOMAIN_HOLDS = Object.freeze([
-  { domain: "Soil", state: "HELD", detail: "No admitted public-safe soil adapter is connected in this Site." },
-  { domain: "Weather", state: "PUBLIC-SAFE", detail: "NWS alert areas and a time-enabled NOAA radar loop are available as optional official operational context; they are not admitted evidence, forecasts, or an all-clear." },
-  { domain: "Smoke", state: "PUBLIC-SAFE", detail: "NOAA HMS satellite-analyzed smoke footprints are available as bounded external context; synthetic smoke, model transport, surface PM2.5, fire perimeters, and advisories remain separate." },
-  { domain: "Air Quality", state: "HELD", detail: "No governed air-quality source, freshness contract, or public-safe release is connected." },
-  { domain: "Natural Resources", state: "HELD", detail: "No public-safe resource inventory or rights-cleared layer is connected." },
-  { domain: "Roads", state: "PUBLIC-SAFE", detail: "Real road context is available through the external vector basemap; KFM road evidence remains generalized." },
-  { domain: "Rail", state: "PUBLIC-SAFE", detail: "Real rail context is available through the external vector basemap; KFM rail evidence remains generalized." },
-  { domain: "Trade Routes", state: "HELD", detail: "No admitted historical trade-route source is connected." },
-  { domain: "Cities", state: "PUBLIC-SAFE", detail: "City labels are available from the external vector basemap; KFM place fixtures remain explicit." },
-  { domain: "Infrastructure", state: "HELD", detail: "No governed asset inventory or rights-cleared infrastructure layer is connected." },
-  { domain: "Archaeology", state: "RESTRICTED", detail: "No precise archaeology layer is exposed; generalized story seams remain the safe extension point." },
-  { domain: "Historical Geography", state: "HELD", detail: "No admitted historical boundary or archival map layer is connected." },
-  { domain: "People / Land", state: "RESTRICTED", detail: "The Site does not expose person-level, parcel-level, or sensitive land detail." },
-  { domain: "Terrain / Elevation", state: "PUBLIC-SAFE", detail: "External DEM terrain plus optional USGS 3DEP mosaic hillshade and slope are display context only; raw point clouds and governed KFM elevation evidence remain held." },
-  { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
-] as const);
 
-const officialContextStateLabel = (state: OfficialContextState) => ({
-  idle: "NOT LOADED",
-  loading: "LOADING",
-  ready: "READY",
-  empty: "NO RESULTS",
-  partial: "PARTIAL",
-  error: "UNAVAILABLE",
-}[state]);
 
 // Open on Kansas Overview: a paused, north-up 2D statewide orientation.
 // Terrain, globe, and local investigation cameras remain explicit actions.
@@ -628,14 +600,6 @@ const officialContextRuntimeVisibility = (
 };
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
-const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
-const DOMAIN_LIVE_CONTEXT: Readonly<Partial<Record<(typeof layerDomains)[number], readonly OfficialContextId[]>>> = Object.freeze({
-  Fire: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke"] as const),
-  Hydrology: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds"] as const),
-  Geology: Object.freeze(["usgs-earthquakes"] as const),
-  Atmosphere: Object.freeze(["noaa-hms-smoke", "nws-forecast-wind"] as const),
-});
-const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const FOCUSABLE_SELECTOR = "button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, a[href], [tabindex]:not([tabindex='-1'])";
 const visibleFocusableElements = (container: HTMLElement) => Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) => {
   if (!(element.tabIndex >= 0 && !element.closest("[hidden], [inert]") && element.getClientRects().length > 0)) return false;
@@ -1381,7 +1345,7 @@ export default function Home() {
   const [officialArchiveDays, setOfficialArchiveDays] = useState<Partial<Record<OfficialContextFeedId, string>>>({});
   const [officialArchiveDraftDays, setOfficialArchiveDraftDays] = useState<Partial<Record<OfficialContextFeedId, string>>>(() => ({ "noaa-hms-smoke": currentUtcDay() }));
   const [earthquakeArchiveFrameIndex, setEarthquakeArchiveFrameIndex] = useState(-1);
-  const [smokeArchiveFrameIndex, setSmokeArchiveFrameIndex] = useState(-1);
+  const [, setSmokeArchiveFrameIndex] = useState(-1);
   const [officialErrors, setOfficialErrors] = useState<Partial<Record<OfficialContextId, string>>>({});
   const [noaaRadarManifestState, setNoaaRadarManifestState] = useState<NoaaRadarManifestState>("idle");
   const [noaaRadarManifest, setNoaaRadarManifest] = useState<NoaaRadarManifest | null>(null);
@@ -1580,9 +1544,7 @@ export default function Home() {
   const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
   const [atlasTopic, setAtlasTopic] = useState<LayerWorkspace>("all");
-  const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
   const [globalQuery, setGlobalQuery] = useState("");
-  const [expandedLayers, setExpandedLayers] = useState<Set<string>>(new Set());
   const [year, setYear] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
   const [previewYear, setPreviewYear] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
   const [baselineDay, setBaselineDay] = useState(currentUtcDay);
@@ -1983,11 +1945,6 @@ export default function Home() {
     if (!day || !payload) return [];
     return earthquakeEventTimes(payload, day);
   }, [officialArchiveDays, officialPayloads]);
-  const smokeArchiveFrames = useMemo(() => {
-    const day = officialArchiveDays["noaa-hms-smoke"];
-    const payload = officialArchivePayloadsRef.current["noaa-hms-smoke"];
-    return day && payload ? smokeValidityTimes(payload, day) : [];
-  }, [officialArchiveDays, officialPayloads]);
   const streamflowFrames = useMemo(() => streamflowBundle
     ? streamflowArchiveDay ? streamflowExactFrames(streamflowBundle) : streamflowDisplayFrames(streamflowBundle)
     : [], [streamflowArchiveDay, streamflowBundle]);
@@ -2149,14 +2106,6 @@ export default function Home() {
       ? "Globe"
       : "2D";
   const mapRepresentationLabel = `${primaryRepresentationLabel}${structures3DEnabled ? ` · Structures 3D ${structures3DState === "READY" ? "ready" : structures3DState.toLowerCase()}` : ""}`;
-  const temporalComparison = useMemo(
-    () => buildTemporalComparison(activeLayers, compareTimeA, compareTimeB),
-    [activeLayers, compareTimeA, compareTimeB],
-  );
-  const temporalComparisonRows = useMemo(
-    () => temporalComparison.layers.filter((layer) => layer.timeARecordCount > 0 || layer.timeBRecordCount > 0),
-    [temporalComparison],
-  );
   const temporalNoData = useMemo(() => activeLayers.filter((layer) => layer.temporal && !layer.data.features.some((feature) => (
     isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
   ))), [activeLayers, temporalQuery]);
@@ -2403,10 +2352,6 @@ export default function Home() {
       ))
       .filter(({ layer, feature }) => !query || `${feature.properties.title} ${feature.properties.fid} ${feature.properties.evidenceState} ${layer.title}`.toLowerCase().includes(query));
   }, [inspectViewportOnly, inspectVisibleLayersOnly, mapEvidenceFilter, mapFeatureLayer, mapFeatureQuery, mapViewportBounds, temporalQuery, visibility]);
-  const mapCompatibleFeatureCount = useMemo(() => LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
-    isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
-    && (mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter)
-  )).length, 0), [mapEvidenceFilter, temporalQuery]);
   const nearbyContext = useMemo(() => {
     if (!selected || selectedTimeMismatch) return [];
     return LAYER_REGISTRY
@@ -2571,13 +2516,6 @@ export default function Home() {
       `${reportTemporalComparison.changedLayerCount} included layer${reportTemporalComparison.changedLayerCount === 1 ? " changes" : "s change"} catalog availability between ${formatTimelineStep(compareTimeA)} and ${formatTimelineStep(compareTimeB)}. This is fixture availability under declared temporal rules, not observed change or imagery analysis.`,
     ];
   }, [compareTimeA, compareTimeB, reportEvidenceCounts, reportLayerSummary, reportRecords.length, reportScope, reportTemporalComparison.changedLayerCount, temporalScopeLabel]);
-  const filteredLayerIds = useMemo(() => {
-    const query = debouncedLayerQuery.trim().toLowerCase();
-    return new Set(LAYER_REGISTRY.filter((layer) => {
-      const matchesQuery = !query || `${layer.title} ${layer.description} ${layer.category} ${layer.datasetName} ${layer.domain}`.toLowerCase().includes(query);
-      return matchesQuery;
-    }).map((layer) => layer.id));
-  }, [debouncedLayerQuery]);
   const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, "")
     .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
   // One Set per render keeps each of the ~60 source rows an O(1) membership check.
@@ -3748,15 +3686,6 @@ export default function Home() {
     setEarthquakeArchiveFrameIndex(index);
   }, [earthquakeArchiveFrames]);
 
-  const seekSmokeArchiveFrame = useCallback((index: number) => {
-    const day = officialArchiveDaysRef.current["noaa-hms-smoke"];
-    const original = officialArchivePayloadsRef.current["noaa-hms-smoke"];
-    const cursor = smokeArchiveFrames[index];
-    if (!day || !original || !cursor) return;
-    officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": smokeValidAt(original, day, cursor) };
-    setOfficialPayloads(officialPayloadsRef.current);
-    setSmokeArchiveFrameIndex(index);
-  }, [smokeArchiveFrames]);
 
   const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
     if (id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope") {
@@ -3864,23 +3793,6 @@ export default function Home() {
     announce(`Retrying ${source.shortTitle}`);
   };
 
-  const applyDomainLens = useCallback((domain: (typeof layerDomains)[number]) => {
-    setLayerDomain(domain);
-    if (domain === "ALL") {
-      announce("Domain lens cleared; the current map layers remain unchanged");
-      return;
-    }
-    const layerIds = LAYER_REGISTRY.filter((layer) => layer.domain === domain).map((layer) => layer.id);
-    setVisibility((current) => {
-      const next = { ...current };
-      layerIds.forEach((id) => { next[id] = true; });
-      visibilityRef.current = next;
-      return next;
-    });
-    (DOMAIN_LIVE_CONTEXT[domain] ?? []).forEach((id) => setOfficialContextVisible(id, true));
-    const liveDetail = (DOMAIN_LIVE_CONTEXT[domain] ?? []).length ? " and matched live context" : "";
-    announce(`${domain} lens added ${layerIds.length} historical layer${layerIds.length === 1 ? "" : "s"}${liveDetail}; other map layers remain available`);
-  }, [announce, setOfficialContextVisible]);
 
   const setOfficialContextOpacity = useCallback((id: OfficialContextId, value: number) => {
     const next = { ...officialOpacityRef.current, [id]: clamp(value, 0, 1) };
@@ -4232,21 +4144,7 @@ export default function Home() {
     if (notify && cancel) announce("Flyover stopped · you have the camera");
   }, [announce]);
 
-  const applyComparisonTime = useCallback((nextYear: number, label: "A" | "B") => {
-    setPlaying(false);
-    setTemporalMode("snapshot");
-    commitTemporalFrame(nextYear);
-    announce(`Applied Time ${label}: ${formatTimelineStep(nextYear)} to the map`);
-  }, [announce, commitTemporalFrame]);
 
-  const copyTemporalComparison = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(JSON.stringify(temporalComparison, null, 2));
-      announce("Time A / Time B catalog comparison copied with no public effect");
-    } catch {
-      announce("Clipboard access was blocked; the temporal comparison stayed in the browser");
-    }
-  }, [announce, temporalComparison]);
 
   const activateDrawerView = useCallback((nextView: DrawerView, focusTab = false) => {
     setDrawerView(nextView);
@@ -7480,17 +7378,6 @@ export default function Home() {
     openMapUtility("inspect", returnElement);
   };
 
-  const moveLayer = (layerId: string, direction: -1 | 1) => {
-    setLayerOrder((current) => {
-      const next = [...current];
-      const index = next.indexOf(layerId);
-      const target = index + direction;
-      if (index < 0 || target < 0 || target >= next.length) return current;
-      [next[index], next[target]] = [next[target], next[index]];
-      if (mapRef.current?.isStyleLoaded()) reorderRegistryLayers(mapRef.current, next);
-      return next;
-    });
-  };
 
   const selectIndexedFeature = (layerId: string, featureId: string) => {
     mapUtilityReturnRef.current = null;
@@ -8346,11 +8233,6 @@ export default function Home() {
     announce(`${snapshot.name} removed from this device`);
   };
 
-  const updateMapEvidenceFilter = (nextFilter: RegistryEvidenceFilter) => {
-    mapEvidenceFilterRef.current = nextFilter;
-    setMapEvidenceFilter(nextFilter);
-    announce(nextFilter === "ALL" ? "Showing every compatible evidence state" : `Map filtered to ${nextFilter.replaceAll("_", " ")}`);
-  };
 
   const openResearchDossier = (replaceAnchor = false, returnElement?: HTMLElement) => {
     const anchor = chooseResearchAnchor(researchAnchor, selectedResearchRecord, replaceAnchor);
@@ -8423,12 +8305,6 @@ export default function Home() {
     return () => window.cancelAnimationFrame(frame);
   }, [researchOpen, rightOpen]);
 
-  const isolateLayer = (layer: LayerRecord) => {
-    const next = Object.fromEntries(LAYER_REGISTRY.map((candidate) => [candidate.id, candidate.id === layer.id]));
-    visibilityRef.current = next;
-    setVisibility(next);
-    announce(`${layer.title} isolated on the map`);
-  };
 
   const restoreLastKnownGoodView = () => {
     const lastView = lastKnownGoodViewRef.current;
@@ -8480,125 +8356,6 @@ export default function Home() {
     }
   };
 
-  const resetExplorer = () => {
-    const map = mapRef.current;
-    visibilityRef.current = defaultVisibility;
-    opacityRef.current = defaultOpacity;
-    officialVisibilityRef.current = defaultOfficialVisibility;
-    officialOpacityRef.current = defaultOfficialOpacity;
-    orderRef.current = defaultOrder;
-    yearRef.current = OFFICIAL_CONTEXT_PRESENT_FRAME;
-    mapEvidenceFilterRef.current = "ALL";
-    basemapRef.current = "standard";
-    projectionRef.current = "mercator";
-    scenePresetRef.current = "overview-2d";
-    verticalExaggerationRef.current = 1;
-    topographicOverlayRef.current = false;
-    atmospherePresetRef.current = "night";
-    lightAzimuthRef.current = 210;
-    fieldOfViewRef.current = 36;
-    structures3DRef.current = false;
-    gestureModeRef.current = "cooperative";
-    setVisibility(defaultVisibility);
-    setOpacity(defaultOpacity);
-    setOfficialVisibility(defaultOfficialVisibility);
-    setOfficialOpacity(defaultOfficialOpacity);
-    setOfficialErrors({});
-    noaaRadarRequestRef.current?.abort();
-    noaaRadarRequestRef.current = null;
-    noaaRadarLastRequestAtRef.current = 0;
-    noaaRadarReadyRef.current = false;
-    noaaRadarManifestRef.current = null;
-    noaaRadarFrameTimeRef.current = null;
-    noaaRadarPendingFrameTimeRef.current = null;
-    noaaRadarRequestedTimeRef.current = null;
-    noaaRadarFollowLatestRef.current = true;
-    noaaRadarFrameLoadCleanupRef.current?.();
-    noaaRadarFrameLoadCleanupRef.current = null;
-    noaaRadarFrameFailureRef.current = null;
-    setNoaaRadarManifestState("idle");
-    setNoaaRadarManifest(null);
-    setNoaaRadarManifestError("");
-    setNoaaRadarFrameTime(null);
-    setNoaaRadarPendingFrameTime(null);
-    setNoaaRadarLoopSpan(60);
-    setNoaaRadarPlaybackSpeed(1);
-    setNoaaRadarPlaying(false);
-    setNoaaRadarFollowLatest(true);
-    setNoaaRadarFrameLoadState("idle");
-    for (const source of OFFICIAL_CONTEXT_SOURCES) {
-      if (source.defaultVisibility && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
-    }
-    setLayerOrder(defaultOrder);
-    setYear(OFFICIAL_CONTEXT_PRESENT_FRAME);
-    setPreviewYear(OFFICIAL_CONTEXT_PRESENT_FRAME);
-    setTemporalMode("snapshot");
-    setTemporalStepRule("regular-calendar");
-    setPlaybackSpeed(1);
-    setPlaybackDirection("forward");
-    setPlaybackLoopMode("stop");
-    setSweepRangeStart(TIME_STEPS[0]);
-    setSweepRangeEnd(TIME_STEPS.at(-1)!);
-    setMovingWindowFrames(3);
-    setPlaying(false);
-    setDynamicEffects(true);
-    setMapEvidenceFilter("ALL");
-    setCompareTimeA(1910);
-    setCompareTimeB(OFFICIAL_CONTEXT_PRESENT_FRAME);
-    setBasemap("standard");
-    setProjection("mercator");
-    setScenePreset("overview-2d");
-    setVerticalExaggeration(1);
-    setTopographicOverlay(false);
-    setTerrainState("OFF");
-    setAtmospherePreset("night");
-    setLightAzimuth(210);
-    setFieldOfView(36);
-    setStructures3DEnabled(false);
-    setStructures3DState("OFF");
-    setGestureMode("cooperative");
-    stopSceneOrbit(false);
-    setMeasureMode(null);
-    setMeasurementGeometryMode(null);
-    measureModeRef.current = null;
-    measurementGeometryModeRef.current = null;
-    measureCoordinatesRef.current = [];
-    setMeasureCoordinateCount(0);
-    setMeasurement("Select a measurement tool");
-    mapRef.current?.doubleClickZoom.enable();
-    locationDerivedViewRef.current = false;
-    setLocationCameraRedacted(false);
-    replayingCameraHistoryRef.current = true;
-    cameraHistoryRef.current = [KANSAS_VIEW];
-    cameraHistoryIndexRef.current = 0;
-    setCameraHistoryIndex(0);
-    setCameraHistoryLength(1);
-    map?.stop();
-    if (map?.isStyleLoaded()) {
-      setTerrainState(setTerrainPresentation(map, false, 1));
-      setTerrainHeightOverlay(map, false);
-      setStructureExtrusions(map, false);
-      map.setProjection({ type: "mercator" });
-      applySceneEnvironment(map, "night", 210);
-      map.setVerticalFieldOfView(36);
-      map.triggerRepaint();
-      updateMeasurementSource(map, buildMeasurementData([], null));
-    }
-    map?.jumpTo(KANSAS_VIEW);
-    analysisAreaRef.current = null;
-    setAnalysisArea(null);
-    if (mapRef.current?.isStyleLoaded()) updateAnalysisAreaSource(mapRef.current, null);
-    clearSelection();
-    setMapQueryCandidates([]);
-    setReportTitle("Kansas map data report");
-    setReportScope("VIEWPORT");
-    setReportDetail("STANDARD");
-    setReportLayerIds([...defaultReportLayerIds]);
-    setReportSections(defaultReportSections);
-    setReportQuery("");
-    setReportEvidenceFilter("ALL");
-    announce("Explorer reset to the Kansas overview");
-  };
 
   const toggleMeasure = (mode: Exclude<MeasureMode, null>) => {
     setTerrainProfile([]);
