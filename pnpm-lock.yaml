@@ -10,6 +10,9 @@ overrides:
   source-map-js: 1.2.2
   vite: 8.3.3
 
+patchedDependencies:
+  picomatch@4.0.7: 324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae
+
 importers:
 
   .: {}
@@ -969,9 +972,9 @@ snapshots:
 
   expect-type@1.4.0: {}
 
-  fdir@6.5.0(picomatch@4.0.7):
+  fdir@6.5.0(picomatch@4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae)):
     optionalDependencies:
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae)
 
   fsevents@2.3.3:
     optional: true
@@ -1073,7 +1076,7 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@4.0.7: {}
+  picomatch@4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae): {}
 
   postcss@8.5.28:
     dependencies:
@@ -1141,8 +1144,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
+      fdir: 6.5.0(picomatch@4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae))
+      picomatch: 4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae)
 
   tinyqueue@3.0.0: {}
 
@@ -1159,7 +1162,7 @@ snapshots:
   vite@8.3.3(@types/node@26.6.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.12):
     dependencies:
       lightningcss: 1.33.0
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae)
       postcss: 8.5.28
       rolldown: 1.2.13
       tinyglobby: 0.2.17
@@ -1180,7 +1183,7 @@ snapshots:
       expect-type: 1.4.0
       magic-string: 1.4.5
       obug: 3.0.0
-      picomatch: 4.0.7
+      picomatch: 4.0.7(patch_hash=324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae)
       std-env: 4.3.0
       tinybench: 6.2.3
       tinyexec: 1.3.1

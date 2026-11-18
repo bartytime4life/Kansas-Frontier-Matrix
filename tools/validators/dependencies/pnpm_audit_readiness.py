@@ -9,9 +9,11 @@ registry or command failures cannot be mistaken for a clean dependency result.
 from __future__ import annotations
 
 import argparse
+import datetime
+import hashlib
 import json
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Sequence
 
 EXIT_PASS = 0
@@ -37,6 +39,27 @@ COMPETING_LOCKFILES = (
     "bun.lockb",
 )
 WORKSPACE_PATTERN_RE = re.compile(r"^[A-Za-z0-9._-]+/\*$")
+EXCEPTION_REGISTER = "dependency_audit_exceptions"
+EXCEPTION_KEYS = frozenset(
+    {
+        "advisory",
+        "package",
+        "version",
+        "patch_path",
+        "patch_sha256",
+        "upstream_fix",
+        "reason",
+        "recorded_on",
+        "expires_on",
+        "human_review",
+    }
+)
+MAX_EXCEPTIONS = 10
+MAX_EXCEPTION_DAYS = 184
+GHSA_RE = re.compile(r"GHSA(?:-[23456789cfghjmpqrvwx]{4}){3}")
+PACKAGE_NAME_RE = re.compile(r"(?:@[a-z0-9._-]+/)?[a-z0-9._-]+")
+EXACT_VERSION_RE = re.compile(r"\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?")
+SHA256_RE = re.compile(r"[0-9a-f]{64}")
 LOCKFILE_IMPORTER_RE = re.compile(r"^  (?P<key>[^ \t:#][^:]*):(?:\s.*)?$")
 
 
@@ -738,16 +761,209 @@ def _legacy_threshold_advisory_projection(
     }
 
 
+def _parse_iso_day(value: Any) -> datetime.date | None:
+    if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        return None
+    try:
+        return datetime.date.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def _lockfile_package_versions(lockfile_text: str, package: str) -> set[str]:
+    """Exact versions of ``package`` keyed in the lockfile packages/snapshots maps."""
+
+    pattern = re.compile(
+        rf"^  '?{re.escape(package)}@(?P<version>[^:(\s']+)", re.MULTILINE
+    )
+    return {match.group("version") for match in pattern.finditer(lockfile_text)}
+
+
+def load_audit_exceptions(
+    register_path: Path | str,
+    repository_root: Path | str,
+    *,
+    today: datetime.date | None = None,
+    findings: list[dict[str, str]],
+) -> list[dict[str, str]] | None:
+    """Load reviewed exceptions bound to an in-tree patch; invalid registers fail closed.
+
+    An exception names one advisory for one exact locked package version. It is
+    accepted only while unexpired, while its patch file hashes to the recorded
+    digest, while ``pnpm-lock.yaml`` applies that patch hash to that version,
+    and while no other version of the package is locked.
+    """
+
+    root = Path(repository_root)
+    today = today or datetime.datetime.now(datetime.timezone.utc).date()
+    register_text = _read_text_file(
+        Path(register_path),
+        missing_code="AUDIT_EXCEPTIONS_MISSING",
+        unsafe_code="AUDIT_EXCEPTIONS_UNSAFE",
+        invalid_code="AUDIT_EXCEPTIONS_INVALID",
+        findings=findings,
+    )
+    register = _load_json_object(
+        register_text,
+        label="audit exception register",
+        invalid_code="AUDIT_EXCEPTIONS_INVALID",
+        findings=findings,
+    )
+    lockfile_text = _read_text_file(
+        root / "pnpm-lock.yaml",
+        missing_code="AUDIT_EXCEPTIONS_LOCKFILE_MISSING",
+        unsafe_code="AUDIT_EXCEPTIONS_LOCKFILE_UNSAFE",
+        invalid_code="AUDIT_EXCEPTIONS_LOCKFILE_INVALID",
+        findings=findings,
+    )
+    if register is None or lockfile_text is None:
+        return None
+
+    def invalid(message: str) -> None:
+        findings.append(_finding("AUDIT_EXCEPTIONS_INVALID", message))
+
+    entries = register.get("exceptions")
+    if register.get("register") != EXCEPTION_REGISTER or register.get("version") != "v1":
+        invalid("register identity must be dependency_audit_exceptions v1")
+        return None
+    if not isinstance(entries, list) or len(entries) > MAX_EXCEPTIONS:
+        invalid(f"exceptions must be a list of at most {MAX_EXCEPTIONS} entries")
+        return None
+
+    accepted: list[dict[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    before = len(findings)
+    for index, entry in enumerate(entries):
+        label = f"exception {index}"
+        if not isinstance(entry, dict) or set(entry) != EXCEPTION_KEYS:
+            invalid(f"{label} must contain exactly the documented keys")
+            continue
+        advisory, package, version = entry["advisory"], entry["package"], entry["version"]
+        patch_path, patch_sha256 = entry["patch_path"], entry["patch_sha256"]
+        if not isinstance(advisory, str) or not GHSA_RE.fullmatch(advisory):
+            invalid(f"{label} advisory must be one GHSA identifier")
+            continue
+        if not isinstance(package, str) or not PACKAGE_NAME_RE.fullmatch(package):
+            invalid(f"{label} package name is invalid")
+            continue
+        if not isinstance(version, str) or not EXACT_VERSION_RE.fullmatch(version):
+            invalid(f"{label} version must be one exact version")
+            continue
+        if (advisory, package) in seen:
+            invalid(f"{label} duplicates an earlier advisory/package pair")
+            continue
+        seen.add((advisory, package))
+        for text_key in ("upstream_fix", "reason", "human_review"):
+            if _bounded_audit_text(entry[text_key]) is None:
+                invalid(f"{label} {text_key} must be bounded non-empty text")
+        if not str(entry["upstream_fix"]).startswith("https://"):
+            invalid(f"{label} upstream_fix must be an https reference")
+        recorded_on = _parse_iso_day(entry["recorded_on"])
+        expires_on = _parse_iso_day(entry["expires_on"])
+        if recorded_on is None or expires_on is None:
+            invalid(f"{label} dates must be ISO calendar days")
+            continue
+        if not recorded_on <= expires_on or (expires_on - recorded_on).days > MAX_EXCEPTION_DAYS:
+            invalid(f"{label} must expire within {MAX_EXCEPTION_DAYS} days of being recorded")
+            continue
+        if today > expires_on:
+            findings.append(
+                _finding("AUDIT_EXCEPTION_EXPIRED", f"{label} for {advisory} expired on {expires_on}")
+            )
+            continue
+        if not isinstance(patch_sha256, str) or not SHA256_RE.fullmatch(patch_sha256):
+            invalid(f"{label} patch_sha256 must be a lowercase SHA-256 digest")
+            continue
+        relative = PurePosixPath(patch_path) if isinstance(patch_path, str) else None
+        if (
+            relative is None
+            or relative.is_absolute()
+            or ".." in relative.parts
+            or str(relative) != patch_path
+            or not patch_path.endswith(".patch")
+        ):
+            invalid(f"{label} patch_path must be a repository-relative .patch file")
+            continue
+        patch_file = root.joinpath(*relative.parts)
+        if any(part.is_symlink() for part in (patch_file, *patch_file.parents)) or not patch_file.is_file():
+            invalid(f"{label} patch file is missing or unsafe")
+            continue
+        if hashlib.sha256(patch_file.read_bytes()).hexdigest() != patch_sha256:
+            invalid(f"{label} patch file does not match patch_sha256")
+            continue
+        applied = re.search(
+            rf"^patchedDependencies:\n(?:  .*\n)*?  '?{re.escape(package)}@{re.escape(version)}'?: {patch_sha256}$",
+            lockfile_text,
+            re.MULTILINE,
+        )
+        if applied is None:
+            invalid(f"{label} lockfile does not apply this patch hash to {package}@{version}")
+            continue
+        locked = _lockfile_package_versions(lockfile_text, package)
+        if locked != {version}:
+            invalid(f"{label} lockfile must lock only {package}@{version}")
+            continue
+        accepted.append(
+            {
+                "advisory": advisory,
+                "package": package,
+                "version": version,
+                "expires_on": expires_on.isoformat(),
+            }
+        )
+    if len(findings) != before:
+        return None
+    return accepted
+
+
+def _legacy_threshold_records(
+    report: dict[str, Any], audit_level: str
+) -> list[dict[str, Any]] | None:
+    """Legacy advisories at or above threshold with their locked finding versions."""
+
+    raw_advisories = report.get("advisories")
+    threshold_index = SEVERITY_INDEX.get(audit_level)
+    if not isinstance(raw_advisories, dict) or threshold_index is None:
+        return None
+    records: list[dict[str, Any]] = []
+    for advisory_key, raw_entry in raw_advisories.items():
+        if not isinstance(raw_entry, dict) or raw_entry.get("severity") not in SEVERITIES:
+            return None
+        if SEVERITY_INDEX[raw_entry["severity"]] < threshold_index:
+            continue
+        raw_findings = raw_entry.get("findings")
+        versions = (
+            {item.get("version") for item in raw_findings if isinstance(item, dict)}
+            if isinstance(raw_findings, list)
+            else set()
+        )
+        records.append(
+            {
+                "package": raw_entry.get("module_name"),
+                "advisory_ids": {str(advisory_key), str(raw_entry.get("github_advisory_id"))},
+                "versions": versions,
+            }
+        )
+    return records
+
+
 def classify_audit(
     report_path: Path | str,
     *,
     command_exit_code: int,
     audit_level: str,
     manager: str = "pnpm",
+    exceptions: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
-    """Classify an npm-compatible JSON audit as PASS, REGRESSION, or ERROR."""
+    """Classify an npm-compatible JSON audit as PASS, REGRESSION, or ERROR.
+
+    ``exceptions`` come from :func:`load_audit_exceptions`. A threshold finding
+    is excepted only when its package, advisory and every locked finding
+    version match one exception exactly; any other finding keeps its polarity.
+    """
 
     findings: list[dict[str, str]] = []
+    excepted: list[dict[str, str]] = []
     if manager not in AUDIT_MANAGERS:
         findings.append(
             _finding("AUDIT_MANAGER_INVALID", f"unsupported audit manager: {manager}")
@@ -814,30 +1030,64 @@ def classify_audit(
             and threshold_vulnerabilities["total"] != threshold_count
         ):
             threshold_vulnerabilities["status"] = "COUNT_MISMATCH"
-        if command_exit_code == 0 and threshold_count == 0:
-            outcome = "PASS"
-        elif command_exit_code == 1 and threshold_count > 0:
-            outcome = "REGRESSION"
-            findings.append(
-                _finding(
-                    "VULNERABILITY_THRESHOLD_EXCEEDED",
-                    f"{threshold_count} vulnerabilities at or above {audit_level}",
-                )
+        if exceptions and command_exit_code == 1 and threshold_count > 0:
+            records = _legacy_threshold_records(raw_report, audit_level)
+            attributable = (
+                records is not None
+                and len(records) == threshold_count
+                and threshold_vulnerabilities["status"] == "PRESENT"
+                and not threshold_vulnerabilities["truncated"]
             )
-        elif command_exit_code == 0:
-            findings.append(
-                _finding(
-                    "AUDIT_EXIT_CODE_INCONSISTENT",
-                    "audit command succeeded despite threshold findings",
+            if attributable:
+                for record in records:
+                    match = next(
+                        (
+                            exception
+                            for exception in exceptions
+                            if record["package"] == exception["package"]
+                            and exception["advisory"] in record["advisory_ids"]
+                            and record["versions"] == {exception["version"]}
+                        ),
+                        None,
+                    )
+                    if match is not None:
+                        excepted.append(match)
+            if attributable and len(excepted) == threshold_count:
+                outcome = "PASS"
+            elif excepted:
+                findings.append(
+                    _finding(
+                        "VULNERABILITY_THRESHOLD_EXCEEDED",
+                        f"{threshold_count - len(excepted)} vulnerabilities at or above {audit_level} "
+                        f"after {len(excepted)} reviewed exceptions",
+                    )
                 )
-            )
-        else:
-            findings.append(
-                _finding(
-                    "AUDIT_COMMAND_FAILED",
-                    "audit command failed without threshold vulnerability findings",
+                outcome = "REGRESSION"
+        if outcome == "ERROR":
+            if command_exit_code == 0 and threshold_count == 0:
+                outcome = "PASS"
+            elif command_exit_code == 1 and threshold_count > 0:
+                outcome = "REGRESSION"
+                findings.append(
+                    _finding(
+                        "VULNERABILITY_THRESHOLD_EXCEEDED",
+                        f"{threshold_count} vulnerabilities at or above {audit_level}",
+                    )
                 )
-            )
+            elif command_exit_code == 0:
+                findings.append(
+                    _finding(
+                        "AUDIT_EXIT_CODE_INCONSISTENT",
+                        "audit command succeeded despite threshold findings",
+                    )
+                )
+            else:
+                findings.append(
+                    _finding(
+                        "AUDIT_COMMAND_FAILED",
+                        "audit command failed without threshold vulnerability findings",
+                    )
+                )
 
     return _finalize_report(
         (
@@ -853,6 +1103,8 @@ def classify_audit(
         threshold_count=threshold_count,
         threshold_vulnerabilities=threshold_vulnerabilities,
         vulnerability_counts=counts,
+        **({"excepted_vulnerabilities": sorted(excepted, key=lambda item: item["advisory"])}
+           if exceptions is not None else {}),
     )
 
 
@@ -876,6 +1128,15 @@ def _parser() -> argparse.ArgumentParser:
     classify.add_argument("--command-exit-code", required=True, type=int)
     classify.add_argument("--audit-level", default="high", choices=AUDIT_LEVELS)
     classify.add_argument("--manager", default="pnpm", choices=AUDIT_MANAGERS)
+    classify.add_argument(
+        "--exceptions",
+        help="reviewed exception register bound to in-tree dependency patches",
+    )
+    classify.add_argument(
+        "--repository-root",
+        default=".",
+        help="repository root used to verify exception patch and lockfile bindings",
+    )
     return parser
 
 
@@ -884,11 +1145,29 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "validate-repository":
         report = validate_repository(args.repository_root)
     else:
+        exceptions = None
+        if args.exceptions is not None:
+            exception_findings: list[dict[str, str]] = []
+            exceptions = load_audit_exceptions(
+                args.exceptions, args.repository_root, findings=exception_findings
+            )
+            if exceptions is None:
+                report = _finalize_report(
+                    f"{args.manager}_audit_result",
+                    "ERROR",
+                    exception_findings,
+                    manager=args.manager,
+                    audit_level=args.audit_level,
+                    command_exit_code=args.command_exit_code,
+                )
+                print(render_report(report))
+                return EXIT_ERROR
         report = classify_audit(
             args.report,
             command_exit_code=args.command_exit_code,
             audit_level=args.audit_level,
             manager=args.manager,
+            exceptions=exceptions,
         )
     print(render_report(report))
     if report["outcome"] == "PASS":

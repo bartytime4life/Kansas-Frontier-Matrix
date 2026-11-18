@@ -1,0 +1,18 @@
+{
+  "register": "dependency_audit_exceptions",
+  "version": "v1",
+  "exceptions": [
+    {
+      "advisory": "GHSA-fc5q-39xc-vjpf",
+      "package": "picomatch",
+      "version": "4.0.7",
+      "patch_path": "configs/dependency-patches/picomatch-4.0.7.patch",
+      "patch_sha256": "324f9e493727b0dfecf26d0471726ba56295e4cfb2a3a074d4c261bf08cf77ae",
+      "upstream_fix": "https://github.com/micromatch/picomatch/pull/264",
+      "reason": "No patched picomatch release exists; the locked 4.0.7 used by vite/vitest carries the upstream fix in-tree and its regression test passes.",
+      "recorded_on": "2026-11-18",
+      "expires_on": "2027-02-18",
+      "human_review": "pending"
+    }
+  ]
+}

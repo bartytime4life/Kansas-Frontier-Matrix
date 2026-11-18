@@ -10,6 +10,7 @@ from tools.validators.dependencies.pnpm_audit_readiness import (
     EXIT_PASS,
     EXIT_REGRESSION,
     classify_audit,
+    load_audit_exceptions,
     main,
     render_report,
     validate_repository,
@@ -314,6 +315,7 @@ def test_dependency_workflow_audits_remaining_locked_node_graph() -> None:
 
     assert 'pnpm audit \\' in workflow
     assert '--manager "pnpm"' in workflow
+    assert "--exceptions configs/dependency-patches/audit-exceptions.json" in workflow
     assert 'apps/kansas-frontier-matrix-explorer' not in workflow
 
 
@@ -588,3 +590,161 @@ def test_cli_exit_polarity_and_json_output(
     )
     error = json.loads(capsys.readouterr().out)
     assert error["outcome"] == "ERROR"
+
+
+PICOMATCH_GHSA = "GHSA-fc5q-39xc-vjpf"
+
+
+def _picomatch_advisory(version: str = "4.0.7", **extra: object) -> dict[str, object]:
+    return {
+        "1247710": {
+            "module_name": "picomatch",
+            "severity": "high",
+            "github_advisory_id": PICOMATCH_GHSA,
+            "findings": [{"version": version, "paths": ["packages__maplibre>vitest>picomatch"]}],
+        },
+        **extra,
+    }
+
+
+def _exception_repository(
+    root: Path,
+    *,
+    patch_text: str = "diff --git a/lib/parse.js b/lib/parse.js\n",
+    lock_hash: str | None = None,
+    extra_lock_version: bool = False,
+    **entry_changes: object,
+) -> Path:
+    import hashlib
+
+    patch = root / "configs/dependency-patches/picomatch-4.0.7.patch"
+    patch.parent.mkdir(parents=True, exist_ok=True)
+    patch.write_text(patch_text, encoding="utf-8")
+    digest = hashlib.sha256(patch.read_bytes()).hexdigest()
+    lock_hash = lock_hash or digest
+    (root / "pnpm-lock.yaml").write_text(
+        "lockfileVersion: '9.0'\n\n"
+        "patchedDependencies:\n"
+        f"  picomatch@4.0.7: {lock_hash}\n\n"
+        "packages:\n\n"
+        "  picomatch@4.0.7:\n    resolution: {integrity: sha512-x}\n\n"
+        + ("  picomatch@2.3.1:\n    resolution: {integrity: sha512-y}\n\n" if extra_lock_version else "")
+        + f"snapshots:\n\n  picomatch@4.0.7(patch_hash={lock_hash}): {{}}\n",
+        encoding="utf-8",
+    )
+    entry: dict[str, object] = {
+        "advisory": PICOMATCH_GHSA,
+        "package": "picomatch",
+        "version": "4.0.7",
+        "patch_path": "configs/dependency-patches/picomatch-4.0.7.patch",
+        "patch_sha256": digest,
+        "upstream_fix": "https://github.com/micromatch/picomatch/pull/264",
+        "reason": "No fixed release; upstream fix applied in-tree.",
+        "recorded_on": "2026-11-18",
+        "expires_on": "2027-02-18",
+        "human_review": "pending",
+        **entry_changes,
+    }
+    register = root / "configs/dependency-patches/audit-exceptions.json"
+    register.write_text(
+        json.dumps({"register": "dependency_audit_exceptions", "version": "v1", "exceptions": [entry]}),
+        encoding="utf-8",
+    )
+    return register
+
+
+def test_repository_picomatch_exception_is_bound_to_the_applied_patch() -> None:
+    import datetime
+
+    findings: list[dict[str, str]] = []
+    accepted = load_audit_exceptions(
+        REPO_ROOT / "configs/dependency-patches/audit-exceptions.json",
+        REPO_ROOT,
+        today=datetime.date(2026, 11, 18),
+        findings=findings,
+    )
+    assert findings == []
+    assert accepted == [
+        {"advisory": PICOMATCH_GHSA, "package": "picomatch", "version": "4.0.7", "expires_on": "2027-02-18"}
+    ]
+    workspace = (REPO_ROOT / "pnpm-workspace.yaml").read_text(encoding="utf-8")
+    assert '"picomatch@4.0.7": "configs/dependency-patches/picomatch-4.0.7.patch"' in workspace
+    assert "ignoreGhsas" not in workspace, "pnpm ignores keep severity counts and fail the classifier"
+
+
+def test_bound_exception_passes_only_its_own_finding(tmp_path: Path) -> None:
+    import datetime
+
+    register = _exception_repository(tmp_path)
+    findings: list[dict[str, str]] = []
+    exceptions = load_audit_exceptions(register, tmp_path, today=datetime.date(2026, 11, 18), findings=findings)
+    assert findings == [] and exceptions
+
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path, legacy_advisories=_picomatch_advisory(), high=1)
+    report = classify_audit(report_path, command_exit_code=1, audit_level="high", exceptions=exceptions)
+    assert report["outcome"] == "PASS"
+    assert report["excepted_vulnerabilities"] == [
+        {"advisory": PICOMATCH_GHSA, "package": "picomatch", "version": "4.0.7", "expires_on": "2027-02-18"}
+    ]
+
+    other = {"1138809": {"module_name": "vinext", "severity": "high", "github_advisory_id": "GHSA-example-2"}}
+    _write_audit_report(report_path, legacy_advisories=_picomatch_advisory(**other), high=2)
+    report = classify_audit(report_path, command_exit_code=1, audit_level="high", exceptions=exceptions)
+    assert report["outcome"] == "REGRESSION"
+    assert report["reason_codes"] == ["VULNERABILITY_THRESHOLD_EXCEEDED"]
+    assert "1 vulnerabilities at or above high after 1 reviewed exceptions" in render_report(report)
+
+    _write_audit_report(report_path, legacy_advisories=_picomatch_advisory(version="4.0.8"), high=1)
+    report = classify_audit(report_path, command_exit_code=1, audit_level="high", exceptions=exceptions)
+    assert report["outcome"] == "REGRESSION", "a different locked version is not excepted"
+
+    _write_audit_report(report_path, legacy_advisories=_picomatch_advisory(), high=2)
+    report = classify_audit(report_path, command_exit_code=1, audit_level="high", exceptions=exceptions)
+    assert report["outcome"] == "REGRESSION", "unattributable counts are never excepted"
+
+
+def test_classification_without_exceptions_is_unchanged(tmp_path: Path) -> None:
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path, legacy_advisories=_picomatch_advisory(), high=1)
+    report = classify_audit(report_path, command_exit_code=1, audit_level="high")
+    assert report["outcome"] == "REGRESSION"
+    assert "excepted_vulnerabilities" not in report
+
+
+@pytest.mark.parametrize(
+    ("changes", "code"),
+    [
+        ({"expires_on": "2026-11-17", "recorded_on": "2026-11-01"}, "AUDIT_EXCEPTION_EXPIRED"),
+        ({"expires_on": "2027-12-31"}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"patch_sha256": "0" * 64}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"lock_hash": "f" * 64}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"extra_lock_version": True}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"advisory": "CVE-2026-112366"}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"patch_path": "../outside.patch"}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"upstream_fix": "http://example.test/fix"}, "AUDIT_EXCEPTIONS_INVALID"),
+        ({"unexpected": "key"}, "AUDIT_EXCEPTIONS_INVALID"),
+    ],
+)
+def test_unbound_or_expired_exceptions_fail_closed(tmp_path: Path, changes: dict[str, object], code: str) -> None:
+    import datetime
+
+    repository_changes = {key: changes.pop(key) for key in ("lock_hash", "extra_lock_version") if key in changes}
+    register = _exception_repository(tmp_path, **repository_changes, **changes)
+    findings: list[dict[str, str]] = []
+    assert load_audit_exceptions(register, tmp_path, today=datetime.date(2026, 11, 18), findings=findings) is None
+    assert code in {finding["code"] for finding in findings}
+
+
+def test_cli_exception_register_errors_are_reported(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    register = _exception_repository(tmp_path, patch_sha256="0" * 64)
+    report_path = tmp_path / "audit.json"
+    _write_audit_report(report_path, legacy_advisories=_picomatch_advisory(), high=1)
+    exit_code = main([
+        "classify-audit", "--report", str(report_path), "--command-exit-code", "1",
+        "--exceptions", str(register), "--repository-root", str(tmp_path),
+    ])
+    output = json.loads(capsys.readouterr().out)
+    assert exit_code == EXIT_ERROR
+    assert output["outcome"] == "ERROR"
+    assert output["reason_codes"] == ["AUDIT_EXCEPTIONS_INVALID"]

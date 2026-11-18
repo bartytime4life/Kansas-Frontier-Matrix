@@ -43,6 +43,10 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ## Unreleased
 
+### Security
+
+- Root pnpm workspace: `picomatch` 4.0.7, the only locked version, is patched in-tree against the unpatched ReDoS advisory [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf) (high). It is reached only through `vite` and `vitest` dev tooling. The patch carries the upstream fix from [micromatch/picomatch#264](https://github.com/micromatch/picomatch/pull/264), applied with pnpm `patchedDependencies` (`configs/dependency-patches/`). A regression test covers the advisory's inputs. The `npm-audit` classifier accepts that one advisory only through an expiring exception bound to the patch and lockfile hashes; every other finding still fails the job. Remove the patch when a fixed release exists.
+
 ### Added
 
 - Explorer older and newer layers together (`apps/site/source`; [note](apps/site/source/docs/explorer-old-and-new-data-2026-11-18.md)): eight new themed starters, now 20 in six menu groups, bring older aquifer, seismic, survey, rail, lightning and river layers together with the November layers. Eight more plain-language guides bring `/explore` to 13, covering storms, fire, aquifers, earthquakes, land cover, rivers, roads and survey lines. Science lab phenomena link to their public map layers, and a sitemap and robots file are added. Every layer is an existing public context source; no provider, dataset, admission or release is added.

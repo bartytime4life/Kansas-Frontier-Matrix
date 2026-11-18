@@ -192,6 +192,8 @@ jobs:
             --command-exit-code "${pnpm_audit_status}" \
             --audit-level "${PNPM_AUDIT_LEVEL}" \
             --manager "pnpm" \
+            --exceptions configs/dependency-patches/audit-exceptions.json \
+            --repository-root . \
             | tee "${pnpm_classification_path}"
           pnpm_classification_status=${PIPESTATUS[0]}
 
@@ -213,6 +215,7 @@ jobs:
             echo "- Root coordination graph: \`pnpm@11.17.0\` via Corepack"
             echo "- Root command: \`pnpm audit --audit-level ${PNPM_AUDIT_LEVEL} --json\`"
             echo "- Root classifier: \`${pnpm_classification}\`"
+            echo "- Reviewed exceptions: \`configs/dependency-patches/audit-exceptions.json\` (bound to in-tree patch hashes; expiring)"
             echo "- Network: point-in-time queries to the configured Node package registry advisory services"
             echo "- Failure posture: threshold findings, registry errors, malformed reports, and command/report polarity mismatches fail closed"
             echo "- Authority: dependency CI signal only; not vulnerability absence, provenance, compatibility, rights, release, deployment, or publication approval"
