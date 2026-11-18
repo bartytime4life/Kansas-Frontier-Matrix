@@ -1,0 +1,116 @@
+{
+  "receipt_id": "kfm-faa-field-metadata-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/collection-field-dictionary.ts",
+    "app/collection-metadata.ts",
+    "app/collection-metadata-panel.tsx",
+    "app/collection-lab.ts",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/measurement-explorer.tsx",
+    "app/data-lab/page.tsx",
+    "tests/faa-field-metadata.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/collection-field-dictionary.ts": "sha256:484ec9c00ffbd78cb19457f5b3ef0c90cce7cf8e702e173a877c60e58434a1f0",
+    "app/collection-metadata.ts": "sha256:d5c28ce55ed5857ef065f05b01710b1921d6d359684219590979ed0e2faf5e89",
+    "app/collection-metadata-panel.tsx": "sha256:32ee5a0ac3f5f3bee87fe4f74f60e96221402cc91989616e40083bd26b32fa6e",
+    "app/collection-lab.ts": "sha256:fadae291f76ae9b6ed1d70761c49b80e10ae1b94e2c524fec10721d05ee0b399",
+    "app/data-lab/lab-bundle.ts": "sha256:ca3888d575c6ca2e866bf9dd8e8ad9e43eb850bc5b3957c652ad339f4b7108d7",
+    "app/data-lab/measurement-explorer.tsx": "sha256:ea2173805cace5ad5d61941b62d05b593c646e238e29524b9032a654775c836a",
+    "app/data-lab/page.tsx": "sha256:4f4ccfe24f784640cc3f149ca1306488af3a56e563456c6eaa5416b63bbae899",
+    "tests/faa-field-metadata.test.mjs": "sha256:9108b8414d0a7dd87205dac60d35b8941cf976d2297443c8df97aa43ca8c2b3e",
+    "docs/collection-data-lab.md": "sha256:a7371f8cc377713b2a4b537f76d5515eab6137ac1b5e504439764b30612cb836"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9d845743b688a0a032a3bfff661de9f756d5f947f158e7c92fcd00e17222514c"
+    ],
+    "evidence_refs": [
+      "repo:647771f9a4efb0d5ebd749b20552abeafdd8c682:app/collection-metadata.ts",
+      "repo:323539a8bf3abd2cd153c257c01fe4dbb1ef7af0:tools/local_data/sql_feed_structures.py"
+    ],
+    "attached_docs": [
+      "FAA DDOF README, 2026-05-21; public FAA obstacle FAQ"
+    ]
+  },
+  "truth_labels": {
+    "app/collection-field-dictionary.ts": "CONFIRMED",
+    "app/collection-metadata.ts": "CONFIRMED",
+    "app/collection-metadata-panel.tsx": "CONFIRMED",
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/measurement-explorer.tsx": "CONFIRMED",
+    "app/data-lab/page.tsx": "CONFIRMED",
+    "tests/faa-field-metadata.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite after build completion: 3,098 passed, 25 skipped, zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "26 targeted dictionary, collection integration and saved-bundle tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript and targeted ESLint",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone browser validation of 250 preserved public records, 31 field definitions, three exports and old/new bundle compatibility",
+      "outcome": "PASS",
+      "reason": "Reopened an earlier public-relay capture; selected layer contained the 18 matching quality-context records."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted CI and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Draft candidate; no public deployment is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "FAA DDOF format manual",
+      "validated": true,
+      "evidence_ref": "https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/DailyDOF/media/DDOF_README_05-21-2026.pdf"
+    },
+    {
+      "id": "FAA obstacle FAQ",
+      "validated": true,
+      "evidence_ref": "https://www.faa.gov/air_traffic/flight_info/aeronav/obst_data/odtfaqs/"
+    },
+    {
+      "id": "KFM FAA normalizer",
+      "validated": true,
+      "evidence_ref": "repo:323539a8bf3abd2cd153c257c01fe4dbb1ef7af0:tools/local_data/sql_feed_structures.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T23:26:32.793197+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Provider-backed metadata does not establish each record's accuracy, edition, rights or AI review. Documentation edition/fingerprint is kept separate from capture identity. Source rows, old bundle bytes and private intake stores are preserved. The first full test run overlapped the build and had two transient missing-manifest failures; the post-build rerun passed with zero failures."
+}

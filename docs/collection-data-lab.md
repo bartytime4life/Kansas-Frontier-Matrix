@@ -42,6 +42,28 @@ The research brief includes the question, measured sample scope, recorded value
 ranges, example source-time fields, retrieval times, source lineage, exact record
 identities and interpretation limits. It and the lab bundle are free downloads.
 
+## Documented FAA fields
+
+The FAA obstacle collection now has definitions for all 31 archived fields.
+The [FAA daily format manual, May 21, 2026](https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/DailyDOF/media/DDOF_README_05-21-2026.pdf)
+defines heights in feet and the horizontal/vertical tolerance codes. Accuracy
+categories stay out of numeric distributions. AGL and AMSL references and FAA
+verification/accuracy categories remain separate in height summary groups and
+measurement layers. Unknown codes and original values are retained.
+
+The [FAA FAQ](https://www.faa.gov/air_traffic/flight_info/aeronav/obst_data/odtfaqs/)
+explains that quantity can represent an array at a single point. The provider
+action date is identified as `YYYYDDD`, not interpreted as a construction or
+observation date. KFM-derived coordinates and keys cite the pinned normalizer.
+Documentation edition and source-document fingerprint are distinct from the
+captured record's edition, retrieval time and AI review credit.
+
+The library dictionary, metadata API, lab JSON, story brief and GeoJSON exports
+carry these definitions and their source references. Other collections retain
+their explicit unknowns. Previously saved FAA bundles reopen their unchanged
+records and question; an obsolete measurement context is reset with a visible
+notice. New bundles retain their documented context and dictionary revision.
+
 **Reopen a saved lab bundle** reads the file in the browser and restores its
 record sample, question, field, context and selected interval where present.
 Older JSON downloads reopen their record sample and question. The app checks
