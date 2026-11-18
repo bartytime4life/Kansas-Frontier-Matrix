@@ -1,0 +1,112 @@
+{
+  "receipt_id": "kfm-usgs-field-metadata-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/usgs-field-dictionary.ts",
+    "app/collection-field-dictionary.ts",
+    "app/collection-metadata.ts",
+    "app/collection-metadata-panel.tsx",
+    "app/collection-lab.ts",
+    "app/data-lab/lab-bundle.ts",
+    "tests/usgs-field-metadata.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/usgs-field-dictionary.ts": "sha256:8f8a0d63ac313c368302b45b62f1707e1c65ef503ffea35ddea6ae4972b7b9c2",
+    "app/collection-field-dictionary.ts": "sha256:6cc0831d7d32c5c0927447af1bea6d0209ffc1f963f8165f1fa3ca5199783bae",
+    "app/collection-metadata.ts": "sha256:1bdbb6c22b29b772e52ebdfe492f9dcbd2fc9f22e0cc783b19124e1387b4360f",
+    "app/collection-metadata-panel.tsx": "sha256:c124973362c9a53ad60b70f94600ae9689c29f06d0bac02b34e8842114c9e035",
+    "app/collection-lab.ts": "sha256:e8809709ebe815c96f1822187037c468ddc7717e22237aefd7670989ccb11a6b",
+    "app/data-lab/lab-bundle.ts": "sha256:308a68f5d4b171a4c83c338efbe479057eccec331c7d35eb7ba8b1d5e6b35159",
+    "tests/usgs-field-metadata.test.mjs": "sha256:aad1077b922fe253449f8fc4bfcb54cfc01df2a58e5872eb81b954bfe2f8ab16",
+    "docs/collection-data-lab.md": "sha256:228a468d301bedcc6dc5a43738bc7e216c5e9a4f371eec04016151ee995b66c4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:020b8c06eb96b2be493857b3d33d7ed2e477434c910a90f45724cca26d4b5ac0",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:1063a4f64b76a41ebd79cf349a4a2e3a6f629c4eb86334f88d3f9eaf32678d9d",
+      "sha256:bed43a636be3a99c19169391cf8071a8a246078f8c92f714909f3067a7540b48",
+      "sha256:235f44ede1e8e4a2193146dabea4dd11003ce3e3ecfc06204e6373c045a47363"
+    ],
+    "evidence_refs": [
+      "repo:1d35b5c7398d6907f7d0ac5358a2f6406a127bcb:app/collection-field-dictionary.ts",
+      "repo:3b9697c513d2ab655e52e947f1b25d12d0e41df2:tools/local_data/sql_feed_water.py"
+    ]
+  },
+  "truth_labels": {
+    "app/usgs-field-dictionary.ts": "CONFIRMED",
+    "app/collection-field-dictionary.ts": "CONFIRMED",
+    "app/collection-metadata.ts": "CONFIRMED",
+    "app/collection-metadata-panel.tsx": "CONFIRMED",
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "tests/usgs-field-metadata.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite: 3,105 passed, 25 existing skips, zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "33 focused water, FAA, collection and saved-bundle regressions",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone browser checks: 750 unchanged source records, 54 definitions, six JSON/story exports, old/new bundle reopening",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted CI and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Source candidate and local preview only; no public deployment claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "daily schema",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/schema?f=json"
+    },
+    {
+      "id": "field-measurements schema",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/field-measurements/schema?f=json"
+    },
+    {
+      "id": "peaks schema",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/peaks/schema?f=json"
+    },
+    {
+      "id": "KFM USGS normalizer",
+      "validated": true,
+      "evidence_ref": "repo:3b9697c513d2ab655e52e947f1b25d12d0e41df2:tools/local_data/sql_feed_water.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T23:51:00.340632+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Source-backed field curation is deterministic and does not establish AI review, source admission or observation accuracy. Schema versions and fingerprints remain distinct from captured data editions. Per-row units, provider clocks, source qualifiers and original rows are preserved. Native data was read only through the existing public dataset reader; no data-store or publication writes occurred."
+}

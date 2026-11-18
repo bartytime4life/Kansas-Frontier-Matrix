@@ -1,5 +1,5 @@
 import {collectionMetadata,fieldRole,type Collection} from './collection-metadata';
-import {documentedField,collectionFieldNotes} from './collection-field-dictionary';
+import {documentedField,collectionFieldNotes,recordedUnit} from './collection-field-dictionary';
 import {fetchArchive,validArchiveGeometry,type ArchiveAnswer,type ArchiveRow} from './archive-layer-data';
 
 export const LAB_MAX_ROWS=250,LAB_MAX_PAGES=5;
@@ -35,10 +35,11 @@ const collectionDimensions: Partial<Record<string, Readonly<Record<string, reado
   value: ['parameter_code', 'statistic_id', 'unit_of_measure', 'approval_status', 'qualifier'],
  },
  'observations-usgs-field-measurements': {
-  value: ['parameter_code', 'unit_of_measure', 'kind', 'reading_type', 'vertical_datum', 'approval_status', 'qualifier'],
+  value: ['parameter_code', 'unit_of_measure', 'kind', 'reading_type', 'vertical_datum', 'approval_status', 'qualifier',
+   'observing_procedure_code','observing_procedure','sublocation_identifier','measuring_agency','control_condition','measurement_rated'],
  },
  'observations-usgs-peaks': {
-  value: ['parameter_code', 'unit_of_measure', 'qualifier'],
+  value: ['parameter_code', 'unit_of_measure', 'qualifier','peak_since'],
  },
  'observations-aqs-daily': {
   arithmetic_mean: aqsConcentrationDimensions,
@@ -199,7 +200,7 @@ export function profileCollection(c:Collection,snapshot:LabSnapshot){
    const mean=values.reduce((total,v)=>total+v/values.length,0);
    return {context,count:values.length,min:values[0],max:values.at(-1)!,mean:Number.isFinite(mean)?mean:null,median:values.length%2?values[mid]:values[mid-1]/2+values[mid]/2};
   });
-  return {name,role,definition:definition?.definition??null,unit:definition?.unit??null,reference:definition?.reference??null,
+  return {name,role,definition:definition?.definition??null,unit:definition?.unit??null,unitField:definition?.unitField??null,reference:definition?.reference??null,
    present,missing:rows.length-present,numericCount,longFields,exampleValues,groups:summary,additionalGroups:Math.max(0,groups.size-summary.length)};
  });
  const provenance=new Map<string,{sourceId:string|null;url:string|null;sha256:string|null}>();
@@ -249,7 +250,7 @@ export function storyBrief(c:Collection,snapshot:LabSnapshot,question:string,pre
   '', '## Source time fields',...profile.fields.filter(f=>f.role==='time'&&f.exampleValues.length).map(f=>`- ${f.name}: ${f.exampleValues.join('; ')} (recorded examples, not a complete range or a verified temporal meaning).`),
   ...(profile.collection.documentation.length?['','## Field definitions and units',
    ...profile.collection.fields.filter(f=>f.definition&&profile.fields.some(p=>p.name===f.name&&(p.groups.length||p.role==='time'||p.role==='quality')))
-    .map(f=>`- ${f.name}: ${f.definition}${f.unit?` Unit: ${f.unit}.`:''}${f.reference?` Reference: ${f.reference}.`:''}${f.encoding?` Encoding: ${f.encoding}.`:''}`),
+    .map(f=>`- ${f.name}: ${f.definition}${f.unit?` Unit: ${f.unit}.`:''}${f.unitField?` Unit source: each record's ${f.unitField} field.`:''}${f.reference?` Reference: ${f.reference}.`:''}${f.encoding?` Encoding: ${f.encoding}.`:''}`),
    '', '## Field documentation',...profile.collection.documentation.map(d=>
     `- [${d.title}](${d.url})${d.edition?`; documentation edition ${d.edition}`:''}; checked ${d.checkedAt}${d.sha256?`; SHA256 ${d.sha256}`:''}. ${d.scope}`)]:[]),
   '', '## Source lineage',
@@ -275,7 +276,7 @@ export function measurementLayer(c:Collection,snapshot:LabSnapshot,field:string,
   if(!geometry||geometry.type==='Point'&&geometry.coordinates[0]===0&&geometry.coordinates[1]===0){omitted.noUsableGeometry++;continue;}
   const p=object(row.provenance)?row.provenance:{};
   features.push({type:'Feature' as const,id:String(row.id),geometry,properties:{record_id:String(row.id),collection:c.id,field,value,measurement_context:context,
-   unit:definition.unit,reference:definition.reference,
+   unit:recordedUnit(c.id,field,values),reference:definition.reference,
    source_id:typeof p.source_id==='string'?p.source_id:null,source_url:safeUrl(p.source_url),source_sha256:typeof p.sha256==='string'?p.sha256:null}});
  }
  return {type:'FeatureCollection' as const,features,kfm:{format:'kfm-lab-measurement-layer-v1',collection:c.id,field,context,omitted,

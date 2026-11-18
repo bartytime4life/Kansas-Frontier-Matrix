@@ -21,7 +21,7 @@ export default function CollectionMetadataPanel({collection, inLab = false}:{col
     <ul>{metadata.fieldNotes.map(note=><li key={note}>{note}</li>)}</ul></>}
    <ul>{metadata.fields.map(f=><li key={f.name}>
     <code>{f.name}</code> · {f.label} · {f.role}{f.roleBasis==='field_name_hint'&&' (name-based hint)'}
-    {f.definition&&<p>{f.definition}{f.unit&&` Unit: ${f.unit}.`}{f.reference&&` Reference: ${f.reference}.`}{f.encoding&&` Encoding: ${f.encoding}.`}</p>}
+    {f.definition&&<p>{f.definition}{f.unit&&` Unit: ${f.unit}.`}{f.unitField&&<> Unit from each record’s <code>{f.unitField}</code> field.</>}{f.reference&&` Reference: ${f.reference}.`}{f.encoding&&` Encoding: ${f.encoding}.`}</p>}
     {f.codes&&<p>Codes: {Object.entries(f.codes).map(([code,meaning])=>`${code} = ${meaning}`).join(' · ')}. Unlisted codes remain uninterpreted.</p>}
     {f.sources.length>0&&<p>Sources: {f.sources.map((id,index)=>{
      const source=metadata.documentation.find(d=>d.id===id);

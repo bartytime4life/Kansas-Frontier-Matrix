@@ -28,7 +28,7 @@ export function collectionMetadata(c:Collection){
  const fields=c.columns.map(name=>{
   const known=documentedField(c.id,name);
   return {name,label:known?.label??fieldLabel(name),role:fieldRole(name,c.keys,c.id),
-   definition:known?.definition??null,unit:known?.unit??null,reference:known?.reference??null,
+   definition:known?.definition??null,unit:known?.unit??null,unitField:known?.unitField??null,reference:known?.reference??null,
    encoding:known?.encoding??null,codes:known?.codes??null,
    roleBasis:known?'documented':'field_name_hint',sources:known?.sources??[]};
  });
