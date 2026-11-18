@@ -70,6 +70,8 @@ Exploratory intake records may help maintainers decide:
 
 ## Repo fit
 
+- [Agent harness evaluation for Kansas Frontier Matrix](agent-harness-evaluation.md) proposes a synthetic comparison of task context, verification and abstention.
+
 | Surface | Relationship | Notes |
 |---|---|---|
 | `docs/intake/` | Parent intake lane | `NEEDS VERIFICATION`: should define the overall intake process, register, and routing policy. |
