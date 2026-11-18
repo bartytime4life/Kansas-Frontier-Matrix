@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-soil-moisture-runtime-proof-artifacts-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-moisture-runtime-proof.yml",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "sha256:db9962002d7e56d5be6a2644a5132ec4188608d42766620c8c4936abfca20416",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "sha256:dc878da59dadfef1a0c2c0c5e879cc72679e75f6e7a391052fa3063a081f6f31",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py": "sha256:5ebfc689c19aca451d774165e47be9e6d8d6a194d05799138d08bbe5d500400d",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "sha256:f1c92c8eabdd0c7d35275081dab1d0c33d7e4bf3c5defe8a5059653553e289cf",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py": "sha256:a20744bc4a2b2dd6156b21116ccac94a3b888f5d185b59fa90337aaf719d5825"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Current Codex session; exact model build unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:60e93fe19f4a61ea9cb9bea02b5b104c5e7616b9028200fae6b1e2fb5e5e8c2f"
+    ],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20260805.json@03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
+      "repo:.github/workflows/soil-moisture-runtime-proof.yml@03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
+      "repo:tools/validators/validate_generated_receipt.py@03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "PROPOSED",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-base-reproduction",
+      "outcome": "PASS",
+      "reason": "Native validator on main@03d477b2da3f08c5d1a7ac65a45a1d21a618601b rejects the historical workflow binding with ARTIFACT_DIGEST_MISMATCH at /artifact_paths/0."
+    },
+    {
+      "gate": "current-runtime-proof-and-lineage-tests",
+      "outcome": "PASS",
+      "reason": "Python 3.12.3: complete workflow selection plus the unchanged generated-receipt validator regression module: 70 passed, zero skipped; includes five per-artifact tamper denials."
+    },
+    {
+      "gate": "native-current-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Native validator accepts all five current artifact digests with human review pending and no approval claim."
+    },
+    {
+      "gate": "exact-head-hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted CI and independent human review remain pending at receipt generation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "soil-runtime-proof-profile",
+      "validated": true,
+      "evidence_ref": "repo:tests/runtime_proof/domains/soil/soil_moisture/README.md@03d477b2da3f08c5d1a7ac65a45a1d21a618601b"
+    },
+    {
+      "id": "directory-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T18:50:41.122317+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Append-only successor to the August 5 authoring receipt, whose exact SHA-256 is retained as an input. The historical receipt and native validator are unchanged. This receipt binds the current workflow, proof README, emitter, runtime-mapper tests and new lineage tests. New lineage tests retain native integrity checking and reject each modified artifact in disposable copies. Temporary response/summary artifacts remain review aids only; no source admission, actual soil-data validation, approval, activation, release, deployment or publication is granted."
+}
