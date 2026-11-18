@@ -2920,4 +2920,16 @@ def test_basemap_gap_warning_successor_preserves_picomatch_inventory_and_all_hol
          "tests/basemap-raster-health.test.mjs", "tests/cutaway-basemap-failure.test.mjs"},
         "c31a6825ce7393a75d1de0671f55764af3f243dd",
     )
-    assert TOOL.RECEIPT.name == "site-v268-basemap-gap-warning-overlay-20261118.json"
+
+
+def test_coverage_pass_3_successor_preserves_basemap_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-coverage-pass-3-overlay-20261118.json",
+        "site-v268-basemap-gap-warning-overlay-20261118.json",
+        "b8d6e7254b15cfa34813f08e0b66cf8c43e80eaf6f7afc25612176bd28f76658",
+        {"app/explore/terrain-and-slope/page.tsx", "app/landing-guides.ts", "app/map-starters.ts", "app/site-features.ts",
+         "docs/README.md", "docs/explorer-old-and-new-data-2026-11-18.md", "tests/landing-guides.test.mjs",
+         "tests/map-starters.test.mjs"},
+        "ccb28a12cc5768ee7578f7d796d6cdcfac2304f2",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-coverage-pass-3-overlay-20261118.json"

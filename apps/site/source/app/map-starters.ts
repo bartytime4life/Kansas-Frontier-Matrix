@@ -79,6 +79,21 @@ export const MAP_STARTERS = [
   { id: "minerals-and-survey", title: "Federal mineral leases", theme: "Built & planning", isNew: true, description: "For land and energy researchers: BLM authorized and closed oil and gas lease cases on PLSS townships, with counties for orientation.",
     ids: ["blm-mlrs-leases-authorized", "blm-mlrs-leases-closed", "blm-plss-townships", "census-counties"],
     limitation: "Lease cases are geocoded from legal descriptions and are not exact lease or mineral-rights footprints, drilling activity, title or access. Leases appear only at closer zoom." },
+  { id: "water-table-and-wells", title: "Water table & wells", theme: "Water & ground", guide: "aquifers-and-groundwater", isNew: true, description: "For water planners and students: the High Plains water-table elevation with the measured monitoring wells, the aquifer extent and watershed boundaries.",
+    ids: ["kgs-aquifer-high-plains", "kgs-water-table", "kgs-monitoring-wells", "usgs-wbd-watersheds"],
+    limitation: "Water-table classes are regional 2022–2024 estimates in feet above sea level, not current water levels, a precise head surface or pumping advice." },
+  { id: "eastern-aquifers", title: "Eastern Kansas aquifers", theme: "Water & ground", guide: "kansas-aquifers", isNew: true, description: "For water users in eastern Kansas: the Osage, Flint Hills, Glacial Drift and Ozark aquifer extents mapped by the Kansas Geological Survey.",
+    ids: ["kgs-aquifer-osage", "kgs-aquifer-flint-hills", "kgs-aquifer-glacial-drift", "kgs-aquifer-ozark"],
+    limitation: "Extents are regional reference boundaries without a stated vintage. They can overlap at different depths and are not well yield, water rights or drilling advice." },
+  { id: "slopes-and-landforms", title: "Slopes & landforms", theme: "Earth & survey", guide: "terrain-and-slope", isNew: true, description: "For hikers, teachers and land stewards: USGS 3DEP slope over shaded relief, with watersheds and counties for orientation.",
+    ids: ["usgs-3dep-hillshade", "usgs-3dep-slope", "usgs-wbd-watersheds", "census-counties"],
+    limitation: "Slope and shading are drawn from elevation data for display. They are not a site survey, an erosion or stability finding, or a trail rating. Slope appears from zoom 7." },
+  { id: "fire-detections-up-close", title: "Fire detections up close", theme: "Weather & hazards", guide: "fire-and-smoke", isNew: true, description: "For land managers: clickable NOAA-20 heat detections over the daily thermal-anomaly image, smoke footprints and 2021 land cover.",
+    ids: ["nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-hms-smoke", "mrlc-nlcd-land-cover"],
+    limitation: "A heat detection is a satellite signal, not a confirmed wildfire; prescribed burns and flares also appear. Smoke outlines are not air-quality readings." },
+  { id: "survey-divisions", title: "Survey divisions up close", theme: "Earth & survey", guide: "land-survey-and-soils", isNew: true, description: "For land professionals: PLSS sections and their intersected divisions, such as quarters and government lots, over soil map units and counties.",
+    ids: ["blm-plss-sections", "blm-plss-intersected", "nrcs-ssurgo-soils", "census-counties"],
+    limitation: "Divisions appear only from zoom 12 and are survey references, not parcels, deeds, ownership or access. Soil map units are not a field soil test." },
 ] as const satisfies readonly { id: string; title: string; theme: StarterTheme; guide?: string; description: string; ids: readonly OfficialContextId[]; limitation: string; isNew?: boolean }[];
 
 export const DEFAULT_STARTER_ID = "learning-kansas";

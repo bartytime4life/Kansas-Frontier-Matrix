@@ -141,6 +141,7 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
       "See whether elevated or critical fire weather is forecast over western Kansas today.",
       "In March and April, look for clusters of heat detections over the Flint Hills during the spring burn season.",
       "Follow a smoke plume back toward the heat detections it may have come from.",
+      "Open the Fire detections up close starter and click a detection to read its time and satellite details.",
     ],
     caution: "A heat detection is not a confirmed wildfire, a report may describe a different incident, and a smoke outline is not an air-quality reading. Check county burn restrictions and red-flag warnings before any burn.",
   },
@@ -159,6 +160,7 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
       "Find where the saturated sediments are thickest and where they thin toward the aquifer's edges.",
       "Find where groundwater sits more than 150 feet below the surface.",
       "Click a monitoring location to see which well the regional estimate draws on.",
+      "Open the Water table & wells starter to see the water-table elevation fall from west to east across the aquifer.",
     ],
     caution: "Thickness and depth classes are regional estimates from measured wells, not parcel measurements, current water levels or advice for drilling or pumping. Contact the Kansas Geological Survey or a licensed driller for a local answer.",
   },
@@ -249,6 +251,7 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
       "Zoom in until section lines appear and compare them with the roads on the base map.",
       "Keep zooming to see soil map-unit boundaries follow creeks and slopes rather than survey lines.",
       "Find where townships shift at a correction line, where the survey grid was reset.",
+      "Open the Survey divisions up close starter and zoom past 12 to see quarters and government lots inside a section.",
     ],
     caution: "Survey divisions and soil map units are references. They are not parcel boundaries, deeds, proof of ownership or a soil test for a field.",
   },
@@ -284,9 +287,27 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     ideas: [
       "Trace the alluvial aquifers along the river valleys and see which towns sit on them.",
       "Find where the Dakota aquifer extends under central Kansas.",
-      "Turn on the Osage and Flint Hills aquifers in Map layers to complete the picture for eastern Kansas.",
+      "Open the Eastern Kansas aquifers starter to add the Osage and Flint Hills aquifers for eastern Kansas.",
     ],
     caution: "These are regional reference extents without a stated date. Aquifers can overlap at different depths, and an outline is not well yield, water rights or drilling advice. Ask the Kansas Geological Survey or a licensed driller about a specific place.",
+  },
+  {
+    slug: "terrain-and-slope",
+    title: "Slopes and landforms of Kansas",
+    description: "See where Kansas is steep and where it is flat: USGS 3DEP slope over shaded relief in the Flint Hills, river bluffs and Red Hills.",
+    kicker: "LAND · TERRAIN",
+    intro: [
+      "Kansas is not as flat as its reputation. The Flint Hills rise in long limestone escarpments, rivers have cut bluffs into the plains, and the Red Hills of the south-central border are a maze of buttes and canyons.",
+      "This map shades the land with USGS 3D Elevation Program relief and colours it by slope, so steep ground stands out. Slope appears once you zoom in to about the scale of a few counties.",
+    ],
+    layers: ["usgs-3dep-hillshade", "usgs-3dep-slope", "usgs-wbd-watersheds", "census-counties"],
+    center: [-96.55, 38.55], zoom: 8.5,
+    ideas: [
+      "Follow the steep escarpments that outline the Flint Hills.",
+      "Pan along a river and see where it has cut bluffs into the plains.",
+      "Travel south-west to the Red Hills near Medicine Lodge and compare their slopes with the flat High Plains.",
+    ],
+    caution: "Slope and shading are drawn from elevation data for display. They are not a site survey, an erosion or stability finding, or a trail difficulty rating.",
   },
 ] satisfies LandingGuide[]);
 

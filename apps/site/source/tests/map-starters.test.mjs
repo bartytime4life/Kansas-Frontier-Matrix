@@ -39,10 +39,10 @@ const memoryStorage = () => {
   return { data, writes, getItem: key => data.get(key) ?? null, setItem: (key, value) => { writes.push([key, value]); data.set(key, value); }, removeItem: key => data.delete(key) };
 };
 
-test("twenty-four bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
+test("twenty-nine bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
   const before = JSON.stringify(sources);
-  assert.equal(model.MAP_STARTERS.length, 24);
-  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 24);
+  assert.equal(model.MAP_STARTERS.length, 29);
+  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 29);
   for (const starter of model.MAP_STARTERS) {
     assert.ok(starter.description && starter.limitation);
     assert.ok(starter.ids.length >= 3 && starter.ids.length <= 4);
@@ -65,7 +65,8 @@ test("starters group by theme in menu order, keep a valid default and link only 
   // Older aquifer, seismic, survey, rail and lightning layers each anchor at least one starter.
   const used = new Set(model.MAP_STARTERS.flatMap(starter => starter.ids));
   for (const id of ["kgs-saturated-thickness", "kgs-monitoring-wells", "raspberry-shake-stations", "blm-plss-sections", "kdot-rail-active", "noaa-lightning-density", "nasa-lightning-climatology", "kdwp-wildlife-areas", "noaa-nwm-short-range", "kdot-bridges-closed",
-    "kgs-aquifer-dakota", "kgs-aquifer-ozark", "kdot-bridges-old", "fema-disaster-declarations", "noaa-nwm-analysis", "blm-mlrs-leases-authorized", "blm-mlrs-leases-closed"])
+    "kgs-aquifer-dakota", "kgs-aquifer-ozark", "kdot-bridges-old", "fema-disaster-declarations", "noaa-nwm-analysis", "blm-mlrs-leases-authorized", "blm-mlrs-leases-closed",
+    "kgs-water-table", "kgs-aquifer-osage", "kgs-aquifer-flint-hills", "usgs-3dep-slope", "nasa-gibs-fire-points", "blm-plss-intersected"])
     assert.ok(used.has(id), `${id} appears in a starter`);
   const control = await readFile("app/map-starters-control.tsx", "utf8");
   assert.match(control, /<optgroup key=\{group\.theme\} label=\{group\.theme\}>/);
@@ -145,7 +146,7 @@ test("accessible native controls choose every starter, announce partial coverage
     let tree = render(); await settle(); tree = render();
     const select = findNode(tree, node => node.type === "select");
     assert.ok(select.props["aria-describedby"].includes("map-starters-description"));
-    assert.equal(nodes(tree, "option").length, 24);
+    assert.equal(nodes(tree, "option").length, 29);
     assert.equal(nodes(tree, "optgroup").length, 6);
     for (const starter of model.MAP_STARTERS) {
       select.props.onChange({ target: { value: starter.id } }); tree = render();
@@ -201,7 +202,9 @@ test("new starters are marked, Surprise me always moves to a different selectabl
   const fresh = model.MAP_STARTERS.filter(starter => starter.isNew);
   assert.deepEqual(fresh.map(starter => starter.id), ["storm-watch", "rain-and-drought", "fire-season", "heritage-trail", "trails-west", "open-lands",
     "beneath-the-plains", "shaking-ground", "river-flood-watch", "survey-and-soil", "roads-and-rails", "lightning-and-sky", "wild-kansas", "bridges-and-crossings",
-    "kansas-aquifers", "old-bridges", "declared-disasters", "minerals-and-survey"]);
+    "kansas-aquifers", "old-bridges", "declared-disasters", "minerals-and-survey",
+    "water-table-and-wells", "eastern-aquifers", "slopes-and-landforms", "fire-detections-up-close", "survey-divisions"]);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "fire-detections-up-close").limitation, /not a confirmed wildfire/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "storm-watch").limitation, /not a warning service/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "trails-west").limitation, /not public access/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "heritage-trail").limitation, /sensitive sites are withheld/);
