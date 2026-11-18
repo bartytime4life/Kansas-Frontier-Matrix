@@ -442,6 +442,67 @@ class CaptureTests(FeedCase):
                                                             "featureCount": len(features), "sourceUrl": f"https://{source}.example/api"}))
         return digest
 
+    def test_capture_policy_uses_live_catalog_with_an_open_wal(self):
+        init_store(self.root)
+        budget = fixtures.budget(github_limit_bytes=10**12, reserved_for_code_and_interface_bytes=10**11, committed=[])
+        def feature(identity):
+            return {"type": "Feature", "id": identity, "geometry": {"type": "Point", "coordinates": [-98, 38]},
+                    "properties": {"value": identity}}
+        self.capture("usgs-earthquakes", [feature("quake")])
+        self.capture("usgs-streamflow", [feature("gauge")])
+        bad = self.capture("nws-alerts", [], receipt_bytes=1)
+        self.capture("private-survey", [feature("private")])
+        intake.analyze(self.root, budget=budget)
+        originals = {p: p.read_bytes() for p in (self.root / "data/quarantine").rglob("payload")}
+        with intake.open_index(self.root) as live:
+            live.execute("INSERT INTO meta VALUES ('capture_test_writer', 'active')")
+            live.commit()
+            self.assertGreater((intake.intake_dir(self.root) / "index.sqlite-wal").stat().st_size, 0)
+            with self.assertRaisesRegex(intake.IntakeError, "IMMUTABLE_INDEX_SNAPSHOT_REQUIRED"):
+                with intake.open_index(self.root, read_only=True):
+                    pass
+            with patch.object(intake_route, "load_budget", return_value=budget):
+                first = feeds.captures(self.ctx)
+                second = feeds.captures(self.ctx)
+            self.assertEqual((first["reviewed"], first["held"], first["files_loaded"]), (2, 1, 2))
+            self.assertEqual((second["reviewed"], second["files_loaded"]), (0, 0))
+            statuses = {r[0].split("/")[0]: r[1] for r in live.execute("SELECT relative_path,status FROM items")}
+            self.assertEqual(statuses["private-survey"], "review")
+            self.assertEqual(statuses["nws-alerts"], "review")
+            with self.assertRaisesRegex(intake.IntakeError, "IMMUTABLE_INDEX_SNAPSHOT_REQUIRED"):
+                with intake.open_index(self.root, read_only=True):
+                    pass
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_environmental_capture_features"), [(2,)])
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_sql_sources WHERE sha256=?", bad), [(0,)])
+        self.assertEqual({p: p.read_bytes() for p in originals}, originals)
+
+    def test_capture_review_can_continue_when_a_writer_keeps_the_new_wal_open(self):
+        from tools.local_data import intake_review
+        init_store(self.root)
+        budget = fixtures.budget(github_limit_bytes=10**12, reserved_for_code_and_interface_bytes=10**11, committed=[])
+        for source, identity in [("usgs-earthquakes", "quake"), ("usgs-streamflow", "gauge")]:
+            self.capture(source, [{"type": "Feature", "id": identity,
+                                   "geometry": {"type": "Point", "coordinates": [-98, 38]}, "properties": {}}])
+        intake.analyze(self.root, budget=budget)
+        saved, connections = intake_review.save, []
+        def save_with_live_reader(*args, **kwargs):
+            result = saved(*args, **kwargs)
+            if not connections:
+                live = sqlite3.connect(intake.intake_dir(self.root) / "index.sqlite")
+                connections.append(live)
+                live.execute("PRAGMA journal_mode=WAL")
+                live.execute("INSERT INTO meta VALUES ('capture_test_writer', 'active')")
+                live.commit()
+            return result
+        try:
+            with patch.object(intake_route, "load_budget", return_value=budget), \
+                    patch.object(intake_review, "save", side_effect=save_with_live_reader):
+                result = feeds.captures(self.ctx)
+            self.assertEqual((result["reviewed"], result["held"], result["files_loaded"]), (2, 0, 2))
+        finally:
+            for live in connections:
+                live.close()
+
     def test_new_captures_are_reviewed_by_policy_then_loaded_once(self):
         init_store(self.root)
         budget = fixtures.budget(github_limit_bytes=10**12, reserved_for_code_and_interface_bytes=10**11, committed=[])

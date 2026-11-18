@@ -57,10 +57,11 @@ def review_captures(ctx) -> dict:
     from tools.local_data import intake, intake_review, intake_route
 
     receipts, budget, reviewed, held = _capture_receipts(ctx), intake_route.load_budget(), 0, []
-    with intake.open_index(ctx.root, read_only=True) as conn:
+    # This policy updates the live Working Data catalogue as it runs.
+    with intake.open_index(ctx.root) as conn:
         ids = [r[0] for r in conn.execute("SELECT id FROM items WHERE present=1 AND status='review'")]
     for identity in ids:
-        item = intake.get_item(ctx.root, identity, read_only=True)
+        item = intake.get_item(ctx.root, identity)
         source = item["relative_path"].split("/")[0]
         if source not in CAPTURE_SOURCES:
             continue
@@ -74,7 +75,7 @@ def review_captures(ctx) -> dict:
             if hashlib.sha256(raw).hexdigest() != item["sha256"]:
                 raise ValueError("capture digest mismatch")
             payload = _feature_collection(raw)
-            with intake.open_index(ctx.root, read_only=True) as conn:
+            with intake.open_index(ctx.root) as conn:
                 history = intake_review.history(conn, identity)
             domain, reference = CAPTURE_SOURCES[source]
             intake_review.save(ctx.root, {
@@ -93,7 +94,7 @@ def load_captures(ctx, db) -> int:
     from tools.local_data import intake
 
     receipts, files = _capture_receipts(ctx), 0
-    with intake.open_index(ctx.root, read_only=True) as conn:
+    with intake.open_index(ctx.root) as conn:
         items = [dict(zip(("relative_path", "store_path", "sha256"), r)) for r in
                  conn.execute("SELECT relative_path, store_path, sha256 FROM items WHERE present=1 AND status IN ('reviewed','ready')")]
     for item in items:
