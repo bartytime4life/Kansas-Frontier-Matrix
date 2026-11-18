@@ -12,6 +12,7 @@
 .story-card[data-status=planned]{background:linear-gradient(180deg,#0b2a39cc,#071c28cc)}
 .story-card-open{display:flex;flex-direction:column;width:100%;min-height:44px;padding:0;margin:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;touch-action:manipulation}
 .story-card-open:focus-visible{outline:2px solid #efd395;outline-offset:-3px;border-radius:13px}
+a.story-card-open{text-decoration:none}
 .story-thumb{display:block;position:relative;aspect-ratio:16/10;width:100%;background:var(--story-0);overflow:hidden}
 .story-canvas{display:block;width:100%;height:100%}
 .story-card[data-status=planned] .story-thumb{opacity:.82}

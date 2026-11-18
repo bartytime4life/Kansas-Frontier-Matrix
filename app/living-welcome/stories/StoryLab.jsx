@@ -204,6 +204,7 @@ export function StoryLab({ story, paused, reduced, onMove, onClose }) {
         <button type="button" className="story-icon-button" aria-label="Close this lab" onClick={() => onClose(story.id)}>×</button>
       </nav>
     </header>
-    <LabContent key={story.id} story={story} paused={paused} reduced={reduced}/>
+    {story.href ? <div className="story-panel"><p>{story.summary}</p><p>{story.limit}</p><a className="story-tool" href={story.href}>Open {story.title} ↗</a></div>
+      : <LabContent key={story.id} story={story} paused={paused} reduced={reduced}/>}
   </div>, document.querySelector('.site-root') || document.body);
 }

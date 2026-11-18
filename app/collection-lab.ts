@@ -83,7 +83,12 @@ function groupKey(collection: Collection, field: string, values: Record<string, 
  return dimensions.length ? JSON.stringify(Object.fromEntries(dimensions)) : 'Unit and measurement context not supplied';
 }
 const safeUrl=(v:unknown)=>{try{if(typeof v!=='string')return null;const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}};
-export type LabSnapshot={answers:ArchiveAnswer[];rows:ArchiveRow[];hasMore:boolean;pages:number};
+type LabRead = Pick<ArchiveAnswer, 'cache'> & {
+ generatedAt?: string;
+ source?: Pick<ArchiveAnswer['source'], 'provider'>;
+};
+export type LabSnapshot={answers:LabRead[];rows:ArchiveRow[];hasMore:boolean;pages:number;origin?:'saved-bundle'};
+const SAVED_BUNDLE_NOTE = 'These records came from a user-supplied file. Its source references and retrieval times have not been independently checked.';
 type DistributionRecord = { id: string; value: number; sourceId: string | null; sourceUrl: string | null };
 export type MeasurementBin = {
  lower: number;
@@ -208,11 +213,13 @@ export function profileCollection(c:Collection,snapshot:LabSnapshot){
  return {format:'kfm-collection-profile-v1',collection:{...base,
   temporal:{...base.temporal,retrievedAt:snapshot.answers.map(a=>a.generatedAt??null)},
   provenance:{...base.provenance,provider:providers.length===1?providers[0]:null,sourceUrls:[...new Set(lineage.flatMap(p=>p.url?[p.url]:[]))],digests:[...new Set(lineage.flatMap(p=>p.sha256?[p.sha256]:[]))]}},sample:{rows:rows.length,pages:snapshot.pages,hasMore:snapshot.hasMore,
-  scope:'First identity-ordered pages; not a random sample, spatial search, trend or collection total.',
+  scope:snapshot.origin?'Records retained in the saved bundle. The file provides the capture metadata.':'First identity-ordered pages; not a random sample, spatial search, trend or collection total.',
+  inputOrigin:snapshot.origin??'archive',
   retrievedAt:snapshot.answers.map(a=>a.generatedAt??null),cache:snapshot.answers.map(a=>a.cache??null),
   stale:snapshot.answers.some(a=>a.cache?.state==='stale'),recordIds:rows.map(r=>r.id)},
   fields,spatial:{mappable,unavailableGeometry,withoutUsableGeometry:c.geometry?rows.length-mappable:null,sampleBoundingBox:mappable?bounds:null},provenance:lineage,
-  interpretation:['Numeric summaries describe the loaded values only. Original sentinel values and quality flags are not reinterpreted.',
+  interpretation:[...(snapshot.origin?[SAVED_BUNDLE_NOTE]:[]),
+   'Numeric summaries describe the loaded values only. Original sentinel values and quality flags are not reinterpreted.',
    'Units and measurement identifiers are profiled in separate groups. Unitless groups need source documentation.',
    'Identifiers, dates, locations and quality flags are excluded from measurement statistics.'],
   credit:{method:'Deterministic KFM browser profile',aiReview:null,approval:null},
@@ -229,7 +236,8 @@ export function storyBrief(c:Collection,snapshot:LabSnapshot,question:string,pre
   ...(measurements.length>20?['Additional measurement groups remain in the profile export.']:[]),
   ...(profile.fields.some(f=>f.additionalGroups>0)?['Some fields exceed the 12-group summary. Omitted-group counts are in the profile; all original values remain in the record export.']:[]),
   '', '## Source time fields',...profile.fields.filter(f=>f.role==='time'&&f.exampleValues.length).map(f=>`- ${f.name}: ${f.exampleValues.join('; ')} (recorded examples, not a complete range or a verified temporal meaning).`),
-  '', '## Source lineage',...profile.provenance.map(p=>`- ${p.sourceId??'Source ID not supplied'}; ${p.url??'Source URL not supplied'}; SHA256 ${p.sha256??'not supplied'}`),
+  '', '## Source lineage',
+  ...profile.provenance.map(p=>`- ${p.sourceId??'Source ID not supplied'}; ${p.url??'Source URL not supplied'}; SHA256 ${p.sha256??'not supplied'}`),
   ...(!profile.provenance.length?['Source lineage was not supplied for these records.']:[]),
   '', '## Limits and next steps',...profile.interpretation.map(v=>`- ${v}`),
   '- Verify field definitions, source dates, geographic identifiers and editions before comparison or causal interpretation.',
@@ -254,6 +262,7 @@ export function measurementLayer(c:Collection,snapshot:LabSnapshot,field:string,
  }
  return {type:'FeatureCollection' as const,features,kfm:{format:'kfm-lab-measurement-layer-v1',collection:c.id,field,context,omitted,
   rowsRead:snapshot.rows.length,hasMore:snapshot.hasMore,retrievalTimes:snapshot.answers.map(a=>a.generatedAt??null),
+  inputOrigin:snapshot.origin??'archive',...(snapshot.origin?{sourceNote:SAVED_BUNDLE_NOTE}:{}),
   stale:snapshot.answers.some(a=>a.cache?.state==='stale'),scope:'Loaded identity-ordered records only; validated longitude/latitude XY geometry and recorded numeric values. No geocoding, reprojection or unit conversion. Original geometry remains in the lab record export.',
   reviewCredit:null,approval:null}};
 }

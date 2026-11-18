@@ -44,6 +44,20 @@
   background: #245264;
 }
 
+.savedBundle {
+  max-width: 56rem;
+  margin-bottom: 20px;
+  color: #b7ccca;
+}
+
+.savedBundle summary {
+  color: #a8ddcc;
+}
+
+.savedBundle p:empty {
+  margin: 0;
+}
+
 .measurements {
   min-width: 0;
   margin-block: 24px;

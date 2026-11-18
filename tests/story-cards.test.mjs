@@ -46,10 +46,14 @@ test('implemented instruments are lazy and planned stories cannot load a pretend
     const lazyFile = story.load.toString().match(/import\(['"]\.\/([a-z-]+\.jsx)['"]\)/)?.[1];
     assert.ok(lazyFile && existsSync(path(`app/living-welcome/stories/${lazyFile}`)), `${story.id} has a lazy module`);
   }
-  for (const story of STORIES.filter(entry => entry.status !== 'ready')) {
-    assert.equal(story.status, 'planned', story.id);
+  for (const story of STORIES.filter(entry => entry.status === 'planned')) {
     assert.equal(story.load, null, story.id);
   }
+  assert.deepEqual(STORIES.filter(entry => entry.status === 'guided').map(({ id, href, load }) => [id, href, load]), [
+    ['boom-and-ghost-towns', '/labs/ghost-towns', null],
+    ['water-chemistry', '/labs/water-chemistry', null],
+    ['newspaper-pulse', '/labs/newspaper-pulse', null],
+  ]);
 });
 
 test('a story never fetches, and cards hold still and stop offscreen through the shared hook', () => {

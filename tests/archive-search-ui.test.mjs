@@ -15,10 +15,10 @@ async function fixture(search='',globals={}){
  const h=await componentHarness('app/data-library/search.tsx',{
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise((resolve,reject)=>pending.push({resolve,reject}));}},
   './library.module.css':{default:new Proxy({},{get:(_t,key)=>key})},
- },{location:{search},URLSearchParams,...globals});
+ },{location:{search},URLSearchParams,queueMicrotask,...globals});
  const dispose=h.dispose;h.dispose=()=>{dispose();for(const item of pending)item.resolve(response());};
  const render=()=>{const tree=h.render(h.exports.default,{});h.commit();return tree;};
- let tree=render();
+ let tree=render();await settle();tree=render();
  return {h,pending,calls,render,get tree(){return tree;},refresh(){tree=render();return tree;},
   change(name,value){field(tree,name).props.onChange({target:{value}});tree=render();},
   submit(){findNode(tree,n=>n.type==='form').props.onSubmit({preventDefault(){}});tree=render();},
@@ -114,6 +114,17 @@ test('deep links initialize the submitted query and zero-row pages never report 
   await f.answer(response(0,0,'texts'));assert.match(status(f.tree),/No matches/);assert.equal(button(f.tree,'Next').props.disabled,true);
   f.submit();await f.answer(response(0,5,'texts'));assert.doesNotMatch(status(f.tree),/Showing 1–0/);assert.match(status(f.tree),/No further matches/);
  }finally{f.h.dispose();}
+});
+
+test('newspaper links preserve a valid title and reject other title inputs',async()=>{
+ const valid=await fixture('?q=railroad&source=newspapers&from=1900&to=1900&title=SN84029386');
+ const foreign=await fixture('?q=railroad&source=texts&title=SN84029386');
+ const invalid=await fixture('?q=railroad&source=newspapers&title=unrecognized');
+ try{
+  assert.equal(valid.calls[0].query.title,'sn84029386');
+  assert.equal(foreign.calls[0].query.title,undefined);
+  assert.equal(invalid.calls[0].query.title,undefined);
+ }finally{valid.h.dispose();foreign.h.dispose();invalid.h.dispose();}
 });
 
 test('a response arriving after the timeout stays unapplied and can be retried',async()=>{

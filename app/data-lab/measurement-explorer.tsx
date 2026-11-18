@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { fieldLabel, type Collection } from '../collection-metadata';
 import {
   measurementDistribution,
@@ -10,6 +10,7 @@ import {
   type profileCollection,
 } from '../collection-lab';
 import styles from './lab.module.css';
+import { sameRange, type LabMeasurementView } from './lab-bundle';
 
 type FieldProfile = ReturnType<typeof profileCollection>['fields'][number];
 const isUnit = (name: string) => /(^|_)units?(_|$)/.test(name);
@@ -32,19 +33,17 @@ const axisNumber = (value: number) => value !== 0 && (Math.abs(value) < 0.001 ||
   ? value.toExponential(3)
   : compactNumber.format(value);
 
-export default function MeasurementExplorer({ collection, snapshot, fields, busy, save }: {
+export default function MeasurementExplorer({ collection, snapshot, fields, busy, save, view, onViewChange }: {
   collection: Collection;
   snapshot: LabSnapshot;
   fields: ReadonlyArray<FieldProfile>;
   busy: boolean;
   save: (name: string, content: string, type: string) => void;
+  view: LabMeasurementView | null;
+  onViewChange: (view: LabMeasurementView) => void;
 }) {
-  const [fieldName, setFieldName] = useState('');
-  const [contextKey, setContextKey] = useState('');
-  const [selectedBin, setSelectedBin] = useState<number | null>(null);
-
-  const field = fields.find(candidate => candidate.name === fieldName) ?? fields[0];
-  const group = field.groups.find(candidate => candidate.context === contextKey) ?? field.groups[0];
+  const field = fields.find(candidate => candidate.name === view?.field) ?? fields[0];
+  const group = field.groups.find(candidate => candidate.context === view?.context) ?? field.groups[0];
   const distribution = useMemo(
     () => measurementDistribution(collection, snapshot, field.name, group.context),
     [collection, snapshot, field.name, group.context],
@@ -53,7 +52,7 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
     () => collection.geometry ? measurementLayer(collection, snapshot, field.name, group.context) : null,
     [collection, snapshot, field.name, group.context],
   );
-  const activeBin = selectedBin === null ? null : distribution.bins[selectedBin];
+  const activeBin = distribution.bins.find(bin => sameRange(view?.range, bin));
   const tallest = Math.max(1, ...distribution.bins.map(bin => bin.count));
   const firstBin = distribution.bins.at(0);
   const lastBin = distribution.bins.at(-1);
@@ -71,18 +70,14 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
     <div className={styles.measurementControls}>
       <label>Measurement field
         <select value={field.name} onChange={event => {
-          setFieldName(event.target.value);
-          setContextKey('');
-          setSelectedBin(null);
+          const selected = fields.find(candidate => candidate.name === event.target.value);
+          if (selected) onViewChange({ field: selected.name, context: selected.groups[0].context, range: null });
         }}>
           {fields.map(option => <option key={option.name} value={option.name}>{fieldLabel(option.name)}</option>)}
         </select>
       </label>
       <label>Unit &amp; measurement context
-        <select value={group.context} onChange={event => {
-          setContextKey(event.target.value);
-          setSelectedBin(null);
-        }}>
+        <select value={group.context} onChange={event => onViewChange({ field: field.name, context: event.target.value, range: null })}>
           {field.groups.map(option => <option key={option.context} value={option.context}>{contextLabel(option.context)}</option>)}
         </select>
       </label>
@@ -99,9 +94,12 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
               key={index}
               title={intervalLabel(bin)}
               aria-label={`${intervalLabel(bin)}: ${bin.count} ${bin.count === 1 ? 'record' : 'records'}`}
-              aria-pressed={selectedBin === index}
+              aria-pressed={activeBin === bin}
               aria-controls="measurement-range-records"
-              onClick={() => setSelectedBin(index)}
+              onClick={() => onViewChange({
+                field: field.name, context: group.context,
+                range: { lower: bin.lower, upper: bin.upper, includeUpper: bin.includeUpper },
+              })}
             >
               <span className={styles.binMark} aria-hidden="true" style={{ height: `${100 * bin.count / tallest}%` }}>
                 <span>{bin.count}</span>
@@ -125,7 +123,7 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
       </p>
       {activeBin && (activeBin.count ? <div className={styles.rangeTable} role="region" aria-label="Loaded records in selected range" tabIndex={0}>
         <table aria-label="Records in selected range">
-          <thead><tr><th scope="col">Record</th><th scope="col">Recorded value</th><th scope="col">Source</th></tr></thead>
+          <thead><tr><th scope="col">Record</th><th scope="col">Recorded value</th><th scope="col">{snapshot.origin ? 'Source listed in file' : 'Source'}</th></tr></thead>
           <tbody>{activeBin.records.map(record => <tr key={record.id}>
             <th scope="row"><code>{record.id}</code></th>
             <td>{record.value}</td>

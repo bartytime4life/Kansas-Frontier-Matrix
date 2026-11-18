@@ -10,7 +10,7 @@
 //   sources   source names shown while the card waits for its data
 //   tables    the feed tables the builder reads; feeds lists the feeds that fill them
 //   db        the story's main database, 'observations' or 'bulk'; its builder reads tables in the other one as other.<table>
-//   status    'ready' has a lazy visual module; actual data availability is verified by the bundle hook.
+//   status    'ready' has a lazy visual module; 'guided' links to a dedicated source-backed lab.
 //
 // Ready means an instrument exists, not that source admission or publication has occurred.
 // The shared record lab supports bounded source snapshots; dataset gates remain independent.
@@ -18,6 +18,7 @@ export const STORY_GROUPS = Object.freeze(['Deep time', 'Frontier & settlement',
 
 const planned = entry => Object.freeze({ db: 'observations', ...entry, status: 'planned', load: null });
 const ready = entry => Object.freeze({ db: 'observations', ...entry, status: 'ready' });
+const guided = entry => Object.freeze({ db: 'observations', ...entry, status: 'guided', load: null });
 
 export const STORIES = Object.freeze([
   ready({
@@ -62,11 +63,12 @@ export const STORIES = Object.freeze([
     tables: ['kfm_atack_railroads'], feeds: ['railroads-history'],
     load: () => import('./iron-horse.jsx'),
   }),
-  planned({
+  guided({
     id: 'boom-and-ghost-towns', group: 'Frontier & settlement', title: 'Boom & Ghost Towns', kicker: 'POST OFFICES',
-    summary: 'Post offices light up where towns were founded and fade when they closed, 1828 to 2000.',
-    try: 'Scrub the years, watch births against closures, and filter by county.',
-    limit: 'A post office is a proxy for a town, and offices without coordinates cannot be mapped.',
+    href: '/labs/ghost-towns',
+    summary: 'Follow documented post-office openings and closures in Douglas County.',
+    try: 'Move through the years and inspect the location and source behind each event.',
+    limit: 'Postal records describe office events. Some offices lack a reliable mapped location or had interruptions in service.',
     palette: ['#161210', '#f4a261', '#7b6d8d'],
     sources: ['Blevins & Helbock post offices', 'USGS GNIS'],
     tables: ['kfm_blevins_post_offices', 'kfm_gnis_names_2021', 'kfm_gnis_historical_features'],
@@ -194,11 +196,12 @@ export const STORIES = Object.freeze([
     sources: ['USDA NASS Quick Stats'],
     tables: ['kfm_nass_quickstats'], feeds: ['nass'],
   }),
-  planned({
+  guided({
     id: 'water-chemistry', group: 'Living record', title: 'Water Chemistry', kicker: 'WHAT’S IN THE WATER',
-    summary: 'Sampling stations pulse by nitrate and other measures across a century of samples.',
-    try: 'Choose a characteristic and decade, and compare the distribution with a reference level.',
-    limit: 'Sampling targets concerns rather than the average, and a reference level is not a compliance finding.',
+    href: '/labs/water-chemistry',
+    summary: 'Compare two periods of dissolved nitrate samples from the Little Arkansas River near Sedgwick.',
+    try: 'Inspect recorded distributions, sample coverage, and the original results.',
+    limit: 'A historical station comparison describes sampled conditions, with its own method, timing, and reporting limits.',
     palette: ['#08181c', '#4fd1c5', '#f6ad55'],
     sources: ['Water Quality Portal', 'USGS Samples'],
     tables: ['kfm_wqp_results', 'kfm_wqp_stations', 'kfm_usgs_samples_results'],
@@ -224,11 +227,12 @@ export const STORIES = Object.freeze([
     tables: ['kfm_eia_seds_values', 'kfm_eia_seds_series'], feeds: ['eia-seds'],
     load: () => import('./record-lab.jsx'),
   }),
-  planned({
-    id: 'newspaper-pulse', group: 'Data to come', title: 'Newspaper Pulse', kicker: 'WORD TRENDS',
-    summary: 'How often words appear in Kansas newspapers, 1854 to 1922.',
-    try: 'Choose up to six terms and compare normalized frequency by year and title.',
-    limit: 'OCR errors and uneven title coverage shape every line, and frequency is not sentiment.',
+  guided({
+    id: 'newspaper-pulse', group: 'Frontier & settlement', title: 'Newspaper Pulse', kicker: 'DIGITIZED KANSAS PRESS',
+    href: '/labs/newspaper-pulse',
+    summary: 'Trace two terms through two digitized issues of the Abilene Weekly Reflector.',
+    try: 'Compare the share of pages with each term and open the original issues.',
+    limit: 'OCR quality and digitized issue coverage affect both sides of the comparison.',
     palette: ['#151310', '#e8dcc0', '#c96f4a'],
     sources: ['Chronicling America'],
     tables: ['kfm_newspaper_pages', 'kfm_newspaper_pages_fts'], feeds: ['newspaper-text'], db: 'bulk',
