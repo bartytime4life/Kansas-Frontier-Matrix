@@ -42,9 +42,9 @@ Population estimates are selected one year at a time. Tornado rows sharing an
 SPC identifier retain separate date/time/state-sequence identities. An earthquake
 query reaching its 10,000-row cap fails acquisition rather than claiming completeness.
 
-## Source and rights basis
+### Source and rights basis for the nine bundled instruments
 
-The importers read only named public NOAA, Census, USGS, EIA, EPA and KDOT endpoints. Each bundle
+The importers for these nine instruments read only named public NOAA, Census, USGS, EIA, EPA and KDOT endpoints. Each bundle
 records the exact URLs, retrieval times, raw byte counts and SHA-256 hashes.
 The generated manifest binds each shipping filename, size and SHA-256. The
 browser verifies the file before accepting its data. Build validation rejects
