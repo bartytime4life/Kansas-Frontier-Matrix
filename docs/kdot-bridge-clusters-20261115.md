@@ -72,3 +72,16 @@ its name, styled as before.
 - The count is markers, not listings: a listing such as a district can publish several points.
 - The feed, its fields and its limits are unchanged. `app/context-clusters.ts` holds the cluster
   settings and the per-source summary used for both bridges and National Register places.
+
+## Trail sites use the same counted circles (2026-11-18)
+
+The trail-sites layer has about 96 public markers. Most sit where the trails leave the Missouri
+River, so at statewide scale dozens overlapped around Kansas City. Nearby sites are now counted
+in one numbered circle that splits on zoom; from zoom 10 every site sits at its own point with
+its name, styled as before.
+
+- Hovering a circle gives its makeup, for example "14 trail sites in this area · 7 NPS-certified ·
+  Santa Fe 9 · Oregon 6 · California 7". Selecting it zooms to where it splits.
+- A site on a shared corridor counts toward each trail it names, so the trail numbers can add up
+  to more than the number of sites.
+- The feed, its fields and its limits are unchanged.
