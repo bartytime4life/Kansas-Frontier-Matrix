@@ -531,3 +531,10 @@ test("KDWP keeps completed pages when the shared budget shortens a later page, a
   const firstPageTimeout = await run(async () => { throw new Error("unreachable"); }, { slowFirstPage: true });
   assert.equal(firstPageTimeout.response.status, 503, "a first-page timeout still fails the feed");
 });
+
+test("the selected bridge record read is size-bounded and abortable", async () => {
+  const { readFile: read } = await import("node:fs/promises");
+  const page = await read("app/page.tsx", "utf8");
+  assert.match(page, /fetch\(`\/api\/bridge-detail\?id=\$\{encodeURIComponent\(selectedBridgeId\)\}`[\s\S]{0,400}readBoundedJson\(response, 256 \* 1024, controller\.signal\)/);
+  assert.doesNotMatch(await read("app/api/live-context/route.ts", "utf8"), /fetchBoundedJsonArray/, "the unused array reader is removed");
+});
