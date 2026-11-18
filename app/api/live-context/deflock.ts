@@ -7,12 +7,14 @@ export const DEFLOCK_QUERY = `[out:json][timeout:20][maxsize:8388608];area["ISO3
 const PROVIDER_URL = `https://overpass-api.de/api/interpreter?${new URLSearchParams({ data: DEFLOCK_QUERY })}`;
 export const DEFLOCK_CACHE_MS = 60 * 60_000;
 // Each consecutive provider failure doubles the wait before the next attempt, up to
-// 15 minutes, so a long Overpass outage costs visitors one slow request per window
-// instead of one every minute. Any success resets it.
+// 15 minutes. Only the first failure makes a visitor wait: while the provider is known to
+// be failing, later checks run in the background and every request is answered at once.
+// Any success resets it.
 const FAILURE_COOLDOWN_MS = 60_000;
 const MAX_FAILURE_COOLDOWN_MS = 15 * 60_000;
 export const deflockCooldownMs = (failures: number) => Math.min(MAX_FAILURE_COOLDOWN_MS, FAILURE_COOLDOWN_MS * 2 ** Math.max(0, failures - 1));
 const errorMessage = (waitMs: number) => `DeFlock / OpenStreetMap reports are unavailable. No camera locations or absence claim can be inferred. Next provider check in about ${Math.max(1, Math.ceil(waitMs / 60_000))} minute${Math.ceil(waitMs / 60_000) > 1 ? "s" : ""}.`;
+const recheckMessage = "DeFlock / OpenStreetMap reports are unavailable. No camera locations or absence claim can be inferred. Next provider check is running now; try again in about a minute.";
 
 /** One bounded shared read per process; cache only the generalized public projection. */
 export function createDeflockReader(fetcher: typeof fetch = fetch, clock: () => number = Date.now) {
@@ -22,9 +24,11 @@ export function createDeflockReader(fetcher: typeof fetch = fetch, clock: () => 
   return async function readDeflock(): Promise<OfficialContextPayload> {
     const now = clock();
     if (cached && now >= cached.at && now - cached.at < DEFLOCK_CACHE_MS) return cached.payload;
-    if (inFlight) return inFlight;
+    // A check that follows a failure never holds a visitor: it can take 25 seconds to fail again.
+    if (inFlight) { if (failures > 0) throw new Error(recheckMessage); return inFlight; }
     if (now < retryAt) throw new Error(errorMessage(retryAt - now));
-    inFlight = (async () => {
+    const recheck = failures > 0;
+    const attempt = (async () => {
       const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 25_000);
       try {
         const response = await fetcher(PROVIDER_URL, { signal: controller.signal, redirect: "manual", cache: "no-store",
@@ -38,9 +42,11 @@ export function createDeflockReader(fetcher: typeof fetch = fetch, clock: () => 
         cached = null; failures++;
         const wait = deflockCooldownMs(failures); retryAt = clock() + wait;
         throw new Error(errorMessage(wait));
-      } finally { clearTimeout(timer); }
+      } finally { clearTimeout(timer); inFlight = null; }
     })();
-    try { return await inFlight; } finally { inFlight = null; }
+    inFlight = attempt;
+    if (recheck) { attempt.catch(() => {}); throw new Error(recheckMessage); }
+    return attempt;
   };
 }
 export const readDeflock = createDeflockReader();

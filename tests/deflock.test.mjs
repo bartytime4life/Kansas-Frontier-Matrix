@@ -63,7 +63,9 @@ test('concurrent reads coalesce; the one-hour cache preserves retrieval time and
   time += 3_599_999; assert.equal((await read()).retrievedAt, results[0].retrievedAt); assert.equal(calls, 1);
   time++; fail = true; await assert.rejects(read(), /unavailable/); assert.equal(calls, 2);
   await assert.rejects(read(), e => !e.message.includes('secret')); assert.equal(calls, 2, 'failure cooldown prevents a request storm');
-  time += 60_000; fail = false; assert.notEqual((await read()).retrievedAt, results[0].retrievedAt); assert.equal(calls, 3);
+  // After a failure the next check runs in the background; the request after it gets the fresh data.
+  time += 60_000; fail = false; await assert.rejects(read(), /Next provider check is running now/); assert.equal(calls, 3);
+  await new Promise(resolve => setImmediate(resolve)); assert.notEqual((await read()).retrievedAt, results[0].retrievedAt); assert.equal(calls, 3);
 });
 
 test('redirects, failed status, declared oversize and streamed oversize responses fail closed', async () => {
@@ -136,12 +138,38 @@ test('map cells and counts restore after style replacement, respect hide/opacity
 
 test('repeated provider failures back off up to 15 minutes, answer instantly meanwhile, and reset after success', async () => {
   let time = now.getTime(), calls = 0, fail = true;
+  const settle = () => new Promise(resolve => setImmediate(resolve));
   const read = reader.createDeflockReader(async () => { calls++; if (fail) throw new Error('down'); return Response.json(raw()); }, () => time);
   assert.deepEqual([1, 2, 3, 4, 5, 6].map(reader.deflockCooldownMs), [60_000, 120_000, 240_000, 480_000, 900_000, 900_000]);
   await assert.rejects(read(), /Next provider check in about 1 minute\./); assert.equal(calls, 1);
-  time += 60_000; await assert.rejects(read(), /about 2 minutes/); assert.equal(calls, 2);
+  // Once the provider is known to be failing, the next check runs in the background.
+  time += 60_000; await assert.rejects(read(), /Next provider check is running now; try again in about a minute\./); assert.equal(calls, 2);
+  await settle(); await assert.rejects(read(), /about 2 minutes/); assert.equal(calls, 2);
   time += 60_000; await assert.rejects(read(), /about 1 minute/); assert.equal(calls, 2, 'still inside the doubled window: no provider request');
-  time += 60_000; await assert.rejects(read(), /about 4 minutes/); assert.equal(calls, 3);
-  time += 240_000; fail = false; assert.equal((await read()).feed, 'deflock-alpr'); assert.equal(calls, 4);
+  time += 60_000; await assert.rejects(read(), /running now/); assert.equal(calls, 3);
+  await settle(); await assert.rejects(read(), /about 4 minutes/); assert.equal(calls, 3);
+  // Recovery: the background check succeeds, and the request after it gets the data.
+  time += 240_000; fail = false; await assert.rejects(read(), /running now/); assert.equal(calls, 4);
+  await settle(); assert.equal((await read()).feed, 'deflock-alpr'); assert.equal(calls, 4);
   time += 3_600_000; fail = true; await assert.rejects(read(), /about 1 minute\./); assert.equal(calls, 5, 'success reset the backoff');
+});
+
+test('a re-check after a failure never holds a visitor while the provider hangs', async () => {
+  let time = now.getTime(), calls = 0, release;
+  const read = reader.createDeflockReader(() => { calls++; return calls === 1 ? Promise.reject(new Error('down')) : new Promise((_, reject) => { release = () => reject(new Error('still down')); }); }, () => time);
+  await assert.rejects(read(), /about 1 minute\./);
+  time += 60_000;
+  // The provider now hangs. Every request during the hung check is answered at once with the outage sentence.
+  for (let i = 0; i < 3; i++) await assert.rejects(read(), error => /are unavailable\. No camera locations or absence claim can be inferred\. Next provider check is running now/.test(error.message));
+  assert.equal(calls, 2, 'one shared background check, not one per request');
+  release(); await new Promise(resolve => setImmediate(resolve));
+  await assert.rejects(read(), /about 2 minutes/); assert.equal(calls, 2);
+});
+
+test('the first read still waits for the provider and concurrent first reads share one request', async () => {
+  let calls = 0, respond;
+  const read = reader.createDeflockReader(() => { calls++; return new Promise(resolve => { respond = () => resolve(Response.json(raw())); }); }, () => now.getTime());
+  const first = read(), second = read();
+  respond(); const [a, b] = await Promise.all([first, second]);
+  assert.equal(a.feed, 'deflock-alpr'); assert.equal(a, b); assert.equal(calls, 1);
 });
