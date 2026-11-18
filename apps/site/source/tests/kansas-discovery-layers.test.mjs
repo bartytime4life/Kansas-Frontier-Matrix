@@ -463,7 +463,7 @@ test("a numbered circle is summarised for its own source and is never read as on
   assert.equal(clusters.officialClusterSummary("nps-nrhp-places", { featureId: "nrhp-1", name: "Test", landmark: true }), null, "one marker is a record, not a count");
   // Bridges keep their own wording, and a source without clusters is never summarised.
   assert.match(clusters.officialClusterSummary("kdot-bridges-local", { cluster: true, point_count: 40, earliest: 1920, longestFt: 300, closed: 1, posted: 2 }).title, /^40 bridges in this area$/);
-  assert.equal(clusters.officialClusterSummary("nps-trail-places", cluster), null);
+  assert.equal(clusters.officialClusterSummary("usgs-earthquakes", cluster), null);
   assert.equal(clusters.officialClusterSummary(undefined, cluster), null);
 });
 
@@ -537,4 +537,35 @@ test("the selected bridge record read is size-bounded and abortable", async () =
   const page = await read("app/page.tsx", "utf8");
   assert.match(page, /fetch\(`\/api\/bridge-detail\?id=\$\{encodeURIComponent\(selectedBridgeId\)\}`[\s\S]{0,400}readBoundedJson\(response, 256 \* 1024, controller\.signal\)/);
   assert.doesNotMatch(await read("app/api/live-context/route.ts", "utf8"), /fetchBoundedJsonArray/, "the unused array reader is removed");
+});
+
+test("trail sites are counted in numbered circles that split on zoom, and single sites keep their marker and label", () => {
+  const id = "nps-trail-places", source = context.OFFICIAL_CONTEXT_BY_ID[id];
+  const { map, sources, layers } = mapHarness();
+  const visibility = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(item => [item.id, false]));
+  const opacity = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(item => [item.id, item.defaultOpacity]));
+  const data = { type: "FeatureCollection", features: [pointFeature([-97, 38], { featureId: "trail-place-42", name: "Synthetic crossing" })] };
+  context.applyOfficialContextState(map, { ...visibility, [id]: true }, { ...opacity, [id]: 0.6 }, { [id]: { data } });
+  assert.deepEqual(source.layerIds, ["external-nps-trail-places-points", "external-nps-trail-places-labels", "external-nps-trail-places-clusters", "external-nps-trail-places-cluster-count"]);
+  assert.deepEqual(source.interactiveLayerIds, ["external-nps-trail-places-clusters", "external-nps-trail-places-points"]);
+  const one = ["!", ["has", "point_count"]], many = ["has", "point_count"], added = sources.get(source.sourceId);
+  assert.equal(added.cluster, true); assert.equal(added.clusterMaxZoom, clusters.TRAIL_PLACE_CLUSTER_MAX_ZOOM); assert.equal(added.clusterRadius, clusters.TRAIL_PLACE_CLUSTER_RADIUS);
+  assert.deepEqual(Object.keys(added.clusterProperties).sort(), ["california", "certified", "oregon", "ponyExpress", "santaFe"]);
+  assert.deepEqual(layers.get(source.layerIds[0]).filter, one); assert.deepEqual(layers.get(source.layerIds[1]).filter, one);
+  assert.equal(layers.get(source.layerIds[1]).minzoom, 8);
+  assert.deepEqual(layers.get(source.layerIds[2]).filter, many); assert.equal(layers.get(source.layerIds[2]).type, "circle");
+  assert.deepEqual(layers.get(source.layerIds[3]).layout["text-field"], ["get", "point_count_abbreviated"]);
+  assert.match(source.legend, /^Numbered circles count sites and split as you zoom in\./);
+});
+
+test("a trail-site circle says how many sites it holds, how many are certified and which trails they are on", () => {
+  const cluster = { cluster: true, cluster_id: 4, point_count: 31, certified: 18, santaFe: 22, oregon: 14, california: 14, ponyExpress: 0 };
+  assert.deepEqual(clusters.officialClusterSummary("nps-trail-places", cluster), { title: "31 trail sites in this area",
+    detail: "18 NPS-certified · Santa Fe 22 · Oregon 14 · California 14" });
+  assert.deepEqual(clusters.officialClusterSummary("nps-trail-places", { cluster: true, point_count: 2 }), { title: "2 trail sites in this area", detail: "Select to zoom in" });
+  assert.equal(clusters.officialClusterSummary("nps-trail-places", { featureId: "trail-place-1", name: "Council Grove", trails: "Santa Fe" }), null, "one site is a record, not a count");
+  // The totals are counted from each site's own fields: a site on a shared corridor counts toward every trail it names.
+  const totals = clusters.TRAIL_PLACE_CLUSTER_PROPERTIES;
+  assert.deepEqual(totals.certified, ["+", ["case", ["==", ["get", "certified"], "NPS-certified trail site"], 1, 0]]);
+  assert.deepEqual(totals.ponyExpress, ["+", ["case", ["in", "Pony Express", ["to-string", ["coalesce", ["get", "trails"], ""]]], 1, 0]]);
 });

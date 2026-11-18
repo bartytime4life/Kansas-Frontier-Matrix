@@ -2959,12 +2959,23 @@ def test_dead_controls_successor_preserves_accessible_names_inventory_and_all_ho
     )
 
 
-def test_storm_times_successor_preserves_dead_controls_inventory_and_all_holds():
+def test_trail_site_clusters_successor_preserves_dead_controls_inventory_and_all_holds():
     _assert_transport_successor(
-        "site-v268-storm-times-overlay-20261118.json",
+        "site-v268-trail-site-clusters-overlay-20261118.json",
         "site-v268-dead-controls-overlay-20261118.json",
         "4dd639f2b0100619ef6e679418cb45ff4030357f2d7a61ef7d4813591f3e7959",
-        {"app/event-atlas.ts", "app/observatory/workspace.tsx", "tests/event-atlas.test.mjs"},
+        {"app/context-clusters.ts", "app/live-context.ts", "docs/kdot-bridge-clusters-20261115.md",
+         "tests/kansas-discovery-layers.test.mjs"},
         "12c39b6bb118aecf750fc063bf113aba5db4ab85",
+    )
+
+
+def test_storm_times_successor_preserves_trail_site_clusters_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-storm-times-overlay-20261118.json",
+        "site-v268-trail-site-clusters-overlay-20261118.json",
+        "0d385a6aadbbdb981b91cbfc42846882688cd23351bd33365d3ed9dc90fff17b",
+        {"app/event-atlas.ts", "app/observatory/workspace.tsx", "tests/event-atlas.test.mjs"},
+        "8fdefd21d68ea8263566421bb83b238a6ad1f989",
     )
     assert TOOL.RECEIPT.name == "site-v268-storm-times-overlay-20261118.json"
