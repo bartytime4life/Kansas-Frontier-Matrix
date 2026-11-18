@@ -35,7 +35,21 @@
 
 # Kansas Frontier Matrix Explorer
 
-**Next.js dependency candidate — October 22, 2026.** The standalone Node
+**Next.js runtime reconciliation — November 18, 2026.** This source candidate
+pins the runtime package to 16.4.6; the separate ESLint configuration stays at
+16.4.2. It addresses the package ranges in
+[GHSA-mfr8-8qww-v76h](https://github.com/advisories/GHSA-mfr8-8qww-v76h) and
+[GHSA-vc7v-qv4w-wrv8](https://github.com/advisories/GHSA-vc7v-qv4w-wrv8).
+The existing vendored vinext production server, React, starting-page source,
+provider contracts and hosting settings are unchanged. Run
+`node --test tests/next-runtime-compatibility.test.mjs` for the installed-package
+gate and actual Next/vinext request-response compatibility checks. This is a
+source dependency repair, not proof of advisory reachability, deployed package
+versions, independent security review or permission to publish. Reverting the
+four-file dependency/test/documentation change restores the previous source
+composition; no data migration is involved.
+
+**Historical Next.js dependency candidate — October 22, 2026.** The standalone Node
 source pins Next and its ESLint configuration to 16.4.2, preserving the existing
 Vinext, React, Braces fork and hosting settings. See the
 [dependency verification boundary](docs/godaddy-node-preview.md#nextjs-dependency-candidate--2026-10-22).
