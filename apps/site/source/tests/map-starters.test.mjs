@@ -39,10 +39,10 @@ const memoryStorage = () => {
   return { data, writes, getItem: key => data.get(key) ?? null, setItem: (key, value) => { writes.push([key, value]); data.set(key, value); }, removeItem: key => data.delete(key) };
 };
 
-test("eleven bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
+test("twenty bounded starters use only actual public context, preserve source metadata, and make no admission claims", () => {
   const before = JSON.stringify(sources);
-  assert.equal(model.MAP_STARTERS.length, 12);
-  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 12);
+  assert.equal(model.MAP_STARTERS.length, 20);
+  assert.equal(new Set(model.MAP_STARTERS.map(starter => starter.id)).size, 20);
   for (const starter of model.MAP_STARTERS) {
     assert.ok(starter.description && starter.limitation);
     assert.ok(starter.ids.length >= 3 && starter.ids.length <= 4);
@@ -52,6 +52,24 @@ test("eleven bounded starters use only actual public context, preserve source me
   }
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "historical-landscape").limitation, /do not locate archaeological sites/);
   assert.equal(JSON.stringify(sources), before);
+});
+
+test("starters group by theme in menu order, keep a valid default and link only real guides", async () => {
+  const guides = await import(await moduleUrl("app/landing-guides.ts"));
+  const groups = model.startersByTheme();
+  assert.deepEqual(groups.map(group => group.theme), [...model.STARTER_THEMES]);
+  assert.equal(groups.flatMap(group => group.starters).length, model.MAP_STARTERS.length, "every starter has exactly one theme");
+  assert.ok(model.MAP_STARTERS.some(starter => starter.id === model.DEFAULT_STARTER_ID));
+  const slugs = new Set(guides.LANDING_GUIDES.map(guide => guide.slug));
+  for (const starter of model.MAP_STARTERS) if (starter.guide) assert.ok(slugs.has(starter.guide), `${starter.id} links a real guide`);
+  // Older aquifer, seismic, survey, rail and lightning layers each anchor at least one starter.
+  const used = new Set(model.MAP_STARTERS.flatMap(starter => starter.ids));
+  for (const id of ["kgs-saturated-thickness", "kgs-monitoring-wells", "raspberry-shake-stations", "blm-plss-sections", "kdot-rail-active", "noaa-lightning-density", "nasa-lightning-climatology", "kdwp-wildlife-areas", "noaa-nwm-short-range", "kdot-bridges-closed"])
+    assert.ok(used.has(id), `${id} appears in a starter`);
+  const control = await readFile("app/map-starters-control.tsx", "utf8");
+  assert.match(control, /<optgroup key=\{group\.theme\} label=\{group\.theme\}>/);
+  assert.doesNotMatch(control, /MAP_STARTERS\[2\]/, "the fallback starter is found by id, not array position");
+  assert.match(control, /Read the guide →/);
 });
 
 test("held, failed, unknown, proposed and private sources never become selectable", () => {
@@ -126,7 +144,8 @@ test("accessible native controls choose every starter, announce partial coverage
     let tree = render(); await settle(); tree = render();
     const select = findNode(tree, node => node.type === "select");
     assert.ok(select.props["aria-describedby"].includes("map-starters-description"));
-    assert.equal(nodes(tree, "option").length, 12);
+    assert.equal(nodes(tree, "option").length, 20);
+    assert.equal(nodes(tree, "optgroup").length, 6);
     for (const starter of model.MAP_STARTERS) {
       select.props.onChange({ target: { value: starter.id } }); tree = render();
       const button = findNode(tree, node => node.type === "button" && node.props.children === "Use starter");
@@ -179,11 +198,13 @@ test("remembered preference cannot overwrite pending URL restoration; storage fa
 
 test("new starters are marked, Surprise me always moves to a different selectable starter, and limits stay visible", async () => {
   const fresh = model.MAP_STARTERS.filter(starter => starter.isNew);
-  assert.deepEqual(fresh.map(starter => starter.id), ["storm-watch", "rain-and-drought", "fire-season", "heritage-trail", "trails-west", "open-lands"]);
+  assert.deepEqual(fresh.map(starter => starter.id), ["storm-watch", "rain-and-drought", "fire-season", "heritage-trail", "trails-west", "open-lands",
+    "beneath-the-plains", "shaking-ground", "river-flood-watch", "survey-and-soil", "roads-and-rails", "lightning-and-sky", "wild-kansas", "bridges-and-crossings"]);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "storm-watch").limitation, /not a warning service/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "trails-west").limitation, /not public access/);
   assert.match(model.MAP_STARTERS.find(starter => starter.id === "heritage-trail").limitation, /sensitive sites are withheld/);
-  assert.match(model.MAP_STARTERS.find(starter => starter.id === "trails-west").limitation, /not public access/);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "fire-season").limitation, /burn restrictions/);
+  assert.match(model.MAP_STARTERS.find(starter => starter.id === "river-flood-watch").limitation, /not a flood warning/);
   for (const current of model.MAP_STARTERS.map(starter => starter.id)) {
     for (const r of [0, 0.25, 0.5, 0.999999]) {
       const next = model.surpriseStarterId(current, () => r);
@@ -195,7 +216,10 @@ test("new starters are marked, Surprise me always moves to a different selectabl
   const calls = [], props = { sources, access: available, visibility: {}, selectionReady: true, sourceStatus: () => "Available to request", onApply: (ids, title) => calls.push({ ids, title }) };
   const render = () => { const tree = h.render(h.exports.MapStartersControl, props); h.commit(); return tree; };
   let tree = render(); await settle(); tree = render();
-  assert.ok(nodes(tree, "option").some(node => String(node.props.children).endsWith("· new")));
+  assert.equal(nodes(tree, "option").some(node => String(node.props.children).endsWith("· new")), model.starterIsNew({ isNew: true }));
+  assert.equal(model.starterIsNew({ isNew: true }, Date.parse("2026-11-18T00:00:00Z")), true);
+  assert.equal(model.starterIsNew({ isNew: true }, Date.parse("2027-01-01T00:00:00Z")), false, "NEW labels expire");
+  assert.equal(model.starterIsNew({}, Date.parse("2026-11-18T00:00:00Z")), false);
   const before = findNode(tree, node => node.type === "select").props.value;
   const surprise = findNode(tree, node => node.type === "button" && node.props.children === "Surprise me");
   assert.equal(surprise.props.type, "button");

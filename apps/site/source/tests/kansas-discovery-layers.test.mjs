@@ -387,7 +387,7 @@ test("frontier trails draw designated trails solid and study routes dashed, with
   const paint = JSON.stringify(layers.get("external-nps-historic-trails-line").paint["line-color"]);
   for (const stop of discovery.discoveryLegend("nps-historic-trails")) assert.ok(paint.includes(stop.color), stop.label);
   assert.ok(discovery.NEW_LAYER_IDS.has("nps-historic-trails"));
-  assert.deepEqual(topics.officialSourceTopics("nps-historic-trails"), ["history", "places"]);
+  assert.deepEqual(topics.officialSourceTopics("nps-historic-trails"), ["history", "places", "transport"]);
 });
 
 test("trail sites keep public Kansas points, drop private sites and never request contact or editor fields", async () => {
@@ -465,4 +465,27 @@ test("a numbered circle is summarised for its own source and is never read as on
   assert.match(clusters.officialClusterSummary("kdot-bridges-local", { cluster: true, point_count: 40, earliest: 1920, longestFt: 300, closed: 1, posted: 2 }).title, /^40 bridges in this area$/);
   assert.equal(clusters.officialClusterSummary("nps-trail-places", cluster), null);
   assert.equal(clusters.officialClusterSummary(undefined, cluster), null);
+});
+
+test("KDWP layers carry NEW markers and legend chips that share the map paint colours; NEW markers expire", async () => {
+  const { readFile: read } = await import("node:fs/promises");
+  const ts = (await import("typescript")).default;
+  const source = ts.transpileModule(await read("app/kansas-discovery-layers.ts", "utf8"), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText
+    .replace(/from "\.\/kdot-bridges"/, `from ${JSON.stringify("data:text/javascript;base64," + Buffer.from(ts.transpileModule(await read("app/kdot-bridges.ts", "utf8"), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText).toString("base64"))}`);
+  const layers = await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
+  for (const id of ["kdwp-wildlife-areas", "kdwp-wiha-access"]) {
+    assert.ok(layers.NEW_LAYER_IDS.has(id));
+    assert.deepEqual(layers.discoveryLegend(id).map(stop => stop.color), [layers.KDWP_AREA_COLORS[id].fill]);
+  }
+  assert.equal(layers.isNewLayer("kdwp-wiha-access", Date.parse("2026-11-18T00:00:00Z")), true);
+  assert.equal(layers.isNewLayer("kdwp-wiha-access", Date.parse("2027-01-01T00:00:00Z")), false);
+  assert.equal(layers.isNewLayer("census-counties", Date.parse("2026-11-18T00:00:00Z")), false);
+  const context = await read("app/live-context.ts", "utf8");
+  assert.doesNotMatch(context, /\["kdwp-wildlife-areas", "#7fbf6a"/, "map paint reads the shared KDWP colours");
+  assert.match(context, /const \{ fill: color, line \} = KDWP_AREA_COLORS\[id\];/);
+  const page = await read("app/page.tsx", "utf8");
+  assert.match(page, /isNewLayer\(source\.id\) && <> <span className="new-layer-badge" aria-hidden="true"/);
+  assert.match(page, /aria-label=\{`Show \$\{source\.title\}`\}/);
+  assert.match(page, /const goesSelected = Boolean\(officialVisibility\["noaa-goes-geocolor"\]\);/);
+  assert.match(page, /\}, \[buildYearCurrent, goesSelected, refreshNoaaSatelliteFrames, temporalQuery\.frame\]\);/);
 });

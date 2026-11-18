@@ -133,6 +133,11 @@ export const QWEN_KNOWLEDGE_DOMAIN_TERMS = Object.freeze({
     "Lightning flash density": "Number of lightning flashes per area per period, such as per square kilometer per year.",
     "Disaster declaration": "A federal declaration for designated counties that enables FEMA assistance; it is not a map of damage.",
     "Special Flood Hazard Area": "FEMA zones (A, AE and similar) with a 1% or greater annual flood chance, the \"100-year\" floodplain.",
+    "SPC outlook": "Storm Prediction Center forecast of organized severe-storm risk by category, thunder to high; a forecast area, not a watch or warning.",
+    "Local storm report": "A preliminary NWS report of observed hail, wind, tornado, flood or winter impacts at a time and place; later surveys may revise it.",
+    MRMS: "Multi-Radar Multi-Sensor radar rainfall estimate on a 1 km grid; radar can miss or overstate rain and is not a gauge total.",
+    QPF: "Quantitative precipitation forecast: WPC's forecast rain total for a period, such as the next five days.",
+    "Drought outlook": "CPC seasonal forecast of whether drought develops, persists or improves; not current drought conditions or a designation.",
   }),
   "Fire, smoke & hazards": Object.freeze({
     "Active fire detection": "A satellite pixel markedly hotter than its surroundings; VIIRS pixels are about 375 m and MODIS about 1 km.",
@@ -156,6 +161,8 @@ export const QWEN_KNOWLEDGE_DOMAIN_TERMS = Object.freeze({
     "Sixth Principal Meridian": "The north-south survey line Kansas townships and ranges are counted from; its baseline is the Kansas-Nebraska border.",
     MLRS: "BLM Mineral and Land Records System, source of the lease layers.",
     "Federal mineral lease": "A BLM authorization to develop federally owned minerals; surface ownership may differ.",
+    SSURGO: "NRCS Soil Survey Geographic database of soil map units mapped at about 1:12,000 to 1:24,000; shown only at close zoom.",
+    "Soil map unit": "A mapped soil-survey polygon that can contain several soils and inclusions; not a site soil test or building approval.",
   }),
   "Geology & hazards": Object.freeze({
     Magnitude: "Logarithmic measure of earthquake size; each whole step is about 32 times more energy.",
@@ -182,12 +189,16 @@ export const QWEN_KNOWLEDGE_DOMAIN_TERMS = Object.freeze({
     "Land-cover class": "A mapped category such as cultivated crops or grassland; classes carry mapping error and are not land ownership or use permits.",
     "PAD-US": "Protected Areas Database of the United States, a USGS compilation of agency-reported public and protected lands.",
     "Fee manager": "The agency type that owns and manages a protected parcel in PAD-US; it does not imply public access.",
+    "KDWP wildlife area": "Public land managed by the Kansas Department of Wildlife and Parks for wildlife and hunting; rules, refuges and closures vary.",
+    WIHA: "Walk-In Hunting Access: private land KDWP leases for public hunting during set seasons under program rules; still private land.",
   }),
   "History & cultural heritage": Object.freeze({
     "National Register of Historic Places": "The federal list of buildings, districts, sites, structures and objects judged worthy of preservation, kept by the National Park Service.",
     "National Historic Landmark": "A nationally significant property designated by the Secretary of the Interior; a smaller set within the National Register.",
     "NRIS reference number": "The National Register's identifier for one listing.",
     "Restricted location": "A listing whose location NPS withholds, often an archaeological site; the Site never shows or infers it.",
+    "National Historic Trail": "A congressionally designated route such as the Santa Fe, Oregon, California or Pony Express trail; mapped alignments are approximate.",
+    "Cattle trail": "A post-Civil War route for driving Texas cattle to Kansas railheads, such as the Chisholm and Western trails; shown as NPS study routes.",
   }),
   "Reference boundaries & locators": Object.freeze({
     "FIPS code": "Federal numeric code for a state or county; Kansas is 20.",

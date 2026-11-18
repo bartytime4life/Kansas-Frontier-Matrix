@@ -83,6 +83,10 @@ differences. [Trust membrane](docs/doctrine/trust-membrane.md) · [Truth posture
 The October 27 public welcome contained **19 categories in four groups**, verified against the
 [category source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/app/layer-workspaces.ts) and the public welcome on October 27.
 These are navigation choices; this count does not certify every layer or provider.
+The repository Explorer in `apps/site/source` currently arranges its layers into 17 subjects
+in four groups, with 20 themed starters and 13 plain-language map guides under `/explore`
+([November 18 note](apps/site/source/docs/explorer-old-and-new-data-2026-11-18.md)). Those
+repository counts are not a hosted-site readback.
 
 | Start with | Explore next | Read the implementation guide |
 |---|---|---|

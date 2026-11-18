@@ -114,3 +114,13 @@ device matrix, long-session resource retention and comprehensive visual and
 accessibility acceptance remain unverified. No synthetic benchmark or successful
 publication closes those gates. Source-provider failures and missing coverage
 remain explicit rather than replaced with invented data.
+
+## Since October 11
+
+Later layer work keeps these rules and records its own reads:
+
+- [KDOT bridge clusters](kdot-bridge-clusters-20261115.md): one shared inventory read per network, cached for a day, with outage backoff.
+- [Outdoor access and soil layers](explorer-outdoor-access-soil-layers-2026-11-13.md): KDWP pages of 2,000 up to 6,000 polygons. Since November 18 all pages share a 25 s budget below the 30 s browser read limit.
+- [Older and newer layers together](explorer-old-and-new-data-2026-11-18.md): Set-based row membership, memoized topic search, a GOES refresh tied to its own layer, bounded Observatory reads and `npm run measure:layers`.
+
+These notes do not re-run the October 11 measurements.

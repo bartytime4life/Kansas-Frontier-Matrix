@@ -9,7 +9,7 @@ import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
 import { FrameCheck } from "./frame-check";
 import { MapStartersControl } from "./map-starters-control";
-import { discoveryLegend, NEW_LAYER_IDS } from "./kansas-discovery-layers";
+import { discoveryLegend, isNewLayer } from "./kansas-discovery-layers";
 import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
@@ -2578,6 +2578,8 @@ export default function Home() {
   }, [debouncedLayerQuery]);
   const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, "")
     .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
+  // One Set per render keeps each of the ~60 source rows an O(1) membership check.
+  const listedOfficialSourceIds = new Set<string>(listedOfficialSources.map(source => source.id));
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -3099,7 +3101,8 @@ export default function Home() {
     setOfficialErrors((current) => ({ ...current, "nws-radar": undefined }));
     try {
       const response = await fetch(NOAA_RADAR_FRAME_API_PATH, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
-      const candidate = await response.json() as unknown;
+      // The frame manifest is a short list of timestamps; refuse an oversized body instead of parsing it.
+      const candidate = await readBoundedJson(response, 1024 * 1024, controller.signal);
       if (!response.ok || !isNoaaRadarManifest(candidate)) throw new Error("The fixed NOAA frame adapter returned an invalid or unavailable manifest.");
       const manifestCheckedAt = Date.now();
       if (candidate.freshness !== "current" || !noaaRadarManifestIsFresh(candidate, manifestCheckedAt)) throw new Error("The newest NOAA radar observation is more than 15 minutes old.");
@@ -6869,12 +6872,14 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest, runMapMutation, runtimeOfficialVisibility]);
 
+  // Depend on the GOES selection alone: toggling an unrelated layer must not refetch frames or restart the timer.
+  const goesSelected = Boolean(officialVisibility["noaa-goes-geocolor"]);
   useEffect(() => {
-    if (!buildYearCurrent || !officialVisibility["noaa-goes-geocolor"] || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    if (!buildYearCurrent || !goesSelected || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
     void refreshNoaaSatelliteFrames(true);
     const timer = window.setInterval(() => { void refreshNoaaSatelliteFrames(true); }, 300_000);
     return () => window.clearInterval(timer);
-  }, [buildYearCurrent, officialVisibility, refreshNoaaSatelliteFrames, temporalQuery.frame]);
+  }, [buildYearCurrent, goesSelected, refreshNoaaSatelliteFrames, temporalQuery.frame]);
 
   useEffect(() => {
     if (buildYearCurrent) return;
@@ -9764,7 +9769,7 @@ export default function Home() {
               : officialStates[id] === "idle" ? "Available to request · response not checked" : `Not selected · ${officialStates[id]}`}
             onApply={applyStarterContext} />
           <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
-          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
+          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage →</Link><Link href="/explore">Map guides →</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
           <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)} />
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
@@ -9789,8 +9794,8 @@ export default function Home() {
               const riverArchiveSpan = streamflowCoverage?.station === streamflowSelectedStationId && !streamflowCoverage.partial ? streamflowCoverage.continuous : null;
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
-              return <article key={source.id} hidden={!listedOfficialSources.some(item => item.id === source.id)} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}{NEW_LAYER_IDS.has(source.id) && <span className="new-layer-badge" title="Added in the November 2026 layer refresh">NEW</span>}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
+              return <article key={source.id} hidden={!listedOfficialSourceIds.has(source.id)} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
+                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`Show ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}{isNewLayer(source.id) && <> <span className="new-layer-badge" aria-hidden="true" title="Added in the November 2026 layer refresh">NEW</span><span className="sr-only">, new layer</span></>}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
                 {officialVisibility[source.id] && state === "loading" && source.apiPath && <small role="status">{officialReadPhases[source.id] === "queued" ? "Waiting for a loading slot…" : "Receiving source data…"} You can hide this layer to cancel.</small>}
                 {officialVisibility[source.id] && state === "error" && <div className="layer-request-recovery">
                   <p role="alert">{officialArchiveDays[source.id as OfficialContextFeedId] ? `Could not load ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC.` : feedOutageExplanation(officialErrors[source.id]) ?? "Could not load source data."} {source.apiPath ? "This layer has no data on the map." : "Check Source quality for the failure and any retained observations."} Try again or hide it.</p>
@@ -9826,7 +9831,7 @@ export default function Home() {
 
 
                 {source.legend && <p className="reference-layer-legend"><i style={{ backgroundColor: source.color }} aria-hidden="true" />{source.legend}</p>}
-                {discoveryLegend(source.id) && <ul className="discovery-legend" aria-label={`${source.shortTitle} legend`}>{discoveryLegend(source.id)!.map(stop => <li key={stop.label}><i style={{ backgroundColor: stop.color }} aria-hidden="true" />{stop.label}</li>)}</ul>}
+                {(() => { const legend = discoveryLegend(source.id); return legend && <ul className="discovery-legend" aria-label={`${source.shortTitle} legend`}>{legend.map(stop => <li key={stop.label}><i style={{ backgroundColor: stop.color }} aria-hidden="true" />{stop.label}</li>)}</ul>; })()}
                 {isBridgeLayer(source.id) && <BridgeRecordInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} reducedMotion={reducedMotion} />}
                 {isBlmPlssLayer(source.id) && <BlmPlssInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} />}
                 {GROUNDWATER_MANIFEST.find(item => item.id === source.id)?.legend.map(item => <p className="reference-layer-legend" key={item.value}><i style={{ backgroundColor: item.color }} aria-hidden="true" />{item.label} ft</p>)}

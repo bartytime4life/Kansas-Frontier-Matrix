@@ -109,6 +109,12 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
   "nps-trail-places": "nps-trail-places",
 };
 
+/** A source read through /api/live-context names its feed in apiPath; deriving it keeps new feeds (such as the KDOT bridge lists) from showing no feed. */
+const apiPathFeed = (source: { apiPath?: string }): OfficialContextFeedId | null => {
+  const feed = source.apiPath ? new URLSearchParams(source.apiPath.split("?")[1] ?? "").get("feed") : null;
+  return feed ? feed as OfficialContextFeedId : null;
+};
+
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
 "kgs-aquifer-alluvial": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
 "kgs-aquifer-dakota": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
@@ -195,7 +201,7 @@ export const SITE_CONNECTIONS = Object.freeze(
     status: source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER" ? "DISPLAY_CONTEXT" : "ACTIVE_CONTEXT",
     role: source.evidenceRole,
     endpoint: connectionEndpoint(source),
-    feed: CONNECTION_FEEDS[source.id] ?? null,
+    feed: CONNECTION_FEEDS[source.id] ?? apiPathFeed(source),
     sourceUrl: source.sourceUrl,
     serviceUrl: source.serviceUrl,
     freshness: source.freshness,

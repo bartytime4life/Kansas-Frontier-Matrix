@@ -16,6 +16,12 @@ reading source details and downloading reviewed records retain their exact
 selection and evidence context. The dated implementation notes in the index
 explain these independent corrections and their limits.
 
+Since then (November 13–18) the mirror has added storm, rain, land-cover,
+outdoor-access, trail, historic-place and bridge layers. It also has
+[20 themed starters, 13 `/explore` guides and Science lab map links](docs/explorer-old-and-new-data-2026-11-18.md)
+that combine those layers with the older aquifer, seismic, survey, rail and
+lightning layers.
+
 The project keeps its original Sites identity and preservation record. The
 repository mirror, public Node website, private Site and any installed local
 copy have separate source/runtime state. No new deployed version or hosted parity

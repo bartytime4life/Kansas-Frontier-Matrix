@@ -6,6 +6,10 @@ import { LightningArchiveControl } from "./lightning-archive-control";
 import { LightningYearControl } from "./lightning-year-control";
 import { GLM_FLASH_WINDOWS, GLM_NOAA_SOURCE, glmFlashPlaybackBounds, glmFlashBins, type GlmFlash, type GlmFlashSnapshot, type GlmFlashWindow } from "./lightning-flashes";
 import { createTimePointLayer, type TimePointLayer, type TimePointWindow } from "./time-point-layer";
+import { readSuccessfulJson } from "./bounded-json";
+
+/** 5,000 flashes with their fields stay well under this; a larger body is refused, not parsed. */
+const MAX_FLASH_RESPONSE_BYTES = 2 * 1024 * 1024;
 
 // One GPU layer draws the halo and core passes. Flashes upload once per
 // snapshot; playback only changes the time window (shader uniforms), so the
@@ -52,15 +56,17 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   useEffect(() => {
     if (!enabled || sourceMode !== "recent") return;
     const abort = new AbortController();
-    let disposed = false;
+    let disposed = false, loaded = false;
     const refresh = async () => {
+      // After the first read, a hidden tab keeps its last snapshot; polling resumes on the next visible tick.
+      if (loaded && typeof document !== "undefined" && document.hidden) return;
       setLoadState((current) => current === "ready" ? current : "loading");
       try {
         const response = await fetch(`/api/lightning/flashes?minutes=${windowMinutes}`, { signal: abort.signal, cache: "no-store" });
-        if (!response.ok) throw new Error("Flash feed unavailable");
-        const next: GlmFlashSnapshot = await response.json();
+        const next = await readSuccessfulJson(response, MAX_FLASH_RESPONSE_BYTES, abort.signal) as GlmFlashSnapshot;
         if (next.evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || next.source !== "NOAA_GOES19_GLM_VIA_ATMOSTORM" || next.windowMinutes !== windowMinutes || !Array.isArray(next.flashes) || next.flashes.length > 5_000 || !["ready", "empty", "partial", "stale"].includes(next.state)) throw new Error("Flash response invalid");
         if (disposed) return;
+        loaded = true;
         setSnapshot(next);
         const nextBounds = glmFlashPlaybackBounds(next);
         setCursor((current) => current >= nextBounds.start && current <= nextBounds.end ? current : nextBounds.start);

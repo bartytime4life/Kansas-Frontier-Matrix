@@ -2,6 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
+import { readSuccessfulJson } from "./bounded-json";
+
+/** The availability list is a few hundred day strings; a stalled or oversized reply is abandoned. */
+const AVAILABILITY_TIMEOUT_MS = 20_000;
+const AVAILABILITY_MAX_BYTES = 256 * 1024;
 import {
   SOIL_GEOLOCATION_NOTICE,
   SOIL_GLOBAL_BOUNDS_WGS84,
@@ -143,15 +148,21 @@ export function SoilMoistureControl({
     setDay(next);
   }, [day, view]);
 
+  const availabilityAbortRef = useRef<AbortController | null>(null);
+  useEffect(() => () => availabilityAbortRef.current?.abort(), []);
   const checkAvailability = useCallback(async (retry = false) => {
     const id = ++requestId.current;
     setChecking(true);
     setPlaying(false);
     try {
-      const response = await fetch("/api/soil-moisture/availability" + (retry ? "?retry=1" : ""), { cache: "no-store" });
-      const data = await response.json() as Availability;
+      availabilityAbortRef.current?.abort();
+      const controller = new AbortController();
+      availabilityAbortRef.current = controller;
+      const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(AVAILABILITY_TIMEOUT_MS)]);
+      const response = await fetch("/api/soil-moisture/availability" + (retry ? "?retry=1" : ""), { cache: "no-store", signal });
+      const data = await readSuccessfulJson(response, AVAILABILITY_MAX_BYTES, signal) as Availability;
       if (id !== requestId.current) return;
-      if (!response.ok || data.state === "error" || !Array.isArray(data.availableDays)) throw new Error("NASA availability failed.");
+      if (data.state === "error" || !Array.isArray(data.availableDays)) throw new Error("NASA availability failed.");
       setAvailability(data);
       const ordered = [...data.availableDays].reverse();
       const latest = ordered.at(-1) ?? "";

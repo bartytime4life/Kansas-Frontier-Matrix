@@ -28,14 +28,16 @@ export function DataNotices({ issues = [], onRetry, onHide, onFireSaved, embedde
     if (!eventDay(fireDay) || fireDay < "2018-01-01" || fireDay > currentUtcDay()) { setFireStatus("Choose a supported exact UTC day."); return; }
     setFireBusy(true); setFireStatus(`Checking NASA detections for ${fireDay} UTC…`);
     try {
-      const response = await fetch(`/api/live-context?feed=nasa-gibs-fire-points&day=${encodeURIComponent(fireDay)}`, { cache: "no-store" });
-      const payload = await readBoundedJson(response, 8 * 1024 * 1024);
+      // A stalled provider must not leave the save button busy indefinitely.
+      const signal = AbortSignal.timeout(45_000);
+      const response = await fetch(`/api/live-context?feed=nasa-gibs-fire-points&day=${encodeURIComponent(fireDay)}`, { cache: "no-store", signal });
+      const payload = await readBoundedJson(response, 8 * 1024 * 1024, signal);
       if (!response.ok) throw new Error("NASA detections are unavailable for this UTC day.");
       const bytes = await saveFireDay(fireDay, payload);
       const count = typeof payload === "object" && payload !== null && "featureCount" in payload ? Number(payload.featureCount) : 0;
       setFireStatus(`${count} dated detections saved (${(bytes / 1024).toFixed(1)} KiB) to this browser's map directory. Empty or partial coverage is not an all-clear.`);
       onFireSaved?.(fireDay);
-    } catch (error) { setFireStatus(error instanceof Error ? error.message : "Map download failed."); }
+    } catch (error) { setFireStatus(error instanceof DOMException && error.name === "TimeoutError" ? "NASA detections did not arrive in time. Try again." : error instanceof Error ? error.message : "Map download failed."); }
     finally { setFireBusy(false); }
   };
   useEffect(() => {

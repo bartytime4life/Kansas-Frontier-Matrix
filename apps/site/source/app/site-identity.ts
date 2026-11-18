@@ -12,3 +12,6 @@ export const SITE_IDENTITY = Object.freeze({
   repositoryManifestStatus: "SAME_PROJECT_DISTINCT_SOURCE_AND_BINDINGS",
   sourceRelation: "SEPARATE_SOURCE_HISTORIES",
 });
+
+/** Origin for canonical links, the sitemap and provider User-Agent contact strings. */
+export const PUBLIC_SITE_ORIGIN = SITE_IDENTITY.canonicalUrl;

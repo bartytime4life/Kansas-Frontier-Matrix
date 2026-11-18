@@ -2,6 +2,8 @@ import Link from "next/link";
 
 const ROUTES = [
   ["/", "Explorer map", "Layers, time, Underground and the Evidence Drawer."],
+  ["/explore", "Map guides", "Ready-made maps of storms, rivers, trails, aquifers and more."],
+  ["/topics", "Explore by subject", "Layers and tools grouped by subject, with their limits."],
   ["/observatory", "Event Observatory", "Dated radar, smoke, streamflow and weather archives."],
   ["/knowledge", "Kansas knowledge", "Released places, people, events and stories."],
   ["/data", "Data commons", "Propose a source or follow a submission."],

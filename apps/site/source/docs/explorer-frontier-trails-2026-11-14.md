@@ -71,3 +71,5 @@ and terrain.
 
 Revert the commit. The change touches no data, settings or provider
 configuration. The local companion's official-source cap goes from 60 to 61 here (57 to 58 on the hosted composition).
+The later trail sites layer (`nps-trail-places`, commit `11f07c6e`) raised the same cap from 61 to 62, the
+current count of official context sources.

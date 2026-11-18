@@ -21,3 +21,5 @@
 .cards p { font-size: 14px; }
 .page :focus-visible { outline: 2px solid #e5c887; outline-offset: 4px; }
 @media (max-width: 480px) { .page { padding-top: 12px; } .article, .index { margin-top: 20px; } }
+.srOnly { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.starterNote { max-width: 880px; margin: 24px auto 0; color: #c8d4df; font-size: 14px; line-height: 1.6; }

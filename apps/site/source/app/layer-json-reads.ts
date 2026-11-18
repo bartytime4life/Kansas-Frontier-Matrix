@@ -74,7 +74,7 @@ export class LayerJsonReads {
           job.controller.signal.throwIfAborted();
           // A failed feed explains itself (what is unavailable, what cannot be inferred, when it is checked next); show that.
           if (!result.response.ok) throw new Error(adapterErrorText(result.body) ?? `Source adapter returned an unavailable or incompatible response (HTTP ${result.response.status}).`);
-          if (!job.validate(result.body)) throw new Error(`Source adapter returned an unavailable or incompatible response (HTTP ${result.response.status}).`);
+          if (!job.validate(result.body)) throw new Error("Source adapter returned an incompatible response that did not match the requested layer, so nothing was drawn.");
           // At most four 8 MiB responses, with original source/retrieval timestamps.
           if (job.cacheMs && job.maxBytes <= 8 * 1024 * 1024) {
             this.cache.set(job.key, { result, expires: this.now() + Math.min(job.cacheMs, 300_000) });

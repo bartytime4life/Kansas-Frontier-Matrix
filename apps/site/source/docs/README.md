@@ -1,7 +1,8 @@
 # Explorer documentation
 
 Use these guides for the repository Explorer. The reviewed source checkpoint is
-main `d4d84171653a2f2582b48ece511dc010857fde15` on November 11, 2026.
+main `d4d84171653a2f2582b48ece511dc010857fde15` on November 11, 2026. Later layer,
+guide, cluster and starter work (November 13–18) is described in the dated notes below.
 [Installation and verification](../../../../docs/installation.md#explorer-site-mirror) ·
 [Repository review](../../../../docs/reports/documentation-currentness-review-20261111.md) ·
 [Application README](../README.md).
@@ -10,7 +11,10 @@ main `d4d84171653a2f2582b48ece511dc010857fde15` on November 11, 2026.
 
 | Task | Guide |
 |---|---|
-| Try the new storm, rain, land-cover and historic-place layers | [Discovery layers and starters](explorer-discovery-layers-2026-11-13.md) |
+| Open a ready-made map with an explanation | `/explore` (13 guides) and [older and newer layers together](explorer-old-and-new-data-2026-11-18.md) |
+| Pick a themed starter or a Science lab layer set | [Starters, guides and Science lab links](explorer-old-and-new-data-2026-11-18.md) |
+| Try the storm, rain, land-cover and historic-place layers | [Discovery layers and starters](explorer-discovery-layers-2026-11-13.md) |
+| Read KDOT bridges or National Register places as counted circles | [Bridge and register clusters](kdot-bridge-clusters-20261115.md) |
 | See KDWP wildlife areas, walk-in hunting access and soil map units | [Outdoor access and soil survey layers](explorer-outdoor-access-soil-layers-2026-11-13.md) |
 | Follow the Santa Fe, Oregon, Pony Express and cattle trails | [Frontier trails layer](explorer-frontier-trails-2026-11-14.md) |
 | Replay a day, inspect a current record or recover a stalled read | [Observatory replay](observatory-replay.md) |
@@ -96,6 +100,8 @@ checks or establish current deployment, browser acceptance or source admission.
 - [Discovery layers, legend chips and themed starters — November 13, 2026](explorer-discovery-layers-2026-11-13.md)
 - [Outdoor access and soil survey layers — November 13, 2026](explorer-outdoor-access-soil-layers-2026-11-13.md)
 - [Frontier trails layer — November 14, 2026](explorer-frontier-trails-2026-11-14.md)
+- [KDOT bridge and National Register clusters — November 15–16, 2026](kdot-bridge-clusters-20261115.md)
+- [Older and newer layers together: starters, guides, Science lab links and reliability — November 18, 2026](explorer-old-and-new-data-2026-11-18.md)
 - [Explorer local-port reconciliation](explorer-local-port-20261017.md)
 - [Reading context and keyboard ownership](explorer-reading-context-integrity-2026-11-09.md)
 - [Explorer reliability review — 2026-10-06](explorer-reliability-review-2026-10-06.md)

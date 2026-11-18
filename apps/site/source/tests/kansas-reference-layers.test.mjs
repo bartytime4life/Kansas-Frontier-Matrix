@@ -72,7 +72,8 @@ test("Kansas reference overlays stay independent and do not request images while
 
 test("BLM, roads, rail, and hazards remain searchable through focused topics", () => {
   const all = context.OFFICIAL_CONTEXT_SOURCES;
-  assert.deepEqual(workspaces.filterOfficialSources(all, "transport", "").map(s => s.id), workspaces.TRANSPORT_SOURCE_IDS);
+  // KDOT transport references first, then the frontier trail layers that also belong to Transportation.
+  assert.deepEqual(workspaces.filterOfficialSources(all, "transport", "").map(s => s.id), [...workspaces.TRANSPORT_SOURCE_IDS, "nps-historic-trails", "nps-trail-places"]);
   assert.equal(workspaces.filterOfficialSources(all, "transport", "railroad").length, 2);
   assert.equal(workspaces.filterOfficialSources(all, "land", "BLM").length, 5);
   assert.equal(workspaces.filterOfficialSources(all, "disaster", "flood").some(s => s.id === "fema-flood-zones"), true);
