@@ -35,6 +35,7 @@ import {
   radarReplayFrames,
   smokeAt,
   type EventManifest,
+  wholeSecondUtc,
 } from "../event-atlas";
 import { parseStreamflowBundle, buildStreamflowFrame, buildHydrographSegments, type StreamflowBundle } from "../streamflow";
 import { NEXRAD_EARLIEST_DAY, NEXRAD_SOURCE_PAGE, stormRadarSites, type StormAvailability, type StormFrame } from "../nexrad-storms";
@@ -586,9 +587,13 @@ export default function EventObservatory() {
 
   const getStorms = useCallback(async (time: string, signal: AbortSignal) => {
     const cached = stormCache.current.get(time); if (cached) return cached;
-    const response = await fetch(`/api/event-atlas/storms?time=${encodeURIComponent(time)}`, { signal });
+    // Frames merge several sources' clocks, some with milliseconds; the storm
+    // archive accepts exact whole-second UTC. The latest scan before a frame is
+    // the same for both, so request the frame's second.
+    const second = wholeSecondUtc(time);
+    const response = await fetch(`/api/event-atlas/storms?time=${encodeURIComponent(second)}`, { signal });
     const body = await readObservatoryJson(response, OBSERVATORY_FEED_BYTES, signal);
-    if (!response.ok || body.format !== "kfm-nexrad-storms-v1" || body.time !== time || body.data?.type !== "FeatureCollection") throw new Error(body.message ?? "Storm scans unavailable for this time.");
+    if (!response.ok || body.format !== "kfm-nexrad-storms-v1" || body.time !== second || body.data?.type !== "FeatureCollection") throw new Error(body.message ?? "Storm scans unavailable for this time.");
     stormCache.current.set(time, body);
     for (const key of stormCache.current.keys()) if (stormCache.current.size > 24) stormCache.current.delete(key);
     return body as StormFrame;

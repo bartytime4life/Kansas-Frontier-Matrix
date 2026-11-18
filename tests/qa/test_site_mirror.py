@@ -2968,4 +2968,14 @@ def test_trail_site_clusters_successor_preserves_dead_controls_inventory_and_all
          "tests/kansas-discovery-layers.test.mjs"},
         "12c39b6bb118aecf750fc063bf113aba5db4ab85",
     )
-    assert TOOL.RECEIPT.name == "site-v268-trail-site-clusters-overlay-20261118.json"
+
+
+def test_storm_times_successor_preserves_trail_site_clusters_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-storm-times-overlay-20261118.json",
+        "site-v268-trail-site-clusters-overlay-20261118.json",
+        "0d385a6aadbbdb981b91cbfc42846882688cd23351bd33365d3ed9dc90fff17b",
+        {"app/event-atlas.ts", "app/observatory/workspace.tsx", "tests/event-atlas.test.mjs"},
+        "8fdefd21d68ea8263566421bb83b238a6ad1f989",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-storm-times-overlay-20261118.json"

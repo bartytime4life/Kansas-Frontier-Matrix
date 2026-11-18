@@ -23,6 +23,11 @@ export type EventHourAvailability = EventHourSlot & Readonly<{
   supported: boolean;
 }>;
 
+/** The UTC instant truncated to its whole second, as the archive endpoints expect. */
+export function wholeSecondUtc(value: string): string {
+  return new Date(Math.floor(Date.parse(value) / 1000) * 1000).toISOString();
+}
+
 export function exactUtc(value: string): string | null {
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.000)?Z$/.test(value)) return null;
   const ms = Date.parse(value);
@@ -80,7 +85,8 @@ export function eventDayHours(value: string): readonly EventHourSlot[] {
 export function eventInterval(start: string, hours: number, now = Date.now()) {
   const from = exactUtc(start);
   if (!from || ![1, 6, 24].includes(hours) || Date.parse(from) < Date.parse(`${EVENT_EARLIEST_DAY}T00:00:00Z`) || Date.parse(from) >= now) throw new Error("Choose a valid UTC start since 1800 and a 1, 6, or 24 hour interval, not in the future.");
-  const end = new Date(Math.min(Date.parse(from) + hours * 3_600_000, now)).toISOString();
+  // Archive endpoints accept exact whole-second UTC; a clock-clamped end must not carry milliseconds.
+  const end = new Date(Math.min(Date.parse(from) + hours * 3_600_000, Math.floor(now / 1000) * 1000)).toISOString();
   if (Date.parse(end) <= Date.parse(from)) throw new Error("The interval must contain past time.");
   return { start: from, end };
 }

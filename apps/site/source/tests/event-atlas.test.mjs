@@ -35,6 +35,26 @@ test("event interval rejects ambiguous/future/rollover dates and unbounded windo
   assert.deepEqual(atlas.intervalDays("2024-01-01T00:00:00Z","2024-01-02T00:00:00Z"),["2024-01-01"]);
 });
 
+test("a clock-clamped interval end and storm frame times are exact whole-second UTC", () => {
+  // Observatory requests built from Date.now() carried milliseconds, which the
+  // storm archive's exact-UTC check rejected with 400 for the current window.
+  const now = Date.parse("2026-11-18T16:56:17.183Z");
+  const { start, end } = atlas.eventInterval("2026-11-18T00:00:00Z", 24, now);
+  assert.equal(start, "2026-11-18T00:00:00.000Z");
+  assert.equal(end, "2026-11-18T16:56:17.000Z", "the end is truncated, never rounded into the future");
+  assert.equal(atlas.exactUtc(end), end, "the archive validator accepts the end as sent");
+  assert.equal(atlas.eventInterval("2024-01-01T00:00:00Z", 6, now).end, "2024-01-01T06:00:00.000Z", "a past interval keeps its full length");
+  assert.equal(atlas.wholeSecondUtc("2026-11-18T16:55:17.178Z"), "2026-11-18T16:55:17.000Z");
+  assert.equal(atlas.wholeSecondUtc("2026-11-18T16:55:00.000Z"), "2026-11-18T16:55:00.000Z");
+  assert.equal(atlas.exactUtc(atlas.wholeSecondUtc("2026-11-18T16:55:17.999Z")), "2026-11-18T16:55:17.000Z");
+});
+
+test("the Observatory asks the storm archive for whole-second frame times", async () => {
+  const workspace = await readFile(new URL("../app/observatory/workspace.tsx", import.meta.url), "utf8");
+  assert.match(workspace, /const second = wholeSecondUtc\(time\);\s*const response = await fetch\(`\/api\/event-atlas\/storms\?time=\$\{encodeURIComponent\(second\)\}`/);
+  assert.match(workspace, /body\.time !== second/);
+});
+
 test("calendar weeks retain all 24 UTC hours when a checked day has gaps", () => {
   assert.equal(atlas.eventDay("2007-05-05"), "2007-05-05");
   assert.equal(atlas.eventDay("2007-02-29"), null);
