@@ -1271,9 +1271,10 @@ def test_historical_privacy_receipt_binds_only_home_path_redactions(monkeypatch:
     for name in changed:
         entry, before = receipt["comparison"][name], previous["comparison"][name]
         # The immutable receipt above pins the historical bytes. Navigation
-        # guidance now has a strict selected successor; privacy still holds below.
+        # guidance and the basemap notes (missing-tile warning, 2026-11-18) now
+        # have strict selected successors; privacy still holds below.
         digest = declarations[name]["mirror_sha256"]
-        if name != "docs/unified-download-workspace.md":
+        if name not in {"docs/unified-download-workspace.md", "docs/basemap-cache.md"}:
             assert hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest() == digest
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         assert entry["site_sha256"] == before["site_sha256"]
@@ -2908,4 +2909,15 @@ def test_picomatch_redos_successor_preserves_coverage_inventory_and_all_holds():
          "vendor/picomatch-4.0.7-kfm.1.tgz", "vendor/picomatch-kfm.md"},
         "3e4137714e97c960dad7cf10e973481559a14782",
     )
-    assert TOOL.RECEIPT.name == "site-v268-picomatch-redos-overlay-20261118.json"
+
+
+def test_basemap_gap_warning_successor_preserves_picomatch_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-basemap-gap-warning-overlay-20261118.json",
+        "site-v268-picomatch-redos-overlay-20261118.json",
+        "862f2d6958e7a68d9bfa4398b765070727b8517db5db2368c75c71fd8a014917",
+        {"app/basemap-raster-health.ts", "app/page.tsx", "docs/basemap-cache.md",
+         "tests/basemap-raster-health.test.mjs", "tests/cutaway-basemap-failure.test.mjs"},
+        "c31a6825ce7393a75d1de0671f55764af3f243dd",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-basemap-gap-warning-overlay-20261118.json"

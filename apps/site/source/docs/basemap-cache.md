@@ -108,6 +108,33 @@ directory. The UI deliberately has no broad delete-data operation.
 All bytes are **display context, not KFM evidence**. No source-admission,
 activation, source-time, DB/R2 binding, or audience change is made.
 
+## Missing-tile warning
+
+When a raster basemap tile fails, the map shows "Some basemap tiles are
+unavailable. Gaps are unknown…". The satellite and Kansas aerial basemaps are
+raster. A tile can fail whether it comes from this cache or from a provider.
+
+A failure counts only while its tile could still be drawn in the settled view.
+`app/basemap-raster-health.ts` keeps track of this.
+
+- A tile that loads later clears its own failure.
+- MapLibre does not request a tile again after the camera has moved away from
+  it. When the map settles on a view where no recorded failure can be drawn,
+  the warning is removed. Moving back re-requests that tile, and a repeated
+  failure shows the warning again.
+- A failure that has no tile identity applies to the whole source. It stays
+  until you switch basemaps. Switching basemaps also clears every recorded
+  failure.
+- The in-view test is conservative. It covers three zoom levels below the
+  drawn zoom and two above, accounts for the source `maxzoom` and overzoom, and
+  works across world copies. Malformed input counts as in view. A real gap is
+  therefore never hidden.
+
+Before this change, one failed tile kept the warning on for the life of the
+map. It stayed on after a complete view loaded, and even after a basemap
+switch. `tests/cutaway-basemap-failure.test.mjs` runs the real `error`,
+`sourcedata` and `idle` handlers from `page.tsx` and covers each of these cases.
+
 ## Verification
 
 From `apps/site/source`, `node --test tests/basemap-cache.test.mjs` includes
