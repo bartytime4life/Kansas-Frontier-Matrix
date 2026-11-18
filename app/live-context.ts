@@ -4,7 +4,7 @@ import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-
 import { hiDpiExportUrl } from "./hd-rasters";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import { KANSAS_DISCOVERY_SOURCES } from "./kansas-discovery-layers";
-import { HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS } from "./context-clusters";
+import { HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS, TRAIL_PLACE_CLUSTER_MAX_ZOOM, TRAIL_PLACE_CLUSTER_PROPERTIES, TRAIL_PLACE_CLUSTER_RADIUS } from "./context-clusters";
 import { BRIDGE_CLOSED_COLOR, BRIDGE_CLUSTER_MAX_ZOOM, BRIDGE_CLUSTER_RADIUS, BRIDGE_ERA_STOPS, BRIDGE_FEED_IDS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR } from "./kdot-bridges";
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, GeoJSONSource, GeoJSONSourceSpecification, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
@@ -126,8 +126,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     id: "nps-trail-places", title: "Trail sites · NPS National Trails points of interest", shortTitle: "Trail sites · forts, crossings & ruts",
     organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-nps-trail-places",
-    layerIds: Object.freeze(["external-nps-trail-places-points", "external-nps-trail-places-labels"]),
-    interactiveLayerIds: Object.freeze(["external-nps-trail-places-points"]),
+    layerIds: Object.freeze(["external-nps-trail-places-points", "external-nps-trail-places-labels", "external-nps-trail-places-clusters", "external-nps-trail-places-cluster-count"]),
+    interactiveLayerIds: Object.freeze(["external-nps-trail-places-clusters", "external-nps-trail-places-points"]),
     apiPath: "/api/live-context?feed=nps-trail-places",
     endpointLabel: "services1.arcgis.com · NPS National Trails points of interest",
     sourceUrl: "https://www.nps.gov/safe/planyourvisit/places-to-go.htm", serviceUrl: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/SAFE_SantaFeNHTPointsofInterest_pt/FeatureServer/0",
@@ -136,7 +136,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     defaultVisibility: false, defaultOpacity: 0.95, color: "#f2c46d",
     attribution: "National Park Service, National Trails Office",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    legend: "Gold markers · forts, crossings, ruts, museums and other public trail sites. Click one for its story and the NPS page.",
+    legend: "Numbered circles count sites and split as you zoom in. Gold markers · forts, crossings, ruts, museums and other public trail sites. Click one for its story and the NPS page.",
     boundary: "Public points of interest NPS publishes for the National Historic Trails. Sites NPS describes as private or not open to visitors are left out. A marker is not a property boundary, an access permission or KFM evidence; hours and access change, so check the linked page before visiting.",
     fallback: "A failed NPS request leaves the layer empty and labeled; missing markers do not mean no trail sites exist.",
   }),
@@ -1091,14 +1091,23 @@ export const applyOfficialContextState = (
 
   const trailPlaces = OFFICIAL_CONTEXT_BY_ID["nps-trail-places"];
   if (visibility["nps-trail-places"] || map.getSource(trailPlaces.sourceId)) {
-    ensureGeoJsonSource(map, trailPlaces, payloads["nps-trail-places"]?.data ?? emptyCollection());
-    ensureLayer(map, { id: trailPlaces.layerIds[0], type: "circle", source: trailPlaces.sourceId, paint: {
+    // Sites crowd each other where the trails leave the Missouri River, so nearby ones are counted in one circle that splits on zoom.
+    ensureGeoJsonSource(map, trailPlaces, payloads["nps-trail-places"]?.data ?? emptyCollection(), { cluster: true, clusterMaxZoom: TRAIL_PLACE_CLUSTER_MAX_ZOOM, clusterRadius: TRAIL_PLACE_CLUSTER_RADIUS, clusterProperties: TRAIL_PLACE_CLUSTER_PROPERTIES });
+    const oneSite: ExpressionSpecification = ["!", ["has", "point_count"]];
+    ensureLayer(map, { id: trailPlaces.layerIds[0], type: "circle", source: trailPlaces.sourceId, filter: oneSite, paint: {
       "circle-color": trailPlaces.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3, 9, 5.5, 13, 8],
       "circle-stroke-color": "#3b210c", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 1, 12, 2], "circle-opacity": trailPlaces.defaultOpacity,
     } });
-    ensureLayer(map, { id: trailPlaces.layerIds[1], type: "symbol", source: trailPlaces.sourceId, minzoom: 8, layout: {
+    ensureLayer(map, { id: trailPlaces.layerIds[1], type: "symbol", source: trailPlaces.sourceId, filter: oneSite, minzoom: 8, layout: {
       "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 11, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 10,
     }, paint: { "text-color": "#fbe7c2", "text-halo-color": "#1d140c", "text-halo-width": 1.6, "text-opacity": 0.95 } });
+    ensureLayer(map, { id: trailPlaces.layerIds[2], type: "circle", source: trailPlaces.sourceId, filter: ["has", "point_count"], paint: {
+      "circle-color": trailPlaces.color, "circle-radius": ["step", ["get", "point_count"], 11, 5, 14, 15, 17, 40, 21],
+      "circle-stroke-color": "#3b210c", "circle-stroke-width": 1.6, "circle-opacity": trailPlaces.defaultOpacity,
+    } });
+    ensureLayer(map, { id: trailPlaces.layerIds[3], type: "symbol", source: trailPlaces.sourceId, filter: ["has", "point_count"], layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": 11.5, "text-allow-overlap": true, "text-ignore-placement": true,
+    }, paint: { "text-color": "#2a1d0a", "text-halo-color": "rgba(255,255,255,0.5)", "text-halo-width": 1 } });
   }
 
   const trails = OFFICIAL_CONTEXT_BY_ID["nps-historic-trails"];
