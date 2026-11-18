@@ -22,14 +22,14 @@ export function stormHeadline(frame: StormFrame | null): string {
 
 /** Compact on-map key: what the colors and lines mean, in plain words. */
 export function StormMapKey({ frame, onDetails }: { frame: StormFrame | null; onDetails: () => void }) {
-  return <aside className="event-storm-key" aria-label="Storm cell map key">
+  return <section className="event-storm-key" aria-label="Storm cell map key">
     <strong>{stormHeadline(frame)}</strong>
     <ul>{KEY_ROWS.map((row) => <li key={row.label}><i style={{ background: row.color }} aria-hidden="true" />{row.label}</li>)}
       <li><i className="event-storm-line" aria-hidden="true" />Where it has been</li>
       <li><i className="event-storm-line" data-dashed="true" aria-hidden="true" />Expected path, next hour</li></ul>
     <small>*Radar algorithm flags, not confirmed tornadoes. Click a storm for details.</small>
     <button type="button" onClick={onDetails}>About this layer</button>
-  </aside>;
+  </section>;
 }
 
 export function StormDetails({ frame, selected }: { frame: StormFrame | null; selected: Record<string, unknown> | null }) {

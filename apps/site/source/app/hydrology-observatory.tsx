@@ -324,7 +324,7 @@ export function HydrologyObservatory({
       <span>{observationTimes.length ? `${safeFrameIndex + 1} / ${observationTimes.length}` : "No frames"}</span>
     </div>
 
-    <div className="hydrology-transport" aria-label="Streamflow playback">
+    <div role="group" className="hydrology-transport" aria-label="Streamflow playback">
       <button type="button" onClick={() => onStep("reverse")} disabled={!canStep || safeFrameIndex <= 0} aria-label="Previous exact streamflow frame">‹</button>
       <button className="hydrology-play" type="button" aria-pressed={playing} onClick={onTogglePlay} disabled={!canPlay}>{playing ? "Ⅱ Pause" : "▶ Play"}</button>
       <button type="button" onClick={() => onStep("forward")} disabled={!canStep || atLatest} aria-label="Next exact streamflow frame">›</button>
@@ -461,7 +461,7 @@ export function HydrologyObservatory({
           <span>{formatLocalTime(selectedSeries.at(-1)?.observedAt ?? null)}</span>
         </figcaption>
       </figure> : <div className="hydrology-hydrograph-empty" role="status"><strong>No plottable discharge values</strong><span>The selected range returned no numeric observations; this is not interpreted as zero flow.</span></div>}
-      {selectedSeries.length > 0 && <div className="river-sample-probe" aria-label="Exact source sample inspector"><div><span>INSPECTED SAMPLE</span><strong>{formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)}</strong><time>{formatLocalTime(probeObservation?.observedAt ?? null)}</time></div><small>{probeObservation?.approvalStatus ?? "No sample"} · Statistic {probeObservation?.statisticId ?? "not supplied"} · {probeObservation?.value === null ? "Missing value; no point invented." : "Exact reported value. Inspection does not change map time."}</small>
+      {selectedSeries.length > 0 && <div role="group" className="river-sample-probe" aria-label="Exact source sample inspector"><div><span>INSPECTED SAMPLE</span><strong>{formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)}</strong><time>{formatLocalTime(probeObservation?.observedAt ?? null)}</time></div><small>{probeObservation?.approvalStatus ?? "No sample"} · Statistic {probeObservation?.statisticId ?? "not supplied"} · {probeObservation?.value === null ? "Missing value; no point invented." : "Exact reported value. Inspection does not change map time."}</small>
         <input type="range" min="0" max={Math.max(0, selectedSeries.length - 1)} value={probeIndex >= 0 ? probeIndex : Math.max(0, selectedSeries.indexOf(probeObservation!))} onChange={event => inspectIndex(Number(event.target.value))} aria-label="Inspect exact station sample" aria-valuetext={`${formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)} at ${formatLocalTime(probeObservation?.observedAt ?? null)}`} />
       </div>}
       <dl className="hydrology-hydrograph-summary" aria-label="Hydrograph textual summary">

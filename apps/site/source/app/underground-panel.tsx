@@ -289,7 +289,7 @@ export default function UndergroundPanel(props: Props) {
       <div className={s.actions}>{["kgs-wwc5","kgs-core"].map(id=><button type="button" key={id} aria-pressed={sources.includes(id)} onClick={()=>setSources(value=>value.includes(id)?value.filter(source=>source!==id):[...value,id])}>{id==="kgs-wwc5"?"Well logs":"Core inventory"}</button>)}</div>
     </details>
   </section>;
-  return <>{display !== "aquifer" && display !== "3d" && <div className={s.locatorBar} aria-label="Underground 2D locator">
+  return <>{display !== "aquifer" && display !== "3d" && <div role="group" className={s.locatorBar} aria-label="Underground 2D locator">
     <strong>2D locator</strong><span>{pinned ? "Pinned" : "Pointer preview"} · {anchor[1].toFixed(4)}°, {anchor[0].toFixed(4)}°</span>
     <button type="button" onClick={inspectHere}>Use map center</button><button type="button" onClick={() => { setPinned(true); map?.easeTo({center:anchor,zoom:Math.max(10,map.getZoom()),pitch:0,bearing:0,duration:reduceMotion?0:350}); }}>Find selection</button>
     <button type="button" onClick={props.onFlatMap}>Reset to 2D</button>

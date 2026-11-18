@@ -18,7 +18,8 @@ test("mobile map keeps one header row with named menus and reachable map actions
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);
   assert.match(page, /const openMapSettings = useCallback\(\(\) => \{\s*openMapUtility\("scene"\)/);
   assert.match(page, /<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
-  assert.match(toolbar, /aria-label="Open data and download notices"/);
+  assert.match(toolbar, /aria-label=\{`Open data and download notices: \$\{issues\.length\} source issue/);
+  assert.match(toolbar, /<b aria-hidden="true">\{issues\.length \|\| DOWNLOAD_NOTICES\.length\}<\/b>/, "the badge digits are not announced twice");
   assert.match(css, /safe-area-inset-bottom/);
   assert.match(css, /:root \{[\s\S]*?--global-header-height:\s*54px;[\s\S]*?--mobile-header-height:\s*54px;[\s\S]*?--topbar:\s*var\(--global-header-height\);/);
   assert.match(css, /@media \(min-width: 761px\) and \(max-width: 1100px\) \{[\s\S]*?\.mobile-primary-tabs \{ display: none; \}/);
