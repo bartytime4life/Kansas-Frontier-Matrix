@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-program-baseline-m01-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/governance/program_baseline.md",
+    "control_plane/README.md",
+    "control_plane/program_baseline.json",
+    "tests/validators/test_validate_program_baseline.py"
+  ],
+  "artifact_hashes": {
+    "contracts/governance/program_baseline.md": "sha256:1bd9ea237d8299462d70c0b23803a0b609433e5f969f210ce4f445aecaf7559f",
+    "control_plane/README.md": "sha256:2c2c894bee965a4807cb047da72edab7c5ad5808de64e5d2f24f21531262dcaf",
+    "control_plane/program_baseline.json": "sha256:a65bb7e0f12956fd279512830137510ff3000a67f40712157003d19601b2871b",
+    "tests/validators/test_validate_program_baseline.py": "sha256:f8a0b2d17fab9759d18fc5051294b39fd32fc3c036d0b9276b591c2426d40f25"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code",
+    "version": "Exact serving build not recorded in repository artifacts"
+  },
+  "prompt_or_contract": "sha256:1bd9ea237d8299462d70c0b23803a0b609433e5f969f210ce4f445aecaf7559f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub MCP read-only queries",
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0861558e4a1ef1b91ba4a457132b100ee3614f15c0761625d2988f5dceb0f91e",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:476ad5cf89b1480eee3c36ff0bf15cf221c0144aca20d56d95baac1d80a59bd0",
+      "sha256:f21ebe9996da58a798247090cd478ec5388d6f74041c6091b30368b62ff2b0c6"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2768",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2874",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3365",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs?branch=main&event=push&head_sha=3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:main@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:.github/CODEOWNERS@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:control_plane/external_mirror_register.yaml@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:control_plane/object_family_register.yaml@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:control_plane/path_alias_register.yaml@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:control_plane/program_baseline.json@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:control_plane/repository_governance_parity.yaml@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:control_plane/root_registry.yaml@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:docs/adr/INDEX.md@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:docs/doctrine/directory-rules.md@3e4137714e97c960dad7cf10e973481559a14782",
+      "repo:docs/adr/INDEX.md@514b2367638778a0a0b6e45a6451aea70c762909"
+    ]
+  },
+  "truth_labels": {
+    "contracts/governance/program_baseline.md": "PROPOSED",
+    "control_plane/README.md": "PROPOSED",
+    "control_plane/program_baseline.json": "PROPOSED",
+    "tests/validators/test_validate_program_baseline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "The exact main SHA 3e4137714e97c960dad7cf10e973481559a14782, the ADR index (11 accepted, 38 proposed, 11 scaffolds derived from its tables), the Directory Rules digest, the CODEOWNERS route, root and alias projections, issues #2768/#2874/#3365, and the open-PR queue (empty) were read and pinned."
+    },
+    {
+      "gate": "program_baseline_profile",
+      "outcome": "PASS",
+      "reason": "Eighteen focused no-network tests, one positive and seventeen negative fixture cases with Git checks enabled, pinned-byte digest replay, derived ADR counts, base-path and supersedes lineage checks, and the canonical v2 instance passed. The profile, schema and validator were not changed."
+    },
+    {
+      "gate": "local_validation_observations",
+      "outcome": "PASS",
+      "reason": "Each listed command was run against the base tree. Topology passed with 0 new drift, 89 baselined warnings, and 0 stale fingerprints; object-family workflow-watch tests passed with 16 tests and 275 subtests; repository-governance parity is recorded separately below."
+    },
+    {
+      "gate": "repository_governance_parity_conformance",
+      "outcome": "FAIL",
+      "reason": "The parity validator exited 0 with profile integrity PASS, but its conformance outcome is HOLD_INHERITED on the topology lane; the baseline records HOLD and carries repository_governance_parity_hold rather than reporting a pass."
+    },
+    {
+      "gate": "exact_main_hosted_checks",
+      "outcome": "PASS",
+      "reason": "Hosted push workflow runs for the exact base commit were recorded as PASS (fifty_one_success_one_skipped_zero_failed_of_fifty_two_push_workflow_runs); the skipped APIsec run is carried as hosted_apisec_check_run_skipped."
+    },
+    {
+      "gate": "drive_lineage_boundary",
+      "outcome": "SKIPPED",
+      "reason": "The three Drive lineage entries were carried forward without re-observation; they remain advisory with repository_authority=false and mutated=false."
+    },
+    {
+      "gate": "hosted_exact_pr_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after a pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and cannot be inferred from CODEOWNERS, a receipt, a workflow, or a pull request."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All four substantively modified artifacts are bound to their bytes at commit 1e1ba72b3fa0a108d8874206e4f8b5e5c819741a; this receipt does not bind itself or the Makefile line that replays it."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-ADR-INDEX",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/INDEX.md@3e4137714e97c960dad7cf10e973481559a14782"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@3e4137714e97c960dad7cf10e973481559a14782"
+    },
+    {
+      "id": "KFM-PRIOR-PROGRAM-BASELINE",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/program_baseline.json@3e4137714e97c960dad7cf10e973481559a14782"
+    },
+    {
+      "id": "KFM-GITHUB-M01",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3365"
+    },
+    {
+      "id": "KFM-GITHUB-PROGRAM-TRACKER",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768"
+    },
+    {
+      "id": "KFM-GITHUB-SOURCE-CORPUS-TRACKER",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2874"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T02:06:48Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path forward refresh of the M01 program baseline from main@514b2367638778a0a0b6e45a6451aea70c762909 to main@3e4137714e97c960dad7cf10e973481559a14782 under unchanged profile v2. The 2026-08-22 and 2026-10-14 receipts are kept unchanged. This receipt does not create authority, change issue state, accept an ADR, activate a source, approve policy or review, change repository settings, waive drift, mutate lifecycle state, release, deploy, promote, publish, or establish public-runtime behavior."
+}

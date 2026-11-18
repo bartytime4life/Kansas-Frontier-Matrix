@@ -198,6 +198,7 @@ program-baseline:
 	$(KFM_VALIDATION_ENV) python tools/validators/control_plane/validate_program_baseline.py
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-program-baseline-m01-20260822.json --repo-root . --artifact-git-ref d0c4e9a5108c7b0d82372a43f785ae10eeed6895
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-program-baseline-m01-20261014.json --repo-root . --artifact-git-ref f09c07a527d4f45f520b3f84ebf23d3d4a248d5b
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-program-baseline-m01-20261118.json --repo-root . --artifact-git-ref 1e1ba72b3fa0a108d8874206e4f8b5e5c819741a
 
 control-plane-registry-packet:
 	$(KFM_VALIDATION_ENV) python -m unittest discover --start-directory tests/validators --pattern 'test_validate_control_plane_registry_packet.py' --verbose

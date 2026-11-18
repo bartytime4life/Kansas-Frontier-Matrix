@@ -1,29 +1,23 @@
 {
   "schema_version": "2.0.0",
   "profile": "kfm.program-baseline.m01.v2",
-  "baseline_id": "kfm-program-baseline-main-514b23676387",
+  "baseline_id": "kfm-program-baseline-main-3e4137714e97",
   "repository": "bartytime4life/Kansas-Frontier-Matrix",
   "projection_status": "PROPOSED",
   "implementation_status": "PARTIAL",
   "authority_mode": "evidence_projection_only",
-  "observed_at": "2026-10-14T06:32:06Z",
+  "observed_at": "2026-11-18T02:02:57Z",
   "base": {
     "branch": "main",
-    "sha": "514b2367638778a0a0b6e45a6451aea70c762909",
+    "sha": "3e4137714e97c960dad7cf10e973481559a14782",
     "milestone_number": 2,
     "milestone_issue_number": 3365,
     "milestone_title": "M01 - Authority, Directory Rules & Program Baseline",
-    "open_pull_requests": [
-      5153,
-      5154,
-      5155,
-      5156,
-      5157
-    ]
+    "open_pull_requests": []
   },
   "supersedes": {
-    "baseline_id": "kfm-program-baseline-main-6aa1ce50dfc4",
-    "base_sha": "6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e"
+    "baseline_id": "kfm-program-baseline-main-514b23676387",
+    "base_sha": "514b2367638778a0a0b6e45a6451aea70c762909"
   },
   "placement": {
     "owner": "@bartytime4life",
@@ -88,7 +82,7 @@
     {
       "id": "adjacent_control_plane_readme",
       "path": "control_plane/README.md",
-      "sha256": "sha256:ee1e9a7001244c5889dc108d248333b378b27858ea4e9166c8da334af813f31f",
+      "sha256": "sha256:b719c41117d937a4c14a1a41b408616077c3171eb46d5eda5af2e684c83885d2",
       "implementation_status": "PARTIAL",
       "reason": "dated_snapshot_and_validation_readback_precede_current_main"
     },
@@ -116,7 +110,7 @@
     {
       "id": "object_family_catalog",
       "path": "control_plane/object_family_register.yaml",
-      "sha256": "sha256:405902fb35305f58cfa48a8db8fa1c136c17bb9817ca2d4d6bf30d4b1c8006b1",
+      "sha256": "sha256:6e2cdb669e489fedc7e6478b22d1f429161cf1370bfc62935a2328949fd7e63b",
       "implementation_status": "PARTIAL",
       "reason": "workflow_watch_tests_pass_but_ten_required_families_remain_conflicted"
     },
@@ -130,7 +124,7 @@
     {
       "id": "repository_governance_parity_projection",
       "path": "control_plane/repository_governance_parity.yaml",
-      "sha256": "sha256:f58bea6ea220bdb7716329d286d650424d1b0349bd11184a5a0af1c918846870",
+      "sha256": "sha256:bd88389599e964c6099d3434e55cc5d08c62d3089dffcb316db2da7c568f4b40",
       "implementation_status": "PARTIAL",
       "reason": "expected_topology_matches_observed_but_conformance_remains_hold_inherited"
     },
@@ -229,16 +223,16 @@
       "outcome": "PASS",
       "failure_class": "NONE",
       "finding_count": 0,
-      "scope": "seven_required_registry_projections_and_fourteen_tests"
+      "scope": "seven_required_registry_projections_and_sixteen_tests"
     },
     {
       "id": "exact_main_hosted_checks",
-      "command": "gh api repos/bartytime4life/Kansas-Frontier-Matrix/commits/514b2367638778a0a0b6e45a6451aea70c762909/check-runs --paginate",
+      "command": "GitHub Actions list_workflow_runs branch=main event=push head_sha=3e4137714e97c960dad7cf10e973481559a14782",
       "run_state": "EXECUTED",
       "outcome": "PASS",
       "failure_class": "NONE",
       "finding_count": 0,
-      "scope": "one_hundred_seven_success_two_skipped_zero_failed_of_one_hundred_nine_check_runs"
+      "scope": "fifty_one_success_one_skipped_zero_failed_of_fifty_two_push_workflow_runs"
     },
     {
       "id": "external_site_mirror_parity",
@@ -265,7 +259,7 @@
       "outcome": "PASS",
       "failure_class": "NONE",
       "finding_count": 0,
-      "scope": "sixteen_tests_and_two_hundred_seventy_six_subtests"
+      "scope": "sixteen_tests_and_two_hundred_seventy_five_subtests"
     },
     {
       "id": "path_alias_register",
@@ -292,7 +286,7 @@
       "outcome": "PASS",
       "failure_class": "NONE",
       "finding_count": 0,
-      "scope": "zero_new_drift_ninety_three_baselined_warnings_zero_stale_fingerprints"
+      "scope": "zero_new_drift_eighty_nine_baselined_warnings_zero_stale_fingerprints"
     },
     {
       "id": "root_registry",
@@ -318,12 +312,11 @@
     "control_plane_readme_snapshot_precedes_current_main",
     "drive_lineage_not_reobserved_since_prior_baseline",
     "five_required_control_plane_registers_remain_empty",
-    "hosted_apisec_and_dependency_review_check_runs_skipped",
+    "hosted_apisec_check_run_skipped",
     "human_review_pending",
-    "main_advanced_past_base_before_observation_completed",
     "object_family_register_has_ten_conflicted_required_families",
     "repository_governance_parity_hold",
-    "repository_topology_baseline_waivers_expire_20261110",
+    "repository_topology_baseline_waivers_expire_20270510",
     "tracker_2768_requires_current_delta",
     "tracker_2874_requires_current_delta",
     "tracker_3365_requires_current_delta"
@@ -342,7 +335,7 @@
   ],
   "correction": {
     "method": "same_path_forward_fix_or_reviewed_git_revert",
-    "rollback_target": "git:514b2367638778a0a0b6e45a6451aea70c762909",
+    "rollback_target": "git:3e4137714e97c960dad7cf10e973481559a14782",
     "external_correction": "append_corrective_issue_comment",
     "stale_triggers": [
       "accepted_adr_status_changes",

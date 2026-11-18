@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/control-plane-readme
 title: control_plane/ — Machine-Readable Governance Index Root
-version: v0.9
+version: v0.10
 type: README
 status: "draft; repository-grounded; canonical-root-confirmed; directory-rules-v2-adopted; required-register-packet-enforced; mixed-validation-profiles; register-population-partial; specialized-projections-present; non-authoritative"
 owners: "OWNER_TBD — Control-plane steward · Register steward · Architecture steward · Docs steward · affected authority-root owners · Validation/CI steward; CODEOWNERS routes /control_plane/ to @bartytime4life"
 created: 2026-06-24
-updated: 2026-10-14
+updated: 2026-11-18
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "repository-facing; control-plane; machine-registers; authority-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware"
 current_path: control_plane/README.md
@@ -79,6 +79,7 @@ related:
 tags: [kfm, control-plane, machine-registers, governance-index, crosswalks, authority, directory-rules-v2, drift, verification, deprecation, policy-gates, release-state, validation, correction, rollback]
 notes:
   - "Earlier v0.6 content at this same path remains available in Git history; no separate superseded document path is asserted."
+  - "v0.10 records the same-path M01 program-baseline v2 refresh to main@3e4137714e97c960dad7cf10e973481559a14782, superseding the 2026-10-14 baseline at main@514b2367638778a0a0b6e45a6451aea70c762909, in the inventory row, profile section, known gaps, and rollback text; the profile, schema, and validator are unchanged, and the dated snapshots and run readbacks elsewhere in this README are unchanged."
   - "v0.9 records the same-path M01 program-baseline v2 refresh to main@514b2367638778a0a0b6e45a6451aea70c762909 in the profile table, known gaps, inventory row, profile section, and rollback text; the dated snapshots and run readbacks elsewhere in this README are unchanged."
   - "v0.8 adds external_mirror_register.yaml to the direct-child map and authority notes; it projects accepted ADR-0048 for upstream-backed entries in receipt-pinned external byte mirrors and is read by the topology validator; no other register, binding, or authority changes."
   - "v0.7 repins the same-path README to current main, reconciles the direct-child map, records the topology-correction projection, and adds named current-main validation outcomes without changing authority."
@@ -367,7 +368,7 @@ These are current GitHub Actions observations for the pinned main commit, not a 
 - no general cross-register path/ID/digest resolver is established;
 - no general human-versus-machine drift comparator is established;
 - consumer inventory, stale-cache behavior, correction propagation, and current expected-topology parity remain incomplete;
-- the 2026-09-06 M01 program-baseline receipt digest mismatch no longer applies: each baseline receipt now replays from its own artifact commit, and the 2026-10-14 v2 refresh records its own observations;
+- the 2026-09-06 M01 program-baseline receipt digest mismatch no longer applies: each baseline receipt now replays from its own artifact commit, and the 2026-10-14 and 2026-11-18 v2 refreshes each record their own observations;
 - the aggregate schema/fixture lane currently has a validator-test syntax error.
 
 [Back to top](#top)
@@ -525,7 +526,7 @@ currentness correction above.
 | `path_alias_register.yaml` | Active legacy-to-canonical mapping for Directory Rules. | Cannot close consumers or authorize tombstone/deletion. |
 | `cross_domain_seam_register.yaml` | Five high-risk seams, all held unresolved. | Cannot authorize a join or lower policy/sensitivity. |
 | `trust_spine_baseline.yaml` | Proposed pinned MRTS-01 authority and implementation evidence projection. | Cannot create authority, accept decisions, waive drift, activate sources, or change release/publication state. |
-| `program_baseline.json` | Proposed M01 authority, ownership, tracker/PR overlap, Drive-lineage, validation, and rollback projection; profile v2 is pinned to `main@514b2367638778a0a0b6e45a6451aea70c762909` and supersedes the 2026-08-22 baseline at `main@6aa1ce50dfc4e818e5f33d47fff24b6d06a1c91e`. | Cannot mutate issues, create authority, accept decisions, waive failures, activate sources, or change release/publication state. |
+| `program_baseline.json` | Proposed M01 authority, ownership, tracker/PR overlap, Drive-lineage, validation, and rollback projection; profile v2 is pinned to `main@3e4137714e97c960dad7cf10e973481559a14782` and supersedes the 2026-10-14 baseline at `main@514b2367638778a0a0b6e45a6451aea70c762909`. | Cannot mutate issues, create authority, accept decisions, waive failures, activate sources, or change release/publication state. |
 | `repository_control_state.yaml` | Historical repository-control observation. | Cannot authorize itself; stale for current state. |
 | `repository_governance_parity.yaml` | Proposed validation projection; its expected topology (0 new drift / 127 baselined warnings / 0 stale) does not match the current-main observed result (5 / 122 / 5), so the parity run fails closed. | Cannot amend Directory Rules, expand a baseline, or turn an inherited hold into a pass. |
 | `repository_topology_correction_register.yaml` | One proposed KFM-TOPO-004 consume-once transition with equal 43-member path sets; no accepted commit is recorded. | Cannot suppress live findings, authorize unregistered edits, migrate/delete, release, or publish. |
@@ -573,7 +574,7 @@ This mixed state is current implementation evidence, not a recommendation that f
 
 ### Dedicated M01 program-baseline profile — supplemental projection
 
-`program_baseline.json` is pinned to one exact main commit for Milestone 2. The 2026-10-14 refresh uses profile `kfm.program-baseline.m01.v2` at `main@514b2367638778a0a0b6e45a6451aea70c762909` and names the 2026-08-22 baseline it replaces in `supersedes`. Its contract, schema, fixture cases, validator, focused tests, Make target, read-only workflow, and generated receipts verify authority and ownership bytes, the observed issue/PR overlap, advisory Drive lineage, classification vocabulary, recorded validation outcomes, correction triggers, and rollback.
+`program_baseline.json` is pinned to one exact main commit for Milestone 2. The 2026-11-18 refresh uses profile `kfm.program-baseline.m01.v2` at `main@3e4137714e97c960dad7cf10e973481559a14782` and names the 2026-10-14 baseline it replaces in `supersedes`. It needed no profile, schema, or validator change. Its contract, schema, fixture cases, validator, focused tests, Make target, read-only workflow, and generated receipts verify authority and ownership bytes, the observed issue/PR overlap, advisory Drive lineage, classification vocabulary, recorded validation outcomes, correction triggers, and rollback.
 
 Profile v2 has no snapshot-specific constants. ADR counts come from the pinned index tables. `base_path_status` must match the base tree. The superseded base must be a Git ancestor. Every non-`PASS` observation must appear as an unresolved `<id>_<outcome>` token. The three Drive lineage entries are carried forward from 2026-08-22 without re-observation. The projection remains outside the nine-file required register packet, does not mutate GitHub or Drive, and cannot authorize itself.
 
@@ -700,7 +701,7 @@ Before merge, close/abandon the draft PR or restore the prior README bytes. Afte
 a7bbfddc0f257194c42b75046da6eccf976980e0
 ```
 
-Revert the M01 program-baseline instance, contract, schema, fixture cases, validator, tests, workflow, Make target, README delta, and generated receipt as one reviewed packet, or apply a same-path forward fix with a new receipt. Reverting the 2026-10-14 v2 refresh restores the v1 packet at `main@514b2367638778a0a0b6e45a6451aea70c762909`; both generated receipts stay append-only. Correct external tracker statements with append-only issue comments. This slice creates no source activation, policy decision, lifecycle transition, release, deployment, promotion, publication, or public-runtime state.
+Revert the M01 program-baseline instance, contract, schema, fixture cases, validator, tests, workflow, Make target, README delta, and generated receipt as one reviewed packet, or apply a same-path forward fix with a new receipt. Reverting the 2026-11-18 refresh restores the 2026-10-14 v2 instance at `main@3e4137714e97c960dad7cf10e973481559a14782`, and reverting that refresh restores the v1 packet at `main@514b2367638778a0a0b6e45a6451aea70c762909`. Every generated receipt stays append-only. Correct external tracker statements with append-only issue comments. This slice creates no source activation, policy decision, lifecycle transition, release, deployment, promotion, publication, or public-runtime state.
 
 [Back to top](#top)
 
