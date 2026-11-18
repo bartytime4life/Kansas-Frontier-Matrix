@@ -6,7 +6,7 @@ type: runbook
 status: proposed; current-main-reconciled; blocked-handoff; non-release
 owners: Validation/CI steward; Repository owner; Release steward
 created: 2026-08-22
-updated: 2026-08-23
+updated: 2026-11-18
 responsibility_root: docs/
 owning_root: docs/
 responsibility: explain ownership inputs outputs validation correction rollback issue reconciliation and closure limits for the MRTS-06 CI conformance report
@@ -33,7 +33,13 @@ notes:
 
 ## Current handoff
 
-The [2026-10-08 conformance refresh](mrts-06-conformance-refresh-2026-10-08.md)
+The [2026-11-18 conformance refresh](mrts-06-conformance-refresh-2026-11-18.md)
+is the current successor report and execution evidence, at
+`main@3e4137714e97c960dad7cf10e973481559a14782`. Topology passes with 89
+baselined warnings; governance parity keeps its baseline-warning hold. Four
+closure blockers remain. Its PASS results describe that commit only.
+
+The earlier [2026-10-08 conformance refresh](mrts-06-conformance-refresh-2026-10-08.md)
 provides a separate successor report and execution evidence at
 `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. Topology passes with zero
 new drift and zero stale fingerprints; governance parity retains its baseline

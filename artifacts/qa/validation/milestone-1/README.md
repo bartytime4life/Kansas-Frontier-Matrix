@@ -10,8 +10,14 @@ and the operational review/closure procedure is
 
 ## Tracked inspection artifacts
 
+- [2026-11-18 successor report](./ci_conformance_report_2026-11-18.json)
+  records bounded local checks at `main@3e4137714e97c960dad7cf10e973481559a14782`:
+  topology `PASS` with 89 baselined warnings, governance parity `HOLD_INHERITED`,
+  and four remaining closure blockers. Its [execution evidence](./ci_conformance_evidence_2026-11-18.json)
+  binds commands, times, actual execution head/tree, prerequisite state and
+  exact-main workflow runs. [Review and rollback handoff](../../../../docs/runbooks/mrts-06-conformance-refresh-2026-11-18.md).
 - [2026-10-08 successor report](./ci_conformance_report_2026-10-08.json)
-  records bounded local checks at `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`:
+  is the earlier dated successor. It is unchanged and records bounded local checks at `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`:
   topology `PASS`, governance parity `HOLD_INHERITED`, and four remaining
   closure blockers. Its [execution evidence](./ci_conformance_evidence_2026-10-08.json)
   binds commands, times, actual execution head/tree, prerequisite state and
