@@ -90,11 +90,6 @@ const fetchBoundedJson = async (url: string, timeoutMs: number, init?: RequestIn
   return parsed;
 };
 
-const fetchBoundedJsonArray = async (url: string, timeoutMs: number, init?: RequestInit): Promise<unknown[]> => {
-  const parsed = await fetchBoundedJsonValue(url, timeoutMs, init);
-  if (!Array.isArray(parsed)) throw new UpstreamError("Official upstream response was not a JSON array.");
-  return parsed;
-};
 
 const collectionFeatures = (payload: JsonRecord): JsonRecord[] => {
   if (!Array.isArray(payload.features) || !payload.features.every(isRecord)) throw new UpstreamError("Official upstream response had an invalid feature collection.");

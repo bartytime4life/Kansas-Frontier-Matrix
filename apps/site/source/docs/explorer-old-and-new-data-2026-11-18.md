@@ -157,6 +157,29 @@ work above. Both are fixed in a follow-up change.
   a labeled partial result. A first-page failure, a full-length page timeout and
   any other upstream error still fail the feed.
 
+## Second coverage pass (after merge)
+
+A later pass gives starters or guides to layers that still had none.
+
+| Addition | Layers |
+|---|---|
+| Starter and guide: Aquifers beyond the High Plains (`/explore/kansas-aquifers`) | KGS alluvial, Dakota, Glacial Drift and Ozark aquifer extents |
+| Guide for the Lightning & the sky starter (`/explore/lightning-and-the-sky`) | 15-minute lightning density, 1995–2014 flash average, radar loop, GOES imagery |
+| Starter: Bridges before 1950 (links the bridges guide) | KDOT local bridges built before 1950, historic-designated bridges, 1918 roads |
+| Starter: Declared disasters & alerts | FEMA declaration counties, NWS alerts, SPC Day 1 outlook, NWM high-flow analysis |
+| Starter: Federal mineral leases | BLM authorized and closed lease cases, PLSS townships, counties |
+
+The menu now has 24 starters, and `/explore` has 15 guides. A few layers still
+have neither:
+
+- **Airflow:** a model canvas with no map layer for a starter to select.
+- **Local road bridges:** about 19,300 points, too many for a starter to open.
+- **Others:** slope, water-table elevation, FIRMS detection details and PLSS
+  intersected divisions. All are still available in Map layers.
+
+The selected-bridge record read is now size-bounded. The unused
+`fetchBoundedJsonArray` helper in the live-context route was removed.
+
 ## Validation
 
 See the pull request for the full test run, type check and mirror receipt.

@@ -2884,4 +2884,17 @@ def test_console_kdwp_followup_successor_preserves_old_new_data_inventory_and_al
          "tests/kansas-discovery-layers.test.mjs", "tests/water-release-console-reads.test.mjs"},
         "1584fd15edd6a70b588e3f4177d52d0d13c0050d",
     )
-    assert TOOL.RECEIPT.name == "site-v268-console-kdwp-followup-overlay-20261118.json"
+
+
+def test_coverage_pass_2_successor_preserves_followup_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-coverage-pass-2-overlay-20261118.json",
+        "site-v268-console-kdwp-followup-overlay-20261118.json",
+        "bc2aa67e432f700622ecbf7447861441dcabc7baa12bc78e07edc2be3e2d15f8",
+        {"app/api/live-context/route.ts", "app/explore/kansas-aquifers/page.tsx", "app/explore/lightning-and-the-sky/page.tsx",
+         "app/landing-guides.ts", "app/map-starters.ts", "app/page.tsx",
+         "app/site-features.ts", "docs/explorer-old-and-new-data-2026-11-18.md", "tests/kansas-discovery-layers.test.mjs",
+         "tests/landing-guides.test.mjs", "tests/map-starters.test.mjs"},
+        "e4e0b1032f29077551a4abf2afcb89c3bd6fe22a",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-coverage-pass-2-overlay-20261118.json"

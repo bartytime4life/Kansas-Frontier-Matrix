@@ -2648,7 +2648,8 @@ export default function Home() {
     if (!selectedBridgeId) return;
     const controller = new AbortController();
     void fetch(`/api/bridge-detail?id=${encodeURIComponent(selectedBridgeId)}`, { signal: controller.signal, headers: { Accept: "application/json" } })
-      .then(response => response.ok ? response.json() : null)
+      // One bridge record is a few kilobytes; refuse an oversized body instead of parsing it.
+      .then(response => response.ok ? readBoundedJson(response, 256 * 1024, controller.signal) as Promise<{ id?: unknown; properties?: unknown }> : null)
       .then((body: { id?: unknown; properties?: unknown } | null) => {
         if (controller.signal.aborted || !body || body.id !== selectedBridgeId || !body.properties || typeof body.properties !== "object") return;
         const properties = Object.fromEntries(Object.entries(body.properties as Record<string, unknown>).filter((entry): entry is [string, string] => typeof entry[1] === "string"));

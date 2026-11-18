@@ -58,7 +58,7 @@ export const MAP_STARTERS = [
   { id: "roads-and-rails", title: "Roads & rails through time", theme: "History & routes", guide: "roads-and-railroads", isNew: true, description: "For history explorers: set the 1918 road map and abandoned railroads against today's highways and active rail lines.",
     ids: ["kdot-roads-1918", "kdot-rail-abandoned", "kdot-rail-active", "kdot-roads"],
     limitation: "Map editions differ in date, scale and accuracy. An abandoned line is not a public trail and a mapped road is not a current condition report." },
-  { id: "lightning-and-sky", title: "Lightning & the sky", theme: "Weather & hazards", isNew: true, description: "For weather watchers: the latest 15-minute lightning density, the long-term flash average, the radar loop and satellite imagery.",
+  { id: "lightning-and-sky", title: "Lightning & the sky", theme: "Weather & hazards", guide: "lightning-and-the-sky", isNew: true, description: "For weather watchers: the latest 15-minute lightning density, the long-term flash average, the radar loop and satellite imagery.",
     ids: ["noaa-lightning-density", "nasa-lightning-climatology", "nws-radar", "noaa-goes-geocolor"],
     limitation: "The 1995–2014 flash average is a historical composite, not today's storms. Radar and satellite frames are display context, not a lightning-safety service." },
   { id: "wild-kansas", title: "Wildlife & open country", theme: "Outdoors & ecology", guide: "hunting-and-wildlife-areas", isNew: true, description: "For naturalists and hunters: KDWP public wildlife areas with 2021 land cover, public and protected lands and the stream network.",
@@ -67,6 +67,18 @@ export const MAP_STARTERS = [
   { id: "bridges-and-crossings", title: "Bridges & crossings", theme: "Built & planning", guide: "kansas-bridges", isNew: true, description: "For road users and engineers: state highway bridges and recorded closures as counted circles, with highways and the stream network they cross.",
     ids: ["kdot-bridges-state", "kdot-bridges-closed", "kdot-roads", "usgs-3dhp-hydrography"],
     limitation: "Bridge records are KDOT's inventory and may lag. A recorded status is not a live closure notice or a safety determination; follow posted signs and KDOT notices." },
+  { id: "kansas-aquifers", title: "Aquifers beyond the High Plains", theme: "Water & ground", guide: "kansas-aquifers", isNew: true, description: "For water users and students: the river-valley alluvial, Dakota, Glacial Drift and Ozark aquifer extents mapped by the Kansas Geological Survey.",
+    ids: ["kgs-aquifer-alluvial", "kgs-aquifer-dakota", "kgs-aquifer-glacial-drift", "kgs-aquifer-ozark"],
+    limitation: "Extents are regional reference boundaries without a stated vintage. They can overlap at different depths and are not well yield, water rights or drilling advice." },
+  { id: "old-bridges", title: "Bridges before 1950", theme: "History & routes", guide: "kansas-bridges", isNew: true, description: "For history explorers: local bridges with a recorded build year before 1950 and historic-designated bridges, beside the 1918 road map.",
+    ids: ["kdot-bridges-old", "kdot-bridges-historic", "kdot-roads-1918"],
+    limitation: "An age filter is not a historic designation, and a later rebuild may have changed a structure. Records may lag; a point is not public access or a safety finding." },
+  { id: "declared-disasters", title: "Declared disasters & alerts", theme: "Weather & hazards", isNew: true, description: "For emergency planners: recent FEMA declaration counties beside active NWS alerts, today's severe-storm outlook and the National Water Model's high-flow analysis.",
+    ids: ["fema-disaster-declarations", "nws-alerts", "noaa-spc-convective-outlook", "noaa-nwm-analysis"],
+    limitation: "A declaration names counties, not a disaster footprint or current danger. Alerts, outlooks and model analyses are separate products; follow NWS warnings and local officials." },
+  { id: "minerals-and-survey", title: "Federal mineral leases", theme: "Built & planning", isNew: true, description: "For land and energy researchers: BLM authorized and closed oil and gas lease cases on PLSS townships, with counties for orientation.",
+    ids: ["blm-mlrs-leases-authorized", "blm-mlrs-leases-closed", "blm-plss-townships", "census-counties"],
+    limitation: "Lease cases are geocoded from legal descriptions and are not exact lease or mineral-rights footprints, drilling activity, title or access. Leases appear only at closer zoom." },
 ] as const satisfies readonly { id: string; title: string; theme: StarterTheme; guide?: string; description: string; ids: readonly OfficialContextId[]; limitation: string; isNew?: boolean }[];
 
 export const DEFAULT_STARTER_ID = "learning-kansas";

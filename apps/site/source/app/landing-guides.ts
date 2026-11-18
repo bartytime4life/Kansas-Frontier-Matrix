@@ -252,6 +252,42 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     ],
     caution: "Survey divisions and soil map units are references. They are not parcel boundaries, deeds, proof of ownership or a soil test for a field.",
   },
+  {
+    slug: "lightning-and-the-sky",
+    title: "Kansas lightning, radar and satellite views",
+    description: "See recent lightning density over Kansas beside the long-term lightning average, the NOAA radar loop and GOES satellite imagery.",
+    kicker: "WEATHER · LIGHTNING",
+    intro: [
+      "Kansas thunderstorms bring frequent lightning from spring through late summer, often at night, when storms that formed over the High Plains drift east across the state.",
+      "This map shows NOAA's 15-minute lightning density from ground-based detection networks, NASA's 1995–2014 average flash rate measured from orbit, the National Weather Service radar loop and GOES satellite imagery. Each layer keeps its own time.",
+    ],
+    layers: ["noaa-lightning-density", "nasa-lightning-climatology", "nws-radar", "noaa-goes-geocolor"],
+    center: [-98.3, 38.5], zoom: 6.3,
+    ideas: [
+      "On a stormy evening, compare where recent lightning is densest with the strongest radar echoes.",
+      "Turn off the live layers and read the long-term average: which parts of Kansas see the most flashes over the years?",
+      "Watch storm tops on the satellite image grow as the radar loop advances.",
+    ],
+    caution: "Lightning density cells do not locate individual strikes, and an empty area is not an all-clear. This map is not a lightning-safety service: when thunder roars, go indoors, and follow National Weather Service warnings.",
+  },
+  {
+    slug: "kansas-aquifers",
+    title: "Kansas aquifers beyond the High Plains",
+    description: "Map the alluvial, Dakota, Glacial Drift and Ozark aquifers that supply water to Kansas towns and farms outside the High Plains aquifer.",
+    kicker: "WATER · AQUIFERS",
+    intro: [
+      "The High Plains aquifer is the best known, but much of Kansas draws water from other aquifers. Sand and gravel along rivers such as the Arkansas, Kansas and Smoky Hill form alluvial aquifers. Sandstones of the Dakota aquifer lie beneath much of central and western Kansas.",
+      "In northeast Kansas, glaciers left sediments that hold the Glacial Drift aquifer, and the far southeast corner of the state sits over the Ozark aquifer in limestone and dolomite. This map shows the Kansas Geological Survey's mapped extents of these four aquifers.",
+    ],
+    layers: ["kgs-aquifer-alluvial", "kgs-aquifer-dakota", "kgs-aquifer-glacial-drift", "kgs-aquifer-ozark"],
+    center: [-97.6, 38.5], zoom: 6.3,
+    ideas: [
+      "Trace the alluvial aquifers along the river valleys and see which towns sit on them.",
+      "Find where the Dakota aquifer extends under central Kansas.",
+      "Turn on the Osage and Flint Hills aquifers in Map layers to complete the picture for eastern Kansas.",
+    ],
+    caution: "These are regional reference extents without a stated date. Aquifers can overlap at different depths, and an outline is not well yield, water rights or drilling advice. Ask the Kansas Geological Survey or a licensed driller about a specific place.",
+  },
 ] satisfies LandingGuide[]);
 
 export const landingGuide = (slug: string) => LANDING_GUIDES.find(guide => guide.slug === slug);
