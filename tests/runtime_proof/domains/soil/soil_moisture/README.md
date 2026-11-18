@@ -22,6 +22,7 @@ Run the focused proof with:
 python -m pytest \
   tests/packages/envelopes/test_runtime_response_candidate.py \
   tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py \
+  tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py \
   tests/ci/test_render_runtime_proof_summary.py \
   -q --strict-config --strict-markers
 ```
@@ -48,3 +49,21 @@ A green result proves only deterministic mapping of synthetic fixtures under
 this proposed test profile. It does not activate a source, resolve an
 `EvidenceBundle`, evaluate release policy, authorize an API route, or publish
 soil-moisture data.
+
+## Current authoring receipt
+
+The workflow validates
+[`genrec-soil-moisture-runtime-proof-artifacts-20261118.json`](../../../../../data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json)
+against the current workflow and proof artifacts with the repository's native
+generated-receipt validator. It records the predecessor's exact digest and
+pinned repository input; it does not change the validator or bypass integrity.
+
+The [August 5 receipt](../../../../../data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20260805.json)
+remains immutable historical provenance. Its old workflow digest does not
+qualify the workflow after the upload-action update. The lineage tests pin that
+receipt's bytes, validate the selected successor, and require a digest mismatch
+when any bound artifact is altered in a temporary copy.
+
+The successor's human review remains pending. Receipt validity establishes
+shape and byte integrity, not review, real soil-data qualification, release,
+deployment, or publication.
