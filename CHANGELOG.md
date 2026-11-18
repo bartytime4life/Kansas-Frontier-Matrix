@@ -43,6 +43,10 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ## Unreleased
 
+### Security
+
+- Root pnpm workspace: `picomatch` 4.0.7, the only locked version, is patched in-tree against the unpatched ReDoS advisory [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf) (high). It is reached only through `vite` and `vitest` dev tooling. The patch carries the upstream fix from [micromatch/picomatch#264](https://github.com/micromatch/picomatch/pull/264), applied with pnpm `patchedDependencies` (`configs/dependency-patches/`). A regression test covers the advisory's inputs. The `npm-audit` classifier accepts that one advisory only through an expiring exception bound to the patch and lockfile hashes; every other finding still fails the job. Remove the patch when a fixed release exists.
+
 ### Added
 
 - Private Studio local administration (`tools/local_data/intake_studio/studio-admin.sh`): a menu-driven program on the Studio PC to change any account's password, add/enable/disable users, change roles, clear sign-in lockouts, sign out all sessions and read account activity. Passwords are accepted only at a hidden terminal prompt. The launcher now reads owner-private data workspace settings (`~/.config/kfm-intake-studio/workspace.json`) so Working Data and the Library are mounted and **Send to KFM** can move held reviews; the Overview shows whether Working Data is connected. Local synthetic tests only; not an installed-machine verification.

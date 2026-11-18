@@ -48,7 +48,9 @@ python tools/validators/dependencies/pnpm_audit_readiness.py \
   --report /path/to/pnpm-audit.json \
   --command-exit-code 0 \
   --audit-level high \
-  --manager pnpm
+  --manager pnpm \
+  --exceptions configs/dependency-patches/audit-exceptions.json \
+  --repository-root .
 ```
 
 `validate-repository` performs no network access. It checks:
@@ -75,6 +77,34 @@ titles, descriptions, recommendations, dependency paths, registry payloads,
 or arbitrary advisory URLs. `NOT_PROVIDED`, `PARTIAL_INVALID`, and
 `COUNT_MISMATCH` remain explicit instead of being misrepresented as a
 complete finding inventory.
+
+### Reviewed exceptions bound to in-tree patches
+
+`classify-audit --exceptions <register> --repository-root <root>` accepts a
+register of reviewed exceptions. The CI register is
+[`configs/dependency-patches/audit-exceptions.json`](../../../configs/dependency-patches/README.md).
+Each entry names one GHSA advisory for one exact package version.
+
+An entry is loaded only while all of these hold:
+
+- It is unexpired, and it expires at most 184 days after it was recorded.
+- Its repository-relative `.patch` file hashes to the recorded `patch_sha256`.
+- `pnpm-lock.yaml` applies exactly that patch hash to that version under
+  `patchedDependencies`.
+- No other version of that package is locked.
+
+An unbound, expired or malformed register makes the result `ERROR`.
+
+A threshold finding is excepted only when its package, its advisory and every
+locked finding version match an entry. The classifier must also be able to
+attribute every counted finding to a record. When all threshold findings are
+excepted, a failing audit command becomes `PASS`. The excepted entries are
+listed in `excepted_vulnerabilities`. Any other finding keeps the result at
+`REGRESSION`.
+
+pnpm's own `auditConfig.ignoreGhsas` is not used. pnpm drops the advisory from
+the report but keeps it in the severity counts, and this classifier treats
+that mismatch as `ERROR`.
 
 ## Finite outcomes
 

@@ -536,7 +536,8 @@
         "apps/*/package-lock.json",
         "packages/*/package.json",
         "tests/validators/test_pnpm_audit_readiness.py",
-        "tools/validators/dependencies/**"
+        "tools/validators/dependencies/**",
+        "configs/dependency-patches/**"
       ],
       "timeout_seconds": 120,
       "artifact_refs": []
