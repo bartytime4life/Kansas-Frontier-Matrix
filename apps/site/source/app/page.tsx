@@ -74,6 +74,7 @@ import { drawWaterMotionCanvas } from "./water-motion-canvas";
 import { readProgressiveDownstreamGuide, waterReadingCue, type DownstreamGuide, type DownstreamPath } from "./water-flow-context";
 import { applyTopographicRasterDepth } from "./terrain-relief-style";
 import { TerrainRasterViewTracker, terrainRasterErrorTile, terrainRasterTileInView, type TerrainRasterId } from "./terrain-raster-status";
+import { BASEMAP_TILE_GAP_MESSAGE, BasemapRasterHealth, rasterSourceMaxzooms } from "./basemap-raster-health";
 import type { WindArrowFrame, WindArrowSample } from "./wind-arrow-data";
 import { loadWindFlowFrame } from "./wind-flow-client";
 import { EarthEngineDisplayControls } from "./earth-engine-display";
@@ -1256,6 +1257,7 @@ export default function Home() {
   const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
   const officialRasterFailuresRef = useRef(new Set<OfficialContextId>());
   const terrainRasterViewRef = useRef(new TerrainRasterViewTracker());
+  const basemapRasterHealthRef = useRef(new BasemapRasterHealth());
   const failedTerrainSourceRef = useRef<unknown>(null);
   const noaaRadarRequestRef = useRef<AbortController | null>(null);
   const noaaRadarLastRequestAtRef = useRef(0);
@@ -5831,7 +5833,10 @@ export default function Home() {
           // A missing display basemap tile must not block cutaway navigation or records.
           const basemapStyle = BASEMAPS[basemapRef.current].style;
           if (sourceId && typeof basemapStyle !== "string" && basemapStyle.sources[sourceId]?.type === "raster") {
-            degradedReason = "Some basemap tiles are unavailable. Gaps are unknown; choose another basemap or retry. Map controls and records remain available.";
+            // Track the failed tile so a settled view without it can retire
+            // the warning; a failure without a tile stays source-level.
+            basemapRasterHealthRef.current.markFailed(sourceId, terrainRasterErrorTile(event as typeof event & { tile?: { tileID?: { canonical?: { z: number; x: number; y: number } } }; coord?: { canonical?: { z: number; x: number; y: number } } }));
+            degradedReason = BASEMAP_TILE_GAP_MESSAGE;
             setRuntime({ kind: "degraded", message: degradedReason });
             return;
           }
@@ -5903,6 +5908,12 @@ export default function Home() {
             if (degradedReason?.startsWith("Terrain DEM is unavailable")) { degradedReason = null; runtimeError = null; }
           }
           if (!event.sourceId) return;
+          if (event.tile?.state === "loaded") {
+            const basemapStyle = BASEMAPS[basemapRef.current].style;
+            if (typeof basemapStyle !== "string" && basemapStyle.sources[event.sourceId]?.type === "raster") {
+              basemapRasterHealthRef.current.markLoaded(event.sourceId, event.coord?.canonical);
+            }
+          }
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
           const terrainRaster = officialSource?.id === "usgs-3dep-hillshade" || officialSource?.id === "usgs-3dep-slope";
           if (terrainRaster && event.tile?.state === "loaded" && officialVisibilityRef.current[officialSource.id]) {
@@ -5930,6 +5941,15 @@ export default function Home() {
         map.on("idle", () => {
           runMapMutation("Map readiness check", () => {
             syncTerrainRasterView();
+            // MapLibre never re-requests a tile that failed in a former view,
+            // so retire the basemap gap warning once no failure can be drawn.
+            if (degradedReason === BASEMAP_TILE_GAP_MESSAGE) {
+              const bounds = map.getBounds();
+              const view = { west: bounds.getWest(), east: bounds.getEast(), south: bounds.getSouth(), north: bounds.getNorth() };
+              if (!basemapRasterHealthRef.current.hasFailureInView(rasterSourceMaxzooms(BASEMAPS[basemapRef.current].style), view, map.getZoom())) {
+                degradedReason = null;
+              }
+            }
             if (scenePresetRef.current === "elevation-3d" && map.getTerrain()?.source === TERRAIN_SOURCE_ID
               && map.getSource(TERRAIN_SOURCE_ID) && map.isSourceLoaded(TERRAIN_SOURCE_ID)
               && attachedTerrainProviderRef.current === terrainProviderRef.current
@@ -6367,6 +6387,7 @@ export default function Home() {
     attachedTerrainProviderRef.current = null;
     officialRasterFailuresRef.current.clear();
     terrainRasterViewRef.current.resetAll();
+    basemapRasterHealthRef.current.reset();
     setOfficialStates(current => {
       const next = { ...current };
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
