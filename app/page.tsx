@@ -13145,6 +13145,11 @@ export default function Home() {
                   <div className="source-time-actions"><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">NIFC fire news ↗</a></div>
                   <button type="button" onClick={() => openPrimaryWorkspace("reports", true, buildFireReportContext(selectedOfficialContextId === "nifc-fire-reports" ? "nifc-fire-reports" : "nasa-gibs-fire-points", selectedOfficialFeature || null, selectedOfficialPayload?.retrievedAt, selectedOfficialPayload?.state ?? "unavailable", selectedFireComparisonPayload?.state ?? "unavailable", selectedFireNeighbors))}>Build report from selected fire record</button>
                 </section>}
+                {selectedOfficialContextId === "usgs-streamflow" && selected.externalStationId === "07144100" && <section className="drawer-data-block" aria-label="Historical water chemistry">
+                  <header><h3>Historical water chemistry</h3><small>2019–2022 · same monitoring site</small></header>
+                  <p>Compare dissolved nitrate samples from two periods near Sedgwick.</p>
+                  <a href="/labs/water-chemistry">Explore Water Chemistry ↗</a>
+                </section>}
                 {selectedRiverObservation && <section className="drawer-data-block" aria-label="USGS gauge height data"><header><h3>Gauge height · USGS 00065</h3><small>Separate seven-day station request</small></header>
                   {selectedStageDetail?.status === "loading" && <p role="status">Loading station metadata and gauge-height observations…</p>}
                   {selectedStageDetail?.status === "error" && <p role="status">Gauge-height data are unavailable. The discharge frame and its history remain separate.</p>}

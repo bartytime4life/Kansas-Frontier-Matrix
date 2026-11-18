@@ -13,6 +13,7 @@ type Facets={years:{year:number|null;hits:number}[];titles:{id:string;title:stri
 type SearchAnswer={total:number|null;count:number;rows:Hit[];generatedAt:string;source:{notes:string};totalCapped?:boolean;facets?:Facets};
 const OPEN='⟦',CLOSE='⟧',PAGE=20,MAX_OFFSET=1000;
 const YEAR=/^\d{4}$/;
+const NEWSPAPER_TITLE=/^[a-z]{2}\d{8}$/i;
 type SearchQuery={q:string;source:Source;from:string;to:string;title:string};
 type SearchRequest={query:SearchQuery;offset:number;previous:number[]};
 type SearchPage=SearchRequest&{answer:SearchAnswer};
@@ -68,14 +69,18 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
  function submit(event:FormEvent){event.preventDefault();void run({query:{q,source,from,to,title:''},offset:0,previous:[]});}
  function filterTitle(value:string){if(page)void run({query:{...page.query,title:value},offset:0,previous:[]});}
  useEffect(()=>{
-  const params=new URLSearchParams(location.search),linkedQ=(params.get('q')??'').slice(0,200);
-  if(!linkedQ.trim())return;
-  const linkedSource:Source=params.get('source')==='texts'?'texts':'newspapers',linkedFrom=YEAR.test(params.get('from')??'')?params.get('from')!:'',linkedTo=YEAR.test(params.get('to')??'')?params.get('to')!:'';
-  setQ(linkedQ);setSource(linkedSource);setFrom(linkedFrom);setTo(linkedTo);
-  void run({query:{q:linkedQ,source:linkedSource,from:linkedFrom,to:linkedTo,title:''},offset:0,previous:[]});
-  // Apply the address bar at mount; later searches come from the form.
-  // Strict Mode may replay setup after cleanup aborts the first request.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  let current=true;
+  queueMicrotask(()=>{
+   if(!current)return;
+   const params=new URLSearchParams(location.search),linkedQ=(params.get('q')??'').slice(0,200);
+   if(!linkedQ.trim())return;
+   const linkedSource:Source=params.get('source')==='texts'?'texts':'newspapers',linkedFrom=YEAR.test(params.get('from')??'')?params.get('from')!:'',linkedTo=YEAR.test(params.get('to')??'')?params.get('to')!:'';
+   const requestedTitle=params.get('title')??'';
+   const linkedTitle=linkedSource==='newspapers'&&NEWSPAPER_TITLE.test(requestedTitle)?requestedTitle.toLowerCase():'';
+   setQ(linkedQ);setSource(linkedSource);setFrom(linkedFrom);setTo(linkedTo);
+   void run({query:{q:linkedQ,source:linkedSource,from:linkedFrom,to:linkedTo,title:linkedTitle},offset:0,previous:[]});
+  });
+  return()=>{current=false;};
  },[]);
  const answer=page?.answer,offset=page?.offset??0,title=page?.query.title??'';
  const facets=answer?.facets,decadeChart=facets?decades(facets.years):null;
@@ -85,6 +90,7 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
  return <section className={styles.search} aria-labelledby="archive-search-title">
   <h2 id="archive-search-title">Search the texts</h2>
   <p>Full-text search over the Kansas newspaper pages and public-domain texts the PC has loaded: words, <q>quoted phrases</q>, prefixes such as <code>wich*</code>, and AND, OR, NOT between terms. Results rank the original OCR, so spellings and scanning errors of the period affect what is found.</p>
+  <p><a href="/labs/newspaper-pulse">Compare word coverage in Newspaper Pulse →</a></p>
   {loadedThrough&&(loadedThrough.newspapers||loadedThrough.texts)&&<p className={styles.note}>Loading continues on the PC: {loadedThrough.newspapers?`newspaper pages last added ${loadedThrough.newspapers}`:'newspaper load date not reported'}; {loadedThrough.texts?`archive texts last added ${loadedThrough.texts}`:'text load date not reported'}. A missing match may not be loaded yet.</p>}
   <form className={styles.searchForm} onSubmit={submit} aria-describedby={formError?"archive-search-error":undefined}>
    <label className={styles.grow}>Words or phrase<input ref={queryInput} type="search" value={q} onChange={e=>setQ(e.target.value)} placeholder='tornado · "dust storm" · grasshopper*' maxLength={200} required/></label>

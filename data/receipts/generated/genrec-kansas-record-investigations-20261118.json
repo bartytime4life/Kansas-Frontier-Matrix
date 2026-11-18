@@ -1,0 +1,240 @@
+{
+  "receipt_id": "genrec-kansas-record-investigations-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/collection-lab.ts",
+    "app/collection-metadata-panel.tsx",
+    "app/collection-metadata.ts",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/lab.module.css",
+    "app/data-lab/measurement-explorer.tsx",
+    "app/data-lab/page.tsx",
+    "app/data-library/search.tsx",
+    "app/labs/atlas-model.mjs",
+    "app/labs/ghost-towns/GhostTowns.jsx",
+    "app/labs/ghost-towns/ghost-towns.module.css",
+    "app/labs/ghost-towns/page.tsx",
+    "app/labs/ghost-towns/post-office-model.mjs",
+    "app/labs/ghost-towns/post-office-snapshot.json",
+    "app/labs/newspaper-pulse/NewspaperPulse.jsx",
+    "app/labs/newspaper-pulse/cohort.mjs",
+    "app/labs/newspaper-pulse/page.tsx",
+    "app/labs/newspaper-pulse/pulse.module.css",
+    "app/labs/newspaper-pulse/reflector-cohort.json",
+    "app/labs/page.jsx",
+    "app/labs/page.module.css",
+    "app/labs/water-chemistry/WaterChemistry.jsx",
+    "app/labs/water-chemistry/page.tsx",
+    "app/labs/water-chemistry/water-model.mjs",
+    "app/labs/water-chemistry/water-snapshot.json",
+    "app/labs/water-chemistry/water.module.css",
+    "app/layer-workspaces.ts",
+    "app/living-welcome/stories/StoryLab.jsx",
+    "app/living-welcome/stories/StorySection.jsx",
+    "app/living-welcome/stories/registry.mjs",
+    "app/living-welcome/stories/stories.css",
+    "app/page.tsx",
+    "docs/collection-data-lab.md",
+    "docs/labs-public-data.md",
+    "scripts/prepare-labs-post-offices.py",
+    "scripts/prepare-newspaper-pulse.mjs",
+    "scripts/prepare-water-chemistry.py",
+    "tests/archive-search-ui.test.mjs",
+    "tests/collection-integration.test.mjs",
+    "tests/newspaper-pulse.test.mjs",
+    "tests/post-office-history.test.mjs",
+    "tests/record-lab-bundle.test.mjs",
+    "tests/story-cards.test.mjs",
+    "tests/water-chemistry.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/collection-lab.ts": "sha256:2949aa7ee6b084239f846ed55b29bfac56171dce9f987a42337a5194559ce68a",
+    "app/collection-metadata-panel.tsx": "sha256:c8e0f5a23487c8cdde7ced8d2e160cf62aeac8829ddef5e659c1c48b611d8cf5",
+    "app/collection-metadata.ts": "sha256:bc927b5eb5547c3fba7317a6f66ff429ff939492dfe5db9c33af85a20090c810",
+    "app/data-lab/lab-bundle.ts": "sha256:60b4ffdee98866c1be5166a969838bd8d8360f45e4b4109a8319aa10ee94ae16",
+    "app/data-lab/lab.module.css": "sha256:6e5f85dc0c638fcea1be245c69c0cfd7b103f7376665896315afbe2e1a34510e",
+    "app/data-lab/measurement-explorer.tsx": "sha256:c6fc83a5cea16ae70ab9b7042eb12d58f5e51b68e642715e37a7dd6f89a7b316",
+    "app/data-lab/page.tsx": "sha256:c33afc7c91ea87b8e4514f39cf4bc0f392bf91b50f71b817b53327bc0798da78",
+    "app/data-library/search.tsx": "sha256:884a7d7701bfab3f42d0f1bfedb3fcc04b63146391721a9724ce954806fe8cea",
+    "app/labs/atlas-model.mjs": "sha256:3531180307be3edc8bb4f354da951b417b36d92d8980e372d9ebe4684317d28d",
+    "app/labs/ghost-towns/GhostTowns.jsx": "sha256:4f8c09f650b8b53ba5087c5ce36afb630f6e029b0b7166dfbb73eaae95bf7248",
+    "app/labs/ghost-towns/ghost-towns.module.css": "sha256:aa7a41d23e13324d3ecce78c564cb84eac209446975e0ed725782db1416e3b93",
+    "app/labs/ghost-towns/page.tsx": "sha256:c829c42e71228cf075d1fdfdfc7e2fc1e762311dc343c9edae35b3a3afd8e0f2",
+    "app/labs/ghost-towns/post-office-model.mjs": "sha256:b68af3b132f0a4d66fe0db18dad8b6e33b654959db3982a82a2d4be8029d3a42",
+    "app/labs/ghost-towns/post-office-snapshot.json": "sha256:a7af8156fb5ac2a0b8b018b18b33a6a11da9c25fabaf213151c028119802be2c",
+    "app/labs/newspaper-pulse/NewspaperPulse.jsx": "sha256:f1038b4fed3c1e58a2ee9565f79deca8d199b732cdf5ef8d9209bea99899376c",
+    "app/labs/newspaper-pulse/cohort.mjs": "sha256:654df530985347184202e14688504f58a7e96fca7754e1738896553ace4a1150",
+    "app/labs/newspaper-pulse/page.tsx": "sha256:b73e880df96bc716b3e6923c3757a51a618a4e754fd915144d857e33b25937c1",
+    "app/labs/newspaper-pulse/pulse.module.css": "sha256:8bf50d8c1355fd1632dd5064a9e75c9dd707219716d81f3b3127a484deee84f8",
+    "app/labs/newspaper-pulse/reflector-cohort.json": "sha256:e7fd8db60fcae4b299fed36285c3ae9f5eb3e14ed8101f65685870a7683e2479",
+    "app/labs/page.jsx": "sha256:0d0411feb42ea61d1a86f8198bda9911cb4666efa1c54ec35d749e707d1772b5",
+    "app/labs/page.module.css": "sha256:015bf85844e86090c4da366e3954b440bf64ba77153c6aa291333e21286be44a",
+    "app/labs/water-chemistry/WaterChemistry.jsx": "sha256:f8ff2f45b63de26681d3c870c35658a54a39444374bc457cbc8aaa74443b9295",
+    "app/labs/water-chemistry/page.tsx": "sha256:5f8e7be35420ffa6c9c7a923058e1ba2146a4370c7b7347091b605f2f12bf83a",
+    "app/labs/water-chemistry/water-model.mjs": "sha256:df6cbcad9c6640bb09b8a5d26cb75df7acb1b2855b0204e4afb090b63f8ebc62",
+    "app/labs/water-chemistry/water-snapshot.json": "sha256:7dcf8a71161c7ecfa186be32963f1af0953e670a07348a03ef76b662750ab8cc",
+    "app/labs/water-chemistry/water.module.css": "sha256:4bb5ef5edba3e835527c104ee28c93d4d6fffe3c845d6384af8b220e61ae1fd3",
+    "app/layer-workspaces.ts": "sha256:52c81a6493b13cbb24686b8f69c0b7c9458c2c4d48f1d85fd7c6dfe6ec96f138",
+    "app/living-welcome/stories/StoryLab.jsx": "sha256:baa5114539fba3388b0350d60ac7361e0a515d632666cc8ca0faf8a41432086f",
+    "app/living-welcome/stories/StorySection.jsx": "sha256:1f92364c80f46ad80f7dd501fbf0c5e6c63d8b0d50b9f4859bfeac605ba708c7",
+    "app/living-welcome/stories/registry.mjs": "sha256:cf377232250da1d2653e97164427cafa289b9de58a36c875ed4f48a82b95d1f8",
+    "app/living-welcome/stories/stories.css": "sha256:8b75666a494ab3df4c9cdeb9ae48ae3727fe65f338c043c6bb7cb5ec48c8f384",
+    "app/page.tsx": "sha256:ddc359be2cffdb8d82b3d54ab7e18be730966b33008735fedc416072c92775fd",
+    "docs/collection-data-lab.md": "sha256:5af023599f06ef1ed16283dd467db8274bd9009692d17bf4abebf3767fdad8a0",
+    "docs/labs-public-data.md": "sha256:e48996466a236711eac3911fb4e44f1a836d02ab832563879a375f06d5f1bb58",
+    "scripts/prepare-labs-post-offices.py": "sha256:5d11ca8d960f0dc02ffdc2cf73cc5c90868ee448e16fc6bf6362328d77b3c17b",
+    "scripts/prepare-newspaper-pulse.mjs": "sha256:4dc5961058bf36dfa41ce7187ee11aaf58ae15da9dd8c95c5a0729d726943271",
+    "scripts/prepare-water-chemistry.py": "sha256:383d383eb92cf172c65d2d22c01e89180dea2a8fd57bf8db27d33785c28455b3",
+    "tests/archive-search-ui.test.mjs": "sha256:91d19710b7ef568058516c48b915475546daa31be8be9c60f28ace747ae3d1cc",
+    "tests/collection-integration.test.mjs": "sha256:1240904e016ec7feb59ada905451370b9fc0bbd473c6a063980c549656df7f56",
+    "tests/newspaper-pulse.test.mjs": "sha256:5c8f4344e184d36eea391cf72652aa45bc0a03d64b87f203896ead21fc221aaf",
+    "tests/post-office-history.test.mjs": "sha256:cbea1ba27bcd8fc544512fe4cae2daff8028576a5a1a1677cff5a08c2683a090",
+    "tests/record-lab-bundle.test.mjs": "sha256:49a7606034d1dee5b8ef64a226429ecb70e17c15b5e7504d65814bc3a7295747",
+    "tests/story-cards.test.mjs": "sha256:f1f414e1df8fa98ed1064f04d8f059f668683ebadcf594329668e6bd33a37068",
+    "tests/water-chemistry.test.mjs": "sha256:dccb0ff2b1859724d3170f272f0a2f3f3af49a3f2b97d59b23ac6ea59d308afd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-6 family; exact runtime version not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell",
+      "git",
+      "GitHub connector",
+      "headless Chromium CDP"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:54d4d71a7286169143528d9007f35dde6f19574d:AGENTS.md",
+      "git:1f30fe05557f07863edda05cedc535b6005b664b",
+      "git:15af2a85ba8323a0b3c04e3beca4ebd3db2f39fc:docs/doctrine/ai-build-operating-contract.md",
+      "git:15af2a85ba8323a0b3c04e3beca4ebd3db2f39fc:schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://waterqualitydata.us/provider/NWIS/USGS-KS/USGS-07144100/",
+      "https://doi.org/10.7910/DVN/NUKCNA",
+      "https://www.loc.gov/item/sn84029386/"
+    ]
+  },
+  "truth_labels": {
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/collection-metadata-panel.tsx": "CONFIRMED",
+    "app/collection-metadata.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/lab.module.css": "CONFIRMED",
+    "app/data-lab/measurement-explorer.tsx": "CONFIRMED",
+    "app/data-lab/page.tsx": "CONFIRMED",
+    "app/data-library/search.tsx": "CONFIRMED",
+    "app/labs/atlas-model.mjs": "CONFIRMED",
+    "app/labs/ghost-towns/GhostTowns.jsx": "CONFIRMED",
+    "app/labs/ghost-towns/ghost-towns.module.css": "CONFIRMED",
+    "app/labs/ghost-towns/page.tsx": "CONFIRMED",
+    "app/labs/ghost-towns/post-office-model.mjs": "CONFIRMED",
+    "app/labs/ghost-towns/post-office-snapshot.json": "CONFIRMED",
+    "app/labs/newspaper-pulse/NewspaperPulse.jsx": "CONFIRMED",
+    "app/labs/newspaper-pulse/cohort.mjs": "CONFIRMED",
+    "app/labs/newspaper-pulse/page.tsx": "CONFIRMED",
+    "app/labs/newspaper-pulse/pulse.module.css": "CONFIRMED",
+    "app/labs/newspaper-pulse/reflector-cohort.json": "CONFIRMED",
+    "app/labs/page.jsx": "CONFIRMED",
+    "app/labs/page.module.css": "CONFIRMED",
+    "app/labs/water-chemistry/WaterChemistry.jsx": "CONFIRMED",
+    "app/labs/water-chemistry/page.tsx": "CONFIRMED",
+    "app/labs/water-chemistry/water-model.mjs": "CONFIRMED",
+    "app/labs/water-chemistry/water-snapshot.json": "CONFIRMED",
+    "app/labs/water-chemistry/water.module.css": "CONFIRMED",
+    "app/layer-workspaces.ts": "CONFIRMED",
+    "app/living-welcome/stories/StoryLab.jsx": "CONFIRMED",
+    "app/living-welcome/stories/StorySection.jsx": "CONFIRMED",
+    "app/living-welcome/stories/registry.mjs": "CONFIRMED",
+    "app/living-welcome/stories/stories.css": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED",
+    "docs/labs-public-data.md": "CONFIRMED",
+    "scripts/prepare-labs-post-offices.py": "CONFIRMED",
+    "scripts/prepare-newspaper-pulse.mjs": "CONFIRMED",
+    "scripts/prepare-water-chemistry.py": "CONFIRMED",
+    "tests/archive-search-ui.test.mjs": "CONFIRMED",
+    "tests/collection-integration.test.mjs": "CONFIRMED",
+    "tests/newspaper-pulse.test.mjs": "CONFIRMED",
+    "tests/post-office-history.test.mjs": "CONFIRMED",
+    "tests/record-lab-bundle.test.mjs": "CONFIRMED",
+    "tests/story-cards.test.mjs": "CONFIRMED",
+    "tests/water-chemistry.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Clean candidate production build and full Node suite",
+      "outcome": "PASS",
+      "reason": "Application candidate 1f30fe0555. 3082 passed, 25 existing skips, 0 failed."
+    },
+    {
+      "gate": "TypeScript and changed-area ESLint",
+      "outcome": "PASS",
+      "reason": "Application candidate 1f30fe0555. No type or lint errors. 42 baseline map-shell warnings."
+    },
+    {
+      "gate": "Desktop and 390 px Chromium",
+      "outcome": "PASS",
+      "reason": "Application candidate 1f30fe0555. Three guided labs, source links and exports, Record Lab chart and file reopen."
+    },
+    {
+      "gate": "Public-data rights and source readback",
+      "outcome": "PASS",
+      "reason": "Checked published water station and exact 28-row selection, the unrestricted CC0 post-office source and 59-row selection, and the published Library of Congress issue inputs."
+    },
+    {
+      "gate": "Hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt emission. Inspect the current pull request for the authoritative result."
+    },
+    {
+      "gate": "Independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting human disposition."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "hosted-app-baseline",
+      "validated": true,
+      "evidence_ref": "git:54d4d71a7286169143528d9007f35dde6f19574d"
+    },
+    {
+      "id": "current-ai-build-contract",
+      "validated": true,
+      "evidence_ref": "git:15af2a85ba8323a0b3c04e3beca4ebd3db2f39fc:docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "water-quality-portal",
+      "validated": true,
+      "evidence_ref": "https://waterqualitydata.us/provider/NWIS/USGS-KS/USGS-07144100/"
+    },
+    {
+      "id": "post-office-source",
+      "validated": true,
+      "evidence_ref": "https://doi.org/10.7910/DVN/NUKCNA"
+    },
+    {
+      "id": "newspaper-source",
+      "validated": true,
+      "evidence_ref": "https://www.loc.gov/item/sn84029386/"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T16:35:14.394582+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Records generation provenance and scoped validation. Confirmation labels refer to the cited artifacts and checks. The final documentation clarification and this receipt do not change application or test inputs. The receipt excludes itself from content hashing. Source admission, human review, and public delivery remain separate."
+}

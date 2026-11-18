@@ -4,7 +4,7 @@ export type Collection = (typeof RECOVERED_COLLECTIONS)[number];
 export type FieldRole = 'identity'|'time'|'location'|'unit'|'quality'|'value';
 export function fieldRole(name:string, keys:readonly string[]=[]):FieldRole {
  if(keys.includes(name)||/(_number(?:_\d+)?|_no|_identifier)$/i.test(name)||/^(county|state|tract|block|site|station|block_group|variable|parameter|parameter_cd|element|measureid|characteristic_name)$/i.test(name)||/(^|_)(id|ids|code|fips|geoid|zip|row_number|file_id|site_no|station_id|objectid|lccn)($|_)/i.test(name))return 'identity';
- if(/(^|_)(date|time|year|month|day|start|end|begin|issued|valid|edition)($|_)/i.test(name))return 'time';
+ if(name==='first_max_hour'||/(^|_)(date|time|year|month|day|start|end|begin|issued|valid|edition)($|_)/i.test(name))return 'time';
  if(/geometry|latitude|longitude|(^|_)(lat|lon|lng|coordinates)($|_)/i.test(name))return 'location';
  if(/(^|_)(units?|unit_name)($|_)/i.test(name))return 'unit';
  if(/flag|qualifier|quality|status|remark|censor|precision|uncertainty/i.test(name))return 'quality';
@@ -13,7 +13,12 @@ export function fieldRole(name:string, keys:readonly string[]=[]):FieldRole {
 export const fieldLabel = (name:string) => name.replaceAll('_',' ').replace(/\b\w/g,v=>v.toUpperCase());
 const family = (id:string) => id.replace(/^(observations|bulk)-/,'').split('-')[0];
 export const collectionUrl = (id:string) => `/data-library?collection=${encodeURIComponent(id)}`;
-export const labUrl = (id:string) => `/data-lab?collection=${encodeURIComponent(id)}`;
+export function labUrl(id = '', packId?: string) {
+ if (!id) return '/data-lab';
+ const params = new URLSearchParams({collection: id});
+ if (packId) params.set('pack', packId);
+ return `/data-lab?${params}`;
+}
 export function collectionMetadata(c:Collection){
  const topics=[...recoveredTopics(c.id)];
  const fields=c.columns.map(name=>({name,label:fieldLabel(name),role:fieldRole(name,c.keys),definition:null,unit:null}));

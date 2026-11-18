@@ -41,6 +41,14 @@ as omissions. Empty layer downloads are disabled.
 The research brief includes the question, measured sample scope, recorded value
 ranges, example source-time fields, retrieval times, source lineage, exact record
 identities and interpretation limits. It and the lab bundle are free downloads.
+
+**Reopen a saved lab bundle** reads the file in the browser and restores its
+record sample, question, field, context and selected interval where present.
+Older JSON downloads reopen their record sample and question. The app checks
+record identities, bounds and any saved interval before replacing the current
+view. Opening a file makes no archive request. Subsequent exports identify
+the file as their input and qualify its supplied source descriptions.
+
 The method is deterministic browser computation. These outputs do not establish
 AI review, approval, release or publication. Private intake review credits and
 the original data remain unchanged. Unknown definitions, rights, units, CRS,

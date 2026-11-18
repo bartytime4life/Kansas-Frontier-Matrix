@@ -18,6 +18,7 @@ export function atlasFacts(bundle) {
 }
 
 export function atlasStatus(story, state) {
+  if (story.status === 'guided') return { label: 'Guided investigation', tone: 'ready' };
   if (story.status !== 'ready') return { label: 'In development', tone: 'planned' };
   if (state === 'ready') return { label: 'Source snapshot ready', tone: 'ready' };
   if (state === 'offline') return { label: 'Source unavailable', tone: 'offline' };
@@ -47,7 +48,7 @@ export function matchesAtlasStory(story, { query = '', group = 'All', availabili
   const text = [story.title, story.kicker, story.summary, story.group, ...(story.sources || [])].join(' ').toLocaleLowerCase();
   if (terms.some(term => !text.includes(term))) return false;
   if (group !== 'All' && story.group !== group) return false;
-  if (availability === 'available' && !Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, story.id)) return false;
+  if (availability === 'available' && story.status !== 'guided' && !Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, story.id)) return false;
   if (availability === 'ready' && (story.status !== 'ready' || states[story.id] !== 'ready')) return false;
   if (availability === 'planned' && story.status !== 'planned') return false;
   return true;

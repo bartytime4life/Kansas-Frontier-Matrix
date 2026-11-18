@@ -2,6 +2,7 @@ import {collectionMetadata,fieldRole,type Collection} from './collection-metadat
 import {fetchArchive,validArchiveGeometry,type ArchiveAnswer,type ArchiveRow} from './archive-layer-data';
 
 export const LAB_MAX_ROWS=250,LAB_MAX_PAGES=5;
+const MAX_DISTRIBUTION_BINS = 6;
 const object=(v:unknown):v is Record<string,unknown> => !!v&&typeof v==='object'&&!Array.isArray(v);
 const missing=(v:unknown)=>v===null||v===undefined||typeof v==='string'&&!v.trim();
 function numeric(v:unknown):number|null{
@@ -11,13 +12,152 @@ function numeric(v:unknown):number|null{
  }
  return typeof v==='number'&&Number.isFinite(v)&&(!Number.isInteger(v)||Number.isSafeInteger(v))?v:null;
 }
-const dimensionFields=['unit','units','unit_name','measurement_unit','result_measure_unit_code','variable','parameter_cd','parameter','element','characteristic_name','measureid','qualifier','quality_flag','remark_cd','censoring_code','result_detection_condition'];
-function groupKey(values:Record<string,unknown>){
- const dimensions=Object.fromEntries(dimensionFields.filter(k=>!missing(values[k])&&['string','number'].includes(typeof values[k])).map(k=>[k,String(values[k])]));
- return Object.keys(dimensions).length?JSON.stringify(dimensions):'Unit and measurement context not supplied';
+const defaultDimensions = [
+ 'unit', 'units', 'unit_name', 'measurement_unit', 'result_measure_unit_code',
+ 'variable', 'parameter_cd', 'parameter', 'element', 'characteristic_name', 'measureid',
+ 'qualifier', 'quality_flag', 'remark_cd', 'censoring_code', 'result_detection_condition',
+];
+const aqsObservationDimensions = [
+ 'parameter_code', 'parameter_name', 'sample_duration', 'pollutant_standard', 'event_type',
+];
+const aqsConcentrationDimensions = [...aqsObservationDimensions, 'units_of_measure'];
+
+// The catalog uses provider-specific column names. Context for one numeric field
+// must not supply the unit for another field on the same record.
+const collectionDimensions: Partial<Record<string, Readonly<Record<string, readonly string[]>>>> = {
+ 'observations-usgs-daily-values': {
+  value: ['parameter_code', 'statistic_id', 'unit_of_measure', 'approval_status', 'qualifier'],
+ },
+ 'observations-usgs-field-measurements': {
+  value: ['parameter_code', 'unit_of_measure', 'kind', 'reading_type', 'vertical_datum', 'approval_status', 'qualifier'],
+ },
+ 'observations-usgs-peaks': {
+  value: ['parameter_code', 'unit_of_measure', 'qualifier'],
+ },
+ 'observations-aqs-daily': {
+  arithmetic_mean: aqsConcentrationDimensions,
+  first_max_value: aqsConcentrationDimensions,
+  observation_count: aqsObservationDimensions,
+  observation_percent: aqsObservationDimensions,
+  aqi: aqsObservationDimensions,
+ },
+ 'observations-usgs-samples-results': {
+  result_measure: [
+   'result_characteristic', 'usgs_pcode', 'result_measure_unit', 'activity_media', 'activity_media_subdivision',
+   'result_sample_fraction',
+   'result_measure_type', 'result_weight_basis', 'result_time_basis', 'result_measure_temperature_basis',
+   'result_measure_particle_size_basis', 'result_statistical_base', 'result_result_detection_condition',
+   'result_measure_qualifier_code', 'result_measure_status_identifier', 'result_analytical_method_identifier',
+   'result_analytical_method_identifier_context', 'result_analytical_method_name',
+  ],
+  activity_location_horz_accuracy_measure: ['activity_location_horz_accuracy_measure_unit'],
+  activity_depth_height_measure: ['activity_depth_height_measure_unit'],
+  activity_top_depth_measure: ['activity_top_depth_measure_unit'],
+  activity_bottom_depth_measure: ['activity_bottom_depth_measure_unit'],
+  group_summary_weight_measure: ['group_summary_weight_measure_unit'],
+  result_depth_height_measure: ['result_depth_height_measure_unit', 'result_depth_height_altitude_reference_point'],
+  detection_limit_measure_a: ['result_characteristic', 'detection_limit_type_a', 'detection_limit_measure_unit_a'],
+  detection_limit_measure_b: ['result_characteristic', 'detection_limit_type_b', 'detection_limit_measure_unit_b'],
+ },
+ 'observations-wqp-results': {
+  result_measure_value: [
+   'characteristic_name', 'usgs_pcode', 'result_measure_unit_code', 'activity_media_name', 'activity_media_subdivision_name',
+   'result_sample_fraction_text',
+   'result_value_type_name', 'result_weight_basis_text', 'result_time_basis_text', 'result_temperature_basis_text',
+   'result_particle_size_basis_text', 'statistical_base_code', 'result_detection_condition_text',
+   'measure_qualifier_code', 'result_status_identifier', 'result_analytical_method_identifier',
+   'result_analytical_method_identifier_context', 'result_analytical_method_name',
+  ],
+  activity_depth_height_value: ['activity_depth_height_unit_code'],
+  result_depth_height_value: ['result_depth_height_unit_code'],
+  detection_quantitation_limit_value: ['characteristic_name', 'detection_quantitation_limit_type_name', 'detection_quantitation_limit_unit_code'],
+ },
+};
+
+function groupKey(collection: Collection, field: string, values: Record<string, unknown>) {
+ const dimensionsByField = collectionDimensions[collection.id];
+ const dimensionFields = dimensionsByField ? dimensionsByField[field] ?? [] : defaultDimensions;
+ const dimensions = dimensionFields
+  .filter(key => !missing(values[key]) && ['string', 'number'].includes(typeof values[key]))
+  .map(key => [key, String(values[key])]);
+ return dimensions.length ? JSON.stringify(Object.fromEntries(dimensions)) : 'Unit and measurement context not supplied';
 }
 const safeUrl=(v:unknown)=>{try{if(typeof v!=='string')return null;const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}};
-export type LabSnapshot={answers:ArchiveAnswer[];rows:ArchiveRow[];hasMore:boolean;pages:number};
+type LabRead = Pick<ArchiveAnswer, 'cache'> & {
+ generatedAt?: string;
+ source?: Pick<ArchiveAnswer['source'], 'provider'>;
+};
+export type LabSnapshot={answers:LabRead[];rows:ArchiveRow[];hasMore:boolean;pages:number;origin?:'saved-bundle'};
+const SAVED_BUNDLE_NOTE = 'These records came from a user-supplied file. Its source references and retrieval times have not been independently checked.';
+type DistributionRecord = { id: string; value: number; sourceId: string | null; sourceUrl: string | null };
+export type MeasurementBin = {
+ lower: number;
+ upper: number;
+ includeUpper: boolean;
+ count: number;
+ records: DistributionRecord[];
+};
+export type MeasurementDistribution = { count: number; bins: MeasurementBin[] };
+
+function isMeasurementField(collection: Collection, field: string) {
+ return collection.columns.includes(field) && fieldRole(field, collection.keys) === 'value';
+}
+
+function binBoundaries(min: number, max: number, count: number) {
+ // Fewer bins keep boundaries distinct when adjacent values are very close.
+ for (let size = count; size > 1; size--) {
+  const edges = Array.from({ length: size + 1 }, (_, index) =>
+   index === size ? max : min + (max - min) * (index / size)
+  );
+  if (edges.every((edge, index) => index === 0 || edge > edges[index - 1])) return edges;
+ }
+ return [min, max];
+}
+
+/** Profile one measurement context using the same recorded values as the lab summary. */
+export function measurementDistribution(
+ collection: Collection,
+ snapshot: LabSnapshot,
+ field: string,
+ context: string,
+): MeasurementDistribution {
+ if (!isMeasurementField(collection, field)) return { count: 0, bins: [] };
+ const records: DistributionRecord[] = [];
+ let minimum = Infinity;
+ let maximum = -Infinity;
+ for (const row of snapshot.rows) {
+  if (!object(row.values) || typeof row.id !== 'string') continue;
+  const value = numeric(row.values[field]);
+  if (value === null || groupKey(collection, field, row.values) !== context) continue;
+  const provenance = object(row.provenance) ? row.provenance : {};
+  records.push({
+   id: row.id,
+   value,
+   sourceId: typeof provenance.source_id === 'string' ? provenance.source_id : null,
+   sourceUrl: safeUrl(provenance.source_url),
+  });
+  minimum = Math.min(minimum, value);
+  maximum = Math.max(maximum, value);
+ }
+ if (records.length === 0) return { count: 0, bins: [] };
+
+ const desiredBins = Math.min(MAX_DISTRIBUTION_BINS, Math.ceil(Math.sqrt(records.length)));
+ const boundaries = minimum === maximum ? [minimum, maximum] : binBoundaries(minimum, maximum, desiredBins);
+ const bins: MeasurementBin[] = boundaries.slice(0, -1).map((lower, index) => ({
+  lower,
+  upper: boundaries[index + 1],
+  includeUpper: index === boundaries.length - 2,
+  count: 0,
+  records: [],
+ }));
+ for (const record of records) {
+  const bin = bins.find(candidate => record.value < candidate.upper) ?? bins[bins.length - 1];
+  bin.records.push(record);
+  bin.count++;
+ }
+ return { count: records.length, bins };
+}
+
 /** Same two-reader queue, response limit and cancellation boundary as map reads. */
 export async function loadLabSample(c:Collection,signal:AbortSignal,reader=fetchArchive):Promise<LabSnapshot>{
  const answers:ArchiveAnswer[]=[],rows:ArchiveRow[]=[],cursors=new Set<string>(),ids=new Set<string>();let after:string|undefined;
@@ -43,7 +183,7 @@ export function profileCollection(c:Collection,snapshot:LabSnapshot){
    if(object(value)&&value.longField===true){longFields++;continue;}
    if(role==='time'&&exampleValues.length<6&&!exampleValues.includes(String(value)))exampleValues.push(String(value));
    const n=role==='value'?numeric(value):null;
-   if(n!==null){numericCount++;const key=groupKey(values);const list=groups.get(key)??[];list.push(n);groups.set(key,list);}
+   if(n!==null){numericCount++;const key=groupKey(c,name,values);const list=groups.get(key)??[];list.push(n);groups.set(key,list);}
   }
   const summary=[...groups].slice(0,12).map(([context,values])=>{
    values.sort((a,b)=>a-b);const mid=Math.floor(values.length/2);
@@ -73,11 +213,13 @@ export function profileCollection(c:Collection,snapshot:LabSnapshot){
  return {format:'kfm-collection-profile-v1',collection:{...base,
   temporal:{...base.temporal,retrievedAt:snapshot.answers.map(a=>a.generatedAt??null)},
   provenance:{...base.provenance,provider:providers.length===1?providers[0]:null,sourceUrls:[...new Set(lineage.flatMap(p=>p.url?[p.url]:[]))],digests:[...new Set(lineage.flatMap(p=>p.sha256?[p.sha256]:[]))]}},sample:{rows:rows.length,pages:snapshot.pages,hasMore:snapshot.hasMore,
-  scope:'First identity-ordered pages; not a random sample, spatial search, trend or collection total.',
+  scope:snapshot.origin?'Records retained in the saved bundle. The file provides the capture metadata.':'First identity-ordered pages; not a random sample, spatial search, trend or collection total.',
+  inputOrigin:snapshot.origin??'archive',
   retrievedAt:snapshot.answers.map(a=>a.generatedAt??null),cache:snapshot.answers.map(a=>a.cache??null),
   stale:snapshot.answers.some(a=>a.cache?.state==='stale'),recordIds:rows.map(r=>r.id)},
   fields,spatial:{mappable,unavailableGeometry,withoutUsableGeometry:c.geometry?rows.length-mappable:null,sampleBoundingBox:mappable?bounds:null},provenance:lineage,
-  interpretation:['Numeric summaries describe the loaded values only. Original sentinel values and quality flags are not reinterpreted.',
+  interpretation:[...(snapshot.origin?[SAVED_BUNDLE_NOTE]:[]),
+   'Numeric summaries describe the loaded values only. Original sentinel values and quality flags are not reinterpreted.',
    'Units and measurement identifiers are profiled in separate groups. Unitless groups need source documentation.',
    'Identifiers, dates, locations and quality flags are excluded from measurement statistics.'],
   credit:{method:'Deterministic KFM browser profile',aiReview:null,approval:null},
@@ -94,7 +236,8 @@ export function storyBrief(c:Collection,snapshot:LabSnapshot,question:string,pre
   ...(measurements.length>20?['Additional measurement groups remain in the profile export.']:[]),
   ...(profile.fields.some(f=>f.additionalGroups>0)?['Some fields exceed the 12-group summary. Omitted-group counts are in the profile; all original values remain in the record export.']:[]),
   '', '## Source time fields',...profile.fields.filter(f=>f.role==='time'&&f.exampleValues.length).map(f=>`- ${f.name}: ${f.exampleValues.join('; ')} (recorded examples, not a complete range or a verified temporal meaning).`),
-  '', '## Source lineage',...profile.provenance.map(p=>`- ${p.sourceId??'Source ID not supplied'}; ${p.url??'Source URL not supplied'}; SHA256 ${p.sha256??'not supplied'}`),
+  '', '## Source lineage',
+  ...profile.provenance.map(p=>`- ${p.sourceId??'Source ID not supplied'}; ${p.url??'Source URL not supplied'}; SHA256 ${p.sha256??'not supplied'}`),
   ...(!profile.provenance.length?['Source lineage was not supplied for these records.']:[]),
   '', '## Limits and next steps',...profile.interpretation.map(v=>`- ${v}`),
   '- Verify field definitions, source dates, geographic identifiers and editions before comparison or causal interpretation.',
@@ -104,11 +247,11 @@ export function storyBrief(c:Collection,snapshot:LabSnapshot,question:string,pre
 
 /** A separate unit/measurement group becomes one reusable GeoJSON layer. */
 export function measurementLayer(c:Collection,snapshot:LabSnapshot,field:string,context:string){
- if(!c.geometry||!c.columns.includes(field)||fieldRole(field,c.keys)!=='value')throw new Error('Choose a measurement field in a geometry collection.');
+ if(!c.geometry||!isMeasurementField(c,field))throw new Error('Choose a measurement field in a geometry collection.');
  const features=[];const omitted={otherContext:0,notNumeric:0,noUsableGeometry:0};
  for(const row of snapshot.rows){
   const values=object(row.values)?row.values:{};
-  if(groupKey(values)!==context){omitted.otherContext++;continue;}
+  if(groupKey(c,field,values)!==context){omitted.otherContext++;continue;}
   const value=numeric(values[field]);if(value===null){omitted.notNumeric++;continue;}
   let candidate=values[c.geometry];try{if(typeof candidate==='string')candidate=JSON.parse(candidate);}catch{candidate=null;}
   const geometry=validArchiveGeometry(candidate);
@@ -119,6 +262,7 @@ export function measurementLayer(c:Collection,snapshot:LabSnapshot,field:string,
  }
  return {type:'FeatureCollection' as const,features,kfm:{format:'kfm-lab-measurement-layer-v1',collection:c.id,field,context,omitted,
   rowsRead:snapshot.rows.length,hasMore:snapshot.hasMore,retrievalTimes:snapshot.answers.map(a=>a.generatedAt??null),
+  inputOrigin:snapshot.origin??'archive',...(snapshot.origin?{sourceNote:SAVED_BUNDLE_NOTE}:{}),
   stale:snapshot.answers.some(a=>a.cache?.state==='stale'),scope:'Loaded identity-ordered records only; validated longitude/latitude XY geometry and recorded numeric values. No geocoding, reprojection or unit conversion. Original geometry remains in the lab record export.',
   reviewCredit:null,approval:null}};
 }

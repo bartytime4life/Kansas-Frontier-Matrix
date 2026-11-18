@@ -6,6 +6,24 @@ question shortcuts, previews, controls, tables, record inspection and downloads
 use these same bundles. Additional instruments and planned stories remain
 accessible through **All research**.
 
+## Guided investigations candidate, November 18, 2026
+
+The Labs catalog and the Kansas Record on the map welcome link to these three
+dedicated investigations. Their publication is a separate release step.
+
+| Investigation | Source scope |
+| --- | --- |
+| Water Chemistry, `/labs/water-chemistry` | 28 Water Quality Portal records at USGS 07144100 near Sedgwick. The 2019–2020 and 2021–2022 windows use the same dissolved nitrate analyte, units, analytical method, collection method and sampler. One non-detect retains its reporting limit and stays outside the numeric histogram. |
+| Boom & Ghost Towns, `/labs/ghost-towns` | All 59 Douglas County rows matching the county fields in the original geocoded Blevins–Helbock file. The map includes 45 provider-matched locations, and the record view retains unlocated and undated records. County outlines are present-day context. |
+| Newspaper Pulse, `/labs/newspaper-pulse` | All 20 Library of Congress digitized pages from two Abilene Weekly Reflector issues dated January 2, 1890 and January 4, 1900. Rates count pages containing each OCR token and use the matching issue's page inventory as the denominator. |
+
+Each investigation exposes source records and a free export. Snapshot builders
+capture the provider file or request and digest. A source-file receipt documents
+the material used by the page. For historical dates, use the definitions and
+coverage limits shown on the corresponding investigation.
+
+## Bundled instruments
+
 | Lab | Shipped coverage | Records |
 | --- | --- | ---: |
 | Climate Stripes | January 1895–October 2026, Kansas and nine climate divisions | 132 years, 10 areas, 3 monthly measures |
@@ -24,9 +42,9 @@ Population estimates are selected one year at a time. Tornado rows sharing an
 SPC identifier retain separate date/time/state-sequence identities. An earthquake
 query reaching its 10,000-row cap fails acquisition rather than claiming completeness.
 
-## Source and rights basis
+### Source and rights basis for the nine bundled instruments
 
-The importers read only named public NOAA, Census, USGS, EIA, EPA and KDOT endpoints. Each bundle
+The importers for these nine instruments read only named public NOAA, Census, USGS, EIA, EPA and KDOT endpoints. Each bundle
 records the exact URLs, retrieval times, raw byte counts and SHA-256 hashes.
 The generated manifest binds each shipping filename, size and SHA-256. The
 browser verifies the file before accepting its data. Build validation rejects

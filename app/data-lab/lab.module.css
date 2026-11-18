@@ -3,3 +3,255 @@
 .table table{min-width:680px}.table tbody th{position:sticky;left:0;z-index:1;min-width:130px}.table thead th:first-child{left:0;z-index:2}.table:focus-visible{outline:3px solid #f0d69b;outline-offset:3px}.scrollHint{display:none}@media(max-width:650px){.scrollHint{display:block;color:#b7ccca;font-size:13px}}
 
 .table table{table-layout:fixed;min-width:720px}.table th:first-child,.table td:first-child{width:160px}.table th:nth-child(2),.table td:nth-child(2),.table th:nth-child(3),.table td:nth-child(3){width:80px}
+
+.workbench h2 {
+  scroll-margin-top: 24px;
+}
+
+.workbench h2:focus {
+  outline: 3px solid #f0d69b;
+  outline-offset: 4px;
+}
+
+.question {
+  max-width: 56rem;
+}
+
+.question label {
+  font-weight: 600;
+}
+
+.question textarea {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  resize: vertical;
+  scroll-margin-top: 24px;
+}
+
+.question p {
+  margin: 8px 0 12px;
+  color: #b7ccca;
+}
+
+.question .actions {
+  gap: 8px;
+  margin: 0;
+}
+
+.question button[aria-pressed="true"] {
+  border-color: #a8ddcc;
+  background: #245264;
+}
+
+.savedBundle {
+  max-width: 56rem;
+  margin-bottom: 20px;
+  color: #b7ccca;
+}
+
+.savedBundle summary {
+  color: #a8ddcc;
+}
+
+.savedBundle p:empty {
+  margin: 0;
+}
+
+.measurements {
+  min-width: 0;
+  margin-block: 24px;
+  scroll-margin-top: 20px;
+  padding: clamp(12px, 2.5vw, 28px);
+  border: 1px solid #42656d;
+  border-radius: 12px;
+  background: #0d2630;
+}
+
+.measurementIntro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 24px;
+}
+
+.measurementIntro h3,
+.measurementIntro p {
+  margin: 0;
+}
+
+.measurementIntro h3 {
+  font-size: clamp(20px, 2.4vw, 27px);
+  letter-spacing: -0.025em;
+}
+
+.measurementIntro p,
+.plotLabel,
+.rangeStatus {
+  color: #b7ccca;
+}
+
+.measurementTotal {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.measurementTotal strong {
+  color: #b9e5cc;
+  font-size: 21px;
+}
+
+.measurementControls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 12px 16px;
+  margin: 18px 0;
+}
+
+.measurementPlot {
+  max-width: 58rem;
+}
+
+.plotLabel {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.plotScroll {
+  overflow-x: auto;
+  padding-top: 22px;
+}
+
+.plotGrid {
+  display: flex;
+  gap: 4px;
+  height: clamp(122px, 22vw, 168px);
+  border-bottom: 1px solid #6f9699;
+  background: repeating-linear-gradient(to top, transparent 0 calc(25% - 1px), #2c4b54 calc(25% - 1px) 25%);
+}
+
+.lab .binButton {
+  display: flex;
+  flex: 1 0 44px;
+  min-width: 0;
+  align-items: flex-end;
+  justify-content: center;
+  margin: 0;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+}
+
+.lab .binButton:hover,
+.lab .binButton[aria-pressed="true"] {
+  background: #21404b;
+}
+
+.lab .binButton[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 1px #cbb678;
+}
+
+.lab .binButton:focus-visible {
+  outline-offset: -3px;
+}
+
+.binMark {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(0deg, #4a9b8c, #9ad8be);
+  pointer-events: none;
+}
+
+.binButton:only-child .binMark {
+  max-width: 110px;
+}
+
+.binButton[aria-pressed="true"] .binMark {
+  background: linear-gradient(0deg, #aa8745, #f0d69b);
+}
+
+.binMark span {
+  position: absolute;
+  bottom: 100%;
+  inset-inline: 0;
+  color: #e9f2ed;
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.plotAxis {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #d6e9e3;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.plotAxis:has(> :only-child) {
+  justify-content: center;
+}
+
+.rangeStatus {
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+.rangeStatus:empty {
+  margin: 0;
+}
+
+.rangeTable {
+  max-height: 250px;
+  overflow: auto;
+  border: 1px solid #42616b;
+  border-radius: 8px;
+}
+
+.rangeTable:focus-visible {
+  outline: 3px solid #f0d69b;
+  outline-offset: 3px;
+}
+
+.rangeTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.rangeTable th,
+.rangeTable td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #36535b;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+.rangeTable th[scope="col"] {
+  position: sticky;
+  top: 0;
+  background: #1b3843;
+}
+
+.measurementExport {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #36535b;
+}
+
+.measurementExport h4,
+.measurementExport p {
+  margin: 0 0 8px;
+}
+
+@media (max-width: 650px) {
+  .measurementControls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
