@@ -20,12 +20,20 @@ const reasonText: Record<string, string> = {
   RELEASE_TIME_INVALID: "The decision is expired or not yet valid. Write a new decision.",
 };
 
-/** Admin replies are small JSON documents; a non-JSON or oversized body becomes an empty reason, not an exception. */
+/** Admin replies are small JSON documents. A refused (non-OK) reply whose body is unreadable becomes an
+ * empty reason. A successful reply must be read in full: a stalled, truncated, oversized or non-object body
+ * throws, so callers report an unknown state instead of treating the reply as "no package active". */
 const ADMIN_RESPONSE_MAX_BYTES = 256 * 1024;
 const ADMIN_TIMEOUT_MS = 30_000;
+class AdminReplyUnreadable extends Error {}
 const readAdminBody = async (response: Response, signal: AbortSignal): Promise<Record<string, unknown>> => {
-  const body = await readBoundedJson(response, ADMIN_RESPONSE_MAX_BYTES, signal).catch(() => ({}));
-  return body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : {};
+  if (!response.ok) {
+    const body = await readBoundedJson(response, ADMIN_RESPONSE_MAX_BYTES, signal).catch(() => ({}));
+    return body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : {};
+  }
+  const body = await readBoundedJson(response, ADMIN_RESPONSE_MAX_BYTES, signal);
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw new AdminReplyUnreadable("Admin reply was not a JSON object.");
+  return body as Record<string, unknown>;
 };
 
 async function fetchStatus(kind: ReleaseKind): Promise<{ status: Status | null; message: string }> {

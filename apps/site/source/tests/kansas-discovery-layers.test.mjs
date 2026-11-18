@@ -489,3 +489,45 @@ test("KDWP layers carry NEW markers and legend chips that share the map paint co
   assert.match(page, /const goesSelected = Boolean\(officialVisibility\["noaa-goes-geocolor"\]\);/);
   assert.match(page, /\}, \[buildYearCurrent, goesSelected, refreshNoaaSatelliteFrames, temporalQuery\.frame\]\);/);
 });
+
+test("KDWP keeps completed pages when the shared budget shortens a later page, and still fails on other errors", async () => {
+  const square = (lon, lat) => ({ type: "Polygon", coordinates: [[[lon, lat], [lon + 0.05, lat], [lon + 0.05, lat + 0.05], [lon, lat + 0.05], [lon, lat]]] });
+  const firstPage = { type: "FeatureCollection", exceededTransferLimit: true, features: [
+    { type: "Feature", geometry: square(-98, 38), properties: { FID: 1, NAME: "Cheyenne Bottoms Wildlife Area" } }] };
+  const realNow = Date.now, realSetTimeout = globalThis.setTimeout, originalFetch = globalThis.fetch;
+  const run = async (laterPage, { slowFirstPage = false } = {}) => {
+    let clock = realNow();
+    Date.now = () => clock;
+    // Compress timers so a provider timeout costs milliseconds; abort timing keeps its order.
+    globalThis.setTimeout = (fn, ms, ...args) => realSetTimeout(fn, Math.min(ms ?? 0, 50) / 10, ...args);
+    const hang = signal => new Promise((_, reject) => signal.addEventListener("abort", () => reject(Object.assign(new Error("aborted"), { name: "AbortError" })), { once: true }));
+    globalThis.fetch = async (url, init) => {
+      const offset = Number(new URL(String(url)).searchParams.get("resultOffset"));
+      if (offset === 0) {
+        if (slowFirstPage) return hang(init.signal);
+        clock += 18_000; // the first page used 18 s of the 25 s budget
+        return new Response(JSON.stringify(firstPage), { headers: { "Content-Type": "application/json" } });
+      }
+      return laterPage(init.signal, hang);
+    };
+    try {
+      const response = await route.GET(new NextRequest("http://127.0.0.1/api/live-context?feed=kdwp-wildlife-areas"));
+      return { response, body: await response.json() };
+    } finally {
+      Date.now = realNow; globalThis.setTimeout = realSetTimeout; globalThis.fetch = originalFetch;
+    }
+  };
+
+  const shortened = await run((signal, hang) => hang(signal));
+  assert.equal(shortened.response.status, 200, "a budget-shortened later page does not discard completed pages");
+  assert.equal(shortened.body.state, "partial");
+  assert.equal(shortened.body.truncated, true);
+  assert.deepEqual(shortened.body.data.features.map(f => f.properties.featureId), ["kdwp-area-1"]);
+  assert.match(shortened.body.limitation, /capped/);
+
+  const upstreamError = await run(async () => new Response("unavailable", { status: 500 }));
+  assert.equal(upstreamError.response.status, 503, "a non-timeout upstream error on a later page still fails the feed");
+
+  const firstPageTimeout = await run(async () => { throw new Error("unreachable"); }, { slowFirstPage: true });
+  assert.equal(firstPageTimeout.response.status, 503, "a first-page timeout still fails the feed");
+});
