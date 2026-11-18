@@ -220,6 +220,7 @@ ci-conformance-report:
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py artifacts/qa/validation/milestone-1/ci_conformance_report_2026-10-08.json
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-ci-conformance-report-successor-20261008.json --repo-root . --artifact-git-ref 19ce0b5250f18b396dbd71b1861ddd89607beec3
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py artifacts/qa/validation/milestone-1/ci_conformance_report_2026-11-18.json
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-ci-conformance-report-successor-20261118.json --repo-root . --artifact-git-ref b7d2be1b2f23bd97be879bca94520c419b080720
 
 hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
