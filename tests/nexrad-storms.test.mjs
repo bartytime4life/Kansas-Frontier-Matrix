@@ -94,14 +94,26 @@ test("storm route reads only allowlisted archive bytes, caches nothing to disk a
     return new Response("unexpected", { status: 404 });
   };
   try {
-    const response = await GET(new Request("https://app.test/api/event-atlas/storms?time=2024-05-19T23%3A20%3A00.000Z"));
+    const { eventInterval, wholeSecondUtc } = await import(await moduleUrl("../app/event-atlas.ts"));
+    const cursor = "2024-05-19T23:20:00.999Z";
+    const time = wholeSecondUtc(cursor);
+    assert.equal(time, "2024-05-19T23:20:00.000Z");
+    const response = await GET(new Request(`https://app.test/api/event-atlas/storms?${new URLSearchParams({ time })}`));
     assert.equal(response.status, 200);
     const body = await response.json();
     assert.equal(body.format, "kfm-nexrad-storms-v1");
+    assert.equal(body.time, time);
     assert.equal(body.counts.cells, 34);
     assert.ok(body.counts.tornadoSignatures > 0);
     assert.deepEqual(body.radars.map((radar) => radar.status), ["ok", "no-scan", "no-scan", "unavailable"]);
-    const availability = await (await GET(new Request("https://app.test/api/event-atlas/storms?start=2024-05-19T22%3A00%3A00.000Z&end=2024-05-20T00%3A00%3A00.000Z"))).json();
+    assert.equal((await GET(new Request(`https://app.test/api/event-atlas/storms?${new URLSearchParams({ time: cursor })}`))).status, 400);
+    const interval = eventInterval("2024-05-19T22:00:00Z", 6, Date.parse(cursor));
+    const fractionalInterval = new URLSearchParams({ ...interval, end: cursor });
+    assert.equal((await GET(new Request(`https://app.test/api/event-atlas/storms?${fractionalInterval}`))).status, 400);
+    const availabilityResponse = await GET(new Request(`https://app.test/api/event-atlas/storms?${new URLSearchParams(interval)}`));
+    assert.equal(availabilityResponse.status, 200);
+    const availability = await availabilityResponse.json();
+    assert.equal(availability.end, time);
     assert.deepEqual(availability.radars[0].times, ["2024-05-19T23:16:04.000Z"]);
     for (const query of ["time=latest", "time=2019-12-31T00%3A00%3A00Z", "time=2099-01-01T00%3A00%3A00Z", "start=2024-05-19T00%3A00%3A00Z&end=2024-05-21T00%3A00%3A00Z", "time=2024-05-19T23%3A20%3A00Z&url=https://evil.test"]) {
       assert.equal((await GET(new Request(`https://app.test/api/event-atlas/storms?${query}`))).status, 400, query);

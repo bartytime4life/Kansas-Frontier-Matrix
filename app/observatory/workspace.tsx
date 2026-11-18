@@ -23,6 +23,7 @@ import {
   radarAt,
   radarReplayFrames,
   smokeAt,
+  wholeSecondUtc,
   type EventManifest,
 } from "../event-atlas";
 import { parseStreamflowBundle, buildStreamflowFrame, buildHydrographSegments, type StreamflowBundle } from "../streamflow";
@@ -517,9 +518,10 @@ export default function EventObservatory() {
 
   const getStorms = useCallback(async (time: string, signal: AbortSignal) => {
     const cached = stormCache.current.get(time); if (cached) return cached;
-    const response = await fetch(`/api/event-atlas/storms?time=${encodeURIComponent(time)}`, { signal });
+    const archiveTime = wholeSecondUtc(time);
+    const response = await fetch(`/api/event-atlas/storms?time=${encodeURIComponent(archiveTime)}`, { signal });
     const body = await response.json();
-    if (!response.ok || body.format !== "kfm-nexrad-storms-v1" || body.time !== time || body.data?.type !== "FeatureCollection") throw new Error(body.message ?? "Storm scans unavailable for this time.");
+    if (!response.ok || body.format !== "kfm-nexrad-storms-v1" || body.time !== archiveTime || body.data?.type !== "FeatureCollection") throw new Error(body.message ?? "Storm scans unavailable for this time.");
     stormCache.current.set(time, body);
     for (const key of stormCache.current.keys()) if (stormCache.current.size > 24) stormCache.current.delete(key);
     return body as StormFrame;
