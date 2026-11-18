@@ -48,6 +48,7 @@
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
     "eslint-config-next": "16.4.2",
+    "picomatch": "file:vendor/picomatch-4.0.7-kfm.1.tgz",
     "react-server-dom-webpack": "19.2.9",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
@@ -75,6 +76,10 @@
     },
     "eslint-plugin-react-hooks": {
       "zod": "4.6.6"
+    },
+    "picomatch": "$picomatch",
+    "micromatch": {
+      "picomatch": "file:../../vendor/picomatch-2.3.2-kfm.1.tgz"
     }
   }
 }

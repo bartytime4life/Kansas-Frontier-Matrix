@@ -2897,4 +2897,15 @@ def test_coverage_pass_2_successor_preserves_followup_inventory_and_all_holds():
          "tests/landing-guides.test.mjs", "tests/map-starters.test.mjs"},
         "e4e0b1032f29077551a4abf2afcb89c3bd6fe22a",
     )
-    assert TOOL.RECEIPT.name == "site-v268-coverage-pass-2-overlay-20261118.json"
+
+
+def test_picomatch_redos_successor_preserves_coverage_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-picomatch-redos-overlay-20261118.json",
+        "site-v268-coverage-pass-2-overlay-20261118.json",
+        "5d348893284ce8a9d327056bab161fef57398babe78b7492183db9709de3252c",
+        {"package-lock.json", "package.json", "tests/picomatch-redos.test.mjs", "vendor/picomatch-2.3.2-kfm.1.tgz",
+         "vendor/picomatch-4.0.7-kfm.1.tgz", "vendor/picomatch-kfm.md"},
+        "3e4137714e97c960dad7cf10e973481559a14782",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-picomatch-redos-overlay-20261118.json"
