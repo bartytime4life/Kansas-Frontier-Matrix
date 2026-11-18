@@ -332,6 +332,50 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(job['state'],'paused')
         self.assertEqual(job['counts'],{'pending':1})
 
+    def test_geojson_wire_does_not_request_gzip_scope_or_infer_query_counts(self):
+        self.path.unlink()
+        path=self.root/'data/raw/qa-event.geojson'
+        path.write_text(json.dumps({'type':'FeatureCollection','features':[{
+            'type':'Feature','properties':{'value':1},
+            'geometry':{'type':'Point','coordinates':[-98,38]}}]}))
+        intake.analyze(self.root)
+        packet=ai.packet_for(self.root,intake.get_item(self.root,intake.item_id('raw',path.name)))
+        value={'title':'Synthetic QA GeoJSON capture',
+            'description':'The saved QA GeoJSON contains a point feature. This bounded sample does not establish provider-wide coverage or validated measurements.',
+            'domain':'unassigned','recommendation':'hold','confidence':'medium','evidence':['sample'],'concerns':[]}
+        client=ai.Qwen(self.client.model,self.client.digest)
+        with patch.object(client,'call',side_effect=[
+            {'models':[{'name':client.model,'digest':client.digest}]},
+            {'model':client.model,'done':True,'message':{'content':json.dumps(value)}}]) as call:
+            client.review(packet)
+        system=call.call_args_list[1].args[1]['messages'][0]['content']
+        self.assertNotIn('gzip',system.lower())
+        self.assertNotIn('trailer',system.lower())
+        self.assertIn('query limits do not establish returned feature counts',system)
+        self.assertIn('response clocks and stored observation times distinct',system)
+        self.assertEqual(client.last_prompt_sha256,hashlib.sha256(system.encode()).hexdigest())
+
+    def test_compressed_text_wire_keeps_separate_grounded_prompt_and_scope(self):
+        import gzip
+        self.path.unlink()
+        path=self.root/'data/raw/qa-reference.txt.gz'
+        path.write_bytes(gzip.compress(b'GENERAL ORDERS\n\nSynthetic river reference for local QA. No real observations are asserted.'))
+        intake.analyze(self.root)
+        packet=ai.packet_for(self.root,intake.get_item(self.root,intake.item_id('raw',path.name)))
+        _,passages=ai.grounded_review.choices(packet)
+        value={'title_ids':[],'passage_ids':[next(iter(passages))],'domain':'unassigned',
+            'recommendation':'hold','confidence':'medium','concern_codes':[]}
+        client=ai.Qwen(self.client.model,self.client.digest)
+        with patch.object(client,'call',side_effect=[
+            {'models':[{'name':client.model,'digest':client.digest}]},
+            {'model':client.model,'done':True,'message':{'content':json.dumps(value)}}]) as call:
+            review,_=client.review(packet)
+        system=call.call_args_list[1].args[1]['messages'][0]['content']
+        self.assertEqual(system,ai.grounded_review.SYSTEM)
+        self.assertNotEqual(system,ai.SYSTEM)
+        self.assertIn('CRC',review['description'])
+        self.assertIsNotNone(client.last_rendering)
+
 
 if __name__ == '__main__':
     unittest.main()
