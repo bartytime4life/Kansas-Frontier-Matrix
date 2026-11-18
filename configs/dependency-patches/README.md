@@ -11,7 +11,7 @@ only when no fixed upstream release exists. Remove it as soon as one does.
 |---|---|
 | Advisory | [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf), high, CWE-1333 |
 | Affected | every published `picomatch` release `<=4.0.7`; no patched release exists |
-| Path in this repository | root pnpm workspace only: `vite@8.3.3` and `vitest@5.1.0` (dev tooling for `packages/maplibre`), and `tinyglobby`/`fdir` beneath them |
+| Path in this repository | root pnpm workspace: `vite@8.3.3` and `vitest@5.1.0` (dev tooling for `packages/maplibre`), and `tinyglobby`/`fdir` beneath them. The two npm projects use vendored forks instead; see [npm projects](#npm-projects-vendored-forks). |
 | Fix applied | [micromatch/picomatch#264](https://github.com/micromatch/picomatch/pull/264), `lib/parse.js` only, unchanged except for context line offsets against 4.0.7 |
 | Patch file | `picomatch-4.0.7.patch` |
 
@@ -61,3 +61,40 @@ The classifier rejects the register as soon as the lockfile stops applying the
 patch, so an exception cannot be left behind silently. If the exception expires
 first, re-review the upstream status and either renew it with a fresh date or
 replace the patch.
+
+## npm projects: vendored forks
+
+npm has no equivalent of pnpm `patchedDependencies`. The two standalone npm
+projects that locked unpatched picomatch instead install patched forks from
+their own `vendor/` directories:
+
+| Project | Fork | Base | Consumers |
+|---|---|---|---|
+| `apps/site/source` | `vendor/picomatch-4.0.7-kfm.1.tgz` | 4.0.7 + `picomatch-4.0.7.patch` | vite, tinyglobby, fdir |
+| `apps/site/source` | `vendor/picomatch-2.3.2-kfm.1.tgz` | 2.3.2 + `picomatch-2.3.2.patch` | micromatch (fast-glob) |
+| `apps/review-console/recovery` | `vendor/picomatch-4.0.7-kfm.1.tgz` | 4.0.7 + `picomatch-4.0.7.patch` | vite, tinyglobby, fdir |
+
+`picomatch-2.3.2.patch` carries the same fix to the 2.x line, so micromatch
+keeps its declared `^2` range:
+
+- Ten of its eleven hunks are the 4.0.7 hunks at new offsets.
+- The eleventh adds the same source-tracking calls around 2.x's text-token
+  merge.
+
+In a 60,000-pattern differential check against each unpatched base, the two
+forks changed exactly the same 38 match results:
+
+- **Malformed patterns:** most of the changed results come from patterns with
+  unbalanced parentheses.
+- **Repeated wildcard extglobs:** the rest are well-formed patterns such as
+  `*(**)` and `+(**)`. These now compile as literal text, the same fallback
+  unpatched picomatch already applies to other risky repeats such as
+  `+(+(a))`.
+
+Each project has a `vendor/picomatch-kfm.md` with the fork digests and
+how to rebuild them, and a `tests/picomatch-redos.test.mjs` regression test.
+Each test resolves the copy each consumer loads and fails if that copy is
+unpatched. `npm audit` reports no findings for either project with the forks
+installed, because npm does not match `file:` packages against registry
+advisories. Remove the forks, devDependencies and overrides together when a
+fixed release exists.
