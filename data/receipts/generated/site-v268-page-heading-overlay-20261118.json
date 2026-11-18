@@ -2257,7 +2257,7 @@
     },
     "app/explorer-controls.css": {
       "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@123d8645b84e705789390f2ca4cbd66cc1eb2f0e: FAA NASR airspace/airport/airway context and NOAA AWC METAR/PIREP routes. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "6bb6b059018cb3a135fddf2c8d95706d0fab0650c5cec77b0617cbce42c26315",
+      "mirror_sha256": "35bd1c3c9da06f2899d671ae3716d45f70b699158e6f4da8d625560462f37af6",
       "site_sha256": "7dd3b7925d06ac4cbcc7211433a97ffb373ddc1a16619d3236c8990d3ccf660c",
       "state": "inherited_repository_overlay"
     },
@@ -2935,7 +2935,7 @@
       "state": "identical"
     },
     "app/map-layers.css": {
-      "mirror_sha256": "b24e37f19adf70d5449ce99821eed777ae7861ed79c4b41c59d4a13a1e1d69f9",
+      "mirror_sha256": "12e798c39e71db813e9fbce05c96afce1f32a0e77b0857de2fd17a0f86938d8d",
       "site_sha256": "5e6dd670d2e688187e932c847148df968fd7491d7be9fb22f0a894e9389d85a6",
       "state": "inherited_repository_overlay"
     },
@@ -4592,7 +4592,7 @@
     },
     "tests/accessible-names.test.mjs": {
       "difference": "Repository-only accessibility fix proposed on branch claude/explorer-a11y-landmarks from main@bef673cc4c1694f6bd1628ce7c50b75dddba35d9: labelled generic elements gain the role that makes their accessible name announced, the data-notices button names its counts, and the Observatory storm key is no longer a nested complementary landmark. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "36c8c4e897762dd1dec8c5a11d13b736c7b410e9bde3d2e8da83edd9f5a27cf3",
+      "mirror_sha256": "db3d4339b26460008ae8b327574d2a44ac9418d4c11f4c70fa0efdec8ba013d1",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -6453,7 +6453,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "21ab8ee88152612abfeef8082b2d1be7a55bda42dc16f11341819fca62d62950",
+  "inventory_sha256": "dd89a8abb3237b59d93054c48afa567ee24d4ead6181be39c8e589cedec1836c",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8641,13 +8641,29 @@
       ]
     }
   },
-  "recorded_at": "2026-11-18T19:07:17.152640+00:00",
+  "recorded_at": "2026-11-18T19:13:42.249238+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
   "repository_reconciliation": {
     "authority": "CONTENT_PARITY_ONLY",
     "base_commit": "03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
     "changes": [
+      {
+        "mirror_sha256": "35bd1c3c9da06f2899d671ae3716d45f70b699158e6f4da8d625560462f37af6",
+        "path": "app/explorer-controls.css",
+        "previous_receipt_sha256": "6bb6b059018cb3a135fddf2c8d95706d0fab0650c5cec77b0617cbce42c26315",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "6bb6b059018cb3a135fddf2c8d95706d0fab0650c5cec77b0617cbce42c26315",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "12e798c39e71db813e9fbce05c96afce1f32a0e77b0857de2fd17a0f86938d8d",
+        "path": "app/map-layers.css",
+        "previous_receipt_sha256": "b24e37f19adf70d5449ce99821eed777ae7861ed79c4b41c59d4a13a1e1d69f9",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "b24e37f19adf70d5449ce99821eed777ae7861ed79c4b41c59d4a13a1e1d69f9",
+        "state": "inherited_repository_overlay"
+      },
       {
         "mirror_sha256": "59ab89f21f448e1aee6df2d984bdbf0eca39f106f3f2b2d3b31c36ceb1258716",
         "path": "app/page.tsx",
@@ -8657,7 +8673,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "36c8c4e897762dd1dec8c5a11d13b736c7b410e9bde3d2e8da83edd9f5a27cf3",
+        "mirror_sha256": "db3d4339b26460008ae8b327574d2a44ac9418d4c11f4c70fa0efdec8ba013d1",
         "path": "tests/accessible-names.test.mjs",
         "previous_receipt_sha256": "d00aea7678125edec5d00a75b180f074b4e51a9e47bec90597df60c0f10e0eb6",
         "proposed_in_this_change": true,
@@ -8696,7 +8712,7 @@
   },
   "rollback": {
     "mirror": "Revert the page heading and panel heading change with its successor selector/QA together; preserve immutable receipts.",
-    "runtime": "Adds one visually hidden h1 to the map view and changes the layer panel title from h1 to h2 with identical styling. No dependency, data, route-contract or operational-store change.",
+    "runtime": "Adds one visually hidden h1 to the map view and changes the layer panel title from h1 to h2, retargeting its layer-mode CSS so it renders unchanged. No dependency, data, route-contract or operational-store change.",
     "site": "No Site synchronization, deployment or publication."
   },
   "security": {
@@ -8730,8 +8746,8 @@
   "status": "REVIEW_ONLY",
   "validation": {
     "app_tests": "PASS: 1969 tests (1967 pass, 2 skipped), including the page-heading regression, which fails on main.",
-    "browser": "PASS: axe page-has-heading-one, heading-order and empty-heading report no violations on the locally served build at desktop and phone sizes, initially, with Map views open and with the layer panel open. Main exposes no h1 until the layer panel opens.",
-    "focused_tests": "PASS: accessible-names (6).",
+    "browser": "PASS: axe page-has-heading-one, heading-order and empty-heading report no violations on the locally served build at desktop and phone sizes, initially, with Map views open and with the layer panel open. Main exposes no h1 until the layer panel opens. The Map layers title keeps its flex row, 9px gap and 24px Georgia face as an h2.",
+    "focused_tests": "PASS: accessible-names (6), including a guard that layer-mode CSS no longer targets a panel h1.",
     "lint": "PASS: 0 errors in changed files.",
     "mirror": "PASS: strict selected successor inventory and immutable predecessor chain; 262 withheld paths remain absent.",
     "production_build": "PASS: Vite/Vinext build and held-output containment; route-classification limitations remain inherited.",

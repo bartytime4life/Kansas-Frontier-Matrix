@@ -2985,7 +2985,7 @@ def test_page_heading_successor_preserves_storm_times_inventory_and_all_holds():
         "site-v268-page-heading-overlay-20261118.json",
         "site-v268-storm-times-overlay-20261118.json",
         "b602a8eb2d94f1bf95141a65b6f4a6589691cd3127d6724388d2707e829385cc",
-        {"app/page.tsx", "tests/accessible-names.test.mjs"},
+        {"app/explorer-controls.css", "app/map-layers.css", "app/page.tsx", "tests/accessible-names.test.mjs"},
         "03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
     )
     assert TOOL.RECEIPT.name == "site-v268-page-heading-overlay-20261118.json"
