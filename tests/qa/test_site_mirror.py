@@ -2957,4 +2957,15 @@ def test_dead_controls_successor_preserves_accessible_names_inventory_and_all_ho
         {"app/page.tsx", "tests/aviation.test.mjs", "tests/rendered-html.test.mjs"},
         "1cef2d54bd6d9ce3827f0e4614f0ff440299cec2",
     )
-    assert TOOL.RECEIPT.name == "site-v268-dead-controls-overlay-20261118.json"
+
+
+def test_trail_site_clusters_successor_preserves_dead_controls_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-trail-site-clusters-overlay-20261118.json",
+        "site-v268-dead-controls-overlay-20261118.json",
+        "4dd639f2b0100619ef6e679418cb45ff4030357f2d7a61ef7d4813591f3e7959",
+        {"app/context-clusters.ts", "app/live-context.ts", "docs/kdot-bridge-clusters-20261115.md",
+         "tests/kansas-discovery-layers.test.mjs"},
+        "12c39b6bb118aecf750fc063bf113aba5db4ab85",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-trail-site-clusters-overlay-20261118.json"

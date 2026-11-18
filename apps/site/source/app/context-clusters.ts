@@ -32,10 +32,30 @@ export function historicPlaceClusterSummary(properties: unknown): ClusterSummary
   return { title: `${count.toLocaleString("en-US")} National Register markers in this area`, detail: facts.length ? facts.join(" · ") : "Select to zoom in" };
 }
 
+/** Trail sites sit close together along the old roads; ninety-odd markers separate by zoom 10. */
+export const TRAIL_PLACE_CLUSTER_MAX_ZOOM = 9;
+export const TRAIL_PLACE_CLUSTER_RADIUS = 38;
+const TRAIL_NAMES = [["Santa Fe", "santaFe"], ["Oregon", "oregon"], ["California", "california"], ["Pony Express", "ponyExpress"]] as const;
+/** Totals MapLibre keeps for each trail-site cluster. A site on a shared corridor counts toward each of its trails. */
+export const TRAIL_PLACE_CLUSTER_PROPERTIES: Readonly<Record<string, unknown[]>> = Object.freeze({
+  certified: countWhere(["==", ["get", "certified"], "NPS-certified trail site"]),
+  ...Object.fromEntries(TRAIL_NAMES.map(([name, key]) => [key, countWhere(["in", name, ["to-string", ["coalesce", ["get", "trails"], ""]]])])),
+});
+
+export function trailPlaceClusterSummary(properties: unknown): ClusterSummary | null {
+  const cluster = clusterCount(properties);
+  if (!cluster) return null;
+  const { p, count } = cluster, certified = total(p, "certified");
+  const facts = [certified > 0 ? `${certified.toLocaleString("en-US")} NPS-certified` : null,
+    ...TRAIL_NAMES.map(([name, key]) => total(p, key) > 0 ? `${name} ${total(p, key).toLocaleString("en-US")}` : null)].filter(Boolean);
+  return { title: `${count.toLocaleString("en-US")} trail sites in this area`, detail: facts.length ? facts.join(" · ") : "Select to zoom in" };
+}
+
 /** The summary for a numbered circle on an official source, or null when the feature is a single record. */
 export function officialClusterSummary(sourceId: string | undefined, properties: unknown): ClusterSummary | null {
   if (!sourceId) return null;
   if (isBridgeFeed(sourceId)) return bridgeClusterSummary(properties);
   if (sourceId === "nps-nrhp-places") return historicPlaceClusterSummary(properties);
+  if (sourceId === "nps-trail-places") return trailPlaceClusterSummary(properties);
   return null;
 }
