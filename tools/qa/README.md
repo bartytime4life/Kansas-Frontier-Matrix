@@ -6,7 +6,7 @@ version: v0.1
 status: draft
 owner: TODO-tooling-qa-owner-plus-docs-steward
 created: 2026-07-07
-updated: 2026-10-16
+updated: 2026-11-19
 policy_label: repository-facing; qa-tooling
 owning_root: tools/
 responsibility: QA tooling boundary for coverage checks, link checks, drift scans, and reviewer summaries
@@ -52,7 +52,7 @@ A QA report is a review aid. It is not final acceptance by itself.
 |---|---|---|
 | `tools/qa/README.md` | **CONFIRMED** | This README replaces the previous stub. |
 | `scaffold_inventory.py` + `scaffold_baseline.json` | **CONFIRMED** | Inventories placeholder, stub, blank, vacuous-test, TODO-echo, and TBD-descriptor files across scripting, automation, data-processing, and contract surfaces; `--check` (`make scaffold-inventory`, `.github/workflows/scaffold-ratchet.yml`) fails on new scaffolding and on resolved entries left in the baseline, so the count only goes down. |
-| `deny_test_runner.py` | **CONFIRMED** | Runs a closed registry of deny suites (`make deny-suites`, `deny-test.yml` job `aggregate-deny-suites`); a failing, missing, timed-out, or empty suite fails the run. |
+| `deny_test_runner.py` | **CONFIRMED** | Runs a closed registry of deny suites (`make deny-suites`, `deny-test.yml` job `aggregate-deny-suites`); a failing, missing, timed-out, empty, entirely skipped/expected-failure, or unverified suite fails the run. |
 | `gap_scan.py` + `gap_scan_baseline.json` | **CONFIRMED** | Census of gaps the scaffold ratchet does not cover: structured-data parse errors outside negative fixtures and `tests/` packages that shadow an imported root (both must stay at zero), plus broken local Markdown links, non-Markdown placeholders outside scaffold surfaces, and Markdown files whose header declares a placeholder (counts may only fall). `make gap-scan`, `.github/workflows/gap-scan.yml`; procedures in [`docs/registers/repository-gap-fill-goal-2026-10-02.md`](../../docs/registers/repository-gap-fill-goal-2026-10-02.md). |
 | `dp15_inventory_scan.py` + `dp15_inventory_classify.py` | **CONFIRMED** | Read-only reproduction scripts for the commit-pinned DP-15 inventory in [`artifacts/qa/reports/dp-15-inventory-20261007/`](../../artifacts/qa/reports/dp-15-inventory-20261007/README.md), moved here from that report because `artifacts/` admits only provenance-bearing JSON payloads. Review aid only; not a DP validator or enforcement rule. |
 | Other QA executables | **PROPOSED / NEEDS VERIFICATION** | No other script is claimed here. |
@@ -143,25 +143,33 @@ Unavailable proposed and historical paths must stay explicit in prose; removing
 a dead hyperlink does not implement the missing component. Scaffold and review
 holds retain their separate inventories and authority boundaries.
 
+## Deny-suite result checks
+
+Each registered suite declares its runner summary format: pytest, unittest, or
+the evidence resolver's negative-fixture summary. A zero process exit is
+necessary; PASS also requires at least one passing case in the recognized final
+summary. Skipped cases and expected failures do not count as passing cases.
+Known summaries with no passing cases return `EMPTY`; missing, inconsistent or
+unrecognized summaries return `UNVERIFIED`. Both fail the aggregate command.
+The JSON records `passing_cases` when a summary establishes that count.
+
+These are bounded checks of trusted repository-runner output, not authenticated
+execution receipts or proof of complete denial coverage. If a runner changes
+its summary, update the parser and its real-runner regressions together.
+
 ## Validation
 
-Suggested future test surface:
-
-```text
-tests/qa/
-├── README.md
-├── test_qa_checker.py
-└── fixtures/
-```
-
-Suggested future command pattern:
+Run the existing QA tests and registered deny suites using the Python 3.11+
+environment installed with the committed `project-test` profile:
 
 ```bash
-pytest -q tests/qa
+python -m pytest -q tests/qa
+python tools/qa/deny_test_runner.py
 ```
 
-> [!NOTE]
-> This is a proposed validation surface, not proof that `tests/qa/` exists.
+`tests/qa/test_deny_test_runner.py` includes actual pytest and unittest subprocess
+cases with entirely skipped and mixed passing/skipped suites. QA tests and
+the deny suites retain different scopes; neither grants release authority.
 
 ---
 
