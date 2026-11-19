@@ -1,0 +1,201 @@
+{
+  "receipt_id": "genrec-nlcd-native-candidate-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/crop-casma-tile-compatibility.yml",
+    ".github/workflows/pipeline-spec-declarations.yml",
+    "contracts/domains/habitat/land_cover/class_scheme.md",
+    "contracts/domains/habitat/land_cover/observation.md",
+    "contracts/domains/habitat/land_cover_observation.md",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/nlcd-fixture-ingest.md",
+    "docs/runbooks/pipeline-fixture-replay.md",
+    "fixtures/domains/habitat/nlcd_ingest/README.md",
+    "fixtures/domains/habitat/nlcd_ingest/base.json",
+    "fixtures/domains/habitat/nlcd_ingest/changed.json",
+    "pipeline_specs/README.md",
+    "pipeline_specs/habitat/README.md",
+    "pipeline_specs/habitat/nlcd_landcover.yaml",
+    "pipelines/domains/habitat/README.md",
+    "pipelines/domains/habitat/ingest_nlcd.py",
+    "schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json",
+    "schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json",
+    "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json",
+    "tests/ci/test_install_python_ci.py",
+    "tests/pipelines/domains/habitat/test_nlcd_ingest.py",
+    "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "sha256:7e0f81e41f09d26d06bb5a3f2571b1552b87e06dbe81f3c0a5715ecbe985986d",
+    ".github/workflows/pipeline-spec-declarations.yml": "sha256:1ec205ca5dee000da117a8c57edb82bb377821025c0c2774d664fddc75216314",
+    "contracts/domains/habitat/land_cover/class_scheme.md": "sha256:f5f04d74fd753391cfb7bd74bc11bbe2c0fc032f8feb24c75df581c750dd590c",
+    "contracts/domains/habitat/land_cover/observation.md": "sha256:5c0d1e88c8b4197d62a0f268b07828b718d923c5425ba63723f93ed3fed111e7",
+    "contracts/domains/habitat/land_cover_observation.md": "sha256:6de90768b419a5599717edddc900d5e2b2315d84634eb3241a67d6a56ce2a185",
+    "contracts/pipeline_spec_declaration.md": "sha256:6dd6d427ddda6d6867c8413aec970b1b7e52838d6b35aea536b6f0ce1bf6c8a1",
+    "docs/runbooks/nlcd-fixture-ingest.md": "sha256:84cbc7a7f6668ea479dfb6fd0330ec52ab65104cf4436dfb7a3c3b0cfd8f5d71",
+    "docs/runbooks/pipeline-fixture-replay.md": "sha256:08599bf5c016d82990eaa60569de432259230e0121afe70d7144c98abd9c7875",
+    "fixtures/domains/habitat/nlcd_ingest/README.md": "sha256:bba80581ccbdc38f242f01c12e330fc39e4b4709418dcc5839e8c0097f70d564",
+    "fixtures/domains/habitat/nlcd_ingest/base.json": "sha256:2894b7232a0afdca30475281e4db27a2d66bc25d9fabd46b28999c0d3bd70777",
+    "fixtures/domains/habitat/nlcd_ingest/changed.json": "sha256:e7325251edc63ef85765fa0c79cedcdca584f08b63202965f375988af0335844",
+    "pipeline_specs/README.md": "sha256:b86dbc9063bd3bd3e2c90b8c14eac4a7ed48730e25c20b12883f870e2dd39e4c",
+    "pipeline_specs/habitat/README.md": "sha256:ff882c92eecdca8acb841c0a9e4ab1d20665cf63f0a409743c3aa78bfb784963",
+    "pipeline_specs/habitat/nlcd_landcover.yaml": "sha256:167584f17257cd6cc3133b032146048c0cca363dfcab01fec3acd4ec276a74b7",
+    "pipelines/domains/habitat/README.md": "sha256:5801eb00fceb4f8c2402e317b8ab8bcf73cddbb41a8d2196887ae7c29c3029c6",
+    "pipelines/domains/habitat/ingest_nlcd.py": "sha256:2df0039cfa3b97e400bc4a3c0bc48f71672047dbd6e583573b251b1368efffe6",
+    "schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json": "sha256:f044058d71ce2c64e4f0f43a647357c3f2e7ed27b57deee586fc65ccd1cc138c",
+    "schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json": "sha256:a9857c47f4a8eb149700f5d532cc5f5778a96408f555697ed52ced9d8ed99458",
+    "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json": "sha256:183bd965ce50280012852ee488647dfaf0707296dd8d9e3db38a2ca3c8f76102",
+    "tests/ci/test_install_python_ci.py": "sha256:c956c24b247f8f2b5d6c45ceb2dc587e96fd1386c33e75049e3c1427c47d44bc",
+    "tests/pipelines/domains/habitat/test_nlcd_ingest.py": "sha256:a0854a1acb86640da3fd108bc498ea8043b33ffe99edfc93f09adc73d7511d49",
+    "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py": "sha256:c4acebd3d24892d81e0a4b85d2dfdfdfc632098f788d6b384f2d41002c048450",
+    "tools/qa/scaffold_baseline.json": "sha256:deca2f43c7c4fb30cb05a88c1b7457afeb5ad5b04a65849fb3d7e35452d4b197"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:01b64ccc441e39a0b61fbe5f6b99e9ef0aed9f636427c126965328096558d753",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main-closure-pr-5964@664116397773bb3146f214a70bb26d3cd8e7203c",
+      "contracts/domains/habitat/land_cover/class_scheme.md",
+      "contracts/domains/habitat/land_cover/observation.md",
+      "contracts/domains/habitat/land_cover_observation.md",
+      "data/registry/habitat/sources/nlcd.yaml",
+      "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:182081c5c175c4546e74126f9bc17cb91b9fb42518393603245dfb3db203a924",
+      "sha256:988130e753c6bba36cfa43c4cac0d4cfbf7dbb57ff7b7b4cfb71477bafa945d4",
+      "sha256:498a9ced660beaf8bdd5db57cc619ebcf4b735d28a7448b933c8914a3bb185f5",
+      "sha256:ee2e5b616f0e45121e09dc0335ebb35f6b1ec2271db2dd64f792bbda82151cad",
+      "sha256:d9714577ed9f62a1fe7bd8e7cc42c8029dd4d99f1d31c0d71f4f857cec06e9b1",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "PROPOSED",
+    ".github/workflows/pipeline-spec-declarations.yml": "PROPOSED",
+    "contracts/domains/habitat/land_cover/class_scheme.md": "PROPOSED",
+    "contracts/domains/habitat/land_cover/observation.md": "PROPOSED",
+    "contracts/domains/habitat/land_cover_observation.md": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/nlcd-fixture-ingest.md": "PROPOSED",
+    "docs/runbooks/pipeline-fixture-replay.md": "PROPOSED",
+    "fixtures/domains/habitat/nlcd_ingest/README.md": "PROPOSED",
+    "fixtures/domains/habitat/nlcd_ingest/base.json": "PROPOSED",
+    "fixtures/domains/habitat/nlcd_ingest/changed.json": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/habitat/README.md": "PROPOSED",
+    "pipeline_specs/habitat/nlcd_landcover.yaml": "PROPOSED",
+    "pipelines/domains/habitat/README.md": "PROPOSED",
+    "pipelines/domains/habitat/ingest_nlcd.py": "PROPOSED",
+    "schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json": "PROPOSED",
+    "schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json": "PROPOSED",
+    "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json": "PROPOSED",
+    "tests/ci/test_install_python_ci.py": "PROPOSED",
+    "tests/pipelines/domains/habitat/test_nlcd_ingest.py": "PROPOSED",
+    "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py": "PROPOSED",
+    "tools/qa/scaffold_baseline.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "native-nlcd-and-habitat-validators",
+      "outcome": "PASS",
+      "reason": "111 passed and 65 subtests in the compatible locked imagery/schema environment; exact raster replay, native masks, recompression identity, canonical times/classes, malformed inputs, bounds and authority rejection."
+    },
+    {
+      "gate": "existing-locked-imagery-regressions",
+      "outcome": "PASS",
+      "reason": "Crop CASMA two tests and historical topographic two tests pass after dependency composition; pip check passes."
+    },
+    {
+      "gate": "qualified-general-pipeline-and-lightweight-schema-lanes",
+      "outcome": "PASS",
+      "reason": "313 passed and two raster modules skipped in the qualified general environment; 39 lightweight declaration/replay/schema tests and two subtests pass without rasterio."
+    },
+    {
+      "gate": "full-supported-test-collection",
+      "outcome": "PASS",
+      "reason": "10316 tests collected with no errors in the supported full-local bundle; native raster cases qualify separately."
+    },
+    {
+      "gate": "qa-and-installer-regressions",
+      "outcome": "PASS",
+      "reason": "371 passed, 74 subtests. Exact imagery workflow profile allowlist updated for locked schema/test and connector setup."
+    },
+    {
+      "gate": "docs-workflows-and-ratchets",
+      "outcome": "PASS",
+      "reason": "Ten documents structurally pass; 156 local targets resolve; external targets classified without requests. Both workflows have zero security findings. Gap/scaffold pass; topology zero new drift, 89 inherited warnings."
+    },
+    {
+      "gate": "hosted-ci-human-review-and-main-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending the final published candidate, exact-head hosted checks, review and prerequisite main delivery. Synthetic candidate conformance grants no source or public-use authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "contracts/domains/habitat/land_cover/class_scheme.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/habitat/land_cover/class_scheme.md@664116397773bb3146f214a70bb26d3cd8e7203c"
+    },
+    {
+      "id": "contracts/domains/habitat/land_cover/observation.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/habitat/land_cover/observation.md@664116397773bb3146f214a70bb26d3cd8e7203c"
+    },
+    {
+      "id": "contracts/domains/habitat/land_cover_observation.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/habitat/land_cover_observation.md@664116397773bb3146f214a70bb26d3cd8e7203c"
+    },
+    {
+      "id": "data/registry/habitat/sources/nlcd.yaml",
+      "validated": true,
+      "evidence_ref": "data/registry/habitat/sources/nlcd.yaml@664116397773bb3146f214a70bb26d3cd8e7203c"
+    },
+    {
+      "id": "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
+      "validated": true,
+      "evidence_ref": "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock@664116397773bb3146f214a70bb26d3cd8e7203c"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@664116397773bb3146f214a70bb26d3cd8e7203c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T23:35:46.834046Z",
+  "emitter": "codex/nlcd-native-candidate",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Replaces the NLCD executable stub and three permissive schema scaffolds with bounded native-grid candidate conformance. The source descriptor and class meanings remain unadmitted; no habitat inference or lifecycle/public authority. Six of 39 candidates are fixture-first on this stack; 33 remain unimplemented. Tightens five resolved scaffold findings, 863 to 858. Preserves historical receipts. Additional out-of-profile experiment: the full geometry suite in the raster pyproj 3.8.0 / PROJ 9.8.1 environment had 330 passing tests and one EPSG:6923 failure; reproduced in isolation without NLCD because us_noaa_kshpgn.tif was unavailable. The qualified general pyproj 3.7.2 pipeline lane passes. No locks, ballpark gates or network-grid settings were relaxed. GBIF PR 5963 merged into an intermediate branch; main-targeted delivery closure is being prepared separately. The policy-decision reference is accepted ADR-0029 repository placement/authority governance only, not source rights, model approval, data policy evaluation or release authorization. Final candidate is based on main-targeted closure PR 5964 at 664116397773bb3146f214a70bb26d3cd8e7203c; its own PR must also target main, never an intermediate branch."
+}

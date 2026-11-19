@@ -1,0 +1,146 @@
+{
+  "capture": {
+    "retrieved_at": "2026-11-19T00:00:00Z",
+    "valid_time": {
+      "end": "2021-12-31T23:59:59Z",
+      "start": "2021-01-01T00:00:00Z"
+    }
+  },
+  "class_scheme": {
+    "classes": [
+      {
+        "code": 11,
+        "label": "Synthetic class 11"
+      },
+      {
+        "code": 41,
+        "label": "Synthetic class 41"
+      },
+      {
+        "code": 90,
+        "label": "Synthetic class 90"
+      }
+    ],
+    "governance": {
+      "lifecycle_write": false,
+      "policy_evaluated": false,
+      "promotion_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false,
+      "release_authorized": false,
+      "review_completed": false,
+      "review_required": true,
+      "rights_status": "UNVERIFIED",
+      "sensitivity": "NOT_EVALUATED",
+      "source_admitted": false
+    },
+    "nodata_value": 0,
+    "object_type": "ClassSchemeProfile",
+    "profile_version": "kfm.nlcd-class-scheme-candidate/v1",
+    "schema_version": "1.0.0",
+    "scheme_id": "kfm:class-scheme:synthetic-nlcd-fixture",
+    "scheme_version": "1.0.0",
+    "source_descriptor_ref": "data/registry/habitat/sources/nlcd.yaml",
+    "source_family": "NLCD",
+    "source_id": "nlcd",
+    "source_product": "SYNTHETIC_NLCD_STYLE_TILE",
+    "source_role": "OBSERVATION_CANDIDATE",
+    "source_vintage": "2021-01-01",
+    "spec_hash": "sha256:54dc51309ea1153bb2338b41fc8f497c3a3f8ecaaa0d0c04d52db9f434294f85"
+  },
+  "expected_candidate": {
+    "class_counts": [
+      {
+        "code": 11,
+        "count": 3,
+        "label": "Synthetic class 11"
+      },
+      {
+        "code": 41,
+        "count": 3,
+        "label": "Synthetic class 41"
+      },
+      {
+        "code": 90,
+        "count": 3,
+        "label": "Synthetic class 90"
+      }
+    ],
+    "evidence_bundle_ref": null,
+    "governance": {
+      "lifecycle_write": false,
+      "policy_evaluated": false,
+      "promotion_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false,
+      "release_authorized": false,
+      "review_completed": false,
+      "review_required": true,
+      "rights_status": "UNVERIFIED",
+      "sensitivity": "NOT_EVALUATED",
+      "source_admitted": false
+    },
+    "normalized_grid_sha256": "sha256:3b7b0ce6cba56e573af4850c776e8cd9ea3441acdab5dce94e5f070dd8fb6d5e",
+    "object_type": "LandCoverObservation",
+    "observation_id": "kfm:land-cover-observation:413fed307b560668412bcb0b",
+    "processing": {
+      "class_recode": false,
+      "habitat_assertion": false,
+      "public_generalization": false,
+      "resampling": "NONE"
+    },
+    "profile_version": "kfm.nlcd-observation-candidate/v1",
+    "release_ref": null,
+    "retrieved_at": "2026-11-19T00:00:00Z",
+    "schema_version": "1.0.0",
+    "scheme_hash": "sha256:54dc51309ea1153bb2338b41fc8f497c3a3f8ecaaa0d0c04d52db9f434294f85",
+    "scheme_id": "kfm:class-scheme:synthetic-nlcd-fixture",
+    "scheme_version": "1.0.0",
+    "source_artifact_sha256": "sha256:7914a6032983a7bdc2e7f5840038178bd06fba1d988815d62bf2e631d83df86e",
+    "source_descriptor_ref": "data/registry/habitat/sources/nlcd.yaml",
+    "source_id": "nlcd",
+    "source_product": "SYNTHETIC_NLCD_STYLE_TILE",
+    "source_role": "OBSERVATION_CANDIDATE",
+    "source_vintage": "2021-01-01",
+    "spatial": {
+      "bands": 1,
+      "bounds": [
+        -100000.0,
+        2099910.0,
+        -99880.0,
+        2100000.0
+      ],
+      "crs": "EPSG:5070",
+      "dtype": "uint8",
+      "height": 3,
+      "transform": [
+        30.0,
+        0.0,
+        -100000.0,
+        0.0,
+        -30.0,
+        2100000.0
+      ],
+      "width": 4
+    },
+    "spec_hash": "sha256:55fd0c78741cec1867761d982346551deb26419927de8446f94bab234595ed86",
+    "support": {
+      "nodata_count": 3,
+      "pixel_count": 12,
+      "valid_count": 9,
+      "valid_mask_sha256": "sha256:93b21f4ebed2522ea68163d41a019f29537ab86eed2d168195adb231171a5ab0"
+    },
+    "uncertainty": {
+      "classification_accuracy": "NOT_EVALUATED",
+      "source_coverage": "NOT_ESTABLISHED",
+      "vintage_gap": "NOT_EVALUATED"
+    },
+    "valid_time": {
+      "end": "2021-12-31T23:59:59Z",
+      "start": "2021-01-01T00:00:00Z"
+    }
+  },
+  "fixture_only": true,
+  "source_base64": "SUkqAAgAAAAQAAABAwABAAAABAAAAAEBAwABAAAAAwAAAAIBAwABAAAACAAAAAMBAwABAAAAAQAAAAYBAwABAAAAAQAAABEBBAABAAAAcgEAABUBAwABAAAAAQAAABYBAwABAAAAAwAAABcBBAABAAAADAAAABwBAwABAAAAAQAAAFMBAwABAAAAAQAAAA6DDAADAAAAzgAAAIKEDAAGAAAA5gAAAK+HAwAgAAAAFgEAALGHAgAcAAAAVgEAAIGkAgACAAAAMAAAAAAAAAAAAAAAAAA+QAAAAAAAAD5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGr4wAAAAACQBUBBAAAAAAAAAAABAAEAAAAHAAAEAAABAAEAAQQAAAEAAQACBLGHFQAAAAEIsYcGABUABggAAAEAjiMADAAAAQDOEwQMAAABACkjTkFEODMgLyBDb251cyBBbGJlcnN8TkFEODN8AAspAFopWgsAWgspAA==",
+  "source_sha256": "sha256:7914a6032983a7bdc2e7f5840038178bd06fba1d988815d62bf2e631d83df86e"
+}

@@ -26,6 +26,28 @@ notes: ["Metadata is flat by contract; validation does not activate a source, pi
 
 # Habitat pipeline declaration boundary
 
+## NLCD native-grid fixture implementation — November 19, 2026
+
+The [NLCD candidate entrypoint](../../pipelines/domains/habitat/ingest_nlcd.py)
+now reads bounded supplied GeoTIFF bytes, validates a closed candidate class
+scheme, and preserves native codes, nodata, masks and spatial/temporal identity.
+[Its declaration](../../pipeline_specs/habitat/nlcd_landcover.yaml) remains
+FIXTURE_ONLY and inactive, with source admission, lifecycle writes and release
+denied. The class-scheme and observation schemas reject arbitrary objects and
+approval overclaims. Other Habitat pipelines remain separately planned.
+
+See the [runbook](../../docs/runbooks/nlcd-fixture-ingest.md),
+[synthetic packets](../../fixtures/domains/habitat/nlcd_ingest/), and
+[imagery workflow](../../.github/workflows/crop-casma-tile-compatibility.yml).
+These candidates establish neither reviewed NLCD class meaning nor habitat truth.
+
+## Historical boundary inspection
+
+The remainder retains the earlier inspection, which predates this bounded
+fixture-first implementation. Its broader planning and activation gaps remain
+separate from the current native-grid conformance above.
+
+
 `pipeline_specs/habitat/` is the declarative Habitat lane inherited from [`pipeline_specs/`](../README.md). It owns inactive run-graph proposals, not executable processing or ecological truth.
 
 Directory Rules v2 is adopted by [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). This README applies its `BOUNDARY_COMPACT` profile.

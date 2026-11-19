@@ -2,23 +2,23 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 707,
-   "STUB_MODULE": 144,
+   "PLACEHOLDER_MARKER": 703,
+   "STUB_MODULE": 143,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
    "connectors": 68,
    "contracts": 3,
    "packages": 25,
-   "pipelines": 74,
+   "pipelines": 72,
    "policy": 112,
-   "schemas": 386,
+   "schemas": 383,
    "scripts": 1,
    "tests": 170,
    "tools": 24
   },
-  "files": 708,
-  "total": 863
+  "files": 704,
+  "total": 858
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -131,8 +131,6 @@
   {"kind": "STUB_MODULE", "path": "pipelines/domains/agriculture/validate.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/habitat/build_habitat_patch.py"},
   {"kind": "STUB_MODULE", "path": "pipelines/domains/habitat/build_habitat_patch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/habitat/ingest_nlcd.py"},
-  {"kind": "STUB_MODULE", "path": "pipelines/domains/habitat/ingest_nlcd.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/habitat/run_suitability_model.py"},
   {"kind": "STUB_MODULE", "path": "pipelines/domains/habitat/run_suitability_model.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/hazards/ingest.py"},
@@ -537,11 +535,8 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/habitat_decision_envelope.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/habitat_quality_score.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/change_summary.schema.json"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/crosswalk.schema.json"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/uncertainty.schema.json"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/layer_manifest.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/promotion_decision.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/release_manifest.schema.json"},

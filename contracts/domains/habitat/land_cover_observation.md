@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-domains-habitat-land-cover-observation-top-level
 title: Land Cover Observation Contract — Habitat
 type: semantic-contract
-version: v0.2
+version: v0.3
 status: draft; PROPOSED; COMPATIBILITY_ALIAS; CONFLICTED duplicate semantic home; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Habitat domain steward
@@ -17,7 +17,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-22
-updated: 2026-06-22
+updated: 2026-11-19
 policy_label: public-with-gates; semantic-contract; habitat; land-cover; LandCoverObservation; compatibility-alias; source-role-aware; source-vintage-aware; valid-pixel-aware; evidence-bound; release-gated
 tags: [kfm, contracts, habitat, land-cover, land_cover_observation, LandCoverObservation, observation, class-scheme, valid-pixel-footprint, categorical-raster, continuous-raster, source-role, source-vintage, evidence, policy, release, correction, rollback, compatibility-alias]
 related:
@@ -57,6 +57,47 @@ notes:
 <a id="top"></a>
 
 # Land Cover Observation Contract — Habitat
+
+## Bounded NLCD fixture conformance — November 19, 2026
+
+A closed NLCD candidate profile now binds class-scheme identity/version,
+source product/vintage, the proposed source descriptor, sorted native class
+codes and labels, nodata value, capture times, native grid, pixel support,
+uncertainty, artifact/semantic digests and explicit denied authority.
+
+The executable [NLCD entrypoint](../../../pipelines/domains/habitat/ingest_nlcd.py)
+reads only bounded supplied GeoTIFF bytes. It preserves native categorical values
+and valid-pixel support, without resampling, class recoding or habitat inference.
+The class scheme and observation remain review candidates. Conformance does not
+review a legend, admit a source or authorize lifecycle writes or public use.
+
+The canonical machine profiles are
+[class scheme](../../../schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json)
+and [observation](../../../schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json).
+The top-level observation schema is a read-only compatibility reference to the
+nested definition. [Sealed synthetic fixtures](../../../fixtures/domains/habitat/nlcd_ingest/)
+and [native tests](../../../tests/pipelines/domains/habitat/test_nlcd_ingest.py)
+exercise byte identity, semantic identity, masks, bounds, timestamps and authority
+retention. See the [runbook](../../../docs/runbooks/nlcd-fixture-ingest.md)
+for exact fields, commands and the supported native-grid envelope.
+
+Profile properties are closed and required. Class codes must be sorted/unique;
+profile and observation hashes are checked separately from schema shape.
+Valid-pixel count equals the sum of native class counts; valid plus nodata count
+equals grid size. Mask support includes internal masks and source nodata in the
+supplied bytes. Observation identity binds source, class-scheme hash, spatial
+scope, canonical valid time and normalized grid/mask digest. Recompression may
+change the source-artifact digest while preserving observation identity.
+Source vintage, valid time and retrieval time remain distinct. Classification
+accuracy, coverage and vintage-gap assessment remain explicitly unevaluated.
+
+## Historical contract inspection
+
+The remainder preserves the prior inspection and broader semantic guidance.
+Its empty-schema readback predates this bounded candidate profile. Broader
+source families, reviewed legends, continuous/fractional products, promotion,
+release and public acceptance remain outside this implementation.
+
 
 > Compatibility semantic contract for `LandCoverObservation`: the Habitat land-cover evidence object that records a governed categorical or continuous land-cover classification over declared spatial and temporal scope, with source role, class scheme, CRS/resolution, valid-pixel support, evidence, policy, release, correction, and rollback boundaries visible.
 

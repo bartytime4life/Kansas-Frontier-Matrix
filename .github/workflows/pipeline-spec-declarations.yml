@@ -14,6 +14,12 @@ name: pipeline-spec-declarations
       - "connectors/noaa/**"
       - "configs/domains/hydrology/usgs-water-pilot.json"
       - "fixtures/domains/hazards/**"
+      - "fixtures/domains/habitat/nlcd_ingest/**"
+      - "schemas/contracts/v1/domains/habitat/land_cover/**"
+      - "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json"
+      - "contracts/domains/habitat/land_cover/**"
+      - "contracts/domains/habitat/land_cover_observation.md"
+      - "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py"
       - "fixtures/domains/hydrology/usgs_water_replay/**"
       - "contracts/domains/hazards/**"
       - "contracts/domains/hydrology/**"
@@ -44,6 +50,12 @@ name: pipeline-spec-declarations
       - "connectors/noaa/**"
       - "configs/domains/hydrology/usgs-water-pilot.json"
       - "fixtures/domains/hazards/**"
+      - "fixtures/domains/habitat/nlcd_ingest/**"
+      - "schemas/contracts/v1/domains/habitat/land_cover/**"
+      - "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json"
+      - "contracts/domains/habitat/land_cover/**"
+      - "contracts/domains/habitat/land_cover_observation.md"
+      - "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py"
       - "fixtures/domains/hydrology/usgs_water_replay/**"
       - "contracts/domains/hazards/**"
       - "contracts/domains/hydrology/**"
@@ -111,6 +123,7 @@ jobs:
           python tools/validators/validate_pipeline_spec_declarations.py --fixtures
           python -m pytest \
             tests/validators/test_validate_pipeline_spec_declarations.py \
+            tests/validators/domains/habitat/test_nlcd_candidate_schemas.py \
             -q --strict-config --strict-markers
 
       - name: Replay the three sealed domain capture fixtures
@@ -130,6 +143,6 @@ jobs:
             echo "### Inactive pipeline declarations"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: declaration shape, identity, references, hashes, alias targets, fixture polarity, and three sealed synthetic domain replays."
+            echo "- Scope: declaration shape, identity, references, hashes, alias targets, fixture polarity, three sealed synthetic domain replays, and closed NLCD candidate schemas."
             echo "- Boundary: no source activation, live network access, lifecycle write, promotion, release, deployment, or publication."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -1,17 +1,334 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "kfm://schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json",
-  "title": "Observation",
-  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
   "type": "object",
-  "additionalProperties": true,
-  "properties": {},
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_version",
+    "observation_id",
+    "source_id",
+    "source_descriptor_ref",
+    "source_product",
+    "source_vintage",
+    "source_role",
+    "scheme_id",
+    "scheme_version",
+    "scheme_hash",
+    "retrieved_at",
+    "valid_time",
+    "spatial",
+    "support",
+    "class_counts",
+    "source_artifact_sha256",
+    "normalized_grid_sha256",
+    "uncertainty",
+    "processing",
+    "evidence_bundle_ref",
+    "release_ref",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "LandCoverObservation"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_version": {
+      "const": "kfm.nlcd-observation-candidate/v1"
+    },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^kfm:land-cover-observation:[a-f0-9]{24}$"
+    },
+    "source_id": {
+      "const": "nlcd"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/habitat/sources/nlcd.yaml"
+    },
+    "source_product": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "source_vintage": {
+      "type": "string",
+      "format": "date"
+    },
+    "source_role": {
+      "const": "OBSERVATION_CANDIDATE"
+    },
+    "scheme_id": {
+      "type": "string",
+      "pattern": "^kfm:class-scheme:[A-Za-z0-9._:/-]{1,160}$"
+    },
+    "scheme_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "scheme_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "spatial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crs",
+        "width",
+        "height",
+        "transform",
+        "bounds",
+        "dtype",
+        "bands"
+      ],
+      "properties": {
+        "crs": {
+          "const": "EPSG:5070"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2048
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2048
+        },
+        "transform": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "bounds": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "dtype": {
+          "const": "uint8"
+        },
+        "bands": {
+          "const": 1
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pixel_count",
+        "valid_count",
+        "nodata_count",
+        "valid_mask_sha256"
+      ],
+      "properties": {
+        "pixel_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "valid_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "nodata_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        },
+        "valid_mask_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "class_counts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "label",
+          "count"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 255
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1048576
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 255
+    },
+    "source_artifact_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "normalized_grid_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification_accuracy",
+        "source_coverage",
+        "vintage_gap"
+      ],
+      "properties": {
+        "classification_accuracy": {
+          "const": "NOT_EVALUATED"
+        },
+        "source_coverage": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "vintage_gap": {
+          "const": "NOT_EVALUATED"
+        }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resampling",
+        "class_recode",
+        "habitat_assertion",
+        "public_generalization"
+      ],
+      "properties": {
+        "resampling": {
+          "const": "NONE"
+        },
+        "class_recode": {
+          "const": false
+        },
+        "habitat_assertion": {
+          "const": false
+        },
+        "public_generalization": {
+          "const": false
+        }
+      }
+    },
+    "evidence_bundle_ref": {
+      "type": "null"
+    },
+    "release_ref": {
+      "type": "null"
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "review_completed",
+        "policy_evaluated",
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "review_required",
+        "rights_status",
+        "sensitivity"
+      ],
+      "properties": {
+        "source_admitted": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "review_required": {
+          "const": true
+        },
+        "rights_status": {
+          "const": "UNVERIFIED"
+        },
+        "sensitivity": {
+          "const": "NOT_EVALUATED"
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json",
+  "title": "LandCoverObservation - bounded NLCD candidate",
+  "description": "Closed fixture-first NLCD candidate profile. Integrity and conformance grant no source admission, reviewed class meaning, habitat assertion, lifecycle write, release or publication authority.",
   "x-kfm": {
     "status": "PROPOSED",
-    "path": "schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json",
-    "source_docs": [
-      "docs/domains/habitat/sublanes/land_cover.md"
-    ],
-    "contract_doc": "contracts/domains/habitat/land_cover/observation.md"
+    "contract_doc": "contracts/domains/habitat/land_cover/observation.md",
+    "profile_scope": "bounded-native-grid-candidate-only"
   }
 }

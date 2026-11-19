@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-domains-habitat-land-cover-class-scheme
 title: Land Cover Class Scheme Contract — Habitat
 type: semantic-contract
-version: v0.2
+version: v0.3
 status: draft; PROPOSED; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Habitat domain steward
@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-11-19
 policy_label: public-with-gates; semantic-contract; habitat; land-cover; class-scheme; ClassSchemeProfile; source-vintage-aware; evidence-bound; crosswalk-aware; release-gated
 tags: [kfm, contracts, habitat, land_cover, class_scheme, ClassSchemeProfile, land-cover-legend, classification-scheme, source-vintage, nlcd, landfire, gap, nwi, cdl-adjacency, crosswalk, evidence, source-role, policy, release, correction, rollback]
 related:
@@ -34,7 +34,7 @@ related:
   - ../../../../release/manifests/habitat/
 notes:
   - "Expanded from a thin scaffold into a Habitat land-cover class-scheme semantic contract."
-  - "The paired schema exists at schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json, but it is still a PROPOSED scaffold with empty properties and additionalProperties=true; field-level enforcement remains NEEDS VERIFICATION."
+  - "The paired schema exists at schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json, which was previously an empty permissive scaffold; the current bounded NLCD candidate profile has closed field enforcement and still requires source and human review."
   - "The land-cover sublane uses ClassSchemeProfile for the object-family concept, while this requested file path is class_scheme.md and the paired schema title is Class Scheme. This contract treats class_scheme.md as the semantic contract for ClassSchemeProfile unless a later ADR/schema decision says otherwise."
   - "Class schemes name and pin versioned land-cover legends/classification systems. They do not perform crosswalks, reclassifications, source activation, observation truth, change summaries, public layer release, or HabitatPatch/SuitabilityModel claims by themselves."
 [/KFM_META_BLOCK_V2] -->
@@ -42,6 +42,47 @@ notes:
 <a id="top"></a>
 
 # Land Cover Class Scheme — Habitat
+
+## Bounded NLCD fixture conformance — November 19, 2026
+
+A closed NLCD candidate profile now binds class-scheme identity/version,
+source product/vintage, the proposed source descriptor, sorted native class
+codes and labels, nodata value, capture times, native grid, pixel support,
+uncertainty, artifact/semantic digests and explicit denied authority.
+
+The executable [NLCD entrypoint](../../../../pipelines/domains/habitat/ingest_nlcd.py)
+reads only bounded supplied GeoTIFF bytes. It preserves native categorical values
+and valid-pixel support, without resampling, class recoding or habitat inference.
+The class scheme and observation remain review candidates. Conformance does not
+review a legend, admit a source or authorize lifecycle writes or public use.
+
+The canonical machine profiles are
+[class scheme](../../../../schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json)
+and [observation](../../../../schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json).
+The top-level observation schema is a read-only compatibility reference to the
+nested definition. [Sealed synthetic fixtures](../../../../fixtures/domains/habitat/nlcd_ingest/)
+and [native tests](../../../../tests/pipelines/domains/habitat/test_nlcd_ingest.py)
+exercise byte identity, semantic identity, masks, bounds, timestamps and authority
+retention. See the [runbook](../../../../docs/runbooks/nlcd-fixture-ingest.md)
+for exact fields, commands and the supported native-grid envelope.
+
+Profile properties are closed and required. Class codes must be sorted/unique;
+profile and observation hashes are checked separately from schema shape.
+Valid-pixel count equals the sum of native class counts; valid plus nodata count
+equals grid size. Mask support includes internal masks and source nodata in the
+supplied bytes. Observation identity binds source, class-scheme hash, spatial
+scope, canonical valid time and normalized grid/mask digest. Recompression may
+change the source-artifact digest while preserving observation identity.
+Source vintage, valid time and retrieval time remain distinct. Classification
+accuracy, coverage and vintage-gap assessment remain explicitly unevaluated.
+
+## Historical contract inspection
+
+The remainder preserves the prior inspection and broader semantic guidance.
+Its empty-schema readback predates this bounded candidate profile. Broader
+source families, reviewed legends, continuous/fractional products, promotion,
+release and public acceptance remain outside this implementation.
+
 
 > Semantic contract for `ClassSchemeProfile`: the Habitat land-cover object that names, versions, and governs a source classification scheme or legend before `LandCoverObservation`, crosswalk, change-summary, public layer, or downstream Habitat reasoning can use its classes.
 

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-habitat-readme
 title: Habitat Domain Pipeline README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <habitat-pipeline-owner>
@@ -15,7 +15,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-11-19
 policy_label: public
 path: pipelines/domains/habitat/README.md
 related:
@@ -76,6 +76,28 @@ notes:
 <a id="top"></a>
 
 # 🌿 Habitat Domain Pipeline
+
+## NLCD native-grid fixture implementation — November 19, 2026
+
+The [NLCD candidate entrypoint](../../../pipelines/domains/habitat/ingest_nlcd.py)
+now reads bounded supplied GeoTIFF bytes, validates a closed candidate class
+scheme, and preserves native codes, nodata, masks and spatial/temporal identity.
+[Its declaration](../../../pipeline_specs/habitat/nlcd_landcover.yaml) remains
+FIXTURE_ONLY and inactive, with source admission, lifecycle writes and release
+denied. The class-scheme and observation schemas reject arbitrary objects and
+approval overclaims. Other Habitat pipelines remain separately planned.
+
+See the [runbook](../../../docs/runbooks/nlcd-fixture-ingest.md),
+[synthetic packets](../../../fixtures/domains/habitat/nlcd_ingest/), and
+[imagery workflow](../../../.github/workflows/crop-casma-tile-compatibility.yml).
+These candidates establish neither reviewed NLCD class meaning nor habitat truth.
+
+## Historical boundary inspection
+
+The remainder retains the earlier inspection, which predates this bounded
+fixture-first implementation. Its broader planning and activation gaps remain
+separate from the current native-grid conformance above.
+
 
 > Executable Habitat-domain pipeline lane for converting admitted land-cover, ecological-system, habitat-patch, suitability, connectivity, corridor, stewardship, wetland, restoration, and sensitive-ecology context into governed candidates, quarantine records, processed records, catalog/triplet handoffs, receipts, and release-review packages — without collapsing modeled habitat, regulatory designation, species occurrence, plant occurrence, or public-safe release state.
 
