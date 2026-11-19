@@ -40,16 +40,21 @@ against the SHA-256 pinned in `pass12-release-policy-v1.yml` and
 so nothing on `PATH` changes:
 
 ```bash
-mkdir -p "$HOME/.local/opt/opa-1.19.0"
-curl -fsSL -o "$HOME/.local/opt/opa-1.19.0/opa" \
-  https://github.com/open-policy-agent/opa/releases/download/v1.19.0/opa_linux_amd64_static
-echo "1dd5c5591ff856f5e20a1d66bafae9511ddf3c5552ed3b5070c70b2b6580ee3f  $HOME/.local/opt/opa-1.19.0/opa" | sha256sum -c -
-chmod 0755 "$HOME/.local/opt/opa-1.19.0/opa"
-OPA_BIN="$HOME/.local/opt/opa-1.19.0/opa" make policy
+OPA_DIR="$HOME/.local/opt/opa-1.19.0" &&
+mkdir -p "$OPA_DIR" &&
+curl -fsSL -o "$OPA_DIR/opa.download" \
+  https://github.com/open-policy-agent/opa/releases/download/v1.19.0/opa_linux_amd64_static &&
+echo "1dd5c5591ff856f5e20a1d66bafae9511ddf3c5552ed3b5070c70b2b6580ee3f  $OPA_DIR/opa.download" | sha256sum -c - &&
+chmod 0755 "$OPA_DIR/opa.download" &&
+mv "$OPA_DIR/opa.download" "$OPA_DIR/opa" &&
+OPA_BIN="$OPA_DIR/opa" make policy
 ```
 
-A passing run prints `"status":"PASS"` with reason `BOUNDED_REGO_PAIR_PASSED`
-and exits 0. Stop if `sha256sum -c` does not print `OK`. On other platforms,
+Every step is chained with `&&`, so a failed download or checksum stops the
+block even when it is pasted into an interactive shell, and the binary only
+reaches the `opa` path after it verifies. The lane runner trusts whatever
+`OPA_BIN` names, so never point it at an unverified file. A passing run prints
+`"status":"PASS"` with reason `BOUNDED_REGO_PAIR_PASSED` and exits 0. On other platforms,
 download the v1.19.0 asset for that platform and check it against the
 `.sha256` file published beside it; the pinned digest above covers only the
 Linux x86-64 binary. The same `OPA_BIN` also lets the OPA-backed tests in
