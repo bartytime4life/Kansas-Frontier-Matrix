@@ -1,35 +1,49 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.flora.gbif-ingest
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: flora
-stage: INGEST
+stage: NORMALIZE
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/flora/gbif_ingest.yaml
-purpose: Preserve the Flora gbif ingest proposal as a reviewable inactive pipeline candidate without
-  activating sources or lifecycle writes.
+purpose: Compose the existing GBIF Darwin Core fixture normalizer, schemas and intake classifier as a
+  bounded local rehearsal with aggregate-only CLI output; no API acquisition, taxonomy inference or lifecycle
+  writes.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/flora/FILE_SYSTEM_PLAN.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/flora/sources/gbif_plants.yaml
+  contract_refs:
+  - contracts/domains/flora/flora_occurrence_candidate.md
+  - contracts/domains/flora/flora_occurrence_intake_decision.md
+  schema_refs:
+  - schemas/contracts/v1/domains/flora/flora_occurrence_candidate.schema.json
+  - schemas/contracts/v1/domains/flora/flora_occurrence_intake_decision.schema.json
+  implementation_refs:
+  - packages/domains/flora/normalizers/dwc_occurrence.py
+  - packages/domains/flora/normalizers/intake_governance.py
+  - pipelines/domains/flora/gbif_ingest.py
+  fixture_refs:
+  - fixtures/domains/flora/flora_occurrence_candidate/
+  test_refs:
+  - tests/packages/domains/flora/normalizers/test_dwc_occurrence.py
+  - tests/packages/domains/flora/normalizers/test_intake_governance.py
+  - tests/pipelines/domains/flora/test_gbif_pipeline.py
+  workflow_refs:
+  - .github/workflows/flora-gbif-pipeline.yml
 lifecycle:
   candidate_inputs:
-  - SOURCE_CAPTURE_CANDIDATE
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - RAW
+  - INTAKE_DECISION_CANDIDATE
+  - NORMALIZED_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,7 +62,7 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
 - SOURCE_ADMISSION_UNVERIFIED
@@ -63,4 +77,8 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:39cf06eda3b75d3d108491e589bc5132d772a3e24e0f0a42ed6218fa9b959a4d
+spec_hash: sha256:7b5df3bb76f8fbc4bd68208bdc0ea13901d77e2476e4768d70fcfdce785f96dc
+validation:
+  command: python -B -m pytest tests/pipelines/domains/flora/test_gbif_pipeline.py tests/packages/domains/flora/normalizers
+    -q --strict-config --strict-markers
+  workflow: .github/workflows/flora-gbif-pipeline.yml
