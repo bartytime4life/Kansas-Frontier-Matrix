@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-stable-structure-zip-fixtures-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/local_data/test_sql_feed_structures.py"
+  ],
+  "artifact_hashes": {
+    "tests/local_data/test_sql_feed_structures.py": "sha256:3cf42ca406c9c33601d275ce6bd123066e044bf9a0256231112cb26c62337934"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3cf42ca406c9c33601d275ce6bd123066e044bf9a0256231112cb26c62337934",
+      "sha256:abc0d695d5858fa774f2e756018855adbabc3e6ef0a4f4eaf904983d28b134b2",
+      "sha256:84be20264bf77820f749ad74caada73a083b739d0321f32666987c5784f7a523",
+      "sha256:fc9f456195bd62b3d3b23c8f0d566d1fb04a738a6b6ce17404b5b71da9d3a246",
+      "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1"
+    ],
+    "evidence_refs": [
+      "main@7e3d173d23717dd7abc4de7cc06503689b9ee708",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/44612891515/job/135873828037",
+      "tests/local_data/test_sql_feed_structures.py",
+      "tools/local_data/sql_feed_structures.py",
+      ".github/workflows/local-data-store.yml",
+      "Makefile",
+      "policy/ai_builder/operating_contract.rego"
+    ]
+  },
+  "truth_labels": {
+    "tests/local_data/test_sql_feed_structures.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-failure-reproduction",
+      "outcome": "PASS",
+      "reason": "The existing airport receipt assertion fails deterministically when ZIP generation crosses the mocked two-second clock boundary."
+    },
+    {
+      "gate": "new-clock-regression-negative-control",
+      "outcome": "PASS",
+      "reason": "The new test fails on the unchanged helper, then passes with a fixed ZIP timestamp."
+    },
+    {
+      "gate": "focused-structure-tests",
+      "outcome": "PASS",
+      "reason": "17 passed."
+    },
+    {
+      "gate": "offline-local-data-suite",
+      "outcome": "PASS",
+      "reason": "Python 3.12.3, no-network guard enabled: 1099 passed, 41 skipped, 686 subtests; optional dependencies are not fully installed in this local environment."
+    },
+    {
+      "gate": "gap-and-scaffold-ratchets",
+      "outcome": "PASS",
+      "reason": "No new findings."
+    },
+    {
+      "gate": "hosted-python-3.11-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at the new PR revision; local Python differs from CI and local success does not grant acceptance."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T21:06:16.286236Z",
+  "emitter": "codex/test-fixture-repair",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Test-only ZIP fixture metadata repair. The production importer and archive-hash assertion are unchanged. All data is synthetic and no provider requests or production-store writes occur. Existing receipts are preserved; unknown model version and parameters are recorded without inference. No merge, release or deployment authority is claimed."
+}
