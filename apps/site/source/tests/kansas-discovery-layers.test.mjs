@@ -569,3 +569,66 @@ test("a trail-site circle says how many sites it holds, how many are certified a
   assert.deepEqual(totals.certified, ["+", ["case", ["==", ["get", "certified"], "NPS-certified trail site"], 1, 0]]);
   assert.deepEqual(totals.ponyExpress, ["+", ["case", ["in", "Pony Express", ["to-string", ["coalesce", ["get", "trails"], ""]]], 1, 0]]);
 });
+
+test("walk-in hunting tracts are counted in overview circles below zoom 8 and drawn as tracts from zoom 8", () => {
+  const id = "kdwp-wiha-access", source = context.OFFICIAL_CONTEXT_BY_ID[id], overviewId = clusters.ACCESS_OVERVIEW_SOURCE_ID;
+  const { map, sources, layers } = mapHarness();
+  const visibility = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(item => [item.id, false]));
+  const opacity = Object.fromEntries(context.OFFICIAL_CONTEXT_SOURCES.map(item => [item.id, item.defaultOpacity]));
+  const square = (west, south, properties) => ({ type: "Feature", properties, geometry: { type: "Polygon", coordinates: [[[west, south], [west + 0.02, south], [west + 0.02, south + 0.01], [west, south + 0.01], [west, south]]] } });
+  const data = { type: "FeatureCollection", features: [square(-100, 38, { featureId: "kdwp-wiha-1", acres: 640, archeryOnly: "Archery only" }), square(-99.5, 38.2, { featureId: "kdwp-wiha-2", acres: 160, archeryOnly: "Not archery-only" })] };
+  context.applyOfficialContextState(map, visibility, opacity, { [id]: { data } });
+  assert.equal(sources.has(source.sourceId), false); assert.equal(sources.has(overviewId), false, "off creates no source");
+  context.applyOfficialContextState(map, { ...visibility, [id]: true }, opacity, { [id]: { data } });
+  assert.deepEqual(source.layerIds, ["external-kdwp-wiha-access-fill", "external-kdwp-wiha-access-line", "external-kdwp-wiha-access-overview", "external-kdwp-wiha-access-overview-count"]);
+  assert.deepEqual(source.interactiveLayerIds, ["external-kdwp-wiha-access-overview", "external-kdwp-wiha-access-fill"]);
+  // The tracts themselves are untouched: same source, same data, no zoom limit.
+  assert.equal(sources.get(source.sourceId).data, data); assert.equal(sources.get(source.sourceId).cluster, undefined);
+  assert.equal(layers.get(source.layerIds[0]).type, "fill"); assert.equal(layers.get(source.layerIds[0]).maxzoom, undefined); assert.equal(layers.get(source.layerIds[0]).minzoom, undefined);
+  // The overview is a second, clustered source of one point per tract, drawn only below zoom 8.
+  const overview = sources.get(overviewId);
+  assert.equal(overview.cluster, true); assert.equal(overview.clusterMaxZoom, clusters.ACCESS_OVERVIEW_MAX_ZOOM - 1); assert.equal(overview.clusterRadius, clusters.ACCESS_OVERVIEW_CLUSTER_RADIUS);
+  assert.deepEqual(overview.clusterProperties, { acres: ["+", ["get", "acres"]], archeryOnly: ["+", ["get", "archeryOnly"]] });
+  assert.equal(overview.data, clusters.accessOverviewPoints(data));
+  for (const layerId of source.layerIds.slice(2)) {
+    assert.equal(layers.get(layerId).source, overviewId); assert.equal(layers.get(layerId).maxzoom, 8); assert.deepEqual(layers.get(layerId).filter, ["has", "point_count"]);
+  }
+  assert.deepEqual(layers.get(source.layerIds[3]).layout["text-field"], ["get", "point_count_abbreviated"]);
+  // A hit on the overview source belongs to the hunting-access layer.
+  assert.equal(context.OFFICIAL_CONTEXT_BY_SOURCE_ID[overviewId], source);
+  // The circles follow the layer's opacity but read more strongly than the tract fill at the same setting.
+  assert.equal(layers.get(source.layerIds[2]).paint["circle-opacity"], 0.85); assert.equal(layers.get(source.layerIds[3]).paint["text-opacity"], 0.85);
+  context.applyOfficialContextState(map, { ...visibility, [id]: true }, { ...opacity, [id]: 0 }, { [id]: { data } });
+  assert.equal(layers.get(source.layerIds[2]).paint["circle-opacity"], 0);
+  context.applyOfficialContextState(map, { ...visibility, [id]: true }, { ...opacity, [id]: 1 }, { [id]: { data } });
+  assert.equal(layers.get(source.layerIds[2]).paint["circle-opacity"], 1);
+  // Hiding the layer hides the overview, and a failed feed clears it with the tracts.
+  context.applyOfficialContextState(map, visibility, opacity, { [id]: { data } });
+  for (const layerId of source.layerIds) assert.equal(layers.get(layerId).layout.visibility, "none");
+  context.clearOfficialContextFeed(map, id);
+  assert.equal(sources.get(source.sourceId).data.features.length, 0); assert.equal(sources.get(overviewId).data.features.length, 0);
+  assert.match(source.legend, /^Zoomed out, numbered circles count tracts and their recorded acres; zoom in for the tracts themselves\./);
+});
+
+test("the hunting-access overview carries one point per tract with only acres and archery status, and says what a circle holds", () => {
+  const ring = [[-100.04, 38], [-100, 38], [-100, 38.02], [-100.04, 38.02], [-100.04, 38]];
+  const tracts = { type: "FeatureCollection", features: [
+    { type: "Feature", properties: { featureId: "kdwp-wiha-1", name: "WIHA tract 1 · Test County", acres: 640, archeryOnly: "Archery only", contractReference: "29", notes: "synthetic note" }, geometry: { type: "Polygon", coordinates: [ring] } },
+    { type: "Feature", properties: { featureId: "kdwp-wiha-2", acres: null, archeryOnly: "Not archery-only" }, geometry: { type: "MultiPolygon", coordinates: [[ring], [[[-99, 39], [-98.98, 39], [-98.98, 39.02], [-99, 39.02], [-99, 39]]]] } },
+    { type: "Feature", properties: { featureId: "kdwp-wiha-3", acres: 80 }, geometry: { type: "Point", coordinates: [-98, 38] } },
+    { type: "Feature", properties: { featureId: "kdwp-wiha-4", acres: 80 }, geometry: null },
+  ] };
+  const overview = clusters.accessOverviewPoints(tracts);
+  assert.equal(overview, clusters.accessOverviewPoints(tracts), "the same tract collection yields the same overview object");
+  assert.equal(overview.features.length, 2, "only tract outlines are counted");
+  assert.deepEqual(overview.features[0].geometry.coordinates.map(value => Number(value.toFixed(6))), [-100.02, 38.01]);
+  assert.deepEqual(overview.features[1].geometry.coordinates.map(value => Number(value.toFixed(6))), [-99.51, 38.51], "a multi-part tract is one point at the middle of its whole extent");
+  // Names, contract references and notes never reach the overview.
+  assert.deepEqual(overview.features.map(feature => feature.properties), [{ featureId: "kdwp-wiha-1-overview", acres: 640, archeryOnly: 1 }, { featureId: "kdwp-wiha-2-overview", acres: 0, archeryOnly: 0 }]);
+  const cluster = { cluster: true, cluster_id: 3, point_count: 364, acres: 104097.4, archeryOnly: 9 };
+  assert.deepEqual(clusters.officialClusterSummary("kdwp-wiha-access", cluster), { title: "364 walk-in hunting tracts in this area", detail: "104,097 recorded acres · 9 archery-only" });
+  assert.deepEqual(clusters.officialClusterSummary("kdwp-wiha-access", { cluster: true, point_count: 2, acres: 0, archeryOnly: 0 }), { title: "2 walk-in hunting tracts in this area", detail: "Select to zoom in" });
+  assert.equal(clusters.officialClusterSummary("kdwp-wiha-access", { featureId: "kdwp-wiha-1", name: "WIHA tract 1 · Test County", acres: 640 }), null, "one tract is a record, not a count");
+  assert.equal(clusters.officialClusterSummary("kdwp-wildlife-areas", cluster), null, "wildlife areas have no overview");
+});
+

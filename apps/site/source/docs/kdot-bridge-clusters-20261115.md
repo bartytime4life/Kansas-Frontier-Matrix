@@ -85,3 +85,21 @@ its name, styled as before.
 - A site on a shared corridor counts toward each trail it names, so the trail numbers can add up
   to more than the number of sites.
 - The feed, its fields and its limits are unchanged.
+
+## Walk-in hunting access gets a counted overview (2026-11-19)
+
+The walk-in hunting access layer has about 3,600 tracts. They are outlines, not points, and at
+statewide scale they were pale specks that gave no sense of how much land is enrolled where.
+Below zoom 8, numbered circles now count the tracts in an area; from zoom 8 only the tracts
+themselves are drawn, as before.
+
+- Hovering a circle gives, for example, "364 walk-in hunting tracts in this area · 104,097
+  recorded acres · 9 archery-only". Selecting it zooms in one step toward the tracts.
+- The acres are the sum of KDWP's recorded acres for those tracts, not a measured area.
+- The circles come from a second, display-only map source with one point per tract, placed at
+  the middle of the tract's extent. Each point carries only the tract's recorded acres and
+  whether it is archery-only: no name, contract reference or note. `app/context-clusters.ts`
+  builds it; the tract feed, its fields and its limits are unchanged.
+- The tract outlines stay on the map at every zoom, so a single tract can still be selected
+  anywhere. The circles follow the layer's opacity slider and read more strongly than the tract
+  fill at the same setting.

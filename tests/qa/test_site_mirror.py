@@ -2988,4 +2988,15 @@ def test_page_heading_successor_preserves_storm_times_inventory_and_all_holds():
         {"app/explorer-controls.css", "app/map-layers.css", "app/page.tsx", "tests/accessible-names.test.mjs"},
         "03d477b2da3f08c5d1a7ac65a45a1d21a618601b",
     )
-    assert TOOL.RECEIPT.name == "site-v268-page-heading-overlay-20261118.json"
+
+
+def test_hunting_access_overview_successor_preserves_page_heading_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-hunting-access-overview-overlay-20261119.json",
+        "site-v268-page-heading-overlay-20261118.json",
+        "0457931eab8cc5e9465db5aade65de7eb655e91dcf78b909a1685287f7ba7e77",
+        {"app/context-clusters.ts", "app/live-context.ts", "docs/kdot-bridge-clusters-20261115.md",
+         "tests/kansas-discovery-layers.test.mjs"},
+        "effb3de6d6ddb7fe62e784f4a60cb875be2af6d5",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-hunting-access-overview-overlay-20261119.json"
