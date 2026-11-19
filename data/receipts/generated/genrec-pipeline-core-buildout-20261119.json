@@ -1,0 +1,157 @@
+{
+  "receipt_id": "genrec-pipeline-core-buildout-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/crop-casma-tile-compatibility.yml",
+    ".github/workflows/offline-pipeline-check.yml",
+    "Makefile",
+    "packages/pipelines-core/README.md",
+    "packages/pipelines-core/pyproject.toml",
+    "packages/pipelines-core/src/README.md",
+    "packages/pipelines-core/src/pipelines_core/README.md",
+    "packages/pipelines-core/src/pipelines_core/__init__.py",
+    "packages/pipelines-core/src/pipelines_core/core.py",
+    "pipelines/README.md",
+    "tests/packages/pipelines_core/test_core.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "sha256:9993c7732d12a5f7246e42c473cbdb47e412cd4313e6e7a1cc1d70343339c82a",
+    ".github/workflows/offline-pipeline-check.yml": "sha256:89ce1a9ff97fbcabeb08572cafc29ce8b9d04c1812a4d95ae8be516d2158b404",
+    "Makefile": "sha256:dcfae231dce505f0cbfd2330ecb15d44477d0d5f159f95d0d26fe05f00111d5b",
+    "packages/pipelines-core/README.md": "sha256:f78ca0b6d94616f7350f777d13177fa5e447b6715592b19859db23d50cb50b49",
+    "packages/pipelines-core/pyproject.toml": "sha256:8bcdc217b35f2ac8b2afff0eee88774d63809ed40efb68dea04e53d49dd0dfde",
+    "packages/pipelines-core/src/README.md": "sha256:10cc0e9167cf634a0636a2939bbd65f94a2c28d787f66a9316383e450e8ae3dd",
+    "packages/pipelines-core/src/pipelines_core/README.md": "sha256:294a3a7872debcd76d68ef0da8a918fd845b1645886e14d38b835ea323637561",
+    "packages/pipelines-core/src/pipelines_core/__init__.py": "sha256:cc4c0d5487a6d1e16b246ca3204279ca6e657a6fdf58f5bd2f317fa5d80bd129",
+    "packages/pipelines-core/src/pipelines_core/core.py": "sha256:c13e25e67fc4cf8dd7315436f4a3e1acda81a87b39d85d88b50fe5841b244c5d",
+    "pipelines/README.md": "sha256:f5b7a4e73e5cf65fdc795680867a625d660fc0d2bb0a7fc0aeed4f0e95ec552b",
+    "tests/packages/pipelines_core/test_core.py": "sha256:ec1b560b0f8445ec529426c7c863f01f3f48adaa887a6e8b43ed0b110a705b5b",
+    "tools/qa/scaffold_baseline.json": "sha256:e1122090db020d3b740b8195c1bfd9ebe530da8fe1c20982889bfeb1d24d3d9a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f614a191e4fc133e989a6a14ad3f64e6e10e65e74b91860e82ce744f0d65f39e",
+      "sha256:571ae0bc10a380bbcca9ab025478d591ac0d4a727ab68be61fcb382d206e8ca2",
+      "sha256:6e654f6b861b2f9268a80045e9ed3c85e80c63ce0c8bcb46fe248d76d8f10a1e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "evidence_refs": [
+      "main@9e3a15df9b4e6468ad18788df1919b02a1a83c26",
+      "contracts/runtime/run_receipt.md",
+      "schemas/contracts/v1/runtime/run_receipt.schema.json",
+      "contracts/pipeline_spec_declaration.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "PROPOSED",
+    ".github/workflows/offline-pipeline-check.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "packages/pipelines-core/README.md": "PROPOSED",
+    "packages/pipelines-core/pyproject.toml": "PROPOSED",
+    "packages/pipelines-core/src/README.md": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/README.md": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/__init__.py": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/core.py": "PROPOSED",
+    "pipelines/README.md": "PROPOSED",
+    "tests/packages/pipelines_core/test_core.py": "PROPOSED",
+    "tools/qa/scaffold_baseline.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "core-and-existing-planners",
+      "outcome": "PASS",
+      "reason": "85 tests, including actual Mesonet normalization and rejection."
+    },
+    {
+      "gate": "offline-pipeline-suite",
+      "outcome": "PASS",
+      "reason": "284 passed, one raster module skipped in this dependency profile; Python no-network proof passes outside the outer socket sandbox."
+    },
+    {
+      "gate": "locked-imagery-pipelines",
+      "outcome": "PASS",
+      "reason": "Historical topo two tests and Crop CASMA two tests pass in the separate locked tile environment."
+    },
+    {
+      "gate": "wheel-build-install-and-execution",
+      "outcome": "PASS",
+      "reason": "No-index, no-build-isolation wheel builds; clean installed environment executes from cwd /tmp; wheel module bytes equal candidate source."
+    },
+    {
+      "gate": "qa-and-dependency-installer",
+      "outcome": "PASS",
+      "reason": "371 tests and 74 subtests."
+    },
+    {
+      "gate": "docs-and-repository-ratchets",
+      "outcome": "PASS",
+      "reason": "Four Markdown files structurally pass; 255 local targets resolve; gap/scaffold checks pass; scaffold findings decrease 866 to 863; topology zero new drift, 89 inherited warnings."
+    },
+    {
+      "gate": "workflow-security-and-historical-lock-migration",
+      "outcome": "PASS",
+      "reason": "Both modified current workflows have no workflow-security findings; pinned historical dependency migration ledger replays successfully."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending for the final pushed candidate; no runtime/source activation or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "contracts/runtime/run_receipt.md",
+      "validated": true,
+      "evidence_ref": "contracts/runtime/run_receipt.md@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    },
+    {
+      "id": "schemas/contracts/v1/runtime/run_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/runtime/run_receipt.schema.json@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    },
+    {
+      "id": "contracts/pipeline_spec_declaration.md",
+      "validated": true,
+      "evidence_ref": "contracts/pipeline_spec_declaration.md@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T21:50:39.339255Z",
+  "emitter": "codex/pipeline-buildout",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Builds the shared execution component and closes concrete CI coverage gaps. Callbacks are explicitly supplied trusted application code, not a sandbox. Computation and RunReceipts do not establish source admission, policy/evidence closure, lifecycle mutation, release or publication. Domain candidate declarations remain a separate implementation backlog; this receipt does not claim that all planned pipelines are built."
+}

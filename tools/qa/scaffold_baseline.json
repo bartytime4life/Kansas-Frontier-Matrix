@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 709,
-   "STUB_MODULE": 145,
+   "PLACEHOLDER_MARKER": 707,
+   "STUB_MODULE": 144,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
    "connectors": 68,
    "contracts": 3,
-   "packages": 28,
+   "packages": 25,
    "pipelines": 74,
    "policy": 112,
    "schemas": 386,
@@ -17,8 +17,8 @@
    "tests": 170,
    "tools": 24
   },
-  "files": 710,
-  "total": 866
+  "files": 708,
+  "total": 863
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -112,9 +112,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/geo/src/geo/core.py"},
   {"kind": "STUB_MODULE", "path": "packages/geo/src/geo/core.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/identity/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "packages/pipelines-core/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "packages/pipelines-core/src/pipelines_core/core.py"},
-  {"kind": "STUB_MODULE", "path": "packages/pipelines-core/src/pipelines_core/core.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/redaction/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/redaction/src/redaction/core.py"},
   {"kind": "STUB_MODULE", "path": "packages/redaction/src/redaction/core.py"},

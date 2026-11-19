@@ -34,7 +34,7 @@ deny-suites:
 # Existing synthetic pipeline implementations only. The injected guard covers
 # named Python egress APIs; PROJ disables native grid retrieval separately.
 offline-pipeline-check:
-	$(KFM_VALIDATION_ENV) PROJ_NETWORK=OFF PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/pipelines tests/domains/hydrology/test_no_network_proof.py
+	$(KFM_VALIDATION_ENV) PROJ_NETWORK=OFF PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/pipelines tests/packages/pipelines_core tests/domains/hydrology/test_no_network_proof.py
 
 # Retired repository mirror. Keep a fail-closed compatibility target so a
 # request for the old app check cannot report a passing result.

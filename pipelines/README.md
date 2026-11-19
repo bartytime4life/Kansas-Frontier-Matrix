@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-readme
 title: pipelines/ — Governed Executable Pipeline and Orchestration Root
 type: readme; root-readme; canonical-pipelines-root; executable-orchestration-boundary; non-publisher-index; compatibility-drift-index
-version: v0.4
+version: v0.5
 status: draft; repository-grounded; canonical-root-confirmed; mixed-maturity; selected-deterministic-planning-kernels-confirmed; direct-stage-shells-partially-placeholder; live-execution-unverified; production-unverified; non-authoritative
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
@@ -17,7 +17,7 @@ owners:
   - "OWNER_TBD — Security reviewer"
   - "OWNER_TBD — Docs steward"
 created: 2026-06-13
-updated: 2026-08-08
+updated: 2026-11-19
 supersedes: v0.3
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "public-doc; pipelines-root; executable-logic; non-publisher; no-source-authority; no-evidence-authority; no-policy-authority; no-release-authority; lifecycle-governed; receipt-aware; no-network-by-default; correction-aware; rollback-aware"
@@ -128,6 +128,31 @@ notes:
 <a id="pipelines"></a>
 
 # `pipelines/` — Governed Executable Pipeline and Orchestration Root
+
+## Execution and CI build-out — November 19, 2026
+
+The reusable [pipeline core](../packages/pipelines-core/README.md#current-implementation--november-19-2026)
+now has a buildable wheel and bounded, deterministic in-memory DAG execution.
+It composes explicitly supplied transforms, validates outputs, preserves input
+isolation and emits per-stage RunReceipts. It is an execution component, not an
+activation or release mechanism.
+
+`make offline-pipeline-check` now includes the core's execution and planning
+tests. The [offline workflow](../.github/workflows/offline-pipeline-check.yml)
+also builds the wheel and proves it imports and executes in a clean installed
+environment. Historical topographic tile tests run with their required locked
+raster stack in the [imagery qualification workflow](../.github/workflows/crop-casma-tile-compatibility.yml),
+alongside Crop CASMA preparation and tamper tests. The general geospatial job
+can skip raster-only tests because that separate job executes them.
+
+The declaration inventory remains distinct from implementation tests. Of the
+110 declarations at the inspected base, 65 are stage boundaries and six are
+aliases required by their contract to remain non-executable. There are 39
+pipeline candidates, of which 38 still need completed implementation bindings.
+The new runner does not turn those missing domain pipelines into finished work.
+
+The older root analysis below retains its original inspection scope.
+
 
 > **One-line purpose.** Own executable KFM pipeline logic and bounded orchestration—the **how** of admitted intake, transformation, validation, projection, readiness, correction, and rollback support—without becoming source authority, evidence authority, policy authority, release authority, or a public serving surface.
 

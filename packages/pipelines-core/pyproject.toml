@@ -1,4 +1,13 @@
-# packages/pipelines-core pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling==1.32.0"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-pipelines-core"
-version = "0.0.0"
+version = "0.1.0"
+description = "Deterministic pipeline planning and bounded in-memory stage execution"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pipelines_core"]
