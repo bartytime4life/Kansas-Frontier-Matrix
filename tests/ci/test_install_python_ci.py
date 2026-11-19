@@ -90,7 +90,10 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(str(REPO_ROOT / profile.lockfile), commands[0][commands[0].index("--requirement") + 1])
         self.assertFalse(profile.local_specs)
         workflow = REPO_ROOT / ".github/workflows/crop-casma-tile-compatibility.yml"
-        self.assertEqual(frozenset({"crop-casma-tiles"}), module.profiles_for_workflow(workflow))
+        # The imagery lane also verifies closed NLCD candidates using the existing
+        # locked schema/test and capture primitives; keep the allowlist exact.
+        self.assertEqual(frozenset({"crop-casma-tiles", "project-test", "connectors-core"}),
+                         module.profiles_for_workflow(workflow))
         self.assertNotIn("--only-binary=:all:", module.build_commands("project-test")[0])
 
     def test_geo_profile_matches_declared_optional_transform_dependency(self) -> None:

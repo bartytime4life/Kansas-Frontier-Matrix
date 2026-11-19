@@ -2,7 +2,7 @@
 doc_id: kfm://contract/pipeline-spec-declaration
 title: KfmPipelineSpecDeclaration Contract
 type: contract
-version: v1.3
+version: v1.4
 status: proposed-inactive
 owners: OWNER_TBD — Pipeline specification steward · Schema steward · Validation steward · Domain steward
 created: 2026-08-30
@@ -46,7 +46,7 @@ tags: [kfm, pipeline-spec, declaration, inactive, fixture-only, compatibility-al
 notes:
   - "This contract governs declarative repository records only."
   - "A conforming declaration cannot activate a source, execute a network request, write a lifecycle target, promote, release, or publish."
-  - "Version v1.3 adds the bounded GBIF fixture pipeline. Version v1.2 added the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
+  - "Version v1.4 adds bounded NLCD candidate conformance. Version v1.3 added the bounded GBIF fixture pipeline. Version v1.2 added the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
 [/KFM_META_BLOCK_V2] -->
 
 # KfmPipelineSpecDeclaration Contract
@@ -69,9 +69,9 @@ promotion, release, publication, or public-use authority.
 
 ### Repository checkpoint (2026-11-19)
 
-The declaration corpus still contains 110 records. Five of the 39 pipeline
+The declaration corpus still contains 110 records. Six of the 39 pipeline
 candidates now bind fixture-first implementations: WBD HUC12, USGS water
-observations, USGS earthquakes, NOAA Storm Events, and GBIF Flora intake.
+observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, and bounded NLCD land cover.
 The earthquake, storm-event and water-observation pipelines replay
 sealed synthetic capture packets through the existing normalizers and validators
 without network access or lifecycle writes. Their bindings include the
@@ -79,8 +79,10 @@ implementation, fixture, test, descriptor, schema, contract, and CI paths.
 GBIF composes the existing Darwin Core normalizer and intake classifier under
 schema validation. Its descriptor remains proposed with unresolved admission;
 fixture-first execution does not resolve it or infer taxonomy, rights, or sensitivity.
+NLCD binds closed candidate class-scheme and observation schemas with native-grid
+replay; its source descriptor and class meanings also remain unadmitted.
 
-The remaining 34 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
+The remaining 33 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
 compatibility aliases retain their contract-required NOT_IMPLEMENTED posture.
 No execution authority changes. See the
 [fixture replay runbook](../docs/runbooks/pipeline-fixture-replay.md).

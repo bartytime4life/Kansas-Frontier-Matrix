@@ -1,35 +1,48 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.habitat.nlcd-landcover
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: habitat
-stage: INGEST
+stage: NORMALIZE
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/habitat/nlcd_landcover.yaml
-purpose: Preserve the Habitat nlcd landcover proposal as a reviewable inactive pipeline candidate
-  without activating sources or lifecycle writes.
+purpose: Normalize bounded supplied NLCD-style GeoTIFF bytes against an explicit candidate class scheme;
+  preserve native classes and valid support without resampling, recoding, habitat inference or lifecycle
+  writes.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/habitat/MISSING_OR_PLANNED_FILES.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/habitat/sources/nlcd.yaml
+  contract_refs:
+  - contracts/domains/habitat/land_cover/class_scheme.md
+  - contracts/domains/habitat/land_cover/observation.md
+  - contracts/domains/habitat/land_cover_observation.md
+  schema_refs:
+  - schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json
+  - schemas/contracts/v1/domains/habitat/land_cover/observation.schema.json
+  - schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json
+  implementation_refs:
+  - pipelines/domains/habitat/ingest_nlcd.py
+  fixture_refs:
+  - fixtures/domains/habitat/nlcd_ingest/
+  test_refs:
+  - tests/pipelines/domains/habitat/test_nlcd_ingest.py
+  - tests/validators/domains/habitat/test_nlcd_candidate_schemas.py
+  workflow_refs:
+  - .github/workflows/crop-casma-tile-compatibility.yml
+  - .github/workflows/pipeline-spec-declarations.yml
 lifecycle:
   candidate_inputs:
-  - SOURCE_CAPTURE_CANDIDATE
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - RAW
+  - LAND_COVER_OBSERVATION_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,7 +61,7 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
 - SOURCE_ADMISSION_UNVERIFIED
@@ -63,4 +76,8 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:fc13815a161906103ed6a9f23c19e0dd6cc126c36371a552f74f960202a8b67e
+spec_hash: sha256:696df0e7cf303a7ab7eac76fcdefbb6b73ae4a98a6131f04bd206340ea095b1e
+validation:
+  command: python -B -m pytest tests/pipelines/domains/habitat/test_nlcd_ingest.py tests/validators/domains/habitat/test_nlcd_candidate_schemas.py
+    -q --strict-config --strict-markers
+  workflow: .github/workflows/crop-casma-tile-compatibility.yml

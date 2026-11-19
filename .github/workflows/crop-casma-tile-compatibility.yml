@@ -6,6 +6,20 @@ name: Crop CASMA Tile Compatibility
     paths:
       - ".github/workflows/crop-casma-tile-compatibility.yml"
       - "pipelines/domains/soil/crop_casma_tiles/**"
+      - "pipelines/domains/habitat/ingest_nlcd.py"
+      - "pipeline_specs/habitat/nlcd_landcover.yaml"
+      - "packages/connectors-core/**"
+      - "contracts/domains/habitat/land_cover/**"
+      - "contracts/domains/habitat/land_cover_observation.md"
+      - "schemas/contracts/v1/domains/habitat/land_cover/**"
+      - "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json"
+      - "fixtures/domains/habitat/nlcd_ingest/**"
+      - "data/registry/habitat/sources/nlcd.yaml"
+      - "tests/pipelines/domains/habitat/**"
+      - "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/python-test.lock"
+      - "pyproject.toml"
       - "pipelines/normalize/geography/historical_topo_tiles.py"
       - "tests/pipelines/test_historical_topo_tiles.py"
       - "tools/ci/kfm_no_network/**"
@@ -16,6 +30,20 @@ name: Crop CASMA Tile Compatibility
     paths:
       - ".github/workflows/crop-casma-tile-compatibility.yml"
       - "pipelines/domains/soil/crop_casma_tiles/**"
+      - "pipelines/domains/habitat/ingest_nlcd.py"
+      - "pipeline_specs/habitat/nlcd_landcover.yaml"
+      - "packages/connectors-core/**"
+      - "contracts/domains/habitat/land_cover/**"
+      - "contracts/domains/habitat/land_cover_observation.md"
+      - "schemas/contracts/v1/domains/habitat/land_cover/**"
+      - "schemas/contracts/v1/domains/habitat/land_cover_observation.schema.json"
+      - "fixtures/domains/habitat/nlcd_ingest/**"
+      - "data/registry/habitat/sources/nlcd.yaml"
+      - "tests/pipelines/domains/habitat/**"
+      - "tests/validators/domains/habitat/test_nlcd_candidate_schemas.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/python-test.lock"
+      - "pyproject.toml"
       - "pipelines/normalize/geography/historical_topo_tiles.py"
       - "tests/pipelines/test_historical_topo_tiles.py"
       - "tools/ci/kfm_no_network/**"
@@ -48,7 +76,11 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install hash-locked tile dependencies
-        run: python tools/ci/install_python_ci.py crop-casma-tiles
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test
+          python tools/ci/install_python_ci.py connectors-core
+          python tools/ci/install_python_ci.py crop-casma-tiles
       - name: Check dependency consistency and patched Pillow
         run: |
           python -m pip check
@@ -63,3 +95,14 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
         run: python -m unittest discover -s tests/pipelines -p 'test_historical_topo_tiles.py' -v
+
+      - name: Verify bounded NLCD native-grid candidates and strict schemas
+        env:
+          KFM_NO_NETWORK: "1"
+          PROJ_NETWORK: "OFF"
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python -B -m pytest tests/pipelines/domains/habitat/test_nlcd_ingest.py tests/validators/domains/habitat/test_nlcd_candidate_schemas.py -q --strict-config --strict-markers
+          python -B -m pipelines.domains.habitat.ingest_nlcd base
+          python -B -m pipelines.domains.habitat.ingest_nlcd changed
