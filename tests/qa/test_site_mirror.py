@@ -3076,4 +3076,41 @@ def test_live_context_deadline_successor_preserves_inventory_and_all_holds():
         {"app/api/live-context/route.ts", "tests/live-context-deadline.test.mjs"},
         'ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8',
     )
-    assert TOOL.RECEIPT.name == 'site-v268-live-context-deadline-overlay-20261119.json'
+
+    # A later immutable successor now owns the current selector.
+
+
+def test_unused_code_successor_preserves_connections_capture_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-unused-code-overlay-20261119.json",
+        "site-v268-connections-capture-recovery-overlay-20261119.json",
+        "d47bf1e7147dcbe9350b6d84e9c662f2a8a18362d64e58fbe055a219830d2df2",
+        {
+            "app/api-connections-runtime/provider-10.mjs",
+            "app/api-connections-runtime/provider-14.mjs",
+            "app/api-connections-runtime/provider-6.mjs",
+            "app/crop-casma-control.tsx",
+            "eslint.config.mjs",
+            "tests/aquifer-layers.test.mjs",
+            "tests/lightning-archive.test.mjs",
+            "tests/rendered-html.test.mjs",
+            "tests/river-network-budget.test.mjs",
+            "tests/water-flow-sync.test.mjs",
+        },
+        "ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8",
+    )
+
+
+def test_live_context_deadline_main_reconciliation_preserves_both_histories():
+    _assert_transport_successor(
+        'site-v268-live-context-deadline-main-reconciliation-20261119.json',
+        'site-v268-unused-code-overlay-20261119.json',
+        '5e1cdd95fe8b727760df4b2e1ffab477221f08aa6347a450a34efc1ae98a0737',
+        {"app/api/live-context/route.ts", "tests/live-context-deadline.test.mjs"},
+        '0c882dedae7a492678b281f3e5be5b8fa3221126',
+    )
+    assert TOOL.RECEIPT.name == 'site-v268-live-context-deadline-main-reconciliation-20261119.json'
+    current = json.loads(TOOL.RECEIPT.read_text())
+    prior = ROOT / "data/receipts/generated" / current["repository_reconciliation"]["prior_branch_receipt"]
+    assert prior.name == 'site-v268-live-context-deadline-overlay-20261119.json'
+    assert hashlib.sha256(prior.read_bytes()).hexdigest() == current["repository_reconciliation"]["prior_branch_receipt_sha256"] == 'c0b0b2bd2487f1feda0808371196e6f38235b99575d9655588bc3a12e75f0f11'

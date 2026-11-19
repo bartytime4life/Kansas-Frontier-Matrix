@@ -63,7 +63,6 @@ export function CropCasmaControl({ mapRef, styleReady, projection, onSelectionCh
     return () => abort.abort();
   }, [revision, mode]);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- Map source lifecycle reports loading and failure from this effect. */
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady || !enabled || availability?.state !== "available" || availability.mode !== mode || !availability.day) {
@@ -124,7 +123,6 @@ export function CropCasmaControl({ mapRef, styleReady, projection, onSelectionCh
       balanceMapRasters(map);
     };
   }, [availability?.day, availability?.state, availability?.mode, mode, enabled, mapRef, styleReady]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   useLayoutEffect(() => {
     opacityRef.current = opacity;
