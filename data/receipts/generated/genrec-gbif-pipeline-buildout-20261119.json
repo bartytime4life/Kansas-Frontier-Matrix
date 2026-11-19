@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-gbif-pipeline-buildout-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/flora-gbif-pipeline.yml",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/pipeline-fixture-replay.md",
+    "pipeline_specs/README.md",
+    "pipeline_specs/flora/gbif_ingest.yaml",
+    "pipelines/domains/flora/README.md",
+    "pipelines/domains/flora/gbif_ingest.py",
+    "tests/pipelines/domains/flora/test_gbif_pipeline.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/flora-gbif-pipeline.yml": "sha256:9c7a26b974f9d840d4228ab8c358591746a92ff895e51c3377c49144194526f7",
+    "contracts/pipeline_spec_declaration.md": "sha256:c2420e01e8e38f99a98735d7a0d5804d70d89ef6f3acdea2b11fbe720a31c5fc",
+    "docs/runbooks/pipeline-fixture-replay.md": "sha256:497ea4599dc0f89d6e062fa1a77dd3e9d1f5c267959659b5f98898b485ebfc2f",
+    "pipeline_specs/README.md": "sha256:5084db9604b9207266d4a59a68ceaa5230755f634f2da0b5004c7e9cdc932237",
+    "pipeline_specs/flora/gbif_ingest.yaml": "sha256:7e0dae13f63b0df4ea4ecb7d1291f428f9d59ef6af456998bed4a65744c25e8c",
+    "pipelines/domains/flora/README.md": "sha256:d1b4cc6f819bf330e74213851de1b626cb492872c06f4267add721882bbc4efb",
+    "pipelines/domains/flora/gbif_ingest.py": "sha256:24df2ec858e58d313c72634499c71eaec5662b5be846ed80f5ea565c149ade9f",
+    "tests/pipelines/domains/flora/test_gbif_pipeline.py": "sha256:861ad7443a7ac6ecf9aaf0ad22af4df8dabd2059a329bb7a7aac98d7a99a8e03"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:01b64ccc441e39a0b61fbe5f6b99e9ef0aed9f636427c126965328096558d753",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "codex/pipeline-bindings-20261119@06b3a16fd32aaca16a532c8431fa863b2534fe0b",
+      "contracts/domains/flora/flora_occurrence_candidate.md",
+      "contracts/domains/flora/flora_occurrence_intake_decision.md",
+      "packages/domains/flora/normalizers/dwc_occurrence.py",
+      "packages/domains/flora/normalizers/intake_governance.py",
+      "data/registry/flora/sources/gbif_plants.yaml"
+    ],
+    "evidence_hashes": [
+      "sha256:57965f9b5df987a76986884ae01f2675737dac8ab7fc15ac8c0173476ab603ec",
+      "sha256:e4c1155720d6d22ba211beb9cb3d9b38752ceaf223c0e4bccce731cf43ae2d8c",
+      "sha256:6343f7fc4af553ea780e5ae710fd5b6fd3c79b6ae545ebb855328c1eadbb14b1",
+      "sha256:8543d76ecd4729c2f0597e441f45356370c11987cd96d8b9b7f8262096ef72c9",
+      "sha256:4682896d82513fe5220770b701331b34d304e666ebc61b509e6118b290d52405"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/flora-gbif-pipeline.yml": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/pipeline-fixture-replay.md": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/flora/gbif_ingest.yaml": "PROPOSED",
+    "pipelines/domains/flora/README.md": "PROPOSED",
+    "pipelines/domains/flora/gbif_ingest.py": "PROPOSED",
+    "tests/pipelines/domains/flora/test_gbif_pipeline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "gbif-pipeline-and-flora-regressions",
+      "outcome": "PASS",
+      "reason": "51 tests and 22 subtests; exact candidate replay, explicit partial failures, duplicate identity refusal, stable peer proposals after reorder, independent rights/sensitivity holds, bounds and aggregate-only CLI. Replayed using the fresh minimal environment as well."
+    },
+    {
+      "gate": "fresh-minimal-pipeline-matrix",
+      "outcome": "PASS",
+      "reason": "313 passed, one raster module skipped; fresh project-test, connectors-core and geo-transforms environment."
+    },
+    {
+      "gate": "full-supported-suite-collection",
+      "outcome": "PASS",
+      "reason": "10304 tests collected in 8.37s; no errors, on the refreshed parent stack including merged PR 5960."
+    },
+    {
+      "gate": "declaration-corpus-and-polarity",
+      "outcome": "PASS",
+      "reason": "110 declarations and four polarity fixtures pass, with all activation and lifecycle authorities denied."
+    },
+    {
+      "gate": "docs-and-workflow-security",
+      "outcome": "PASS",
+      "reason": "Four Markdown documents have zero structural findings; 50 local targets resolve. The new Python 3.11/3.12 workflow has zero security findings."
+    },
+    {
+      "gate": "repository-ratchets-and-topology",
+      "outcome": "PASS",
+      "reason": "Gap and scaffold checks pass; no new topology drift or invariant failures."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending final published head and review. Local Python 3.12; hosted 3.11/3.12 and source admission remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "contracts/domains/flora/flora_occurrence_candidate.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/flora/flora_occurrence_candidate.md@06b3a16fd32aaca16a532c8431fa863b2534fe0b"
+    },
+    {
+      "id": "contracts/domains/flora/flora_occurrence_intake_decision.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/flora/flora_occurrence_intake_decision.md@06b3a16fd32aaca16a532c8431fa863b2534fe0b"
+    },
+    {
+      "id": "packages/domains/flora/normalizers/dwc_occurrence.py",
+      "validated": true,
+      "evidence_ref": "packages/domains/flora/normalizers/dwc_occurrence.py@06b3a16fd32aaca16a532c8431fa863b2534fe0b"
+    },
+    {
+      "id": "packages/domains/flora/normalizers/intake_governance.py",
+      "validated": true,
+      "evidence_ref": "packages/domains/flora/normalizers/intake_governance.py@06b3a16fd32aaca16a532c8431fa863b2534fe0b"
+    },
+    {
+      "id": "data/registry/flora/sources/gbif_plants.yaml",
+      "validated": true,
+      "evidence_ref": "data/registry/flora/sources/gbif_plants.yaml@06b3a16fd32aaca16a532c8431fa863b2534fe0b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T22:35:07.904897Z",
+  "emitter": "codex/gbif-pipeline-buildout",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Adds the bounded GBIF Darwin Core intake pipeline by composing existing normalizer and classifier semantics with schema checks. Five of 39 YAML candidates are fixture-first, 34 remain unimplemented. The GBIF source descriptor remains proposed and unresolved; license URLs not recognized by the existing shorthand profile remain quarantined. CLI exposes aggregate status only. No live API capture, taxonomy inference, geoprivacy transformation, source admission, lifecycle mutation, promotion, release or publication. Historical receipts remain unchanged."
+}

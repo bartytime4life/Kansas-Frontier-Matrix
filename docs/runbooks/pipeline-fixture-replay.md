@@ -52,7 +52,8 @@ descriptors, shared byte reader, and test dependencies. Existing domain workflow
 continue their broader capture, denial, private-store, and serving tests.
 
 The [declaration inventory](../../pipeline_specs/README.md#current-inventory)
-records four implemented fixture-first candidates including the separately tested
-WBD HUC12 pipeline, and 35 remaining candidate implementations. Stage boundaries
+records five implemented fixture-first candidates including the separately tested
+WBD HUC12 and [GBIF Flora intake](../../pipelines/domains/flora/README.md) pipelines,
+and 34 remaining candidate implementations. Stage boundaries
 and aliases stay inactive by their existing contract. This replay build-out does
 not claim those remaining pipelines are complete.
