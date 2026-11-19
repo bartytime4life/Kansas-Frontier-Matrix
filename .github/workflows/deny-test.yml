@@ -148,6 +148,9 @@ jobs:
       - name: Install test dependencies
         run: python tools/ci/install_python_ci.py project-test
 
+      - name: Test deny-runner result verification
+        run: python -m pytest -q -p no:cacheprovider tests/qa/test_deny_test_runner.py
+
       - name: Run registered deny suites
         run: python tools/qa/deny_test_runner.py
 
@@ -157,6 +160,6 @@ jobs:
           {
             echo "## aggregate-deny-suites"
             echo
-            echo "Runs the closed suite registry in tools/qa/deny_test_runner.py; an empty suite fails."
+            echo "Tests the runner result gate, then runs its closed suite registry; empty, skipped-only and unverified suites fail."
             echo "It does not prove complete policy coverage, authorization, sensitivity, or publication safety."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -5,13 +5,15 @@
     "tools/qa/deny_test_runner.py",
     "tests/qa/test_deny_test_runner.py",
     "tools/qa/README.md",
-    "docs/registers/repository-gap-fill-goal-2026-10-02.md"
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+    ".github/workflows/deny-test.yml"
   ],
   "artifact_hashes": {
     "tools/qa/deny_test_runner.py": "sha256:e9143bd440c59a52358d1eeba78826dd3605807398f1a95e9ef43877df01bf60",
     "tests/qa/test_deny_test_runner.py": "sha256:3ab3406ff035b6db5c7a35eab4b53c56b74ee34cfb2da485139f01867dbcb893",
-    "tools/qa/README.md": "sha256:e15cf6763ce860f3f064d0ccea9f47d95825f3b6fa790ac97c2fdbeda98aa9cc",
-    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:0bf6d2ba36bdcd78ea4cbfd7e7820319ffe46fc6ee923233919f9daabcdaaac8"
+    "tools/qa/README.md": "sha256:c1773511ffc0b8076e038995b1f39a953ac8dee5d462d8f7aafe719ec35bb98d",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:e81144eda169778818de8379dd134163a272a54c498e694b706199dd1374f347",
+    ".github/workflows/deny-test.yml": "sha256:463ca315e2f311186454f37e7c98c9d4d6d5a873cffecec9691e9203638272a6"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -54,7 +56,8 @@
     "tools/qa/deny_test_runner.py": "CONFIRMED",
     "tests/qa/test_deny_test_runner.py": "CONFIRMED",
     "tools/qa/README.md": "CONFIRMED",
-    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "CONFIRMED"
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "CONFIRMED",
+    ".github/workflows/deny-test.yml": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -156,6 +159,11 @@
       "gate": "final-main-verification",
       "outcome": "PASS",
       "reason": "Rebased onto main@162d89630c78860c9e3751bc548153ada62c6f57 (PR #5951, six disjoint Site/mirror paths). Final QA/schema/contract run: 849 passed, 90 subtests. All 29 validators and all four counted deny suites pass. Topology: 15,366 indexed paths, zero invariant/new drift, 89 inherited warnings."
+    },
+    {
+      "gate": "ci-regression-wiring",
+      "outcome": "PASS",
+      "reason": "The existing aggregate-deny-suites job now runs the focused runner tests before its four suites. The exact added command passes 41 tests locally. The registered full validator profile passes all 29 validators after this workflow delta. Hosted execution remains pending."
     }
   ],
   "policy_decisions": [
@@ -174,9 +182,9 @@
   "created_at": "2026-11-19T20:40:08.091934Z",
   "emitter": "Codex; bounded repository audit and deny-runner repair",
   "links": {
-    "pr_number": null,
+    "pr_number": 5955,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Review-only provenance for the isolated change from main@ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8. The prompt_or_contract field hashes the inspected operating-contract file. Trusted terminal-summary parsing is not an authenticated execution receipt. No source bytes, held scaffold, waiver, policy, Site tree, release or publication state is changed. Historical receipts remain intact. Main advanced through PR #5949 to 0c882dedae7a492678b281f3e5be5b8fa3221126; its 13 changed paths are disjoint from this patch. The audit baseline remains pinned to ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8; final validation is repeated after rebase. PR #5951 then advanced main to 162d89630c78860c9e3751bc548153ada62c6f57; its six changed paths are also disjoint and were preserved by a second rebase. Final-main checks above supersede the intermediate validation identity for this draft."
+  "notes": "Review-only provenance for the isolated change from main@ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8. The prompt_or_contract field hashes the inspected operating-contract file. Trusted terminal-summary parsing is not an authenticated execution receipt. No source bytes, held scaffold, waiver, policy, Site tree, release or publication state is changed. Historical receipts remain intact. Main advanced through PR #5949 to 0c882dedae7a492678b281f3e5be5b8fa3221126; its 13 changed paths are disjoint from this patch. The audit baseline remains pinned to ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8; final validation is repeated after rebase. PR #5951 then advanced main to 162d89630c78860c9e3751bc548153ada62c6f57; its six changed paths are also disjoint and were preserved by a second rebase. Final-main checks above supersede the intermediate validation identity for this draft. Final CI inspection found that the runner regressions were not scheduled; the existing deny workflow now executes them. This adds no permissions, secrets, jobs, dependency selection or source activation. Receipt bindings now cover five artifacts."
 }

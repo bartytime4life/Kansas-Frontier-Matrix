@@ -68,8 +68,11 @@ successfully: 7 boundary guards, 1 abstention-route case, 19 negative evidence
 fixtures and 4 publication-denial cases. Parsing is a bounded inspection of
 trusted runner output, not an authenticated execution receipt or proof of
 complete denial coverage. Formatting changes must update the parser and tests.
+The existing `aggregate-deny-suites` workflow job now runs the runner regressions
+before the suite registry; its read-only permissions and existing commands stay
+in place.
 
-Placement stays in `tools/qa/`, `tests/qa/` and existing documentation homes.
+Placement stays in `tools/qa/`, `tests/qa/`, the existing workflow and documentation homes.
 The additive provenance record is
 [`genrec-repo-audit-deny-runner-20261119.json`](../../data/receipts/generated/genrec-repo-audit-deny-runner-20261119.json).
 No scaffold baseline, topology waiver, source payload, release state or Site

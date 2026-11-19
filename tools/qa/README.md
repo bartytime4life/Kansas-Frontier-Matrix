@@ -152,6 +152,8 @@ summary. Skipped cases and expected failures do not count as passing cases.
 Known summaries with no passing cases return `EMPTY`; missing, inconsistent or
 unrecognized summaries return `UNVERIFIED`. Both fail the aggregate command.
 The JSON records `passing_cases` when a summary establishes that count.
+The existing `deny-test.yml` aggregate job runs the runner regressions before
+executing the four registered suites.
 
 These are bounded checks of trusted repository-runner output, not authenticated
 execution receipts or proof of complete denial coverage. If a runner changes
