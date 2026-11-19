@@ -156,7 +156,17 @@ export const STORIES = Object.freeze([
     sources: ["USGS daily mean discharge"],
     tables: ['kfm_usgs_daily_values', 'kfm_usgs_series', 'kfm_usgs_sites', 'kfm_usgs_peaks'],
     feeds: ['usgs-daily', 'usgs-peaks'],
+    relatedLab: { href: '/labs/river-flow', label: 'Compare how often flows were reached in River Flow Lab ↗' },
     load: () => import('./record-lab.jsx'),
+  }),
+  guided({
+    id: 'river-flow', group: 'Living record', title: 'River Flow Lab', kicker: 'DAILY STREAMFLOW',
+    summary: 'Find how often two Kansas gauges reached high or low flows on dates when both reported.',
+    try: 'Select two gauges, compare high and low flows, count days above a threshold, and open the watershed map.',
+    limit: 'Daily mean discharge at three selected gauges. Coverage and drainage area differ by site.',
+    href: '/labs/river-flow',
+    palette: ['#071b26', '#70d5db', '#f4c577'],
+    sources: ['USGS daily mean discharge'], tables: ['kfm_usgs_daily_values'], feeds: ['usgs-daily'],
   }),
   ready({
     id: 'tornado-tracks', group: 'Living record', title: 'Tornado Tracks', kicker: 'SINCE 1950',

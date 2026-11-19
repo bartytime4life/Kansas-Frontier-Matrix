@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Link from 'next/link';
 import { isolateModalBackground, modalFocusableElements } from '../../modal-background';
 import { STORIES } from './registry.mjs';
 import { KANSAS_OUTLINE_CREDIT, downloadCSV, fmt } from './story-kit.mjs';
@@ -154,6 +155,7 @@ function LabContent({ story, paused, reduced }) {
           ? <Visual bundle={bundle} mode="lab" paused={paused} reduced={reduced} time={shownTime} onTime={value => { setPlaying(false); setTime(value); }} controls={controls} onControls={setControls} snapshotSha256={snapshotSha256}/>
           : <WaitingPanel story={story} state={story.status === 'planned' ? 'planned' : state}/>}
       </StoryBoundary>
+      {story.relatedLab && <p className="story-lab-related"><Link href={story.relatedLab.href} prefetch={false}>{story.relatedLab.label}</Link></p>}
       <Sources story={story} bundle={state === 'ready' ? bundle : null} controls={controls} time={shownTime} snapshotSha256={snapshotSha256}/>
     </div>
     {Visual && <div className="story-lab-bar" role="group" aria-label="Lab controls">
