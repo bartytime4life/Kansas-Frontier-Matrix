@@ -21,3 +21,9 @@ coordinates are invented, and every narrative says so.
 | 9000107 | unreadable damage `abc`: withheld as `DAMAGE_UNPARSEABLE` |
 | 9000108 | end before begin: withheld as `END_BEFORE_BEGIN` |
 | 9000109 | Nebraska: not selected |
+
+`replay.json` seals the existing synthetic capture manifest and exact base64
+object bytes with a golden candidate ID for the
+[offline fixture harness](../../../../pipelines/fixture_replay.py). It is test
+input only; no live capture, admission, lifecycle write, or release is implied.
+The [runbook](../../../../docs/runbooks/pipeline-fixture-replay.md) gives commands.

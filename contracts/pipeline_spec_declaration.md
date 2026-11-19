@@ -2,11 +2,11 @@
 doc_id: kfm://contract/pipeline-spec-declaration
 title: KfmPipelineSpecDeclaration Contract
 type: contract
-version: v1.1
+version: v1.2
 status: proposed-inactive
 owners: OWNER_TBD — Pipeline specification steward · Schema steward · Validation steward · Domain steward
 created: 2026-08-30
-updated: 2026-09-06
+updated: 2026-11-19
 policy_label: public; pipeline-specification; declarative-only; inactive; no-live-effects
 maturity: repository-grounded; validator-and-fixture-backed; hosted-currentness-unverified; non-authoritative
 owning_root: contracts/
@@ -46,7 +46,7 @@ tags: [kfm, pipeline-spec, declaration, inactive, fixture-only, compatibility-al
 notes:
   - "This contract governs declarative repository records only."
   - "A conforming declaration cannot activate a source, execute a network request, write a lifecycle target, promote, release, or publish."
-  - "Version v1.1 is a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
+  - "Version v1.2 adds the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
 [/KFM_META_BLOCK_V2] -->
 
 # KfmPipelineSpecDeclaration Contract
@@ -67,7 +67,21 @@ entry, dedicated workflow, fixture-root checks, and generated receipts. A
 schema or validator PASS does not grant source, execution, lifecycle, policy,
 promotion, release, publication, or public-use authority.
 
-### Current repository evidence
+### Repository checkpoint (2026-11-19)
+
+The declaration corpus still contains 110 records. Four of the 39 pipeline
+candidates now bind fixture-first implementations: WBD HUC12, USGS water
+observations, USGS earthquakes, and NOAA Storm Events. The latter three replay
+sealed synthetic capture packets through the existing normalizers and validators
+without network access or lifecycle writes. Their bindings include the
+implementation, fixture, test, descriptor, schema, contract, and CI paths.
+
+The remaining 35 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
+compatibility aliases retain their contract-required NOT_IMPLEMENTED posture.
+No execution authority changes. See the
+[fixture replay runbook](../docs/runbooks/pipeline-fixture-replay.md).
+
+### Historical repository evidence (2026-09-06)
 
 | Evidence surface | Readback |
 |---|---|

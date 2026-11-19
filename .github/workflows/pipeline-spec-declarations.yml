@@ -8,6 +8,22 @@ name: pipeline-spec-declarations
       - "tools/validators/_common/**"
       - "pyproject.toml"
       - "pipeline_specs/**"
+      - "pipelines/**"
+      - "packages/connectors-core/**"
+      - "connectors/usgs/**"
+      - "connectors/noaa/**"
+      - "configs/domains/hydrology/usgs-water-pilot.json"
+      - "fixtures/domains/hazards/**"
+      - "fixtures/domains/hydrology/usgs_water_replay/**"
+      - "contracts/domains/hazards/**"
+      - "contracts/domains/hydrology/**"
+      - "schemas/contracts/v1/domains/hazards/**"
+      - "schemas/contracts/v1/domains/hydrology/**"
+      - "data/registry/sources/hazards/**"
+      - "data/registry/sources/hydrology/**"
+      - "tests/pipelines/test_fixture_replay.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/kfm_no_network/**"
       - "contracts/pipeline_spec_declaration.md"
       - "schemas/contracts/v1/pipeline_spec_declaration.schema.json"
       - "fixtures/contracts/v1/pipeline_spec_declaration/**"
@@ -22,6 +38,22 @@ name: pipeline-spec-declarations
       - "tools/validators/_common/**"
       - "pyproject.toml"
       - "pipeline_specs/**"
+      - "pipelines/**"
+      - "packages/connectors-core/**"
+      - "connectors/usgs/**"
+      - "connectors/noaa/**"
+      - "configs/domains/hydrology/usgs-water-pilot.json"
+      - "fixtures/domains/hazards/**"
+      - "fixtures/domains/hydrology/usgs_water_replay/**"
+      - "contracts/domains/hazards/**"
+      - "contracts/domains/hydrology/**"
+      - "schemas/contracts/v1/domains/hazards/**"
+      - "schemas/contracts/v1/domains/hydrology/**"
+      - "data/registry/sources/hazards/**"
+      - "data/registry/sources/hydrology/**"
+      - "tests/pipelines/test_fixture_replay.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/kfm_no_network/**"
       - "contracts/pipeline_spec_declaration.md"
       - "schemas/contracts/v1/pipeline_spec_declaration.schema.json"
       - "fixtures/contracts/v1/pipeline_spec_declaration/**"
@@ -66,7 +98,9 @@ jobs:
           cache-dependency-path: tools/ci/python-test.lock
 
       - name: Install declared test dependencies
-        run: python tools/ci/install_python_ci.py project-test
+        run: |
+          python tools/ci/install_python_ci.py project-test
+          python tools/ci/install_python_ci.py connectors-core
 
       - name: Validate declaration corpus and fixture polarity
         env:
@@ -79,6 +113,16 @@ jobs:
             tests/validators/test_validate_pipeline_spec_declarations.py \
             -q --strict-config --strict-markers
 
+      - name: Replay the three sealed domain capture fixtures
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python -B -m pytest tests/pipelines/test_fixture_replay.py -q --strict-config --strict-markers
+          for pipeline in earthquake storm-events water-observations; do
+            python -B -m pipelines.fixture_replay "$pipeline" > "$RUNNER_TEMP/$pipeline-replay.json"
+          done
+
       - name: Record bounded trust posture
         if: always()
         run: |
@@ -86,6 +130,6 @@ jobs:
             echo "### Inactive pipeline declarations"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: declaration shape, identity, references, hashes, alias targets, and fixture polarity."
+            echo "- Scope: declaration shape, identity, references, hashes, alias targets, fixture polarity, and three sealed synthetic domain replays."
             echo "- Boundary: no source activation, live network access, lifecycle write, promotion, release, deployment, or publication."
           } >> "$GITHUB_STEP_SUMMARY"

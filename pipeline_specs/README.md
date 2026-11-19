@@ -6,7 +6,7 @@ version: v1.0
 status: governed; proposed-inactive-corpus; repository-grounded
 owners: OWNER_TBD — pipeline-spec steward; domain steward; validation reviewer
 created: 2026-05-02
-updated: 2026-08-30
+updated: 2026-11-19
 policy_label: public-metadata; declarative-only; fail-closed; no-secrets; no-live-activation
 owning_root: pipeline_specs/
 responsibility: canonical declarative pipeline specification authority; executable behavior remains under pipelines/
@@ -121,9 +121,16 @@ life-safety authority. A pipeline declaration must not imply otherwise.
 | Boundary READMEs | 23 | One root boundary and 22 lane or sub-lane boundaries; each local contract owns its profile |
 | `.gitkeep` markers | 8 | Retained as topology-compatible zero-byte markers; they create no declaration or execution authority |
 
-Exactly one YAML candidate, Hydrology WBD HUC12, is
-`IMPLEMENTED_FIXTURE_FIRST`. It remains `FIXTURE_ONLY`, no-network, non-writing, and
-inactive. The other 109 YAML declarations are `NOT_IMPLEMENTED`.
+Four YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
+USGS water observations, USGS earthquakes, and NOAA Storm Events. Each remains
+`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 35 pipeline
+candidates still need bounded implementations and bindings. The 65 stage boundaries
+and six compatibility aliases retain `NOT_IMPLEMENTED` by contract; they are not
+71 runnable pipelines awaiting activation.
+
+The [fixture replay runbook](../docs/runbooks/pipeline-fixture-replay.md) gives the
+three sealed capture commands and their verification limits. The original WBD
+candidate retains its dedicated implementation and workflow.
 
 Compatibility YAML is limited to the five Archaeology `*.spec.yaml` aliases and
 `hydrology/ingest_wbd.yaml`. The documentation-only compatibility lanes `air/`,
@@ -217,5 +224,6 @@ Open verification items:
 - assign and verify human owners and CODEOWNERS coverage;
 - decide the flora/shared-watcher and Hydrology NHDPlus placement holds;
 - define a separate activation registry only through an accepted authority decision;
-- bind the 109 unimplemented declarations only with source, contract, policy, fixture,
-  test, workflow, evidence, and release review.
+- implement and bind the remaining 35 pipeline candidates with source, contract,
+  fixture, test, and workflow evidence; keep activation and release review separate;
+- retain the contract-required inactive posture of stage boundaries and aliases.

@@ -1,35 +1,45 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.hydrology.usgs-water-observations
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: hydrology
-stage: DERIVE
+stage: NORMALIZE
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/hydrology/usgs_water_observations.yaml
-purpose: Preserve the Hydrology usgs water observations proposal as a reviewable inactive pipeline
-  candidate without activating sources or lifecycle writes.
+purpose: Replay the sealed synthetic water-observations capture through normalization and validation in
+  memory; no live acquisition or lifecycle writes.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/hydrology/FILE_SYSTEM_PLAN.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/sources/hydrology/usgs_nwis.yaml
+  contract_refs:
+  - contracts/domains/hydrology/flow_observation.md
+  schema_refs:
+  - schemas/contracts/v1/domains/hydrology/flow_observation.schema.json
+  implementation_refs:
+  - pipelines/domains/hydrology/normalize.py
+  - pipelines/domains/hydrology/validate.py
+  - pipelines/fixture_replay.py
+  fixture_refs:
+  - fixtures/domains/hydrology/usgs_water_replay/replay.json
+  test_refs:
+  - tests/domains/hydrology/test_usgs_water_normalizer.py
+  - tests/pipelines/test_fixture_replay.py
+  workflow_refs:
+  - .github/workflows/pipeline-spec-declarations.yml
+  - .github/workflows/water-pilot.yml
 lifecycle:
   candidate_inputs:
-  - PROCESSED
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - WORK
+  - VALIDATED_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,10 +58,9 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
-- SOURCE_ADMISSION_UNVERIFIED
 non_effects:
 - NO_EVIDENCE_CLOSURE
 - NO_LIFECYCLE_WRITE
@@ -63,4 +72,7 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:aaabc6711af8763e3c220cd1664c7d606940055548a3d198434af08c1c189c2d
+spec_hash: sha256:efe8b0aa9e336d7e0d04f2e435d06622208d4f01981971bdd7037ed5d4298761
+validation:
+  command: python -B -m pytest tests/pipelines/test_fixture_replay.py -q --strict-config --strict-markers
+  workflow: .github/workflows/pipeline-spec-declarations.yml
