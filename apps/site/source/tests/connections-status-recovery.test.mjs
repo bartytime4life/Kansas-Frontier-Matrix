@@ -12,6 +12,7 @@ const catalog = (owner = false) => ({
   host: { state: "ready", configured: true, paused: false, host: "local test host", usedBytes: 0, limitBytes: 1000 },
   sources: [{ id: "noaa-ncei", name: "NOAA NCEI", kind: "table", fields: [], configured: true, missing: [], holds: [], state: "ready", docs: "https://example.test/", limitation: "Test source", limitBytes: 100, releaseState: "unreleased" }],
 });
+const replayReceipt = { captureId: "a".repeat(64), sourceId: "noaa-ncei", retrievedAt: "2026-11-09", byteLength: 100, entityBytes: 50, sha256: "b".repeat(64), validation: "structure-valid", partial: false, query: {}, limitation: "Fixture", entityHashes: [] };
 const response = body => ({ ok: true, json: async () => body });
 const deferred = () => { let resolve; const promise = new Promise(done => { resolve = done; }); return { promise, resolve }; };
 const statusButton = tree => findNode(tree, node => node.type === "button" && /^(Refresh|Retry source|Refreshing)/.test(node.props.children));
@@ -81,7 +82,7 @@ test("manual status retry aborts on unmount and a late response cannot install i
 
 test("background status failure keeps a successful capture message and verified result visible", async () => {
   let statusCalls = 0;
-  const result = { cached: true, view: { sourceId: "noaa-ncei", query: {}, rows: [], total: 0, partial: false, retrievedAt: "2026-11-09", limitation: "Test source", releaseState: "unreleased" }, receipt: { captureId: "test-capture" } };
+  const result = { cached: true, view: { sourceId: "noaa-ncei", query: {}, rows: [], total: 0, partial: false, retrievedAt: "2026-11-09", limitation: "Test source", releaseState: "unreleased" }, receipt: replayReceipt };
   const { h, render } = await setup((url, options) => {
     if (options?.method === "POST") return Promise.resolve(response(result));
     if (url.includes("action=captures")) return Promise.resolve(response({ captures: [] }));
@@ -98,7 +99,7 @@ test("background status failure keeps a successful capture message and verified 
 
 test("changing the selected source after capture cannot strand its independent status refresh", async () => {
   const background = deferred(); let statusCalls = 0, backgroundSignal;
-  const result = { cached: true, view: { sourceId: "noaa-ncei", query: {}, rows: [], total: 0, partial: false, retrievedAt: "2026-11-09", limitation: "Test source", releaseState: "unreleased" }, receipt: { captureId: "test-capture" } };
+  const result = { cached: true, view: { sourceId: "noaa-ncei", query: {}, rows: [], total: 0, partial: false, retrievedAt: "2026-11-09", limitation: "Test source", releaseState: "unreleased" }, receipt: replayReceipt };
   const { h, render } = await setup((url, options) => {
     if (options?.method === "POST") return Promise.resolve(response(result));
     if (url.includes("action=captures")) return Promise.resolve(response({ captures: [] }));

@@ -14,8 +14,8 @@ const preferred:Record<string,string[]>={"water-quality-portal":["Activity_Start
 // validate JSON, and a bad refresh must not replace a usable catalog/history.
 const record=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==="object"&&!Array.isArray(value);
 const strings=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==="string");
-const byteCount=(value:unknown)=>typeof value==="number"&&Number.isSafeInteger(value)&&value>=0;
-const queryRecord=(value:unknown)=>record(value)&&Object.values(value).every(item=>typeof item==="string");
+const byteCount=(value:unknown):value is number=>typeof value==="number"&&Number.isSafeInteger(value)&&value>=0;
+const queryRecord=(value:unknown):value is Record<string,string>=>record(value)&&Object.values(value).every(item=>typeof item==="string");
 const setupStatus=(value:unknown)=>record(value)&&typeof value.configured==="boolean"&&strings(value.missing)&&strings(value.holds);
 const stringLists=(value:unknown)=>record(value)&&Object.values(value).every(strings);
 function catalogPayload(value:unknown):value is Catalog {
@@ -42,6 +42,44 @@ function captureHistory(value:unknown):value is {captures:Receipt[]} {
  return value.captures.every(receipt=>record(receipt)&&["captureId","sourceId","retrievedAt","sha256","validation","limitation"].every(key=>typeof receipt[key]==="string")
   &&byteCount(receipt.byteLength)&&byteCount(receipt.entityBytes)&&typeof receipt.partial==="boolean"&&queryRecord(receipt.query)
   &&Array.isArray(receipt.entityHashes)&&receipt.entityHashes.every(entity=>record(entity)&&typeof entity.url==="string"&&typeof entity.sha256==="string"&&typeof entity.contentType==="string"&&byteCount(entity.byteLength)));
+}
+// Result identity is checked separately from payload shape: a valid result for
+// another source/capture must not be presented as the owner's selected record.
+function coordinates(value:unknown,depth:number):boolean {
+ if(!Array.isArray(value))return false;
+ if(depth>0)return value.every(part=>coordinates(part,depth-1));
+ return value.length>=2&&value.every(part=>typeof part==="number"&&Number.isFinite(part))
+  &&value[0]>=-180&&value[0]<=180&&value[1]>=-90&&value[1]<=90;
+}
+function capturedFeature(value:unknown):boolean {
+ if(!record(value)||value.type!=="Feature"||!record(value.properties))return false;
+ if(value.geometry===null)return true;
+ const geometry=value.geometry;
+ if(!record(geometry)||typeof geometry.type!=="string")return false;
+ const depths:Record<string,number>={Point:0,MultiPoint:1,LineString:1,MultiLineString:2,Polygon:2,MultiPolygon:3};
+ return Object.hasOwn(depths,geometry.type)&&coordinates(geometry.coordinates,depths[geometry.type]);
+}
+function capturedRaster(value:unknown):boolean {
+ if(!record(value)||!Array.isArray(value.bbox)||value.bbox.length!==4||!value.bbox.every(n=>typeof n==="number"&&Number.isFinite(n)))return false;
+ const [west,south,east,north]=value.bbox;
+ return west>=-180&&east<=180&&west<east&&south>=-90&&north<=90&&south<north
+  &&byteCount(value.width)&&value.width>0&&byteCount(value.height)&&value.height>0&&typeof value.vintage==="string"
+  &&(value.acquiredAt===null||(typeof value.acquiredAt==="string"&&Number.isFinite(Date.parse(value.acquiredAt))));
+}
+function captureResult(value:unknown,sourceId:string,captureId?:string):value is Result {
+ if(!record(value)||!record(value.view)||(value.cached!==undefined&&typeof value.cached!=="boolean"))return false;
+ const history={captures:[value.receipt]};if(!captureHistory(history))return false;
+ const receipt=history.captures[0],view=value.view;
+ if(receipt.sourceId!==sourceId||view.sourceId!==sourceId||receipt.validation!=="structure-valid"
+  ||!(/^[a-f0-9]{64}$/).test(receipt.captureId)||(captureId!==undefined&&receipt.captureId!==captureId)
+  ||!Array.isArray(view.rows)||!view.rows.every(record)||!byteCount(view.total)||view.total<view.rows.length
+  ||typeof view.partial!=="boolean"||view.partial!==receipt.partial||typeof view.limitation!=="string"||view.releaseState!=="unreleased"
+  ||typeof view.retrievedAt!=="string"||!Number.isFinite(Date.parse(view.retrievedAt))||view.retrievedAt!==receipt.retrievedAt
+  ||!queryRecord(view.query))return false;
+ const query=view.query;
+ return Object.keys(query).length===Object.keys(receipt.query).length&&Object.keys(query).every(key=>query[key]===receipt.query[key])
+  &&(view.features===undefined||(Array.isArray(view.features)&&view.features.every(capturedFeature)))
+  &&(view.raster===undefined||capturedRaster(view.raster));
 }
 export default function ConnectionsWorkspace(){
  const [catalog,setCatalog]=useState<Catalog|null>(null),[selected,setSelected]=useState("noaa-ncei"),[query,setQuery]=useState<Record<string,string>>({});
@@ -89,7 +127,9 @@ export default function ConnectionsWorkspace(){
   request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);setMessage("");setPage(0);
   try{
    const response=await fetch(receipt?"/api/connections?action=view&id="+receipt.captureId:"/api/connections",receipt?{cache:"no-store",signal:controller.signal}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sourceId:selected,query}),signal:controller.signal});
-   const value=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error(labels[value.error]??"This request is held. Check configuration, dates and the source limitations.");
+   const value:unknown=await response.json().catch(()=>null);if(controller.signal.aborted)return;
+   if(!response.ok)throw new Error((record(value)&&typeof value.error==="string"?labels[value.error]:undefined)??"This request is held. Check configuration, dates and the source limitations.");
+   if(!captureResult(value,receipt?.sourceId??selected,receipt?.captureId))throw new Error("Capture returned invalid data. Please retry.");
    if(receipt){setSelected(receipt.sourceId);setQuery(receipt.query);}
    setResult(value);setMetric((VALUE_COLUMNS[value.view.sourceId]??[]).find(key=>value.view.rows.some((r:Record<string,unknown>)=>r[key]!==undefined))??"");setMessage(value.cached?"Verified saved capture replayed.":"Stored bytes verified. Review and release remain pending.");void refresh();
   }catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Capture held.");}
