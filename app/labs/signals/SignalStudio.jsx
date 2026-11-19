@@ -136,6 +136,7 @@ export default function SignalStudio() {
     if (!active || restored.current) return;
     restored.current = true;
     const params = new URLSearchParams(window.location.search), token = params.get('view');
+    if (params.has('investigation')) return;
     if (token) {
       const view = decodeWorkbenchView(token, { workspace: 'signal', sourceBindings: SOURCE_BINDINGS });
       if (view) { setControls({ ...INITIAL, ...view.state }); setSelectedYear(view.state.selectedYear ?? null); setPreset(''); setNotice('Shared investigation restored against the exact source snapshots.'); }
@@ -172,7 +173,7 @@ export default function SignalStudio() {
   };
   const restoreNotebook = entry => { setControls({ ...INITIAL, ...entry.state }); setSelectedYear(entry.state.selectedYear ?? null); setPreset(''); setNotice('Saved investigation restored from this browser.'); setShareURL(''); };
   return <div className={styles.page}>
-    <header className={styles.masthead}><Link prefetch={false} className={styles.brand} href="/labs"><strong>KFM</strong><span>KANSAS FRONTIER MATRIX<small>The research atlas</small></span></Link><nav className={styles.nav} aria-label="Research navigation"><Link prefetch={false} href="/labs">All labs ↗</Link><Link prefetch={false} href="/labs/observatory">County Observatory ↗</Link></nav></header>
+    <header className={styles.masthead}><Link prefetch={false} className={styles.brand} href="/labs"><strong>KFM</strong><span>KANSAS FRONTIER MATRIX<small>The research atlas</small></span></Link><nav className={styles.nav} aria-label="Research navigation"><Link prefetch={false} href="/labs">All labs ↗</Link><Link prefetch={false} href="/labs/observatory">County Observatory ↗</Link><Link prefetch={false} href="/labs/notebook">Research notebook</Link></nav></header>
     <main><section className={styles.hero} aria-labelledby="signal-title"><div><span className={styles.eyebrow}>CONNECTED SCIENCE / THE KANSAS RECORD</span><h1 id="signal-title">Find the rhythm.<br/><em>Question the connection.</em></h1><p>Put two Kansas signals on the same clock. Follow energy transitions, changing climate, river flows and recorded events. Separate long trends from year-to-year movement, inspect every pair and take the evidence with you.</p></div><aside className={styles.heroAside}><div><strong>5</strong><span>public source families</span></div><div><strong>{catalog.length || '—'}</strong><span>annual signals available</span></div><div><strong>11</strong><span>calendar lags to inspect</span></div><p>A shared pattern is a starting point for a question. It does not establish a mechanism or a cause.</p></aside></section>
       <div className={styles.workbench}>
         <section aria-label="Named investigations" className={styles.presets}><span>START WITH A QUESTION</span>{SIGNAL_PRESETS.map(item => <button key={item.id} type="button" className={styles.preset} aria-pressed={preset === item.id} onClick={() => changePreset(item)} title={item.description}>{item.title}</button>)}</section>
