@@ -1,5 +1,30 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Keep the newer desktop atlas — November 19, 2026
+
+The owner requested retaining the newer atlas presentation after a 1280 × 720
+live screenshot showed the older-looking card grid. Desktop atlas eligibility
+now follows width only: at least 1101 CSS pixels, outside the full-window
+preview. Shorter laptop windows keep the map, left topic rail, record search
+and chosen-map panel. The existing scroll containers keep their own bounded
+viewport geometry; no theme, typography, map content or data boundary changes.
+
+The existing narrow/tablet and phone/short-landscape carousel rules are unchanged.
+Selections, topic filters and record-search drafts survive height changes and
+round trips through narrow layouts. Component regressions exercise initial
+dimensions, media changes and listener cleanup. The real browser composition
+matrix explicitly requires the atlas at 1280 × 720, 1280 × 600 and 1101 × 500,
+retaining content, hit-target, credit, scrolling and focus assertions. Local
+rendered evidence and exact-head CI must be reported separately from these
+regression definitions; this document alone is not browser acceptance.
+
+Placement reuses the existing `app/living-welcome`, `tests` and `docs`
+responsibility roots under Directory Rules / accepted ADR-0029. Rollback is a
+revert of the component, style comment, paired tests and this guidance. No
+stored-preference migration, provider capture, service installation, hosting
+change or publication follows from the source change. The older dated 761-pixel
+height requirement below describes history and is superseded by this section.
+
 ## Expanded-panel geometry follow-up — November 15, 2026 candidate
 
 Exact-head focused-welcome job 132975734999 in run 43767480914 tested

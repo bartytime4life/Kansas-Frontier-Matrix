@@ -42,8 +42,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0),returnCardLeft=useRef(0);
   const carouselList=useRef(null),carouselTimer=useRef(null),carouselPointer=useRef(null),carouselDragged=useRef(false);
   const [carousel,setCarousel]=useState(false),[centered,setCentered]=useState(()=>normalizeCategoryTopics(initialTopics)[0]||TOPICS[0].id);
-  // Wide, tall screens get the atlas layout: the live map is the page, topics are a rail, one panel describes the chosen map.
-  const [desktop,setDesktop]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(min-width:1101px) and (min-height:761px)').matches);
+  // Wide desktops keep the atlas at any height; its rail and chosen-map panel scroll independently.
+  const [desktop,setDesktop]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(min-width:1101px)').matches);
   const departed=useRef(false),modalRestore=useRef(null);
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
@@ -202,7 +202,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   useEffect(()=>{
     const media=window.matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)');
     const update=()=>setCarousel(media.matches);update();media.addEventListener('change',update);
-    const wide=window.matchMedia('(min-width:1101px) and (min-height:761px)');
+    const wide=window.matchMedia('(min-width:1101px)');
     const updateWide=()=>setDesktop(wide.matches);wide.addEventListener('change',updateWide);
     return()=>{media.removeEventListener('change',update);wide.removeEventListener('change',updateWide);clearTimeout(carouselTimer.current);};
   },[]);
