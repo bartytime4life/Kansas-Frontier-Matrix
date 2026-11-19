@@ -1,0 +1,19 @@
+.controls { min-width: 0; }
+.controls form { display: grid; gap: 8px; }
+.controls label { font-size: .8rem; font-weight: 700; color: var(--gold-soft); }
+.controls label span { color: var(--muted); font-weight: 400; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.row input { min-width: 0; width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-strong); color: var(--ink); padding: 8px; font-size: 1rem; }
+.controls button { min-height: 44px; border: 1px solid rgba(224,186,109,.42); border-radius: 8px; background: rgba(224,186,109,.08); color: var(--gold-soft); padding: 8px 12px; font-size: .8rem; font-weight: 800; cursor: pointer; }
+.controls button:disabled { opacity: .5; cursor: default; }
+.controls .capacity, .feedback p, .undo small { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.feedback { display: grid; gap: 8px; margin-top: 10px; overflow-wrap: anywhere; }
+.undo { display: grid; justify-items: start; gap: 6px; }
+.controls :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.list.list > article { grid-template-columns: 32px minmax(0, 1fr); }
+.list.list > article > span { grid-row: 1 / 3; }
+.list.list [class~="place-stop-actions"] { grid-column: 2; grid-template-columns: repeat(3, 44px); justify-content: start; }
+.list.list [class~="place-stop-actions"] button { min-height: 44px; }
+.legacyList.legacyList article { grid-template-columns: minmax(0, 1fr) 44px; }
+.legacyList.legacyList article > button:last-child { min-height: 44px; min-width: 44px; }
+@media (max-width: 380px) { .row { grid-template-columns: minmax(0, 1fr); } }

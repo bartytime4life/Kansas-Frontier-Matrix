@@ -431,8 +431,145 @@ for (const { width, height, input } of [
   });
 }
 
+// Regression for the viewport-fixed chosen-map panel. The ordinary chooser
+// tests wheel over the right gutter; every gesture below must hit the panel.
+for (const [width,height] of [[1280,800],[1363,936]]) {
+  test('welcome categories scroll through the chosen-map panel at '+width+'x'+height, {timeout:90000}, async t=>{
+    const b=await browser(t),p=await pageSession(b,width,height);
+    await p.open('/?motion=off');await readyWelcome(p);
+    await p.wait('!!document.querySelector(".welcome-focus") && !document.querySelector(".welcome-focus").getAnimations().some(a=>a.pending||a.playState==="running")','chosen-map panel is settled');
+    const read=()=>p.evaluate('('+(()=>{
+      const host=document.querySelector('.living-welcome'),panel=host.querySelector('.welcome-focus');
+      const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+      const box=rect(panel),point={x:box.left+box.width/2,y:box.top+box.height/2};
+      return {layout:host.dataset.layout,host:{top:host.scrollTop,max:host.scrollHeight-host.clientHeight,rect:rect(host)},panel:{top:panel.scrollTop,max:panel.scrollHeight-panel.clientHeight,rect:box},point,hit:panel.contains(document.elementFromPoint(point.x,point.y)),viewport:{width:innerWidth,height:innerHeight},page:{x:scrollX,y:scrollY,top:document.scrollingElement.scrollTop,left:document.scrollingElement.scrollLeft,overflow:document.documentElement.scrollWidth>innerWidth+1}};
+    }).toString()+')()');
+    const geometry=state=>{
+      assert.equal(state.layout,'atlas');assert.ok(state.hit,'wheel point belongs to the actual panel, not its gutter');
+      assert.deepEqual(state.viewport,{width,height});
+      for(const box of [state.host.rect,state.panel.rect]){
+        assert.ok(box.width>0&&box.height>0,'scroll surface has real area');
+        assert.ok(box.left>=-.5&&box.right<=width+.5&&box.top>=-.5&&box.bottom<=height+.5,'scroll surface stays inside the viewport: '+JSON.stringify(box));
+      }
+      assert.ok(state.panel.rect.top>=state.host.rect.top-.5&&state.panel.rect.bottom<=state.host.rect.bottom+.5,'panel stays above the attribution strip');
+      assert.deepEqual(state.page,{x:0,y:0,top:0,left:0,overflow:false},'wheel cannot displace the document or create horizontal overflow');
+    };
+    const pinned=(before,after)=>{
+      geometry(after);
+      for(const key of ['left','right','top','bottom'])assert.ok(Math.abs(after.panel.rect[key]-before.panel.rect[key])<=1,'panel remains pinned: '+key);
+    };
+    const centerOuter=()=>p.evaluate('('+(()=>{const host=document.querySelector('.living-welcome');host.scrollTo({top:(host.scrollHeight-host.clientHeight)/2,behavior:'instant'});}).toString()+')()');
+    const wheel=async(deltaY,deltaX=0)=>{
+      const before=await read();geometry(before);
+      await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...before.point});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',...before.point,deltaX,deltaY});
+      return before;
+    };
+    const capture=async label=>{
+      if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+      const shot=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,'welcome-focus-wheel-'+width+'x'+height+'-'+label+'.png'),Buffer.from(shot.data,'base64'));
+    };
+    let phase='real-layout';
+    try {
+      // These use real, unmodified panel geometry: the expanded explanation
+      // naturally overflows at 1280x800 but fits at 1363x936.
+      for(const expanded of [false,true]){
+        phase=expanded?'real-expanded-layout':'real-closed-layout';
+        if(expanded){
+          await p.evaluate('document.querySelector(".welcome-focus-more > summary").focus({preventScroll:true})');
+          await p.key('Enter','Enter',13);
+          await p.wait('document.querySelector(".welcome-focus-more").open','real explanation disclosure opens');
+        }
+        await centerOuter();
+        let state=await read();geometry(state);
+        assert.ok(state.host.max>400,'the real chooser has enough range in both directions');
+        const expectsOverflow=expanded&&width===1280;
+        t.diagnostic(JSON.stringify({case:'native-layout',expanded,expectsOverflow,state}));
+        if(expectsOverflow){
+          assert.ok(state.panel.max>1,'real expanded explanation naturally overflows at 1280x800');
+          // Keep the real height. Small native deltas fit even a short range;
+          // each direction starts in the middle, before its boundary handoff.
+          const delta=Math.min(40,Math.max(1,Math.floor(state.panel.max/4)));
+          for(const direction of [1,-1]){
+            await centerOuter();
+            await p.evaluate('(()=>{const panel=document.querySelector(".welcome-focus");panel.scrollTop=(panel.scrollHeight-panel.clientHeight)/2;})()');
+            const before=await wheel(direction*delta);
+            assert.ok(before.panel.top>.5&&before.panel.top<before.panel.max-.5,'real expanded explanation starts inside its natural scroll range');
+            await p.wait('document.querySelector(".welcome-focus").scrollTop '+(direction>0?'>':'<')+' '+(before.panel.top+direction*delta/2),'native wheel consumes the real expanded explanation range');
+            await pause(200);const after=await read();pinned(before,after);
+            assert.ok(Math.abs(after.host.top-before.host.top)<=1,'outer chooser does not steal real expanded explanation scrolling');
+            t.diagnostic(JSON.stringify({case:'native-expanded-inner-consumption',direction,delta,before,after}));
+          }
+        }else{
+          assert.ok(state.panel.max<=1,'real '+(expanded?'expanded':'closed')+' explanation has no inner overflow');
+        }
+        for(const direction of [1,-1]){
+          if(expectsOverflow){
+            await centerOuter();
+            await p.evaluate('document.querySelector(".welcome-focus").scrollTop='+(direction>0?'document.querySelector(".welcome-focus").scrollHeight':'0'));
+          }
+          const before=await wheel(direction*120);
+          if(expectsOverflow)assert.ok(direction>0?Math.abs(before.panel.top-before.panel.max)<=1:before.panel.top<=1,'real expanded explanation starts at the requested natural boundary');
+          await p.wait('document.querySelector(".living-welcome").scrollTop '+(direction>0?'>':'<')+' '+(before.host.top+direction*20),'trusted wheel over the panel moves the outer chooser');
+          await pause(200);const after=await read();pinned(before,after);
+          assert.ok(Math.abs(after.panel.top-before.panel.top)<=1,'outer handoff leaves the real explanation scroll position unchanged');
+          t.diagnostic(JSON.stringify({case:expectsOverflow?'native-expanded-boundary-handoff':'native-no-overflow',expanded,direction,before,after}));
+        }
+        await capture(expanded?'native-expanded':'native-closed');
+      }
+      phase='synthetic-inner-overflow';
+      // Deliberate loopback-only geometry fixture: bound the actual panel to
+      // 220px without changing its real content. This is not production proof.
+      await p.evaluate('('+(()=>{const panel=document.querySelector('.welcome-focus');panel.dataset.scrollFixture='limited-height';panel.style.maxHeight='220px';panel.scrollTop=(panel.scrollHeight-panel.clientHeight)/2;}).toString()+')()');
+      await centerOuter();
+      let state=await read();geometry(state);
+      assert.ok(state.panel.max>200,'explicit height fixture has a real inner scroll range');
+      for(const direction of [1,-1]){
+        const before=await wheel(direction*40);
+        await p.wait('document.querySelector(".welcome-focus").scrollTop '+(direction>0?'>':'<')+' '+(before.panel.top+direction*10),'native panel scrolling consumes input away from its boundary');
+        await pause(200);const after=await read();pinned(before,after);
+        assert.ok(Math.abs(after.host.top-before.host.top)<=1,'outer chooser does not steal native inner scrolling');
+        t.diagnostic(JSON.stringify({case:'synthetic-inner-consumption',direction,before,after}));
+      }
+      for(const direction of [1,-1]){
+        await centerOuter();
+        await p.evaluate('document.querySelector(".welcome-focus").scrollTop='+(direction>0?'document.querySelector(".welcome-focus").scrollHeight':'0'));
+        const before=await wheel(direction*120);
+        assert.ok(direction>0?Math.abs(before.panel.top-before.panel.max)<=1:before.panel.top<=1,'inner fixture starts at the requested boundary');
+        await p.wait('document.querySelector(".living-welcome").scrollTop '+(direction>0?'>':'<')+' '+(before.host.top+direction*20),'boundary wheel hands off to the chooser');
+        await pause(200);const after=await read();pinned(before,after);
+        assert.ok(Math.abs(after.panel.top-before.panel.top)<=1,'handoff leaves the inner panel at its boundary');
+        t.diagnostic(JSON.stringify({case:'synthetic-boundary-handoff',direction,before,after}));
+      }
+      await capture('synthetic-inner-overflow');
+      await p.evaluate('('+(()=>{const panel=document.querySelector('.welcome-focus');panel.style.removeProperty('max-height');delete panel.dataset.scrollFixture;panel.scrollTop=0;}).toString()+')()');
+      phase='input-guards';await centerOuter();
+      const horizontal=await wheel(0,120);await pause(200);
+      const afterHorizontal=await read();pinned(horizontal,afterHorizontal);
+      assert.ok(Math.abs(afterHorizontal.host.top-horizontal.host.top)<=1&&Math.abs(afterHorizontal.panel.top-horizontal.panel.top)<=1,'native horizontal wheel is not converted into vertical scrolling');
+      // Synthetic guard-contract checks only: dispatchEvent cannot establish
+      // native browser zoom/pinch behavior, which remains a separate check.
+      const guards=await p.evaluate('('+(()=>{
+        const panel=document.querySelector('.welcome-focus'),host=document.querySelector('.living-welcome');
+        return [{deltaX:80,deltaY:0},{deltaX:80,deltaY:40},{deltaY:80,ctrlKey:true},{deltaY:80,metaKey:true},{deltaY:80,altKey:true},{deltaY:80,shiftKey:true},{deltaY:0}].map(input=>{
+          const before=host.scrollTop,event=new WheelEvent('wheel',{bubbles:true,cancelable:true,...input});
+          const accepted=panel.dispatchEvent(event);
+          return {input,accepted,prevented:event.defaultPrevented,changed:host.scrollTop-before};
+        });
+      }).toString()+')()');
+      for(const result of guards){assert.equal(result.accepted,true);assert.equal(result.prevented,false);assert.equal(result.changed,0);}
+      t.diagnostic(JSON.stringify({case:'synthetic-input-noninterception',guards}));
+    } finally {
+      await capture('last-'+phase);
+      await p.evaluate('(()=>{const panel=document.querySelector(".welcome-focus");if(panel){panel.style.removeProperty("max-height");delete panel.dataset.scrollFixture;}})()');
+    }
+  });
+}
+
 // Native touch input must center a preview without selecting or opening a map.
-for(const [width,height] of [[320,568],[390,690],[640,360]]){
+for(const [width,height] of [[320,568],[390,690],[390,844],[640,360]]){
  test(`welcome categories scroll horizontally and preview the centered card at ${width}x${height}`,{timeout:90000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,height);
   await p.open('/?motion=off');await readyWelcome(p);
@@ -1229,10 +1366,19 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       await p.wait(`!document.querySelector('.explorer-guide')`, 'blocked storage still permits dismissal');
     });
     await t.test('shared camera and retained source-status routes bypass without opt-out', async () => {
-      for (const url of ['/?c=-98.2,38.6&z=7&t=2026', '/?layers=sources', '/?maptab=localAtlas']) {
+      for (const url of ['/?c=-98.2,38.6&z=7&t=2026', '/?layers=sources', '/?maptab=localAtlas', '/?panel=layers']) {
         await p.open(url);
         assert.equal(await p.evaluate(`!!document.querySelector('.explorer-guide')`), false, url);
         assert.equal(await p.evaluate(`localStorage.getItem('kfm.explorer.guide.dismissed.v2')`), null);
+        if (url === '/?panel=layers') {
+          await p.wait(`document.querySelector('[aria-label="Map layers"]')?.getAttribute('aria-hidden') === 'false'`, 'library return opens Layers');
+          const browse = '[data-layer-view="official"]';
+          await p.wait(`(() => { const e=document.querySelector('${browse}'),r=e?.getBoundingClientRect();return e && !e.closest('[inert], [aria-hidden="true"]') && r.width>0 && r.height>0 && e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`, 'Browse is a visible, unobscured target');
+          const at = await p.evaluate(`(() => {const r=document.querySelector('${browse}').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+          for (const type of ['mousePressed', 'mouseReleased']) await p.call('Input.dispatchMouseEvent', {type, ...at, button:'left', clickCount:1});
+          await p.unobstructed('[aria-label="Layer topic"]');
+          assert.equal(await p.evaluate(`!!document.querySelector('#map-source-status')`), false, 'Layers does not open source status');
+        }
       }
     });
     await t.test('real Topics link and browser back/forward', async () => {
@@ -1310,6 +1456,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
       assert.equal(await p.evaluate(`document.activeElement === document.querySelector(${JSON.stringify(selector)})`), true, 'focus returns to opening control');
       assert.equal(await p.evaluate(`document.querySelector('header.topbar').inert`), true, 'map header stays inert while the chooser remains open');
     }
+    assert.equal(await p.evaluate(`document.querySelector('.welcome-preferences').open`),true,'Map notes leaves its owning preferences disclosure open');
     await p.evaluate(`document.querySelector('.topic-preview-weather').focus()`);
     await p.key('Enter', 'Enter', 13);
     await openStageNotes(p);
@@ -1318,6 +1465,8 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
     await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.welcome-layer-demo-actions button:last-child')`, 'Escape restores the source-notes action');
     await p.key('Escape','Escape',27);
     await p.wait(`document.activeElement?.matches('.topic-preview-weather')`, 'Escape returns to the original card');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`!document.querySelector('.welcome-preferences').open && document.activeElement===document.querySelector('.welcome-preferences > summary')`, 'the next Escape closes the now-visible preferences and restores its summary');
     await p.key('Escape', 'Escape', 27);
     await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement?.matches('.guide-trigger')`, 'next Escape closes welcome and returns focus to the guide trigger');
   });
@@ -1844,10 +1993,15 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     const report = await stored('report');
     assert.equal(report.title, 'QA report kept separate');
     assert.equal(await p.evaluate(`document.querySelectorAll('.story-scene-list .scene-select').length`), 1, 'new story contains one captured map scene');
+    await p.evaluate(`document.querySelector('.story-draft-fields textarea').focus()`);
+    await p.key('a', 'KeyA', 65, 2);
+    await p.call('Input.insertText', { text: 'q'.repeat(25000) });
+    await p.wait(`document.querySelector('.story-draft-fields textarea').value.length === 24000`, 'pasted question stops at the reopen limit');
     await fill('.story-draft-fields input', 'QA story kept separate');
     await switchTo('Reports');
     const story = await stored('story');
     assert.equal(story.title, 'QA story kept separate');
+    assert.equal(story.researchQuestion.length, 24000);
     assert.deepEqual(story.scenes[0].snapshot, story.baseSnapshot);
     assert.deepEqual(story.scenes[0].evidenceRefs, story.baseSnapshot.evidenceRefs);
     assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), report.title);
@@ -1858,6 +2012,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     assert.equal((await stored('report')).title, 'QA latest report before exit');
     await openFromMap('Stories');
     assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields input').value`), story.title);
+    assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields textarea').value`), story.researchQuestion, 'long question survives reopening');
     assert.equal((await stored('story')).baseSnapshot.id, story.baseSnapshot.id);
     await capture('restored-story');
     await button('Return to map', nav);
@@ -1897,6 +2052,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     assert.notEqual(freshCapture, report.snapshot.createdAt, 'explicit composition created a fresh snapshot');
     await fill('.report-title-field input', 'QA recoverable quota edit');
     await p.wait(`document.querySelector('.draft-state').textContent.includes('Browser storage unavailable')`, 'storage denial is visible');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.draft-state small')).display !== 'none'`), true, 'save failure remains visible on small screens');
     assert.equal((await stored('report')).title, 'QA latest report before exit');
     await openFromMap('Reports');
     assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), 'QA recoverable quota edit');
@@ -1912,6 +2068,397 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
   });
 }
 
+
+for(const area of ['places','chat','tools','time','evidence']){
+ test(`responsive work area continuity for ${area}`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,1280,900);
+  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  // Keep a real competing surface open on desktop. Narrowing must retain the
+  // actively edited surface, not install two competing compact focus owners.
+  await enter('.qwen-header-entry');await p.wait(`document.activeElement===document.querySelector('#qwen-map-panel textarea')`,'chat entry focus completes');
+  let selector='#qwen-map-panel textarea',owner='chat';
+  if(area==='places'){
+   await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Places').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.layer-panel').contains(document.activeElement)`,'Places entry focus completes');selector='[aria-label="Save a place"] input';owner='left';
+  }else if(area==='tools'){
+   await p.evaluate(`document.querySelector('#map-canvas').focus()`);await p.key('r','KeyR',82);
+   await p.wait(`document.querySelector('#map-utility-panel').contains(document.activeElement)`,'tools entry focus completes');selector='[aria-label="Save a workspace"] input';owner='tools';
+  }else if(area==='time'){
+   await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Time').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');selector='[aria-label="Exact map date"]';owner='time';
+  }else if(area==='evidence'){
+   await p.evaluate(`[...document.querySelectorAll('#qwen-map-panel [aria-label="Map inspection views"] button')].find(node=>node.textContent==='Evidence').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.evidence-drawer').contains(document.activeElement)`,'evidence entry focus completes');selector='.evidence-drawer [aria-label="Map inspection views"] [aria-pressed="true"]';owner='evidence';
+  }
+  const text=['places','chat','tools'].includes(area),value=`Pending ${area} investigation`;
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+  if(text){await p.key('a','KeyA',65,2);await p.key('Backspace','Backspace',8);await p.call('Input.insertText',{text:value});await p.wait(`document.querySelector(${JSON.stringify(selector)}).value===${JSON.stringify(value)}`,'draft renders');await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).setSelectionRange(3,8)`);}
+  const initial=await p.evaluate(`(() => {window.__retainedResizeControl=document.querySelector(${JSON.stringify(selector)});const el=window.__retainedResizeControl;return {value:el.value??null,scroll:document.documentElement.scrollTop};})()`);
+  for(const [width,height] of [[1101,900],[1100,900],[768,1024],[390,844],[320,640],[844,390],[1280,900]]){
+   await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+   // Let the responsive surface transitions finish before checking geometry or
+   // capturing a frame; a closed sheet can still be animating between axes.
+   await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+   await p.evaluate(`Promise.all([...document.querySelectorAll('.layer-panel,.evidence-drawer,#map-utility-panel,#qwen-map-panel')].flatMap(node=>node.getAnimations()).map(animation=>animation.finished.catch(()=>{})))`);
+   await p.wait(`(() => {const el=window.__retainedResizeControl,r=el?.getBoundingClientRect();return el?.isConnected&&document.activeElement===el&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,`${area} retains visible focus at ${width}x${height}`);
+   assert.equal(await p.evaluate('window.__retainedResizeControl.value??null'),initial.value);
+   if(text)assert.deepEqual(await p.evaluate('[window.__retainedResizeControl.selectionStart,window.__retainedResizeControl.selectionEnd]'),[3,8]);
+   assert.equal(await p.evaluate('document.documentElement.scrollTop'),initial.scroll,'panel reveal never scrolls the page');
+   assert.ok(await p.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'no horizontal document overflow');
+   if(width<=1100){
+    const open=await p.evaluate(`({left:document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false',evidence:document.querySelector('.evidence-drawer').getAttribute('aria-hidden')==='false',chat:!document.querySelector('#qwen-map-panel').hidden,tools:document.querySelector('#map-utility-panel').dataset.open==='true',time:!!document.querySelector('#compact-time-settings')})`);
+    assert.deepEqual(Object.keys(open).filter(key=>open[key]),[owner],'only the retained work area remains open');
+    if(owner!=='left')assert.equal(await p.evaluate(`(() => {const el=document.querySelector('.layer-panel'),r=el.getBoundingClientRect(),style=getComputedStyle(el);return style.display==='none'||style.visibility==='hidden'||r.right<=0||r.bottom<=0||r.left>=innerWidth||r.top>=innerHeight;})()`),true,'dismissed Layers cannot paint over the retained work area; inert alone only suppresses hit-testing');
+   }
+   if(process.env.KFM_WORKSPACE_SCREENSHOTS&&[1100,320,844].includes(width)){
+    await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+    const geometry=await p.evaluate(`(() => {const el=window.__retainedResizeControl;return {viewport:[innerWidth,innerHeight],field:el.getBoundingClientRect().toJSON(),active:document.activeElement===el,panels:[...document.querySelectorAll('.layer-panel,.evidence-drawer,#map-utility-panel,#qwen-map-panel')].map(node=>({id:node.id,class:node.className,hidden:node.getAttribute('aria-hidden'),open:node.dataset.open,rect:node.getBoundingClientRect().toJSON(),transform:getComputedStyle(node).transform}))};})()`);
+    await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`resize-${area}-${width}x${height}.json`),JSON.stringify(geometry,null,2));
+    const shot=await p.call('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width,height,scale:1},captureBeyondViewport:false});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`resize-${area}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+   }
+  }
+  assert.equal(await p.evaluate(`document.querySelector('.topbar').inert`),false,'expanding releases modal background holds');
+  if(area==='evidence'){
+   await p.evaluate(`window.__hiddenResizeControl=document.querySelector('.evidence-drawer [aria-label="Close Evidence Drawer"]');window.__hiddenResizeControl.focus()`);
+   await p.call('Emulation.setDeviceMetricsOverride',{width:1100,height:900,deviceScaleFactor:1,mobile:false});
+   await p.wait(`document.querySelector('.evidence-drawer').getAttribute('aria-hidden')==='false'&&document.querySelector('.evidence-drawer').contains(document.activeElement)&&document.activeElement!==window.__hiddenResizeControl&&document.activeElement.getClientRects().length>0`,'a control hidden by compact styling gets a visible fallback in the same inspector');
+  }
+ });
+}
+
+test('responsive layer sheet retains map focus and a foreground share keeps its link',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Layers').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.layer-panel').contains(document.activeElement)`,'Layers entry focus completes');
+ await p.evaluate(`document.querySelector('#map-canvas').focus();window.__mapResizeFocus=document.activeElement`);
+ await p.call('Emulation.setDeviceMetricsOverride',{width:768,height:1024,deviceScaleFactor:1,mobile:false});
+ await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-modal')==='false'`,'Layers remains nonmodal');
+ assert.equal(await p.evaluate(`document.activeElement===window.__mapResizeFocus&&document.querySelector('#map-canvas').contains(document.activeElement)`),true);assert.equal(await p.evaluate(`document.querySelector('.topbar').inert`),false);
+ await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true'`,'Escape still closes Layers');
+ // Closing Layers returns focus on a later timer task (about 100 ms on a busy page). A timer queued
+ // now runs after it, so the return finishes at this width. Resizing first let it land on the Layers
+ // button after More was focused, and Enter then reopened Layers instead of More.
+ await p.evaluate(`new Promise(resolve=>setTimeout(resolve,0))`);
+ await p.call('Emulation.setDeviceMetricsOverride',{width:1280,height:900,deviceScaleFactor:1,mobile:false});
+ await p.evaluate(`Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{}}})`);
+ await enter('summary[aria-label="More site actions"]');await p.wait(`document.querySelector('.header-overflow-menu').open`,'More opens');await enter('.share-action');
+ await p.wait(`document.querySelector('#map-share-dialog')?.open&&document.activeElement===document.querySelector('#map-share-dialog textarea')`,'share entry focus completes');
+ const link=await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`);
+ for(const [width,height]of [[768,1024],[390,844],[844,390],[1280,900]]){
+  await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+  await p.wait(`document.querySelector('#map-share-dialog')?.open&&document.activeElement===document.querySelector('#map-share-dialog textarea')`,'foreground share retains focus');
+  assert.equal(await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`),link);
+ }
+ await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('#map-share-dialog')`,'share closes normally after resizing');
+ await enter('summary[aria-label="More site actions"]');await p.wait(`document.querySelector('.header-overflow-menu').open`,'More reopens');
+ await p.evaluate(`[...document.querySelectorAll('.header-overflow-workspaces button')].find(node=>node.textContent==='Reports').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.report-view-switch')`,'report workspace opens');
+ await p.wait(`document.activeElement?.id==='primary-workspace-title'`,'report entry focus completes');
+ await p.evaluate(`[...document.querySelectorAll('.report-view-switch button')].find(node=>node.textContent==='Edit report').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.report-title-field input')`,'report editor opens');
+ await p.evaluate(`document.querySelector('.report-title-field input').focus()`);await p.key('a','KeyA',65,2);await p.call('Input.insertText',{text:'Report retained during resize'});
+ await p.wait(`document.querySelector('.report-title-field input').value==='Report retained during resize'`,'report edit renders');await p.evaluate(`document.querySelector('.report-title-field input').setSelectionRange(3,8)`);
+ for(const [width,height]of [[768,1024],[390,844],[844,390],[1280,900]]){
+  await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+  await p.wait(`!!document.querySelector('[data-workspace="reports"]')&&document.activeElement===document.querySelector('.report-title-field input')`,'report retains foreground editing');
+  assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`),'Report retained during resize');
+  assert.deepEqual(await p.evaluate(`[document.activeElement.selectionStart,document.activeElement.selectionEnd]`),[3,8]);
+ }
+});
+
+async function pointAtTimeControl(p,selector,touch=false){
+ const encoded=JSON.stringify(selector);
+ await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+ await p.evaluate(`Promise.all([...document.querySelectorAll('.compact-time,.compact-time-row,.compact-time-popover')].flatMap(node=>node.getAnimations()).map(animation=>animation.finished.catch(()=>{})))`);
+ await p.wait(`(() => {const el=document.querySelector(${encoded}),r=el?.getBoundingClientRect();return r&&r.width>0&&r.height>0&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'Time action is visible and hit-testable');
+ const point=await p.evaluate(`(() => {const r=document.querySelector(${encoded}).getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+ if(touch){await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
+ else{await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...point,button:'none',buttons:0});for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...point,button:'left',buttons:type==='mousePressed'?1:0,clickCount:1});}
+ // Check the settled click result, not the transient pointer-down dismissal.
+ await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+}
+
+for(const menu of ['map','more'])for(const [width,height]of [[390,844],[768,1024],[1280,900]]){
+ test(`keyboard header ${menu} menu owns the foreground at ${width}px`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height),panel=menu==='map'?'.map-dock-map-menu':'.header-overflow-menu',summary=panel+' > summary';
+  const action=menu==='map'?width<=1100?panel+' [aria-controls="compact-time-settings"]':panel+' [aria-label="Style and basemap"]':panel+' .header-overflow-workspaces button';
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time opens from its clock');
+  const state=()=>p.evaluate(`({url:location.href,date:['Sweep year or earlier era','Sweep month','Sweep day'].map(label=>document.querySelector('[aria-label="'+label+'"]').value),scroll:document.documentElement.scrollTop})`),initial=await state();
+  const enterMenu=async()=>{
+   await p.evaluate(`document.querySelector(${JSON.stringify(summary)}).focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector(${JSON.stringify(panel)}).open&&!document.querySelector('#compact-time-settings')&&document.querySelector('.compact-time').dataset.expanded==='false'`,'the native header opening dismisses Time without pointer input');
+   assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(summary)})`),true,'the menu summary keeps keyboard focus');
+   await p.wait(`(() => {const el=document.querySelector(${JSON.stringify(action)}),r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'header action is visible and not covered by Time');
+  };
+  await enterMenu();assert.deepEqual(await state(),initial,'menu ownership never seeks, navigates or scrolls the page');
+  await p.key('Tab','Tab',9);await p.wait(`document.querySelector(${JSON.stringify(panel)}).contains(document.activeElement)&&document.activeElement!==document.querySelector(${JSON.stringify(summary)})`,'Tab enters the opened menu');
+  await p.wait(`(() => {const el=document.activeElement,r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'the keyboard destination is visible');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width,height,scale:1},captureBeyondViewport:false});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`header-${menu}-${width}.png`),Buffer.from(shot.data,'base64'));}
+  await p.key('Escape','Escape',27);await p.wait(`!document.querySelector(${JSON.stringify(panel)}).open&&document.activeElement===document.querySelector(${JSON.stringify(summary)})`,'Escape closes the menu and returns to its summary');
+  assert.equal(await p.evaluate(`!!document.querySelector('#compact-time-settings')`),false,'closing a menu does not resurrect Time');
+  await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time can be reopened normally');
+  assert.deepEqual(await state(),initial);
+  const destination=menu==='map'&&width>1100?'.map-dock-actions [aria-controls="compact-time-settings"]':action;
+  await enterMenu();await p.evaluate(`document.querySelector(${JSON.stringify(destination)}).focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`!document.querySelector(${JSON.stringify(panel)}).open`,'the chosen menu action closes its native menu');
+  if(menu==='map'){
+   await p.wait(`!!document.querySelector('#compact-time-settings')`,'the Time action survives the queued closed-menu toggle event');
+   assert.deepEqual(await state(),initial);
+  }else await p.wait(`!document.querySelector('#compact-time-settings')`,'returning to Map keeps Time dismissed');
+ });
+}
+
+test('keyboard header opening also dismisses transport-only Time',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,390,844);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time opens');
+ await p.evaluate(`document.querySelector('.compact-time-more').focus()`);await p.key('Enter','Enter',13);await p.wait(`!document.querySelector('#compact-time-settings')&&document.querySelector('.compact-time').dataset.expanded==='true'`,'transport-only mode is retained');
+ await p.evaluate(`document.querySelector('.map-dock-map-menu > summary').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.map-dock-map-menu').open&&document.querySelector('.compact-time').dataset.expanded==='false'`,'the header menu owns the whole time surface');
+ assert.equal(await p.evaluate(`document.activeElement===document.querySelector('.map-dock-map-menu > summary')`),true);
+});
+
+test('local Time details do not trigger header-menu dismissal',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,390,844);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time opens');
+ const summary='.compact-time-source-details > summary';
+ await p.evaluate(`document.querySelector(${JSON.stringify(summary)}).focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.querySelector('.compact-time-source-details').open&&!!document.querySelector('#compact-time-settings')`,'local source-clock details stay within Time');
+ await p.key('Enter','Enter',13);await p.wait(`!document.querySelector('.compact-time-source-details').open&&!!document.querySelector('#compact-time-settings')`,'closing local details also keeps Time open');
+});
+
+for(const width of [1280,1101]){
+ test(`Time pointer toggle matches keyboard behavior at ${width}px`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,900),trigger='.map-dock-actions [aria-controls="compact-time-settings"]';
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  const initialUrl=await p.evaluate('location.href');
+  const opened=()=>p.wait(`!!document.querySelector('#compact-time-settings')&&document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')==='true'`,'Time opens once');
+  const closed=()=>p.wait(`!document.querySelector('#compact-time-settings')&&document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')==='false'&&document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-pressed')==='false'`,'Time closes after the complete activation');
+  await pointAtTimeControl(p,trigger+' strong');await opened();
+  const date=await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`);
+  await pointAtTimeControl(p,trigger+' strong');await closed();
+  assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(trigger)})`),true,'the clicked header trigger retains focus');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`time-toggle-closed-${width}.png`),Buffer.from(shot.data,'base64'));}
+  await p.key('Enter','Enter',13);await opened();await p.key(' ','Space',32);await closed();
+  // Clock entry deliberately keeps the transport available when settings close.
+  await pointAtTimeControl(p,'.compact-time-clock-toggle');await opened();await pointAtTimeControl(p,trigger+' strong');await closed();
+  assert.equal(await p.evaluate(`document.querySelector('.compact-time').dataset.expanded`),'true');
+  assert.equal(await p.evaluate(`document.querySelector('#compact-time-transport').inert`),false);
+  await pointAtTimeControl(p,'.compact-time-more');await opened();assert.equal(await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`),date);
+  await pointAtTimeControl(p,'.compact-time-more');await closed();
+  await pointAtTimeControl(p,'.compact-time-clock-toggle');
+  await p.wait(`document.querySelector('.compact-time').dataset.expanded==='false'`,'the clock still collapses the whole transport');
+  await pointAtTimeControl(p,trigger+' strong');await opened();
+  const outside={x:width-160,y:240};for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...outside,button:'left',buttons:type==='mousePressed'?1:0,clickCount:1});
+  await closed();assert.equal(await p.evaluate(`document.querySelector('.compact-time').dataset.expanded`),'false','an unrelated map pointer still dismisses Time');
+  assert.equal(await p.evaluate('location.href'),initialUrl,'toggle routing never seeks or navigates');
+ });
+}
+
+for(const [width,height]of [[390,844],[768,1024]]){
+ test(`Time touch and keyboard actions stay consistent from the Map menu at ${width}px`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height),summary='.map-dock-map-menu > summary',trigger='.map-dock-menu-quick [aria-controls="compact-time-settings"]';
+  await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  await pointAtTimeControl(p,summary,true);await p.wait(`document.querySelector('.map-dock-map-menu').open`,'Map menu opens by touch');
+  await pointAtTimeControl(p,trigger,true);await p.wait(`!!document.querySelector('#compact-time-settings')&&!document.querySelector('.map-dock-map-menu').open`,'touch selects Time and closes its menu');
+  const date=await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`);
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')`),'true');
+  await pointAtTimeControl(p,summary,true);await p.wait(`document.querySelector('.map-dock-map-menu').open&&!document.querySelector('#compact-time-settings')`,'touching Map dismisses Time before opening its menu');
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')`),'false');
+  await pointAtTimeControl(p,trigger,true);await p.wait(`!!document.querySelector('#compact-time-settings')`,'Time reopens once');
+  assert.equal(await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`),date);
+  await pointAtTimeControl(p,'.compact-time-clock-toggle',true);await p.wait(`!document.querySelector('#compact-time-settings')&&document.querySelector('.compact-time').dataset.expanded==='false'`,'the clock closes Time by touch');
+  await p.evaluate(`document.querySelector(${JSON.stringify(summary)}).focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.map-dock-map-menu').open`,'Map menu opens with the keyboard');
+  await p.evaluate(`document.querySelector(${JSON.stringify(trigger)}).focus()`);await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('#compact-time-settings')&&!document.querySelector('.map-dock-map-menu').open`,'keyboard selects the same Time window');
+  assert.equal(await p.evaluate(`document.querySelector('[aria-label="Exact map date"]').value`),date);
+  await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('#compact-time-settings')&&document.activeElement?.getAttribute('aria-label')==='Open time sweep'`,'Escape returns to the visible clock');
+ });
+}
+
+for(const [control,label,targetWidth] of [
+ ['year','Sweep year or earlier era',390],['month','Sweep month',390],['day','Sweep day',390],
+ ['previous','Previous sweep frame',760],['compare','Pin or compare dates',760],['scrubber','Scrub time sweep',760],
+]){
+ test(`responsive time control retains keyboard context for ${control}`,{timeout:120000},async t=>{
+  const b=await browser(t),p=await pageSession(b,1280,900);
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+  await p.evaluate(`document.querySelector('[aria-label="Open time sweep"]').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');
+  const selector=`[aria-label=${JSON.stringify(label)}]`,datePart=['year','month','day'].includes(control),fallback=datePart?'.compact-time-date-mobile':'.compact-time-more';
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus();window.__originalTimeControl=document.activeElement;void 0`);
+  await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(selector)})&&document.activeElement.getClientRects().length>0`,'desktop control is focused');
+  const initial=await p.evaluate(`({date:document.querySelector('[aria-label="Exact map date"]').value,url:location.href,scroll:document.documentElement.scrollTop})`);
+  let narrowed=false;
+  for(const [width,height]of [[1280,900],[targetWidth,targetWidth===760?900:844],[320,640],[844,390],[1280,900]]){
+   await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
+   if(width<=targetWidth)narrowed=true;
+   const expected=datePart?width>420?selector:fallback:narrowed?fallback:selector;
+   await p.wait(`(() => {const el=document.querySelector(${JSON.stringify(expected)}),r=el?.getBoundingClientRect();return document.activeElement===el&&r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,`${control} keeps visible keyboard context at ${width}x${height}`);
+   assert.deepEqual(await p.evaluate(`({date:document.querySelector('[aria-label="Exact map date"]').value,url:location.href,scroll:document.documentElement.scrollTop})`),initial,'layout changes never seek a date, navigate or scroll the page');
+   assert.ok(await p.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'no horizontal document overflow');
+   if(process.env.KFM_WORKSPACE_SCREENSHOTS&&[1280,390,844].includes(width)){
+    await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+    await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width,height,scale:1},captureBeyondViewport:false});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`time-${control}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+   }
+  }
+  if(datePart)assert.equal(await p.evaluate('document.activeElement===window.__originalTimeControl'),true,'expanding restores the original date part');
+  await p.key('Escape','Escape',27);await p.wait(`document.activeElement?.getAttribute('aria-label')==='Open time sweep'&&!document.querySelector('#compact-time-settings')`,'Escape still closes the toolbar and returns to its clock');
+ });
+}
+
+test('responsive time control respects an intentional move back to the map',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('[aria-label="Open time sweep"]').focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');
+ await p.evaluate(`document.querySelector('[aria-label="Sweep month"]').focus();document.querySelector('#map-canvas').focus();window.__intentionalTimeExit=document.activeElement;void 0`);
+ await p.call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+ await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+ assert.equal(await p.evaluate('document.activeElement===window.__intentionalTimeExit'),true,'a former time control cannot reclaim map focus');
+});
+
+test('responsive time control follows its container without a window resize',{timeout:120000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'map entry completes');
+ await p.evaluate(`document.querySelector('[aria-label="Open time sweep"]').focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('#compact-time-settings')`,'time settings open');
+ await p.evaluate(`(() => {document.querySelector('[aria-label="Sweep month"]').focus();window.__timeWindowResizes=0;window.addEventListener('resize',()=>window.__timeWindowResizes++);const panel=document.querySelector('.timeline-panel');panel.style.right='auto';panel.style.width='400px';})()`);
+ await p.wait(`document.activeElement===document.querySelector('.compact-time-date-mobile')`,'container query hands off to the compact date control');
+ assert.equal(await p.evaluate('innerWidth'),1280);assert.equal(await p.evaluate('window.__timeWindowResizes'),0);
+ await p.evaluate(`(() => {const panel=document.querySelector('.timeline-panel');panel.style.removeProperty('width');panel.style.removeProperty('right');})()`);
+ await p.wait(`document.activeElement===document.querySelector('[aria-label="Sweep month"]')`,'expanding only the container restores Month');
+ assert.equal(await p.evaluate('window.__timeWindowResizes'),0);
+});
+
+for(const [width,height] of [[1280,900],[390,844],[568,320]]){
+ test(`Places preserve saved stops and recover removals at ${width}x${height}`,{timeout:180000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height);
+  const key='kfm-map-workspaces-v1',form='[aria-label="Save a place"]',list='.places-trail-section';
+  const stored=()=>p.evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(key)})||'[]')`);
+  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+  const openPlaces=async()=>{
+   if(width===1280){await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Places').focus()`);await p.key('Enter','Enter',13);}
+   else{await enter('.map-dock-map-menu > summary');await p.wait(`document.querySelector('.map-dock-map-menu').open`,'Map menu opens');await p.evaluate(`[...document.querySelectorAll('.map-dock-menu-quick button')].find(node=>node.textContent.startsWith('Places')).focus()`);await p.key('Enter','Enter',13);}
+   await p.wait(`document.querySelector('.layer-panel')?.dataset.panelMode==='places'&&document.querySelector('.layer-panel').contains(document.activeElement)`,'Places and its entry focus are ready');
+  };
+  const fillName=async value=>{
+   await p.evaluate(`document.querySelector(${JSON.stringify(form+' input')}).focus()`);await p.key('a','KeyA',65,2);await p.key('Backspace','Backspace',8);await p.call('Input.insertText',{text:value});
+   await p.wait(`document.querySelector(${JSON.stringify(form+' input')}).value===${JSON.stringify(value)}`,'place name renders');
+  };
+  const waitCount=async count=>p.wait(`JSON.parse(localStorage.getItem(${JSON.stringify(key)})||'[]').length===${count}`,'saved place count '+count);
+  const remove=async name=>enter(`${list} [aria-label=${JSON.stringify('Delete '+name)}]`);
+  const undo=async name=>enter(`${form} + div [aria-label=${JSON.stringify('Undo removal of '+name)}]`);
+  const capture=async label=>{
+   if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
+   await p.evaluate(`document.querySelector(${JSON.stringify(form)}).scrollIntoView({block:'center',behavior:'instant'})`);
+   await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`places-${width}x${height}-${label}.png`),Buffer.from(shot.data,'base64'));
+  };
+  await p.open('/?topic=all&motion=off','1');await p.wait(`!document.querySelector('.explorer-guide')`,'saved welcome preference permits the map');await openPlaces();
+  for(let i=1;i<=12;i++){await fillName('QA '+String(i).padStart(2,'0'));await p.key('Enter','Enter',13);await waitCount(i);}
+  const original=await stored();assert.equal(original[0].name,'QA 12');assert.equal(original.at(-1).name,'QA 01');
+  await fillName('Pending investigation');await p.key('Enter','Enter',13);
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(form+' button[type="submit"]')}).disabled`),true);
+  assert.deepEqual(await stored(),original,'full Places never discards the oldest stop');
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(form+' input')}).value`),'Pending investigation');
+  assert.match(await p.evaluate(`document.querySelector(${JSON.stringify(form)}).textContent`),/12 of 12 places saved.*Remove a saved place/s);await capture('full');
+  await remove('QA 06');await waitCount(11);
+  await p.wait(`document.activeElement?.getAttribute('aria-label')==='Undo removal of QA 06'`,'removal moves owned focus to Undo');
+  await undo('QA 06');await waitCount(12);
+  await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(form+' input')})`,'undo returns focus to the originating name input');
+  assert.deepEqual(await stored(),original,'undo restores the exact record and order');
+  await p.evaluate(`(() => {const original=Storage.prototype.setItem;window.__denyPlaceWrites=true;Storage.prototype.setItem=function(key,value){if(window.__denyPlaceWrites&&key==='kfm-map-workspaces-v1')throw new DOMException('Synthetic quota','QuotaExceededError');return original.call(this,key,value);};})()`);
+  await remove('QA 01');assert.deepEqual(await stored(),original,'failed removal keeps every stored stop');
+  await p.wait(`document.querySelector(${JSON.stringify(form)}).parentElement.textContent.includes('Places could not be updated')`,'persistent storage failure is visible');
+  await p.evaluate('window.__denyPlaceWrites=false');await remove('QA 01');await waitCount(11);const withoutOldest=await stored();
+  await p.evaluate('window.__denyPlaceWrites=true');await undo('QA 01');assert.deepEqual(await stored(),withoutOldest,'failed undo keeps the current list and its retry');await capture('undo-retry');
+  await p.evaluate('window.__denyPlaceWrites=false');await undo('QA 01');await waitCount(12);assert.deepEqual(await stored(),original);
+  await remove('QA 12');await waitCount(11);await fillName('Pending investigation');await p.key('Enter','Enter',13);await waitCount(12);
+  const replacement=await stored();assert.equal(replacement[0].name,'Pending investigation');assert.equal(replacement.at(-1).name,'QA 01');assert.deepEqual(replacement.slice(1),original.slice(1));
+  assert.equal(await p.evaluate(`document.querySelectorAll(${JSON.stringify(form+' + div button')}).length`),0,'successful addition ends the preceding undo');
+  assert.ok(await p.evaluate(`[...document.querySelectorAll('.places-trail-section .place-stop-actions button')].every(node=>node.getBoundingClientRect().width>=44&&node.getBoundingClientRect().height>=44)`),'place actions have 44 px targets');
+  assert.ok(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`),'Places has no horizontal document overflow');
+  const previous=await p.evaluate('performance.timeOrigin');await p.call('Page.reload');await p.wait(`performance.timeOrigin!==${previous}&&document.querySelector('.atlas-studio')?.dataset.startup==='ready'&&!document.querySelector('.explorer-guide')`,'new document restores the map');await openPlaces();assert.deepEqual(await stored(),replacement,'reload retains the deliberate replacement');
+  if(width===1280){
+   await enter('[aria-label="Close Explorer navigation"]');await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true'`,'Places closes before the utility opens');
+   // Complete the close handoff and the tool's deferred entry before editing;
+   // visible markup alone can precede either focus callback.
+   await p.wait(`document.activeElement?.closest('.map-dock-actions')`,'Places close returns to its trigger');
+   await p.evaluate(`document.querySelector('#map-canvas').focus()`);await p.key('r','KeyR',82);
+   const workspace='[aria-label="Save a workspace"]';await p.wait(`document.querySelector(${JSON.stringify(workspace)})?.getClientRects().length>0`,'saved workspace controls are visible');
+   await p.wait(`document.querySelector('#map-utility-panel').contains(document.activeElement)`,'utility entry focus completes before Places edits');
+   assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(workspace+' button[type="submit"]')}).disabled`),true);
+   await enter('.saved-workspace-list [aria-label="Delete Pending investigation"]');await waitCount(11);await p.wait(`document.activeElement?.getAttribute('aria-label')==='Undo removal of Pending investigation'`,'utility removal owns its undo focus');
+   await enter(`${workspace} + div [aria-label="Undo removal of Pending investigation"]`);await waitCount(12);assert.deepEqual(await stored(),replacement);
+   await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(workspace+' input')})`,'utility undo returns to its own name field');
+  }
+ });
+}
+
+// Sharing remains usable without clipboard or history permissions. These are
+// disposable pages; no link is sent and no real clipboard write is performed.
+for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
+ test(`map sharing retains a recoverable redacted link at ${width}x${height}`,{timeout:90000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height);
+  await p.open('/?topic=all&motion=off&privacy=location-camera-redacted&c=-97.12345,39.12345&aoi=-98,38,-97,39','1');
+  await p.wait(`document.querySelector('.atlas-studio')?.dataset.startup==='ready'&&!document.querySelector('.explorer-guide')`,'map controls are ready');
+  if(width===1280){
+   await p.evaluate(`[...document.querySelectorAll('.map-dock-actions button')].find(node=>node.querySelector('strong')?.textContent==='Layers').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'background Layers is open');
+   await p.wait(`document.querySelector('.layer-panel')?.contains(document.activeElement)`,'Layers entry focus settles before the next menu action');
+  }
+  await p.evaluate(`(() => {
+   window.__denyShareCopy=true;window.__shareAttempts=[];
+   Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.__shareAttempts.push(value);if(window.__denyShareCopy)throw new DOMException('Synthetic clipboard denial','NotAllowedError');}}});
+   history.replaceState=()=>{throw new DOMException('Synthetic history denial','SecurityError');};
+  })()`);
+  const originalUrl=await p.evaluate('location.href'),entry=await p.evaluate('history.state?.kfmExplorerEntry');
+  await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.header-overflow-menu').open`,'More exposes Share current view');
+  await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('#map-share-dialog')?.open&&document.querySelector('#map-share-status')?.textContent.includes('Automatic copying is unavailable')`,'denied copying leaves a persistent manual fallback');
+  const link=await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`),params=new URL(link).searchParams;
+  assert.equal(params.get('privacy'),'location-camera-redacted');assert.notEqual(params.get('c'),'-97.12345,39.12345');assert.equal(params.has('aoi'),false);
+  assert.match(await p.evaluate(`document.querySelector('#map-share-dialog').textContent`),/Location-derived camera replaced with statewide Kansas/);
+  assert.equal(await p.evaluate('location.href'),originalUrl,'history refusal does not prevent the visible link');
+  assert.equal(await p.evaluate('history.state?.kfmExplorerEntry'),entry);
+  assert.deepEqual(await p.evaluate('window.__shareAttempts'),[link],'automatic copy receives the same redacted link');
+  assert.ok(await p.evaluate(`(() => {const field=document.querySelector('#map-share-dialog textarea');return field.readOnly&&document.activeElement===field&&field.selectionStart===0&&field.selectionEnd===field.value.length;})()`),'the complete readonly link is selected');
+  for(let i=0;i<7;i++){await p.key('Tab','Tab',9);assert.ok(await p.evaluate(`document.querySelector('#map-share-dialog').contains(document.activeElement)`),'native Tab remains within the modal');}
+  await p.evaluate(`document.querySelector('#map-share-dialog [aria-label="Close share dialog"]').focus()`);
+  for(const [key,code,keyCode] of [['l','KeyL',76],['r','KeyR',82],['/','Slash',191]])await p.key(key,code,keyCode);
+  assert.ok(await p.evaluate(`document.querySelector('#map-share-dialog').contains(document.activeElement)`),'map shortcuts do not redirect focus behind sharing');
+  const action=async text=>{
+   await p.evaluate(`([...document.querySelectorAll('#map-share-dialog button')].find(node=>node.textContent===${JSON.stringify(text)})).focus()`);await p.key('Enter','Enter',13);
+  };
+  await action('Select link');assert.ok(await p.evaluate(`document.activeElement===document.querySelector('#map-share-dialog textarea')`));
+  assert.ok(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`),'no horizontal document overflow');
+  assert.ok(await p.evaluate(`[...document.querySelectorAll('#map-share-dialog button')].every(node=>node.getBoundingClientRect().height>=44)`),'all dialog actions retain 44 px height');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+   await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+   const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`share-${width}x${height}-manual.png`),Buffer.from(shot.data,'base64'));
+  }
+  await p.evaluate('window.__denyShareCopy=false');await action('Copy link');
+  await p.wait(`document.querySelector('#map-share-status')?.textContent.trim()==='Link copied.'`,'retry succeeds without rebuilding the link');
+  assert.deepEqual(await p.evaluate('window.__shareAttempts'),[link,link]);
+  await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('#map-share-dialog')&&document.activeElement?.matches('summary[aria-label="More site actions"]')`,'Escape restores the visible More trigger');
+  if(width===1280){
+   assert.equal(await p.evaluate(`document.querySelector('.layer-panel').getAttribute('aria-hidden')`),'false','the share Escape leaves background Layers open');
+   await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.header-overflow-menu').open`,'More reopens after sharing');
+   await p.evaluate(`[...document.querySelectorAll('.header-overflow-workspaces button')].find(node=>node.textContent==='Reports').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('[data-workspace="reports"]')`,'report workspace opens');
+   await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('.header-overflow-menu').open`,'Share is available from Reports');
+   await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
+   await p.wait(`document.querySelector('#map-share-dialog')?.open`,'share dialog opens above Reports');
+   await p.key('Escape','Escape',27);
+   await p.wait(`!document.querySelector('#map-share-dialog')&&!!document.querySelector('[data-workspace="reports"]')`,'Share Escape does not leave the report workspace');
+  }
+ });
+}
 
 // The welcome reuses the pinned local reference; provider/AI I/O stays isolated.
 for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones and modes at ${width}x${height}`,{timeout:90000},async t=>{
@@ -1956,6 +2503,9 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
  await p.wait(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow===false`,'leaving Water shuts off inherited animation');
  await enter('[aria-label="Effects & rendering"]');
  for(const name of ['Cinematic','Natural']){
+  // Like every other step: wait for the control before driving it. Reaching for a preset the
+  // Effects panel had not rendered yet threw a TypeError instead of a readable failure.
+  await p.wait(`[...document.querySelectorAll('.scene-panel-body button')].some(node=>node.textContent.startsWith(${JSON.stringify(name)}))`,`Effects panel offers the ${name} preset`);
   await p.evaluate(`(()=>{const button=[...document.querySelectorAll('.scene-panel-body button')].find(node=>node.textContent.startsWith(${JSON.stringify(name)}));button.focus();})()`);await p.key('Enter','Enter',13);
   assert.equal(await p.evaluate(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow`),false,'visual preset does not enable flow');
  }
@@ -2123,6 +2673,9 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`new URLSearchParams(location.search).get('topics')==='government'&&!document.querySelector('.header-overflow-menu').open`,'Share current view updates the address bar');
     assert.equal(await p.evaluate('history.state?.kfmExplorerEntry'),mapEntry,'sharing preserves native entry ownership');
+    await p.wait(`document.querySelector('#map-share-dialog')?.open`, 'the share link remains available');
+    await p.evaluate(`document.querySelector('#map-share-dialog [aria-label="Close share dialog"]').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('#map-share-dialog')`, 'sharing closes before returning to the chooser');
     await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);await readyWelcome(p);
     await p.evaluate(`document.querySelector('.topic-weather').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.living-welcome')&&new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='weather'`,'navigation still saves a different map after sharing');
@@ -2187,6 +2740,92 @@ for (const [width,height] of [[1280,800],[390,844]]) {
 }
 
 
+test('trail site markers open complete histories and validated record links in the hydrated drawer', { timeout: 120000 }, async t => {
+  // Synthetic public-context records exercise the real map click and React
+  // drawer. Provider traffic stays blocked by the shared network fixture.
+  const history = 'Synthetic historical context. '.repeat(40).slice(0, 895) + ' END.';
+  const recordUrl = 'https://www.nps.gov/places/synthetic-trail-regression.htm';
+  const retrievedAt = '2026-11-14T12:00:00.000Z';
+  const fixtures = [
+    { id: 'trail-place-9001', name: 'Synthetic linked trail site', longitude: -98.12, recordUrl },
+    { id: 'trail-place-9002', name: 'Synthetic unsafe-link trail site', longitude: -98, recordUrl: 'javascript:window.__trailUnsafeNavigation=true' },
+    { id: 'trail-place-9003', name: 'Synthetic unlinked trail site', longitude: -97.88 },
+  ];
+  const payload = {
+    feed: 'nps-trail-places', state: 'ready', retrievedAt, upstreamUpdatedAt: null,
+    featureCount: fixtures.length, truncated: false,
+    source: 'National Park Service · National Trails points of interest',
+    limitation: 'Synthetic browser acceptance only; not provider observations or KFM evidence.',
+    data: { type: 'FeatureCollection', features: fixtures.map(site => ({
+      type: 'Feature', id: site.id, geometry: { type: 'Point', coordinates: [site.longitude, 38.5] },
+      properties: { featureId: site.id, name: site.name, place: 'Synthetic Kansas location',
+        trails: 'Santa Fe', history, recordUrl: site.recordUrl ?? null,
+        latitude: 38.5, longitude: site.longitude, retrievedAt,
+        dataRole: 'NPS National Trails point of interest', evidenceRole: 'EXTERNAL_CONTEXT_ONLY' },
+    })) },
+  };
+  let feedRequests = 0;
+  const diagnostics = renderPerformanceFixtures(origin);
+  const b = await browser(t), p = await pageSession(b, 1280, 800, {
+    ...diagnostics,
+    async intercept(request, call) {
+      if (await diagnostics.intercept(request, call)) return true;
+      const url = new URL(request.request.url);
+      if (url.origin !== origin.origin || url.pathname !== '/api/live-context' || url.searchParams.get('feed') !== 'nps-trail-places') return false;
+      feedRequests++;
+      await call('Fetch.fulfillRequest', { requestId: request.requestId, responseCode: 200,
+        responseHeaders: [{ name: 'Content-Type', value: 'application/json' }],
+        body: Buffer.from(JSON.stringify(payload)).toString('base64') });
+      return true;
+    },
+  });
+  await p.open('/?topics=history&ctx=nps-trail-places&l=&c=-98,38.5&z=10&base=civic&motion=off');
+  await leaveCompactLayers(p);
+  const map = `window.__kfmRenderDiagnostics?.maps.find(entry => entry.kind === 'explorer' && !entry.removed)?.map`;
+  const layer = 'external-nps-trail-places-points';
+  await p.wait(`(() => { const map = ${map}; return map?.getLayer(${JSON.stringify(layer)}) && map.queryRenderedFeatures({ layers: [${JSON.stringify(layer)}] }).length >= 3; })()`, 'all synthetic trail markers render');
+  assert.equal(await p.evaluate(`(${map}).getLayer('external-nps-trail-places-labels').minzoom`), 8, 'site labels retain their zoom-eight threshold');
+  for (const site of fixtures) {
+    // Project the actual rendered point after any drawer-driven resize, then
+    // dispatch a native pointer event instead of invoking application handlers.
+    // Closing the drawer widens the map container before MapLibre resizes its
+    // canvas; until the two sizes agree, project() still describes the old
+    // layout and a click there can land on the previous marker.
+    await p.wait(`(() => { const map = ${map}, canvas = map?.getCanvas(), container = map?.getContainer();
+      if (!canvas || canvas.clientWidth !== container.clientWidth || canvas.clientHeight !== container.clientHeight || map.isMoving()) return false;
+      const point = map.project([${site.longitude}, 38.5]); return map.queryRenderedFeatures(point, { layers: [${JSON.stringify(layer)}] }).some(feature => feature.properties.featureId === ${JSON.stringify(site.id)}); })()`, 'the next trail marker is hit-testable at the current map size');
+    const point = await p.evaluate(`(() => { const map = ${map}, point = map.project([${site.longitude}, 38.5]), rect = map.getCanvas().getBoundingClientRect(); return { x: point.x + rect.left, y: point.y + rect.top }; })()`);
+    await p.call('Input.dispatchMouseEvent', { type: 'mousePressed', ...point, button: 'left', clickCount: 1 });
+    await p.call('Input.dispatchMouseEvent', { type: 'mouseReleased', ...point, button: 'left', clickCount: 1 });
+    await p.wait(`document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden') === 'false' && document.querySelector('.drawer-heading h2')?.textContent === ${JSON.stringify(site.name)}`, 'native map selection opens the matching trail site');
+    const drawer = await p.evaluate(`(() => {
+      const root = document.querySelector('.evidence-drawer'), rows = [...root.querySelectorAll('.drawer-attribute-list > div')];
+      const field = label => rows.find(row => row.querySelector('dt')?.textContent === label)?.querySelector('dd');
+      const link = field('NPS or partner page')?.querySelector('a');
+      return { history: field('Why it matters')?.textContent, link: link ? { href: link.getAttribute('href'), target: link.target, rel: link.rel } : null,
+        source: root.querySelector('.drawer-live-source')?.textContent, boundary: root.querySelector('.drawer-claim-boundary')?.textContent,
+        unsafeVisible: root.textContent.includes('javascript:'), unsafeExecuted: window.__trailUnsafeNavigation === true };
+    })()`);
+    assert.equal(drawer.history, history, 'all 900 allowed history characters survive selection and rendering');
+    assert.match(drawer.source, /National Park Service/);
+    assert.match(drawer.boundary, /No KFM EvidenceBundle attached/);
+    assert.equal(drawer.unsafeVisible, false, 'rejected URLs are omitted from the drawer');
+    assert.equal(drawer.unsafeExecuted, false, 'provider text cannot execute navigation code');
+    if (site.recordUrl === recordUrl) {
+      assert.deepEqual(drawer.link, { href: recordUrl, target: '_blank', rel: 'noreferrer' }, 'the allowed record is a native external anchor');
+      await p.evaluate(`document.querySelector('.drawer-attribute-list a').focus()`);
+      assert.equal(await p.evaluate(`document.activeElement?.getAttribute('href')`), recordUrl, 'the record page is keyboard-focusable');
+    } else {
+      assert.equal(drawer.link, null, 'missing and unsafe records create no navigation target');
+      assert.equal((await p.evaluate('location.origin')), origin.origin, 'inspection stays on the local Explorer');
+    }
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden') === 'true'`, 'close returns to the map before another marker');
+  }
+  assert.ok(feedRequests >= 1, 'the built application requested its actual trail feed');
+  t.diagnostic('Synthetic trail records; actual MapLibre clicks and hydrated drawer; no live-provider or real-device acceptance claimed.');
+});
+
 for(const [width,height] of [[1280,800],[390,844]]) {
  test(`civic inspection survives browser Back Forward and reload at ${width}x${height}`,{timeout:120000},async t=>{
   // Contract-valid synthetic district boxes isolate navigation from provider availability.
@@ -2216,6 +2855,109 @@ for(const [width,height] of [[1280,800],[390,844]]) {
   await p.call('Page.reload');
   await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('f')===${JSON.stringify(feature)} && document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden')==='false' && document.querySelector('.evidence-drawer')?.textContent.includes('Kansas U.S. House District 1')`,'reload reconstructs inspection after its source loads');
  });
+}
+
+for (const [width, height] of [[1280,800],[390,844],[568,320]]) {
+  for (const route of ['section','advanced']) {
+    test(`Map tool ${route} navigation preserves its keyboard control at ${width}x${height}`, {timeout:90000}, async t => {
+      const b=await browser(t),p=await pageSession(b,width,height);
+      await p.open('/?maptab=scene&mapui=open&motion=off');
+      await p.wait(`document.querySelector('#map-utility-panel').contains(document.activeElement)`, 'initial tool entry receives focus');
+      await p.wait(`!document.querySelector('.runtime-overlay.loading')`, 'map initialization settles');
+      const target=route==='section'?'measure':'inspect';
+      const owner=route==='section'?'.map-utility-tabs button:nth-child(2)':'.explorer-advanced-navigation > summary';
+      await p.evaluate(`document.querySelector(${JSON.stringify(owner)}).focus()`);
+      await p.key('Enter','Enter',13);
+      if(route==='advanced'){
+        await p.wait(`document.querySelector('.explorer-advanced-navigation').open`, 'Advanced tools opens');
+        await p.key('Tab','Tab',9);
+        assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation button:first-child')`),true,'the first real advanced tool owns keyboard input');
+        await p.key('Enter','Enter',13);
+      }
+      await p.wait(`document.querySelector('#map-utility-panel').dataset.view===${JSON.stringify(target)}`, 'the requested tool commits');
+      // Include both deferred entry frames; a synchronous check misses the jump.
+      await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))`);
+      if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+        await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+        const shot=await p.call('Page.captureScreenshot',{format:'png'});
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`tool-${route}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+      }
+      assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(owner)})`),true,'switching tools retains the navigation control instead of jumping to Close');
+      assert.equal(await p.evaluate(`(()=>{const node=document.activeElement,r=node.getBoundingClientRect();return r.width>0&&r.height>0&&r.top>=0&&r.bottom<=innerHeight&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`),true,'the retained control remains visible and unobstructed');
+      if(route==='advanced'){
+        assert.equal(await p.evaluate(`['static','relative'].includes(getComputedStyle(document.querySelector('#map-utility-view-inspect .map-context-card')).position)`),true,'the context receipt remains in the Inspect content flow');
+      }
+      await p.key('Tab','Tab',9);
+      if(route==='section'){
+        assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation > summary')`),true,'Tab follows the selected section in DOM order');
+        await p.key('Tab','Tab',9);
+      }
+      assert.equal(await p.evaluate(`document.querySelector('.map-utility-scroll').contains(document.activeElement)&&!document.activeElement.closest('[inert]')`),true,'Tab enters the selected tool contents');
+      // Explicit entry requests still re-enter even when that tool is already
+      // open and a persistent navigation control currently owns focus.
+      for(let request=0;request<2;request++){
+        await p.evaluate(`document.querySelector('.explorer-advanced-navigation > summary').focus()`);
+        await p.key('r','KeyR',82);
+        await p.wait(`document.querySelector('#map-utility-panel').dataset.view==='report'&&document.activeElement?.matches('#map-utility-panel .icon-close')`, 'an explicit report request receives entry focus, including a repeated request');
+      }
+      await p.key('Escape','Escape',27);
+      await p.wait(`document.querySelector('#map-utility-panel').dataset.open==='false'&&document.querySelector('#map-canvas').contains(document.activeElement)`, 'Escape still closes the panel and returns to the map');
+    });
+  }
+}
+
+for (const [width, height] of [[1280,800],[390,844],[568,320]]) {
+  test(`Advanced tools Escape closes its menu before Map controls at ${width}x${height}`, {timeout:60000}, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    const capture = async (step, label) => {
+      if (!process.env.KFM_WORKSPACE_SCREENSHOTS) return;
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, {recursive:true});
+      const shot = await p.call('Page.captureScreenshot', {format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `controls-${width}x${height}-${step}-${label}.png`), Buffer.from(shot.data, 'base64'));
+    };
+    await p.open('/?maptab=scene&mapui=open&motion=off');
+    await p.wait(`document.querySelector('#map-utility-panel[data-open="true"]').contains(document.activeElement)`, 'Map controls receives entry focus');
+    await p.wait(`!document.querySelector('.runtime-overlay.loading')`, 'map initialization settles before capturing controls');
+    const original = await p.evaluate(`({view:document.querySelector('#map-utility-panel').dataset.view, camera:new URLSearchParams(location.search).get('c')})`);
+    await capture('01', 'appearance');
+    await p.evaluate(`document.querySelector('.explorer-advanced-navigation > summary').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.explorer-advanced-navigation').open`, 'Advanced tools opens');
+    await p.key('Tab', 'Tab', 9);
+    assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation button')`), true, 'keyboard enters a real tool option');
+    await capture('02', 'advanced');
+    const menuGeometry = await p.evaluate(`(()=>{const nav=document.querySelector('.explorer-advanced-navigation nav'),r=nav.getBoundingClientRect(),p=document.querySelector('#map-utility-panel').getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:nav.clientHeight,panelTop:p.top,panelBottom:p.bottom};})()`);
+    assert.ok(menuGeometry.top >= menuGeometry.panelTop + 4 && menuGeometry.bottom <= menuGeometry.panelBottom - 4 && menuGeometry.height >= 44, 'the menu fits inside the visible panel: '+JSON.stringify(menuGeometry));
+    for (let option = 0; option < 8; option++) {
+      if (option) await p.key('Tab', 'Tab', 9);
+      assert.equal(await p.evaluate(`(()=>{const node=document.activeElement,nav=document.querySelector('.explorer-advanced-navigation nav'),r=node.getBoundingClientRect(),n=nav.getBoundingClientRect();return node===nav.querySelectorAll('button')[${option}]&&r.top>=n.top&&r.bottom<=n.bottom&&r.height>=44&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`), true, 'every tool remains visible and hit-testable when reached by Tab, including option '+option);
+    }
+    if (width === 1280) {
+      for (const [w, h] of [[568,320],[1280,800]]) {
+        await p.call('Emulation.setDeviceMetricsOverride', {width:w,height:h,deviceScaleFactor:1,mobile:false});
+        await p.wait(`innerWidth===${w}&&innerHeight===${h}`, 'the viewport resize commits');
+        await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+        assert.equal(await p.evaluate(`(()=>{const nav=document.querySelector('.explorer-advanced-navigation nav'),node=document.activeElement,r=node.getBoundingClientRect(),n=nav.getBoundingClientRect(),p=document.querySelector('#map-utility-panel').getBoundingClientRect();return node===nav.querySelectorAll('button')[7]&&r.top>=n.top&&r.bottom<=n.bottom&&n.top>=p.top&&n.bottom<=p.bottom;})()`), true, 'resizing an open menu keeps the focused final option visible at '+w+'x'+h);
+      }
+    }
+    await p.key('Escape', 'Escape', 27);
+    await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+    await capture('03', 'escape');
+    assert.equal(await p.evaluate(`document.querySelector('#map-utility-panel').dataset.open`), 'true', 'Escape dismisses the nested menu without losing Map controls');
+    assert.equal(await p.evaluate(`document.querySelector('.explorer-advanced-navigation').open`), false);
+    assert.equal(await p.evaluate(`document.activeElement?.matches('.explorer-advanced-navigation > summary')`), true, 'the summary regains focus');
+    assert.deepEqual(await p.evaluate(`({view:document.querySelector('#map-utility-panel').dataset.view, camera:new URLSearchParams(location.search).get('c')})`), original, 'dismissing a menu keeps the selected controls and map position');
+    await p.key('Tab', 'Tab', 9);
+    assert.equal(await p.evaluate(`document.querySelector('#map-utility-panel').contains(document.activeElement) && !document.activeElement.closest('.explorer-advanced-navigation')`), true, 'Tab resumes in the retained panel, outside the closed menu');
+    await p.evaluate(`document.querySelector('.explorer-advanced-navigation > summary').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.explorer-advanced-navigation').open`, 'the retained menu can reopen');
+    await p.key('Escape', 'Escape', 27);
+    assert.equal(await p.evaluate(`document.querySelector('#map-utility-panel').dataset.open`), 'true', 'Escape on the open summary also dismisses only the menu');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`document.querySelector('#map-utility-panel').dataset.open==='false'`, 'a later Escape closes Map controls normally');
+    await p.wait(`document.querySelector('#map-canvas').contains(document.activeElement)`, 'panel close restores map focus');
+  });
 }
 
 // The startup map hides its instrument dock; its color key must remain reachable
@@ -2260,4 +3002,101 @@ for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
     await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('.map-dock-map-menu').open`,'Escape closes the menu');
     assert.equal(await p.evaluate(`document.activeElement?.matches('.map-dock-map-menu>summary')`),true,'focus returns to Map');
   });
+}
+
+
+// Keep this regression in the existing focused source-status CI group.
+for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
+  for (const [id,title] of [
+    ['kdot-roads','KDOT Kansas roads and highways'],
+    ['nasa-gibs-fire-points','NASA GIBS selectable NOAA-20 thermal detections'],
+  ]) {
+    test(`source status releases the previous map entry: source-details return for ${id} at ${width}x${height}`,{timeout:120000},async t=>{
+      const b=await browser(t),p=await pageSession(b,width,height);
+      const row=`.official-context-row:has(.visibility-switch input[aria-label$=${JSON.stringify(title)}])`;
+      const action=`${row} .official-context-actions > button:first-child`;
+      const details=`${row} .official-context-options`;
+      const statusRow=`.source-quality-row[data-source-id="${id}"]`;
+      const summary=`${statusRow} details > summary`;
+      const back='[aria-label="Back to layers"]';
+      const status='.layer-source-switch > button:last-child';
+      const selection=`[...document.querySelectorAll('.official-context-row .visibility-switch input')].map(e=>[e.getAttribute('aria-label'),e.checked])`;
+      // The viewport alone is insufficient: compact layouts can scroll the
+      // outer Layers panel while desktop layouts scroll an inner container.
+      const geometry=selector=>`(() => {
+        const e=document.querySelector(${JSON.stringify(selector)});
+        if(!e)return {visible:false,focused:false,missing:true};
+        const r=e.getBoundingClientRect(),clip={left:0,top:0,right:innerWidth,bottom:innerHeight},ancestors=[];
+        for(let n=e.parentElement;n;n=n.parentElement){
+          const s=getComputedStyle(n),a=n.getBoundingClientRect();
+          if(/^(auto|scroll|hidden|clip)$/.test(s.overflowX)){
+            clip.left=Math.max(clip.left,a.left+n.clientLeft);clip.right=Math.min(clip.right,a.left+n.clientLeft+n.clientWidth);
+          }
+          if(/^(auto|scroll|hidden|clip)$/.test(s.overflowY)){
+            clip.top=Math.max(clip.top,a.top+n.clientTop);clip.bottom=Math.min(clip.bottom,a.top+n.clientTop+n.clientHeight);
+            ancestors.push({tag:n.tagName,className:n.className,top:a.top,bottom:a.bottom,clientHeight:n.clientHeight,scrollHeight:n.scrollHeight,scrollTop:n.scrollTop});
+          }
+        }
+        const available=!e.closest('[hidden], [inert], [aria-hidden="true"]')&&getComputedStyle(e).visibility==='visible';
+        const visible=available&&r.width>0&&r.height>0&&r.left>=clip.left-1&&r.right<=clip.right+1&&r.top>=clip.top-1&&r.bottom<=clip.bottom+1&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));
+        return {visible,focused:document.activeElement===e,rect:r.toJSON(),clip,ancestors};
+      })()`;
+      const focusControl=async selector=>{
+        await p.wait(`!!document.querySelector(${JSON.stringify(selector)})`,'control exists');
+        await p.evaluate(`(() => {const e=document.querySelector(${JSON.stringify(selector)});e.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});e.focus({preventScroll:true});})()`);
+        await p.wait(`(${geometry(selector)}).visible && (${geometry(selector)}).focused`,'control is reachable before keyboard activation');
+      };
+      const evidence=[];
+      const capture=async label=>{
+        const entry={label,viewport:await p.evaluate(`({width:innerWidth,height:innerHeight,devicePixelRatio,mobile:${width<600}})`),returnControl:await p.evaluate(geometry(action)),sourceSummary:await p.evaluate(geometry(summary)),selection:await p.evaluate(selection)};
+        evidence.push(entry);
+        if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
+        await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+        const name=`source-return-${id}-${width}x${height}-${label}`;
+        const shot=await p.call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`${name}.png`),Buffer.from(shot.data,'base64'));
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`${name}.json`),JSON.stringify({browser:await b.call('Browser.getVersion'),evidence},null,2));
+      };
+      try {
+        await p.open('/?panel=layers&motion=off');
+        await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'Layers opens from its direct route');
+        await focusControl('[data-layer-view="official"]');await p.key('Enter','Enter',13);
+        await focusControl('[aria-label="Search map layers"]');
+        await p.call('Input.insertText',{text:title});
+        await p.wait(`document.querySelector(${JSON.stringify(row)})?.hidden===false`,'disabled source is listed');
+        assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(row+' .visibility-switch input')}).checked`),false,'requested source starts disabled');
+        const before=await p.evaluate(selection);
+        await focusControl(details+' > summary');await p.key('Enter','Enter',13);
+        await p.wait(`document.querySelector(${JSON.stringify(details)}).open`,'source controls expanded by keyboard');
+        await focusControl(action);
+        for(let cycle=0;cycle<2;cycle++){
+          // The second opening uses the focus returned by the application.
+          await p.key('Enter','Enter',13);
+          await p.wait(`document.querySelector(${JSON.stringify(statusRow+' details')})?.open && (${geometry(summary)}).focused && (${geometry(summary)}).visible`,'requested source details are open, scrolled into view and focused');
+          assert.equal(await p.evaluate(`document.querySelector('.source-status-scope > button:last-child')?.getAttribute('aria-pressed')`),'true','source navigation selects All sources');
+          assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(statusRow+' input[type="checkbox"]')}).checked`),false,'inspection does not enable the source');
+          assert.deepEqual(await p.evaluate(selection),before,'opening leaves all layer selections unchanged');
+          await capture(`opened-${cycle}`);
+          const beforeWheel=await p.evaluate(geometry(summary));
+          const scrollOffsets=JSON.stringify(beforeWheel.ancestors.map(a=>a.scrollTop));
+          await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x:beforeWheel.rect.x+beforeWheel.rect.width/2,y:beforeWheel.rect.y+beforeWheel.rect.height/2,deltaX:0,deltaY:160});
+          await p.wait(`JSON.stringify((${geometry(summary)}).ancestors.map(a=>a.scrollTop))!==${JSON.stringify(scrollOffsets)}`,'wheel input scrolls the actual Status ancestor');
+          await focusControl(back);await p.key('Enter','Enter',13);
+          // Do not scroll or focus the return control in the test after Back.
+          await p.wait(`!document.querySelector('#map-source-status') && (${geometry(action)}).focused && (${geometry(action)}).visible`,'Back returns visible keyboard focus inside every clipping ancestor');
+          assert.deepEqual(await p.evaluate(selection),before,'returning leaves all layer selections unchanged');
+          await capture(`returned-${cycle}`);
+        }
+        await focusControl(status);await p.key('Enter','Enter',13);
+        await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(back)})`,'generic Status retains its Back focus destination');
+        await focusControl(back);await p.key('Enter','Enter',13);
+        await p.wait(`!document.querySelector('#map-source-status') && (${geometry(status)}).focused && (${geometry(status)}).visible`,'generic Back returns to the visible Status control');
+        assert.deepEqual(await p.evaluate(selection),before,'generic Status also preserves layer selections');
+      } catch(error) {
+        await capture('failure').catch(captureError=>t.diagnostic(`Evidence capture failed: ${captureError}`));
+        t.diagnostic(JSON.stringify(evidence.at(-1)));
+        throw error;
+      }
+    });
+  }
 }

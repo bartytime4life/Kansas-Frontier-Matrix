@@ -6,12 +6,15 @@ import ts from 'typescript';
 const source=await readFile('app/page.tsx','utf8'),ast=ts.createSourceFile('page.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 const performanceModule={};
 vm.runInNewContext(ts.transpileModule(await readFile("app/map-performance.ts","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:performanceModule});
+const healthModule={};
+vm.runInNewContext(ts.transpileModule(await readFile("app/basemap-health.ts","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:healthModule});
 let handler;
 function visit(node){if(ts.isCallExpression(node)&&node.expression.getText(ast)==='map.on'&&node.arguments[0]?.getText(ast)==='"error"')handler=node.arguments[1].getText(ast);ts.forEachChild(node,visit)}visit(ast);assert.ok(handler);
 const code=ts.transpileModule(`exports.handle=${handler}`,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 test('a selected aerial tile failure leaves cutaway controls usable with explicit missing coverage',()=>{
  const states=[],exports={};const sourceId='kansas-ng911-2024';
- vm.runInNewContext(code,{...performanceModule,exports,basemapRef:{current:'kansas-aerial'},VECTOR_BASEMAPS:new Set(['standard','aviation-chart','civic']),BASEMAPS:{'kansas-aerial':{style:{sources:{[sourceId]:{type:'raster'}}}}},LAYER_REGISTRY:[],OFFICIAL_CONTEXT_BY_SOURCE_ID:{},officialContextForMapSource:()=>undefined,degradedReason:null,setRuntime:state=>states.push(state)});
- exports.handle({sourceId,error:new Error('private provider URL must never enter UI')});
+ const spec={type:'raster',tiles:['https://example.invalid/{z}/{x}/{y}.png']},rendererSource={serialize:()=>spec};
+ vm.runInNewContext(code,{...performanceModule,...healthModule,exports,basemapHealth:healthModule.createBasemapHealth(),map:{getSource:()=>rendererSource},basemapRef:{current:'kansas-aerial'},VECTOR_BASEMAPS:new Set(['standard','aviation-chart','civic']),BASEMAPS:{'kansas-aerial':{style:{sources:{[sourceId]:spec}}}},LAYER_REGISTRY:[],OFFICIAL_CONTEXT_BY_SOURCE_ID:{},officialContextForMapSource:()=>undefined,degradedReason:null,setRuntime:state=>states.push(state)});
+ exports.handle({sourceId,source:spec,tile:{state:'errored',tileID:{canonical:{z:6,x:14,y:24}}},error:new Error('private provider URL must never enter UI')});
  assert.equal(states[0].kind,'degraded');assert.match(states[0].message,/Gaps are unknown/);assert.match(states[0].message,/controls and records remain available/);assert.doesNotMatch(states[0].message,/private provider/);
 });

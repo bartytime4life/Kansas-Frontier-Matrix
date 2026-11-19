@@ -262,6 +262,23 @@ export const applyTerrainReliefStyle = (map: MapLibreMap, look: ReliefLook, ligh
 // ---------------------------------------------------------------------------
 
 export const CURTAIN_LAYER_ID = "scene-kansas-aurora";
+// Presentation leases never change persisted scene preferences. Every ordinary
+// visibility sync (including style replacement) still observes the active lease.
+const curtainSuppression = new WeakMap<MapLibreMap, number>();
+const curtainEfficiency = new WeakMap<MapLibreMap, boolean>();
+export function leaseBorderCurtainSuppression(map: MapLibreMap): () => void {
+  curtainSuppression.set(map, (curtainSuppression.get(map) ?? 0) + 1);
+  syncBorderCurtainVisibility(map, curtainEfficiency.get(map) ?? false);
+  let active = true;
+  return () => {
+    if (!active) return;
+    active = false;
+    const remaining = (curtainSuppression.get(map) ?? 1) - 1;
+    if (remaining) curtainSuppression.set(map, remaining);
+    else curtainSuppression.delete(map);
+    syncBorderCurtainVisibility(map, curtainEfficiency.get(map) ?? false);
+  };
+}
 // Updated with the same effective light used by the sky and buildings. This
 // registry is sampled by the existing layer, never by an extra repaint loop.
 const curtainLights = new WeakMap<object, SceneLightPreset>();
@@ -311,14 +328,15 @@ export function syncBorderCurtain(map: MapLibreMap, efficient: boolean): boolean
 }
 
 export function syncBorderCurtainVisibility(map: MapLibreMap, efficient: boolean): void {
+  curtainEfficiency.set(map, efficient);
   if (!map.getLayer(CURTAIN_LAYER_ID)) return;
   const projection = map.getProjection()?.type;
-  const visibility = curtainShouldShow(sceneEffectsFor(map), map.getPitch(), efficient, typeof projection === "string" ? projection : undefined) ? "visible" : "none";
+  const visibility = !curtainSuppression.has(map) && curtainShouldShow(sceneEffectsFor(map), map.getPitch(), efficient, typeof projection === "string" ? projection : undefined) ? "visible" : "none";
   if (map.getLayoutProperty(CURTAIN_LAYER_ID, "visibility") !== visibility) map.setLayoutProperty(CURTAIN_LAYER_ID, "visibility", visibility);
 }
 
 export const curtainIsVisible = (map: MapLibreMap): boolean =>
-  Boolean(map.getLayer(CURTAIN_LAYER_ID)) && map.getLayoutProperty(CURTAIN_LAYER_ID, "visibility") === "visible";
+  !curtainSuppression.has(map) && Boolean(map.getLayer(CURTAIN_LAYER_ID)) && map.getLayoutProperty(CURTAIN_LAYER_ID, "visibility") === "visible";
 
 // ---------------------------------------------------------------------------
 // Selection pulse

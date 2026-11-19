@@ -1,3 +1,7 @@
+> **Topic discovery candidate — 2026-11-10:** Search topics in any word order, keep the preview aligned with matching results, and clear filters without losing combined-map choices. Keyboard dismissal and phone empty-result recovery are improved. [Behavior and local verification](docs/explorer-topic-finder.md). Not deployed.
+
+> **Kansas Sky flight candidate — 2026-11-08:** Explore retained aircraft journeys in the existing Aviation layer with Follow/Orbit, source-backed briefs, guarded motion, cinematic paths and projection-aware framing. [Usage, mathematics and validation](docs/kansas-sky.md) distinguish local evidence from GitHub review, deployment and hosted archive activation.
+
 > **Living welcome candidate — 2026-10-20:** Eight map topics and 30 credited motion scenes now connect to the existing Find, Ask and source tools. Kansas history, source locations, reduced motion and pending-data boundaries are preserved. See [integration and maintenance](docs/living-welcome.md). Repository candidate; publication is separate.
 
 > **Anonymous replacement application — 2026-10-19:** Login, account management,
@@ -31,7 +35,21 @@
 
 # Kansas Frontier Matrix Explorer
 
-**Next.js dependency candidate — October 22, 2026.** The standalone Node
+**Next.js runtime reconciliation — November 18, 2026.** This source candidate
+pins the runtime package to 16.4.6; the separate ESLint configuration stays at
+16.4.2. It addresses the package ranges in
+[GHSA-mfr8-8qww-v76h](https://github.com/advisories/GHSA-mfr8-8qww-v76h) and
+[GHSA-vc7v-qv4w-wrv8](https://github.com/advisories/GHSA-vc7v-qv4w-wrv8).
+The existing vendored vinext production server, React, starting-page source,
+provider contracts and hosting settings are unchanged. Run
+`node --test tests/next-runtime-compatibility.test.mjs` for the installed-package
+gate and actual Next/vinext request-response compatibility checks. This is a
+source dependency repair, not proof of advisory reachability, deployed package
+versions, independent security review or permission to publish. Reverting the
+four-file dependency/test/documentation change restores the previous source
+composition; no data migration is involved.
+
+**Historical Next.js dependency candidate — October 22, 2026.** The standalone Node
 source pins Next and its ESLint configuration to 16.4.2, preserving the existing
 Vinext, React, Braces fork and hosting settings. See the
 [dependency verification boundary](docs/godaddy-node-preview.md#nextjs-dependency-candidate--2026-10-22).
@@ -1036,6 +1054,13 @@ React, React DOM and RSC are pinned to 19.2.8 for
 Scoped dependency overrides install patched bytes: `vinext -> image-size@2.0.4`,
 `miniflare -> sharp@0.35.4`, and `@esbuild-kit/core-utils -> esbuild@0.25.12`
 ([esbuild advisory](https://github.com/advisories/GHSA-67mh-4wv8-2f99)).
+The public composition also scopes `minimatch@11.0.1` to
+`@typescript-eslint/typescript-estree` for
+[GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249).
+Callable legacy `minimatch@3.1.5` remains separate; the advisory's affected range
+starts at version 7. Regression checks exercise the actual TypeScript project
+service's default-project allowlist, glob behavior and both installed APIs.
+This records a source dependency repair, not installed-host or exploitation proof.
 Other vulnerable transitive packages are updated within their existing ranges.
 These are package replacements, not audit suppressions. Revisit overrides when
 upstream dependency ranges incorporate these fixes. The Site uses a checked-in

@@ -3,7 +3,7 @@ import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap 
 /**
  * A glowing curtain of light standing on a closed ring (the Census Kansas
  * boundary, simplified for state-scale display). Drawn as a MapLibre custom WebGL2 layer so it can blend
- * additively — bright at the foot, fading upward, with an optional slow
+ * with bounded premultiplied alpha — bright at the foot, fading upward, with an optional slow
  * shimmer. Wall feet follow the rendered terrain surface when Terrain 3D is on.
  *
  * Presentation only: the ring is the bundled display outline, never a legal
@@ -36,7 +36,7 @@ export function densifyRing(ring: readonly (readonly [number, number])[], stepKm
 }
 
 /** Wall height in metres by zoom: readable statewide, modest up close. */
-export const CURTAIN_HEIGHT_STOPS: readonly (readonly [number, number])[] = [[1, 380000], [4, 120000], [6, 52000], [8, 17000], [10, 5200], [12, 1600], [14, 520]];
+export const CURTAIN_HEIGHT_STOPS: readonly (readonly [number, number])[] = [[1, 42000], [4, 16000], [6, 6500], [8, 2200], [10, 700], [12, 220], [14, 70]];
 
 export function curtainHeightMeters(zoom: number): number {
   const stops = CURTAIN_HEIGHT_STOPS;
@@ -55,29 +55,9 @@ export function curtainHeightMeters(zoom: number): number {
 
 const mercatorX = (lng: number) => (180 + lng) / 360;
 const mercatorY = (lat: number) => (180 - (180 / Math.PI) * Math.log(Math.tan(Math.PI / 4 + (lat * RADIANS) / 2))) / 360;
-/** MapLibre's world size in pixels at a zoom (512 px tiles). */
-const worldSize = (zoom: number) => 512 * 2 ** zoom;
-
-const MERCATOR_VERTEX_SHADER = `#version 300 es
-uniform mat4 u_matrix;
-uniform float u_height;
-uniform float u_world_size;
-in vec2 a_pos;
-in float a_ground;
-in float a_side;
-in float a_t;
-out float v_side;
-out float v_t;
-void main() {
-  v_side = a_side;
-  v_t = a_t;
-  // MapLibre's mercator view-projection takes world pixels for x/y and metres for z.
-  gl_Position = u_matrix * vec4(a_pos * u_world_size, a_ground + a_side * u_height, 1.0);
-}`;
-
-// On the globe, MapLibre supplies its projection prelude: positions are
-// Mercator 0–1 coordinates and elevation is in metres above the sphere.
-const globeVertexShader = (prelude: string, define: string) => `#version 300 es
+// A world tile provides one public coordinate contract in both projections:
+// normalized Mercator XY becomes tile units (0..8192), with meter elevation.
+const curtainVertexShader = (prelude: string, define: string) => `#version 300 es
 ${prelude}
 ${define}
 uniform float u_height;
@@ -87,10 +67,17 @@ in float a_side;
 in float a_t;
 out float v_side;
 out float v_t;
+out float v_visibility;
 void main() {
   v_side = a_side;
   v_t = a_t;
-  gl_Position = projectTileWithElevation(a_pos, a_ground + a_side * u_height);
+  float height=a_ground+a_side*u_height;
+  gl_Position = projectTileFor3D(a_pos*8192.,height);
+  v_visibility=1.;
+  #ifdef GLOBE
+  vec3 elevated=projectToSphere(a_pos*8192.)*(1.+height/6371008.8);
+  v_visibility=1.-globeComputeClippingZ(elevated)*clamp((u_projection_transition-.2)/.8,0.,1.);
+  #endif
 }`;
 
 const FRAGMENT_SHADER = `#version 300 es
@@ -101,15 +88,17 @@ uniform vec3 u_foot;
 uniform vec3 u_crest;
 in float v_side;
 in float v_t;
+in float v_visibility;
 out vec4 fragColor;
 void main() {
+  if(v_visibility<0.)discard;
   float fade = pow(1.0 - v_side, 2.2);
   // Broad folds plus finer drifting rays along the perimeter.
   float rays = 0.72 + 0.18 * sin(v_t * 420.0 + u_time * 0.9) + 0.1 * sin(v_t * 2100.0 - u_time * 1.7);
   float footLine = 1.0 - smoothstep(0.0, 0.03, v_side);
-  float alpha = clamp(fade * rays * u_intensity + footLine * 0.55, 0.0, 1.0);
+  float alpha = clamp((fade * rays * .2 + footLine * .09) * u_intensity, 0.0, .28);
   vec3 color = mix(u_foot, u_crest, smoothstep(0.0, 0.85, v_side));
-  // Premultiplied output for additive blending.
+  // Premultiplied output with bounded alpha keeps map context legible.
   fragColor = vec4(color * alpha, alpha);
 }`;
 
@@ -202,7 +191,7 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
     return shader;
   };
 
-  const UNIFORMS = ["u_matrix", "u_height", "u_world_size", "u_time", "u_intensity", "u_foot", "u_crest",
+  const UNIFORMS = ["u_height", "u_time", "u_intensity", "u_foot", "u_crest",
     "u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition"];
   const createBundle = (gl: WebGL2RenderingContext, vertexSource: string): ProgramBundle => {
     const program = gl.createProgram()!;
@@ -268,17 +257,15 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
         // A failed sample keeps the previous feet rather than breaking the frame.
         try { updateGround(gl); } catch { groundDirty = false; }
       }
-      const exaggeration = Number(map.getTerrain()?.exaggeration ?? 1);
-      const height = curtainHeightMeters(map.getZoom()) * (Number.isFinite(exaggeration) && exaggeration > 0 ? Math.min(exaggeration, 1.6) : 1);
+      // Decorative height is independent of the user's terrain exaggeration.
+      const height = curtainHeightMeters(map.getZoom());
       const variant = input.shaderData?.variantName === "globe" ? "globe" : "mercator";
       if (unsupported.has(variant)) return;
       let bundle = bundles.get(variant);
       if (!bundle) {
         // Compile only the projection actually drawn; a failure disables only this variant.
         try {
-          bundle = createBundle(gl, variant === "globe"
-            ? globeVertexShader(input.shaderData.vertexShaderPrelude, input.shaderData.define)
-            : MERCATOR_VERTEX_SHADER);
+          bundle = createBundle(gl, curtainVertexShader(input.shaderData.vertexShaderPrelude, input.shaderData.define));
         } catch {
           unsupported.add(variant);
           return;
@@ -287,17 +274,12 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
       }
       const { program, vao, uniforms } = bundle;
       gl.useProgram(program);
-      if (variant === "globe") {
-        const projection = input.defaultProjectionData;
-        gl.uniformMatrix4fv(uniforms.u_projection_matrix, false, projection.mainMatrix as Float32Array);
-        gl.uniformMatrix4fv(uniforms.u_projection_fallback_matrix, false, projection.fallbackMatrix as Float32Array);
-        gl.uniform4f(uniforms.u_projection_tile_mercator_coords, ...projection.tileMercatorCoords);
-        gl.uniform4f(uniforms.u_projection_clipping_plane, ...projection.clippingPlane);
-        gl.uniform1f(uniforms.u_projection_transition, projection.projectionTransition);
-      } else {
-        gl.uniformMatrix4fv(uniforms.u_matrix, false, input.modelViewProjectionMatrix as Float32Array);
-        gl.uniform1f(uniforms.u_world_size, worldSize(map.getZoom()));
-      }
+      const projection = input.getProjectionData({tileID:{canonical:{z:0,x:0,y:0}},applyGlobeMatrix:true});
+      gl.uniformMatrix4fv(uniforms.u_projection_matrix, false, Float32Array.from(projection.mainMatrix));
+      gl.uniformMatrix4fv(uniforms.u_projection_fallback_matrix, false, Float32Array.from(projection.fallbackMatrix));
+      gl.uniform4f(uniforms.u_projection_tile_mercator_coords, ...projection.tileMercatorCoords);
+      gl.uniform4f(uniforms.u_projection_clipping_plane, ...projection.clippingPlane);
+      gl.uniform1f(uniforms.u_projection_transition, projection.projectionTransition);
       gl.uniform1f(uniforms.u_height, height);
       gl.uniform1f(uniforms.u_time, options.clock() ?? 0);
       const palette = options.palette?.();
@@ -305,7 +287,8 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
       gl.uniform3fv(uniforms.u_foot, palette?.foot ?? options.foot ?? [1, 0.8, 0.42]);
       gl.uniform3fv(uniforms.u_crest, palette?.crest ?? options.crest ?? [0.45, 0.85, 0.95]);
       gl.enable(gl.BLEND);
-      gl.blendFunc(gl.ONE, gl.ONE);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+      gl.enable(gl.DEPTH_TEST);
       gl.depthMask(false);
       gl.disable(gl.CULL_FACE);
       gl.bindVertexArray(vao);

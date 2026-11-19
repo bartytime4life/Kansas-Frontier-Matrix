@@ -1,6 +1,8 @@
 'use client';
 import { useRef, useState } from 'react';
 import { Legend, Readout, Segmented, Summary, clamp, divergingBlueRed, divergingBrownTeal, drawGrain, ease, fillTabular, fmt, useStoryCanvas } from './story-kit.mjs';
+import { climateAnnualAnalysis } from './science-model.mjs';
+import './record-lab.css';
 
 const GROUND = '#0c1420', STATE = '20';
 const DEFAULTS = Object.freeze({ element: 'tmpc', baseline: '1901-2000', area: STATE });
@@ -86,7 +88,9 @@ function drawCard(ctx, scene, { t, still }) {
   const { w, h, rows, stripes } = scene, cycle = SWEEP_SECONDS + HOLD_SECONDS, at = still ? 1 : clamp((t % cycle) / SWEEP_SECONDS);
   const reveal = ease.inOutCubic(at), front = reveal * w;
   ctx.fillStyle = GROUND; ctx.fillRect(0, 0, w, h);
-  ctx.drawImage(stripes, 0, 0, Math.round(front * scene.dpr), stripes.height, 0, 0, front, h);
+  // Keep the full record visible from the first frame; the sweep highlights it
+  // without making a just-opened card look like another empty instrument.
+  ctx.drawImage(stripes, 0, 0, stripes.width, stripes.height, 0, 0, w, h);
   if (at < 1) {
     const light = ctx.createLinearGradient(front - 28, 0, front + 8, 0);
     light.addColorStop(0, '#ffffff00'); light.addColorStop(.8, '#ffffff66'); light.addColorStop(1, '#ffffff00');
@@ -225,9 +229,19 @@ function Lab({ bundle, time, onTime, controls, onControls }) {
   };
   const unit = spec.unit === 'index' ? 'index' : spec.unit;
   const stateRow = annualOf(model, element, STATE, settings.baseline).rows.find(row => row.year === year), highest = [...series.rows].filter(row => row.months === 12).sort((a, b) => b.anomaly - a.anomaly)[0];
+  const analysis = climateAnnualAnalysis(bundle, { element, area: settings.area, baseline: settings.baseline, from: settings.scienceFrom, to: settings.scienceTo });
+  const analysisFormat = value => value === null ? 'Not defined' : fmt(value, { digits: element === 'tmpc' ? 2 : 3 });
+  const highLabel = element === 'tmpc' ? 'Warmest complete year' : element === 'pcpn' ? 'Wettest complete year' : 'Highest annual drought index';
+  const lowLabel = element === 'tmpc' ? 'Coolest complete year' : element === 'pcpn' ? 'Driest complete year' : 'Lowest annual drought index';
   const summary = `Stripes of annual ${spec.label.toLowerCase()} for Kansas and nine climate divisions, ${years[0]} to ${years.at(-1)}, with a monthly calendar below. In ${year}, Kansas was ${stateRow?.months ? fmt(stateRow.value, { digits, unit: spec.unit === 'index' ? '' : spec.unit }) : 'not yet reported'}. The highest whole year for the chosen area was ${highest?.year}.`;
   return <div className="story-lab-layout">
-    <div className="story-lab-main"><canvas ref={canvas} className="story-canvas story-stripes-lab" role="img" aria-label={summary} onPointerMove={pick} onPointerDown={choose} onPointerLeave={() => setHover(null)}/></div>
+    <div className="story-lab-main"><canvas ref={canvas} className="story-canvas story-stripes-lab" role="img" aria-label={summary} onPointerMove={pick} onPointerDown={choose} onPointerLeave={() => setHover(null)}/>
+      <section className="climate-science" aria-label="Climate trend analysis"><div className="climate-science-heading"><div><span className="record-eyebrow">THE LONG VIEW / COMPLETE YEARS ONLY</span><h3>Measure the changing record.</h3><p>{areas.find(area => area.id === settings.area)?.name} · annual {spec.label.toLowerCase()}</p></div><div className="climate-analysis-period"><label>Analysis from<input type="number" min={years[0]} max={years.at(-1)} placeholder={years[0]} value={settings.scienceFrom ?? ''} onChange={event => onControls?.({ ...settings, scienceFrom: event.target.value })}/></label><label>Analysis to<input type="number" min={years[0]} max={years.at(-1)} placeholder={years.at(-1)} value={settings.scienceTo ?? ''} onChange={event => onControls?.({ ...settings, scienceTo: event.target.value })}/></label></div></div>
+        <dl className="climate-analysis-stats"><div><dt>Linear trend / decade</dt><dd>{analysisFormat(analysis.slopePerDecade)}<small>{unit}</small></dd></div><div><dt>Descriptive OLS R²</dt><dd>{analysisFormat(analysis.rSquared)}</dd></div><div><dt>Complete years</dt><dd>{analysis.count}<small>{analysis.incomplete} incomplete excluded</small></dd></div><div><dt>Fitted period</dt><dd>{analysis.rows[0]?.year ?? '—'}<small>to {analysis.rows.at(-1)?.year ?? '—'}</small></dd></div></dl>
+        <div className="climate-analysis-extremes">{[[lowLabel, analysis.lowest], [highLabel, analysis.highest]].map(([label, row]) => <button key={label} type="button" disabled={!row} onClick={() => row && onTime?.(row.year)}><span>{label}</span><strong>{row?.year ?? '—'}</strong><small>{row ? `${analysisFormat(row.value)} ${unit}` : 'No complete years'} <span aria-hidden="true">↗</span></small></button>)}</div>
+        <p className="record-method-note">{analysis.reason ? `${analysis.reason} ` : ''}Ordinary least squares fits annual values against calendar year over the analysis period. Temperature and drought use 12-month means; precipitation uses 12-month totals. Incomplete years are excluded. The year scrubber highlights a year; these analysis bounds control the fit. The slope is descriptive and does not quantify uncertainty, attribution or future change.</p>
+      </section>
+    </div>
     <aside className="story-lab-side" aria-label="Climate tools">
       <section className="story-panel">
         <Segmented label="Measure" value={element} onChange={value => onControls?.({ ...settings, element: value })} options={[{ id: 'tmpc', label: 'Temperature' }, { id: 'pcpn', label: 'Precipitation' }, { id: 'pdsi', label: 'Drought index' }]}/>

@@ -2,8 +2,11 @@ import { NextRequest } from "next/server";
 import { GET as contextData } from "../live-context/route";
 import { GET as streamflowData } from "../hydrology/streamflow/route";
 import { eventDay } from "../../event-atlas";
+import { SOURCE_DOWNLOADS } from "../../source-downloads";
 export const dynamic = "force-dynamic";
-const sources = new Set(["census-counties", "usgs-streamflow", "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "nifc-fire-reports", "raspberry-shake-stations", "nws-alerts"]);
+// Exactly the sources whose download link points at this route; one list, kept in source-downloads.ts.
+const DOWNLOAD_HREF = "/api/source-download?source=";
+const sources = new Set(Object.entries(SOURCE_DOWNLOADS).flatMap(([id, { href }]) => href === `${DOWNLOAD_HREF}${id}` ? [id] : []));
 const archiveSources = new Set(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);
 export async function GET(request: Request) {
   const url = new URL(request.url); const source = url.searchParams.get("source") ?? "";

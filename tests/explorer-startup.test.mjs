@@ -19,13 +19,13 @@ test('all catalogue subjects and existing tool links are intentional destination
 });
 
 test('source-status compatibility, explicit views and shared URLs bypass welcome', () => {
-  for (const search of ['layers=sources', 'maptab=localAtlas', 'topic=all', 'layerView=imagery', 'layerView=selected', 'mapui=open', 'tm=comparison', 'kfm-chat=1', 'c=-98.2,38.6&z=7&t=2026', 'f=shared-record']) {
+  for (const search of ['panel=layers', 'layers=sources', 'maptab=localAtlas', 'topic=all', 'layerView=imagery', 'layerView=selected', 'mapui=open', 'tm=comparison', 'kfm-chat=1', 'c=-98.2,38.6&z=7&t=2026', 'f=shared-record']) {
     assert.equal(destination(search), true, search);
   }
 });
 
 test('plain startup and unrelated or invalid query values retain welcome', () => {
-  for (const search of ['', 'utm_source=topics', 'topic=', 'topic=unknown', 'topic=__proto__', 'mapui=closed', 'maptab=measure', 'layerView=unknown', 'c=,', 'c=no,38', 'c=1,2,3']) {
+  for (const search of ['', 'utm_source=topics', 'topic=', 'topic=unknown', 'topic=__proto__', 'mapui=closed', 'panel=unknown', 'panel=', 'maptab=measure', 'layerView=unknown', 'c=,', 'c=no,38', 'c=1,2,3']) {
     assert.equal(destination(search), false, search);
   }
   assert.equal(startup.exports.hasExplorerDestination(new URLSearchParams('c=-98,38&mapui=closed'), new URLSearchParams()), false, 'automatically saved default camera is not an explicit destination');
@@ -109,4 +109,29 @@ test('restoring a map clears source status and does not serialize that panel int
  assert.deepEqual(run('topics=government&layers=sources'),{status:true,left:true,mode:'layers'});
  assert.deepEqual(run('topic=government','government',[]),{status:false,left:true,mode:'layers'},'direct topic links still open the catalog');
  assert.deepEqual(run('maptab=localAtlas'),{status:true,left:true,mode:'layers'},'legacy source-status navigation remains supported');
+});
+
+
+test('library return opens editable Layers without source status or a saved welcome preference', async () => {
+ const page = await readFile('app/page.tsx', 'utf8');
+ const start = page.indexOf('      const restoredMapUtilityView = params.get("maptab");', page.indexOf('  const restoreExplorerFromUrl'));
+ assert.ok(start >= 0, 'execute the actual URL restoration');
+ const end = page.indexOf('      const nextMapUtilityView:', start);
+ assert.ok(end > start);
+ const source = page.slice(start, end);
+ for (const [query, expected] of [['panel=layers', true], ['panel=unknown', false], ['', false]]) {
+  const state = {status: true, left: false, mode: 'search'};
+  vm.runInNewContext(ts.transpile(source), {
+   params: new URLSearchParams(query), restoredTopic: 'all', restoredTopics: [],
+   setSourceStatusOpen: value => state.status = value,
+   setLeftOpen: value => state.left = value,
+   setLeftPanelMode: value => state.mode = value,
+  });
+  assert.equal(state.left, expected, query);
+  assert.equal(state.status, false, 'Layers is not the source-status dialog');
+  assert.equal(state.mode, expected ? 'layers' : 'search', query);
+  assert.equal(destination(query), expected, 'destination and restoration agree');
+ }
+ const library = await readFile('app/data-library/page.tsx', 'utf8');
+ assert.match(library, /href="\/\?panel=layers"/, 'exercise the destination used by the library');
 });

@@ -64,6 +64,13 @@ Each step below is something the owner runs deliberately on the home PC.
 
 ## Phase 0: inventory (read-only)
 
+The redactor uses portable extended regular expressions for BSD and GNU `sed`,
+including adjacent IPv4/UUID tokens. Loopback and wildcard listeners retain
+their addresses and ports. This portability applies to redaction; the complete
+hardware inventory remains intended for the second Linux PC. The focused
+`node --test tests/home-inference-inventory.test.mjs` check runs from the repository
+root and exercises synthetic input only, without collecting host inventory.
+
 ```bash
 bash inventory.sh > ~/kfm-inventory-$(date +%F).txt
 ```
@@ -166,6 +173,26 @@ caps visible answers at public chat's 16384-byte limit, preserving UTF-8 and
 returning longer answers as partials that the visitor can continue. Hidden
 reasoning never becomes a partial answer. Keep the deadline bounded for the PC.
 
+**Thinking by depth.** `think` may be `true`/`false` for every request, or
+`{"brief": false, "expanded": true}` to set it for each depth separately. An
+optional `depthOptions` object (`brief` and/or `expanded`) holds sampling options
+that replace the profile's `options` for that depth only, using the same allowed
+keys. One profile can then answer a short structured step quickly without
+reasoning and a long answer with it, for example Qwen 3.5 with its non-thinking
+sampling for `brief`. The website chooses the depth; the profile decides what each
+depth does. Changing either field changes model behaviour, so re-qualify the
+profile before pointing a website at it.
+
+**Structured output.** A chat request may include `format`, a JSON schema whose
+root is an object. The gateway forwards it to Ollama, which constrains sampling so
+the answer parses as that shape. Only a bounded subset is accepted: at most 8 KB
+and 8 levels; keywords `type`, `properties`, `required`, `items`,
+`additionalProperties` (boolean), `minItems`, `maxItems`, `minLength`,
+`maxLength`, `enum`, `description`. References, `pattern` and combinators are
+refused with `INVALID_REQUEST`. Health lists `structuredOutput: true` on each
+profile so a website sends a schema only to a gateway that accepts one. The
+caller still validates the parsed answer; a schema fixes shape, not content.
+
 **Coordinated limits.** `budgets.mjs` allows up to 640 seconds through the gateway,
 650 through the relay, 660 through the PC worker and 670 through the hosted client.
 Each public job has 700 seconds once running. Admission reserves another 700
@@ -221,6 +248,57 @@ chat deadline, response authentication and outage checks still apply. Finishing
 or cancelling that generation triggers a fresh health probe immediately.
 
 Logs (`journalctl -u kfm-inference-worker`) carry fixed codes and timings only.
+
+## Change the chat model
+
+The model is pinned in **two places**, and both must name the same digest:
+
+1. **On the inference PC:** the profile's `model` and `digest` in the
+   gateway's profiles file. The file's path comes from the gateway process's
+   `KFM_GATEWAY_PROFILES` setting, and defaults to
+   `/etc/kfm-inference/profiles.json`.
+2. **On the website:** `KFM_HOME_INFERENCE_DIGEST` in the GoDaddy app's
+   environment. The site also checks the profile `id` against
+   `KFM_HOME_INFERENCE_PROFILE`.
+
+If the two digests differ, public chat reports *unavailable* until they
+match, and the app log records `PROFILE_IDENTITY`. Nothing falls back to another model.
+
+**Size the model to the GPU first.** Use about 8B for 8 GB of VRAM and about
+14B for 12–16 GB. On CPU only, larger models usually miss the 90-second limit
+for brief answers.
+
+To change the model, on the inference PC:
+
+```bash
+ollama pull qwen3:14b
+```
+
+```bash
+curl -s http://127.0.0.1:11434/api/tags | node -e 'for (const m of JSON.parse(require("fs").readFileSync(0)).models) console.log(m.name, "sha256:" + m.digest)'
+```
+
+1. Back up the profiles file.
+2. In the profile the site uses (normally `kfm-default-chat`), change only
+   `model` and `digest`. Keep its `id` and every other field.
+3. Reload the gateway service.
+4. Without delay, set `KFM_HOME_INFERENCE_DIGEST` in GoDaddy to the same
+   `sha256:…` value.
+5. **Publish.** The app restarts and shows *connecting* for about 10 seconds
+   before *ready*.
+
+Then confirm the change from anywhere:
+
+```bash
+curl -s https://kansasfrontiermatrix.com/api/ai/status
+```
+
+The response should show the new `modelLabel` and `"ready":true`. Then ask one
+brief question on the site and time the reply.
+
+**To undo:** restore the backed-up profiles file, reload the gateway, put the
+old digest back in GoDaddy, and publish. Keep the old model downloaded until
+the new one has proved itself.
 
 ## Stopping and rollback on this PC
 

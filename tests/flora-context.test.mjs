@@ -58,6 +58,18 @@ test('style replacement restores the selected year; later cover layers remain be
  m.removeLayer(id);m.removeSource(id);m.emit('styledata',{});
  assert.ok(m.getSource(id));assert.equal(m.getLayer(id).paint['raster-opacity'],0.65);assert.equal(states.at(-1),'loading');stop();
 });
+test('native context loss permits disabled-layer cleanup and resumes only after a style returns',()=>{
+ const m=fakeMap(),readStyle=m.getStyle;let available=false;
+ m.getStyle=()=>available?readStyle():undefined;m.isStyleLoaded=()=>available;
+ assert.doesNotThrow(()=>f.watchFloraContext(m,null,0,()=>0.75,()=>{}),'React may disable a context layer after MapLibre discards its style');
+ assert.deepEqual(Object.keys(m.sources),[],'no style means no source mutation');
+ const states=[],id=f.floraSourceId(2021),stop=f.watchFloraContext(m,2021,0,()=>0.65,s=>states.push(s));
+ m.emit('styledata',{});assert.deepEqual(Object.keys(m.sources),[]);assert.deepEqual(states,['loading']);
+ available=true;m.emit('styledata',{});assert.ok(m.getLayer(id));assert.equal(m.getLayer(id).paint['raster-opacity'],0.65);
+ m.emit('sourcedata',{sourceId:id,isSourceLoaded:true});assert.equal(states.at(-1),'settled');
+ stop();available=false;assert.doesNotThrow(()=>f.watchFloraContext(m,null,0,()=>0.75,()=>{}));
+ for(const listeners of m.events.values())assert.equal(listeners.size,0,'context recovery subscriptions are released');
+});
 test('dock exposes annual, opacity and retry controls with source limits, and opening another category clears plants',async()=>{
  const h=await componentHarness('app/category-map-dock.tsx',{}),calls=[];
  const base={look:maps.CATEGORY_MAPS.flora,mode:'2d',depth:1,azimuth:315,onMode(){},onDepth(){},onAzimuth(){},onReset(){},onLayers(){},onClose(){},

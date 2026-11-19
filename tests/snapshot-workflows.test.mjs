@@ -102,3 +102,54 @@ test("location-redacted snapshots cannot restore precise bounds", () => {
   assert.equal(storage.validMapSnapshot(redacted), true);
   assert.equal(storage.validMapSnapshot({ ...redacted, area: { ...snapshot.area, bounds: { west: -98.4, east: -98.3, south: 38.4, north: 38.5 } } }), false);
 });
+
+test("a successful report or story save can be reopened with the same validator", () => {
+  const previousWindow = globalThis.window;
+  const saved = new Map();
+  const device = { getItem: key => saved.get(key) ?? null, setItem: (key, value) => saved.set(key, value) };
+  globalThis.window = { localStorage: device };
+  try {
+    for (const [key, draft] of [[storage.REPORT_STORAGE_KEY, model.createReportDraft(snapshot, [])], [storage.STORY_STORAGE_KEY, model.createMapStory(snapshot)]]) {
+      draft.researchQuestion = "q".repeat(storage.MAX_DRAFT_TEXT_LENGTH);
+      assert.equal(storage.writeDraft(device, key, draft), "saved");
+      assert.deepEqual(storage.readDraft(key), JSON.parse(JSON.stringify(draft)));
+    }
+  } finally { if (previousWindow === undefined) delete globalThis.window; else globalThis.window = previousWindow; }
+});
+
+test("save rejects unrestorable drafts before replacing the previous device copy", () => {
+  const previous = "previous saved copy", saved = new Map([[storage.REPORT_STORAGE_KEY, previous], [storage.STORY_STORAGE_KEY, previous]]);
+  const device = { setItem: (key, value) => saved.set(key, value) };
+  const report = model.createReportDraft(snapshot, []), story = model.createMapStory(snapshot);
+  const redactedWithBounds = { ...snapshot, camera: { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", pitch: "WITHHELD", bearing: "WITHHELD" }, area: { ...snapshot.area, bounds: { west: -99, east: -98, south: 38, north: 39 } } };
+  for (const [key, value] of [
+    [storage.REPORT_STORAGE_KEY, { ...report, researchQuestion: "q".repeat(storage.MAX_DRAFT_TEXT_LENGTH + 1) }],
+    [storage.REPORT_STORAGE_KEY, { ...report, status: "PUBLISHED" }],
+    [storage.REPORT_STORAGE_KEY, { ...report, snapshot: redactedWithBounds }],
+    [storage.REPORT_STORAGE_KEY, story], [storage.STORY_STORAGE_KEY, report],
+    [storage.STORY_STORAGE_KEY, { ...story, scenes: [{ ...story.scenes[0], evidenceRefs: ["invented-evidence"] }] }],
+    ["unrelated-storage-key", report],
+  ]) assert.equal(storage.writeDraft(device, key, value), "invalid");
+  assert.deepEqual([...saved.values()], [previous, previous]);assert.equal(saved.size, 2);
+});
+
+test("save enforces the reopen size ceiling even for a shape-valid story", () => {
+  const story = model.createMapStory(snapshot);
+  const text = "q".repeat(storage.MAX_DRAFT_TEXT_LENGTH);
+  story.scenes = Array.from({ length: 64 }, (_, i) => ({ ...story.scenes[0], id: `scene-${i}`, narrative: text, caveats: [text] }));
+  assert.equal(storage.validStoryDraft(story), true);
+  assert.ok(JSON.stringify(story).length > storage.MAX_DRAFT_CHARACTERS);
+  let writes = 0;
+  assert.equal(storage.writeDraft({ setItem() { writes++; } }, storage.STORY_STORAGE_KEY, story), "too-large");
+  assert.equal(writes, 0);
+});
+
+test("serialization failures and transformed invalid drafts cannot receive a saved state", () => {
+  const report = model.createReportDraft(snapshot, []), circular = {};circular.self = circular;
+  let writes = 0;const device = { setItem() { writes++; } };
+  for (const value of [undefined, circular, { ...report, extra: 1n }, { ...report, toJSON: () => ({ ...report, status: "PUBLISHED" }) }]) {
+    assert.equal(storage.writeDraft(device, storage.REPORT_STORAGE_KEY, value), "invalid");
+  }
+  assert.equal(writes, 0);
+  assert.equal(storage.writeDraft({ setItem() { throw new Error("quota or browser denial"); } }, storage.REPORT_STORAGE_KEY, report), "unavailable");
+});

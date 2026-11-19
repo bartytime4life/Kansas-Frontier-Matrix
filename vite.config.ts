@@ -1,9 +1,13 @@
 import vinext from "vinext";
-import { defineConfig } from "vite";
+import { defineConfig, normalizePath } from "vite";
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { welcomeDemoCapturePlugin } from "./scripts/welcome-demos/capture-sink.mjs";
+
+// Replace this one pinned Vinext transport helper in dev and production. Its
+// text-only normalizer corrupts length-framed Flight binary and long-text rows.
+const vinextRscStreamHints = normalizePath(fileURLToPath(new URL("./server/rsc-stream-hints.js", import.meta.resolve("vinext"))));
 
 // Dev server only, and only when KFM_STORY_PREVIEW_DIR is set: serves locally exported story bundles
 // (python3 -m tools.local_data.sql_feed_stories export) where the website would ask the relay.
@@ -37,6 +41,7 @@ export default defineConfig(({ command }) => {
   resolve: {
     alias: {
       "cloudflare:workers": fileURLToPath(new URL("./server/godaddy-env.ts", import.meta.url)),
+      [vinextRscStreamHints]: fileURLToPath(new URL("./server/rsc-stream-hints.mjs", import.meta.url)),
     },
   },
   server: { host: recorderEnabled ? "127.0.0.1" : "0.0.0.0" },

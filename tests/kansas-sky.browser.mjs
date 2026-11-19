@@ -8,6 +8,7 @@ import { mkdtemp, rm, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
+import { installSkyRenderObserver } from './kansas-sky-render-observer.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -47,6 +48,9 @@ async function browser(t) {
   const pending = new Map(), listeners = new Set(), checks = [];
   child.stderr.on('data', chunk => { stderr = (stderr + chunk).slice(-12000); });
   const failPending = error => { closed = true; for (const entry of pending.values()) entry.reject(error); pending.clear(); };
+  // Keep a blocked browser/pipe failure diagnostic instead of an unhandled
+  // stream error that loses Chrome's startup reason.
+  for(const stream of [child.stdio[3],child.stdio[4]])stream.on('error',error=>failPending(new Error(`Chrome transport unavailable: ${error.message}; ${stderr}`)));
   child.on('error', failPending);
   child.on('exit', code => failPending(new Error(`Chrome exited ${code}: ${stderr}`)));
   child.stdio[4].on('data', chunk => {
@@ -62,10 +66,10 @@ async function browser(t) {
       } else for (const listener of listeners) listener(message);
     }
   });
-  const call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
+  const call = (method, params = {}, sessionId, timeoutMs = 20000) => new Promise((resolve, reject) => {
     if (closed) { reject(new Error(`Chrome unavailable: ${stderr}`)); return; }
     const id = ++sequence;
-    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, 20000);
+    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, timeoutMs);
     pending.set(id, { resolve: value => { clearTimeout(timer); resolve(value); }, reject: error => { clearTimeout(timer); reject(error); } });
     child.stdio[3].write(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }) + '\0');
   });
@@ -77,22 +81,46 @@ async function browser(t) {
       await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
     }
   });
-  t.diagnostic(JSON.stringify(await call('Browser.getVersion')));
+  // Only the first command waits for Chrome's cold start on a busy CI runner.
+  // Page commands and application assertions keep their existing deadlines.
+  t.diagnostic(JSON.stringify(await call('Browser.getVersion', {}, undefined, 90000)));
   return { call, listeners, checks };
 }
 
 // Uses the production page/CSS with isolated aviation and county fixtures.
 // Build identity and airport availability reach loopback; external traffic is blocked.
-async function pageSession(b, { width, height, touch, motion, repaint, tileErrorDelay }) {
+async function pageSession(b, { width, height, touch, motion, repaint, tileErrorDelay, basemapTrace = false }) {
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
   const interceptions = createInterceptionErrorTracker();
   let feedFailed=false, countyRequests=0;
   const archiveRequests=[];
+  const network=[],requests=new Map();let droppedNetworkEvents=0,firstNetworkFailure=null;
+  // This listener exists before Network.enable and the first Page.navigate.
+  // Synthetic fixture traffic only; exported rows contain no URLs/coordinates.
+  const recordNetwork=(message)=>{
+    if(!basemapTrace||!['Network.requestWillBeSent','Network.responseReceived','Network.loadingFailed','Network.loadingFinished'].includes(message.method))return;
+    const e=message.params;
+    if(message.method==='Network.requestWillBeSent'){
+      const u=new URL(e.request.url);
+      const lane=u.hostname==='s3.amazonaws.com'&&u.pathname.startsWith('/elevation-tiles-prod/terrarium/')?'basemap-relief'
+        :u.hostname==='tiles.openfreemap.org'?'basemap-vector'
+        :u.origin===origin.origin&&u.pathname==='/api/governed/v1/layers'?'governed-catalog':'other';
+      if(requests.size>=2048){droppedNetworkEvents++;return;}
+      requests.set(e.requestId,{request:requests.size+1,lane});
+    }
+    const request=requests.get(e.requestId);if(!request)return;
+    if(network.length===512){network.shift();droppedNetworkEvents++;}
+    const row={...request,event:message.method,at:e.timestamp,wallTime:e.wallTime??null,
+      status:e.response?.status??null,cancelled:e.canceled===true||e.errorText==='net::ERR_ABORTED',cors:e.corsErrorStatus?.corsError==='MissingAllowOriginHeader'?'MISSING_ALLOW_ORIGIN':e.corsErrorStatus?'CORS_OTHER':null};
+    if(!firstNetworkFailure&&!row.cancelled&&(row.status>=400||message.method==='Network.loadingFailed'))firstNetworkFailure=row;
+    network.push(row);
+  };
   b.checks.push(() => interceptions.assertHealthy());
   b.listeners.add(message => {
     if (message.sessionId !== sessionId) return;
+    recordNetwork(message);
     if (message.method === 'Network.loadingFailed') interceptions.loadingFailed(message.params);
     if (message.method === 'Network.requestWillBeSent') interceptions.requestWillBeSent(message.params);
     if (message.method === 'Page.frameNavigated') interceptions.frameNavigated(message.params);
@@ -104,7 +132,7 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
         const name=js.match(/([\w$]+) as Map,/)[1];assert.ok(name,'instrument actual built Map class in this disposable response only');
         // A continuously repainting real map must become usable without idle.
         js+=`\n;{const addControl=${name}.prototype.addControl;${name}.prototype.addControl=function(...args){if(!window.__skyMap){window.__skyMap=this;window.__skyIdleCount=0;window.__skyMapFrames=0;window.__skyReadiness=[];this.on('idle',()=>window.__skyIdleCount++);const snapshot=(event)=>{const state={event,at:Math.round(performance.now()),styleLoaded:this.isStyleLoaded(),skyLayer:!!this.getLayer('kfm-kansas-sky'),portal:!!document.querySelector('.kansas-sky-map-status')};const last=window.__skyReadiness.at(-1);if(event!=='render'||!last||state.styleLoaded!==last.styleLoaded||state.skyLayer!==last.skyLayer||state.portal!==last.portal){window.__skyReadiness.push(state);if(window.__skyReadiness.length>40)window.__skyReadiness.shift();}};this.on('render',()=>{window.__skyMapFrames++;snapshot('render');});this.on('load',()=>snapshot('load'));this.on('style.load',()=>snapshot('style.load'));if(${Boolean(repaint)})this.repaint=true;}return addControl.apply(this,args);};}\n`;
-        js+=`\n;{const add=${name}.prototype.addLayer;${name}.prototype.addLayer=function(layer,...rest){if(layer.id==='kfm-kansas-sky'){window.__skyMap=this;window.__skyRender={frames:0,aircraftVertices:0,trailVertices:0,maxZ:0};const render=layer.render;layer.render=function(gl,...args){const draw=gl.drawArrays,upload=gl.bufferSubData;const stats=window.__skyRender;stats.aircraftVertices=0;stats.trailVertices=0;gl.drawArrays=function(mode,start,count){if(mode===gl.TRIANGLES)stats.aircraftVertices+=count;if(mode===gl.LINES)stats.trailVertices+=count;return draw.call(this,mode,start,count);};gl.bufferSubData=function(target,offset,data,...more){if(data instanceof Float32Array){stats.maxZ=0;for(let i=2;i<data.length;i+=6)stats.maxZ=Math.max(stats.maxZ,Math.abs(data[i]));}return upload.call(this,target,offset,data,...more);};try{const result=render.call(this,gl,...args);stats.frames++;return result;}finally{gl.drawArrays=draw;gl.bufferSubData=upload;}};}return add.call(this,layer,...rest);};}\n`;
+        js+=`\n;(${installSkyRenderObserver.toString()})(${name});\n`;
         return call('Fetch.fulfillRequest',{requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'text/javascript'}],body:Buffer.from(js).toString('base64')});
       }).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;
     }
@@ -123,7 +151,9 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
       : url.pathname === '/api/live-context' && url.searchParams.get('feed') === 'census-counties' ? JSON.stringify(counties) : null;
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
-        ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
+        // The recovery scenario intentionally needs a successful cross-origin style,
+        // unlike the existing unavailable-provider fixtures.
+        ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }, ...(basemapTrace ? [{name:'Access-Control-Allow-Origin',value:'*'}] : [])], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
         : (tileErrorDelay ? pause(tileErrorDelay).then(()=>call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })) : call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })))
       : url.pathname.startsWith('/api/') && !['/api/build', '/api/aviation/airports'].includes(url.pathname)
         ? call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Layout test: unrelated source unavailable"}').toString('base64') })
@@ -181,11 +211,43 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
     const e=document.activeElement,r=e.getBoundingClientRect(),panel=document.querySelector('.layer-panel').getBoundingClientRect(),head=document.querySelector(innerHeight<=600 ? '.layer-panel .panel-heading' : '.layer-panel-explore > summary').getBoundingClientRect(),style=getComputedStyle(e);
     return { tag:e.tagName,text:e.textContent,top:r.top,bottom:r.bottom,hit:e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)),within:r.top>=Math.max(head.bottom,panel.top)-1&&r.bottom<=Math.min(panel.bottom,innerHeight)+1,outline:style.outlineStyle,outlineWidth:parseFloat(style.outlineWidth),focusVisible:e.matches(':focus-visible') };
   })()`);
-  await call('Page.navigate', { url: new URL('?l=&ctx=', origin).href });
+  await call('Page.navigate', { url: new URL(basemapTrace?'?l=&ctx=&base=midnight&mapui=open&maptab=scene&basemapTrace=1':'?l=&ctx=', origin).href });
   await wait(`history.state?.kfmExplorerView && document.querySelector('.map-chrome-dock')`, 'hydration');
-  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests, archiveRequests:()=>[...archiveRequests] };
+  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests, archiveRequests:()=>[...archiveRequests], networkSnapshot:()=>({events:[...network],firstFailure:firstNetworkFailure,droppedEvents:droppedNetworkEvents,boundary:'SYNTHETIC loopback fixture; capture enabled before initial navigation. Provider lanes and catalog remain separate.'}) };
 }
 
+
+test('Kansas Sky basemap warning lifecycle records first failure and preserves real failures across resizing', {timeout:120000}, async t=>{
+  const b=await browser(t),p=await pageSession(b,{width:1440,height:900,touch:false,motion:'no-preference',basemapTrace:true});
+  const warning=`[...document.querySelectorAll('.runtime-degraded-banner')].some(e=>/basemap tiles are unavailable|basemap source reported an error/i.test(e.textContent))`;
+  const snapshot=()=>p.evaluate(`({fixture:'SYNTHETIC',trace:window.__kfmBasemapTrace?.snapshot()??null,style:{name:window.__skyMap?.getStyle()?.name??null,loaded:window.__skyMap?.isStyleLoaded()??false,relief:!!window.__skyMap?.getSource('basemap-relief-dem'),fixtureBackground:!!window.__skyMap?.getLayer('layout-test-background')},selected:document.querySelector('select[aria-label="Appearance basemap"]')?.value??null,banners:[...document.querySelectorAll('.runtime-degraded-banner')].map(e=>e.textContent),errors:window.__skyErrors??[]})`);
+  b.checks.unshift(async()=>{
+    const state=await snapshot();
+    t.diagnostic(JSON.stringify({...state,trace:state.trace?{...state.trace,events:state.trace.events.slice(-15)}:null}));
+    if(process.env.KFM_SKY_SCREENSHOTS){await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,'basemap-warning-final-or-failure.json'),JSON.stringify({...state,network:p.networkSnapshot()},null,2));}
+  });
+  await p.wait(`window.__skyMap?.getSource('basemap-relief-dem') && window.__kfmBasemapTrace`, 'diagnostics attached to running Midnight map');
+  await p.wait(warning,'actual deliberately blocked relief source remains visibly warned');
+  const first=await p.evaluate(`window.__kfmBasemapTrace.snapshot().firstFailure`);
+  assert.ok(first,'first map error retained before recovery');
+  const generation=await p.evaluate(`window.__kfmBasemapTrace.snapshot().events.at(-1).generation`);
+  await p.evaluate(`(()=>{const s=document.querySelector('select[aria-label="Appearance basemap"]');s.value='standard';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await p.wait(`window.__skyMap.isStyleLoaded() && !window.__skyMap.getSource('basemap-relief-dem') && !(${warning})`, 'successful blank fixture style retires abandoned relief warning');
+  assert.deepEqual(await p.evaluate(`window.__kfmBasemapTrace.snapshot().firstFailure`),first,'first failure survives style recovery');
+  await p.evaluate(`(()=>{const s=document.querySelector('select[aria-label="Appearance basemap"]');s.value='midnight';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await p.wait(warning,'new real fixture failure is not hidden by recovery reset');
+  await p.call('Emulation.setDeviceMetricsOverride',{width:375,height:844,deviceScaleFactor:1,mobile:false});
+  await p.wait(`innerWidth===375 && (${warning})`,'phone viewport retains the visible failed-basemap warning');
+  await p.call('Emulation.setDeviceMetricsOverride',{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  await p.wait(`innerWidth===1440 && window.__kfmBasemapTrace.snapshot().events.some(e=>e.event==='resize') && (${warning})`,'desktop viewport retains the visible warning and resize trace');
+  assert.equal(await p.evaluate(`Boolean(${warning})`),true,'still-failed source stays warned after resizing');
+  const trace=await p.evaluate(`window.__kfmBasemapTrace.snapshot()`),network=p.networkSnapshot();
+  assert.ok(trace.events.some(e=>e.generation>generation));assert.equal(trace.collectorErrors,0);
+  assert.ok(network.events.some(e=>e.lane==='basemap-relief'),'network capture includes provider lane from beginning');
+  assert.ok(network.events.some(e=>e.event==='Network.requestWillBeSent'));
+  if(process.env.KFM_SKY_SCREENSHOTS){await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,'basemap-warning-lifecycle.json'),JSON.stringify({fixture:'SYNTHETIC',trace,network},null,2));}
+  assert.deepEqual(await p.evaluate(`window.__skyErrors`),[]);
+});
 
 for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repaint:true,tileErrorDelay:0},{repaint:false,tileErrorDelay:1200}]) for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'},{width:390,height:844,touch:true,motion:'reduce'}]) test(`Kansas Sky synthetic live/replay controls ${layout.width}px${repaint?' with continuous repaint':''}${tileErrorDelay?' with late tile failures':''}`,{timeout:120000},async t=>{
   const artifactKey=`${layout.width}${repaint?'-repainting':''}${tileErrorDelay?'-late-tiles':''}`;
@@ -245,6 +307,11 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow camera enabled');
     const canvas=await p.rect('.maplibregl-canvas');
     const x=Math.min(layout.width-20,canvas.x+canvas.width*.9),y=canvas.y+canvas.height*.55;
+    // Follow can move into still-pending delayed fixture tiles. Wait for the
+    // real input surface, as the earlier aircraft click does, instead of
+    // dispatching a gesture into a transient loading overlay. Keep both hit
+    // assertions and the real native-drag release assertion below.
+    await p.wait(`(()=>{const canvas=window.__skyMap.getCanvas();return document.elementFromPoint(${x},${y})===canvas&&document.elementFromPoint(${x-35},${y+10})===canvas;})()`,'native drag canvas is unobstructed after Follow');
     // Retain actual delivery and camera state around the unchanged native drag.
     // This trace never drives the camera or substitutes for the release assertion.
     const gestureHits=await p.evaluate(`(()=>{
@@ -294,6 +361,9 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
   assert.equal(await p.evaluate(`(${airportToggle}).checked`),!airportState,'ordinary airport layer remains independently editable during replay');
   await p.evaluate(`(${airportToggle}).click()`);
 
+  await p.evaluate(`(()=>{const m=window.__skyMap;window.__skyLifecycle=[];const t0=performance.now();const remove=m.removeLayer.bind(m),add=m.addLayer.bind(m);
+    m.removeLayer=id=>{if(id==='kfm-kansas-sky')window.__skyLifecycle.push(['remove',Math.round(performance.now()-t0),m.isStyleLoaded()]);return remove(id);};
+    m.addLayer=(layer,...rest)=>{if(layer?.id==='kfm-kansas-sky')window.__skyLifecycle.push(['add',Math.round(performance.now()-t0),m.isStyleLoaded()]);return add(layer,...rest);};})()`);
   // Reload the actual style, not a fake event; the custom layer reinstalls.
   await p.evaluate(`new Promise(resolve=>{
     window.__skyMap.once('style.load',()=>{
@@ -306,6 +376,20 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     && window.__skyMap.getLayer('kfm-kansas-sky') && window.__skyRender.aircraftVertices>0
     && (window.__skyRender!==window.__skyReloadCheckpoint.render || window.__skyRender.frames>window.__skyReloadCheckpoint.frames)`,'settled replacement style renders a fresh aircraft frame');
   if(repaint)assert.equal(await p.evaluate(`window.__skyIdleCount`),0,'replacement style recovery also precedes idle');
+  // #5737: once the replacement style has re-installed the aircraft renderer,
+  // ordinary readiness changes (sources loading in the recovered style) must
+  // not tear it down again. Count removals across the settle window.
+  await p.evaluate(`(()=>{const m=window.__skyMap;window.__skyRemovals=0;const remove=m.removeLayer.bind(m);m.removeLayer=id=>{if(id==='kfm-kansas-sky')window.__skyRemovals++;return remove(id);};})()`);
+  await p.evaluate(`new Promise(r=>setTimeout(r,3000))`);
+  await p.wait(`window.__skyMap.loaded()`,'replacement style settled');
+  const lifecycle=await p.evaluate(`window.__skyLifecycle`);
+  t.diagnostic('sky lifecycle '+JSON.stringify(lifecycle));
+  // #5737: the replaced style drops the custom layer by itself and the renderer
+  // reinstalls it on style.load. The app must not additionally dispose it while
+  // the new style's sources load; that left a no-layer window after recovery.
+  assert.deepEqual(lifecycle.filter(([kind])=>kind==='remove'),[],'no app-initiated aircraft layer removal across a style replacement');
+  assert.equal(await p.evaluate(`window.__skyRemovals`),0,'the recovered aircraft renderer stays installed while the style settles');
+  assert.ok(await p.evaluate(`Boolean(window.__skyMap.getLayer('kfm-kansas-sky'))`),'the aircraft renderer is still installed after settling');
   await p.evaluate(`document.querySelector('.kansas-sky-clock').scrollIntoView({block:'center',behavior:'instant'})`);
   await p.wait(`document.querySelector('.toast')?.dataset.visible!=='true'`,'transient status toast settled before controls capture');
   if(process.env.KFM_SKY_SCREENSHOTS){
@@ -315,20 +399,29 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-render-${artifactKey}.json`),JSON.stringify(await p.evaluate(`({fixture:'SYNTHETIC',render:window.__skyRender,clock:document.querySelector('.kansas-sky-clock').textContent,layer:window.__skyMap.getLayer('kfm-kansas-sky').type})`),null,2));
   }
   // Inspect actual built rendering at the second recorded observation: both
-  // the aircraft glyph and its measured two-point trail must issue GPU draws.
+  // the aircraft glyph and its measured route must issue distinct GPU draws.
+  // Cinematic selected paths are triangle strips; counting only gl.LINES
+  // misclassifies a rendered route as absent and route triangles as aircraft.
   // Temporarily use the real airspace controls for an unobscured map capture;
   // the preceding interaction checks already establish editable coexistence.
   const airspaceVolumes=`[...document.querySelectorAll('.official-context-row fieldset')].find(fieldset=>fieldset.querySelector('legend')?.textContent==='Airspace volumes')`;
   const enabledVolumeIndices=await p.evaluate(`(()=>{const inputs=[...(${airspaceVolumes}).querySelectorAll('input[type="checkbox"]')];const enabled=inputs.flatMap((input,index)=>input.checked?[index]:[]);for(const index of enabled)inputs[index].click();return enabled;})()`);
   await p.wait(`![...(${airspaceVolumes}).querySelectorAll('input[type="checkbox"]')].some(input=>input.checked)`,'airspace volumes temporarily hidden through their controls');
   await p.evaluate(`(()=>{const e=document.querySelector('[aria-label="Flight timeline"]');const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;setter.call(e,${at+30000});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));window.__skyMap.jumpTo({center:[-98.325,38.52],zoom:10,pitch:45,bearing:0});})()`);
-  await p.wait(`window.__skyRender.aircraftVertices>0 && window.__skyRender.trailVertices>=2 && Number(document.querySelector('[aria-label="Flight timeline"]').value)===${at+30000}`,'second observed sample renders aircraft and retained trail');
+  await p.wait(`window.__skyRender.aircraftVertices>0 && (window.__skyRender.pathTriangles>=6 || window.__skyRender.lineTrailVertices>=2) && Number(document.querySelector('[aria-label="Flight timeline"]').value)===${at+30000}`,'second observed sample renders aircraft and retained trail');
   await p.activate('[aria-label="Close Explorer navigation"]');
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true' && !window.__skyMap.isMoving() && document.querySelector('.toast')?.dataset.visible!=='true'`,'unobstructed replay map ready');
   // Wait for the close transition to release the whole map, using rendered geometry.
   await p.wait(`document.querySelector('.layer-panel').getAnimations().every(animation=>animation.playState!=='running')`,'closed Layers no longer covers flight view');
   await p.wait(`document.querySelector('.kansas-sky-map-status')?.dataset.state==='REPLAY' && document.querySelector('.kansas-sky-map-status time')?.dateTime===${JSON.stringify(new Date(at+30000).toISOString())}`,'closed-panel map still labels replay and its synchronized UTC instant');
-  assert.equal(await p.evaluate(`(()=>{const badge=document.querySelector('.kansas-sky-map-status'),r=badge.getBoundingClientRect();return !badge.closest('.layer-panel')&&badge.checkVisibility()&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&getComputedStyle(badge).pointerEvents==='none'&&document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.classList.contains('maplibregl-canvas')&&![...document.querySelectorAll('.maplibregl-ctrl button,.runtime-degraded-banner,.build-year-warning,.no-time-data,.map-mobile-actions,.map-tool-rail button')].some(button=>{const b=button.getBoundingClientRect();return button.checkVisibility()&&b.width>0&&b.height>0&&b.left<r.right&&b.right>r.left&&b.top<r.bottom&&b.bottom>r.top;});})()`),true,'replay date is visible without intercepting input or overlapping degradation notices, source notices or map controls');
+  assert.equal(await p.evaluate(`(()=>{const badge=document.querySelector('.kansas-sky-map-status'),r=badge.getBoundingClientRect();return !badge.closest('.layer-panel')&&badge.checkVisibility()&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&getComputedStyle(badge).pointerEvents==='none'&&(()=>{const time=badge.querySelector('time'),t=time?.getBoundingClientRect();return t&&t.width>0&&t.height>0&&document.elementFromPoint(t.x+t.width/2,t.y+t.height/2)?.classList.contains('maplibregl-canvas');})()&&![...document.querySelectorAll('.maplibregl-ctrl button,.runtime-degraded-banner,.build-year-warning,.no-time-data,.map-mobile-actions,.map-tool-rail button')].some(button=>{const b=button.getBoundingClientRect();return button.checkVisibility()&&b.width>0&&b.height>0&&b.left<r.right&&b.right>r.left&&b.top<r.bottom&&b.bottom>r.top;});})()`),true,'replay date is visible without intercepting input or overlapping degradation notices, source notices or map controls');
+  // The source/time label still passes pointer input through; the explicitly
+  // interactive Find action must receive its own hit and open the real list.
+  assert.equal(await p.evaluate(`(()=>{const button=document.querySelector('[aria-label="Find aircraft"]'),r=button.getBoundingClientRect();return r.width>=30&&r.height>=30&&button.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`),true,'Find aircraft is a visible unobstructed target');
+  await p.activate('[aria-label="Find aircraft"]');
+  await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false' && document.activeElement===document.querySelector('[aria-label="Kansas Sky aircraft"]')`,'Find aircraft opens the existing list and transfers keyboard focus');
+  await p.activate('[aria-label="Close Explorer navigation"]');
+  await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true' && document.querySelector('.layer-panel').getAnimations().every(animation=>animation.playState!=='running')`,'Find list closes without replacing the aircraft scene');
   if(process.env.KFM_SKY_SCREENSHOTS){
     const capture=await p.call('Page.captureScreenshot',{format:'png'});
     await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-aircraft-trail-${artifactKey}.png`),Buffer.from(capture.data,'base64'));

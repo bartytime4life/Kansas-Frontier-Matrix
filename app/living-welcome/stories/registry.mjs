@@ -10,35 +10,38 @@
 //   sources   source names shown while the card waits for its data
 //   tables    the feed tables the builder reads; feeds lists the feeds that fill them
 //   db        the story's main database, 'observations' or 'bulk'; its builder reads tables in the other one as other.<table>
-//   status    'ready' has load: () => import('./<id>.jsx'); 'planned' has load: null
+//   status    'ready' has a lazy visual module; 'guided' links to a dedicated source-backed lab.
 //
-// Making a story real: build the visual and the builder, then change only that story's entry from planned({...})
-// to ready({..., load: () => import('./<id>.jsx')}).
+// Ready means an instrument exists, not that source admission or publication has occurred.
+// The shared record lab supports bounded source snapshots; dataset gates remain independent.
 export const STORY_GROUPS = Object.freeze(['Deep time', 'Frontier & settlement', 'People', 'Living record', 'Data to come']);
 
 const planned = entry => Object.freeze({ db: 'observations', ...entry, status: 'planned', load: null });
 const ready = entry => Object.freeze({ db: 'observations', ...entry, status: 'ready' });
+const guided = entry => Object.freeze({ db: 'observations', ...entry, status: 'guided', load: null });
 
 export const STORIES = Object.freeze([
-  planned({
-    id: 'deep-time-column', group: 'Deep time', title: 'Deep Time Column', kicker: 'ROCKS & FOSSILS',
-    summary: 'Rock layers under Kansas through 540 million years, with fossil counts for each interval.',
-    try: 'Zoom the time axis, pick a column, and select an interval to list its taxa.',
-    limit: 'Macrostrat columns generalize units, and fossil counts follow where people collected.',
+  ready({
+    id: 'deep-time-column', group: 'Deep time', title: "Deep Time & Fossils", kicker: 'ROCKS & FOSSILS',
+    summary: "Kansas fossil collections through geological time, with age ranges, formations and recorded occurrences.",
+    try: "Explore approximate collection locations, filter geological intervals, and compare recorded occurrences.",
+    limit: "Collection and publication effort shape coverage; age midpoints are illustrative and locations are generalized.",
     palette: ['#14181f', '#c7a26b', '#6fa8a0'],
-    sources: ['Macrostrat', 'Paleobiology Database', 'iDigBio'],
+    sources: ["Paleobiology Database"],
     tables: ['kfm_macrostrat_columns', 'kfm_macrostrat_units', 'kfm_pbdb_occurrences', 'kfm_pbdb_collections', 'kfm_idigbio_fossils'],
     feeds: ['macrostrat', 'pbdb', 'idigbio-fossils'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
+  ready({
     id: 'inland-sea', group: 'Deep time', title: 'Inland Sea', kicker: 'CRETACEOUS SEAWAY',
-    summary: 'Where the sea creatures of the Western Interior Seaway were found in Kansas rock.',
-    try: 'Move through the stages from Albian to Maastrichtian and switch fossil groups on and off.',
-    limit: 'Age bins are wide, and finds record where rock is exposed and collected.',
+    summary: "Cretaceous fossil collections in Kansas, from the age of the Western Interior Seaway.",
+    try: "Explore collection ages and formations, inspect source references, and compare intervals.",
+    limit: "Cretaceous age does not prove a marine environment. Collection locations are generalized and age ranges remain approximate.",
     palette: ['#071c2c', '#6fc3d0', '#e7d7a8'],
-    sources: ['Paleobiology Database', 'iDigBio'],
+    sources: ["Paleobiology Database"],
     tables: ['kfm_pbdb_occurrences', 'kfm_pbdb_collections', 'kfm_idigbio_fossils'],
     feeds: ['pbdb', 'idigbio-fossils'],
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'ice-age-prairie', group: 'Deep time', title: 'Ice Age to Prairie', kicker: 'POLLEN & RADIOCARBON',
@@ -60,25 +63,27 @@ export const STORIES = Object.freeze([
     tables: ['kfm_atack_railroads'], feeds: ['railroads-history'],
     load: () => import('./iron-horse.jsx'),
   }),
-  planned({
+  guided({
     id: 'boom-and-ghost-towns', group: 'Frontier & settlement', title: 'Boom & Ghost Towns', kicker: 'POST OFFICES',
-    summary: 'Post offices light up where towns were founded and fade when they closed, 1828 to 2000.',
-    try: 'Scrub the years, watch births against closures, and filter by county.',
-    limit: 'A post office is a proxy for a town, and offices without coordinates cannot be mapped.',
+    href: '/labs/ghost-towns',
+    summary: 'Follow documented post-office openings and closures in Douglas County.',
+    try: 'Move through the years and inspect the location and source behind each event.',
+    limit: 'Postal records describe office events. Some offices lack a reliable mapped location or had interruptions in service.',
     palette: ['#161210', '#f4a261', '#7b6d8d'],
     sources: ['Blevins & Helbock post offices', 'USGS GNIS'],
     tables: ['kfm_blevins_post_offices', 'kfm_gnis_names_2021', 'kfm_gnis_historical_features'],
     feeds: ['post-offices', 'gnis-names'],
   }),
-  planned({
+  ready({
     id: 'shifting-lines', group: 'Frontier & settlement', title: 'Shifting Lines', kicker: 'COUNTY BOUNDARIES',
-    summary: 'County borders redraw themselves from Kansas Territory to the modern state.',
-    try: 'Scrub the date, read the chronology, and select a county to see its lineage.',
-    limit: 'Boundaries are the Newberry atlas’s legal reading; much of the early map was unsettled on the ground.',
+    summary: "Historical county boundaries changing from predecessor territories to the twentieth century.",
+    try: "Move the timeline to view active boundaries, inspect a change, and search the source chronology.",
+    limit: "Newberry’s administrative history is not land title or Indigenous sovereignty; this snapshot ends in 2000.",
     palette: ['#14161c', '#d8c58f', '#7fa3b8'],
     sources: ['Newberry Atlas of Historical County Boundaries'],
     tables: ['kfm_ahcb_county_versions', 'kfm_ahcb_changes', 'kfm_ahcb_chronology'],
     feeds: ['county-boundaries'],
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'treaty-lands', group: 'Frontier & settlement', title: 'Treaty Lands', kicker: 'LAND CESSIONS',
@@ -90,11 +95,12 @@ export const STORIES = Object.freeze([
     tables: ['kfm_usfs_ceded_lands', 'kfm_usfs_ceded_land_cessions'],
     feeds: ['ceded-lands'],
   }),
-  planned({
-    id: 'historic-places', group: 'Frontier & settlement', title: 'Historic Places', kicker: 'NATIONAL REGISTER & LOC',
-    summary: 'National Register listings in listing order, with Library of Congress photos, maps and newspapers through time.',
-    try: 'Map listings by resource type and follow newspaper issues per year.',
-    limit: 'Listing dates are not building dates, restricted addresses stay unlocated, and the LOC index is metadata only.',
+  guided({
+    id: 'historic-places', group: 'Frontier & settlement', title: 'Historic Places · Fort Larned', kicker: 'PAWNEE COUNTY · ARCHIVAL PHOTOGRAPHS',
+    href: '/labs/fort-larned',
+    summary: 'Read three buildings around Fort Larned’s parade ground through July 1965 survey photographs.',
+    try: 'Choose a building and follow its Library of Congress photograph and National Park Service history.',
+    limit: 'The photographs record the buildings in 1965. The plan shows three selected locations.',
     palette: ['#14141c', '#e8c76a', '#9d7fc4'],
     sources: ['National Register of Historic Places', 'Library of Congress'],
     tables: ['kfm_nrhp_properties', 'kfm_nrhp_locations', 'kfm_loc_items', 'kfm_loc_newspaper_titles'],
@@ -110,15 +116,26 @@ export const STORIES = Object.freeze([
     tables: ['kfm_wikidata_people', 'kfm_wikidata_places', 'kfm_congress_legislators', 'kfm_congress_terms'],
     feeds: ['wikidata-kansas', 'congress-kansas'],
   }),
-  planned({
-    id: 'census-mosaic', group: 'People', title: 'Census Mosaic', kicker: 'EVERY KANSAN, 2020',
-    summary: 'A dot map of the 2020 census with community profiles alongside.',
-    try: 'Toggle groups, compare a county’s age pyramid with the state, and map median income.',
-    limit: 'Dots are placed at random inside their areas, and the ACS values are estimates.',
+  ready({
+    id: 'census-mosaic', group: 'People', title: "County Pulse", kicker: "POPULATION & CHANGE",
+    summary: "Six years of population estimates, births, deaths and migration across all 105 Kansas counties.",
+    try: "Change the year and measure, compare counties, and inspect the components of population change.",
+    limit: "July 1 estimates, 2020–2025. The 2020 components cover a partial year; geometries are contemporary.",
     palette: ['#10131a', '#7ee0c3', '#f7b267'],
-    sources: ['U.S. Census 2020', 'American Community Survey', 'TIGER'],
+    sources: ["U.S. Census Population Estimates, Vintage 2025","Census TIGERweb"],
     tables: ['kfm_census_decennial_values', 'kfm_census_decennial_geographies', 'kfm_census_acs_values'],
     feeds: ['census-decennial', 'census-acs'],
+    load: () => import('./record-lab.jsx'),
+  }),
+  ready({
+    id: 'county-conditions', group: 'People', title: 'County Conditions', kicker: 'LIFE ACROSS 105 COUNTIES',
+    summary: 'Income, poverty, education, housing and age across three nonoverlapping ACS five-year periods.',
+    try: 'Compare counties and periods, inspect 90% margins of error, and connect measures in the County Observatory.',
+    limit: 'Five-year survey estimates describe periods, not single years. Dollar values use each vintage’s dollars; uncertainty matters.',
+    palette: ['#0c1b29', '#e7bd68', '#68c9bb'],
+    sources: ['U.S. Census Bureau American Community Survey'],
+    tables: ['kfm_census_acs_values'], feeds: ['census-acs'],
+    load: () => import('./record-lab.jsx'),
   }),
   ready({
     id: 'climate-stripes', group: 'Living record', title: 'Climate Stripes', kicker: 'TEMPERATURE & DROUGHT',
@@ -130,33 +147,36 @@ export const STORIES = Object.freeze([
     tables: ['kfm_climdiv_monthly', 'kfm_climdiv_normals'], feeds: ['climdiv'],
     load: () => import('./climate-stripes.jsx'),
   }),
-  planned({
+  ready({
     id: 'river-memory', group: 'Living record', title: 'River Memory', kicker: 'STREAMFLOW & FLOODS',
-    summary: 'River flow as colour stripes, day by year, with the record floods marked.',
-    try: 'Pick a long-record gauge, read the raster, and compare the flow duration curve.',
-    limit: 'Gauges start and stop, and dams and withdrawals change what a stripe means over time.',
+    summary: "Daily streamflow at three Kansas gauges, from 2020 through the downloaded 2026 record.",
+    try: "Compare gauges and periods, inspect daily values, and export the filtered series with its qualifiers.",
+    limit: "Three gauges are a selected comparison, not statewide coverage. Discharge is daily mean flow, not a flood forecast.",
     palette: ['#071a24', '#5ec4e8', '#f0c75e'],
-    sources: ['USGS daily values', 'USGS peak streamflow'],
+    sources: ["USGS daily mean discharge"],
     tables: ['kfm_usgs_daily_values', 'kfm_usgs_series', 'kfm_usgs_sites', 'kfm_usgs_peaks'],
     feeds: ['usgs-daily', 'usgs-peaks'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
+  ready({
     id: 'tornado-tracks', group: 'Living record', title: 'Tornado Tracks', kicker: 'SINCE 1950',
-    summary: 'Every recorded Kansas tornado streaks across the state, brighter and wider by strength.',
-    try: 'Filter by scale, read the season clock, and open the deadliest storms from the data.',
-    limit: 'Reporting changed through the 1990s, so rising counts are partly better reporting.',
+    summary: "Whole tornado tracks starting in Kansas since 1950, with reported endpoints, ratings and impacts.",
+    try: "Filter ratings and dates, compare periods, and inspect path length, width, injuries and fatalities.",
+    limit: "Some whole tracks cross state borders. Straight lines join reported endpoints; they are not damage footprints.",
     palette: ['#10131c', '#c9d6df', '#e4572e'],
     sources: ['NOAA Storm Prediction Center'],
     tables: ['kfm_spc_tornadoes'], feeds: ['tornadoes'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
+  ready({
     id: 'shaking-ground', group: 'Living record', title: 'Shaking Ground', kicker: 'EARTHQUAKES',
-    summary: 'Pulsing rings by magnitude, replaying the 2013–2016 swarm in south-central Kansas.',
-    try: 'Scrub the time, read the depth section, and see the frequency–magnitude fit with its calculation.',
-    limit: 'Detection improved over time, and nearby injection activity does not establish cause.',
+    summary: "A catalog of magnitude 1 and larger earthquakes around Kansas, 2010–2026.",
+    try: "Explore epicentres, filter magnitude and dates, compare periods, and inspect depth and source records.",
+    limit: "The query includes nearby states. Detection varies, magnitude scales differ, and occurrence does not establish cause.",
     palette: ['#14121a', '#ff9f68', '#a78bfa'],
-    sources: ['USGS ComCat', 'Kansas Geological Survey'],
+    sources: ["USGS ComCat"],
     tables: ['kfm_usgs_earthquakes', 'kfm_kgs_wells'], feeds: ['earthquakes', 'kgs-oil-gas'],
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'black-gold', group: 'Living record', title: 'Black Gold', kicker: 'OIL & GAS',
@@ -177,53 +197,76 @@ export const STORIES = Object.freeze([
     sources: ['USDA NASS Quick Stats'],
     tables: ['kfm_nass_quickstats'], feeds: ['nass'],
   }),
-  planned({
+  guided({
+    id: 'kansas-then-and-now', group: 'Living record', title: 'Kansas Then & Now', kicker: 'GARDEN CITY · TWO AERIAL EDITIONS',
+    href: '/labs/then-now',
+    summary: 'Compare two aligned aerial views of the Arkansas River crossing at Garden City.',
+    try: 'Move the divider, compare both editions side by side, and read the bridge project record.',
+    limit: 'Edition labels identify the statewide collections. Exact flight dates at the crossing remain unconfirmed.',
+    palette: ['#f6f5ec', '#244c3b', '#867553'],
+    sources: ['Kansas Data Access and Support Center', 'Kansas Department of Transportation'],
+    tables: [], feeds: [],
+  }),
+  guided({
+    id: 'drought-replay-2012', group: 'Living record', title: '2012 Drought Replay', kicker: 'FINNEY COUNTY · ARKANSAS RIVER',
+    href: '/labs/drought-replay',
+    summary: 'Follow 17 Finney County drought assessments alongside 119 daily discharge values at Garden City.',
+    try: 'Move between assessment dates and open the matching historical map or daily records.',
+    limit: 'County drought categories and observations at one gauge describe different places, measures and times.',
+    palette: ['#211c18', '#e9914c', '#bb454a'],
+    sources: ['U.S. Drought Monitor', 'U.S. Geological Survey'],
+    tables: ['kfm_usgs_daily_values'], feeds: ['usgs-streamflow'],
+  }),
+  guided({
     id: 'water-chemistry', group: 'Living record', title: 'Water Chemistry', kicker: 'WHAT’S IN THE WATER',
-    summary: 'Sampling stations pulse by nitrate and other measures across a century of samples.',
-    try: 'Choose a characteristic and decade, and compare the distribution with a reference level.',
-    limit: 'Sampling targets concerns rather than the average, and a reference level is not a compliance finding.',
+    href: '/labs/water-chemistry',
+    summary: 'Compare two periods of dissolved nitrate samples from the Little Arkansas River near Sedgwick.',
+    try: 'Inspect recorded distributions, sample coverage, and the original results.',
+    limit: 'A historical station comparison describes sampled conditions, with its own method, timing, and reporting limits.',
     palette: ['#08181c', '#4fd1c5', '#f6ad55'],
     sources: ['Water Quality Portal', 'USGS Samples'],
     tables: ['kfm_wqp_results', 'kfm_wqp_stations', 'kfm_usgs_samples_results'],
     feeds: ['water-quality', 'usgs-samples'],
   }),
-  planned({
-    id: 'air-and-health', group: 'Living record', title: 'Air & Health', kicker: 'AQI & COMMUNITY HEALTH',
-    summary: 'A day-by-year air quality calendar beside model-based community health estimates.',
-    try: 'Open a county’s calendar, compare pollutant drivers, and map a health measure.',
-    limit: 'PLACES values are model-based estimates, and the two records together do not show cause.',
+  ready({
+    id: 'air-and-health', group: 'Living record', title: 'Air Quality', kicker: 'AQI & MONITOR COVERAGE',
+    summary: '26 years of EPA county air-quality observations, with extremes, pollutant drivers and monitoring coverage.',
+    try: 'Compare monitored counties, inspect coverage and explore relationships between annual AQI measures.',
+    limit: 'Unmonitored counties are missing, not clean air. AQI does not measure individual exposure or health outcomes.',
     palette: ['#10141c', '#9ad1a0', '#e36f6f'],
-    sources: ['EPA AQS', 'CDC PLACES'],
-    tables: ['kfm_aqs_daily_aqi_county', 'kfm_aqs_daily', 'kfm_cdc_places_county', 'kfm_cdc_places_tract'],
-    feeds: ['air-quality', 'cdc-places'],
+    sources: ['EPA AirData', 'U.S. Census Bureau county boundaries'],
+    tables: ['kfm_aqs_daily_aqi_county', 'kfm_aqs_daily'], feeds: ['air-quality'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
-    id: 'energy-shift', group: 'Living record', title: 'Energy Shift', kicker: 'SOURCES & SECTORS',
-    summary: 'A flowing stream of Kansas energy since 1960, as wind rises beside coal.',
-    try: 'Scrub the years through a source-to-sector flow, and compare production with consumption.',
-    limit: 'SEDS values are state estimates in the source’s own units.',
+  ready({
+    id: 'energy-shift', group: 'Living record', title: 'Energy Shift', kicker: '65 YEARS OF ENERGY',
+    summary: '26 EIA series trace Kansas energy production and consumption from 1960 through 2024.',
+    try: 'Follow wind, coal and other energy series, compare periods and inspect annual values in billion Btu.',
+    limit: 'Production, fuel totals and sector totals are overlapping accounting views; do not add them together.',
     palette: ['#0f1518', '#7bdcb5', '#f78da7'],
     sources: ['EIA State Energy Data System'],
     tables: ['kfm_eia_seds_values', 'kfm_eia_seds_series'], feeds: ['eia-seds'],
+    load: () => import('./record-lab.jsx'),
   }),
-  planned({
-    id: 'newspaper-pulse', group: 'Data to come', title: 'Newspaper Pulse', kicker: 'WORD TRENDS',
-    summary: 'How often words appear in Kansas newspapers, 1854 to 1922.',
-    try: 'Choose up to six terms and compare normalized frequency by year and title.',
-    limit: 'OCR errors and uneven title coverage shape every line, and frequency is not sentiment.',
+  guided({
+    id: 'newspaper-pulse', group: 'Frontier & settlement', title: 'Newspaper Pulse', kicker: 'DIGITIZED KANSAS PRESS',
+    href: '/labs/newspaper-pulse',
+    summary: 'Trace two terms through two digitized issues of the Abilene Weekly Reflector.',
+    try: 'Compare the share of pages with each term and open the original issues.',
+    limit: 'OCR quality and digitized issue coverage affect both sides of the comparison.',
     palette: ['#151310', '#e8dcc0', '#c96f4a'],
     sources: ['Chronicling America'],
     tables: ['kfm_newspaper_pages', 'kfm_newspaper_pages_fts'], feeds: ['newspaper-text'], db: 'bulk',
   }),
-  planned({
-    id: 'built-kansas', group: 'Data to come', title: 'Built Kansas', kicker: 'BY YEAR BUILT',
-    summary: 'Bridges, dams, mines, towers and airports rising across Kansas in construction order.',
-    try: 'Compare classes by decade, map bridge condition, and scrub the years.',
-    limit: 'Build years are missing for many old structures, and tower records have no working source yet.',
+  ready({
+    id: 'built-kansas', group: 'Frontier & settlement', title: 'Built Kansas', kicker: 'THE BRIDGE INVENTORY',
+    summary: 'Explore the complete returned KDOT state and local bridge inventories by built year, length, traffic and network.',
+    try: 'Map bridge records, compare state and local roads and test length–traffic relationships.',
+    limit: 'A present inventory is not a complete history. Records can repeat structures; source scores are not current safety findings.',
     palette: ['#11151a', '#9fb8c8', '#f2a65a'],
-    sources: ['FHWA National Bridge Inventory', 'National Inventory of Dams', 'USGS USMIN & MRDS', 'MSHA', 'FAA NASR', 'FCC ASR'],
-    tables: ['kfm_nbi_bridges', 'kfm_nid_dams', 'kfm_usmin_features', 'kfm_mrds_sites', 'kfm_msha_mines', 'kfm_asr_registrations', 'kfm_nasr_airports'],
-    feeds: ['bridges', 'dams', 'mines', 'towers', 'airports'], db: 'bulk',
+    sources: ['Kansas Department of Transportation bridge inventories'],
+    tables: ['kfm_nbi_bridges'], feeds: ['bridges'], db: 'bulk',
+    load: () => import('./record-lab.jsx'),
   }),
   planned({
     id: 'species', group: 'Data to come', title: 'Species', kicker: 'THE LIVING RECORD',

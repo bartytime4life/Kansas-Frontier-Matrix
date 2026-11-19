@@ -1,6 +1,13 @@
 import type { OfficialContextId } from "./live-context";
+import { safeTrailPlaceRecordUrl } from "./trail-place-record";
 
-export type DrawerAttribute = Readonly<{ label: string; value: string }>;
+export type DrawerAttribute = Readonly<{ label: string; value: string; href?: string }>;
+
+/** A selected KDOT bridge: the full inventory record is read for that one bridge (kdot-bridges.ts). */
+const BRIDGE_FIELDS: readonly (readonly [string, string])[] = [["highlight", "Stands out"], ["carries", "Carries"], ["crosses", "Crosses"], ["location", "Location note"], ["county", "County"],
+  ["builtLabel", "Built"], ["rebuilt", "Rebuilt"], ["structureType", "Material and design"], ["lengthLabel", "Length"], ["lanesLabel", "Lanes"], ["trafficLabel", "Traffic"],
+  ["status", "Recorded status"], ["loadPosting", "Load posting class"], ["historic", "Historic designation"], ["condition", "Recorded condition ratings"],
+  ["sufficiencyLabel", "KDOT sufficiency rating"], ["inspected", "Last inspection"], ["owner", "Owner"], ["network", "Road system"], ["structureId", "KDOT structure number"]];
 
 const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readonly (readonly [string, string])[]>> = {
   "census-congress-119": [["district", "District number · 0 means at-large"], ["geoid", "Census GEOID"], ["congress", "Congress"], ["sourceDay", "Selected calendar day"], ["termStart", "Term start · calendar day"], ["termEndExclusive", "Term end · exclusive"], ["basis", "Boundary basis"], ["sourceRevision", "Historical source revision"], ["sourceSha256", "Source SHA-256"], ["sourceDatum", "Source datum"], ["vintage", "Boundary vintage"], ["displayScale", "Display scale"], ["retrievedAt", "Retrieved · UTC"]],
@@ -27,16 +34,23 @@ const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readon
   "raspberry-shake-stations": [["network", "Network"], ["station", "Station"], ["elevationMeters", "Elevation · m"], ["startTime", "Station start"], ["endTime", "Station end"], ["dataRole", "Data role"], ["waveformAvailability", "Waveform availability"]],
   "nws-alerts": [["event", "Event"], ["severity", "Severity"], ["urgency", "Urgency"], ["certainty", "Certainty"], ["headline", "Headline"], ["zoneName", "Zone"], ["effective", "Effective"], ["expires", "Expires"], ["senderName", "Issuer"]],
   "fema-disaster-declarations": [["disasterNumber", "FEMA disaster number"], ["declarationType", "Declaration type"], ["incidentType", "Incident type"], ["designatedArea", "Designated area"], ["declarationAt", "Declaration date"], ["incidentBeginAt", "Incident began"], ["incidentEndAt", "Incident ended"], ["countyGeoid", "2020 county GEOID"], ["geometryRole", "Map geometry meaning"], ["retrievedAt", "Retrieved · UTC"]],
-  "kdot-bridges-state": [],
-  "kdot-bridges-local": [],
-  "kdot-bridges-historic": [],
-  "kdot-bridges-old": [],
-  "kdot-bridges-closed": [],
+  "kdot-bridges-state": BRIDGE_FIELDS,
+  "kdot-bridges-local": BRIDGE_FIELDS,
+  "kdot-bridges-historic": BRIDGE_FIELDS,
+  "kdot-bridges-old": BRIDGE_FIELDS,
+  "kdot-bridges-closed": BRIDGE_FIELDS,
   "kdot-roads-1918": [],
   "kdot-roads": [], "kdot-rail-active": [], "kdot-rail-abandoned": [], "fema-flood-zones": [],
   "blm-plss-townships": [], "blm-plss-sections": [], "blm-plss-intersected": [],
   "blm-mlrs-leases-authorized": [], "blm-mlrs-leases-closed": [],
   "usgs-3dhp-hydrography": [], "usgs-wbd-watersheds": [], "noaa-nwm-analysis": [], "noaa-nwm-short-range": [], "nasa-firms-active-fire": [], "noaa-goes-geocolor": [], "usgs-3dep-hillshade": [], "usgs-3dep-slope": [], "nws-radar": [], "nws-forecast-wind": [], "nasa-lightning-climatology": [], "noaa-lightning-density": [],
+  "noaa-spc-fire-weather": [], "noaa-cpc-drought-outlook": [], "usgs-padus-lands": [],
+  "nps-nrhp-places": [["resourceType", "Resource type"], ["landmarkLabel", "Designation"], ["city", "City"], ["county", "County"], ["certified", "Listed (certification date)"], ["refnum", "NRIS reference number"], ["vicinity", "Location precision"], ["recordUrl", "National Archives record"], ["dataRole", "Data role"]],
+  "nrcs-ssurgo-soils": [],
+  "kdwp-wildlife-areas": [["otherName", "Other name"], ["areaType", "Area type"], ["huntingAccess", "Hunting access"], ["accessRestrictions", "Access restrictions"], ["recordUrl", "KDWP page"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
+  "nps-trail-places": [["otherName", "Other name"], ["place", "Place"], ["trails", "Trails"], ["certified", "Status"], ["history", "Why it matters"], ["recordUrl", "NPS or partner page"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
+  "nps-historic-trails": [["trailName", "Trail"], ["segment", "Route segment"], ["otherName", "Other name"], ["designation", "Status"], ["mapAccuracy", "Mapped accuracy"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
+  "kdwp-wiha-access": [["areaId", "WIHA area"], ["contractReference", "Public contract reference"], ["notes", "KDWP public note"], ["notesStatus", "Note handling"], ["fieldsStatus", "Other field handling"], ["county", "County"], ["acres", "Acres"], ["species", "Species"], ["archeryOnly", "Archery"], ["dataRole", "Data role"], ["retrievedAt", "Retrieved · UTC"]],
   registry: [["displayElevationFt", "Display elevation · ft"], ["relativeHeightM", "Relative height · m"], ["smokeDensity", "Smoke density"], ["watershedClass", "Watershed class"], ["settlementClass", "Settlement class"], ["transportMode", "Transport mode"], ["habitatClass", "Habitat class"], ["faunaClass", "Fauna class"], ["floraClass", "Flora class"], ["fireClass", "Fire class"], ["hazardClass", "Hazard class"], ["consentPosture", "Consent posture"], ["tileLabel", "Tile label"], ["displayLabel", "Display label"]],
   basemap: [["name", "Name"], ["name:en", "English name"], ["class", "Map class"], ["type", "Map type"], ["ref", "Reference"]],
 };
@@ -47,8 +61,13 @@ export const drawerArtifactAttributes = (source: OfficialContextId | "registry" 
   const record = properties as Record<string, unknown>;
   return FIELDS[source].flatMap(([key, label]) => {
     const raw = record[key];
+    if (source === "nps-trail-places" && key === "recordUrl") {
+      const href = safeTrailPlaceRecordUrl(raw);
+      return href ? [{ label, value: href, href }] : [];
+    }
+    const maximum = source === "nps-trail-places" && key === "history" ? 900 : 240;
     const value = typeof raw === "number" && Number.isFinite(raw) ? raw.toLocaleString("en-US", { maximumFractionDigits: 3 })
-      : typeof raw === "string" ? raw.trim().slice(0, 240) : "";
+      : typeof raw === "string" ? raw.trim().slice(0, maximum) : "";
     return value !== "" ? [{ label, value }] : [];
   });
 };

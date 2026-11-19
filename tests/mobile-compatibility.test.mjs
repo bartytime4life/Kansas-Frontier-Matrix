@@ -12,10 +12,13 @@ test("mobile map keeps one header row with named menus and reachable map actions
   assert.match(page, /<nav className="map-chrome-dock" aria-label="Map view and controls">/);
   assert.match(page, /<div className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.doesNotMatch(page, /className="map-dock-representations"/);
-  assert.match(page, /<nav className="map-mobile-actions" aria-label="Mobile map actions">/);
+  const mobileNav = page.match(/<nav\s[^>]*className="map-mobile-actions"[^>]*>/)?.[0];
+  assert.ok(mobileNav, "the compact action navigation is present");
+  assert.match(mobileNav, /aria-label="Mobile map actions"/);
   const mobileActions = page.match(/<nav className="map-mobile-actions"[^>]*>[\s\S]*?<\/nav>/)?.[0];
   assert.ok(mobileActions, "the compact action bar is present");
   for (const label of ["Map layers", "Topics", "Time", "Style"]) assert.match(mobileActions, new RegExp(`>${label}(?:\\s|<|\\{)`));
+  assert.match(mobileActions, /aria-label="Explore Kansas Sky" onClick=\{openKansasSky\}>Aircraft<\/button>/);
   assert.match(page, /openAtlasPanel\("places"/);
   assert.match(page, /aria-label="Source status and data quality"/);
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);

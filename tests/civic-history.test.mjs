@@ -97,7 +97,7 @@ test('actual archive loader rejects late responses after a newer Congress date r
   assert.equal(days.current[civic.CIVIC_ID],'1875-03-04');assert.equal(payloads.current[civic.CIVIC_ID].sourceDay,'1875-03-04');assert.equal(states[civic.CIVIC_ID],'ready');
 });
 test('date route validates before acquisition and historical requests remain no-store',async()=>{
-  const calls=[];const route=await compile('app/api/live-context/route.ts',{
+  const calls=[];const route=await compile('app/api/live-context/route.ts',{ './kdot-bridges': { isBridgeFeed: () => false, kdotBridges: {} }, '../../wiha-public-record': await compile('app/wiha-public-record.ts'), '../../trail-place-record': await compile('app/trail-place-record.ts'),
     './civic-history':{readCivicHistory:async day=>{calls.push(day);return history.parseCivicHistory(rawFor(43),day,now)}},'../../civic-history':history,'./civic-districts':{},'./deflock':{},
     'cloudflare:workers':{env:{}},'next/server':{NextResponse:Response},'../../bounded-json':bounded,'../../event-atlas':{eventDay:day=>/^\d{4}-\d{2}-\d{2}$/.test(day)},'../event-atlas/upstream':{},'../../county-baseline':{},'../../fema-declarations':{},'@mapbox/vector-tile':{},pbf:{},
   });
@@ -132,7 +132,7 @@ test('actual historical selection records preserve their year, author and immuta
  const summary=pageFunction('const officialContextSummary =','const officialContextTime', {CIVIC_ID:civic.CIVIC_ID,CIVIC_LIMITATION:civic.CIVIC_LIMITATION,CIVIC_HISTORY_LIMITATION:history.CIVIC_HISTORY_LIMITATION,stringContextProperty:str},'officialContextSummary');
  const select=pageFunction('const buildBasemapContext =','const parseNumber =',{
   CIVIC_ID:civic.CIVIC_ID,CIVIC_SERVICE:civic.CIVIC_SERVICE,CIVIC_LIMITATION:civic.CIVIC_LIMITATION,CIVIC_HISTORY_CREDIT:history.CIVIC_HISTORY_CREDIT,CIVIC_HISTORY_LIMITATION:history.CIVIC_HISTORY_LIMITATION,
-  civicSourceForRecord:history.civicSourceForRecord,OFFICIAL_CONTEXT_BY_SOURCE_ID:{[civic.CIVIC_SOURCE.sourceId]:civic.CIVIC_SOURCE},BASEMAP_CONTEXT_LAYER:{},officialContextTime:time,officialContextSummary:summary,stringContextProperty:str,drawerArtifactAttributes:()=>[],
+  civicSourceForRecord:history.civicSourceForRecord,OFFICIAL_CONTEXT_BY_SOURCE_ID:{[civic.CIVIC_SOURCE.sourceId]:civic.CIVIC_SOURCE},BASEMAP_CONTEXT_LAYER:{},OFFICIAL_SOURCE_CATEGORY:{[civic.CIVIC_ID]:'Reference boundaries & locators'},officialContextTime:time,officialContextSummary:summary,stringContextProperty:str,drawerArtifactAttributes:()=>[],
  },'buildBasemapContext');
  const selected=select({...history.parseCivicHistory(rawFor(43),'1873-03-04',now).data.features[0],source:civic.CIVIC_SOURCE.sourceId},-99,38);
  assert.equal(selected.properties.year,1873);assert.equal(selected.properties.sourceOrganization,history.CIVIC_HISTORY_CREDIT);
@@ -143,7 +143,7 @@ test('actual historical selection records preserve their year, author and immuta
 });
 test('the no-date API request also refuses an unsupported Congress instead of serving an expired default',async()=>{
  let calls=0;
- const route=await compile('app/api/live-context/route.ts',{
+ const route=await compile('app/api/live-context/route.ts',{ './kdot-bridges': { isBridgeFeed: () => false, kdotBridges: {} }, '../../wiha-public-record': await compile('app/wiha-public-record.ts'), '../../trail-place-record': await compile('app/trail-place-record.ts'),
   './civic-history':{},'../../civic-history':{civicCongressForDay:()=>null},'./civic-districts':{readCivicDistricts:async()=>{calls++;throw Error('expired default')}},'./deflock':{},
   'cloudflare:workers':{env:{}},'next/server':{NextResponse:Response},'../../bounded-json':bounded,'../../event-atlas':{},'../event-atlas/upstream':{},'../../county-baseline':{},'../../fema-declarations':{},'@mapbox/vector-tile':{},pbf:{},
  });

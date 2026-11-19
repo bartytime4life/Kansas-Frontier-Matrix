@@ -12,6 +12,16 @@
 .curated-map .maplibregl-ctrl-group { display:flex; gap:4px; }
 .curated-records { padding:0; list-style:none; }
 .curated-records li { display:flex; flex-wrap:wrap; gap:12px; padding:10px 0; border-bottom:1px solid #294350; }
+.curated-records button { max-width:100%; overflow-wrap:anywhere; text-align:left; }
+.curated-record-browser { overflow-wrap:anywhere; }
+.curated-workspace small { overflow-wrap:anywhere; }
+.curated-record-browser h2 { font-size:1.35rem; line-height:1.3; }
+.curated-record-search { display:flex; flex-wrap:wrap; align-items:end; gap:12px; }
+.curated-record-search label { display:grid; flex:1 1 240px; gap:6px; min-width:0; }
+.curated-record-search input { width:100%; min-width:0; min-height:44px; padding:8px 12px; border:1px solid #6c9199; border-radius:6px; color:#eef8f5; background:#1b3540; font:inherit; }
+.curated-record-help { color:#b8cecf; font-size:14px; }
+.curated-record-pagination { display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+.curated-workspace button:disabled { opacity:.55; cursor:default; }
 .curated-workspace dl div { display:grid; grid-template-columns:minmax(100px,1fr) 3fr; gap:12px; padding:6px 0; overflow-wrap:anywhere; }
 .curated-workspace dd { margin:0; white-space:pre-wrap; }
 @media(max-width:600px) { .curated-workspace { padding:16px; } .curated-map { height:300px; } .curated-workspace dl div { display:block; } }

@@ -110,6 +110,7 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "sourceIds": [
         "blm-mlrs-leases-authorized",
         "blm-mlrs-leases-closed",
+        "nrcs-ssurgo-soils",
         "blm-plss-townships",
         "blm-plss-sections",
         "blm-plss-intersected"
@@ -123,6 +124,7 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "name": "Weather & hazards",
       "sourceIds": [
         "fema-flood-zones",
+        "noaa-cpc-drought-outlook",
         "fema-disaster-declarations",
         "nws-alerts",
         "nws-radar",
@@ -154,6 +156,46 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "Relate High Plains aquifer saturated thickness to depth-to-water wells across western Kansas counties.",
         "Compare the alluvial aquifer footprint with Living Waters reaches to discuss surface-groundwater connection (as a question, not a finding).",
         "List which KGS groundwater layers are snapshots and what year each represents before comparing them."
+      ]
+    },
+    {
+      "name": "Fire, smoke & hazards",
+      "sourceIds": [
+        "noaa-spc-fire-weather",
+        "noaa-hms-smoke",
+        "nasa-firms-active-fire",
+        "nasa-gibs-fire-points",
+        "nifc-fire-reports",
+        "noaa-goes-geocolor"
+      ],
+      "ideas": [
+        "Compare NASA FIRMS detections, NIFC reports, and HMS smoke polygons for one day to show how each sees fire differently.",
+        "Use GOES GeoColor timing to discuss when smoke was visible versus when detections were recorded.",
+        "Note which Flint Hills burn seasons appear and which detections may be agricultural burning."
+      ]
+    },
+    {
+      "name": "Land cover & ecology",
+      "sourceIds": [
+        "usgs-padus-lands",
+        "kdwp-wildlife-areas",
+        "kdwp-wiha-access"
+      ],
+      "ideas": [
+        "Name which parts of Kansas have very little public land in PAD-US, so access questions start with the gap.",
+        "Locate PAD-US public lands along river corridors and ask which agencies manage them, without implying public access."
+      ]
+    },
+    {
+      "name": "History & cultural heritage",
+      "sourceIds": [
+        "nps-nrhp-places",
+        "nps-historic-trails",
+        "nps-trail-places"
+      ],
+      "ideas": [
+        "Count National Register listings in a county and ask which towns cluster them, as a question about preservation effort as much as history.",
+        "Note that restricted archaeological listings are absent by design, so the map never shows the full Register."
       ]
     },
     {
@@ -191,21 +233,6 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "ideas": [
         "Compare USGS earthquake locations with Raspberry Shake station coverage to discuss detection limits.",
         "Ask how recent south-central Kansas seismicity is discussed in public sources, keeping causation as an open question."
-      ]
-    },
-    {
-      "name": "Fire, smoke & hazards",
-      "sourceIds": [
-        "noaa-hms-smoke",
-        "nasa-firms-active-fire",
-        "nasa-gibs-fire-points",
-        "nifc-fire-reports",
-        "noaa-goes-geocolor"
-      ],
-      "ideas": [
-        "Compare NASA FIRMS detections, NIFC reports, and HMS smoke polygons for one day to show how each sees fire differently.",
-        "Use GOES GeoColor timing to discuss when smoke was visible versus when detections were recorded.",
-        "Note which Flint Hills burn seasons appear and which detections may be agricultural burning."
       ]
     },
     {
@@ -303,11 +330,11 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "shortTitle": "Bridges · state highways",
       "organization": "Kansas Department of Transportation",
       "domain": "Roads, rail & movement",
-      "kind": "OPERATIONAL_WMS",
-      "cadence": "Provider-current reference service; checked as visible tiles load",
-      "freshness": "Feature dates vary; current service access is not live traffic or a historical edition",
-      "boundary": "KDOT state highway structures over 20 feet; inventory dates vary. Inventory observations may lag changes; not navigation, structural safety, public access, or evidence that a bridge has been demolished. External context only.",
-      "fallback": "Unavailable tiles leave a gap. No routes, traffic, closure status, or missing geometry are inferred.",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "Inventory read when the layer is shown; the site keeps one copy for about a day",
+      "freshness": "Provider-current inventory; build years, status and inspection dates vary by bridge and may lag",
+      "boundary": "KDOT state highway structures over 20 feet; inventory dates vary. Inventory observations may lag changes; not navigation, a structural safety determination, public access, or evidence that a bridge has been demolished. External context only.",
+      "fallback": "If the inventory cannot be read the layer stays empty. No bridge locations, closure status, or absence are inferred.",
       "attribution": "Kansas Department of Transportation (KDOT)",
       "sourceUrl": "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/State_Bridges/MapServer/0",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
@@ -318,11 +345,11 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "shortTitle": "Bridges · local roads",
       "organization": "Kansas Department of Transportation",
       "domain": "Roads, rail & movement",
-      "kind": "OPERATIONAL_WMS",
-      "cadence": "Provider-current reference service; checked as visible tiles load",
-      "freshness": "Feature dates vary; current service access is not live traffic or a historical edition",
-      "boundary": "KDOT non-state highway bridge inventory; structures over 20 feet. Inventory observations may lag changes; not navigation, structural safety, public access, or evidence that a bridge has been demolished. External context only.",
-      "fallback": "Unavailable tiles leave a gap. No routes, traffic, closure status, or missing geometry are inferred.",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "Inventory read when the layer is shown; the site keeps one copy for about a day",
+      "freshness": "Provider-current inventory; build years, status and inspection dates vary by bridge and may lag",
+      "boundary": "KDOT non-state highway bridge inventory; structures over 20 feet. Inventory observations may lag changes; not navigation, a structural safety determination, public access, or evidence that a bridge has been demolished. External context only.",
+      "fallback": "If the inventory cannot be read the layer stays empty. No bridge locations, closure status, or absence are inferred.",
       "attribution": "Kansas Department of Transportation (KDOT)",
       "sourceUrl": "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
@@ -333,11 +360,11 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "shortTitle": "Bridges · historic designation",
       "organization": "Kansas Department of Transportation",
       "domain": "Roads, rail & movement",
-      "kind": "OPERATIONAL_WMS",
-      "cadence": "Provider-current reference service; checked as visible tiles load",
-      "freshness": "Feature dates vary; current service access is not live traffic or a historical edition",
-      "boundary": "Non-state bridges recorded as National Register listed or eligible. Possible or undetermined significance is excluded. Historic designation does not mean closed. Inventory observations may lag changes; not navigation, structural safety, public access, or evidence that a bridge has been demolished. External context only.",
-      "fallback": "Unavailable tiles leave a gap. No routes, traffic, closure status, or missing geometry are inferred.",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "Inventory read when the layer is shown; the site keeps one copy for about a day",
+      "freshness": "Provider-current inventory; build years, status and inspection dates vary by bridge and may lag",
+      "boundary": "Non-state bridges recorded as National Register listed or eligible. Possible or undetermined significance is excluded. Historic designation does not mean closed. Inventory observations may lag changes; not navigation, a structural safety determination, public access, or evidence that a bridge has been demolished. External context only.",
+      "fallback": "If the inventory cannot be read the layer stays empty. No bridge locations, closure status, or absence are inferred.",
       "attribution": "Kansas Department of Transportation (KDOT)",
       "sourceUrl": "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
@@ -348,11 +375,11 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "shortTitle": "Bridges · built before 1950",
       "organization": "Kansas Department of Transportation",
       "domain": "Roads, rail & movement",
-      "kind": "OPERATIONAL_WMS",
-      "cadence": "Provider-current reference service; checked as visible tiles load",
-      "freshness": "Feature dates vary; current service access is not live traffic or a historical edition",
-      "boundary": "Non-state bridges with a recorded construction year before 1950; unknown years are excluded. An age filter is not historic designation; later reconstruction may have changed the structure. Inventory observations may lag changes; not navigation, structural safety, public access, or evidence that a bridge has been demolished. External context only.",
-      "fallback": "Unavailable tiles leave a gap. No routes, traffic, closure status, or missing geometry are inferred.",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "Inventory read when the layer is shown; the site keeps one copy for about a day",
+      "freshness": "Provider-current inventory; build years, status and inspection dates vary by bridge and may lag",
+      "boundary": "Non-state bridges with a recorded construction year before 1950; unknown years are excluded. An age filter is not historic designation; later reconstruction may have changed the structure. Inventory observations may lag changes; not navigation, a structural safety determination, public access, or evidence that a bridge has been demolished. External context only.",
+      "fallback": "If the inventory cannot be read the layer stays empty. No bridge locations, closure status, or absence are inferred.",
       "attribution": "Kansas Department of Transportation (KDOT)",
       "sourceUrl": "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
@@ -363,11 +390,11 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "shortTitle": "Bridges · recorded closed",
       "organization": "Kansas Department of Transportation",
       "domain": "Roads, rail & movement",
-      "kind": "OPERATIONAL_WMS",
-      "cadence": "Provider-current reference service; checked as visible tiles load",
-      "freshness": "Feature dates vary; current service access is not live traffic or a historical edition",
-      "boundary": "Non-state bridges explicitly recorded closed to all traffic. A posted load restriction is not treated as a closure; this is not a live closure feed. Inventory observations may lag changes; not navigation, structural safety, public access, or evidence that a bridge has been demolished. External context only.",
-      "fallback": "Unavailable tiles leave a gap. No routes, traffic, closure status, or missing geometry are inferred.",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "Inventory read when the layer is shown; the site keeps one copy for about a day",
+      "freshness": "Provider-current inventory; build years, status and inspection dates vary by bridge and may lag",
+      "boundary": "Non-state bridges explicitly recorded closed to all traffic. A posted load restriction is not treated as a closure; this is not a live closure feed. Inventory observations may lag changes; not navigation, a structural safety determination, public access, or evidence that a bridge has been demolished. External context only.",
+      "fallback": "If the inventory cannot be read the layer stays empty. No bridge locations, closure status, or absence are inferred.",
       "attribution": "Kansas Department of Transportation (KDOT)",
       "sourceUrl": "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
@@ -610,6 +637,141 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
       "fallback": "Snapshot gaps and unclassified areas remain blank; missing coverage does not mean zero water.",
       "attribution": "Kansas Geological Survey · High Plains Aquifer Atlas",
       "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Annual_measurement_wells_2026/FeatureServer/0",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-spc-fire-weather",
+      "title": "NOAA SPC Day 1 fire-weather outlook",
+      "shortTitle": "Fire-weather outlook · Day 1",
+      "organization": "NOAA NWS Storm Prediction Center",
+      "domain": "Fire, smoke & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "SPC fire-weather outlooks are issued daily and updated; the service shows its current issuance",
+      "freshness": "Provider-current Day 1 forecast; issuance time is on the SPC product page",
+      "boundary": "SPC fire-weather outlooks forecast meteorological conditions (wind, humidity, dry thunderstorms) that favor wildfire spread. They are not burn bans, red-flag warnings, active fire detections or fire perimeters. Combine with thermal detections and NIFC reports only as separate context. Not KFM evidence.",
+      "fallback": "An empty or failed image is not a no-risk finding. Local NWS red-flag warnings and county burn restrictions remain authoritative.",
+      "attribution": "NOAA NWS Storm Prediction Center",
+      "sourceUrl": "https://www.spc.noaa.gov/products/fire_wx/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "noaa-cpc-drought-outlook",
+      "title": "NOAA CPC seasonal drought outlook",
+      "shortTitle": "Drought outlook · seasonal",
+      "organization": "NOAA NWS Climate Prediction Center",
+      "domain": "Weather & hazards",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "CPC issues the seasonal drought outlook monthly",
+      "freshness": "Provider-current seasonal outlook; valid period on the CPC page",
+      "boundary": "The seasonal drought outlook forecasts the direction of drought change relative to the U.S. Drought Monitor. It is not current drought intensity, a disaster designation, an irrigation or crop-insurance determination, or KFM evidence.",
+      "fallback": "Missing imagery stays blank. Blank is not a no-drought finding; check the current U.S. Drought Monitor for present conditions.",
+      "attribution": "NOAA NWS Climate Prediction Center",
+      "sourceUrl": "https://www.cpc.ncep.noaa.gov/products/expert_assessment/sdo_summary.php",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "usgs-padus-lands",
+      "title": "USGS PAD-US 4.0 public and protected lands",
+      "shortTitle": "Public & protected lands",
+      "organization": "U.S. Geological Survey Gap Analysis Project",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "Periodic PAD-US releases; this service shows version 4.0",
+      "freshness": "PAD-US 4.0 compilation; individual agency submissions have their own dates",
+      "boundary": "PAD-US compiles agency-reported fee ownership and management for protected areas. Boundaries can be generalized or out of date, and inclusion does not grant public access, hunting permission or legal title. Private land is not shown. External context only.",
+      "fallback": "Unavailable tiles stay transparent. No absence of public land, access or protection is inferred.",
+      "attribution": "USGS Gap Analysis Project · PAD-US 4.0",
+      "sourceUrl": "https://www.sciencebase.gov/catalog/item/652ef930d34edd15305a9b03",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nrcs-ssurgo-soils",
+      "title": "USDA NRCS SSURGO soil survey map units",
+      "shortTitle": "Soil survey · map units",
+      "organization": "USDA Natural Resources Conservation Service",
+      "domain": "Land records & survey",
+      "kind": "OPERATIONAL_WMS",
+      "cadence": "NRCS refreshes SSURGO annually; the service shows the current Soil Data Mart edition",
+      "freshness": "Provider-current SSURGO map units; survey-area publication dates vary",
+      "boundary": "SSURGO map units delineate soil-survey polygons mapped at roughly 1:12,000–1:24,000. A map unit can contain several soil components and inclusions; the outline is not a site-specific soil test, engineering suitability, septic or building approval, or a KFM release. Visible only at close zoom because outlines are dense.",
+      "fallback": "At overview scale or on provider failure, outlines are absent; no soil class or property is inferred.",
+      "attribution": "USDA NRCS Soil Survey Geographic Database (SSURGO)",
+      "sourceUrl": "https://websoilsurvey.nrcs.usda.gov/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-nrhp-places",
+      "title": "National Register of Historic Places · Kansas listings",
+      "shortTitle": "Historic places · National Register",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS cultural-resources service; listings and spatial edits are published periodically",
+      "freshness": "Current public NPS spatial service; certification dates are carried by each listing",
+      "boundary": "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
+      "fallback": "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
+      "attribution": "National Park Service · National Register of Historic Places",
+      "sourceUrl": "https://www.nps.gov/subjects/nationalregister/database-research.htm",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-historic-trails",
+      "title": "Frontier trails across Kansas · NPS National Trails",
+      "shortTitle": "Frontier trails · Santa Fe, Oregon, Pony Express",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS National Trails Office updates trail alignments as mapping is revised",
+      "freshness": "Current NPS mapped alignments at retrieval time",
+      "boundary": "Approximate 1:100,000 NPS alignments of 19th-century routes where they cross Kansas. Most of the land along these lines is private; a line is not public access, a property boundary or a precise ruts location. The cattle-trail routes were studied by NPS and are not designated National Historic Trails. External context only, not KFM evidence.",
+      "fallback": "If an NPS layer is unavailable the rest still draw and the source card names the missing trail; missing lines never mean no historic route existed.",
+      "attribution": "National Park Service, National Trails Office",
+      "sourceUrl": "https://www.nps.gov/subjects/nationaltrailssystem/national-historic-trails.htm",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "nps-trail-places",
+      "title": "Trail sites · NPS National Trails points of interest",
+      "shortTitle": "Trail sites · forts, crossings & ruts",
+      "organization": "National Park Service",
+      "domain": "History & cultural heritage",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "NPS National Trails Office updates trail sites as partners and pages change",
+      "freshness": "Current NPS points of interest at retrieval time",
+      "boundary": "Public points of interest NPS publishes for the National Historic Trails. Sites NPS describes as private or not open to visitors are left out. A marker is not a property boundary, an access permission or KFM evidence; hours and access change, so check the linked page before visiting.",
+      "fallback": "A failed NPS request leaves the layer empty and labeled; missing markers do not mean no trail sites exist.",
+      "attribution": "National Park Service, National Trails Office",
+      "sourceUrl": "https://www.nps.gov/safe/planyourvisit/places-to-go.htm",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "kdwp-wildlife-areas",
+      "title": "KDWP public wildlife areas",
+      "shortTitle": "Wildlife areas · KDWP",
+      "organization": "Kansas Department of Wildlife and Parks",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "KDWP updates its public hunting atlas layers as areas and rules change",
+      "freshness": "Current KDWP public layer at retrieval time",
+      "boundary": "KDWP's public wildlife-area polygons, simplified for display. Refuges, closures, seasons, permits and special rules change during the year and are not complete here. This is not a legal boundary, a regulation, hunting permission or KFM evidence; check KDWP before entering or hunting.",
+      "fallback": "A failed KDWP request leaves the layer empty and labeled; missing areas never imply no public land.",
+      "attribution": "Kansas Department of Wildlife and Parks",
+      "sourceUrl": "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "kdwp-wiha-access",
+      "title": "KDWP Walk-In Hunting Access tracts · 2026–2027",
+      "shortTitle": "Walk-in hunting access",
+      "organization": "Kansas Department of Wildlife and Parks",
+      "domain": "Land cover & ecology",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "KDWP publishes WIHA enrollments by hunting season; tracts can change during the season",
+      "freshness": "Layer used by KDWP's public 2026–2027 WIHA map at retrieval time",
+      "boundary": "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; public administrative references and notes are tract context, not owner identification or permission to track people. Check the current KDWP atlas and regulations before going.",
+      "fallback": "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
+      "attribution": "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
+      "sourceUrl": "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
     {

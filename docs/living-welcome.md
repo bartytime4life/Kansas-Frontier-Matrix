@@ -1,5 +1,105 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Expanded-panel geometry follow-up — November 15, 2026 candidate
+
+Exact-head focused-welcome job 132975734999 in run 43767480914 tested
+`ce5e646d07a094c909bc60d91323f061e2a95762`, whose tree matches merged source
+`1b61903fe5fc6196ddd2cc03104807abd2fc9fb5`. It reported 29 passes and one
+failure. The complete 1363 × 936 hovered-panel wheel case and 390 × 844
+touch-carousel case passed. The 1280 × 800 case failed at
+`real expanded explanation has no inner overflow`: the expanded content
+naturally overflows there. That invalid test premise must not be reported as
+a demonstrated failure of wheel forwarding. Full Explorer job 132975735129
+also reported this same premise failure alongside the two short-window Status
+wheel failures: 157 passes, three failures, no cancellations and five opt-in
+performance/diagnostic skips. It found no additional failure.
+
+The revised test retains real closed-panel no-overflow assertions at both
+sizes and the real expanded no-overflow assertion at 1363 × 936. At 1280 × 800
+it instead requires measured inner range, starts native wheel input within
+that range in both directions and requires the outer chooser to stay still.
+It then checks downward handoff at the real bottom boundary and upward handoff
+at the real top boundary. Inner wheel distance is bounded from the measured
+range; the natural panel's height is not constrained. Pointer hit-testing,
+fixed-panel geometry, viewport containment and unchanged document position
+remain asserted throughout.
+
+The separate 220px synthetic fixture and horizontal/modifier checks remain
+unchanged. No welcome runtime handler, timeout, skip, source permission or
+touch listener changes. At candidate authoring, the combined follow-up passed
+129 focused tests, the production build and TypeScript verification. Its complete
+standalone Node rerun passed 2,993 tests with zero failures and 25 explicit skips.
+The first local attempt had 2,982 passes, five failures and 23 skips because a
+tracked hosting-metadata fixture was omitted by the sparse checkout. Restoring
+the exact base bytes in the isolated checkout corrected that setup omission;
+no hosting value or candidate source changed. Both attempts are retained in
+`KFM-STATUS-SCROLL-FOLLOWUP-EXECUTION-20261115`.
+
+The revised rendered assertions are pending exact-head CI at authoring.
+Existing CI supplies the failing comparison, not a result for this candidate.
+
+The earlier local Chromium socket failure never created a page. It remains
+separate from completed GitHub browser assertions. Viewport emulation and
+synthetic modifier events do not prove physical-device behavior or native
+zoom/pinch. The retained intercepted-API case passed in the identical-tree
+merge navigation run after its PR-run timeout; its root cause is unresolved.
+The separate mobile notice overlapping a return label is also outside this
+correction. Neither observation is claimed fixed by these changes.
+
+Placement retains the current tests/docs ownership and generated-work receipt
+lane under accepted ADR-0029 and Directory Rules. Rollback reverts this bounded
+test/guidance change with its paired Status correction, retaining evidence.
+Neither the previous merge nor this candidate establishes public deployment.
+
+## Desktop explanation wheel handoff — November 15, 2026 candidate
+
+Independent public-UI verification, alongside inspection of hosted source
+`0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7`, reproduced a wheel dead zone over
+`.welcome-focus` at 1363 × 936. Public build metadata did not establish an exact
+deployed commit or built-byte identity. The explanation
+had no internal scroll range; outer scrollTop stayed 187 over the panel and
+changed from 187 to 667 over surrounding space with the same requested gesture.
+The explanation remained visible. This is distinct from the historical removed
+`.welcome-preview-brief` card and does not establish a disappearing-panel failure.
+
+This candidate preserves the fixed atlas layout and installs a native wheel
+listener only on its current chosen-map panel. Inner scrollable content keeps
+native wheel handling while it has range. At an inner boundary, an unmodified
+vertical gesture moves the welcome scroller only when that scroller has room.
+The handler respects deliberate overscroll boundaries and does not intercept
+horizontal-dominant input, Ctrl/Meta/Alt/Shift gestures, editable controls or
+already-canceled/noncancelable events. Cleanup follows topic/layout changes and
+unmount. No touch listener, permission change or data admission is introduced.
+
+This is a bounded candidate, not a demonstrated browser-engine root-cause repair.
+A non-passive listener has input-path cost; line-mode conversion approximates
+text metrics. A gesture still consumed by inner content is left native; later
+boundary gestures are forwarded rather than dividing residual distance. A native
+layout solution would be preferable if separately shown to preserve positioning,
+credit clearance and scrolling across input methods.
+
+The 1280 × 800 and 1363 × 936 browser cases assert a hit inside the panel,
+both wheel directions, fixed visibility and unchanged document position.
+Closed panels and the expanded 1363 × 936 panel use real no-overflow geometry;
+the expanded 1280 × 800 correction checks natural inner consumption
+and boundary handoff as described above. A separately labeled 220px fixture
+checks constrained inner consumption and handoff. Native horizontal input and
+synthetic modifier events check noninterception; synthetic events do not
+establish browser zoom. The existing touch-carousel matrix includes 390 × 844.
+All cases retain the `welcome categories scroll` focused CI prefix.
+
+For PR #5867, local validation passed the 119-test focused suite, production
+build and TypeScript verification. Local Chromium aborted before page creation
+because socket creation was denied. Later GitHub results are recorded above:
+the 1363 × 936 full wheel case passed; the expanded 1280 × 800 test premise
+failed. This follow-up's local results and pending rendered acceptance are
+recorded above. Native zoom/pinch,
+physical trackpad/touch, additional expanded-credit combinations and public
+behavior retain their own boundaries. No public deployment is asserted.
+Placement reuses the existing hosted application, tests and docs under AGENTS
+and accepted ADR-0029 / Directory Rules §§5, 7.2, 10.1 and 14. Rollback reverts
+the bounded candidate change without changing source permissions or stored data.
+
 ## Desktop atlas · 2026-11-05 candidate
 
 On wide, tall screens (at least 1101 px wide and 761 px tall, outside the
@@ -1136,3 +1236,24 @@ has no established cause and is not claimed fixed by this change.
 Placement remains within the existing `app/`, `tests/` and `docs/` responsibility
 roots described above. Rollback is a revert; no data, stored preferences,
 provider settings, hosting configuration or publication state changes.
+
+### Escape ownership across expanded previews (November 11, 2026)
+
+An expanded category preview owns Escape before preferences or topic-filter
+disclosures left open behind it. Source notes still close first and restore
+their trigger; the next Escape returns to the original preview card. Once the
+categories are visible again, an open disclosure keeps its normal close and
+summary-focus action before a further Escape dismisses the chooser. Active
+disclosures containing the focused control retain their own priority.
+
+The repair preserves the current cards, category order, responsive layout,
+preview content and water-animation defaults. Component tests cover retained
+background preferences and filters; the existing browser journey retains its
+close-button geometry, native input, modal isolation and focus assertions,
+and now explicitly checks the restored preferences close step. Original
+failing CI and local reproduction remain separate from candidate validation.
+
+Implementation, tests and this document stay in their existing ownership
+roots under Directory Rules / ADR-0029. No new source, schema, data release or
+runtime authority is introduced. Revert this focused source/test/document
+change to roll back; deployment and publication remain separate.

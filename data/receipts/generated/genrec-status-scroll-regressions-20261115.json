@@ -1,0 +1,183 @@
+{
+  "receipt_id": "kfm:generated:status-scroll-regressions:20261115",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/map-layers.css",
+    "tests/workspace-help-navigation.test.mjs",
+    "tests/explorer-startup.browser.mjs",
+    "docs/explorer-startup-navigation-20261019.md",
+    "docs/living-welcome.md"
+  ],
+  "artifact_hashes": {
+    "app/map-layers.css": "sha256:a907668f1a10a6993e5cd33d71d30daf48c167e2e22f828fdd7175a95dca4dad",
+    "tests/workspace-help-navigation.test.mjs": "sha256:316d66bc97fdc57dab0f9364722ab23726987a425690af058d56ee3d1a183a8d",
+    "tests/explorer-startup.browser.mjs": "sha256:f767a87f1955fe62a39421d093331250854f812928750e8ec198ea31b722ff5a",
+    "docs/explorer-startup-navigation-20261019.md": "sha256:14408ea01cf8fb4d34eb1ed48100d43b00fa03893bd0ce9bbc2c6c3ee793a3e7",
+    "docs/living-welcome.md": "sha256:e091ea624565b4accf3c96073531830aee4245fa87b93b5560bf8296bcfa2d41"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Exact serving revision unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub evidence and authorized draft-PR authoring",
+      "isolated git worktree",
+      "approved patch application",
+      "Node focused and complete tests",
+      "production build",
+      "TypeScript verification",
+      "receipt schema validation",
+      "independent assistant static review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:bf0fe9428b2f84fb0e98a91a388e630c4e2de63d4d96163ff5a7aacfdfce0879",
+      "sha256:a442829a4d28d11fef6a50da996212f0bfc0a9d83b2a2071a59d22f1e7dfefa3",
+      "sha256:a39d73281d142997785b9efa7e02572fbcf778d4c2678ada1813211de2092458",
+      "sha256:4384de9d3810b09d01b9332b5b94c71cf86a5209991cdfbee0941fdb87b77e3c",
+      "sha256:d2c4749e1b8db2691e47822e90a7966fc9ef4e92bb747dee11fec5c1f447d12e",
+      "sha256:71926556569d4448475deabb9150d8f7713b0a0d35ba382d09e9eb3882a3a25b",
+      "sha256:278a53e81d322145373d82583d5829a2bd612be2b1bbd52d8620911547a4c779",
+      "sha256:6d97312f00c3f1a8af0a0d4c458e68fc31fd54564c907ef992faa73c5ae79b7f",
+      "sha256:19edff3abd2e52015f819179a0d1d6913fc0eaa5df4d17003e41ce081025433a",
+      "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256:ed6db8972eb4cfefdc0dc22320879120f49c19cfccdffaebcd501634c69abad7",
+      "sha256:8676e88a53d2622f74369d0086bfc391a162b75095935c3d0ed70d62365cc5fa",
+      "sha256:a183a67c2a6910beb193c9214cc17147fad76d5c40800e7c7ebeb1aebc405a3e",
+      "sha256:56886c05179bf24163e93bb2ae84a4294a0f2b9aad0489be4948abc356774d95",
+      "sha256:41329342bea10ea34418a8a978ecd6b615faa5b269ad06c8554f81353a31c165",
+      "sha256:70bfb4192c65cf65744e2c28bab9dcadcac8335513fe2e505710646605fdb551"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf — previously inspected source lineage; accepted ADR-0029 and adopted Directory Rules remain the placement basis"
+    ],
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@1b61903fe5fc6196ddd2cc03104807abd2fc9fb5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5867",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/43767480914",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/43767614572/job/132976153506",
+      "KFM-5859-INDEPENDENT-20261115",
+      "KFM-5859-FOLLOWUP-EXECUTION-20261115",
+      "KFM-STATUS-SCROLL-FOLLOWUP-EXECUTION-20261115"
+    ]
+  },
+  "truth_labels": {
+    "app/map-layers.css": "NEEDS VERIFICATION",
+    "tests/workspace-help-navigation.test.mjs": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "NEEDS VERIFICATION",
+    "docs/explorer-startup-navigation-20261019.md": "CONFIRMED",
+    "docs/living-welcome.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Authorized application and bounded overlap",
+      "outcome": "PASS",
+      "reason": "User approved the prepared follow-up and needed PRs. At 2026-11-15 22:41:23 UTC hosted tip remained 1b61903fe5fc6196ddd2cc03104807abd2fc9fb5; no open hosted PR or proposed agent branch. Main bdb41a9490ca4e3661196da0f7ab2b0aa0a189d3 has unchanged applicable authority. Unrelated main PR5868 has no exact-path or identified Explorer overlap. Applied all six approved patch hashes; runtime/test bytes remain exact. Recheck before remote mutation."
+    },
+    {
+      "gate": "Existing navigation CI baseline",
+      "outcome": "FAIL",
+      "reason": "PR run: 18 passed, 2 failed, 1 cancelled; merge run: 19 passed, 2 failed, 0 cancelled. Four source cases at 1280 x 800 and 390 x 844 pass in both. Both 681 x 468 cases fail Status wheel before Back. Retained intercepted-API test passed after earlier timeout; root cause unresolved and excluded."
+    },
+    {
+      "gate": "Existing focused-welcome CI baseline",
+      "outcome": "FAIL",
+      "reason": "29 passed, 1 failed. Expanded 1280 x 800 no-overflow premise fails; 1363 x 936 full-wheel and 390 x 844 touch cases pass. Not a follow-up candidate result."
+    },
+    {
+      "gate": "Existing full Explorer CI baseline",
+      "outcome": "FAIL",
+      "reason": "Job 132975735129: 165 total, 157 passed, 3 failed, 0 cancelled, 5 opt-in performance/diagnostic skips. Same expanded 1280 x 800 premise and two 681 x 468 Status-wheel failures only; no additional failure. Four 1280/390 source cases, 1363 wheel and 390 touch pass again. Not a follow-up result."
+    },
+    {
+      "gate": "Existing core CI baseline",
+      "outcome": "FAIL",
+      "reason": "2,992 passed, 1 failed, 25 skipped. Workspace-help test scope lacks sourceStatusReturnPendingRef; same unchanged test passed on 0dc. Prior build/typecheck passed; later skipped checks remain skipped."
+    },
+    {
+      "gate": "Prospective JavaScript and CSS syntax",
+      "outcome": "PASS",
+      "reason": "Both changed mjs files parse via node --check; CSS parses via PostCSS. No behavioral execution."
+    },
+    {
+      "gate": "Candidate focused tests",
+      "outcome": "PASS",
+      "reason": "129 passed, zero failures/cancellations/skips across the seven approved focused suites, including workspace-help fixture and exact thirteen-source allowlist."
+    },
+    {
+      "gate": "Candidate production build",
+      "outcome": "PASS",
+      "reason": "npm run build exited 0; generated assets remain outside the six-path candidate diff. This is local build evidence, not deployment."
+    },
+    {
+      "gate": "Candidate TypeScript",
+      "outcome": "PASS",
+      "reason": "node node_modules/typescript/bin/tsc --noEmit exited 0."
+    },
+    {
+      "gate": "Candidate full Node suite — initial sparse checkout",
+      "outcome": "FAIL",
+      "reason": "3010 total: 2982 passed, 5 failed, 23 skipped, 0 cancelled. Four local-pc-layout cases and local-worker-runtime module initialization failed because the sparse checkout omitted the tracked hosting-metadata fixture. Preserved as an actual failed attempt."
+    },
+    {
+      "gate": "Candidate full Node suite — complete checkout",
+      "outcome": "PASS",
+      "reason": "3018 total: 2993 passed, 0 failed, 25 skipped, 0 cancelled. Restored only exact base blob 89078b1d6e64289521e646cdef6bb0b1980624ef in the isolated checkout. Tracked content, configuration values and sparse rules stayed unchanged; Git cleared that file's skip-worktree flag on materialization. Reran the complete command; no failed test omitted."
+    },
+    {
+      "gate": "Independent static review and permission boundary",
+      "outcome": "PASS",
+      "reason": "Independent assistant review found no blocking static issue; CSS specificity/order, retained source assertions, natural welcome geometry and guards checked. Source-download mapping, route, exact13 regression and workflow byte-identical to base. Not human review or rendered acceptance."
+    },
+    {
+      "gate": "Candidate rendered acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head GitHub CI at authoring. Known local Chromium socket denial prevented earlier page creation; no repeated launch or bypass. Existing six source cases and corrected welcome cases remain selected by unchanged workflow."
+    },
+    {
+      "gate": "Human review and release/deployment",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending. Authorized authoring and draft PR only; no ready-for-review, merge, permission change, source activation, deployment or publication performed by the assistant."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-merged-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1b61903fe5fc6196ddd2cc03104807abd2fc9fb5"
+    },
+    {
+      "id": "accepted-directory-adoption",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/da13ca0d2aa86743c69dcd723a028baa86285479/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-head-baseline-ci",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/43767480914"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-15T22:49:10.314850+00:00",
+  "emitter": "ChatGPT — KFM authorized Status-scroll regression candidate",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/da13ca0d2aa86743c69dcd723a028baa86285479/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "APPLIED_CANDIDATE; rendered acceptance pending at authoring. The six-path follow-up changes short-window Status overflow ownership, supplies a missing test closure dependency, corrects natural expanded-panel geometry at 1280 x 800, updates two guides and creates this receipt. Runtime/test bytes match approved patch SHA-256 41329342bea10ea34418a8a978ecd6b615faa5b269ad06c8554f81353a31c165. Five final artifact hashes; no self-hash. Prior CI failures are baseline evidence, distinct from 129 focused passes, local build/typecheck passes and 2993 full-suite passes with 25 skips. Initial five local failures are retained and attributed to an omitted tracked fixture; exact base restoration changed no hosting value or tracked content. Existing receipt history remains. Pending human review follows schema/CONTRIBUTING; the recorded contract section 32.3 wording conflict remains without fabricated approval. Runtime/browser artifacts need rendered verification. Separate intercepted-API timeout, mobile notice overlap, missing rendered fallback, native zoom/physical devices and public-provider acceptance remain outside this bounded correction. No public deployment claim."
+}

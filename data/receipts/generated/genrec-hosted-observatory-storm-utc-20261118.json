@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-hosted-observatory-storm-utc-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/event-atlas.ts",
+    "app/observatory/workspace.tsx",
+    "tests/event-atlas.test.mjs",
+    "tests/nexrad-storms.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/event-atlas.ts": "sha256:f865bd3a707596c881075bce720e1809bc467749e9c358a1384d5ccf083f829c",
+    "app/observatory/workspace.tsx": "sha256:47fb0d01d024cc3ba9e1b8ea9ac1517d355cfa10c76d9424652cc4049396824d",
+    "tests/event-atlas.test.mjs": "sha256:ddf3ce2af029f177c582829c2731ec9350424cdb8bcb5ba149dfa243a353538a",
+    "tests/nexrad-storms.test.mjs": "sha256:b4661c1370a2a160c736a8d48489be59fb0abd3a1ceb5a12aa084c5e27c075c2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-6 family"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local shell",
+      "git",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:6bf0a12cd10fa79c593fedbab761ff1b7f79949d:AGENTS.md",
+      "git:654980df4c1bc956b28af84221391223d0640809",
+      "git:d8de73b49777b3316eb82aefc6d9403a41638a15",
+      "git:8fdefd21d68ea8263566421bb83b238a6ad1f989:docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5911"
+    ]
+  },
+  "truth_labels": {
+    "app/event-atlas.ts": "CONFIRMED",
+    "app/observatory/workspace.tsx": "CONFIRMED",
+    "tests/event-atlas.test.mjs": "CONFIRMED",
+    "tests/nexrad-storms.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Public current-window failure reproduction",
+      "outcome": "PASS",
+      "reason": "The live Observatory manifest returned a fractional end. The storm route returned 400 for fractional frame and availability queries and 200 for the corresponding whole-second values."
+    },
+    {
+      "gate": "Local production build",
+      "outcome": "PASS",
+      "reason": "Built the four-file application candidate with application input digest sha256:145c2273e61961a4e37df78eec7b5f27310108b6b57bb329a262527e958c61e5."
+    },
+    {
+      "gate": "Observatory and storm route regressions",
+      "outcome": "PASS",
+      "reason": "24 focused tests passed, including the current-window clamp, original whole-second archive validation, and paired request/response times."
+    },
+    {
+      "gate": "Hosted checks and human disposition",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt emission."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "hosted-application-baseline",
+      "validated": true,
+      "evidence_ref": "git:6bf0a12cd10fa79c593fedbab761ff1b7f79949d"
+    },
+    {
+      "id": "site-mirror-counterpart",
+      "validated": true,
+      "evidence_ref": "git:d8de73b49777b3316eb82aefc6d9403a41638a15"
+    },
+    {
+      "id": "ai-build-contract",
+      "validated": true,
+      "evidence_ref": "git:8fdefd21d68ea8263566421bb83b238a6ad1f989:docs/doctrine/ai-build-operating-contract.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-18T18:19:37.558340+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Records the hosted application backport and scoped validation. The Site mirror fix uses its own receipt. The four hashes cover application and test inputs at the candidate commit."
+}

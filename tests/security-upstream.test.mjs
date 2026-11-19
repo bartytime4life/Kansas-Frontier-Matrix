@@ -108,7 +108,7 @@ test("current NASA fire points use only a labeled previous UTC day when new-day 
 
     calls.length = 0;
     const exact = await handler(new Request(`http://localhost/api/live-context?feed=nasa-gibs-fire-points&day=${today}`));
-    assert.equal(exact.status, 502);
+    assert.equal(exact.status, 503, "feed failures use 503 so the host keeps the JSON explanation");
     assert.ok(calls.length > 0 && calls.every((url) => url.includes(`/default/${today}/`)));
   } finally { globalThis.fetch = originalFetch; }
 });

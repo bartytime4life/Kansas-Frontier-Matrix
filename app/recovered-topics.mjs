@@ -7,8 +7,15 @@ export const recoveredTitle=title=>title.split(' ').map(word=>ACRONYM.test(word)
 
 /** The Explorer topics a collection belongs under, from its source family. */
 export function recoveredTopics(id){
+  if(/usgs-earthquakes/.test(id))return ['geology','disaster','science'];
+  if(/nid-dams/.test(id))return ['water','engineering','disaster'];
+  if(/usfs-ceded|blm-plss/.test(id))return ['land','history','people','government'];
+  if(/nps-/.test(id))return ['ecology','history','places','land'];
+  if(/newspaper|ahcb|blevins|atack|gnis|nrhp|htmc|wikidata/.test(id))return ['history','places','evidence'];
+  if(/congress/.test(id))return ['government','people','history'];
+  if(/prepared|environmental-(capture-)?features/.test(id))return ['science','ecology','evidence'];
   if(/osm/.test(id))return ['places','land','transport','evidence'];
-  if(/aqs|climdiv|ghcn|storm|wind|prism|spc|usdm|vtec|asos/.test(id))return ['weather','science','disaster'];
+  if(/aqs|climdiv|ghcn|storm|wind|prism|spc|usdm|vtec|asos|fema/.test(id))return ['weather','science','disaster'];
   if(/kgs|macrostrat|mrds|msha|usmin/.test(id))return ['geology','science','engineering'];
   if(/wqp|usgs-(sites|daily|series|samples|field|peaks)|nwm/.test(id))return ['water','science'];
   if(/faa|nasr/.test(id))return ['aviation','transport','engineering'];

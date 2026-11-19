@@ -3,8 +3,11 @@ import { DEFLOCK_SOURCE, DEFLOCK_COLOR } from "./deflock";
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { hiDpiExportUrl } from "./hd-rasters";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
+import { KANSAS_DISCOVERY_SOURCES } from "./kansas-discovery-layers";
+import { ACCESS_OVERVIEW_CLUSTER_PROPERTIES, ACCESS_OVERVIEW_CLUSTER_RADIUS, ACCESS_OVERVIEW_MAX_ZOOM, ACCESS_OVERVIEW_SOURCE_ID, accessOverviewPoints, HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS, TRAIL_PLACE_CLUSTER_MAX_ZOOM, TRAIL_PLACE_CLUSTER_PROPERTIES, TRAIL_PLACE_CLUSTER_RADIUS } from "./context-clusters";
+import { BRIDGE_CLOSED_COLOR, BRIDGE_CLUSTER_MAX_ZOOM, BRIDGE_CLUSTER_RADIUS, BRIDGE_ERA_STOPS, BRIDGE_FEED_IDS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR } from "./kdot-bridges";
 import type { FeatureCollection } from "geojson";
-import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
+import type { ExpressionSpecification, GeoJSONSource, GeoJSONSourceSpecification, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { lightningTilePath, NASA_LIGHTNING_METADATA_URL, NASA_LIGHTNING_TILES } from "./lightning-data";
 import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite";
@@ -18,8 +21,8 @@ import { globeOverviewPaintSize } from "./globe-context";
 // Only exports the CI fire baseline (a pinned earlier renderer) also has, so its comparison build still links.
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay } from "./fire-detection-style";
 
-export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
-export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
+export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones" | "noaa-spc-fire-weather" | "noaa-cpc-drought-outlook" | "usgs-padus-lands" | "nps-nrhp-places" | "nrcs-ssurgo-soils" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places";
+export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations" | "nps-nrhp-places" | "kdwp-wildlife-areas" | "kdwp-wiha-access" | "nps-historic-trails" | "nps-trail-places" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -82,6 +85,97 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   DEFLOCK_SOURCE,
   ...KANSAS_REFERENCE_SOURCES,
   ...AQUIFER_RASTER_SOURCES, ...GROUNDWATER_SNAPSHOT_SOURCES,
+  ...KANSAS_DISCOVERY_SOURCES,
+  Object.freeze({
+    id: "nps-nrhp-places", title: "National Register of Historic Places · Kansas listings", shortTitle: "Historic places · National Register",
+    organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nps-nrhp-places",
+    layerIds: Object.freeze(["external-nps-nrhp-places-halo", "external-nps-nrhp-places-points", "external-nps-nrhp-places-labels", "external-nps-nrhp-places-clusters", "external-nps-nrhp-places-cluster-count"]),
+    interactiveLayerIds: Object.freeze(["external-nps-nrhp-places-clusters", "external-nps-nrhp-places-points"]),
+    apiPath: "/api/live-context?feed=nps-nrhp-places",
+    endpointLabel: "mapservices.nps.gov · nrhp_locations · Kansas points",
+    sourceUrl: "https://www.nps.gov/subjects/nationalregister/database-research.htm", serviceUrl: "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer",
+    cadence: "NPS cultural-resources service; listings and spatial edits are published periodically",
+    freshness: "Current public NPS spatial service; certification dates are carried by each listing",
+    defaultVisibility: false, defaultOpacity: 0.95, color: "#e8c27a",
+    attribution: "National Park Service · National Register of Historic Places",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Numbered circles count markers and split as you zoom in. Gold markers · listed buildings, districts, sites, structures and objects. Larger rings mark National Historic Landmarks.",
+    boundary: "This layer shows only the public, non-restricted National Register point locations NPS publishes for Kansas. Sensitive archaeological and restricted locations are withheld by NPS and never inferred here. A point is a representative location, not a property boundary, public-access permission, ownership record or current condition. Listing does not mean a property still stands. External context only.",
+    fallback: "A failed or capped NPS query stays labeled. Missing markers do not mean no historic resources exist; restricted listings are intentionally absent.",
+  }),
+  Object.freeze({
+    id: "nps-historic-trails", title: "Frontier trails across Kansas · NPS National Trails", shortTitle: "Frontier trails · Santa Fe, Oregon, Pony Express",
+    organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nps-historic-trails",
+    layerIds: Object.freeze(["external-nps-historic-trails-casing", "external-nps-historic-trails-line", "external-nps-historic-trails-cattle", "external-nps-historic-trails-labels"]),
+    interactiveLayerIds: Object.freeze(["external-nps-historic-trails-line", "external-nps-historic-trails-cattle"]),
+    apiPath: "/api/live-context?feed=nps-historic-trails",
+    endpointLabel: "services1.arcgis.com · NPS National Trails (SAFE, OREG, CALI, POEX, Chisholm–Western study)",
+    sourceUrl: "https://www.nps.gov/subjects/nationaltrailssystem/national-historic-trails.htm", serviceUrl: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/SAFE_NHT/FeatureServer/0",
+    cadence: "NPS National Trails Office updates trail alignments as mapping is revised",
+    freshness: "Current NPS mapped alignments at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.9, color: "#e07a3f",
+    attribution: "National Park Service, National Trails Office",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Solid lines · Santa Fe, Oregon, California and Pony Express National Historic Trails. Dashed lines · Chisholm and Western cattle-trail routes from the NPS feasibility study. Click a line for its trail and status.",
+    boundary: "Approximate 1:100,000 NPS alignments of 19th-century routes where they cross Kansas. Most of the land along these lines is private; a line is not public access, a property boundary or a precise ruts location. The cattle-trail routes were studied by NPS and are not designated National Historic Trails. External context only, not KFM evidence.",
+    fallback: "If an NPS layer is unavailable the rest still draw and the source card names the missing trail; missing lines never mean no historic route existed.",
+  }),
+  Object.freeze({
+    id: "nps-trail-places", title: "Trail sites · NPS National Trails points of interest", shortTitle: "Trail sites · forts, crossings & ruts",
+    organization: "National Park Service", domain: "History & cultural heritage", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nps-trail-places",
+    layerIds: Object.freeze(["external-nps-trail-places-points", "external-nps-trail-places-labels", "external-nps-trail-places-clusters", "external-nps-trail-places-cluster-count"]),
+    interactiveLayerIds: Object.freeze(["external-nps-trail-places-clusters", "external-nps-trail-places-points"]),
+    apiPath: "/api/live-context?feed=nps-trail-places",
+    endpointLabel: "services1.arcgis.com · NPS National Trails points of interest",
+    sourceUrl: "https://www.nps.gov/safe/planyourvisit/places-to-go.htm", serviceUrl: "https://services1.arcgis.com/fBc8EJBxQRMcHlei/arcgis/rest/services/SAFE_SantaFeNHTPointsofInterest_pt/FeatureServer/0",
+    cadence: "NPS National Trails Office updates trail sites as partners and pages change",
+    freshness: "Current NPS points of interest at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.95, color: "#f2c46d",
+    attribution: "National Park Service, National Trails Office",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Numbered circles count sites and split as you zoom in. Gold markers · forts, crossings, ruts, museums and other public trail sites. Click one for its story and the NPS page.",
+    boundary: "Public points of interest NPS publishes for the National Historic Trails. Sites NPS describes as private or not open to visitors are left out. A marker is not a property boundary, an access permission or KFM evidence; hours and access change, so check the linked page before visiting.",
+    fallback: "A failed NPS request leaves the layer empty and labeled; missing markers do not mean no trail sites exist.",
+  }),
+  Object.freeze({
+    id: "kdwp-wildlife-areas", title: "KDWP public wildlife areas", shortTitle: "Wildlife areas · KDWP",
+    organization: "Kansas Department of Wildlife and Parks", domain: "Land cover & ecology", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-kdwp-wildlife-areas",
+    layerIds: Object.freeze(["external-kdwp-wildlife-areas-fill", "external-kdwp-wildlife-areas-line"]),
+    interactiveLayerIds: Object.freeze(["external-kdwp-wildlife-areas-fill"]),
+    apiPath: "/api/live-context?feed=kdwp-wildlife-areas",
+    endpointLabel: "services1.arcgis.com · KDWPT_Wildlife_Areas_view (KDWP public hunting atlas)",
+    sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/KDWPT_Wildlife_Areas_view/FeatureServer/0",
+    cadence: "KDWP updates its public hunting atlas layers as areas and rules change",
+    freshness: "Current KDWP public layer at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.55, color: "#7fbf6a",
+    attribution: "Kansas Department of Wildlife and Parks",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Green fill · KDWP-managed public wildlife areas. Click an area for its name, manager and access notes.",
+    boundary: "KDWP's public wildlife-area polygons, simplified for display. Refuges, closures, seasons, permits and special rules change during the year and are not complete here. This is not a legal boundary, a regulation, hunting permission or KFM evidence; check KDWP before entering or hunting.",
+    fallback: "A failed KDWP request leaves the layer empty and labeled; missing areas never imply no public land.",
+  }),
+  Object.freeze({
+    id: "kdwp-wiha-access", title: "KDWP Walk-In Hunting Access tracts · 2026–2027", shortTitle: "Walk-in hunting access",
+    organization: "Kansas Department of Wildlife and Parks", domain: "Land cover & ecology", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-kdwp-wiha-access",
+    layerIds: Object.freeze(["external-kdwp-wiha-access-fill", "external-kdwp-wiha-access-line", "external-kdwp-wiha-access-overview", "external-kdwp-wiha-access-overview-count"]),
+    interactiveLayerIds: Object.freeze(["external-kdwp-wiha-access-overview", "external-kdwp-wiha-access-fill"]),
+    apiPath: "/api/live-context?feed=kdwp-wiha-access",
+    endpointLabel: "services1.arcgis.com · WIHA access layer in KDWP's 2026–2027 WIHA web map",
+    sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0",
+    cadence: "KDWP publishes WIHA enrollments by hunting season; tracts can change during the season",
+    freshness: "Layer used by KDWP's public 2026–2027 WIHA map at retrieval time",
+    defaultVisibility: false, defaultOpacity: 0.5, color: "#e5b54b",
+    attribution: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    legend: "Zoomed out, numbered circles count tracts and their recorded acres; zoom in for the tracts themselves. Gold fill · private land enrolled in Walk-In Hunting Access. Click a tract for acres, species and archery-only status.",
+    boundary: "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; public administrative references and notes are tract context, not owner identification or permission to track people. Check the current KDWP atlas and regulations before going.",
+    fallback: "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
+  }),
   Object.freeze({
     id: "fema-disaster-declarations", title: "FEMA Kansas disaster declaration areas", shortTitle: "FEMA declarations",
     organization: "Federal Emergency Management Agency", domain: "Weather & hazards", kind: "OPERATIONAL_GEOJSON",
@@ -631,7 +725,9 @@ export function setHmsSmokeFade(map: MapLibreMap, value: number, opacity: number
   balanceMapFills(map);
 }
 export const OFFICIAL_CONTEXT_BY_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source])) as Record<OfficialContextId, OfficialContextSource>);
-export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])) as Record<string, OfficialContextSource>);
+// The hunting-access overview is a second, display-only map source; a hit on it belongs to the hunting-access layer.
+export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze({ ...Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])),
+  [ACCESS_OVERVIEW_SOURCE_ID]: OFFICIAL_CONTEXT_SOURCES.find(source => source.id === "kdwp-wiha-access")! } as Record<string, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CONTEXT_SOURCES.flatMap((source) => source.interactiveLayerIds));
 export const OFFICIAL_CONTEXT_PRESENT_FRAME = BUILD_UTC_YEAR;
 /** Keep dynamic 3DEP image-service requests within the Kansas inspection scale.
@@ -675,6 +771,15 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "kdot-rail-abandoned": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
   "fema-flood-zones": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
 
+  "noaa-spc-fire-weather": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Day 1 fire-weather issuance only; not an archive of past outlooks or observed fire behavior." }),
+  "noaa-cpc-drought-outlook": Object.freeze({ axis: "provider-forecast-series", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current seasonal outlook; not a historical drought record or current drought intensity." }),
+  "usgs-padus-lands": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "PAD-US 4.0 compilation; agency submission dates vary and no historical ownership series is connected." }),
+  "nrcs-ssurgo-soils": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current SSURGO edition; survey-area dates vary and no historical soil series is replayed." }),
+  "nps-trail-places": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current NPS points of interest; the story text describes the past, but the map does not replay when each site was in use." }),
+  "nps-historic-trails": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current NPS mapped alignments of routes used mainly between the 1820s and 1880s; the map does not replay when each route was in use." }),
+  "kdwp-wildlife-areas": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current KDWP public layer; past area boundaries and rules are not replayed." }),
+  "kdwp-wiha-access": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current KDWP season layer; earlier seasons' enrollments are not replayed." }),
+  "nps-nrhp-places": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current public NPS listing locations. Certification dates are attributes, not a reconstruction of the landscape at that date." }),
   "fema-disaster-declarations": Object.freeze({ axis: "provider-observation-history", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Dated historical declaration records with 2020 county locator geometry. The current atlas frame does not turn their declaration dates into present hazard conditions." }),
   "blm-plss-townships": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas township survey image. Feature-level survey dates are not a selectable historical series or a KFM release." }),
   "blm-plss-sections": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas section survey image, shown at local scale. No parcel or historical title time axis is connected." }),
@@ -805,13 +910,28 @@ export const defaultOfficialContextVisibility = (): Record<OfficialContextId, bo
 export const defaultOfficialContextOpacity = (): Record<OfficialContextId, number> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultOpacity])) as Record<OfficialContextId, number>;
 
 const EMPTY_CONTEXT: FeatureCollection = { type: "FeatureCollection", features: [] };
+const ACCESS_OVERVIEW_LAYER_ID = "external-kdwp-wiha-access-overview";
+/** Overview circles follow the layer's opacity slider but sit at 0.85 where the tract fill sits at its default 0.5. */
+const overviewOpacity = (layerOpacity: number) => Math.min(1, layerOpacity * 1.7);
 const emptyCollection = (): FeatureCollection => EMPTY_CONTEXT;
+/** Build-year colour for one bridge or, given a cluster's average year, for a cluster. */
+const bridgeEraColor = (year: ExpressionSpecification): ExpressionSpecification =>
+  ["case", ["<", year, 0], BRIDGE_UNKNOWN_ERA_COLOR, ["step", year, BRIDGE_ERA_STOPS[0].color, ...BRIDGE_ERA_STOPS.slice(1).flatMap(stop => [stop.from, stop.color])] as unknown as ExpressionSpecification];
+/** Totals MapLibre keeps for each cluster, read by the cluster colour, ring and summary. */
+export const BRIDGE_CLUSTER_PROPERTIES = {
+  builtSum: ["+", ["coalesce", ["get", "built"], 0]],
+  builtCount: ["+", ["case", ["has", "built"], 1, 0]],
+  earliest: ["min", ["coalesce", ["get", "built"], 9999]],
+  longestFt: ["max", ["coalesce", ["get", "lengthFt"], 0]],
+  closed: ["+", ["case", ["==", ["get", "statusClass"], "closed"], 1, 0]],
+  posted: ["+", ["case", ["==", ["get", "statusClass"], "posted"], 1, 0]],
+} as const;
 const firstRegistryLayer = (map: MapLibreMap) => map.getStyle().layers?.find((layer) => layer.id.startsWith("kfm-") && layer.id !== "kfm-background")?.id;
-const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, data: FeatureCollection) => {
+const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, data: FeatureCollection, options: Partial<GeoJSONSourceSpecification> = {}) => {
   const existing = map.getSource(source.sourceId) as GeoJSONSource | undefined;
   if (existing) updateGeoJSON(existing, data);
   else {
-    map.addSource(source.sourceId, { type: "geojson", data, promoteId: "featureId", attribution: source.attribution });
+    map.addSource(source.sourceId, { type: "geojson", data, promoteId: "featureId", attribution: source.attribution, ...options });
     rememberGeoJSON(map.getSource(source.sourceId) as GeoJSONSource, data);
   }
 };
@@ -819,6 +939,7 @@ const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, da
  * raster-frame transitions to finish before React reapplies map state. */
 export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContextFeedId): boolean => {
   const cleared = updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
+  if (feed === "kdwp-wiha-access") updateGeoJSON(map.getSource(ACCESS_OVERVIEW_SOURCE_ID) as GeoJSONSource | undefined, accessOverviewPoints(EMPTY_CONTEXT));
   if (feed === "nasa-gibs-fire-points") refreshFireFootprints(map);
   if (feed === "nifc-fire-reports") syncFireReportDisplay(map, false, 0);
   return cleared;
@@ -947,6 +1068,96 @@ export const applyOfficialContextState = (
 
   syncFireReportDisplay(map, visibility[fireReports.id], opacity[fireReports.id] ?? fireReports.defaultOpacity);
 
+  const historicPlaces = OFFICIAL_CONTEXT_BY_ID["nps-nrhp-places"];
+  // In towns the markers pile up at statewide scale, so nearby ones are counted in one circle that splits on zoom.
+  ensureGeoJsonSource(map, historicPlaces, payloads["nps-nrhp-places"]?.data ?? emptyCollection(), { cluster: true, clusterMaxZoom: HISTORIC_PLACE_CLUSTER_MAX_ZOOM, clusterRadius: HISTORIC_PLACE_CLUSTER_RADIUS, clusterProperties: HISTORIC_PLACE_CLUSTER_PROPERTIES });
+  const onePlace: ExpressionSpecification = ["!", ["has", "point_count"]];
+  ensureLayer(map, { id: historicPlaces.layerIds[0], type: "circle", source: historicPlaces.sourceId, filter: ["all", onePlace, ["==", ["get", "landmark"], true]], paint: {
+    "circle-color": "rgba(0,0,0,0)", "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 6.5, 12, 15],
+    "circle-stroke-color": "#fff0c2", "circle-stroke-width": 2, "circle-opacity": 0.3,
+  } });
+  ensureLayer(map, { id: historicPlaces.layerIds[1], type: "circle", source: historicPlaces.sourceId, filter: onePlace, paint: {
+    "circle-color": ["match", ["get", "resourceType"], "district", "#d99a4e", "site", "#c7a46b", "structure", "#e2b866", "object", "#f0d9a0", historicPlaces.color],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 2.4, 9, 4.5, 13, 7.5],
+    "circle-stroke-color": "#3a2a12", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 0.6, 12, 1.4],
+  } });
+  ensureLayer(map, { id: historicPlaces.layerIds[2], type: "symbol", source: historicPlaces.sourceId, filter: onePlace, minzoom: 11, layout: {
+    "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 10.5, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
+  }, paint: { "text-color": "#f6e4bd", "text-halo-color": "#1c140a", "text-halo-width": 1.5, "text-opacity": 0.9 } });
+  // A light ring marks a circle that holds a National Historic Landmark, as the larger ring does for one marker.
+  ensureLayer(map, { id: historicPlaces.layerIds[3], type: "circle", source: historicPlaces.sourceId, filter: ["has", "point_count"], paint: {
+    "circle-color": historicPlaces.color, "circle-radius": ["step", ["get", "point_count"], 12, 10, 15, 50, 19, 150, 24],
+    "circle-stroke-color": ["case", [">", ["get", "landmarks"], 0], "#fff0c2", "#3a2a12"],
+    "circle-stroke-width": ["case", [">", ["get", "landmarks"], 0], 3, 1.4], "circle-opacity": historicPlaces.defaultOpacity,
+  } });
+  ensureLayer(map, { id: historicPlaces.layerIds[4], type: "symbol", source: historicPlaces.sourceId, filter: ["has", "point_count"], layout: {
+    "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": ["step", ["get", "point_count"], 11.5, 50, 12.5],
+    "text-allow-overlap": true, "text-ignore-placement": true,
+  }, paint: { "text-color": "#2a1d0a", "text-halo-color": "rgba(255,255,255,0.5)", "text-halo-width": 1 } });
+
+  const trailPlaces = OFFICIAL_CONTEXT_BY_ID["nps-trail-places"];
+  if (visibility["nps-trail-places"] || map.getSource(trailPlaces.sourceId)) {
+    // Sites crowd each other where the trails leave the Missouri River, so nearby ones are counted in one circle that splits on zoom.
+    ensureGeoJsonSource(map, trailPlaces, payloads["nps-trail-places"]?.data ?? emptyCollection(), { cluster: true, clusterMaxZoom: TRAIL_PLACE_CLUSTER_MAX_ZOOM, clusterRadius: TRAIL_PLACE_CLUSTER_RADIUS, clusterProperties: TRAIL_PLACE_CLUSTER_PROPERTIES });
+    const oneSite: ExpressionSpecification = ["!", ["has", "point_count"]];
+    ensureLayer(map, { id: trailPlaces.layerIds[0], type: "circle", source: trailPlaces.sourceId, filter: oneSite, paint: {
+      "circle-color": trailPlaces.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3, 9, 5.5, 13, 8],
+      "circle-stroke-color": "#3b210c", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 1, 12, 2], "circle-opacity": trailPlaces.defaultOpacity,
+    } });
+    ensureLayer(map, { id: trailPlaces.layerIds[1], type: "symbol", source: trailPlaces.sourceId, filter: oneSite, minzoom: 8, layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 11, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 10,
+    }, paint: { "text-color": "#fbe7c2", "text-halo-color": "#1d140c", "text-halo-width": 1.6, "text-opacity": 0.95 } });
+    ensureLayer(map, { id: trailPlaces.layerIds[2], type: "circle", source: trailPlaces.sourceId, filter: ["has", "point_count"], paint: {
+      "circle-color": trailPlaces.color, "circle-radius": ["step", ["get", "point_count"], 11, 5, 14, 15, 17, 40, 21],
+      "circle-stroke-color": "#3b210c", "circle-stroke-width": 1.6, "circle-opacity": trailPlaces.defaultOpacity,
+    } });
+    ensureLayer(map, { id: trailPlaces.layerIds[3], type: "symbol", source: trailPlaces.sourceId, filter: ["has", "point_count"], layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": 11.5, "text-allow-overlap": true, "text-ignore-placement": true,
+    }, paint: { "text-color": "#2a1d0a", "text-halo-color": "rgba(255,255,255,0.5)", "text-halo-width": 1 } });
+  }
+
+  const trails = OFFICIAL_CONTEXT_BY_ID["nps-historic-trails"];
+  if (visibility["nps-historic-trails"] || map.getSource(trails.sourceId)) {
+    ensureGeoJsonSource(map, trails, payloads["nps-historic-trails"]?.data ?? emptyCollection());
+    const trailColor = ["match", ["get", "trailGroup"], "santa-fe", "#e07a3f", "oregon", "#5aa9e6", "california", "#b48ee0", "pony-express", "#e5c34b", "cattle", "#c98b5a", trails.color] as ExpressionSpecification;
+    const designated: ExpressionSpecification = ["!=", ["get", "trailGroup"], "cattle"];
+    // Oregon, California and Pony Express share the same ruts across northeast Kansas; side-by-side
+    // offsets keep each trail visible instead of the last-drawn line hiding the others.
+    const trailOffset = ["match", ["get", "trailGroup"], "oregon", -3, "california", 3, 0] as ExpressionSpecification;
+    ensureLayer(map, { id: trails.layerIds[0], type: "line", source: trails.sourceId, filter: designated, layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": "#1d140c", "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3.2, 9, 6, 13, 9], "line-offset": trailOffset, "line-opacity": 0.55 } });
+    ensureLayer(map, { id: trails.layerIds[1], type: "line", source: trails.sourceId, filter: designated, layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": trailColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.6, 9, 3.2, 13, 5], "line-offset": trailOffset, "line-opacity": trails.defaultOpacity } });
+    ensureLayer(map, { id: trails.layerIds[2], type: "line", source: trails.sourceId, filter: ["==", ["get", "trailGroup"], "cattle"], layout: { "line-join": "round" },
+      paint: { "line-color": trailColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.4, 9, 2.6, 13, 4], "line-dasharray": [2, 1.5], "line-opacity": trails.defaultOpacity } });
+    ensureLayer(map, { id: trails.layerIds[3], type: "symbol", source: trails.sourceId, minzoom: 7, layout: {
+      "symbol-placement": "line", "text-font": ["Noto Sans Regular"], "text-field": ["get", "name"], "text-size": 11, "symbol-spacing": 420, "text-optional": true,
+    }, paint: { "text-color": "#f8e6c8", "text-halo-color": "#1d140c", "text-halo-width": 1.6, "text-opacity": 0.92 } });
+  }
+
+  for (const [id, color, line] of [["kdwp-wildlife-areas", "#7fbf6a", "#cfeec4"], ["kdwp-wiha-access", "#e5b54b", "#fde7b0"]] as const) {
+    const area = OFFICIAL_CONTEXT_BY_ID[id];
+    if (!visibility[id] && !map.getSource(area.sourceId)) continue;
+    ensureGeoJsonSource(map, area, payloads[id]?.data ?? emptyCollection());
+    ensureLayer(map, { id: area.layerIds[0], type: "fill", source: area.sourceId, paint: { "fill-color": color, "fill-opacity": area.defaultOpacity } }, firstRegistryLayer(map));
+    ensureLayer(map, { id: area.layerIds[1], type: "line", source: area.sourceId, paint: { "line-color": line, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.4, 10, 1.2, 14, 2], "line-opacity": 0.85 } });
+  }
+  // Thousands of hunting tracts are specks at statewide scale. Below zoom 8 numbered circles count the
+  // tracts and their recorded acres from one point per tract; from zoom 8 only the tracts are drawn.
+  const access = OFFICIAL_CONTEXT_BY_ID["kdwp-wiha-access"];
+  if (map.getSource(access.sourceId)) {
+    ensureGeoJsonSource(map, { ...access, sourceId: ACCESS_OVERVIEW_SOURCE_ID }, accessOverviewPoints(payloads["kdwp-wiha-access"]?.data ?? emptyCollection()),
+      { cluster: true, clusterMaxZoom: ACCESS_OVERVIEW_MAX_ZOOM - 1, clusterRadius: ACCESS_OVERVIEW_CLUSTER_RADIUS, clusterProperties: ACCESS_OVERVIEW_CLUSTER_PROPERTIES });
+    ensureLayer(map, { id: access.layerIds[2], type: "circle", source: ACCESS_OVERVIEW_SOURCE_ID, maxzoom: ACCESS_OVERVIEW_MAX_ZOOM, filter: ["has", "point_count"], paint: {
+      "circle-color": access.color, "circle-radius": ["step", ["get", "point_count"], 12, 25, 15, 100, 19, 300, 24],
+      "circle-stroke-color": "#5a4210", "circle-stroke-width": 1.4, "circle-opacity": access.defaultOpacity,
+    } });
+    ensureLayer(map, { id: access.layerIds[3], type: "symbol", source: ACCESS_OVERVIEW_SOURCE_ID, maxzoom: ACCESS_OVERVIEW_MAX_ZOOM, filter: ["has", "point_count"], layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": ["step", ["get", "point_count"], 11.5, 100, 12.5],
+      "text-allow-overlap": true, "text-ignore-placement": true,
+    }, paint: { "text-color": "#2a1d0a", "text-halo-color": "rgba(255,255,255,0.5)", "text-halo-width": 1 } });
+  }
+
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
   ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());
   ensureLayer(map, { id: raspberryShake.layerIds[0], type: "circle", source: raspberryShake.sourceId, paint: {
@@ -970,7 +1181,42 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: declarations.layerIds[0], type: "fill", source: declarations.sourceId, paint: { "fill-color": declarations.color, "fill-opacity": 0.28 } });
   ensureLayer(map, { id: declarations.layerIds[1], type: "line", source: declarations.sourceId, paint: { "line-color": declarations.color, "line-width": 1.7, "line-opacity": 0.72 } });
 
-  for (const raster of [...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
+  // KDOT bridges: one clustered point source per layer. A numbered circle counts the bridges
+  // under it and splits on zoom; past the cluster limit each bridge sits at its recorded point.
+  for (const id of BRIDGE_FEED_IDS) {
+    const bridges = OFFICIAL_CONTEXT_BY_ID[id];
+    if (!visibility[id] && !map.getSource(bridges.sourceId)) continue;
+    ensureGeoJsonSource(map, bridges, payloads[id]?.data ?? emptyCollection(), { cluster: true, clusterMaxZoom: BRIDGE_CLUSTER_MAX_ZOOM, clusterRadius: BRIDGE_CLUSTER_RADIUS, clusterProperties: BRIDGE_CLUSTER_PROPERTIES });
+    const clustered: ExpressionSpecification = ["has", "point_count"], single: ExpressionSpecification = ["!", ["has", "point_count"]];
+    ensureLayer(map, { id: bridges.layerIds[0], type: "circle", source: bridges.sourceId, filter: clustered, paint: {
+      "circle-color": bridgeEraColor(["case", [">", ["get", "builtCount"], 0], ["/", ["get", "builtSum"], ["get", "builtCount"]], -1]),
+      "circle-radius": ["step", ["get", "point_count"], 13, 10, 16, 50, 20, 250, 25, 1000, 31, 5000, 38],
+      "circle-stroke-color": ["case", [">", ["get", "closed"], 0], BRIDGE_CLOSED_COLOR, "#0f1a20"],
+      "circle-stroke-width": ["case", [">", ["get", "closed"], 0], 3, 1.5], "circle-opacity": bridges.defaultOpacity,
+    } });
+    ensureLayer(map, { id: bridges.layerIds[1], type: "symbol", source: bridges.sourceId, filter: clustered, layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": ["step", ["get", "point_count"], 11.5, 50, 12.5, 1000, 14],
+      "text-allow-overlap": true, "text-ignore-placement": true,
+    }, paint: { "text-color": "#0b1418", "text-halo-color": "rgba(255,255,255,0.55)", "text-halo-width": 1.1 } });
+    ensureLayer(map, { id: bridges.layerIds[2], type: "circle", source: bridges.sourceId, filter: single, paint: {
+      "circle-color": bridgeEraColor(["coalesce", ["get", "built"], -1]),
+      // Longer bridges draw larger: about 20 ft at the small end, a quarter mile and more at the large end.
+      "circle-radius": ["interpolate", ["linear"], ["zoom"],
+        4, ["interpolate", ["linear"], ["sqrt", ["coalesce", ["get", "lengthFt"], 20]], 4.5, 3, 40, 6.5],
+        11, ["interpolate", ["linear"], ["sqrt", ["coalesce", ["get", "lengthFt"], 20]], 4.5, 4.5, 40, 10],
+        16, ["interpolate", ["linear"], ["sqrt", ["coalesce", ["get", "lengthFt"], 20]], 4.5, 7, 40, 16]],
+      "circle-stroke-color": ["match", ["get", "statusClass"], "closed", BRIDGE_CLOSED_COLOR, "posted", BRIDGE_POSTED_COLOR, "#0f1a20"],
+      "circle-stroke-width": ["match", ["get", "statusClass"], "closed", 3, "posted", 2.2, 1], "circle-opacity": bridges.defaultOpacity,
+    } });
+    ensureLayer(map, { id: bridges.layerIds[3], type: "symbol", source: bridges.sourceId, filter: single, minzoom: 12.5, layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["case", ["has", "built"], ["concat", ["get", "name"], "\n", ["to-string", ["get", "built"]]], ["get", "name"]],
+      "text-size": 10.5, "text-offset": [0, 1.2], "text-anchor": "top", "text-optional": true, "text-max-width": 9,
+    }, paint: { "text-color": "#f3f7f8", "text-halo-color": "#0f1a20", "text-halo-width": 1.5, "text-opacity": 0.92 } });
+  }
+
+  for (const raster of [...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES, ...KANSAS_DISCOVERY_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
+    // Bridges are drawn above as clustered points, not provider images.
+    if (raster.kind === "OPERATIONAL_GEOJSON") continue;
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
@@ -993,8 +1239,8 @@ export const applyOfficialContextState = (
     if (!map.getSource(source.sourceId)) map.addSource(source.sourceId, { type: "geojson", data: source.mapUrl!, attribution: source.attribution });
     if (source.id === "kgs-monitoring-wells") {
       ensureLayer(map, { id: source.layerIds[0], type: "circle", source: source.sourceId, paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 1.25, 7, 1.8, 10, 5], "circle-color": source.color,
-        "circle-stroke-color": "#092b31", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 5, 0, 8, 0.5, 10, 1], "circle-opacity": monitoringWellOpacity(source.defaultOpacity),
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 1.25, 7, 1.8, 10, 5], "circle-color": source.color,
+        "circle-stroke-color": "#092b31", "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 4, 0, 5, 0, 8, 0.5, 10, 1], "circle-opacity": monitoringWellOpacity(source.defaultOpacity),
       } });
     } else {
       ensureLayer(map, { id: source.layerIds[0], type: "fill", source: source.sourceId, filter: ["==", ["get", "hasValue"], true], paint: {
@@ -1025,7 +1271,8 @@ export const applyOfficialContextState = (
           const expression = monitoringWellOpacity(safeOpacity);
           if (JSON.stringify(map.getPaintProperty(layerId, "circle-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-opacity", expression);
         }
-        else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+        // The hunting-access layer's default opacity suits a tract fill; its numbered overview circles need to read more strongly at the same setting.
+        else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : layerId === ACCESS_OVERVIEW_LAYER_ID ? overviewOpacity(safeOpacity) : safeOpacity);
       }
       if (layer?.type === "circle" && source.id === "kgs-monitoring-wells") {
         const expression = monitoringWellOpacity(safeOpacity);
@@ -1034,7 +1281,7 @@ export const applyOfficialContextState = (
       if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
       if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", layerId.endsWith("-glow") ? safeOpacity * 0.3 : source.id === "census-counties" ? safeOpacity * 0.58 : safeOpacity);
       if (layer?.type === "raster") requestRasterOpacity(map, layerId, source.id === "noaa-lightning-density" && layerId.endsWith("-glow") ? 0 : safeOpacity);
-      if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
+      if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", layerId === `${ACCESS_OVERVIEW_LAYER_ID}-count` ? overviewOpacity(safeOpacity) : safeOpacity);
     }
   }
   // County population prisms, for maps that ask for them: they stand in for the

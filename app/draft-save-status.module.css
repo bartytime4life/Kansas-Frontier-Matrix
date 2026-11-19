@@ -1,0 +1,49 @@
+.status.status {
+  min-width: 0;
+  max-width: 330px;
+}
+
+.status.status small {
+  display: block;
+  max-width: 44ch;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.status.status button {
+  min-height: 44px;
+  min-width: 100px;
+  border: 1px solid rgba(224, 186, 109, .52);
+  border-radius: 8px;
+  background: rgba(224, 186, 109, .09);
+  color: #f4dfae;
+  padding: 8px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.status.status button:disabled {
+  opacity: .55;
+  cursor: default;
+}
+
+@media (max-width: 760px) {
+  .header.header > div:first-child { padding-right: 0; }
+  .status.status {
+    position: static;
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: start;
+    gap: 6px 12px;
+    max-width: none;
+  }
+  .status.status strong { grid-column: 1 / -1; }
+  .status.status small { grid-column: 1; }
+  .status.status button { grid-column: 2; }
+}
+
+@media print {
+  .status.status button { display: none !important; }
+}

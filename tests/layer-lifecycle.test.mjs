@@ -106,3 +106,17 @@ test('production date callback clears incompatible old geometry on failure and p
   const first=r.load(feed,'2024-06-01');assert.equal(r.ctx.officialPayloadsRef.current[feed],undefined);await tick();r.requests[0].reject(new Error('offline'));await first;assert.equal(r.states.at(-1),'error');
   const retry=r.load(feed,'2024-06-01',true);await tick();assert.equal(r.requests[1].options.cacheMs,0);r.requests[1].resolve(snapshot('2024-06-01'));await retry;assert.equal(r.states.at(-1),'empty');
 });
+
+test('a failed feed shows the adapter\'s own explanation; anything else keeps the generic message',async()=>{
+  const { adapterErrorText } = compile(readSource, {'./browser-json-request':{browserJsonRequest:()=>{}}});
+  const explained='KDOT bridge records are unavailable. No bridge locations, status or absence can be inferred. Next provider check in about 4 minutes.';
+  const read=async response=>{const r=pool();const pending=r.reads.read('/api/live-context?feed=kdot-bridges-state',options(new AbortController().signal));r.calls[0].resolve(response);return pending;};
+  await assert.rejects(read({response:{ok:false,status:503},body:{error:explained,state:'error'}}),{message:explained});
+  // The host's replacement page, a non-text error and a wrong-shaped success carry no usable sentence.
+  for (const [response,status] of [[{response:{ok:false,status:502},body:'error code: 502'},502],[{response:{ok:false,status:503},body:{error:{code:1}}},503],[{response:{ok:false,status:500},body:null},500],[{response:{ok:true,status:200},body:{day:'other',error:'ignored on success'}},200]]) {
+    await assert.rejects(read(response),{message:`Source adapter returned an unavailable or incompatible response (HTTP ${status}).`});
+  }
+  assert.equal(adapterErrorText({error:'  spaced\n\ttext  '}),'spaced text');
+  assert.equal(adapterErrorText({error:'x'.repeat(900)}).length,400);
+  assert.equal(adapterErrorText([{error:'array'}]),null); assert.equal(adapterErrorText({error:''}),null);
+});

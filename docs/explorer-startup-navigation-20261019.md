@@ -1,5 +1,121 @@
 # Explorer welcome and explicit navigation — 2026-10-19
 
+## Short-window Status scrolling follow-up — November 15, 2026 candidate
+
+This follow-up is based on merged source
+`1b61903fe5fc6196ddd2cc03104807abd2fc9fb5`. That base's complete tree is identical to
+PR #5867 head `ce5e646d07a094c909bc60d91323f061e2a95762`. Existing CI supplies
+the failing baseline below. The user authorized the prepared six-path follow-up;
+its CSS and test bytes match the reviewed patch. Local candidate outcomes and
+pending rendered acceptance are recorded separately below.
+
+Navigation job 132975734771 in run 43767480914 reported 18 passes, two failures
+and one cancelled test. The four KDOT roads / NASA fire-point cases at
+1280 × 800 and 390 × 844 passed both keyboard round trips, visible returned
+focus, Status wheel movement, unchanged source controls and generic Status
+return. At 681 × 468 both sources opened with visible, focused details, but
+the real Status-ancestor wheel assertion failed before Back was activated.
+Those failures do not establish a failure of the new return-focus effect.
+
+Full Explorer job 132975735129 in the same PR run reported 157 passes, three
+failures and five opt-in skips. It repeats those two wheel failures and the
+1280 × 800 expanded-welcome geometry premise failure described in the welcome
+guide. It adds no other failure or cancellation.
+
+Merge-commit navigation job 132976153506 in run 43767614572 repeated the same
+four source passes and two short-window wheel failures: 19 passes, two failures,
+no cancellations. The retained intercepted-API case that timed out in the
+PR run passed on the identical merged tree. That intermittent observation has
+no established root cause and is outside this correction. A NASA 390 × 844
+return screenshot also shows an unavailable-provider notice partly covering
+the return label despite automated geometry/hit-test passes. That separate
+visual-usability qualification is retained rather than claimed fixed here.
+
+Captured geometry shows an inner Status element with no scroll range while
+the outer Layers panel has range. The existing max-height:600px layout releases
+the catalogue body's overflow but leaves Status as a contained scroll container.
+That source/geometry combination supports a scroll-chaining explanation; the
+candidate CSS correction still requires rendered verification at authoring. It adds Status to
+the existing overflow:visible rule for Layers/live at that height breakpoint.
+The six source-case assertions, scroll-padding and sticky heading are retained;
+tall-window scrolling rules are unchanged.
+
+Core job 132975735016 separately reported 2,992 passes, one failure and 25 skips.
+Its unchanged workspace-help callback fixture omits the newly read
+`sourceStatusReturnPendingRef` and throws a ReferenceError; the same test
+passed on the preceding base. The application declares the ref. This candidate
+supplies the fixture dependency while retaining all frame/focus assertions.
+This is an introduced harness integration omission, not evidence of the same
+ReferenceError in the rendered application.
+
+At candidate authoring, the seven-file focused suite passed 129 tests with no
+failures or skips. The production build and TypeScript verification passed.
+The complete standalone Node suite passed 2,993 tests with zero failures and
+25 explicit skips. Its first local attempt had 2,982 passes, five failures and
+23 skips because the sparse checkout omitted an existing tracked hosting-metadata
+fixture. Restoring that file's exact base bytes in the isolated checkout allowed
+the complete rerun; no configuration value or candidate source path changed.
+Both attempts are retained in `KFM-STATUS-SCROLL-FOLLOWUP-EXECUTION-20261115`.
+
+Candidate rendered CI is pending at authoring. Existing CI supplies the failing
+comparison and does not validate this follow-up. Local Chromium's recorded
+pre-page socket denial remains a separate environment limit; no repeat launch
+or browser-policy bypass was attempted.
+
+Placement retains the existing app/tests/docs roots and generated-receipt lane
+under AGENTS, accepted ADR-0029 and Directory Rules. No permission, source,
+schema, authority or workflow changes are included. A reviewed revert restores
+this bounded correction while preserving evidence history. CI, merge and public
+deployment remain separate. No public deployment, physical-device acceptance,
+live-provider delivery or complete map-rendering claim is established here.
+
+## Source-details return focus — November 15, 2026 candidate
+
+Independent public-UI verification, alongside inspection of hosted source
+`0dc7bb6d8a34ee6ced5ee061bdba80d65bf662b7`, confirmed #5859's source-opening
+behavior for disabled KDOT roads and NASA fire points. Public build metadata
+matched the inspected source-input digest but did not establish an exact deployed
+commit or built-byte identity. At a 681 × 468 CSS viewport produced by 200% desktop zoom,
+Back to layers focused the correct source action below the visible Layers panel.
+This is an observed return-path defect; the evidence does not establish that
+#5859 introduced it. The review record is `KFM-5859-INDEPENDENT-20261115`.
+
+This candidate queues the source return until React commits the closed Status
+view. It resolves the existing return target, uses `revealPanelControl` to reveal
+that target inside Layers, and then focuses it without a second implicit scroll.
+A newer source opening or a different committed workspace/panel cancels the
+pending return. The existing source-opening behavior, layer selection, history
+rules and exact source-download allowlist are retained. The separate generic
+Layers return timer discussed in #5864 is outside this correction.
+
+The added callback tests check committed ordering, one-time consumption and
+superseded navigation. The browser suite defines cases for both sources at 1280 × 800,
+390 × 844 and 681 × 468, two keyboard round trips each, actual ancestor clipping,
+Status wheel scrolling, generic Status return and unchanged rendered official
+source controls. It never scrolls the expected return target after Back.
+Its name remains in the existing focused source-status CI selector.
+
+For PR #5867, local validation passed 119 focused tests, the production build
+and TypeScript verification. All three new focus-control unit cases failed
+against baseline runtime and passed with that candidate. The local browser
+attempt aborted before page creation because Chromium could not create its
+socket; it is not a rendered failure reproduction. Subsequent exact-head CI
+passed the four 1280 × 800 / 390 × 844 cases and exposed the two 681 × 468 wheel
+failures described above. The PR and follow-up evidence keep those stages distinct.
+A 681 × 468 emulated viewport does not reproduce 200% browser zoom;
+390 × 844 emulation does not establish physical-phone or software-keyboard use.
+Isolated unavailable-provider fixtures establish navigation and selection state,
+not live provider data or complete rendered map-layer visibility. Missing-source
+fallback retains its existing callback regression; rendered fallback acceptance
+remains separate. Baseline, candidate, CI and public results must stay distinct.
+
+Placement retains this standalone hosted composition's existing `app/`, `tests/`
+and `docs/` responsibilities under its AGENTS record and accepted ADR-0029 /
+Directory Rules §§5, 7.2, 10.1 and 14. No root, source, policy, schema, release or
+publication authority is introduced. Rollback reverts the bounded candidate
+change; preserve data, settings and the original verification record. Merge and
+public deployment require their own authority and evidence.
+
 ## Finding and scope
 
 Confirmed on hosted branch commit `0ad31b2c993e6d6973b678192f689650ab66e8da`
@@ -354,3 +470,38 @@ and passes with layout scheduling, retaining separate chooser and later-map
 entries. Existing identity, source-date/privacy, embedded-host and original exit
 contracts remain. Native browser assertions and deadlines are retained; local
 hook tests do not replace current-head browser or deployment acceptance.
+
+## Library return destination — November 11, 2026
+
+The existing data-library links use `/?panel=layers`. That exact value now
+bypasses automatic welcome and opens the editable Layers panel. It does not
+open source status or write the device's welcome preference. Plain `/`, empty
+or unknown panel values retain their existing welcome behavior. The starting
+page's presentation, category cards and styles are unchanged.
+
+At base `beed3bbcdb6ef9e65c17f9c481be171f63c3dc8d`, the added destination and
+actual-restoration regressions both fail before the fix. They exercise the
+production destination predicate and restoration statements, including starting
+from a different panel mode. Existing preference/history tests remain in place.
+This is navigation state only; no provider, data, runtime or access change.
+Implementation, regression and documentation stay in the existing `app/`,
+`tests/` and `docs/` responsibility roots. Revert this bounded change to roll
+back; no saved-data migration is required. Publication remains separate.
+
+Candidate validation: 59 focused model/component tests pass; production build
+and TypeScript pass. The existing production-build startup browser matrix
+passes 14 journeys at 1366×768 and 390×844 (16 TAP passes including parents),
+including the new library destination, native-pointer Browse activation,
+unobscured topic control, normal welcome, preferences and Back/Forward.
+Providers were blocked and APIs isolated. An initial new browser assertion
+incorrectly assumed Browse was already selected; the final fixture uses its
+visible control before checking topics. No assertion or deadline was waived.
+This is local synthetic navigation evidence, not actual hosted acceptance.
+
+
+First-head CI found one additional fixture coupling in `local-atlas.test.mjs`:
+it required the exact expression `if (restoredSourceStatus)` before executing
+the actual restoration block. The fixture now bounds that complete block by its
+existing status assignment and next-utility declaration. All eight legacy
+source-status combinations still assert panel mode/open state, closed PC utility
+and unchanged URL parameters. This is a fixture adaptation, not a waived check.

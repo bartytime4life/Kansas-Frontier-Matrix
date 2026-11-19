@@ -119,7 +119,7 @@ function toggleHarness(id = "usgs-3dep-hillshade") {
   const h = { tracker, source, renderer: {}, settled: true, zoom: 10.5, bounds: { west: -99, east: -97, south: 38, north: 40 }, states: {}, errors: {}, applies: 0 };
   const map = { isStyleLoaded: () => true, getSource: () => h.renderer, isSourceLoaded: () => h.settled, getZoom: () => h.zoom,
     getBounds: () => ({ getWest: () => h.bounds.west, getEast: () => h.bounds.east, getSouth: () => h.bounds.south, getNorth: () => h.bounds.north }) };
-  h.scope = { terrainRasterViewRef: { current: tracker }, officialRasterFailuresRef: { current: new Set() }, OFFICIAL_CONTEXT_BY_ID: { [id]: source },
+  h.scope = { BASEMAPS:{local:{style:{sources:{}}}},basemapRef:{current:'local'},terrainRasterViewRef: { current: tracker }, officialRasterFailuresRef: { current: new Set() }, OFFICIAL_CONTEXT_BY_ID: { [id]: source },
     officialVisibilityRef: { current: { [id]: true } }, setOfficialVisibility: () => {}, officialOpacityRef: { current: { [id]: 0.46 } }, officialPayloadsRef: { current: {} },
     mapRef: { current: map }, temporalQueryRef: { current: { frame: 2026 } }, OFFICIAL_CONTEXT_PRESENT_FRAME: 2026, noaaRadarReadyRef: { current: false }, noaaRadarFrameTimeRef: { current: null },
     setOfficialStates: update => { h.states = update(h.states); }, setOfficialErrors: update => { h.errors = update(h.errors); },

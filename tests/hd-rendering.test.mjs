@@ -47,7 +47,8 @@ test('the local styles carry real shaded relief, so no map sits on an empty colo
   assert.match(block,/withLocalRelief\(orientationLayers\(/,`${name} draws its relief`);
  }
  assert.match(runtime,/\.\.\.orientation\.slice\(0, land \+ 1\), relief, \.\.\.orientation\.slice\(land \+ 1\)/,'relief over the land fill, under the state line');
- assert.match(page,/basemapStyle\.sources\[sourceId\]\?\.type === "raster-dem"/,'a missing DEM tile is a basemap gap, not a map failure');
+ // Executed missing-DEM failure/recovery assertions live in the basemap
+ // lifecycle suite; a source-text match must not freeze the old classifier.
 });
 
 test('close 3D views over Kansas move to the USGS 3DEP mosaic once, fall back once, and never override a choice made by hand',()=>{

@@ -6,6 +6,7 @@ import ts from 'typescript';
 const ast = ts.createSourceFile('page.tsx', await readFile(process.env.KFM_PAGE_PATH ?? 'app/page.tsx', 'utf8'), ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
 const callbacks = new Map();
 let layersFocusEffect;
+let sourceStatusReturnEffect;
 function visit(node) {
   if (ts.isVariableDeclaration(node) && node.initializer) {
     const init = node.initializer;
@@ -13,6 +14,7 @@ function visit(node) {
     else if (ts.isCallExpression(init) && init.expression.getText(ast) === 'useCallback') callbacks.set(node.name.getText(ast), init.arguments[0].getText(ast));
   }
   if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('!leftPanelFocusRequest'))layersFocusEffect=node.arguments[0].getText(ast);
+  if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useLayoutEffect'&&node.arguments[0]?.getText(ast).includes('sourceStatusReturnPendingRef.current'))sourceStatusReturnEffect=node.arguments[0].getText(ast);
   ts.forEachChild(node, visit);
 }
 visit(ast);
@@ -59,7 +61,7 @@ test('opening Find or a suggested question gives one focus owner to the composer
     const scope={
       isCompact,HTMLElement:class {},document:{activeElement:trigger},qwenReturnRef:{current:null},
       globalSearchInputRef:{current:input},qwenPanelRef:{current:{querySelector:()=>({focus:()=>focused.push('close')})}},
-      setQwenOpen:value=>changes.push(['open',value]),setHelpOpen:()=>{},dismissMapUtilityWithoutFocus:()=>{},
+      setQwenOpen:value=>changes.push(['open',value]),setChatLayoutSuspended:()=>{},setHelpOpen:()=>{},dismissMapUtilityWithoutFocus:()=>{},
       setGuideOpen:value=>changes.push(['guide',value]),setWelcomeSourcesOpen:value=>changes.push(['sources',value]),
       setLeftOpen:()=>{},setRightOpen:()=>{},setTimelineOpen:()=>{},setPrimaryWorkspace:value=>changes.push(['workspace',value]),
       setAssistantDraftRequest:update=>changes.push(['draft',update({id:4,value:'Old request'})]),
@@ -124,6 +126,7 @@ function harness(workspace = 'reports') {
     setMapContextOpen:()=>{}, setCurrentWorkspace:()=>{}, setRightOpen:()=>{}, dismissMapUtilityWithoutFocus:()=>{},
     setScenePanelOpen:()=>{}, setLocalAtlasPeek:()=>{}, setHelpOpen:()=>{}, setSourceStatusOpen:()=>{},
     mapUtilityReturnRef:{current:null}, sourceSearchFocusPendingRef:{current:false},
+    sourceStatusReturnPendingRef:{current:false},
     document:{activeElement:null},
     leftPanelReturnRef:{current:null}, leftPanelFocusSelectorRef:{current:null}, leftPanelRef:{current:{contains:()=>false}}, visibleFocusableElements:()=>[{focus:()=>focus.push(state.primary)}],
     window:{setTimeout(fn){timers.push(fn);},requestAnimationFrame(fn){timers.push(fn);return timers.length;},cancelAnimationFrame(){}},
@@ -236,7 +239,7 @@ test('map utility focus waits through its opening paint, suppresses draft focus 
   const code=ts.transpileModule(`return ${effect};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   for(const primaryWorkspace of ['reports','stories','map'])for(const mapUtilityOpen of [false,true])for(const cancelAt of ['commit','paint','after-focus']){
     const frames=[],focused=[],cancelled=new Set();let painted=false;
-    const scope={primaryWorkspace,mapUtilityOpen,mapUtilityPanelRef:{current:{}},visibleFocusableElements:()=>[{focus:()=>{assert.equal(painted,true);focused.push(primaryWorkspace);}}],window:{requestAnimationFrame(fn){frames.push(fn);return frames.length;},cancelAnimationFrame(id){cancelled.add(id);}}};
+    const scope={primaryWorkspace,mapUtilityOpen,mapUtilityFocusRequest:1,mapUtilityFocusEntryRef:{current:null},document:{activeElement:{}},mapUtilityPanelRef:{current:{}},visibleFocusableElements:()=>[{focus:()=>{assert.equal(painted,true);focused.push(primaryWorkspace);}}],window:{requestAnimationFrame(fn){frames.push(fn);return frames.length;},cancelAnimationFrame(id){cancelled.add(id);}}};
     const cleanup=new Function(...Object.keys(scope),code)(...Object.values(scope))();
     assert.deepEqual(focused,[]);const active=primaryWorkspace==='map'&&mapUtilityOpen;
     assert.equal(frames.length,active?1:0);
@@ -282,4 +285,148 @@ test('opening source details from a layer keeps the outer Layers return target',
   execute('openSourceStatus',h.scope)(inner);
   assert.equal(h.scope.leftPanelReturnRef.current,outer);
   assert.equal(h.scope.sourceStatusReturnRef.current,inner);
+});
+
+test('per-source details reveal an unselected source without activating its layer', () => {
+  for (const id of ['kdot-roads', 'nasa-gibs-fire-points']) {
+    const h = harness('map'), events = [];
+    const outer = { id: 'layers-trigger' };
+    const inner = { closest: () => ({}) };
+    const summary = { focus: options => events.push(['focus', options.preventScroll]) };
+    const details = {
+      open: false,
+      querySelector: selector => {
+        assert.equal(selector, 'summary');
+        return summary;
+      },
+    };
+    const row = {
+      querySelector: selector => {
+        assert.equal(selector, 'details');
+        return details;
+      },
+      scrollIntoView: options => events.push(['scroll', options.block]),
+    };
+    const visibility = Object.freeze({ [id]: false });
+    h.state.scope = 'selected';
+    Object.assign(h.scope, {
+      officialVisibility: visibility,
+      setSourceStatusScope: value => { h.state.scope = value; },
+      setSourceStatusOpen: value => { h.state.sources = value; },
+      setOfficialContextVisible: () => {
+        throw Error('opening source details must not activate a provider layer');
+      },
+      sourceStatusReturnRef: { current: null },
+      sourceStatusPanelRef: {
+        current: {
+          querySelector: selector => {
+            assert.equal(selector, `[data-source-id="${id}"]`);
+            assert.equal(h.state.scope, 'all', 'the requested row is eligible before focus');
+            return row;
+          },
+        },
+      },
+      mapContainerRef: { current: {} },
+      HTMLElement: class {},
+    });
+    h.scope.leftPanelReturnRef.current = outer;
+    execute('openSourceStatus', h.scope)(inner, id);
+    assert.equal(h.state.scope, 'all');
+    assert.equal(h.state.sources, true);
+    assert.equal(h.scope.leftPanelReturnRef.current, outer);
+    assert.equal(h.scope.sourceStatusReturnRef.current, inner);
+    assert.deepEqual(events, [], 'target focus waits for the opening render');
+    h.flush();
+    assert.equal(details.open, true);
+    assert.equal(visibility[id], false);
+    assert.deepEqual(events, [['scroll', 'nearest'], ['focus', true]]);
+  }
+});
+
+test('generic source status preserves its scope and a missing target keeps the focus fallback', () => {
+  for (const [initialScope, sourceId] of [['selected', undefined], ['all', undefined], ['selected', 'kdot-roads']]) {
+    const h = harness('map'), focused = [], trigger = { closest: () => null };
+    h.state.scope = initialScope;
+    Object.assign(h.scope, {
+      setSourceStatusScope: value => { h.state.scope = value; },
+      sourceStatusReturnRef: { current: null },
+      sourceStatusPanelRef: {
+        current: {
+          querySelector: selector => selector === '[aria-label="Back to layers"]'
+            ? { focus: options => focused.push(['back', options.preventScroll]) }
+            : null,
+        },
+      },
+      mapContainerRef: { current: {} },
+      HTMLElement: class {},
+    });
+    execute('openSourceStatus', h.scope)(trigger, sourceId);
+    assert.equal(h.state.scope, sourceId ? 'all' : initialScope);
+    assert.deepEqual(focused, []);
+    h.flush();
+    assert.deepEqual(focused, [['back', true]]);
+  }
+});
+
+
+function commitSourceStatusReturn(scope) {
+  assert.ok(sourceStatusReturnEffect, 'run the actual committed source return effect');
+  const code = ts.transpileModule(`return ${sourceStatusReturnEffect};`, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+  return new Function(...Object.keys(scope), code)(...Object.values(scope))();
+}
+
+test('source status reveals its committed return control inside Layers before focusing once', () => {
+  for (const insidePanel of [true, false]) {
+    const events = [], trigger = {}, fallback = {};
+    const target = {focus: options => events.push(['focus', options])};
+    const panel = {contains: node => insidePanel && node === target};
+    const scope = {
+      sourceStatusOpen:true, primaryWorkspace:'map', guideOpen:false, leftOpen:true, leftPanelMode:'layers',
+      sourceStatusReturnRef:{current:trigger}, sourceStatusReturnPendingRef:{current:false},
+      mapContainerRef:{current:fallback}, leftPanelRef:{current:panel},
+      setSourceStatusOpen:value => {scope.sourceStatusOpen=value;},
+      modalReturnTarget:(requested, map) => {assert.equal(requested,trigger);assert.equal(map,fallback);return target;},
+      revealPanelControl:(owner, control) => {assert.equal(owner,panel);assert.equal(control,target);events.push(['reveal']);},
+      window:{setTimeout:() => {throw Error('source return must wait for the React commit, not a timer');}},
+    };
+    execute('closeSourceStatus', scope)();
+    assert.equal(scope.sourceStatusOpen, false);
+    assert.equal(scope.sourceStatusReturnRef.current, trigger);
+    assert.equal(scope.sourceStatusReturnPendingRef.current, true);
+    assert.deepEqual(events, [], 'closing does not measure or focus the still-hidden catalog');
+    commitSourceStatusReturn(scope);
+    const expected = [...(insidePanel ? [['reveal']] : []), ['focus', {preventScroll:true}]];
+    assert.deepEqual(events, expected);
+    assert.equal(scope.sourceStatusReturnRef.current, null);
+    assert.equal(scope.sourceStatusReturnPendingRef.current, false);
+    commitSourceStatusReturn(scope);
+    assert.deepEqual(events, expected, 'another effect pass cannot replay consumed focus');
+  }
+});
+
+test('source status cancels its return when a newer source opening owns navigation', () => {
+  const h=harness('map'), trigger={closest:()=>({})};
+  Object.assign(h.scope, {
+    sourceStatusReturnRef:{current:{}}, sourceStatusReturnPendingRef:{current:true},
+    sourceStatusPanelRef:{current:null}, mapContainerRef:{current:{}}, HTMLElement:class {},
+  });
+  execute('openSourceStatus',h.scope)(trigger);
+  assert.equal(h.scope.sourceStatusReturnPendingRef.current,false);
+  commitSourceStatusReturn(h.scope);
+  assert.equal(h.scope.sourceStatusReturnRef.current,trigger,'the newer source keeps its own return target');
+});
+
+test('source status does not return focus into a superseded Layers view', () => {
+  for (const superseded of [
+    {sourceStatusOpen:true}, {primaryWorkspace:'reports'}, {guideOpen:true}, {leftOpen:false}, {leftPanelMode:'places'},
+  ]) {
+    const scope={
+      sourceStatusOpen:false,primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelMode:'layers',...superseded,
+      sourceStatusReturnRef:{current:{}},sourceStatusReturnPendingRef:{current:true},
+      modalReturnTarget:()=>{throw Error('a newer destination owns focus');},
+    };
+    commitSourceStatusReturn(scope);
+    assert.equal(scope.sourceStatusReturnPendingRef.current,false);
+    assert.equal(scope.sourceStatusReturnRef.current,null);
+  }
 });

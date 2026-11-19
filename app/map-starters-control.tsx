@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
-import { MAP_STARTERS, contextSelectionChanges, readContextPreference, starterPlan, writeContextPreference,
+import { MAP_STARTERS, contextSelectionChanges, readContextPreference, starterPlan, surpriseStarterId, writeContextPreference,
   type ContextSelection, type StarterAccessMap } from "./map-starters";
 
 export function MapStartersControl({ sources, access, visibility, selectionReady, sourceStatus, onApply, onRetry, onChooseTime, onUse2D, onBrowse }: Readonly<{
@@ -52,7 +52,7 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
     <h2 id="map-starters-title">Start with a purpose</h2>
     <p id="map-starters-help">Choose a small public context stack, then customize individual layers. Reviewed layers and imagery keep their own selections.</p>
     <div className="map-starters-options" role="group" aria-label="Map purpose" aria-describedby="map-starters-help map-starters-description">
-      {MAP_STARTERS.map(item => <button key={item.id} type="button" aria-pressed={starter.id === item.id} onClick={() => setChoice(item.id)}>{item.title}</button>)}
+      {MAP_STARTERS.map(item => <button key={item.id} type="button" aria-pressed={starter.id === item.id} onClick={() => setChoice(item.id)}>{item.title}{"isNew" in item && item.isNew && <span className="new-layer-badge">NEW</span>}</button>)}
     </div>
     <p id="map-starters-description">{starter.description}</p>
     <div className="map-starters-actions">
@@ -61,6 +61,15 @@ export function MapStartersControl({ sources, access, visibility, selectionReady
         onApply([], "Clear starter layers");
         setMessage("Public context layers cleared. Choose a starter or use Browse for individual layers.");
       }}>Clear context layers</button>
+      <button type="button" className="map-starters-surprise" disabled={!selectionReady} onClick={() => {
+        const nextId = surpriseStarterId(starter.id);
+        const next = MAP_STARTERS.find(item => item.id === nextId) ?? starter;
+        const nextPlan = starterPlan(next.ids, sources, access);
+        setChoice(next.id);
+        if (nextPlan.selected.length === 0) { setMessage(`${next.title}: no starter sources are selectable right now. Try another.`); return; }
+        onApply(nextPlan.selected, next.title);
+        setMessage(`Surprise: ${next.title}. ${nextPlan.selected.length} public context layers selected.${nextPlan.skipped.length ? ` ${nextPlan.skipped.length} starter sources skipped; see source status.` : ""} ${next.description}`);
+      }}>Surprise me</button>
     </div>
     {onBrowse && <button type="button" className="map-starters-browse" onClick={onBrowse}>View selected layers</button>}
     {plan.skipped.some(item => access[item.id as OfficialContextId]?.held) && onChooseTime && <p className="map-starters-recovery">Some sources are held by this map time or representation. <button type="button" onClick={onChooseTime}>Choose map time</button>{onUse2D && <button type="button" onClick={onUse2D}>Use 2D map</button>}</p>}

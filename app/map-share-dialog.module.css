@@ -1,0 +1,31 @@
+.dialog {
+  width: min(640px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  border: 1px solid rgba(224, 186, 109, .45);
+  border-radius: 16px;
+  background: #0c202b;
+  color: #edf4ed;
+  padding: 24px;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+}
+
+.dialog::backdrop { background: rgba(2, 12, 20, .7); }
+.heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+.heading span, .link > span { color: #e0ba6d; font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
+.heading h2 { margin: 6px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.4rem, 5vw, 1.9rem); }
+.dialog p { line-height: 1.5; color: #b5c9c5; }
+.dialog .privacy { border-left: 3px solid #e0ba6d; padding-left: 12px; color: #f4dfae; }
+.link { display: grid; gap: 8px; margin-top: 20px; }
+.link textarea { width: 100%; min-width: 0; border: 1px solid #58777e; border-radius: 8px; background: #07151e; color: #edf4ed; padding: 12px; font-size: 1rem; line-height: 1.5; resize: vertical; overflow-wrap: anywhere; }
+.dialog .status { min-height: 3em; margin: 12px 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.dialog button { min-width: 44px; min-height: 44px; border: 1px solid #58777e; border-radius: 8px; background: #142f3b; color: #edf4ed; padding: 8px 14px; cursor: pointer; font-weight: 700; }
+.actions button:first-child { border-color: #b79858; background: #3b3728; color: #f4dfae; }
+.dialog .close { padding: 8px; font-size: 1.3rem; }
+.dialog :focus-visible { outline: 2px solid #e0ba6d; outline-offset: 3px; }
+@media (max-width: 480px) {
+  .dialog { padding: 16px; }
+  .actions button { flex: 1 1 auto; }
+}

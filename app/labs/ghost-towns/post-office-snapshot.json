@@ -1,0 +1,1067 @@
+{
+  "format": "kfm-post-office-history-v1",
+  "scope": {
+    "county": "Douglas County",
+    "state": "Kansas",
+    "fips": "20045",
+    "selection": "Every source row labeled KS with DOUGLAS in County1, County2 or County3"
+  },
+  "source": {
+    "title": "US Post Offices",
+    "authors": "Cameron Blevins and Richard W. Helbock",
+    "edition": "V1 (2021)",
+    "doi": "https://doi.org/10.7910/DVN/NUKCNA",
+    "url": "https://dataverse.harvard.edu/api/access/datafile/4491713?format=original",
+    "bytes": 31415567,
+    "sha256": "b860791be2542d9da6224c4fc91801e1fbe2236fbf98cd0f22751e9c7ae83499",
+    "retrievedAt": "2026-11-18T07:54:13Z",
+    "license": "CC0 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "methodUrl": "https://cblevins.github.io/us-post-offices/data-biography/",
+    "dictionaryUrl": "https://dataverse.harvard.edu/api/access/datafile/4491716?format=original"
+  },
+  "boundary": {
+    "label": "Contemporary county outline",
+    "source": "U.S. Census Bureau TIGERweb",
+    "bundleSha256": "a3c82ebd5d89619c498db370861f1288eed6199c3ae8ec0407aea999410c7399",
+    "lastModified": null,
+    "rawBytes": 25791,
+    "rawSha256": "5a41b8ad371fc7baa3f02d1276e74236d162cdae615ea4756b3d131b292779f2",
+    "retrievedAt": "2026-11-16T21:50:48+00:00",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=STATE%3D%2720%27&outFields=GEOID%2CNAME&outSR=4326&f=geojson&geometryPrecision=3&maxAllowableOffset=0.015&returnGeometry=true",
+    "ring": [
+      [
+        -95.242,
+        38.739
+      ],
+      [
+        -95.056,
+        38.739
+      ],
+      [
+        -95.056,
+        38.982
+      ],
+      [
+        -95.085,
+        38.982
+      ],
+      [
+        -95.085,
+        38.954
+      ],
+      [
+        -95.164,
+        38.982
+      ],
+      [
+        -95.186,
+        38.965
+      ],
+      [
+        -95.187,
+        39.044
+      ],
+      [
+        -95.341,
+        39.032
+      ],
+      [
+        -95.431,
+        39.069
+      ],
+      [
+        -95.5,
+        39.057
+      ],
+      [
+        -95.501,
+        38.739
+      ],
+      [
+        -95.242,
+        38.739
+      ]
+    ]
+  },
+  "records": [
+    {
+      "id": "124184",
+      "name": "AKRON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1870,
+      "discontinued": 1870,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "124194",
+      "name": "ALADDIN",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1875,
+      "discontinued": 1881,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "124384",
+      "name": "ALFRED",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1875,
+      "discontinued": 1902,
+      "continuous": true,
+      "location": {
+        "longitude": -95.39081,
+        "latitude": 38.83473,
+        "gnisId": "482175",
+        "gnisName": "Alfred",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "125084",
+      "name": "APPANOOSE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1857,
+      "discontinued": 1902,
+      "continuous": true,
+      "location": {
+        "longitude": -95.46425,
+        "latitude": 38.73929,
+        "gnisId": "479338",
+        "gnisName": "Appanoose Cemetery",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "125858",
+      "name": "BADEN",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1883,
+      "discontinued": 1891,
+      "continuous": true,
+      "location": {
+        "longitude": -95.48192,
+        "latitude": 38.78195,
+        "gnisId": "482173",
+        "gnisName": "Baden (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "125974",
+      "name": "BALDWIN",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1887,
+      "discontinued": 1912,
+      "continuous": true,
+      "location": {
+        "longitude": -95.18636,
+        "latitude": 38.77501,
+        "gnisId": "479524",
+        "gnisName": "Baldwin",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "125984",
+      "name": "BALDWIN CITY",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": null,
+      "discontinued": null,
+      "continuous": false,
+      "location": {
+        "longitude": -95.18767,
+        "latitude": 38.7751,
+        "gnisId": "2509637",
+        "gnisName": "Baldwin City Post Office",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "126798",
+      "name": "BELVOIR",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1869,
+      "discontinued": 1903,
+      "continuous": true,
+      "location": {
+        "longitude": -95.42803,
+        "latitude": 38.92028,
+        "gnisId": "481830",
+        "gnisName": "Belvoir (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "127232",
+      "name": "BIG SPRINGS",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1856,
+      "discontinued": 1894,
+      "continuous": true,
+      "location": {
+        "longitude": -95.48498,
+        "latitude": 39.01306,
+        "gnisId": "484942",
+        "gnisName": "Big Springs",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "127271",
+      "name": "BIGSPRING",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1894,
+      "discontinued": 1903,
+      "continuous": true,
+      "location": {
+        "longitude": -95.48498,
+        "latitude": 39.01306,
+        "gnisId": "484942",
+        "gnisName": "Bigspring",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "127432",
+      "name": "BLACK JACK",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1858,
+      "discontinued": 1895,
+      "continuous": true,
+      "location": {
+        "longitude": -95.1158,
+        "latitude": 38.76779,
+        "gnisId": "484893",
+        "gnisName": "Black Jack",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "127586",
+      "name": "BLANTON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1885,
+      "discontinued": 1956,
+      "continuous": true,
+      "location": {
+        "longitude": -95.24192,
+        "latitude": 38.89861,
+        "gnisId": "482474",
+        "gnisName": "Blanton (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "127648",
+      "name": "BLOOMINGTON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": 1858,
+      "continuous": true,
+      "location": {
+        "longitude": -95.39053,
+        "latitude": 38.91167,
+        "gnisId": "479107",
+        "gnisName": "Bloomington",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "127889",
+      "name": "BOND",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1875,
+      "discontinued": 1899,
+      "continuous": true,
+      "location": {
+        "longitude": -95.35525,
+        "latitude": 38.86667,
+        "gnisId": "479512",
+        "gnisName": "Bond",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "129376",
+      "name": "CALCUTTA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1875,
+      "discontinued": 1881,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "131373",
+      "name": "CLEARFIELD",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1885,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.09358,
+        "latitude": 38.82612,
+        "gnisId": "484894",
+        "gnisName": "Clearfield",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "131530",
+      "name": "CLINTON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1858,
+      "discontinued": 1927,
+      "continuous": true,
+      "location": {
+        "longitude": -95.39053,
+        "latitude": 38.91167,
+        "gnisId": "479107",
+        "gnisName": "Clinton",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "133509",
+      "name": "DAVIS",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": 1861,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "134506",
+      "name": "DOUGLAS",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": 1855,
+      "continuous": true,
+      "location": {
+        "longitude": -95.29261,
+        "latitude": 38.88466,
+        "gnisId": "484992",
+        "gnisName": "Douglas County",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "135157",
+      "name": "ECHO",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1874,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.3522,
+        "latitude": 38.81112,
+        "gnisId": "482176",
+        "gnisName": "Echo (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "136311",
+      "name": "EUDORA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1857,
+      "discontinued": null,
+      "continuous": true,
+      "location": {
+        "longitude": -95.0991,
+        "latitude": 38.94613,
+        "gnisId": "2509639",
+        "gnisName": "Eudora Post Office",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "137781",
+      "name": "FRANKLIN",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": 1867,
+      "continuous": true,
+      "location": {
+        "longitude": -95.18525,
+        "latitude": 38.9375,
+        "gnisId": "481879",
+        "gnisName": "Franklin (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "138643",
+      "name": "GIDEON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1883,
+      "discontinued": 1902,
+      "continuous": true,
+      "location": {
+        "longitude": -95.31775,
+        "latitude": 38.89723,
+        "gnisId": "482169",
+        "gnisName": "Gideon (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "138847",
+      "name": "GLEN BURN",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1875,
+      "discontinued": 1875,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "138899",
+      "name": "GLENDALE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1856,
+      "discontinued": 1857,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "138995",
+      "name": "GLOBE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1881,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.3997,
+        "latitude": 38.78223,
+        "gnisId": "484892",
+        "gnisName": "Globe",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "139907",
+      "name": "GROVER",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1886,
+      "discontinued": 1899,
+      "continuous": true,
+      "location": {
+        "longitude": -95.46025,
+        "latitude": 39.05972,
+        "gnisId": "484867",
+        "gnisName": "Grover",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "141268",
+      "name": "HESPER",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1868,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.07469,
+        "latitude": 38.89862,
+        "gnisId": "479160",
+        "gnisName": "Hesper",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "141742",
+      "name": "HOLLING",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1869,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.24192,
+        "latitude": 38.81862,
+        "gnisId": "482178",
+        "gnisName": "Holling (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "143180",
+      "name": "JEFFERSON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1865,
+      "discontinued": 1872,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "143686",
+      "name": "KANWAKA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1857,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.37275,
+        "latitude": 38.97306,
+        "gnisId": "484875",
+        "gnisName": "Kanwaka",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "144116",
+      "name": "KEZERVILLE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1856,
+      "discontinued": 1856,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "144999",
+      "name": "LAKEVIEW",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1898,
+      "discontinued": 1914,
+      "continuous": true,
+      "location": {
+        "longitude": -95.29247,
+        "latitude": 39.01722,
+        "gnisId": "481925",
+        "gnisName": "Lake View",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "145131",
+      "name": "LANE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": 1856,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "145197",
+      "name": "LAPEER",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1873,
+      "discontinued": 1902,
+      "continuous": true,
+      "location": {
+        "longitude": -95.44609,
+        "latitude": 38.79806,
+        "gnisId": "482174",
+        "gnisName": "Lapeer (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "145407",
+      "name": "LAWRENCE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": null,
+      "continuous": true,
+      "location": {
+        "longitude": -95.23756,
+        "latitude": 38.97165,
+        "gnisId": "2509635",
+        "gnisName": "Lawrence Post Office",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "145533",
+      "name": "LECOMPTON",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": null,
+      "continuous": true,
+      "location": {
+        "longitude": -95.3922,
+        "latitude": 39.04387,
+        "gnisId": "2509630",
+        "gnisName": "Lecompton Post Office",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "146488",
+      "name": "LONE STAR",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1899,
+      "discontinued": 1953,
+      "continuous": true,
+      "location": {
+        "longitude": -95.35525,
+        "latitude": 38.86667,
+        "gnisId": "479512",
+        "gnisName": "Lone Star",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "146756",
+      "name": "LOUISIANA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1856,
+      "discontinued": 1857,
+      "continuous": true,
+      "location": {
+        "longitude": -95.20997,
+        "latitude": 38.80417,
+        "gnisId": "482473",
+        "gnisName": "Louisiana (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "147650",
+      "name": "MARION",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1858,
+      "discontinued": 1881,
+      "continuous": true,
+      "location": {
+        "longitude": -95.3997,
+        "latitude": 38.78223,
+        "gnisId": "484892",
+        "gnisName": "Marion",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "148254",
+      "name": "MCKINNEY",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1857,
+      "discontinued": 1868,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "148395",
+      "name": "MEDIA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1878,
+      "discontinued": 1903,
+      "continuous": true,
+      "location": {
+        "longitude": -95.20219,
+        "latitude": 38.77223,
+        "gnisId": "482180",
+        "gnisName": "Media (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "150647",
+      "name": "NEVADA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1855,
+      "discontinued": 1857,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "151206",
+      "name": "NORTH LAWRENCE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1872,
+      "discontinued": 1885,
+      "continuous": true,
+      "location": {
+        "longitude": -95.22539,
+        "latitude": 38.97716,
+        "gnisId": "2509463",
+        "gnisName": "North Lawrence Christian Church",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "152673",
+      "name": "PALMYRA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1857,
+      "discontinued": 1862,
+      "continuous": true,
+      "location": {
+        "longitude": -95.18636,
+        "latitude": 38.77501,
+        "gnisId": "479524",
+        "gnisName": "Palmyra",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "154044",
+      "name": "PLEASANT GROVE",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1879,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.2697,
+        "latitude": 38.85556,
+        "gnisId": "479511",
+        "gnisName": "Pleasant Grove",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "154602",
+      "name": "PRAIRIE CITY",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1856,
+      "discontinued": 1878,
+      "continuous": true,
+      "location": {
+        "longitude": -95.21331,
+        "latitude": 38.76029,
+        "gnisId": "482179",
+        "gnisName": "Prairie City (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "158229",
+      "name": "SEIGEL",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1900,
+      "discontinued": 1901,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "158784",
+      "name": "SIBLEY",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1884,
+      "discontinued": 1934,
+      "continuous": true,
+      "location": {
+        "longitude": -95.19053,
+        "latitude": 38.87362,
+        "gnisId": "482001",
+        "gnisName": "Sibley (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "158834",
+      "name": "SIGEL",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1862,
+      "discontinued": 1896,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "160500",
+      "name": "STULL",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1899,
+      "discontinued": 1903,
+      "continuous": true,
+      "location": {
+        "longitude": -95.45609,
+        "latitude": 38.97111,
+        "gnisId": "479114",
+        "gnisName": "Stull",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "162572",
+      "name": "TWIN MOUND",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1858,
+      "discontinued": 1903,
+      "continuous": true,
+      "location": {
+        "longitude": -95.48164,
+        "latitude": 38.86028,
+        "gnisId": "482172",
+        "gnisName": "Twin Mound (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "163467",
+      "name": "VINLAND",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1868,
+      "discontinued": 1954,
+      "continuous": true,
+      "location": {
+        "longitude": -95.18219,
+        "latitude": 38.83945,
+        "gnisId": "479519",
+        "gnisName": "Vinland",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "163726",
+      "name": "WAKARUSA",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1857,
+      "discontinued": 1866,
+      "continuous": true,
+      "location": {
+        "longitude": -95.2466,
+        "latitude": 38.92487,
+        "gnisId": "479514",
+        "gnisName": "Township of Wakarusa",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "164089",
+      "name": "WASHINGTON CREEK",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1873,
+      "discontinued": 1882,
+      "continuous": true,
+      "location": {
+        "longitude": -95.40019,
+        "latitude": 38.82689,
+        "gnisId": "2509646",
+        "gnisName": "Washington Creek Cemetery",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "164279",
+      "name": "WEAVER",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1891,
+      "discontinued": 1903,
+      "continuous": true,
+      "location": {
+        "longitude": -95.06719,
+        "latitude": 38.96195,
+        "gnisId": "484879",
+        "gnisName": "Weaver",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "164702",
+      "name": "WHEATLAND",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1856,
+      "discontinued": 1856,
+      "continuous": true,
+      "location": null
+    },
+    {
+      "id": "165189",
+      "name": "WILLOW SPRINGS",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1861,
+      "discontinued": 1900,
+      "continuous": true,
+      "location": {
+        "longitude": -95.29664,
+        "latitude": 38.81862,
+        "gnisId": "482177",
+        "gnisName": "Willow Springs (historical)",
+        "gnisCounty": "DOUGLAS"
+      }
+    },
+    {
+      "id": "165664",
+      "name": "WORDEN",
+      "alternateName": null,
+      "counties": [
+        "DOUGLAS"
+      ],
+      "established": 1884,
+      "discontinued": 1904,
+      "continuous": true,
+      "location": {
+        "longitude": -95.33442,
+        "latitude": 38.78223,
+        "gnisId": "479499",
+        "gnisName": "Worden",
+        "gnisCounty": "DOUGLAS"
+      }
+    }
+  ]
+}

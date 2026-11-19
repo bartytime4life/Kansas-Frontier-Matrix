@@ -1,0 +1,117 @@
+{
+  "receipt_id": "kfm-usgs-record-context-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/data-lab/record-context.ts",
+    "app/data-lab/record-context-panel.tsx",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/page.tsx",
+    "app/data-lab/lab.module.css",
+    "tests/record-context-links.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/data-lab/record-context.ts": "sha256:b05107c13cd237259d9826dc74ff8579dabcc8af20e78e62eef2e3bb916ed855",
+    "app/data-lab/record-context-panel.tsx": "sha256:c8151dabbda0caf5882e07026a2c564cc1336a914d5a79916a35f29a1326c824",
+    "app/data-lab/lab-bundle.ts": "sha256:96a5a49e227c7d4a951c5beeaa70eea40dfe2ae849296eb17d3591025d3fca0d",
+    "app/data-lab/page.tsx": "sha256:903a60caed05ef9d946c1a323176edbca5be32e0c330e6925f2478387a63d036",
+    "app/data-lab/lab.module.css": "sha256:2a8d984c136675ccab6627fd94ae637be40ea6c1a1578c4caf4b8f327d09debf",
+    "tests/record-context-links.test.mjs": "sha256:7644782bde666b07bfeff59aef6496c5e7ef99f870f178bd91b5c0027740b57a",
+    "docs/collection-data-lab.md": "sha256:dcc9be52d914b1eb0ed19dbd11db8992bad03e2bc30b09eb6a5f2b0b9fc11e56"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:16f099a8ccbff9b8065f1122948e89027caeac6f184fe9e1a5b4e1cf6ac7611f",
+      "sha256:44274d6c8f5fd2c4ede0939a9e7d9bc0ad282b190a32481f2dab7962eb13c5c6",
+      "sha256:c9ebaaa1de2c91cc18afb30340c7b92203b8575fcdd696146b33b18f28ec8ff2",
+      "sha256:72e1eb50f8f51c429abbadb827fdc4e1d7fd2379a4eb14f22e741f88bacb5737",
+      "sha256:f9902b168df991993386a713eff86e072cb1a6f790a378531ce53d0c6016ebdd",
+      "sha256:31e20e45402e26d2575026deddc23462f66ca848880e0f2021c69af316b35f55"
+    ],
+    "evidence_refs": [
+      "repo:c28a02c828f7df5cc3e2a438035621bd5404c6bf:app/collection-relationships.ts",
+      "repo:c28a02c828f7df5cc3e2a438035621bd5404c6bf:app/usgs-context-dictionary.ts",
+      "repo:3b9697c513d2ab655e52e947f1b25d12d0e41df2:tools/local_data/sql_feed_water.py"
+    ]
+  },
+  "truth_labels": {
+    "app/data-lab/record-context.ts": "CONFIRMED",
+    "app/data-lab/record-context-panel.tsx": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/page.tsx": "CONFIRMED",
+    "app/data-lab/lab.module.css": "CONFIRMED",
+    "tests/record-context-links.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite: 3,122 passed, 25 existing skips, zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "27 focused link, saved-bundle, station/series and water tests, including eight new cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Final production build, TypeScript, targeted ESLint and diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone browser: 1,250 distinct source records preserved across three combined investigations and 12 JSON/story exports, exact bundle reopening, invalid attachments, cancellation/offline retention",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Synthetic browser: repeated captures, series conflicts, missing comparison fields, late upload after collection change and phone layout",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Archive-button request flow over five replayed native-sample responses",
+      "outcome": "PASS",
+      "reason": "Request-format replay only; no live signed-relay round-trip claim."
+    },
+    {
+      "gate": "Hosted CI, live signed relay verification, whole-archive identity/temporal joins and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Local browser/source candidate only; relevant metadata versions remain unverified."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "USGS combined-metadata identity definitions",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/combined-metadata/schema?f=html"
+    },
+    {
+      "id": "Pinned comparison plans and namespaces",
+      "validated": true,
+      "evidence_ref": "repo:c28a02c828f7df5cc3e2a438035621bd5404c6bf:app/collection-relationships.ts"
+    },
+    {
+      "id": "Pinned station and series field definitions",
+      "validated": true,
+      "evidence_ref": "repo:c28a02c828f7df5cc3e2a438035621bd5404c6bf:app/usgs-context-dictionary.ts"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T01:01:56.940418+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Browser-local exact provider-key matching retains all source rows, original values, repeated capture records and read receipts. A single sample match does not select a unique/current/applicable metadata version. Periods, datums, methods and observation quality remain unverified; no value fill, unit conversion, source admission or AI review credit is added. Imported match counts/profiles are recomputed from validated rows. Native sample content is hash-bound here and not committed. Final build/types/lint/browser checks follow the full suite and cover UI-only read-time disclosure, retained-context messaging and phone scroll hint. No public deployment or native service change is included."
+}

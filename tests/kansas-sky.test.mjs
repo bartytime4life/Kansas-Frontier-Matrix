@@ -17,9 +17,9 @@ test('session ingests observation time, deduplicates, sorts out-of-order samples
  assert.deepEqual(b.range(),[epoch,epoch+10000]); assert.equal(b.tracks().get('a00001').length,2);assert.equal(b.tracks().get('a00001')[1].lon,-98);
  b.ingest({...envelope(20000),retrievedAt:'bad'});assert.equal(b.tracks().get('a00001').length,2);
 });
-test('replay interpolates only bracketing observations and shortest heading turn; optional instruments stay unknown',()=>{
- const tracks=new Map([['a00001',[point(),point(20000,{lon:-97,trackDeg:10,altBaroFt:null})]]]);
- const [sample]=sky.samplesAt(tracks,epoch+10000);assert.equal(sample.lon,-97.5);assert.equal(sample.trackDeg,0);assert.equal(sample.altBaroFt,null);assert.equal(sample.rollDeg,null);assert.equal(sample.interpolated,true);assert.equal(sample.observedAt,new Date(epoch).toISOString());
+test('replay interpolates only bracketing observations, separates the rendered turn and leaves optional instruments unknown',()=>{
+ const tracks=new Map([['a00001',[point(),point(20000,{lat:38.04,trackDeg:10,altBaroFt:null})]]]);
+ const [sample]=sky.samplesAt(tracks,epoch+10000);assert.ok(sample.lon<-98);assert.ok(Math.abs(sample.lat-38.02)<1e-9);assert.equal(sample.trackDeg,350);assert.ok(Math.min(sample.renderedTrackDeg,360-sample.renderedTrackDeg)<1e-6);assert.equal(sample.altBaroFt,null);assert.equal(sample.rollDeg,null);assert.equal(sample.interpolated,true);assert.equal(sample.observedAt,new Date(epoch).toISOString());
  assert.deepEqual(sky.samplesAt(tracks,epoch-1),[]);assert.deepEqual(sky.samplesAt(tracks,epoch+20001),[]);assert.equal(sky.samplesAt(tracks,epoch)[0].interpolated,false);
 });
 test('gaps, provider changes, ground transitions and explicit breaks never become continuous flights',()=>{
@@ -112,4 +112,45 @@ test('resuming an expired cursor advances immediately within the actual retained
 test('reported right bank lowers the right wing; absent roll adds no bank',()=>{
  assert.ok(sky.bankHeightOffset(100,20)<0);assert.ok(sky.bankHeightOffset(-100,20)>0);
  assert.ok(sky.bankHeightOffset(-100,-20)<0);assert.equal(Math.abs(sky.bankHeightOffset(100,null)),0);
+});
+
+// Exercise the production renderer's preparation expression, not a duplicate
+// implementation. WebGL rendering is separate from this bounded geometry proof.
+const renderSource=await readFile('app/kansas-sky-layer.ts','utf8');
+const renderTree=ts.createSourceFile('kansas-sky-layer.ts',renderSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+let drawableExpression;
+const findDrawable=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(renderTree)==='drawable')drawableExpression=node.initializer?.getText(renderTree);ts.forEachChild(node,findDrawable);};
+findDrawable(renderTree);
+assert.ok(drawableExpression,'production renderer exposes its drawable trail preparation');
+const drawableCode=ts.transpileModule(`const prepare=()=>(${drawableExpression});`,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
+const rendererTrails=(trails,flat=false)=>{
+ const scope={...sky,trails,flat,TRAIL_VERTICES:60000};
+ return new Function(...Object.keys(scope),`${drawableCode}\nreturn prepare();`)(...Object.values(scope));
+};
+
+test('crowded continuous observations retain a bounded 3D trail for every aircraft after thinning',()=>{
+ const tracks=new Map(Array.from({length:3000},(_,index)=>{
+  const hex=(index+1).toString(16).padStart(6,'0');
+  return [hex,Array.from({length:31},(_,sample)=>point(sample*20000,{hex,lon:-98+sample*.001,positionMethod:'adsb_icao',breakBefore:sample===0}))];
+ }));
+ const trails=sky.trailSegments(tracks,epoch+600000),drawable=rendererTrails(trails);
+ assert.ok(trails.reduce((sum,trail)=>sum+trail.points.length,0)<=sky.SKY_MAX_TRAIL_POINTS);
+ assert.ok(trails.some(trail=>trail.points.some((sample,index)=>index>0&&sample.observedAt-trail.points[index-1].observedAt>sky.SKY_MAX_GAP_MS)), 'the fixture actually exercises a thinning interval larger than a source gap');
+ const visible=new Set(drawable.filter(trail=>trail.points.length>1).map(trail=>trail.hex));
+ assert.equal(visible.size,3000,'display thinning must not reinterpret continuous source history as missing observations');
+ assert.ok(drawable.reduce((sum,trail)=>sum+trail.points.length,0)<=sky.SKY_MAX_TRAIL_POINTS);
+});
+
+test('3D display segments preserve genuine gaps and height-reference changes before thinning',()=>{
+ for(const change of [{providerId:'adsb-fi'},{positionMethod:'mlat'},{onGround:true},{breakBefore:true},{altGeomFt:null},{altGeomFt:null,altBaroFt:null},{gap:true}]){
+  const offset=change.gap?100001:40000,rest={...change};delete rest.gap;
+  const points=[point(0,{positionMethod:'adsb_icao'}),point(20000,{positionMethod:'adsb_icao'}),point(offset,{positionMethod:'adsb_icao',...rest}),point(offset+20000,{positionMethod:'adsb_icao',...rest,breakBefore:false})];
+  const drawable=rendererTrails(sky.trailSegments(new Map([['a00001',points]]),epoch+offset+20000));
+  assert.ok(drawable.some(trail=>trail.points.some(sample=>sample.observedAt===epoch)&&trail.points.some(sample=>sample.observedAt===epoch+20000)),'known continuous observations remain visible beside the gap');
+  for(const trail of drawable)for(let index=1;index<trail.points.length;index++){
+   const before=trail.points[index-1],after=trail.points[index];
+   assert.equal(sky.connected(before,after),true,`a real discontinuity cannot be joined: ${JSON.stringify(change)}`);
+   assert.equal(sky.skyHeightReference(before),sky.skyHeightReference(after),'pressure and WGS84 height references stay separate');
+  }
+ }
 });

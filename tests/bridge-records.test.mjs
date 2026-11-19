@@ -13,6 +13,7 @@ async function load(file) {
 const bridge = await import(await load("app/kansas-bridge-records.ts"));
 const route = await import(await load("app/api/bridge-records/route.ts"));
 const { KANSAS_REFERENCE_SOURCES } = await import(await load("app/kansas-reference-layers.ts"));
+const bridgeMap = await import(await load("app/kdot-bridges.ts"));
 const query = { layer: "kdot-bridges-local", longitude: -98, latitude: 38, radius: 500 };
 const feature = (attributes = {}, geometry = { x: -98, y: 38 }) => ({ attributes: { OBJECTID: 1, BRKEY: "SYNTHETIC-1", FIPS_STATE: "KANSAS", YEARBUILT: 1930, YEARRECON: 1998, OPPOSTCL: "Closed to all traffic", HISTSIGN: "Br eligible for NRHP", INSPDATE: Date.UTC(2024, 4, 1), LASTINSP: Date.UTC(2022, 4, 1), ...attributes }, geometry });
 const body = (features = [feature()], extra = {}) => ({ geometryType: "esriGeometryPoint", spatialReference: { wkid: 4326 }, features, ...extra });
@@ -21,8 +22,11 @@ const request = params => new Request(`http://localhost/api/bridge-records?${new
 test("bridge inspector uses the exact displayed filters and separate provider schemas", () => {
   for (const layer of Object.keys(bridge.BRIDGE_FILTERS)) {
     const url = new URL(bridge.bridgeProviderUrl({ ...query, layer }));
-    const map = new URL(KANSAS_REFERENCE_SOURCES.find(s => s.id === layer).mapUrl);
-    assert.equal(url.searchParams.get("where"), JSON.parse(map.searchParams.get("layerDefs"))[0]);
+    // The map now draws clustered records (kdot-bridges.ts); its layer keeps the record set this filter names.
+    const source = KANSAS_REFERENCE_SOURCES.find(s => s.id === layer);
+    assert.equal(source.apiPath, `/api/live-context?feed=${layer}`);
+    assert.equal(url.searchParams.get("where"), bridge.BRIDGE_FILTERS[layer].where);
+    assert.equal(bridgeMap.BRIDGE_FEEDS[layer].network, bridge.BRIDGE_FILTERS[layer].service === "State_Bridges" ? "state" : "local");
     assert.equal(url.hostname, "kanplan.ksdot.gov");
     assert.equal(url.searchParams.get("outSR"), "4326");
     assert.equal(url.searchParams.get("resultRecordCount"), "50");

@@ -6,6 +6,7 @@ export function hasExplorerDestination(params: URLSearchParams, addressParams = 
   return restoreTopic(params.get("topic")) !== "all"
     || params.get("topic") === "all"
     || params.get("mapui") === "open"
+    || params.get("panel") === "layers"
     || params.get("layers") === "sources"
     || params.get("maptab") === "localAtlas"
     || params.get("layerView") === "imagery"

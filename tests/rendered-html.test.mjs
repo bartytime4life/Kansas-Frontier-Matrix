@@ -430,7 +430,7 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   const places = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.match(page, /leftPanelMode !== "places"/);
-  assert.match(page, /<div className="place-trail-list" aria-label="Saved investigation places">/);
+  assert.match(page, /className=\{`place-trail-list \$\{[^}]+\}`\} aria-label="Saved investigation places"/);
   assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|map-tool-group-workbench|secondary-tools|More map tools/);
   assert.match(page, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
   assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /Advanced tools/);
@@ -761,7 +761,10 @@ test("connects bounded official context sources without admitting evidence", asy
   const aquiferUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/aquifer-layers.ts", import.meta.url), "utf8"), "aquifer-layers.ts")).toString("base64")}`;
   const civicUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/civic-districts.ts", import.meta.url), "utf8"), "civic-districts.ts")).toString("base64")}`;
   const deflockUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/deflock.ts", import.meta.url), "utf8"), "deflock.ts")).toString("base64")}`;
-  const javascript = compile(withBuildClock(registrySource).replace('from "./civic-districts";', `from "${civicUrl}";`).replace('from "./deflock";', `from "${deflockUrl}";`).replace('from "./aquifer-layers";', `from "${aquiferUrl}";`).replace('from "./kansas-reference-layers";', `from "${referenceUrl}";`).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`).replace('from "./fire-detection-style";', `from "${fireUrl}";`).replace('from "./population-prisms";', `from "${prismsUrl}";`).replace('from "./reviewed-snapshot-layers";', `from "${reviewedUrl}";`).replace('from "./map-keys";', `from "${mapKeysUrl}";`).replace('from "./hd-rasters";', `from "${hdUrl}";`), "live-context.ts");
+  const kdotBridgesUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/kdot-bridges.ts", import.meta.url), "utf8"), "kdot-bridges.ts")).toString("base64")}`;
+  const discoveryUrl = `data:text/javascript;base64,${Buffer.from(compile((await readFile(new URL("../app/kansas-discovery-layers.ts", import.meta.url), "utf8")).replace('from "./kdot-bridges";', `from "${kdotBridgesUrl}";`), "kansas-discovery-layers.ts")).toString("base64")}`;
+  const contextClustersUrl = `data:text/javascript;base64,${Buffer.from(compile((await readFile(new URL("../app/context-clusters.ts", import.meta.url), "utf8")).replace('from "./kdot-bridges";', `from "${kdotBridgesUrl}";`), "context-clusters.ts")).toString("base64")}`;
+  const javascript = compile(withBuildClock(registrySource).replace('from "./civic-districts";', `from "${civicUrl}";`).replace('from "./deflock";', `from "${deflockUrl}";`).replace('from "./aquifer-layers";', `from "${aquiferUrl}";`).replace('from "./kansas-reference-layers";', `from "${referenceUrl}";`).replace('from "./kansas-discovery-layers";', `from "${discoveryUrl}";`).replace('from "./kdot-bridges";', `from "${kdotBridgesUrl}";`).replace('from "./context-clusters";', `from "${contextClustersUrl}";`).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`).replace('from "./fire-detection-style";', `from "${fireUrl}";`).replace('from "./population-prisms";', `from "${prismsUrl}";`).replace('from "./reviewed-snapshot-layers";', `from "${reviewedUrl}";`).replace('from "./map-keys";', `from "${mapKeysUrl}";`).replace('from "./hd-rasters";', `from "${hdUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
@@ -770,6 +773,8 @@ test("connects bounded official context sources without admitting evidence", asy
     "kdot-roads", "kdot-rail-active", "kdot-rail-abandoned", "fema-flood-zones",
     "kgs-aquifer-alluvial", "kgs-aquifer-dakota", "kgs-aquifer-glacial-drift", "kgs-aquifer-high-plains", "kgs-aquifer-ozark", "kgs-aquifer-osage", "kgs-aquifer-flint-hills",
     "kgs-water-table", "kgs-saturated-thickness", "kgs-depth-to-water", "kgs-monitoring-wells",
+    "noaa-spc-fire-weather", "noaa-cpc-drought-outlook", "usgs-padus-lands", "nrcs-ssurgo-soils",
+    "nps-nrhp-places", "nps-historic-trails", "nps-trail-places", "kdwp-wildlife-areas", "kdwp-wiha-access",
     "fema-disaster-declarations",
     "blm-plss-townships",
     "blm-plss-sections",
@@ -1240,7 +1245,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /const closeHeaderOverflow = useCallback[\s\S]*summary\?\.focus\(\{ preventScroll: true \}\)/);
   assert.match(page, /openPrimaryWorkspace\("reports"\); closeHeaderOverflow\(event\.currentTarget\)/);
   assert.match(page, /openPrimaryWorkspace\("stories"\); closeHeaderOverflow\(event\.currentTarget\)/);
-  assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); void shareView\(\)/);
+  assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); shareView\(event\.currentTarget\)/);
   assert.match(page, /className="map-dock-context sr-only"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
   assert.match(page, /className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.doesNotMatch(page, /className="map-dock-representations"/);
@@ -1330,10 +1335,12 @@ test("keeps the feature, connection, action, and coding registries aligned", asy
   assert.match(features, /id: "smoke-weather-context"/);
   assert.match(features, /id: "held-raspberry-waveform-bridge"/);
   assert.match(connections, /CONNECTION_CODE_PATHS/);
-  assert.match(connections, /"usgs-earthquakes"/);
+  // Standard feeds such as earthquakes and Raspberry Shake are derived from their apiPath
+  // (checked at runtime in kansas-discovery-layers.test.mjs); exceptions stay explicit.
+  assert.match(connections, /STANDARD_FEED_CODE_PATHS/);
+  assert.match(connections, /const connectionFeed = /);
   assert.match(connections, /"usgs-streamflow"/);
   assert.match(connections, /"noaa-hms-smoke"/);
-  assert.match(connections, /"raspberry-shake-stations"/);
   assert.match(actions, /id: "toggle-context-group"/);
   assert.match(actions, /id: "refresh-streamflow"/);
   assert.match(actions, /id: "refresh-radar-frames"/);

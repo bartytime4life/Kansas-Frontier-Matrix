@@ -1,4 +1,13 @@
 export const MAX_PLACE_TRAIL_STOPS = 12;
+export const PLACES_FULL_MESSAGE = `Places is full (${MAX_PLACE_TRAIL_STOPS} maximum). Remove a saved place before adding another.`;
+
+/** Undo inserts the original stop without evicting or replacing another stop. */
+export function restorePlaceStop<T extends Readonly<{ id: string }>>(stops: readonly T[], stop: T, index: number): T[] | null {
+  if (stops.length >= MAX_PLACE_TRAIL_STOPS || stops.some(item => item.id === stop.id) || !Number.isInteger(index) || index < 0) return null;
+  const next = [...stops];
+  next.splice(Math.min(index, next.length), 0, stop);
+  return next;
+}
 
 export const normalizePlaceStopName = (value: string, fallbackIndex: number) => {
   const normalized = value.trim().replace(/\s+/g, " ").slice(0, 50);

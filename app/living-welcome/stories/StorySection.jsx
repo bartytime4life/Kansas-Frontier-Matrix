@@ -13,6 +13,7 @@ const StoryLab = lazy(() => import('./StoryLab.jsx').then(loaded => ({ default: 
 const statusText = (story, state, observedTo) => {
   const detail = story.sources.join(' · ');
   if (story.status === 'planned') return { label: 'In the works', detail };
+  if (story.status === 'guided') return { label: 'Guided investigation', detail };
   if (state === 'ready') return { label: observedTo ? `Record to ${observedTo}` : 'Record ready', detail };
   if (state === 'offline') return { label: 'Record unavailable', detail };
   return { label: state === 'waiting' ? 'Data arriving' : 'Looking for the record', detail };
@@ -35,8 +36,10 @@ function StoryCard({ story, held, onOpen, root }) {
   const status = statusText(story, state === 'idle' && known ? known.state : state, bundle?.observed?.to ?? known?.observedTo);
   const Visual = state === 'ready' && bundle && storyModule?.default;
   const sketch = <WaitingSketch story={story} held={held}/>;
+  const Open = story.href ? 'a' : 'button';
+  const openProps = story.href ? { href: story.href } : { type: 'button', onClick: event => onOpen(story.id, event.currentTarget) };
   return <article className="story-card" data-story={story.id} data-status={story.status} data-state={state} style={{ '--story-0': story.palette[0], '--story-1': story.palette[1], '--story-2': story.palette[2] }}>
-    <button type="button" className="story-card-open" aria-label={`Open the ${story.title} lab: ${story.summary} ${status.label}.`} onClick={event => onOpen(story.id, event.currentTarget)}>
+    <Open {...openProps} className="story-card-open" aria-label={`Open the ${story.title} lab: ${story.summary} ${status.label}.`}>
       <span className="story-thumb" ref={box}>
         {near && (Visual ? <StoryBoundary fallback={sketch}><Visual bundle={bundle} mode="card" paused={held} reduced={held}/></StoryBoundary> : sketch)}
       </span>
@@ -46,7 +49,7 @@ function StoryCard({ story, held, onOpen, root }) {
         <small>{story.summary}</small>
         <span className="story-status"><b>{status.label}</b><i>{status.detail}</i></span>
       </span>
-    </button>
+    </Open>
   </article>;
 }
 
@@ -81,7 +84,7 @@ function StorySheet({ held, onOpen, onClose, labOpen }) {
   return createPortal(<div className="story-sheet" ref={dialog} role="dialog" aria-modal="true" aria-labelledby="story-sheet-title">
     <header className="story-sheet-head"><div><span className="story-kicker">KANSAS FRONTIER MATRIX</span><h2 id="story-sheet-title" tabIndex={-1}>The Kansas record</h2></div>
       <button type="button" className="story-icon-button" aria-label="Close The Kansas record" onClick={onClose}>×</button></header>
-    <p className="story-section-lede">{STORIES.length} stories built from the public record. Choose one to open its lab.</p>
+    <p className="story-section-lede">{STORIES.filter(entry => entry.status !== 'planned').length} instruments and investigations. Source availability is shown separately.</p>
     <StoryGroups held={held} onOpen={onOpen} root={dialog}/>
   </div>, document.querySelector('.site-root') || document.body);
 }
@@ -103,13 +106,13 @@ export default function StorySection({ paused = false, reduced = false, modal = 
   }, []);
   const closeSheet = useCallback(() => { setSheet(false); requestAnimationFrame(() => launcher.current?.focus({ preventScroll: true })); }, []);
   const story = labId ? storyById(labId) : null;
-  const liveCount = STORIES.filter(entry => entry.status === 'ready').length;
+  const liveCount = STORIES.filter(entry => entry.status !== 'planned').length;
   return <>
     {compact
       ? <button type="button" ref={launcher} className="story-launcher" aria-label={`Open The Kansas record: ${STORIES.length} data stories`} onClick={() => setSheet(true)}><i aria-hidden="true"/>The Kansas record</button>
       : <section className="story-section" aria-labelledby="story-section-title">
         <header className="story-section-head"><h2 id="story-section-title">The Kansas record</h2>
-          <p className="story-section-lede">{STORIES.length} stories built from the public record, each with a lab of its own. {liveCount} are ready to explore; the rest show what is on the way.</p></header>
+          <p className="story-section-lede">{liveCount} research instruments and investigations. Each card shows whether a source snapshot is available.</p><a className="story-atlas-link" href="/labs">Open the research atlas ↗</a></header>
         <StoryGroups held={held} onOpen={open}/>
       </section>}
     {sheetOpen && <StorySheet held={held} onOpen={open} onClose={closeSheet} labOpen={Boolean(labId)}/>}
