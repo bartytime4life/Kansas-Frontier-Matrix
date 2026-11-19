@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-18
+updated: 2026-11-19
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -265,6 +265,35 @@ dates.
 
 **Mirror.** [#5874](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5874) carried #5870, #5872 and #5873 into
 `apps/site/source`.
+
+<a id="public-readback-2026-11-19"></a>
+
+### Publication verified on 2026-11-19: instant DeFlock outage answers and trail-site circles
+
+The identity checker reported `APPLICATION_INPUTS_MATCH` for `9d472887` at
+about 00:45 UTC on 2026-11-19.
+
+| Change | Live readback |
+|---|---|
+| [#5906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5906) DeFlock answers at once while its provider is failing | The provider was still down. The first request after a restart took 26.2 seconds and returned the outage sentence; the next two took 0.3 seconds. After the one-minute cooldown, the request that started the re-check returned in 0.4 seconds with "Next provider check is running now; try again in about a minute". Once that background check had failed, requests returned in under a second with "Next provider check in about 2 minutes" |
+| [#5909](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5909) trail sites as numbered circles | In a headless browser at statewide scale the layer drew numbered circles along the trails. Hovering one showed "14 trail sites in this area · 7 NPS-certified · Santa Fe 9 · Oregon 6 · California 7". Selecting it zoomed in and split it (15, 8, 6 and smaller). At zoom 11 near Council Grove, selecting a single site opened its record. No page errors |
+
+The published commit also carries [#5908](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5908) and [#5912](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5912)
+from other work. This readback did not check them beyond the identity match.
+
+**What #5906 does not change.** The first DeFlock request after a restart still
+waits up to 25 seconds for the provider, because a restart clears the site's
+memory of the outage. The layer still shows no cameras: its own rule is that an
+unavailable provider leaves it unavailable, with no substitute locations.
+
+**Other feeds.** The other 14 feeds answered 200 in under two seconds. The
+National Register feed returned 1,344 points, trail sites 96, trail lines 101
+features, and walk-in hunting access 3,591 tracts.
+
+**Chat model.** `/api/ai/status` reported ready on `qwen3.5:9b-q4_K_M`.
+
+**Mirror.** [#5910](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5910) carried #5909 into `apps/site/source`. That tree
+has no DeFlock layer, so #5906 has no mirror change.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
