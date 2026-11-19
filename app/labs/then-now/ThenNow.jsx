@@ -20,11 +20,13 @@ function EditionImage({ edition, footprint, setUnavailable, alt = '' }) {
   return <img ref={image} src={edition.preview} width={footprint.width} height={footprint.height} alt={alt} draggable={false} onError={() => setUnavailable(true)}/>;
 }
 
-export default function ThenNow({ pair }) {
+export default function ThenNow({ pair, crossing, marker, inventoryHref }) {
   const [older, newer] = pair.editions;
   const [mode, setMode] = useState('swipe');
   const [split, setSplit] = useState(50);
   const [unavailable, setUnavailable] = useState(false);
+  const [showMarker, setShowMarker] = useState(false);
+  const bridgeMarker = showMarker && <span className={styles.marker} style={marker} aria-hidden="true"/>;
 
   return <main className={styles.page}>
     <div className={styles.frame}>
@@ -39,9 +41,12 @@ export default function ThenNow({ pair }) {
         <section className={styles.viewer} aria-labelledby="imagery-title">
           <div className={styles.viewerHeading}>
             <h2 id="imagery-title">Compare the aerial views</h2>
-            <div className={styles.modes} role="group" aria-label="Comparison layout">
-              <button type="button" aria-pressed={mode === 'swipe'} onClick={() => setMode('swipe')}>Swipe</button>
-              <button type="button" aria-pressed={mode === 'side-by-side'} onClick={() => setMode('side-by-side')}>Side by side</button>
+            <div className={styles.viewerTools}>
+              <label className={styles.markBridge}><input type="checkbox" checked={showMarker} disabled={unavailable} aria-describedby="marker-help" onChange={event => setShowMarker(event.target.checked)}/> Mark the bridge</label>
+              <div className={styles.modes} role="group" aria-label="Comparison layout">
+                <button type="button" aria-pressed={mode === 'swipe'} onClick={() => setMode('swipe')}>Swipe</button>
+                <button type="button" aria-pressed={mode === 'side-by-side'} onClick={() => setMode('side-by-side')}>Side by side</button>
+              </div>
             </div>
           </div>
           {unavailable ? <p className={styles.unavailable} role="status">An image preview could not load. The descriptions and source links remain available.</p>
@@ -51,20 +56,33 @@ export default function ThenNow({ pair }) {
                 <div className={styles.newer} aria-hidden="true"><EditionImage edition={newer} footprint={pair.footprint} setUnavailable={setUnavailable}/></div>
                 <div className={styles.older} aria-hidden="true"><EditionImage edition={older} footprint={pair.footprint} setUnavailable={setUnavailable}/></div>
                 <div className={styles.divider} aria-hidden="true"><span>‹ ›</span></div>
+                {bridgeMarker}
                 <input className={styles.range} type="range" min="0" max="100" step="1" value={split} aria-label="Compare imagery editions" aria-valuetext={`${older.year} covers ${split} percent. ${newer.year} covers ${100 - split} percent.`} aria-describedby="divider-help" onChange={event => setSplit(Number(event.target.value))}/>
               </div>
               <p className={styles.help} id="divider-help">Drag the divider or use the arrow keys. Home shows {newer.year} and End shows {older.year}.</p>
             </> : <div className={styles.duo}>{pair.editions.map(edition => <figure key={edition.year}>
-              <EditionImage edition={edition} footprint={pair.footprint} setUnavailable={setUnavailable} alt={viewDescriptions[edition.year]}/>
+              <div className={styles.editionImage}>
+                <EditionImage edition={edition} footprint={pair.footprint} setUnavailable={setUnavailable} alt={viewDescriptions[edition.year]}/>
+                {bridgeMarker}
+              </div>
               <figcaption>{edition.year} edition</figcaption>
             </figure>)}</div>}
+          <p id="marker-help" className={styles.help} hidden={!showMarker || unavailable}>The ring marks the KDOT inventory point south of the ballfields.</p>
         </section>
 
         <aside className={styles.context} aria-labelledby="crossing-title">
           <h2 id="crossing-title">What changed at the crossing?</h2>
           <dl>{pair.editions.map(edition => <div key={edition.year}><dt>{edition.year} edition</dt><dd>{viewDescriptions[edition.year]}</dd></div>)}</dl>
-          <p>KDOT’s annual report says the U.S. 83 Business bridge replacement was completed at the end of 2024.</p>
-          <a href={pair.project}>Read the KDOT project record <span aria-hidden="true">↗</span></a>
+          <div className={styles.bridgeRecord}>
+            <h3>Follow the bridge record</h3>
+            <p>The 2023 letting lists the U.S. 83 Business replacement as project {crossing.project} at bridge #004. KDOT’s annual report dates completion to late 2024. The state inventory lists the replacement as {crossing.structure}.</p>
+            {inventoryHref && <Link className={styles.recordLink} href={inventoryHref} prefetch={false}>Inspect {crossing.structure} in Built Kansas <span aria-hidden="true">→</span></Link>}
+            <ul>
+              <li><a href={crossing.notice}>2023 letting notice</a></li>
+              <li><a href={pair.project}>KDOT completion report</a></li>
+              <li><a href={crossing.inventoryQuery}>KDOT inventory query</a></li>
+            </ul>
+          </div>
         </aside>
       </div>
 

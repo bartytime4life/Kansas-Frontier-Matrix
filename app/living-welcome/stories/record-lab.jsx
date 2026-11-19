@@ -1,5 +1,7 @@
 'use client';
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import gardenCityCrossing from '../../labs/then-now/crossing.json';
 import { KANSAS_BOUNDS, KANSAS_OUTLINE_CREDIT, cividis, downloadCSV, fmt, kansasPath, kansasProjection, useStoryCanvas } from './story-kit.mjs';
 import { compareGroups, comparisonMode, comparisonModes, describe, distribution, filterRecords, metricOf, monthlySeries, numeric, recordGeometry, recordModel, recordOutsideBounds, recordRange, recordsCSV, safeCell, timeText, yearCounts } from './record-model.mjs';
 import { groupSummaries, rankRecords, relationship, sampledPairs, scienceMetrics, scientificSummary, yearlySeries } from './science-model.mjs';
@@ -295,6 +297,7 @@ function RecordInstrument({ bundle, snapshotSha256, time, onTime, controls: inpu
   const records = useMemo(() => filterRecords(model, { controls, time }), [model, controls, time]);
   const timelineRecords = useMemo(() => filterRecords({ ...model, data: { ...model.data, temporalMode: 'events' } }, { controls }), [model, controls]);
   const metric = metricOf(model, controls), summary = describe(records, metric?.key), selected = records.find(row => row.id === selectedId) || null;
+  const isGardenCityCrossing = bundle.story === 'built-kansas' && selected?.structure === gardenCityCrossing.structure && selected.county === gardenCityCrossing.county;
   const hasSeries = Boolean((model.data.dateField || model.data.seriesPeriod === 'year') && model.data.temporalMode === 'events');
   const view = controls.view || (model.data.preferredView === 'chart' && hasSeries ? 'trend' : scene.mapped.length ? 'map' : 'chart'), yearRange = recordRange(bundle);
   const isMa = model.data.timeUnit === 'Ma';
@@ -318,7 +321,15 @@ function RecordInstrument({ bundle, snapshotSha256, time, onTime, controls: inpu
         {view === 'map' && scene.mapped.length ? <SpatialView scene={scene} records={records} metric={metric} selected={selected} onSelect={setSelected} defaultExtent={model.data.temporalMode === 'interval' ? 'all' : 'kansas'}/> : view === 'trend' && hasSeries ? <SeriesView model={model} records={records} metric={metric}/> : view === 'relationships' ? <RelationshipsView model={model} records={records} controls={controls} change={change} selected={selected} onSelect={setSelected}/> : <DistributionView records={records} metric={metric} selected={selected}/>}
         <div className="record-stat-strip"><div><span>Measured records</span><strong>{summary.count.toLocaleString()}</strong></div><div><span>Median {metric?.unit || ''}</span><strong>{number(summary.median)}</strong></div><div><span>Range {metric?.unit || ''}</span><strong>{number(summary.min)} <i>→</i> {number(summary.max)}</strong></div><div><span>Missing measure</span><strong>{summary.missing.toLocaleString()}</strong></div></div>
         <Timeline model={model} records={timelineRecords} time={time} onTime={onTime}/>
-        <div className="record-inspector" ref={inspector} tabIndex={-1} aria-label="Selected source record" aria-live="polite"><div><span className="record-eyebrow">03 / FIELD INSPECTOR</span><h4>{selected ? nameOf(selected) : 'A closer look changes everything.'}</h4><p>{selected ? `Source record ${selected.id}` : 'Select a mark on the map, or use Inspect in the keyboard-accessible record table.'}</p></div>{selected && <dl>{model.columns.map(column => <div key={column.key}><dt>{columnLabel(model, column)}{column.unit ? ` (${column.unit})` : ''}</dt><dd>{column.key === model.yearField || column.key === model.data.endYearField ? timeText(model, selected[column.key]) : typeof selected[column.key] === 'string' && /^https?:\/\//i.test(selected[column.key]) ? <a href={selected[column.key]} target="_blank" rel="noopener noreferrer">Open source record ↗</a> : display(selected[column.key])}</dd></div>)}</dl>}</div>
+        <div className="record-inspector" ref={inspector} tabIndex={-1} aria-label="Selected source record" aria-live="polite">
+          <div>
+            <span className="record-eyebrow">03 / FIELD INSPECTOR</span>
+            <h4>{selected ? nameOf(selected) : 'A closer look changes everything.'}</h4>
+            <p>{selected ? `Source record ${selected.id}` : 'Select a mark on the map, or use Inspect in the keyboard-accessible record table.'}</p>
+            {isGardenCityCrossing && <Link href="/labs/then-now" prefetch={false}>Compare aerial views of this crossing <span aria-hidden="true">→</span></Link>}
+          </div>
+          {selected && <dl>{model.columns.map(column => <div key={column.key}><dt>{columnLabel(model, column)}{column.unit ? ` (${column.unit})` : ''}</dt><dd>{column.key === model.yearField || column.key === model.data.endYearField ? timeText(model, selected[column.key]) : typeof selected[column.key] === 'string' && /^https?:\/\//i.test(selected[column.key]) ? <a href={selected[column.key]} target="_blank" rel="noopener noreferrer">Open source record ↗</a> : display(selected[column.key])}</dd></div>)}</dl>}
+        </div>
       </main>
     </div>
     <SciencePanel bundle={bundle} snapshotSha256={snapshotSha256} model={model} records={records} time={time} controls={controls} change={change} metric={metric} selectedId={selected?.id} onSelect={id => { setSelected(id); requestAnimationFrame(() => { inspector.current?.scrollIntoView({ block: 'start', behavior: 'instant' }); inspector.current?.focus({ preventScroll: true }); }); }}/>

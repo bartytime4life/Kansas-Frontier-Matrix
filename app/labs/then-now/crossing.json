@@ -1,0 +1,12 @@
+{
+  "project": "KA-5707-01",
+  "structure": "0028-B0032",
+  "county": "FINNEY",
+  "location": [-100.87750894002801, 37.955284422488845],
+  "notice": "https://sos.ks.gov/publications/Register/Volume-42/Issues/Issue-38/09-21-23-51496.html",
+  "inventoryQuery": "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/State_Bridges/MapServer/0/query?where=PROJECT_NUMBER%3D%27KA-5707-01%27&outFields=STR_NAME%2CLOCATION%2CFEATURE_CROSSED_DESCRIPTION%2CPROJECT_NUMBER%2CCOUNTYNAME%2CBUILT_DATE&outSR=4326&returnGeometry=true&f=pjson",
+  "snapshot": {
+    "recordId": "kdot-state-52-05d09a7a592dd5da-1",
+    "sha256": "4d6df39613ba521910c3ad144763db7c1eed3696d4db13744c67268a999931db"
+  }
+}
