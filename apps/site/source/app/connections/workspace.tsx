@@ -10,6 +10,39 @@ const labels:Record<string,string>={CREDENTIAL_REQUIRED:"This product needs its 
 const cell=(value:unknown)=>value===null||value===undefined||value===""?"Missing":typeof value==="object"?JSON.stringify(value).slice(0,500):String(value).slice(0,500);
 const defaults=(fields:Catalog["sources"][number]["fields"])=>Object.fromEntries(fields.map(f=>[f.key,f.default]));
 const preferred:Record<string,string[]>={"water-quality-portal":["Activity_StartDate","Result_Characteristic","Result_Measure","Result_MeasureUnit","Result_ResultDetectionCondition","Result_MeasureQualifierCode","DetectionLimit_MeasureA","DetectionLimit_MeasureUnitA"],"nrcs-scan":["date","value","storedUnitCode","heightDepth","derivedData","qcFlag","qaFlag","origValue"],"census-acs":["NAME","B01003_001E","B01003_001M","B01003_001EA","B19013_001E","B19013_001M","B19013_001EA"],"iem-asos":["station","valid","tmpf","sknt","drct","metar"],"usdm-statistics":["mapDate","validStart","validEnd","none","d0","d1","d2","d3","d4"]};
+// Check network values before they enter state: TypeScript annotations do not
+// validate JSON, and a bad refresh must not replace a usable catalog/history.
+const record=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==="object"&&!Array.isArray(value);
+const strings=(value:unknown):value is string[]=>Array.isArray(value)&&value.every(item=>typeof item==="string");
+const byteCount=(value:unknown)=>typeof value==="number"&&Number.isSafeInteger(value)&&value>=0;
+const queryRecord=(value:unknown)=>record(value)&&Object.values(value).every(item=>typeof item==="string");
+const setupStatus=(value:unknown)=>record(value)&&typeof value.configured==="boolean"&&strings(value.missing)&&strings(value.holds);
+const stringLists=(value:unknown)=>record(value)&&Object.values(value).every(strings);
+function catalogPayload(value:unknown):value is Catalog {
+ if(!record(value)||typeof value.owner!=="boolean"||!record(value.host)||!Array.isArray(value.sources))return false;
+ const host=value.host;
+ if(typeof host.state!=="string"||typeof host.host!=="string"||typeof host.configured!=="boolean"||typeof host.paused!=="boolean"
+  ||!(host.usedBytes===null||byteCount(host.usedBytes))||!byteCount(host.limitBytes)||(host.missing!==undefined&&!strings(host.missing)))return false;
+ const ids=new Set<string>();
+ return value.sources.every(source=>{
+  if(!record(source)||typeof source.id!=="string"||!source.id||ids.has(source.id)||!setupStatus(source)||!byteCount(source.limitBytes)
+   ||!["name","kind","state","docs","limitation","releaseState"].every(key=>typeof source[key]==="string")
+   ||(source.rights!==undefined&&typeof source.rights!=="string")||!Array.isArray(source.fields))return false;
+  ids.add(source.id);
+  return source.fields.every(field=>record(field)&&["key","label","type","default"].every(key=>typeof field[key]==="string")
+   &&(field.options===undefined||strings(field.options))
+   &&[field.min,field.max].every(bound=>bound===undefined||(typeof bound==="number"&&Number.isFinite(bound))))
+   &&(source.productStatuses===undefined||(record(source.productStatuses)&&Object.values(source.productStatuses).every(setupStatus)))
+   &&(source.productSecrets===undefined||stringLists(source.productSecrets))
+   &&(source.productConfirmations===undefined||stringLists(source.productConfirmations));
+ });
+}
+function captureHistory(value:unknown):value is {captures:Receipt[]} {
+ if(!record(value)||!Array.isArray(value.captures))return false;
+ return value.captures.every(receipt=>record(receipt)&&["captureId","sourceId","retrievedAt","sha256","validation","limitation"].every(key=>typeof receipt[key]==="string")
+  &&byteCount(receipt.byteLength)&&byteCount(receipt.entityBytes)&&typeof receipt.partial==="boolean"&&queryRecord(receipt.query)
+  &&Array.isArray(receipt.entityHashes)&&receipt.entityHashes.every(entity=>record(entity)&&typeof entity.url==="string"&&typeof entity.sha256==="string"&&typeof entity.contentType==="string"&&byteCount(entity.byteLength)));
+}
 export default function ConnectionsWorkspace(){
  const [catalog,setCatalog]=useState<Catalog|null>(null),[selected,setSelected]=useState("noaa-ncei"),[query,setQuery]=useState<Record<string,string>>({});
  const [result,setResult]=useState<Result|null>(null),[receipts,setReceipts]=useState<Receipt[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState(""),[page,setPage]=useState(0),[metric,setMetric]=useState("");
@@ -33,10 +66,17 @@ export default function ConnectionsWorkspace(){
    const load=async()=>{
    const response=await fetch("/api/connections",{cache:"no-store",signal:controller.signal});
    if(!response.ok)throw new Error("Source status unavailable.");
-   const value:Catalog=await response.json();if(controller.signal.aborted)return;
+   const value:unknown=await response.json();if(controller.signal.aborted)return;
+   if(!catalogPayload(value))throw new Error("Invalid source status response.");
    setCatalog(value);if(!value.owner){setReceipts([]);setResult(null);}
-   setQuery(current=>Object.keys(current).length?current:defaults(value.sources.find(s=>s.id==="noaa-ncei")!.fields));
-   if(value.owner){const r=await fetch("/api/connections?action=captures",{cache:"no-store",signal:controller.signal});if(r.ok){const v=await r.json();if(!controller.signal.aborted)setReceipts(v.captures);}}
+   setQuery(current=>Object.keys(current).length?current:defaults(value.sources.find(s=>s.id==="noaa-ncei")?.fields??[]));
+   if(value.owner){
+    const r=await fetch("/api/connections?action=captures",{cache:"no-store",signal:controller.signal});
+    if(!r.ok)throw new Error("Capture history unavailable.");
+    const v:unknown=await r.json();if(controller.signal.aborted)return;
+    if(!captureHistory(v))throw new Error("Invalid capture history response.");
+    setReceipts(v.captures);
+   }
    };
    await Promise.race([load(),deadline]);
   }catch{if(statusRequest.current===controller&&(!controller.signal.aborted||timedOut))setStatusError(`${timedOut?"Source status took too long to respond.":"Source status is unavailable."} Retry when the host has recovered. Any earlier status below may be out of date.`);}

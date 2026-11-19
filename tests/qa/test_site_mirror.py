@@ -3033,4 +3033,15 @@ def test_picomatch_posix_version_successor_preserves_inventory_and_all_holds():
          "vendor/picomatch-2.3.2-kfm.1.tgz", "vendor/picomatch-kfm.md"},
         "6142bfcc5f50f7db5677ca0d211d0083a5d39df9",
     )
-    assert TOOL.RECEIPT.name == "site-v268-picomatch-posix-version-overlay-20261119.json"
+    # The Connections response-recovery successor now owns the current selector.
+
+
+def test_connections_response_recovery_successor_preserves_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-connections-response-recovery-overlay-20261119.json",
+        "site-v268-picomatch-posix-version-overlay-20261119.json",
+        "52a77d56d280cbe808bfb4b9afc5174e2b9aa25dde5559db53486727050d807d",
+        {"app/connections/workspace.tsx", "tests/connections-status-recovery.test.mjs"},
+        "1f33854127007e9fffbd2fea59281b39678c02ab",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-connections-response-recovery-overlay-20261119.json"

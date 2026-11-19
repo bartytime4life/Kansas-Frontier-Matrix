@@ -1,0 +1,101 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/connections/workspace.tsx": "sha256:80130122d15e6cd4b22fc09719eabf7bba2caabe74e73e2f01f29aab7e4ff4f4",
+    "apps/site/source/tests/connections-status-recovery.test.mjs": "sha256:509ddc81d8aacbe3186d281855638decaf96b77f3d201bdfd07163a1dbe8a202",
+    "data/receipts/generated/site-v268-connections-response-recovery-overlay-20261119.json": "sha256:f8fc7e73ccb875fac2b97833d1873123646015001b9f9b5aa0b416be2c57f451",
+    "tests/qa/test_site_mirror.py": "sha256:d8f1c095b2dfb9a6f8ed55cbb2cc64ff2ac81fb308846a21ee8122c2df739bee",
+    "tools/qa/site_mirror.py": "sha256:636cd63113c478a775af8bfbc8830e1b81241197e39bb74f65b9247a461f8517"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/connections/workspace.tsx",
+    "apps/site/source/tests/connections-status-recovery.test.mjs",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py",
+    "data/receipts/generated/site-v268-connections-response-recovery-overlay-20261119.json"
+  ],
+  "citations": [],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-19T18:56:41.746621+00:00",
+  "emitter": "OpenAI Codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@1f33854127007e9fffbd2fea59281b39678c02ab",
+      "apps/site/source/AGENTS.md",
+      "apps/site/source/docs/SITE_PRESERVATION.md",
+      "apps/site/source/app/connections-types.ts",
+      "docs/doctrine/retention.md",
+      "data/receipts/generated/site-v268-picomatch-posix-version-overlay-20261119.json"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "unspecified"
+  },
+  "notes": "Fresh candidate based on current main. The original dirty checkout is untouched. Historical receipts remain byte-identical; only a successor and selector are added. No browser or provider acceptance, independent review, deployment or publication claim.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "Git inspection",
+      "Node tests",
+      "npm locked install and production build",
+      "Python validators"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:1e430ffca3b145095376488b69af767c070e70df9ec7cb145d483cbc5d2c4a7a",
+  "receipt_id": "genrec-connections-response-recovery-20261119",
+  "truth_labels": {
+    "apps/site/source/app/connections/workspace.tsx": "CONFIRMED",
+    "apps/site/source/tests/connections-status-recovery.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v268-connections-response-recovery-overlay-20261119.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused_recovery_api_storage",
+      "outcome": "PASS",
+      "reason": "PASS: 95 Connections recovery/API/storage tests, including actual provider catalog compatibility."
+    },
+    {
+      "gate": "negative_controls",
+      "outcome": "PASS",
+      "reason": "PASS: the three new malformed-success recovery tests failed against unchanged main and passed after the guard."
+    },
+    {
+      "gate": "app_build_and_tests",
+      "outcome": "PASS",
+      "reason": "PASS: clean locked install followed by npm test; production build and all 2034 tests, zero failures or skips. Site paths/dependencies unchanged by subsequent CI-only main update."
+    },
+    {
+      "gate": "lint",
+      "outcome": "PASS",
+      "reason": "PASS: full npm run lint, zero errors and 54 warnings in unchanged files."
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS",
+      "reason": "PASS: tsc --noEmit --incremental false with freshly installed lockfile dependencies."
+    },
+    {
+      "gate": "mirror_qa",
+      "outcome": "PASS",
+      "reason": "PASS: 111 mirror QA tests; 1002 content paths match, 262 withheld paths absent; predecessor unchanged."
+    },
+    {
+      "gate": "browser_provider_deployment",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: no browser, provider, Site synchronization, deployment, publication or release activation."
+    }
+  ]
+}

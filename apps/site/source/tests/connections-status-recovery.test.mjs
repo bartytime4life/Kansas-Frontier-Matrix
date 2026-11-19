@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { componentHarness, findNode, settle } from "./component-harness.mjs";
+import { catalog as providerCatalog } from "../app/api-connections-runtime/connections.mjs";
 
 const imports = {
   "next/link": { default: "a" }, "next/dynamic": { default: () => "connection-map" },
@@ -169,4 +170,78 @@ test("unmount settles stalled status work and clears its deadline even when fetc
     await settle();
     assert.equal(JSON.stringify(h.render(h.exports.default, {})), before, "late response cannot update an unmounted owner");
   }
+});
+
+test("malformed successful catalogs cannot replace the last usable catalog or strand retry", async () => {
+  const invalid = [
+    {}, { ...catalog(), sources: null }, { ...catalog(), host: null },
+    { ...catalog(), owner: "true" },
+    { ...catalog(), sources: [{ ...catalog().sources[0], fields: null }] },
+    { ...catalog(), sources: [{ ...catalog().sources[0], missing: null }] },
+    { ...catalog(), host: { ...catalog().host, limitBytes: "1000" } },
+  ];
+  for (const value of invalid) {
+    let calls = 0;
+    const { h, render } = await setup(async () => response(++calls === 2 ? value : catalog()));
+    try {
+      render(); await settle(); let tree = render(); assert.equal(hasSource(tree), true);
+      statusButton(tree).props.onClick(); await settle();
+      tree = render();
+      assert.equal(hasSource(tree), true);
+      assert.match(alert(tree).props.children, /Source status is unavailable/);
+      assert.equal(statusButton(tree).props.disabled, false);
+      statusButton(tree).props.onClick(); await settle(); tree = render();
+      assert.equal(alert(tree), undefined); assert.equal(hasSource(tree), true);
+    } finally { h.dispose(); }
+  }
+});
+
+test("an invalid initial catalog remains retryable without enabling owner capture controls", async () => {
+  const { h, render } = await setup(async () => response({ ...catalog(true), sources: null }));
+  try {
+    render(); await settle(); const tree = render();
+    assert.match(alert(tree).props.children, /Source status is unavailable/);
+    assert.equal(hasSource(tree), false);
+    assert.equal(findNode(tree, node => node.type === "form"), undefined);
+    assert.equal(statusButton(tree).props.disabled, false);
+  } finally { h.dispose(); }
+});
+
+test("malformed capture history stays out of rendering and preserves the previous history", async () => {
+  const receipt = { captureId: "a".repeat(64), sourceId: "noaa-ncei", retrievedAt: "2026-11-19T12:00:00Z", byteLength: 100, entityBytes: 50, sha256: "b".repeat(64), validation: "structure-valid", partial: false, query: {}, limitation: "Fixture", entityHashes: [] };
+  for (const value of [{}, { captures: null }, { captures: [null] }, { captures: [{ ...receipt, query: null }] }]) {
+    let histories = 0;
+    const { h, render } = await setup(async url => response(url.includes("action=captures") ? (++histories === 1 ? { captures: [receipt] } : value) : catalog(true)));
+    try {
+      render(); await settle(); let tree = render();
+      const replay = () => findNode(tree, node => node.type === "button" && node.props.children === "Replay capture");
+      assert.ok(replay()); statusButton(tree).props.onClick(); await settle(); await settle(); tree = render();
+      assert.ok(replay(), "last valid history survives an invalid response");
+      assert.match(alert(tree).props.children, /Source status is unavailable/);
+      assert.equal(statusButton(tree).props.disabled, false);
+    } finally { h.dispose(); }
+  }
+});
+
+
+test("catalog validation accepts the server provider inventory and an empty inventory", async () => {
+  for (const sources of [providerCatalog(), []]) {
+    const { h, render } = await setup(async () => response({ ...catalog(), sources }));
+    try {
+      render(); await settle(); const tree = render();
+      assert.equal(alert(tree), undefined);
+      assert.equal(statusButton(tree).props.disabled, false);
+      if(sources.length)assert.ok(findNode(tree, node => node.type === "strong" && node.props.children === sources[0].name));
+      else assert.equal(findNode(tree, node => node.type === "form"), undefined);
+    } finally { h.dispose(); }
+  }
+});
+
+test("capture-history HTTP errors remain visible even when they contain a valid-looking list", async () => {
+  const { h, render } = await setup(async url => url.includes("action=captures") ? { ok: false, json: async () => ({ captures: [] }) } : response(catalog(true)));
+  try {
+    render(); await settle(); await settle(); const tree = render();
+    assert.match(alert(tree).props.children, /Source status is unavailable/);
+    assert.equal(statusButton(tree).props.disabled, false);
+  } finally { h.dispose(); }
 });
