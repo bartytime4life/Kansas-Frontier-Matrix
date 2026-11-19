@@ -1,8 +1,9 @@
 """Run the repository's public-boundary deny suites and emit one finite summary.
 
 Each suite is a fixed, reviewed command; nothing is discovered from arguments or
-the environment. A suite that exits non-zero, times out, or collects no tests
-fails the run, so an empty or placeholder deny test can never read as a pass.
+the environment. A suite must exit zero and report positive passing cases in its
+registered runner summary. Empty, entirely skipped/expected-failure, and missing
+or unrecognized summaries cannot report PASS.
 The summary is a review aid, not release, policy, or publication evidence.
 """
 from __future__ import annotations
@@ -12,15 +13,15 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
+from typing import Literal
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = "kfm.deny-test-run/v1"
 DETERMINISTIC_ENV = {"KFM_NO_NETWORK": "1", "PYTHONHASHSEED": "0",
                      "PYTHONDONTWRITEBYTECODE": "1", "PYTHONUNBUFFERED": "1", "TZ": "UTC"}
-# Output markers that mean a runner executed nothing.
-EMPTY_MARKERS = ("no tests ran", "Ran 0 tests", "collected 0 items")
 
 
 @dataclass(frozen=True)
@@ -29,6 +30,7 @@ class Suite:
     argv: tuple[str, ...]
     required_paths: tuple[str, ...]
     pythonpath: tuple[str, ...] = ()
+    result_format: Literal["pytest", "unittest", "evidence-fixtures"] = "pytest"
 
 
 SUITES = (
@@ -46,11 +48,60 @@ SUITES = (
           ("tools/validators/evidence_resolver/validate_candidate.py", "--fixtures",
            "fixtures/packages/evidence_resolver/v1alpha1", "--negative-only"),
           ("tools/validators/evidence_resolver/validate_candidate.py",
-           "fixtures/packages/evidence_resolver/v1alpha1")),
+           "fixtures/packages/evidence_resolver/v1alpha1"),
+          result_format="evidence-fixtures"),
     Suite("release-publication-deny-dry-run",
           ("-m", "unittest", "-v", "tests.release.test_publication_deny_dry_run"),
-          ("tests/release/test_publication_deny_dry_run.py",)),
+          ("tests/release/test_publication_deny_dry_run.py",),
+          result_format="unittest"),
 )
+
+
+def passing_cases(result_format: str, output: str) -> int | None:
+    """Read only known terminal summaries; None means insufficient evidence."""
+    lines = output.strip().splitlines()
+    if not lines:
+        return None
+    final = lines[-1].strip()
+    if result_format == "pytest":
+        final = final.strip("= ")
+        if re.fullmatch(r"no tests ran in \d+(?:\.\d+)?s", final):
+            return 0
+        summary = re.fullmatch(r"(.+) in \d+(?:\.\d+)?s(?: \([\d:]+\))?", final)
+        if summary is None:
+            return None
+        counts: dict[str, int] = {}
+        for item in summary[1].split(", "):
+            match = re.fullmatch(
+                r"(\d+) (passed|failed|skipped|deselected|xfailed|xpassed|errors?|"
+                r"warnings?|subtests (?:passed|failed|skipped))", item)
+            if match is None or match[2] in counts:
+                return None
+            counts[match[2]] = int(match[1])
+        if any(counts.get(key, 0) for key in ("failed", "error", "errors", "subtests failed")):
+            return None
+        return counts.get("passed", 0)
+    if result_format == "unittest":
+        summary = re.fullmatch(r"OK(?: \((.+)\))?", final)
+        runs = list(re.finditer(r"^Ran (\d+) tests? in [^\n]+$", output, re.MULTILINE))
+        if summary is None or not runs:
+            return None
+        excluded = 0
+        seen: set[str] = set()
+        if summary[1]:
+            for item in summary[1].split(", "):
+                match = re.fullmatch(r"(skipped|expected failures)=(\d+)", item)
+                if match is None or match[1] in seen:
+                    return None
+                seen.add(match[1])
+                excluded += int(match[2])
+        total = int(runs[-1][1])
+        return total - excluded if total >= excluded else None
+    if result_format == "evidence-fixtures":
+        summary = re.fullmatch(
+            r"SUMMARY DENIED=(\d+) ERROR=(\d+) RESOLVED=0 UNRESOLVED=(\d+) FAILED=0", final)
+        return sum(int(value) for value in summary.groups()) if summary else None
+    return None
 
 
 def run_suite(suite: Suite, *, timeout: int) -> dict[str, object]:
@@ -68,14 +119,18 @@ def run_suite(suite: Suite, *, timeout: int) -> dict[str, object]:
     except subprocess.TimeoutExpired:
         return {"suite": suite.suite_id, "status": "TIMEOUT", "timeout_seconds": timeout}
     output = completed.stdout + completed.stderr
+    verified = passing_cases(suite.result_format, output) if completed.returncode == 0 else None
     if completed.returncode != 0:
         status = "FAIL"
-    elif any(marker in output for marker in EMPTY_MARKERS):
+    elif verified is None:
+        status = "UNVERIFIED"
+    elif verified == 0:
         status = "EMPTY"
     else:
         status = "PASS"
     tail = output.strip().splitlines()[-1:] if output.strip() else []
     return {"suite": suite.suite_id, "status": status, "exit_code": completed.returncode,
+            "passing_cases": verified,
             "last_line": tail[0][:300] if tail else ""}
 
 

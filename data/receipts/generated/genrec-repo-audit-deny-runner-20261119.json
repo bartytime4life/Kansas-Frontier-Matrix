@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-repo-audit-deny-runner-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/qa/deny_test_runner.py",
+    "tests/qa/test_deny_test_runner.py",
+    "tools/qa/README.md",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+    ".github/workflows/deny-test.yml"
+  ],
+  "artifact_hashes": {
+    "tools/qa/deny_test_runner.py": "sha256:e9143bd440c59a52358d1eeba78826dd3605807398f1a95e9ef43877df01bf60",
+    "tests/qa/test_deny_test_runner.py": "sha256:3ab3406ff035b6db5c7a35eab4b53c56b74ee34cfb2da485139f01867dbcb893",
+    "tools/qa/README.md": "sha256:c1773511ffc0b8076e038995b1f39a953ac8dee5d462d8f7aafe719ec35bb98d",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:e81144eda169778818de8379dd134163a272a54c498e694b706199dd1374f347",
+    ".github/workflows/deny-test.yml": "sha256:463ca315e2f311186454f37e7c98c9d4d6d5a873cffecec9691e9203638272a6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Exact backend revision not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "isolated worktree edits",
+      "repository QA and regression tests",
+      "GitHub overlap readback"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0ac842de649b31cdc3af75a9696d0f9d39019b40d0efe3319183b733653225be",
+      "sha256:3371fb220503f118dfb06ff5a82ee6de6d7d9ab35ed4fd9144f3f8f920f638b5",
+      "sha256:3427cbe06ebcb3d86d3ea08bae5d124b8d07f0231fec369e5ed250932e206b01",
+      "sha256:423fa734a941dd2d7ff5792622666b9663cedd09daca6724631fbe8f510964d8",
+      "sha256:7ddcc32632aa2fad1dd8900ab32a0dbc891806e55dd7e5ba4018c042f89e0e9b"
+    ],
+    "attached_docs": [
+      "No attached documents; current-main repository inputs only"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8/tools/qa/gap_scan_baseline.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8/tools/qa/scaffold_baseline.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8/tools/validators/directory_governance/repository_topology_baseline.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8/tools/qa/deny_test_runner.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8/CONTRIBUTING.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/qa/deny_test_runner.py": "CONFIRMED",
+    "tests/qa/test_deny_test_runner.py": "CONFIRMED",
+    "tools/qa/README.md": "CONFIRMED",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "CONFIRMED",
+    ".github/workflows/deny-test.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "base-gap-scan",
+      "outcome": "PASS",
+      "reason": "Zero parse errors, test-package shadows and broken links; 7 Markdown and 8 unratcheted placeholders."
+    },
+    {
+      "gate": "base-scaffold-ratchet",
+      "outcome": "PASS",
+      "reason": "866 findings in 710 files, matching the unchanged baseline."
+    },
+    {
+      "gate": "base-topology",
+      "outcome": "PASS",
+      "reason": "15,361 indexed paths; zero invariant findings or new drift; 89 inherited warnings."
+    },
+    {
+      "gate": "base-qa-tests",
+      "outcome": "PASS",
+      "reason": "309 tests and 37 subtests passed under CPython 3.12.3."
+    },
+    {
+      "gate": "regression-reproduction",
+      "outcome": "PASS",
+      "reason": "Seven newly added regressions failed on the original runner with false PASS results; five existing cases passed."
+    },
+    {
+      "gate": "changed-runner-tests",
+      "outcome": "PASS",
+      "reason": "41 cases pass, including actual all-skipped and mixed pytest/unittest subprocesses."
+    },
+    {
+      "gate": "registered-deny-suites",
+      "outcome": "PASS",
+      "reason": "Four suites pass with 7, 1, 19 and 4 counted passing cases."
+    },
+    {
+      "gate": "expanded-qa-schema-contract-tests",
+      "outcome": "PASS",
+      "reason": "847 tests and 90 subtests passed after staging the receipt. The earlier incomplete-artifact run failed one link check; that gap is resolved."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending the draft pull request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending an authorized reviewer; local tests are not human approval."
+    },
+    {
+      "gate": "full-validator-profile",
+      "outcome": "PASS",
+      "reason": "All 29 registered validators passed."
+    },
+    {
+      "gate": "changed-document-metadata",
+      "outcome": "PASS",
+      "reason": "Both edited Markdown metadata blocks validate with no local findings."
+    },
+    {
+      "gate": "changed-document-links",
+      "outcome": "PASS",
+      "reason": "Eight local targets pass; four unchanged external badge URLs were not requested."
+    },
+    {
+      "gate": "unratcheted-document-registry-inspection",
+      "outcome": "FAIL",
+      "reason": "Seven inherited findings in unchanged control_plane/document_registry.yaml: two duplicate keys, one incomplete entry and four malformed entries. Both touched document blocks validate; exact-diff metadata ratchet is checked separately after commit."
+    },
+    {
+      "gate": "rebased-qa-schema-contract-tests",
+      "outcome": "PASS",
+      "reason": "After reconciling main@0c882dedae7a492678b281f3e5be5b8fa3221126: 848 tests and 90 subtests passed."
+    },
+    {
+      "gate": "rebased-deny-suites",
+      "outcome": "PASS",
+      "reason": "All four actual suites pass with positive case counts after rebase."
+    },
+    {
+      "gate": "rebased-full-validator-profile",
+      "outcome": "PASS",
+      "reason": "All 29 registered validators pass after rebase."
+    },
+    {
+      "gate": "rebased-topology",
+      "outcome": "PASS",
+      "reason": "15,363 indexed paths; zero invariant findings and new drift; 89 inherited warnings."
+    },
+    {
+      "gate": "exact-diff-document-metadata",
+      "outcome": "PASS",
+      "reason": "The same metadata ratchet used in CI returns zero new failures against base 0c882dedae7a492678b281f3e5be5b8fa3221126. Historical document and registry warnings remain visible; both changed blocks validate directly."
+    },
+    {
+      "gate": "final-main-verification",
+      "outcome": "PASS",
+      "reason": "Rebased onto main@162d89630c78860c9e3751bc548153ada62c6f57 (PR #5951, six disjoint Site/mirror paths). Final QA/schema/contract run: 849 passed, 90 subtests. All 29 validators and all four counted deny suites pass. Topology: 15,366 indexed paths, zero invariant/new drift, 89 inherited warnings."
+    },
+    {
+      "gate": "ci-regression-wiring",
+      "outcome": "PASS",
+      "reason": "The existing aggregate-deny-suites job now runs the focused runner tests before its four suites. The exact added command passes 41 tests locally. The registered full validator profile passes all 29 validators after this workflow delta. Hosted execution remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "inspected-base-runner",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8/tools/qa/deny_test_runner.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-11-19T20:40:08.091934Z",
+  "emitter": "Codex; bounded repository audit and deny-runner repair",
+  "links": {
+    "pr_number": 5955,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Review-only provenance for the isolated change from main@ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8. The prompt_or_contract field hashes the inspected operating-contract file. Trusted terminal-summary parsing is not an authenticated execution receipt. No source bytes, held scaffold, waiver, policy, Site tree, release or publication state is changed. Historical receipts remain intact. Main advanced through PR #5949 to 0c882dedae7a492678b281f3e5be5b8fa3221126; its 13 changed paths are disjoint from this patch. The audit baseline remains pinned to ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8; final validation is repeated after rebase. PR #5951 then advanced main to 162d89630c78860c9e3751bc548153ada62c6f57; its six changed paths are also disjoint and were preserved by a second rebase. Final-main checks above supersede the intermediate validation identity for this draft. Final CI inspection found that the runner regressions were not scheduled; the existing deny workflow now executes them. This adds no permissions, secrets, jobs, dependency selection or source activation. Receipt bindings now cover five artifacts."
+}

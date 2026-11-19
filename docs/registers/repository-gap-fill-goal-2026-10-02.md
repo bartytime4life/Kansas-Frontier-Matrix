@@ -2,11 +2,11 @@
 doc_id: kfm://register/repository-gap-fill-goal-2026-10-02
 title: KFM Repository Gap-Fill Goal — 2026-10-02
 type: goal-and-procedure-ledger
-version: v1.3
+version: v1.4
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-02
-updated: 2026-10-16
+updated: 2026-11-19
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "State a measurable goal for closing repository gaps, record the gaps observed in a full-tree audit, define repeatable fill procedures, and point each gap at its existing machine projection or validator without creating source, policy, lifecycle, release, or publication authority."
@@ -38,6 +38,48 @@ notes:
 > This ledger is a review aid. It records what the audit saw and how to close it. It does not approve, admit, release, or publish anything.
 
 ---
+
+## Repository audit and deny-result repair — 2026-11-19
+
+Base: `main@ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8`. The audit used
+an isolated worktree and the existing CPython 3.12.3 test environment, preserving
+the owner's unfinished Site/mirror changes in the primary checkout. The public
+Node composition, mirrored Site and governance monorepo remain separate trees.
+
+| Inspection | Observed result | What follows |
+|---|---|---|
+| Gap scan | PASS: 0 structured parse errors, package shadows or broken links; 7 Markdown and 8 unratcheted placeholders | No new gap allowance is needed. |
+| Topology diagnostic | PASS: 15,361 indexed paths, 0 invariant findings, 0 new drift, 89 inherited warnings and no stale entries | Retain the existing placement and waiver boundaries. |
+| Scaffold inventory | PASS: 866 findings across 710 files, matching the baseline | These findings remain implementation debt or explicit holds; a passing ratchet does not make them capabilities. |
+| Completion queue | PASS: 949 historical pinned markers mapped to 747 artifact entries | The queue is pinned to its own earlier commit; its counts are not today's scaffold count. Do not overwrite the historical projection as if it were live measurement. |
+| QA baseline tests | 309 passed plus 37 subtests | This is the QA slice at the base, not full-repository or hosted acceptance. |
+
+The next bounded defect was in `tools/qa/deny_test_runner.py`. A zero exit with
+`1 skipped`, only expected failures, or even no recognizable runner output was
+reported as PASS. Seven new regressions reproduced that false positive before
+the repair. The runner now checks the registered pytest, unittest or negative
+fixture summary and requires a positive passing-case count. Recognized summaries
+with no passing cases return `EMPTY`; missing or inconsistent evidence returns
+`UNVERIFIED`. Both fail the aggregate command. The summary exposes the count.
+
+The focused 41-test slice includes actual pytest and unittest subprocesses for
+entirely skipped and mixed suites. The four registered suites also execute
+successfully: 7 boundary guards, 1 abstention-route case, 19 negative evidence
+fixtures and 4 publication-denial cases. Parsing is a bounded inspection of
+trusted runner output, not an authenticated execution receipt or proof of
+complete denial coverage. Formatting changes must update the parser and tests.
+The existing `aggregate-deny-suites` workflow job now runs the runner regressions
+before the suite registry; its read-only permissions and existing commands stay
+in place.
+
+Placement stays in `tools/qa/`, `tests/qa/`, the existing workflow and documentation homes.
+The additive provenance record is
+[`genrec-repo-audit-deny-runner-20261119.json`](../../data/receipts/generated/genrec-repo-audit-deny-runner-20261119.json).
+No scaffold baseline, topology waiver, source payload, release state or Site
+source is changed. Root npm `WORKFLOW_HOLD` commands remain intentional; they
+are not failing implementations to replace with a zero-exit marker. Rollback
+reverts the focused code, test and documentation patch; preserve the provenance
+record. Independent review, hosted CI and merge state are recorded separately.
 
 ## Bounded repair checkpoint — 2026-10-16 (P-04 and readiness drift)
 
