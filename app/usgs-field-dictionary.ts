@@ -1,4 +1,5 @@
 import type {DocumentedField,FieldDocument} from './collection-field-dictionary';
+import {usgsContextDictionary} from './usgs-context-dictionary';
 
 const normalizer='kfm-usgs-normalizer';
 const normalization:FieldDocument={id:normalizer,title:'KFM USGS capture and normalization',
@@ -75,5 +76,5 @@ const dictionaries=Object.fromEntries((['daily','field-measurements','peaks'] as
  }
 ]));
 export function usgsDictionary(id:string|undefined){
- return id&&Object.hasOwn(dictionaries,id)?dictionaries[id]:null;
+ return id&&Object.hasOwn(dictionaries,id)?dictionaries[id]:usgsContextDictionary(id);
 }

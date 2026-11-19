@@ -1,5 +1,6 @@
 import {RECOVERED_COLLECTIONS,recoveredMapUrl,recoveredTopics} from './recovered-collections';
 import {documentedField,fieldDocuments,collectionFieldNotes,fieldDictionaryRevision} from './collection-field-dictionary';
+import {collectionRelationships,collectionProviderIdentity} from './collection-relationships';
 
 export type Collection = (typeof RECOVERED_COLLECTIONS)[number];
 export type FieldRole = 'identity'|'time'|'location'|'unit'|'quality'|'category'|'value';
@@ -29,17 +30,18 @@ export function collectionMetadata(c:Collection){
   const known=documentedField(c.id,name);
   return {name,label:known?.label??fieldLabel(name),role:fieldRole(name,c.keys,c.id),
    definition:known?.definition??null,unit:known?.unit??null,unitField:known?.unitField??null,reference:known?.reference??null,
+   referenceField:known?.referenceField??null,sourceField:known?.sourceField??null,
    encoding:known?.encoding??null,codes:known?.codes??null,
    roleBasis:known?'documented':'field_name_hint',sources:known?.sources??[]};
  });
  return {format:'kfm-collection-metadata-v1',id:c.id,title:c.title,
   description:`${c.title}: archived source records with ${fields.length} retained fields, including original identifiers and source values. ${c.geometry?'Stored geometry can be inspected on the map.':'Use the record table and lab; map geometry is not stored for this collection.'}`,
-  topics,sourceFamily:family(c.id),recordIdentity:c.keys,
+  topics,sourceFamily:family(c.id),recordIdentity:c.keys,providerIdentity:collectionProviderIdentity(c.id),
   access:{records:`/api/local-data/recovered-${c.database}?collection=${encodeURIComponent(c.id)}&limit=20`,library:collectionUrl(c.id),lab:labUrl(c.id),map:c.geometry?recoveredMapUrl([c.id]):null},
   spatial:{geometryField:c.geometry,coverage:null,crs:null,note:'A stored geometry field is a map option, not proof of complete geographic coverage.'},
   temporal:{candidateFields:fields.filter(f=>f.role==='time').map(f=>f.name),observationPeriod:null,edition:null,retrievedAt:null,note:'Source observation time, archive edition and retrieval time must be read separately.'},
   provenance:{provider:null,sourceUrls:[],digests:[],reviewCredit:null,note:'Source identity, links and file digests are supplied per record when available. This catalog does not establish an AI review or source approval.'},
-  fields,documentation:fieldDocuments(c.id),fieldNotes:collectionFieldNotes(c.id),fieldDictionaryRevision:fieldDictionaryRevision(c.id),
+  fields,documentation:fieldDocuments(c.id),fieldNotes:collectionFieldNotes(c.id),fieldDictionaryRevision:fieldDictionaryRevision(c.id),relationships:collectionRelationships(c.id),
   unknowns:[...(fields.some(f=>!f.definition)?['Undocumented field definitions and units still require source documentation.']:[]),
    'Documentation describes a format, not the edition or accuracy of each archived record.',
    'Coverage, rights, edition and review are not inferred from collection names.'],

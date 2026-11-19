@@ -166,7 +166,13 @@ export function openLabBundle(contents: string) {
     &&oldView.context==='Unit and measurement context not supplied'&&validOldRange;
   const waterUpgrade=value.fieldDictionaryRevision==null&&validOldRange&&record(oldView)
     &&previousWaterContext(collection,oldView,rows);
+  const contextUpgrade=value.fieldDictionaryRevision==null&&validOldRange&&record(oldView)
+    &&oldView.context==='Unit and measurement context not supplied'&&(
+     collection.id==='observations-usgs-sites'&&['drainage_area','contributing_drainage_area','altitude','altitude_accuracy','horizontal_positional_accuracy','well_constructed_depth','hole_constructed_depth'].includes(String(oldView.field))||
+     collection.id==='observations-usgs-series'&&['data_type','parameter_name','web_description','parameter_description','thresholds'].includes(String(oldView.field)));
+  const seriesNotice=contextUpgrade&&collection.id==='observations-usgs-series';
   return { collection, snapshot, question: value.question,
-    view:upgrade||waterUpgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
-    notice:upgrade||waterUpgrade?`${upgrade?'FAA':'USGS'} field definitions have changed. Your records and question were preserved; choose a measurement context again.`:null };
+    view:upgrade||waterUpgrade||contextUpgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
+    notice:seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
+     upgrade||waterUpgrade||contextUpgrade?`${upgrade?'FAA':'USGS'} field definitions have changed. Your records and question were preserved; choose a measurement context again.`:null };
 }

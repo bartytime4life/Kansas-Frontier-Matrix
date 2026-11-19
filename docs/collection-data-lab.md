@@ -89,6 +89,33 @@ contexts reopen exactly; altered contexts are rejected. Exports carry unit sourc
 field definitions and citations. Map derivatives use per-row units when stored
 geometry is available; this change does not fabricate missing map geometry.
 
+## Station and series context
+
+The station and series dictionaries document all 50 archived fields using the
+USGS [combined metadata](https://api.waterdata.usgs.gov/ogcapi/v1/collections/combined-metadata/schema?f=json),
+[monitoring-location](https://api.waterdata.usgs.gov/ogcapi/v1/collections/monitoring-locations/schema?f=json)
+and [time-series](https://api.waterdata.usgs.gov/ogcapi/v1/collections/time-series-metadata/schema?f=json)
+schemas, the [site-unit reference](https://waterservices.usgs.gov/docs/site-service/site-service-details/)
+and the pinned KFM field mapping. Aliases identify provider names such as `id`,
+`primary`, `begin` and `end`. Altitude uses each row's vertical datum, with unknown
+references left unknown; depths and drainage areas retain documented units.
+Original horizontal datum and station timezone metadata do not trigger coordinate
+or observation-clock conversions. Period boundaries may contain gaps or lag new
+observations. Flags and operational thresholds remain metadata.
+
+**Station and series context** links five USGS collections through twelve
+documented comparison plans. They expose provider-key namespaces and checks for
+captured versions, parameters, units, datums and periods. They do not execute a
+record join or choose a current metadata version. Field-measurement series IDs
+are kept separate from the daily/peak series namespace.
+
+The lab and brief distinguish provider identity from capture-file/row identity.
+Loaded-sample counts expose repeated provider identities and missing keys while
+retaining every original row. These counts are not deduplicated station totals.
+The metadata API and JSON/story exports carry the same plans and counts. Older
+station/series bundles keep their records and question, with an explicit notice
+when a former measurement selection now has documented units or metadata roles.
+
 **Reopen a saved lab bundle** reads the file in the browser and restores its
 record sample, question, field, context and selected interval where present.
 Older JSON downloads reopen their record sample and question. The app checks

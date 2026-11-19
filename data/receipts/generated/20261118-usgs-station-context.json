@@ -1,0 +1,132 @@
+{
+  "receipt_id": "kfm-usgs-station-context-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/usgs-context-dictionary.ts",
+    "app/collection-relationships.ts",
+    "app/usgs-field-dictionary.ts",
+    "app/collection-field-dictionary.ts",
+    "app/collection-metadata.ts",
+    "app/collection-metadata-panel.tsx",
+    "app/collection-lab.ts",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/page.tsx",
+    "app/data-lab/measurement-explorer.tsx",
+    "tests/usgs-context-metadata.test.mjs",
+    "tests/usgs-field-metadata.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/usgs-context-dictionary.ts": "sha256:5b41b1ad78a183a7f2645c2d05ae18f5af5026d6eb16f73dc1038c8ce8941595",
+    "app/collection-relationships.ts": "sha256:62721bae0b37f681389a729bbd371b3c359b271e78495d9a76745c046b9d43fe",
+    "app/usgs-field-dictionary.ts": "sha256:5c79ebbf23b3271a09a56361765f43267997dc34fdada676cacddacc7f60a82a",
+    "app/collection-field-dictionary.ts": "sha256:55f754ab0290234c1dd5a6cab00d82a246b1b95c91021c00858afca7ed1d1f85",
+    "app/collection-metadata.ts": "sha256:ec5648f2b0f998824118a593807d7ccd83b1a77440b36118e29aae22949e40a9",
+    "app/collection-metadata-panel.tsx": "sha256:ca99b0c71dc601cb1a9ee8c8dc5ca1df89cfb47c8a5052d830e7a69f034ee1eb",
+    "app/collection-lab.ts": "sha256:70166fa832f7ecbe801ab2229a1830acde11ce372a4cab771a98185ffe733a87",
+    "app/data-lab/lab-bundle.ts": "sha256:f8556b99f0ba39512216e019618f45948a949ac40d34d1e68af54a4814b203c2",
+    "app/data-lab/page.tsx": "sha256:edfecc1f10c5b69621b18a30b4e4694fbc9c9c71fdfb08d11b8d1d2d0e1e10a1",
+    "app/data-lab/measurement-explorer.tsx": "sha256:d029e9569cd49f4c983e3c2159c11b76f5aa019fc3df9f18bfe16e08460f9663",
+    "tests/usgs-context-metadata.test.mjs": "sha256:1e8099d8e2d975051a6e684f35ba0c093dee6eb3a517e7f6ff575355f8555b48",
+    "tests/usgs-field-metadata.test.mjs": "sha256:13dbd3fd4f40cb89383379e2d8866ace1f6c65458f63dabbe6281d2e8e7e6a0a",
+    "docs/collection-data-lab.md": "sha256:00f0b3dd2b52f42b3368f1f8623af55ab2e7a17fd0d7408e80b6d353f2bda1b1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:173ef4bb9aa5aa00e73b7bad53840ef1c5e172039a311007c9d313c16bb5a0a6",
+      "sha256:70bd2b539c0b17bc22aa510bc54536b91527a92b6aa53d13cb953be313cc6648",
+      "sha256:31e20e45402e26d2575026deddc23462f66ca848880e0f2021c69af316b35f55"
+    ],
+    "evidence_refs": [
+      "repo:77d691473439aee6258c93b149316f03d704e59f:app/collection-field-dictionary.ts",
+      "repo:3b9697c513d2ab655e52e947f1b25d12d0e41df2:tools/local_data/sql_feed_water.py"
+    ]
+  },
+  "truth_labels": {
+    "app/usgs-context-dictionary.ts": "CONFIRMED",
+    "app/collection-relationships.ts": "CONFIRMED",
+    "app/usgs-field-dictionary.ts": "CONFIRMED",
+    "app/collection-field-dictionary.ts": "CONFIRMED",
+    "app/collection-metadata.ts": "CONFIRMED",
+    "app/collection-metadata-panel.tsx": "CONFIRMED",
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/page.tsx": "CONFIRMED",
+    "app/data-lab/measurement-explorer.tsx": "CONFIRMED",
+    "tests/usgs-context-metadata.test.mjs": "CONFIRMED",
+    "tests/usgs-field-metadata.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite: 3,114 passed, 25 existing skips, zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "42 focused station/series, water, FAA, collection and saved-bundle regressions",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone browser checks: 500 unchanged original records, 50 definitions, altitude accuracy unit, four JSON/story exports, compatible bundle reopening and comparison-link navigation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted CI and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Local preview and source candidate only; hosted checks must be read from the exact PR head and public deployment is not included."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "monitoring-locations schema",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/monitoring-locations/schema?f=json"
+    },
+    {
+      "id": "time-series-metadata schema",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/time-series-metadata/schema?f=json"
+    },
+    {
+      "id": "combined-metadata schema",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/combined-metadata/schema?f=json"
+    },
+    {
+      "id": "USGS station units",
+      "validated": true,
+      "evidence_ref": "https://waterservices.usgs.gov/docs/site-service/site-service-details/"
+    },
+    {
+      "id": "KFM station/series normalizer",
+      "validated": true,
+      "evidence_ref": "repo:3b9697c513d2ab655e52e947f1b25d12d0e41df2:tools/local_data/sql_feed_water.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T00:17:33.188625+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Deterministic source-backed field curation does not establish source-data AI review, source admission or individual record accuracy. Comparison plans describe provider keys; no record join, deduplication or current-version choice is executed. Original rows, provider IDs, source clocks, qualifiers and captured metadata are preserved. Native samples were read only through the existing public dataset reader. Schema fingerprints describe documentation snapshots, not archived data editions. The full suite preceded the final display-only altitude-accuracy unit refinement; build, types, lint and browser checks cover the final source. No public deployment or native service change is included."
+}

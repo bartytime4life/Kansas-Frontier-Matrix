@@ -1,5 +1,5 @@
 import {collectionMetadata,fieldRole,type Collection} from './collection-metadata';
-import {documentedField,collectionFieldNotes,recordedUnit} from './collection-field-dictionary';
+import {documentedField,collectionFieldNotes,recordedUnit,recordedReference} from './collection-field-dictionary';
 import {fetchArchive,validArchiveGeometry,type ArchiveAnswer,type ArchiveRow} from './archive-layer-data';
 
 export const LAB_MAX_ROWS=250,LAB_MAX_PAGES=5;
@@ -26,6 +26,11 @@ const aqsConcentrationDimensions = [...aqsObservationDimensions, 'units_of_measu
 // The catalog uses provider-specific column names. Context for one numeric field
 // must not supply the unit for another field on the same record.
 const collectionDimensions: Partial<Record<string, Readonly<Record<string, readonly string[]>>>> = {
+ 'observations-usgs-sites':{
+  drainage_area:['site_type_code'],contributing_drainage_area:['site_type_code'],
+  altitude:['altitude_accuracy','site_type_code'],
+  well_constructed_depth:['aquifer_type_code'],hole_constructed_depth:['aquifer_type_code'],
+ },
  'observations-faa-obstacles': {
   quantity:['verification_status'],
   agl_height_ft:['verification_status','horizontal_accuracy','vertical_accuracy'],
@@ -89,7 +94,7 @@ function groupKey(collection: Collection, field: string, values: Record<string, 
   .filter(key => !missing(values[key]) && ['string', 'number'].includes(typeof values[key]))
   .map(key => [key, String(values[key])]);
  const context={...(definition?.unit?{unit:definition.unit}:{}),
-  ...(definition?.reference?{reference:definition.reference}:{}),...Object.fromEntries(dimensions)};
+  ...(definition?.reference||definition?.referenceField?{reference:recordedReference(collection.id,field,values)??'Not supplied'}:{}),...Object.fromEntries(dimensions)};
  return Object.keys(context).length ? JSON.stringify(context) : 'Unit and measurement context not supplied';
 }
 const safeUrl=(v:unknown)=>{try{if(typeof v!=='string')return null;const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}};
@@ -221,6 +226,17 @@ export function profileCollection(c:Collection,snapshot:LabSnapshot){
   }
  }
  const base=collectionMetadata(c),lineage=[...provenance.values()],providers=[...new Set(snapshot.answers.map(a=>a.source?.provider).filter(Boolean))];
+ const providerIds=new Map<string,number>();let missingProviderIdentity=0;
+ if(base.providerIdentity)for(const row of rows){
+  const values=object(row.values)?row.values:{};
+  const keys=base.providerIdentity.fields.map(key=>values[key]);
+  if(keys.some(value=>typeof value!=='string'||!value.trim())){missingProviderIdentity++;continue;}
+  const key=JSON.stringify(keys);providerIds.set(key,(providerIds.get(key)??0)+1);
+ }
+ const providerIdentity=base.providerIdentity?{...base.providerIdentity,distinct:providerIds.size,
+  repeatedIdentifiers:[...providerIds.values()].filter(n=>n>1).length,
+  additionalRows:[...providerIds.values()].reduce((n,count)=>n+count-1,0),missing:missingProviderIdentity,
+  scope:'Loaded metadata rows only. Repeated provider IDs are retained; no deduplication, current-version selection or joined observation is established.'}:null;
  return {format:'kfm-collection-profile-v1',collection:{...base,
   temporal:{...base.temporal,retrievedAt:snapshot.answers.map(a=>a.generatedAt??null)},
   provenance:{...base.provenance,provider:providers.length===1?providers[0]:null,sourceUrls:[...new Set(lineage.flatMap(p=>p.url?[p.url]:[]))],digests:[...new Set(lineage.flatMap(p=>p.sha256?[p.sha256]:[]))]}},sample:{rows:rows.length,pages:snapshot.pages,hasMore:snapshot.hasMore,
@@ -228,7 +244,7 @@ export function profileCollection(c:Collection,snapshot:LabSnapshot){
   inputOrigin:snapshot.origin??'archive',
   retrievedAt:snapshot.answers.map(a=>a.generatedAt??null),cache:snapshot.answers.map(a=>a.cache??null),
   stale:snapshot.answers.some(a=>a.cache?.state==='stale'),recordIds:rows.map(r=>r.id)},
-  fields,spatial:{mappable,unavailableGeometry,withoutUsableGeometry:c.geometry?rows.length-mappable:null,sampleBoundingBox:mappable?bounds:null},provenance:lineage,
+  fields,providerIdentity,spatial:{mappable,unavailableGeometry,withoutUsableGeometry:c.geometry?rows.length-mappable:null,sampleBoundingBox:mappable?bounds:null},provenance:lineage,
   interpretation:[...(snapshot.origin?[SAVED_BUNDLE_NOTE]:[]),
    'Numeric summaries describe the loaded values only. Original sentinel values and quality flags are not reinterpreted.',
    'Units and measurement identifiers are profiled in separate groups. Unitless groups need source documentation.',
@@ -244,15 +260,19 @@ export function storyBrief(c:Collection,snapshot:LabSnapshot,question:string,pre
   '## What was read',`${profile.sample.rows} records over ${profile.sample.pages} page(s). ${profile.sample.hasMore?'Further records remain.':'The endpoint reported no further records at this read.'}`,profile.sample.scope,
   profile.sample.stale?'This brief includes stale cached records.':'No returned page was marked stale.',
   `Retrieval timestamps: ${profile.sample.retrievedAt.map(v=>v??'Not supplied').join(', ')}. These are not observation dates.`,
+  ...(profile.providerIdentity?[`Provider identity sample: ${profile.providerIdentity.distinct} distinct identifiers; ${profile.providerIdentity.additionalRows} additional rows repeat an identifier; ${profile.providerIdentity.missing} rows lack a complete provider identity. ${profile.providerIdentity.scope}`]:[]),
   '', '## Recorded values',...(measurements.slice(0,20).length?measurements.slice(0,20):['No eligible numeric measurements were returned. Inspect source records and field definitions.']),
   ...(measurements.length>20?['Additional measurement groups remain in the profile export.']:[]),
   ...(profile.fields.some(f=>f.additionalGroups>0)?['Some fields exceed the 12-group summary. Omitted-group counts are in the profile; all original values remain in the record export.']:[]),
   '', '## Source time fields',...profile.fields.filter(f=>f.role==='time'&&f.exampleValues.length).map(f=>`- ${f.name}: ${f.exampleValues.join('; ')} (recorded examples, not a complete range or a verified temporal meaning).`),
   ...(profile.collection.documentation.length?['','## Field definitions and units',
    ...profile.collection.fields.filter(f=>f.definition&&profile.fields.some(p=>p.name===f.name&&(p.groups.length||p.role==='time'||p.role==='quality')))
-    .map(f=>`- ${f.name}: ${f.definition}${f.unit?` Unit: ${f.unit}.`:''}${f.unitField?` Unit source: each record's ${f.unitField} field.`:''}${f.reference?` Reference: ${f.reference}.`:''}${f.encoding?` Encoding: ${f.encoding}.`:''}`),
+    .map(f=>`- ${f.name}: ${f.definition}${f.unit?` Unit: ${f.unit}.`:''}${f.unitField?` Unit source: each record's ${f.unitField} field.`:''}${f.reference?` Reference: ${f.reference}.`:''}${f.referenceField?` Reference source: each record's ${f.referenceField} field.`:''}${f.encoding?` Encoding: ${f.encoding}.`:''}`),
    '', '## Field documentation',...profile.collection.documentation.map(d=>
     `- [${d.title}](${d.url})${d.edition?`; documentation edition ${d.edition}`:''}; checked ${d.checkedAt}${d.sha256?`; SHA256 ${d.sha256}`:''}. ${d.scope}`)]:[]),
+  ...(profile.collection.relationships.length?['','## Station and series context',
+   'These are comparison plans, not joined records. Verify provider namespaces, capture versions and measurement conventions.',
+   ...profile.collection.relationships.map(r=>`- [${r.title}](/data-library?collection=${encodeURIComponent(r.targetCollection)}): ${r.keys.map(k=>`${k.source} -> ${k.target}`).join(', ')}. ${r.checks.join(' ')}`)]:[]),
   '', '## Source lineage',
   ...profile.provenance.map(p=>`- ${p.sourceId??'Source ID not supplied'}; ${p.url??'Source URL not supplied'}; SHA256 ${p.sha256??'not supplied'}`),
   ...(!profile.provenance.length?['Source lineage was not supplied for these records.']:[]),
@@ -276,11 +296,11 @@ export function measurementLayer(c:Collection,snapshot:LabSnapshot,field:string,
   if(!geometry||geometry.type==='Point'&&geometry.coordinates[0]===0&&geometry.coordinates[1]===0){omitted.noUsableGeometry++;continue;}
   const p=object(row.provenance)?row.provenance:{};
   features.push({type:'Feature' as const,id:String(row.id),geometry,properties:{record_id:String(row.id),collection:c.id,field,value,measurement_context:context,
-   unit:recordedUnit(c.id,field,values),reference:definition.reference,
+   unit:recordedUnit(c.id,field,values),reference:recordedReference(c.id,field,values),
    source_id:typeof p.source_id==='string'?p.source_id:null,source_url:safeUrl(p.source_url),source_sha256:typeof p.sha256==='string'?p.sha256:null}});
  }
  return {type:'FeatureCollection' as const,features,kfm:{format:'kfm-lab-measurement-layer-v1',collection:c.id,field,context,omitted,
-  fieldDefinition:definition,contextDefinitions:metadata.fields.filter(f=>(collectionDimensions[c.id]?.[field]??[]).includes(f.name)),
+  fieldDefinition:definition,contextDefinitions:metadata.fields.filter(f=>[...(collectionDimensions[c.id]?.[field]??[]),definition.referenceField].includes(f.name)),
   documentation:metadata.documentation,interpretation:metadata.fieldNotes,
   rowsRead:snapshot.rows.length,hasMore:snapshot.hasMore,retrievalTimes:snapshot.answers.map(a=>a.generatedAt??null),
   inputOrigin:snapshot.origin??'archive',...(snapshot.origin?{sourceNote:SAVED_BUNDLE_NOTE}:{}),
