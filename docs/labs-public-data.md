@@ -144,6 +144,54 @@ investigation explicitly includes its private attachment in local storage;
 downloading the notebook includes those attachments. Clearing browser storage
 removes local copies. Source fingerprints distinguish saved from current data.
 
+### County histories and comparison counties
+
+The A/B history view uses all six population estimate years and all three ACS
+periods, independently of the selected cross-sectional source years. Population
+lines connect consecutive years only. ACS estimates are separate points with
+90% margins of error, an exact-value table and a source-bound CSV. Dollar
+amounts retain each vintage's dollars; their change is not purchasing-power
+change. Duplicate county/year rows hold the history rather than selecting an
+arbitrary observation. Missing observations remain gaps.
+
+The comparison finder accepts two to five public or attached private measures.
+It uses one common complete-case cohort across all selected measures. Within
+that cohort each varying measure receives average tied ranks, converted to
+percentiles as `100 × (average rank − 1) / (n − 1)`. Distance is the equal-weight
+root mean square of percentile-point differences from county A. Constant
+measures are disclosed and omitted; fewer than two varying measures, fewer than
+three complete counties, an incomplete anchor or duplicate FIPS produce an
+explanation instead of peers. Ties resolve by FIPS. Every displayed candidate
+exposes actual values, periods, percentiles and squared contributions, and can
+be selected as county B. The full eligible cohort determines ranks, regardless
+of the six displayed candidates. ACS uncertainty is displayed in the history
+and profiles but does not enter the comparison distance. This is descriptive
+similarity, not a causal match or performance/risk score.
+
+History and peer settings travel in notebook entries, public view links and
+analysis receipts. Private measure selections are replaced with public defaults
+in view links. Private values and attachment fingerprints remain available in
+the explicitly downloaded receipt and local notebook.
+
+### Portable science notebooks
+
+`/labs/notebook` searches both workspaces, inspects saved source fingerprints and
+attachment metadata, and opens an investigation using a local identifier only.
+The JSON export can be imported in another browser. Import previews additions,
+identical duplicates, changed sources and private attachment counts before an
+explicit additive merge. Conflicting IDs, unsupported controls, malformed files,
+corrupt destination storage and capacity violations leave existing data intact.
+The input limit is 2 MB UTF-8; the combined notebook remains bounded to 12 entries
+and 512 KB of compact stored JSON. Commit revalidates against the current store,
+including changes made since preview. Private county attachments are validated
+with the same numeric/FIPS boundaries as local CSVs. Nothing is uploaded.
+
+Reopening validates workspace-specific controls and compares source fingerprints
+before applying settings. A changed fingerprint requires an explicit choice to
+use current sources; the original saved entry remains. Unsupported settings do
+not reopen. The science notebook format is `kfm-science-notebook-v1`; `/data-lab`
+keeps its separate Record Lab bundle workflow and limits.
+
 ## Scientific tools and replay
 
 Relationships use all complete pairs in the current selection, with Pearson r,
