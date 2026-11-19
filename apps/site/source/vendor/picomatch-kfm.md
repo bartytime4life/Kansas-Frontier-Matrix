@@ -2,14 +2,28 @@
 
 These tarballs are `picomatch` releases with the upstream fix for
 [GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf)
-applied. That advisory is a high-severity ReDoS through repeated extglobs, and
-no fixed picomatch release exists. Only build-time tooling loads picomatch
-here. The Worker bundle does not include it.
+applied. That repeated-extglob advisory was withdrawn on November 18, 2026.
+The existing hardening is retained to preserve current matching behavior.
+Only build-time tooling loads picomatch here; the Worker bundle does not include it.
 
 | Fork | Base | Used by | SHA-256 |
 |---|---|---|---|
 | `picomatch-4.0.7-kfm.1.tgz` | `picomatch@4.0.7` | vite, tinyglobby, fdir | `d50e8063019826c9298e1d3bc1054c6c8867a3e20500b71bd1da90143bbe35df` |
-| `picomatch-2.3.2-kfm.1.tgz` | `picomatch@2.3.2` | micromatch, which fast-glob uses | `835fd04419711d6e09cc5b1c162c766f0fb9400ce7176a8755f8a117ff0d3bd8` |
+| `picomatch-2.3.2-kfm.1.tgz` | `picomatch@2.3.2` | micromatch, which fast-glob uses | `a62951c51a5db475de0b9eafe8cdb202e70a7d132528c2765894b98fac06cd5d` |
+
+## Version identity and POSIX classes
+
+The 2.x archive retains its filename but declares `2.3.2+kfm.1`. The `+kfm.1`
+build metadata identifies our patch without giving it prerelease precedence
+below upstream `2.3.2`. The former `2.3.2-kfm.1` label triggered Dependabot #149
+for [GHSA-3v7f-55p6-f55p](https://github.com/advisories/GHSA-3v7f-55p6-f55p).
+The base 2.3.2 already contains that advisory's null-prototype POSIX class table.
+All library files are byte-identical to the previous fork; only its manifest
+version changed. No advisory dismissal or audit exception is introduced.
+
+The regression test verifies the versions against the patched thresholds,
+rejects inherited POSIX method names, and retains normal POSIX and glob results.
+GitHub alert closure still requires merge and a fresh dependency-graph update.
 
 ## Changes
 
@@ -56,8 +70,9 @@ To rebuild a fork:
 
 1. Unpack `npm pack picomatch@<base>`.
 2. Apply the matching patch to `lib/parse.js`.
-3. Set `version` to `<base>-kfm.1`.
-4. Run `npm pack`.
+3. Set `version` to `2.3.2+kfm.1` for 2.x, or `4.0.7-kfm.1` for 4.x.
+4. Run `npm pack --ignore-scripts`. For 2.x, retain the committed archive name
+   `picomatch-2.3.2-kfm.1.tgz` when copying the result back to `vendor/`.
 
 The output is byte-reproducible.
 

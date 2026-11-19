@@ -3021,4 +3021,16 @@ def test_underground_survey_recovery_successor_preserves_soil_inventory_and_all_
          "tests/underground-surveys-view.test.mjs"},
         "875758d4d90078429a9ac487629458a0852922fa",
     )
-    assert TOOL.RECEIPT.name == "site-v268-underground-survey-recovery-overlay-20261119.json"
+    # The later POSIX-version successor now owns the current inventory selector.
+
+
+def test_picomatch_posix_version_successor_preserves_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-picomatch-posix-version-overlay-20261119.json",
+        "site-v268-underground-survey-recovery-overlay-20261119.json",
+        "492ef2cb2d1ef42f6f1bd987b85083d2695d9e729dedd0be7c166c019054edc0",
+        {"package-lock.json", "tests/picomatch-redos.test.mjs",
+         "vendor/picomatch-2.3.2-kfm.1.tgz", "vendor/picomatch-kfm.md"},
+        "6142bfcc5f50f7db5677ca0d211d0083a5d39df9",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-picomatch-posix-version-overlay-20261119.json"
