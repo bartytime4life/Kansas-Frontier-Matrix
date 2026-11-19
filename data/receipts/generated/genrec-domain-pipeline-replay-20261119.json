@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-domain-pipeline-replay-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/offline-pipeline-check.yml",
+    ".github/workflows/pipeline-spec-declarations.yml",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/pipeline-fixture-replay.md",
+    "fixtures/domains/hazards/earthquakes/README.md",
+    "fixtures/domains/hazards/earthquakes/replay.json",
+    "fixtures/domains/hazards/storm_events/README.md",
+    "fixtures/domains/hazards/storm_events/replay.json",
+    "fixtures/domains/hydrology/usgs_water_replay/README.md",
+    "fixtures/domains/hydrology/usgs_water_replay/replay.json",
+    "pipeline_specs/README.md",
+    "pipeline_specs/hazards/noaa_storm_events.yaml",
+    "pipeline_specs/hazards/usgs_earthquake.yaml",
+    "pipeline_specs/hydrology/usgs_water_observations.yaml",
+    "pipelines/fixture_replay.py",
+    "tests/pipelines/test_fixture_replay.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/offline-pipeline-check.yml": "sha256:7a3e77e036e7a058cace2cd82bb3c41e4c032aba872bded63dfa2dce7d29c821",
+    ".github/workflows/pipeline-spec-declarations.yml": "sha256:a081ea5d7d78967f596dbcfd448e11386ab605cd0cfffe4a06187e3ce22803a4",
+    "contracts/pipeline_spec_declaration.md": "sha256:ed5fd3b2511a3b92403928903e3dc388b0e7581c09ac0cd3fbc92f1367d831c6",
+    "docs/runbooks/pipeline-fixture-replay.md": "sha256:9b65e14628217b3bb52cb72568c55ca9b3a77d6a3ea997f661ba8a251042ab4e",
+    "fixtures/domains/hazards/earthquakes/README.md": "sha256:897aabd73a06d998f16baf04d0686f9635155e3afd9b32f7a7da15dc694d98c8",
+    "fixtures/domains/hazards/earthquakes/replay.json": "sha256:919b757316fe9455817a174f6ae66c6d374607fd60c6ee48236852f85e1ea06a",
+    "fixtures/domains/hazards/storm_events/README.md": "sha256:910a2b60af15e2ca1b86fb131be7281bbc18d13ba952e5ea2040bb2e5446d59b",
+    "fixtures/domains/hazards/storm_events/replay.json": "sha256:2d71661bc2f5667f693981053e16da86cd4accae4ae2bec13063c732c9c8ad29",
+    "fixtures/domains/hydrology/usgs_water_replay/README.md": "sha256:8db43938038da60af548494c9bdec6636068947e8b549fb352afd1d794809cc3",
+    "fixtures/domains/hydrology/usgs_water_replay/replay.json": "sha256:1df63ac5d25918585599f19918864f6dc15320b145a6281301ed1466434f116d",
+    "pipeline_specs/README.md": "sha256:0807995dd54bc9a2653e8e0f76a377598b5ad3606524d5462b896b7a4aae8486",
+    "pipeline_specs/hazards/noaa_storm_events.yaml": "sha256:12cce90e054fde311c9cfd537fcd6ea3d3bd836143e3cfcebb25df798dc4b479",
+    "pipeline_specs/hazards/usgs_earthquake.yaml": "sha256:c94a5362aa7e2b4cea110f9b48cefd5adcfd5767d8038f7fef337617c5ef89bc",
+    "pipeline_specs/hydrology/usgs_water_observations.yaml": "sha256:00ae071a7fb54452ed3bc342fd25f3a5408788fbb6badd5ab71000ba7fd5c931",
+    "pipelines/fixture_replay.py": "sha256:4ab23cdf903479c2e110d6505651f2aa111038756524f41fcdc4c919b000b3a6",
+    "tests/pipelines/test_fixture_replay.py": "sha256:b7bf6b93399a4b4e2b6a2030156e51d764dca9338aa7c34085dbf9bafa382dff"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:01b64ccc441e39a0b61fbe5f6b99e9ef0aed9f636427c126965328096558d753",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@63c2e992a8e9ab40bcdc3dd267b1ae67fbf15f31",
+      "contracts/pipeline_spec_declaration.md",
+      "contracts/domains/hazards/earthquake_record.md",
+      "contracts/domains/hazards/storm_event_record.md",
+      "contracts/domains/hydrology/flow_observation.md"
+    ],
+    "evidence_hashes": [
+      "sha256:6e654f6b861b2f9268a80045e9ed3c85e80c63ce0c8bcb46fe248d76d8f10a1e",
+      "sha256:3184d79f95c051b5fb84ec57e5d6dd5c4cad22a42f27943043bcf1778e35907a",
+      "sha256:14d9f0b3212a2e8bbac3b7b400c47fa35b6dc4364a65159e97ef228d30700a9e",
+      "sha256:e59645d3abf495b04024ef79f5821da868b99be225b4ec56da147949c497cc67"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/offline-pipeline-check.yml": "PROPOSED",
+    ".github/workflows/pipeline-spec-declarations.yml": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/pipeline-fixture-replay.md": "PROPOSED",
+    "fixtures/domains/hazards/earthquakes/README.md": "PROPOSED",
+    "fixtures/domains/hazards/earthquakes/replay.json": "PROPOSED",
+    "fixtures/domains/hazards/storm_events/README.md": "PROPOSED",
+    "fixtures/domains/hazards/storm_events/replay.json": "PROPOSED",
+    "fixtures/domains/hydrology/usgs_water_replay/README.md": "PROPOSED",
+    "fixtures/domains/hydrology/usgs_water_replay/replay.json": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/hazards/noaa_storm_events.yaml": "PROPOSED",
+    "pipeline_specs/hazards/usgs_earthquake.yaml": "PROPOSED",
+    "pipeline_specs/hydrology/usgs_water_observations.yaml": "PROPOSED",
+    "pipelines/fixture_replay.py": "PROPOSED",
+    "tests/pipelines/test_fixture_replay.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "domain-replay-and-declaration-tests",
+      "outcome": "PASS",
+      "reason": "89 passed, two subtests. Includes golden replay, scope and record checks, tampered bytes, incomplete closure, authority retention, CLI execution from an empty directory and no output files."
+    },
+    {
+      "gate": "fresh-minimal-pipeline-environment",
+      "outcome": "PASS",
+      "reason": "297 passed, one raster module skipped, using a fresh environment with only project-test, connectors-core and geo-transforms profiles. Corrects the missing connector dependency detected by hosted CI."
+    },
+    {
+      "gate": "full-collection-with-pr-5960",
+      "outcome": "PASS",
+      "reason": "10288 tests collected in 8.25s; stacked on the collection repair, all tests collect without errors."
+    },
+    {
+      "gate": "declaration-corpus-and-polarity",
+      "outcome": "PASS",
+      "reason": "110 repository declarations and four declaration fixtures pass with unchanged denied authority fields."
+    },
+    {
+      "gate": "qa-and-dependency-regression",
+      "outcome": "PASS",
+      "reason": "371 passed and 74 subtests."
+    },
+    {
+      "gate": "docs-and-workflow-security",
+      "outcome": "PASS",
+      "reason": "Six documents have zero structural findings; 20 local link targets resolve. Both changed workflows have zero security findings."
+    },
+    {
+      "gate": "repository-ratchets-and-topology",
+      "outcome": "PASS",
+      "reason": "Gap and scaffold checks pass; topology has no new drift or invariants. Existing warnings remain visible."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending the final published head and human review. Main includes merged PR 5960; local Python 3.12 collection passes, and hosted Python 3.11/3.12 checks remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "contracts/pipeline_spec_declaration.md",
+      "validated": true,
+      "evidence_ref": "contracts/pipeline_spec_declaration.md@63c2e992a8e9ab40bcdc3dd267b1ae67fbf15f31"
+    },
+    {
+      "id": "contracts/domains/hazards/earthquake_record.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/hazards/earthquake_record.md@63c2e992a8e9ab40bcdc3dd267b1ae67fbf15f31"
+    },
+    {
+      "id": "contracts/domains/hazards/storm_event_record.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/hazards/storm_event_record.md@63c2e992a8e9ab40bcdc3dd267b1ae67fbf15f31"
+    },
+    {
+      "id": "contracts/domains/hydrology/flow_observation.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/hydrology/flow_observation.md@63c2e992a8e9ab40bcdc3dd267b1ae67fbf15f31"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T22:12:16.914446Z",
+  "emitter": "codex/domain-pipeline-replay",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Binds three fixture-first candidates to a closed offline capture replay harness, schema validators, tests and CI. Four of 39 YAML candidates are now fixture-first including WBD HUC12; 35 remain unimplemented. The 65 stage boundaries and six aliases remain NOT_IMPLEMENTED by contract. Historical receipts are not rewritten. Synthetic fixtures and all results remain non-authorizing; no source activation, network retrieval, lifecycle mutation, promotion, release or publication. Final review stack includes the collection repair at 1ce94013aa83f1bf4eadcb71d0cf606802c22505; the generic offline pipeline workflow now installs connectors-core explicitly. Rebased final candidate onto main@4b3ce6f52f875ae6851e52a2da97a3ef4057dde2."
+}

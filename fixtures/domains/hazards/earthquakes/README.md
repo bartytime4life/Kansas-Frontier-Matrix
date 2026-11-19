@@ -12,3 +12,9 @@ month with no file answers HTTP 204 with no body, as the service does with
 | `2025-01.geojson` | `us7000p001`, `ok2025b002` | a reviewed event with an alias; `ok2025b002` at exactly 2025-02-01T00:00:00.000Z, which the inclusive January query also returns |
 | `2025-02.geojson` | `ok2025b002`, `us7000p003` | February owns the boundary event; `us7000p003` is `deleted` and withheld as `STATUS_DELETED` |
 | `2025-05.geojson` | `us7000p004`, `ok2025p005`, `us7000p006` | an automatic solution with no depth; an epicenter in the Oklahoma margin of the envelope (`CONTEXT_MARGIN`); an event with no magnitude and no place |
+
+`replay.json` seals the existing synthetic capture manifest and exact base64
+object bytes with a golden candidate ID for the
+[offline fixture harness](../../../../pipelines/fixture_replay.py). It is test
+input only; no live capture, admission, lifecycle write, or release is implied.
+The [runbook](../../../../docs/runbooks/pipeline-fixture-replay.md) gives commands.

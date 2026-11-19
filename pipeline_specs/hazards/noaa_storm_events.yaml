@@ -1,35 +1,45 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.hazards.noaa-storm-events
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: hazards
-stage: INGEST
+stage: NORMALIZE
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/hazards/noaa_storm_events.yaml
-purpose: Preserve the Hazards noaa storm events proposal as a reviewable inactive pipeline candidate
-  without activating sources or lifecycle writes.
+purpose: Replay the sealed synthetic storm-events capture through normalization and validation in memory;
+  no live acquisition or lifecycle writes.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/sources/hazards/noaa.storm_events.yaml
+  contract_refs:
+  - contracts/domains/hazards/storm_event_record.md
+  schema_refs:
+  - schemas/contracts/v1/domains/hazards/storm_event_record.schema.json
+  implementation_refs:
+  - pipelines/domains/hazards/storm_events_normalize.py
+  - pipelines/domains/hazards/storm_events_validate.py
+  - pipelines/fixture_replay.py
+  fixture_refs:
+  - fixtures/domains/hazards/storm_events/replay.json
+  test_refs:
+  - tests/domains/hazards/test_storm_events_candidate.py
+  - tests/pipelines/test_fixture_replay.py
+  workflow_refs:
+  - .github/workflows/domain-hazards.yml
+  - .github/workflows/pipeline-spec-declarations.yml
 lifecycle:
   candidate_inputs:
-  - SOURCE_CAPTURE_CANDIDATE
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - RAW
+  - VALIDATED_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,10 +58,9 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
-- SOURCE_ADMISSION_UNVERIFIED
 non_effects:
 - NO_EVIDENCE_CLOSURE
 - NO_LIFECYCLE_WRITE
@@ -63,4 +72,7 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:9d07ee4b3b8867a4033b605b3f88d456314f5689a593588701416e998eb74f35
+spec_hash: sha256:53049d3a717fee39c6f89a5db5a5e25cca25550b9e65bacf6c5d696e87a133fa
+validation:
+  command: python -B -m pytest tests/pipelines/test_fixture_replay.py -q --strict-config --strict-markers
+  workflow: .github/workflows/pipeline-spec-declarations.yml

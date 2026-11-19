@@ -75,6 +75,7 @@ jobs:
           PIP_ONLY_BINARY: ":all:"
         run: |
           python tools/ci/install_python_ci.py project-test
+          python tools/ci/install_python_ci.py connectors-core
           python tools/ci/install_python_ci.py geo-transforms
       - name: Build and install the pipeline core without network access
         run: |
