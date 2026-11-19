@@ -126,7 +126,7 @@ sandboxed code. The runner does not infer source admission, evidence closure,
 release or publication from successful computation.
 
 The package builds a standalone `kfm-pipelines-core` 0.1.0 wheel with no runtime
-dependencies and supports Python 3.11+. [Tests](../../../tests/packages/pipelines_core/test_core.py) cover graph errors,
+dependencies and supports Python 3.11+. [Tests](../../../tests/packages/pipelines_core/test_pipeline_core.py) cover graph errors,
 mutation isolation, validator rejection, failures, cancellation, resource
 limits, schema-conforming receipts and the existing Mesonet normalizer.
 [Pipeline CI](../../../.github/workflows/offline-pipeline-check.yml) builds and installs the wheel outside the source tree
