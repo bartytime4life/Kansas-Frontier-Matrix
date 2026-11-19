@@ -3109,8 +3109,33 @@ def test_live_context_deadline_main_reconciliation_preserves_both_histories():
         {"app/api/live-context/route.ts", "tests/live-context-deadline.test.mjs"},
         '0c882dedae7a492678b281f3e5be5b8fa3221126',
     )
-    assert TOOL.RECEIPT.name == 'site-v268-live-context-deadline-main-reconciliation-20261119.json'
-    current = json.loads(TOOL.RECEIPT.read_text())
+    current = json.loads((ROOT / 'data/receipts/generated' / 'site-v268-live-context-deadline-main-reconciliation-20261119.json').read_text())
     prior = ROOT / "data/receipts/generated" / current["repository_reconciliation"]["prior_branch_receipt"]
     assert prior.name == 'site-v268-live-context-deadline-overlay-20261119.json'
     assert hashlib.sha256(prior.read_bytes()).hexdigest() == current["repository_reconciliation"]["prior_branch_receipt_sha256"] == 'c0b0b2bd2487f1feda0808371196e6f38235b99575d9655588bc3a12e75f0f11'
+
+
+def test_connections_profile_outcomes_successor_preserves_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-connections-profile-outcomes-overlay-20261119.json",
+        "site-v268-unused-code-overlay-20261119.json",
+        "5e1cdd95fe8b727760df4b2e1ffab477221f08aa6347a450a34efc1ae98a0737",
+        {'tests/connections-profile-recovery.test.mjs', 'app/connections/workspace.tsx'},
+        "0c882dedae7a492678b281f3e5be5b8fa3221126",
+    )
+    # A later immutable successor now owns the current selector.
+
+
+def test_live_context_deadline_profile_reconciliation_preserves_both_histories():
+    _assert_transport_successor(
+        'site-v268-live-context-deadline-profile-reconciliation-20261119.json',
+        'site-v268-connections-profile-outcomes-overlay-20261119.json',
+        '4d228837ea07ab67ad06800f09e355c1d5465d39edee1edab73aca5d3fe83597',
+        {"app/api/live-context/route.ts", "tests/live-context-deadline.test.mjs"},
+        "162d89630c78860c9e3751bc548153ada62c6f57",
+    )
+    assert TOOL.RECEIPT.name == 'site-v268-live-context-deadline-profile-reconciliation-20261119.json'
+    current = json.loads(TOOL.RECEIPT.read_text())
+    prior = ROOT / "data/receipts/generated" / current["repository_reconciliation"]["prior_branch_receipt"]
+    assert prior.name == 'site-v268-live-context-deadline-main-reconciliation-20261119.json'
+    assert hashlib.sha256(prior.read_bytes()).hexdigest() == current["repository_reconciliation"]["prior_branch_receipt_sha256"] == '625ee4c76b964dbf77221a866f3fa42639680f57a0d506014c2167c65d378ec7'
