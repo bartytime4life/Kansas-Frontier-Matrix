@@ -1,0 +1,120 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/underground-panel.tsx": "sha256:d5ffd7c5692d826a922bcc3064412c9d00c68f8c19665bd4d35efb9702860376",
+    "apps/site/source/docs/underground-explorer.md": "sha256:e495c2534348b7e43f297e22787eda1f9ef1f4a50b68a5b8be99f5e87c235604",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "sha256:b5455f6773c5621479a457d9a3c00e348f64f166dbac0b306f447977ad54e9c5",
+    "apps/site/source/tests/underground-soil-view.test.mjs": "sha256:21d837a9d83eb72a11969b6216bd7df3e02c57f661da68d620bfd81bf160b8ec",
+    "data/receipts/generated/site-v268-underground-soil-recovery-overlay-20261118.json": "sha256:9ee93aae7ba3e13eb2ccc8263de7c251e91433960db4fde5ac3b32f631152b58",
+    "tests/qa/test_site_mirror.py": "sha256:040bab2f98b0191c4b7828f660fbc5de839db8ff486fb36c667d872c7bd88cca",
+    "tools/qa/site_mirror.py": "sha256:e6d1829e918e36f1df80e4be4e5edc179242f481337af8c2211df8e4bffae563"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/underground-explorer.md",
+    "apps/site/source/tests/subsurface-slice.test.mjs",
+    "apps/site/source/tests/underground-soil-view.test.mjs",
+    "data/receipts/generated/site-v268-underground-soil-recovery-overlay-20261118.json",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "git:ca7c97598e96f7891f17ad32190462c46130a380:apps/site/source/app/api/subsurface/soil/route.ts",
+      "id": "Pinned repository soil route",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-19T03:37:58.473570+00:00",
+  "emitter": "Codex owning conversation",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_hashes": [
+      "sha256:55a9798d6ad5ab7239a5e16176ea3cdbca4df6f0535c4e827480e50ff3f3ce16",
+      "sha256:7043677957d99f71a8b6ad7f7e9f1648b61c4c6ef4de3d4e7e85b507a9f3dada"
+    ],
+    "evidence_refs": [
+      "main@ca7c97598e96f7891f17ad32190462c46130a380",
+      "apps/site/source/app/api/subsurface/soil/route.ts",
+      "data/receipts/generated/site-v268-hunting-access-overview-overlay-20261119.json"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex agent",
+    "provider": "OpenAI",
+    "version": "Runtime build identifier not exposed"
+  },
+  "notes": "Client soil context request validation and recovery only. Current runtime behavior is proposed pending independent human review. Source descriptions remain external context and live soil data remain excluded from KGS section exports. The parent keyed-remount and privacy gate are retained. This authoring receipt excludes itself to avoid a circular digest; it binds all other changed artifact bytes, including the content-parity successor and its selector/QA. No prompts, hidden reasoning, credentials, source data or private coordinates are included.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "receipt_id": "genrec-underground-soil-recovery-20261118",
+  "truth_labels": {
+    "apps/site/source/app/underground-panel.tsx": "PROPOSED",
+    "apps/site/source/docs/underground-explorer.md": "PROPOSED",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "PROPOSED",
+    "apps/site/source/tests/underground-soil-view.test.mjs": "PROPOSED",
+    "data/receipts/generated/site-v268-underground-soil-recovery-overlay-20261118.json": "PROPOSED",
+    "tests/qa/test_site_mirror.py": "PROPOSED",
+    "tools/qa/site_mirror.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "soil_component_route_and_section_checks",
+      "outcome": "PASS",
+      "reason": "54 controlled synthetic checks, including 29 request/response cases and the parent privacy gate."
+    },
+    {
+      "gate": "pinned_base_negative_control",
+      "outcome": "PASS",
+      "reason": "24 of the 29 new scenarios fail on the pinned base; all 29 pass on the correction."
+    },
+    {
+      "gate": "site_full_suite",
+      "outcome": "PASS",
+      "reason": "2001 tests after the production build."
+    },
+    {
+      "gate": "production_build_and_output_containment",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "eslint",
+      "outcome": "PASS",
+      "reason": "Zero errors; 54 warnings in existing unchanged areas."
+    },
+    {
+      "gate": "mirror_parity_and_qa",
+      "outcome": "PASS",
+      "reason": "Strict selected inventory, immutable predecessor and 262 absent withheld paths; 108 tests."
+    },
+    {
+      "gate": "visual_keyboard_touch_and_webgl_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Connected browser failed before page observation or screenshot capture."
+    },
+    {
+      "gate": "live_provider_and_hosted_lifecycle",
+      "outcome": "SKIPPED",
+      "reason": "No live USDA qualification, private-coordinate lookup, source admission, release activation, deployment or publication."
+    }
+  ]
+}

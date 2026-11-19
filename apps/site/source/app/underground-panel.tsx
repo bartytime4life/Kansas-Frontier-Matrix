@@ -8,6 +8,7 @@ import { startSubsurfaceWorker } from "./subsurface-workers";
 import { atRecordYear, recordYear } from "./subsurface-materials";
 import { fitRecordedSlice, sliceWindowDepth } from "./subsurface-slice";
 import { cutawayLocatorPlacement } from "./cutaway-locator";
+import { readSuccessfulJson } from "./bounded-json";
 
 const AquiferView = lazy(() => import("./aquifer-volume-view"));
 const ResourceView = lazy(() => import("./underground-resources"));
@@ -377,15 +378,48 @@ function SurveyView({ survey, anchor, onLocate }: { survey: GeophysicalSurvey; a
     {p && <><label>Profile <select value={id} onChange={e => setId(e.target.value)}>{survey.profiles.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}</select></label> <button type="button" onClick={() => onLocate(p.coordinates)}>Locate profile · {(distanceMeters(anchor, p.coordinates) / 1000).toFixed(1)} km from probe</button><svg className={s.chart} viewBox="0 0 680 320" role="img" aria-label={`${p.title}, measured electrical conductivity versus depth`}><text x="50" y="22">Electrical conductivity {minValue.toFixed(1)}–{maxValue.toFixed(1)} {p.valueUnit}; depth 0–{maxDepth.toFixed(1)} {p.depthUnit} below local surface</text><path d={plotted.map((s, i) => `${i ? "L" : "M"}${50 + (s.value - minValue) / (maxValue - minValue) * 570},${40 + s.depth / maxDepth * 230}`).join(" ")} fill="none" stroke="#976037" strokeWidth="1.5" /><text x="50" y="300">{p.samples.length} original samples · decimated line for display · no lithology conversion</text></svg></>}
   </details>;
 }
-type SoilResult = { rows: (string | number | null)[][]; retrievedAt: string; partial: boolean; limitation: string; error?: string };
+type SoilResult = { rows: (string | number | null)[][]; retrievedAt: string; partial: boolean; limitation: string; sourceUrl: string; depthUnit: "cm"; depthReference: "soil surface" };
+function validSoilResult(value: unknown): value is SoilResult {
+  if (!value || typeof value !== "object") return false;
+  const data = value as Record<string, unknown>;
+  return !("error" in data) && Array.isArray(data.rows) && data.rows.length <= 100
+    && data.rows.every(row => Array.isArray(row) && row.length === 14 && row.every(cell => cell === null || typeof cell === "string" || typeof cell === "number" && Number.isFinite(cell)))
+    && typeof data.retrievedAt === "string" && Number.isFinite(Date.parse(data.retrievedAt))
+    && data.partial === (data.rows.length === 100) && typeof data.limitation === "string"
+    && data.sourceUrl === "https://sdmdataaccess.nrcs.usda.gov/" && data.depthUnit === "cm" && data.depthReference === "soil surface";
+}
 function SoilView({ anchor }: { anchor: Position }) {
-  const [data, setData] = useState<SoilResult | null>(null), [state, setState] = useState("Loading soil-map descriptions…");
-  useEffect(() => { const controller = new AbortController();
-    const timer = setTimeout(() => { void fetch(`/api/subsurface/soil?lon=${anchor[0].toFixed(6)}&lat=${anchor[1].toFixed(6)}`, { signal: controller.signal }).then(r => r.json()).then((d: SoilResult) => { if (controller.signal.aborted) return; if (d.error) setState(d.error); else { setData(d); setState(d.rows.length ? "" : "None in the available soil-map data."); } }).catch(() => { if (!controller.signal.aborted) setState("Soil source unavailable."); }); }, 400);
-    return () => { clearTimeout(timer); controller.abort(); };
-  }, [anchor]);
+  const point = `lon=${anchor[0].toFixed(6)}&lat=${anchor[1].toFixed(6)}`;
+  const [reading, setReading] = useState<{ point: string; data: SoilResult | null } | null>(null), [attempt, setAttempt] = useState(0);
+  const current = reading?.point === point ? reading : null, data = current?.data;
+  const state = !current ? "Loading soil-map descriptions…" : !data ? "Soil source unavailable or timed out. Check that the probe is in Kansas, then retry."
+    : data.rows.length ? "" : "No soil horizons returned for this probe. This does not establish that no soil is present.";
+  useEffect(() => {
+    const controller = new AbortController(); let active = true;
+    let deadline: ReturnType<typeof setTimeout> | undefined, removeAbort = () => {};
+    const dispose = () => { clearTimeout(deadline); removeAbort(); };
+    const timer = setTimeout(() => {
+      const cancelled = new Promise<never>((_, reject) => {
+        const abort = () => reject(controller.signal.reason);
+        controller.signal.addEventListener("abort", abort, { once: true });
+        removeAbort = () => controller.signal.removeEventListener("abort", abort);
+      });
+      // The route has an 18s upstream budget; the browser also bounds headers and its body.
+      deadline = setTimeout(() => controller.abort(new Error("Soil lookup timed out.")), 20000);
+      const load = async () => {
+        const response = await fetch(`/api/subsurface/soil?${point}`, { signal: controller.signal, cache: "no-store" });
+        const value = await readSuccessfulJson(response, 512 * 1024, controller.signal);
+        if (!validSoilResult(value)) throw new Error("Unexpected soil response.");
+        return value;
+      };
+      void Promise.race([load(), cancelled]).then(value => {
+        if (active && !controller.signal.aborted) setReading({ point, data: value });
+      }).catch(() => { if (active) setReading({ point, data: null }); }).finally(dispose);
+    }, 400);
+    return () => { active = false; clearTimeout(timer); controller.abort(); dispose(); };
+  }, [point, attempt]);
   const components = [...new Set(data?.rows.map(row => String(row[3])) ?? [])];
-  return <div><p role="status">{state}</p><p className={s.limit}>SSURGO soil-map components are alternatives within a mapped area. They do not identify the exact soil beneath the crosshair.</p>{data && <><p>Retrieved {data.retrievedAt} · {data.partial ? "Partial: 100-horizon limit reached" : `${data.rows.length} horizons returned`} · depths in centimetres below soil surface.</p>{components.map(id => { const rows = data.rows.filter(r => String(r[3]) === id); return <details key={id}><summary>{rows[0][4]} · {rows[0][5]}% of map unit · {rows[0][2]}</summary><ul>{rows.map((r, index) => <li key={index}>{r[8]}: {r[9] ?? "unknown"}–{r[10] ?? "unknown"} cm · sand {r[11] ?? "unknown"}%, silt {r[12] ?? "unknown"}%, clay {r[13] ?? "unknown"}%</li>)}</ul></details>; })}</>}<a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noreferrer">USDA Soil Data Access ↗</a><p className={s.muted}>Live soil responses are not yet captured in the section export; the export includes KGS columns and their source editions only.</p></div>;
+  return <div aria-busy={!current}><p role="status">{state}</p>{current && !data && <button type="button" onClick={() => { setReading(null); setAttempt(value => value + 1); }}>Retry soil lookup</button>}<p className={s.limit}>SSURGO soil-map components are alternatives within a mapped area. They do not identify the exact soil beneath the crosshair.</p>{data && <><p>Retrieved {data.retrievedAt} · {data.partial ? "Partial: 100-horizon limit reached" : `${data.rows.length} horizons returned`} · depths in centimetres below soil surface.</p>{components.map(id => { const rows = data.rows.filter(r => String(r[3]) === id); return <details key={id}><summary>{rows[0][4]} · {rows[0][5]}% of map unit · {rows[0][2]}</summary><ul>{rows.map((r, index) => <li key={index}>{r[8]}: {r[9] ?? "unknown"}–{r[10] ?? "unknown"} cm · sand {r[11] ?? "unknown"}%, silt {r[12] ?? "unknown"}%, clay {r[13] ?? "unknown"}%</li>)}</ul></details>; })}</>}<a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noreferrer">USDA Soil Data Access ↗</a><p className={s.muted}>Live soil responses are not yet captured in the section export; the export includes KGS columns and their source editions only.</p></div>;
 }
 
 export function SubsurfaceInspector({ inspection, onCenter, onSave, onReport }: { inspection: SubsurfaceInspection; onCenter: () => void; onSave: () => void; onReport: () => void }) {

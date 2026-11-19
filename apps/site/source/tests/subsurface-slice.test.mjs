@@ -46,7 +46,7 @@ test('core inventory remains an envelope and original interval identity survives
 
 async function panelHarness(initialContext=null,{failWorker=false,failPrepare=false,map=null,skipArea=false}={}){
   const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>{if(failPrepare&&message.kind==='prepare')throw new Error('failed');messages.push(message);},terminate(){this.terminated=true;}};
-  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
+  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement,'./bounded-json':{}},{
     matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>{const id=++frameSerial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),queueMicrotask,performance,
     fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:(callback,delay)=>{const id=++timerSerial;timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),
   });
@@ -193,6 +193,11 @@ test('specialist picker pauses the mounted cutaway and omits unrelated time/dept
   findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:display}});p.render();assert.equal(p.aquifer().type,original);assert.equal(p.aquifer().props.active,false);assert.doesNotMatch(visibleText(p.tree),/Depth cursor|Vertical scale|Through record year/);
   button(p.tree,'Back to cutaway').props.onClick();p.render();assert.equal(p.aquifer().props.active,true);p.flushTimers();assert.deepEqual([...p.messages.at(-1).bounds],[-100.7,38.3,-100.3,38.7]);
  }p.h.dispose();
+});
+test('location privacy withholds the soil component and its external coordinate lookup',async()=>{
+ const p=await panelHarness(null,{skipArea:true}),soil=()=>findNode(p.tree,node=>node.type?.name==='SoilView');
+ findNode(p.tree,node=>node.props?.['aria-label']==='Underground tool').props.onChange({target:{value:'soil'}});p.render();assert.ok(soil());
+ p.props.redacted=true;p.render();assert.equal(soil(),undefined);assert.match(text(p.tree),/Location privacy is active\. A soil lookup would send this coordinate to USDA, so it is withheld/);p.h.dispose();
 });
 test('record-worker startup or terminal failure remains recoverable after applying or changing eligibility',async()=>{
  for(const failWorker of [true,false]){

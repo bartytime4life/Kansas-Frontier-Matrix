@@ -2999,4 +2999,15 @@ def test_hunting_access_overview_successor_preserves_page_heading_inventory_and_
          "tests/kansas-discovery-layers.test.mjs"},
         "effb3de6d6ddb7fe62e784f4a60cb875be2af6d5",
     )
-    assert TOOL.RECEIPT.name == "site-v268-hunting-access-overview-overlay-20261119.json"
+
+
+def test_underground_soil_recovery_successor_preserves_hunting_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-underground-soil-recovery-overlay-20261118.json",
+        "site-v268-hunting-access-overview-overlay-20261119.json",
+        "55a9798d6ad5ab7239a5e16176ea3cdbca4df6f0535c4e827480e50ff3f3ce16",
+        {"app/underground-panel.tsx", "docs/underground-explorer.md",
+         "tests/subsurface-slice.test.mjs", "tests/underground-soil-view.test.mjs"},
+        "ca7c97598e96f7891f17ad32190462c46130a380",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-underground-soil-recovery-overlay-20261118.json"
