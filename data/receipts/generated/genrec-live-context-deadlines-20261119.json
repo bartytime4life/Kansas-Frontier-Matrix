@@ -1,0 +1,105 @@
+{
+  "receipt_id": "genrec-live-context-deadlines-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/api/live-context/route.ts",
+    "apps/site/source/tests/live-context-deadline.test.mjs",
+    "data/receipts/generated/site-v268-live-context-deadline-overlay-20261119.json",
+    "data/receipts/generated/site-v268-live-context-deadline-main-reconciliation-20261119.json",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/api/live-context/route.ts": "sha256:be32a20aecd5114b85873934b580a3ba9bd26ec08f9b525a7e9fe63f4d848677",
+    "apps/site/source/tests/live-context-deadline.test.mjs": "sha256:7b10b2690a4545e9e1f8a1653019b41720014a5d988c8b6857e0408369417429",
+    "data/receipts/generated/site-v268-live-context-deadline-overlay-20261119.json": "sha256:c0b0b2bd2487f1feda0808371196e6f38235b99575d9655588bc3a12e75f0f11",
+    "data/receipts/generated/site-v268-live-context-deadline-main-reconciliation-20261119.json": "sha256:625ee4c76b964dbf77221a866f3fa42639680f57a0d506014c2167c65d378ec7",
+    "tests/qa/test_site_mirror.py": "sha256:bbf9684519275cccc23502fea455de4633a19be51799254790654b4cda5f073f",
+    "tools/qa/site_mirror.py": "sha256:a957130a5a79ab81eed473d801166eb49243a4280e4eaf67535128a902b013d6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+      "sha256:5e1cdd95fe8b727760df4b2e1ffab477221f08aa6347a450a34efc1ae98a0737"
+    ],
+    "evidence_refs": [
+      "main@0c882dedae7a492678b281f3e5be5b8fa3221126",
+      "policy/ai_builder/operating_contract.rego",
+      "apps/site/source/AGENTS.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/api/live-context/route.ts": "PROPOSED",
+    "apps/site/source/tests/live-context-deadline.test.mjs": "PROPOSED",
+    "data/receipts/generated/site-v268-live-context-deadline-overlay-20261119.json": "PROPOSED",
+    "data/receipts/generated/site-v268-live-context-deadline-main-reconciliation-20261119.json": "PROPOSED",
+    "tests/qa/test_site_mirror.py": "PROPOSED",
+    "tools/qa/site_mirror.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "site-production-build-and-tests",
+      "outcome": "PASS",
+      "reason": "2049 tests, zero failures or skips; includes four deadline regression cases."
+    },
+    {
+      "gate": "typescript-and-lint",
+      "outcome": "PASS",
+      "reason": "TypeScript passes; lint zero errors, 34 existing warnings."
+    },
+    {
+      "gate": "qa",
+      "outcome": "PASS",
+      "reason": "312 tests and 37 subtests."
+    },
+    {
+      "gate": "local-worker-smoke",
+      "outcome": "PASS",
+      "reason": "112 checks across 80 routes; 14 provider-only routes excluded."
+    },
+    {
+      "gate": "mirror-gap-scaffold-topology",
+      "outcome": "PASS",
+      "reason": "Content parity only; 262 withheld files remain absent; no new ratchet drift."
+    },
+    {
+      "gate": "hosted-ci-and-maintainer-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending for the final pushed revision; no review or deployment authority claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T20:39:44.630831Z",
+  "emitter": "codex/repository-repair",
+  "links": {
+    "pr_number": 5950,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Append-only repository authoring provenance for the deadline repair and current-main reconciliation. Historical receipts remain unchanged. Unknown generation parameters are null. Local checks do not establish hosted equivalence, human approval, source admission, merge, release or deployment."
+}
