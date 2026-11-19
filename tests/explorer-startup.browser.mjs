@@ -1213,7 +1213,10 @@ for (const profile of [
   });
 }
 
-for (const unavailableApis of [false, true]) test(`isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries (${unavailableApis?'unavailable APIs':'intercepted APIs'})`, {timeout:30000}, async t => {
+// The test limit also covers starting Chrome, and this is the first test the navigation job runs, so a cold
+// runner can spend most of a short limit before the first assertion. The limit matches its neighbours; the
+// 10-second deadline below still bounds the navigation and blocking checks themselves.
+for (const unavailableApis of [false, true]) test(`isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries (${unavailableApis?'unavailable APIs':'intercepted APIs'})`, {timeout:90000}, async t => {
   const b=await browser(t);
   const {targetId}=await b.call('Target.createTarget',{url:'about:blank'});
   const {sessionId}=await b.call('Target.attachToTarget',{targetId,flatten:true});
