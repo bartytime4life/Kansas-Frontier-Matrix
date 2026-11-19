@@ -32,6 +32,29 @@ the same commit.
 named HOLD `OPA_BINARY_UNAVAILABLE` even though its registry status is
 IMPLEMENTED.
 
+### Run the `policy` lane locally
+
+Use the OPA build CI uses: v1.19.0, the static Linux x86-64 binary, checked
+against the SHA-256 pinned in `pass12-release-policy-v1.yml` and
+`policy-test.yml`. Keep it outside the repository and pass it through `OPA_BIN`
+so nothing on `PATH` changes:
+
+```bash
+mkdir -p "$HOME/.local/opt/opa-1.19.0"
+curl -fsSL -o "$HOME/.local/opt/opa-1.19.0/opa" \
+  https://github.com/open-policy-agent/opa/releases/download/v1.19.0/opa_linux_amd64_static
+echo "1dd5c5591ff856f5e20a1d66bafae9511ddf3c5552ed3b5070c70b2b6580ee3f  $HOME/.local/opt/opa-1.19.0/opa" | sha256sum -c -
+chmod 0755 "$HOME/.local/opt/opa-1.19.0/opa"
+OPA_BIN="$HOME/.local/opt/opa-1.19.0/opa" make policy
+```
+
+A passing run prints `"status":"PASS"` with reason `BOUNDED_REGO_PAIR_PASSED`
+and exits 0. Stop if `sha256sum -c` does not print `OK`. On other platforms,
+download the v1.19.0 asset for that platform and check it against the
+`.sha256` file published beside it; the pinned digest above covers only the
+Linux x86-64 binary. The same `OPA_BIN` also lets the OPA-backed tests in
+`tests/policy/` run instead of skipping with `OPA_BINARY_UNAVAILABLE`.
+
 HOLD exits use status code 3 instead of the former misleading zero exit. The
 runner emits a structured result and fixes source admission, reviewed-fixture
 overwrite, catalog publication, release authorization, and deployment effects
