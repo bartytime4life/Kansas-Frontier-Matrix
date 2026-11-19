@@ -18,6 +18,19 @@ const chart = await compileModule("aviation-chart");
 const profile = await compileModule("aviation-profile");
 const research = await compileModule("aviation-research");
 const dossier = await compileModule("research-context");
+// Modules with runtime imports of sibling app modules are compiled with those imports rewritten to data URLs.
+const linked = new Map();
+async function compileLinked(name) {
+  if (linked.has(name)) return linked.get(name);
+  const source = await readFile(new URL(`../app/${name}.ts`, import.meta.url), "utf8");
+  let output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }, fileName: `${name}.ts` }).outputText;
+  for (const match of [...output.matchAll(/from "\.\/([a-z0-9-]+)"/g)]) output = output.replace(match[0], `from "${await compileLinked(match[1])}"`);
+  const url = `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`;
+  linked.set(name, url);
+  return url;
+}
+// The layer control's decoders: observed phase, the static type table and the airport dossier helpers.
+const decoders = { "./aviation-phase": await import(await compileLinked("aviation-phase")), "./aircraft-types": await import(await compileLinked("aircraft-types")), "./aviation-dossier": await import(await compileLinked("aviation-dossier")) };
 const bytes = await readFile(new URL("../public/data/aviation/kansas-aviation-context.json", import.meta.url));
 const context = airspace.parseAviationContext(JSON.parse(bytes.toString("utf8")));
 const SALINA = [-97.6522, 38.7906], RURAL = [-100.35, 39.35], FORT_RILEY_RANGE = [-96.85, 39.2];
@@ -321,7 +334,7 @@ test("weather route uses fixed upstream URLs and never forwards caller input", a
   const trafficServer = await readFile(new URL("../app/aviation-traffic-server.ts", import.meta.url), "utf8");
   assert.match(trafficServer, /for \(const provider of TRAFFIC_PROVIDERS\)/, "providers are tried in a fixed order");
   assert.doesNotMatch(trafficServer, /searchParams|nextUrl|NextRequest|headers\.get/, "the traffic route never reads caller input");
-  for (const route of ["metar", "pireps", "traffic", "uas-grid", "tfrs"]) {
+  for (const route of ["metar", "pireps", "taf", "traffic", "uas-grid", "tfrs"]) {
     const handler = await readFile(new URL(`../app/api/aviation/${route}/route.ts`, import.meta.url), "utf8");
     assert.match(handler, /export async function GET\(\)/, "handler takes no request input");
   }
@@ -512,7 +525,7 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
       : {};
   };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null },
+    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
     "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
@@ -549,7 +562,7 @@ test("turning traffic off and on never redraws the previous positions as current
       : {};
   };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null },
+    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
     "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
@@ -582,7 +595,7 @@ test("switching to the 2D chart redraws every 3D form flat, with chart labels an
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -663,7 +676,7 @@ test("drawing a side view with two map clicks renders the cross-section and its 
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -721,7 +734,7 @@ test("the aviation layer offers dossier points while shown and withdraws them wh
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false, onResearchRecords: records => offered.push(records) };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -757,7 +770,7 @@ test("Inspect on an aviation dossier record opens the aviation point inspector t
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false, inspectRequest: null };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -790,7 +803,7 @@ test("aviation drawing owns selection until cancelled and supports keyboard map-
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder, Error,
     window: { matchMedia: () => ({ matches: true }), addEventListener: (key, fn, capture) => { assert.equal(capture, true); keys.set(key, fn); }, removeEventListener: (key, fn, capture) => { assert.equal(capture, true); if (keys.get(key) === fn) keys.delete(key); } } });
   const props = { mapRef: { current: map }, styleReady: true, onPickingChange: value => ownership.push(value) };

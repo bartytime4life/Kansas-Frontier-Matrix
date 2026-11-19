@@ -15,6 +15,7 @@ restricted areas) are not shown.
 | Airspace volumes, public- and private-use airports and runways, airways | FAA NASR 28-day subscription, cycle 2026-10-29, via the pinned `public/data/aviation/kansas-aviation-context.json` | Valid 2026-10-29 up to (not including) 2026-11-26. Before the 29th the layer says it is a *preview* edition; after the 26th it says *expired*. |
 | METAR (ASOS/AWOS station weather) | NOAA/NWS Aviation Weather Center Data API via `/api/aviation/metar` | Each station's own observation time; latest within 90 minutes; refreshed every 5 minutes while shown |
 | PIREP (pilot reports) | Same API via `/api/aviation/pireps` | Report time; last 3 hours |
+| TAF (terminal aerodrome forecasts) | Same API via `/api/aviation/taf` (fixed URL `/api/data/taf?bbox=…&format=json`, 2 MB read limit, 2-minute cache) | Issue time; kept while the forecast's validity has not ended and it was issued within 30 hours; refreshed with the METAR read every 5 minutes while METAR stations are shown |
 | LAANC grid ceilings | FAA UAS Facility Maps (ArcGIS `FAA_UAS_FacilityMap_Data`) via `/api/aviation/uas-grid` | FAA 56-day cycle; read once per session, cached a day on the server |
 | Temporary flight restrictions | FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`) and each NOTAM's detail file (`tfr.faa.gov/download/detail_<id>.xml`) via `/api/aviation/tfrs` | Current list; refreshed every 10 minutes, cached 5 minutes on the server |
 | Live aircraft | Public ADS-B/Mode S receiver networks via `/api/aviation/traffic`: [adsb.lol](https://adsb.lol/) (ODbL 1.0), else [adsb.fi](https://adsb.fi/) open data (non-commercial, attribution) | Positions no older than 60 seconds; refreshed every 20 seconds while shown, 15-second shared cache |
@@ -71,19 +72,79 @@ rooftop. Contacts, owner names and remarks are never copied.
   zoom 10+.
 - **Airways.** Victor/T routes (1,200 AGL–below FL180) and Jet/Q routes
   (FL180–FL450), labelled with designation and MEA.
-- **Live aircraft.** Each aircraft is an arrowhead pointing along its track,
+- **Live aircraft.** Kansas Sky draws each aircraft as a schematic silhouette
   lifted to its reported altitude (geometric if reported, else barometric) above
-  the nearest ground-reference facility's elevation, and coloured by altitude band;
-  emergency squawks (7500, 7600, 7700) are red. At zoom 8+ the label gives
-  callsign, type, altitude, ground speed and the airspace the aircraft is in at
-  that altitude (for example `CLASS C · ICT`). The panel names the network that
-  supplied the positions, with its terms.
+  the nearest ground-reference facility's elevation, coloured by altitude band;
+  emergency squawks (7500, 7600, 7700) are red. From zoom 8 a text label at the
+  aircraft's ground position gives callsign, type, altitude, ground speed and
+  the **observed phase** (below). The panel names the network that supplied the
+  positions, with its terms.
+- **Observed phase** (`app/aviation-phase.ts`). A pure function of one record
+  and the public-use, non-heliport facility list: *on surface* (the feed's
+  surface flag), *climbing* / *level* / *descending* (reported vertical rate
+  at or beyond ±300 ft/min; between is level), or *low near KICT, descending*
+  when the aircraft is within 10 NM of a public-use facility and no more than
+  3,000 ft above its field elevation (reported height minus the NASR
+  elevation; WGS84 geometric height when reported, else pressure altitude).
+  A record with no vertical rate reads *phase not derivable*. It is always
+  introduced as "observed phase", in the Kansas Sky instruments (with its
+  basis spelled out), in the map label and in the point inspector's aircraft
+  list. It is never "arriving", "departing" or "en route to": the site knows
+  no flight plan.
+- **Aircraft type decoding** (`app/aircraft-types.ts`). A static table of
+  about 215 ICAO Doc 8643 designators (airliners, regional, business jets,
+  turboprops, pistons, helicopters, common military types and the generic
+  GLID/BALL/ULAC/GYRO codes) expands the feed's code to manufacturer, model,
+  engine class and ICAO wake category, shown beside the raw code and marked
+  "(static table)". A code not in the table stays raw and says so; nothing is
+  inferred from a registration or callsign.
 - **METAR stations** coloured by FAA flight category (VFR, MVFR, IFR, LIFR);
   **cloud ceilings** as discs at the reported height above each station.
 - **PIREPs** as markers at the reported altitude; urgent reports in red,
   turbulence or icing in orange. Reports with a climb/descent phase or an
   unavailable altitude remain in the point inspector, labelled accordingly;
   they are omitted from the altitude layer rather than drawn at ground level.
+
+## Airport dossier and observed activity board
+
+Clicking a public-use airport dot, or choosing one from the **Airport
+dossier** list in the airports section, opens a panel built only from data
+the layer already holds:
+
+- **NASR facts** (cycle stated): field elevation, traffic pattern altitude
+  when NASR lists one, CTAF, tower type, weather sensor type (the NASR
+  `weather_station` field is a sensor type such as ASOS or AWOS-3, not a
+  station id), ownership, and every runway with its surveyed ends: identifier,
+  length × width, surface in words (`ASPH-CONC` → asphalt/concrete) and
+  lighting.
+- **Weather now.** The METAR whose station id equals the airport's ICAO id;
+  otherwise the nearest station within 50 km, named and distanced, with a note
+  that it describes its own site.
+- **Forecast (TAF).** The TAF issued for the airport's ICAO id, if any (most
+  Kansas fields have none, and the panel says so). Each period overlapping the
+  next 12 hours is listed with its change group (base, FM, BECMG, TEMPO, PROB),
+  times in day/hour UTC, the **forecast flight category** computed from the
+  period's forecast ceiling and visibility by the same FAA rule as METAR
+  categories, ceiling, visibility, wind and weather; periods in force now are
+  marked. TEMPO and PROB periods overlay the base forecast rather than
+  replacing it, so more than one can be current. The raw TAF text follows.
+- **TFR areas reaching the airport**: drawn boundaries that contain the field
+  reference point or a runway end, or whose boundary comes within 3 NM, with
+  limits and times. The FAA NOTAM decides applicability.
+- **LAANC ceiling** at the field reference point, when the UAS grid is loaded.
+- **Observed activity board** (`app/aviation-dossier.ts`): aircraft from the
+  same traffic envelope the map draws, within 10 NM and no more than 3,000 ft
+  above the field, grouped as *descending, track toward the field* (reported
+  rate ≤ −300 ft/min and reported track within 60° of the bearing to the
+  field), *climbing, track away from the field* (rate ≥ +300 ft/min, track
+  within 60° of the bearing away), *on the surface (reported)*, and *other low
+  traffic nearby* (level, crossing, or rate/track not reported). Each row
+  gives callsign or registration, decoded type, height above field, distance,
+  observation age, and in parentheses the rate, track and bearing it was
+  grouped from. The 40 nearest are listed. It is an observation list, not an
+  arrivals/departures board: no destination, schedule, cancellation or ETA is
+  known to this site, and the panel says so. During a Kansas Sky replay the
+  board is paused rather than filled with historical samples.
 
 ## 3D volumes and the 2D chart
 
@@ -228,7 +289,7 @@ the GoDaddy Node application:
   never the held candidate tables.
 - There is no shared edge cache on this host. Each route therefore keeps its
   last successful response in process (`app/aviation-route-cache.ts`):
-  - METAR and PIREP: 2 minutes;
+  - METAR, TAF and PIREP: 2 minutes;
   - traffic: 15 seconds;
   - TFRs: 5 minutes;
   - the UAS grid: a day.
@@ -238,7 +299,10 @@ the GoDaddy Node application:
 - Opening the **Aviation** category map (`docs/category-maps.md`) shows this
   layer on the aviation chart basemap, in 3D.
 
-Verification: `tests/aviation-layer.test.mjs`, `tests/aviation-route-cache.test.mjs`,
+Verification: `tests/aviation-layer.test.mjs`, `tests/aviation-phase.test.mjs`
+(observed phase, map label, type table), `tests/aviation-dossier.test.mjs`
+(activity board, TFR proximity, runway text, TAF parsing and route, and the
+rendered dossier), `tests/aviation-route-cache.test.mjs`,
 `tests/category-maps.test.mjs`, and in the monorepo
 `tests/connectors/test_faa_airspace.py`.
 

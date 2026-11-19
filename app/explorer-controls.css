@@ -180,3 +180,12 @@
 .layer-panel .aviation-column { display: grid; gap: 8px; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
 .layer-panel .aviation-column table { width: 100%; border-collapse: collapse; font-size: 11px; }
 .layer-panel .aviation-column :is(th,td) { padding: 4px; border-bottom: 1px solid #2a3746; text-align: left; vertical-align: top; }
+/* Airport dossier: NASR facts as a compact term list, then weather, TFRs and the observed activity board. */
+.layer-panel .aviation-dossier { padding: 8px; border: 1px solid #2a3746; border-radius: 4px; }
+.layer-panel .aviation-dossier dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; margin: 0; }
+.layer-panel .aviation-dossier dt { font-size: 10px; color: #c4d4dc; }
+.layer-panel .aviation-dossier dd { margin: 2px 0 0; font-size: 12px; color: #fff; }
+.layer-panel .aviation-dossier ul { margin: 0; padding-left: 18px; }
+.layer-panel .aviation-dossier li { margin: 2px 0; }
+.layer-panel .aviation-dossier p { margin: 0; }
+.layer-panel .aviation-dossier button { margin-left: 6px; font-size: 11px; }

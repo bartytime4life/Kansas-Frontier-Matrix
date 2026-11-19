@@ -40,6 +40,31 @@ transitions and explicit breaks disconnect tracks. No positions appear before
 the first or after the last observation. Replay airspace/weather elsewhere on
 the map remains current context, explicitly not reconstructed historical context.
 
+## Observed phase and type decoding (2026-11-06)
+
+The instruments block opens with an **observed phase** row, computed by
+`app/aviation-phase.ts` from the selected record alone plus the pinned NASR
+list of public-use, non-heliport facilities: *on surface* from the feed's
+surface flag; *climbing*, *level* or *descending* from the reported vertical
+rate (±300 ft/min is the level band); *low near KSLN, descending* when the
+aircraft is within 10 NM of a public-use facility and no more than 3,000 ft
+above its field elevation (reported WGS84 height, else pressure altitude,
+minus the NASR elevation); *phase not derivable* when no vertical rate is
+reported. A basis line under the instruments states the numbers it came from.
+The same label is appended, as "observed phase", to the zoom-8+ map text that
+the Aviation layer draws at each aircraft's ground position, and to the point
+inspector's nearby-aircraft list. The label describes the observation only:
+it is not "arriving", "departing", "en route to" or any other intent, and the
+site still knows no flight plan, schedule or ETA. Replay samples use the same
+function on the retained measurements, so a replay phase is as approximate as
+its interpolated inputs.
+
+The raw ICAO type code is kept and expanded beside it from the static table in
+`app/aircraft-types.ts` (manufacturer, model, engine class, wake category,
+marked "static table"); a code not in the table stays raw. See
+[aviation-layers.md](aviation-layers.md) for the airport dossier and the
+observed activity board that use the same phase rules around one airport.
+
 ## Memory and rendering bounds
 
 The browser retains ten minutes regionally and up to one hour for the selected
@@ -80,7 +105,7 @@ Preparation is offline:
 
 ```sh
 python3 scripts/prepare-kansas-sky-replay.py TRACE.json.gz SOURCE_URL MEMBER OUTPUT.json
-node --test tests/kansas-sky.test.mjs tests/aviation-route-cache.test.mjs tests/aviation-layer.test.mjs
+node --test tests/kansas-sky.test.mjs tests/aviation-route-cache.test.mjs tests/aviation-layer.test.mjs tests/aviation-phase.test.mjs tests/aviation-dossier.test.mjs
 node scripts/benchmark-kansas-sky.mjs
 ```
 

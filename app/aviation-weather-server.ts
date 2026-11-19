@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { readBoundedText } from "./bounded-json";
-import { AWC_API_BASE, AWC_KANSAS_BBOX, AWC_SOURCE_TITLE, AWC_SOURCE_URL, parseMetars, parsePireps } from "./aviation-weather";
+import { AWC_API_BASE, AWC_KANSAS_BBOX, AWC_SOURCE_TITLE, AWC_SOURCE_URL, parseMetars, parsePireps, parseTafs } from "./aviation-weather";
 
 const USER_AGENT = "KansasFrontierMatrix/1.0 (https://kansasfrontiermatrix.com)";
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -12,6 +12,8 @@ const PRODUCTS = {
     limitation: "Latest ASOS/AWOS observation per station within 90 minutes. Observations describe the station site only, may be missing or amended, and are not forecasts or flight briefings." },
   pirep: { url: `${AWC_API_BASE}/pirep?bbox=${AWC_KANSAS_BBOX}&format=json&age=3`, code: "AVIATION_PIREP",
     limitation: "Voluntary pilot reports from the last 3 hours. Few reports does not mean little traffic or smooth air; locations and altitudes are as reported." },
+  taf: { url: `${AWC_API_BASE}/taf?bbox=${AWC_KANSAS_BBOX}&format=json`, code: "AVIATION_TAF",
+    limitation: "Latest terminal aerodrome forecast per station, as decoded by the Aviation Weather Center. A TAF covers the area within about 5 statute miles of its airport and is a forecast, not an observation or a briefing; stations without a TAF are not forecast here." },
 } as const;
 
 export class UpstreamError extends Error {
@@ -51,7 +53,7 @@ export async function aviationWeatherResponse(kind: keyof typeof PRODUCTS): Prom
   try {
     const payload = await fetchJson(product.url);
     const now = Date.now();
-    const parsed = kind === "metar" ? parseMetars(payload, now) : parsePireps(payload, now);
+    const parsed = kind === "metar" ? parseMetars(payload, now) : kind === "taf" ? parseTafs(payload, now) : parsePireps(payload, now);
     return NextResponse.json({ retrievedAt: new Date(now).toISOString(), sourceTitle: AWC_SOURCE_TITLE, sourceUrl: AWC_SOURCE_URL,
       evidenceRole: "EXTERNAL_CONTEXT_ONLY", records: parsed.records, dropped: parsed.dropped, limitation: product.limitation }, {
       status: 200,
