@@ -1,5 +1,5 @@
 # KFM dependency vulnerability scanning workflow.
-# Status: Python CI and crop-tile lock audits, locked pnpm audit, and Site npm audit.
+# Status: all Python CI lock and crop-tile lock audits, locked pnpm audit, and Site npm audit.
 #
 # Authority boundary:
 # - This workflow queries public vulnerability advisory services and reports
@@ -58,11 +58,18 @@ jobs:
       - name: Install pinned audit tool
         run: python tools/ci/install_python_ci.py audit-tool
 
-      - name: Audit the hash-locked Python CI dependency set
+      - name: Audit every hash-locked Python CI dependency set
         run: >-
           python -m pip_audit
+          --requirement tools/ci/geoparquet-pyarrow-25.lock
+          --requirement tools/ci/python-audit.lock
+          --requirement tools/ci/python-cli.lock
+          --requirement tools/ci/python-geo.lock
+          --requirement tools/ci/python-nwm.lock
           --requirement tools/ci/python-test.lock
-          --no-deps
+          --require-hashes
+          --disable-pip
+          --strict
           --progress-spinner off
           --desc off
           --format columns
@@ -74,13 +81,16 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Python dependency audit boundary
 
-          This lane audits the complete, hash-locked Python CI dependency set
-          with scanner version `pip-audit==2.10.1`, itself installed from a
-          separate hash-locked environment.
+          This lane audits every hash-locked Python CI dependency set in
+          `tools/ci/*.lock` (test, audit tool, CLI, geo, NWM and PyArrow
+          profiles) with scanner version `pip-audit==2.10.1`, itself installed
+          from a separate hash-locked environment. It reads the exact pins
+          without installing them; findings and scanner errors fail this job.
+          Dependabot does not parse these lock files.
 
-          A green result means no known vulnerability was reported for the
-          exact dependency versions in `tools/ci/python-test.lock` against the
-          advisory data available during this run.
+          A green result means no known vulnerability was reported for those
+          exact dependency versions against the advisory data available during
+          this run.
 
           The result is not proof of vulnerability absence, compatibility,
           source integrity, release readiness, deployment approval, or

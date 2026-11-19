@@ -216,6 +216,13 @@ the shared installer on Python 3.12 with SHA-256 enforcement and binary-only
 distributions. Its synthetic tests still reject tampered inputs; no source
 acquisition, lifecycle promotion or publication is authorized by this profile.
 
+The `dependency-scan / pip-audit` job audits every `tools/ci/*.lock` (the
+PyArrow, audit-tool, CLI, geo, NWM and test profiles) in one run with the same
+`--require-hashes --disable-pip --strict` options, so it reads the exact pins
+without installing them. Dependabot does not parse these lock files, so this job
+is their only advisory check. A lock added to this directory must also be added
+to that step; `tests/ci/test_dependency_scan_workflow.py` fails until it is.
+
 The separate `dependency-scan / pip-audit-crop-casma` job audits that same
 tile lock on Python 3.12 with the existing `audit-tool` profile. It runs on
 pull requests, pushes to main, the advisory schedule, and manual dispatch.
