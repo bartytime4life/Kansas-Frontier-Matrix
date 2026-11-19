@@ -1,8 +1,13 @@
 import { validKansasFips } from './county-csv.mjs';
 import { validateInvestigationState } from './investigation-state.mjs';
 const KEY = 'kfm-science-notebook-v1', MAX_BYTES = 512 * 1024;
+export const MAX_NOTE_CHARACTERS = 4000;
 const forbidden = new Set(['__proto__', 'constructor', 'prototype']);
 const plain = value => value !== null && typeof value === 'object' && !Array.isArray(value) && (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null);
+export function validateInvestigationNotes(value) {
+  if (typeof value !== 'string' || value.length > MAX_NOTE_CHARACTERS) throw new Error('Research notes must be plain text of 4,000 characters or fewer.');
+  return value.trim() ? value : '';
+}
 export function validateWorkbenchState(state) {
   if (!plain(state) || Object.keys(state).length > 40 || JSON.stringify(state).length > 5000) throw new Error('Invalid investigation settings.');
   for (const [key, value] of Object.entries(state)) {
@@ -34,7 +39,8 @@ function validatePrivate(data) {
 }
 function validateEntry(input) {
   if (!plain(input) || !['county', 'signal'].includes(input.workspace) || typeof input.title !== 'string' || !input.title.trim() || input.title.length > 120 || typeof input.id !== 'string' || !/^[a-zA-Z0-9-]{1,80}$/.test(input.id) || typeof input.createdAt !== 'string' || !Number.isFinite(Date.parse(input.createdAt))) throw new Error('Invalid saved investigation.');
-  return { id: input.id, workspace: input.workspace, title: input.title.trim(), createdAt: input.createdAt, state: validateWorkbenchState(input.state), sourceBindings: validateSourceBindings(input.sourceBindings), ...(input.privateData ? { privateData: validatePrivate(input.privateData) } : {}) };
+  const notes = input.notes === undefined ? '' : validateInvestigationNotes(input.notes);
+  return { id: input.id, workspace: input.workspace, title: input.title.trim(), createdAt: input.createdAt, state: validateWorkbenchState(input.state), sourceBindings: validateSourceBindings(input.sourceBindings), ...(input.privateData ? { privateData: validatePrivate(input.privateData) } : {}), ...(notes ? { notes } : {}) };
 }
 const getStorage = storage => { const target = storage ?? globalThis.localStorage; if (!target) throw new Error('Browser storage is unavailable. Download an analysis receipt instead.'); return target; };
 export function listLocalInvestigations(storage) {
@@ -53,6 +59,28 @@ export function saveLocalInvestigation(input, storage) {
 }
 export function deleteLocalInvestigation(id, storage) { write(readStrict(storage).filter(entry => entry.id !== id), storage); }
 export function exportLocalInvestigations(storage) { return JSON.stringify({ format: KEY, exportedAt: new Date().toISOString(), entries: readStrict(storage) }, null, 2); }
+
+// Update only the reasoning attached to an entry, retaining its analytical snapshot.
+export function updateLocalInvestigationNotes(id, notes, { expectedNotes, expectedEntry, storage } = {}) {
+  if (typeof id !== 'string' || !/^[a-zA-Z0-9-]{1,80}$/.test(id)) throw new Error('Invalid investigation identifier.');
+  const normalized = validateInvestigationNotes(notes), entries = readStrict(storage);
+  const index = entries.findIndex(entry => entry.id === id);
+  if (index === -1) throw new Error('That investigation is no longer saved in this browser. Your draft has not been saved.');
+  if (expectedEntry !== undefined) {
+    const expected = validateEntry(expectedEntry);
+    if (expected.id !== id || canonical(expected) !== canonical(entries[index])) throw new Error('This saved investigation changed in another tab. Your draft has been kept; reload and review the saved record before editing again.');
+  }
+  if (expectedNotes !== undefined && validateInvestigationNotes(expectedNotes) !== (entries[index].notes || '')) throw new Error('These notes changed in another tab. Your draft has been kept; reload the saved notes before editing again.');
+  const updated = { ...entries[index] };
+  if (normalized) updated.notes = normalized; else delete updated.notes;
+  entries[index] = updated;
+  try { write(entries, storage); }
+  catch (error) {
+    if (error.message.includes('512 KB')) throw error;
+    throw new Error('This browser could not save these notes. Copy your draft before leaving or retry when storage is available.');
+  }
+  return updated;
+}
 
 // Imports and reopening validate supported controls as well as the storage shape.
 export function validateInvestigation(input) {
