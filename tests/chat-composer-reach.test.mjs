@@ -227,6 +227,76 @@ test('opening requests apply before the first editable paint and never erase inp
  }
 });
 
+test('page record Ask callbacks select Ask repeatedly without losing the draft, context or conversation or submitting',async()=>{
+ const page=ts.createSourceFile('page.tsx',await readFile(new URL('../app/page.tsx',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+ const nodes=[];const visit=node=>{nodes.push(node);ts.forEachChild(node,visit);};visit(page);
+ const attribute=(node,name)=>node.attributes.properties.find(item=>item.name?.getText(page)===name)?.initializer;
+ const evaluate=(node,scope)=>new Function(...Object.keys(scope),ts.transpileModule(`return (${node.getText(page)});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));
+ const declaration=name=>{const node=nodes.find(node=>ts.isVariableDeclaration(node)&&node.name.getText(page)===name);assert.ok(node,name);return node.initializer;};
+ const callbacks=nodes.filter(node=>ts.isJsxAttribute(node)&&node.name.getText(page)==='onAsk').map(node=>node.initializer.expression);
+ assert.equal(callbacks.length,2,'both Underground and SubsurfaceInspector page callbacks are exercised');
+ const record=nodes.find(node=>ts.isJsxElement(node)&&node.openingElement.tagName.getText(page)==='button'&&node.children.some(child=>ts.isJsxText(child)&&child.text.trim()==='Ask AI about this record'));
+ callbacks.push(attribute(record.openingElement,'onClick').expression);
+ const elements=nodes.filter(node=>ts.isJsxSelfClosingElement(node)||ts.isJsxOpeningElement(node));
+ const find=elements.find(node=>attribute(node,'aria-label')?.text==='Find a county or place');
+ const toggle=elements.find(node=>node.tagName.getText(page)==='InspectionPanelSwitch'&&attribute(node,'active')?.text==='evidence');
+ const recordFocus={...focus,context:{...focus.context,frame:2020,layers:['counties','geology']}};
+ for(const isCompact of [false,true]){
+  const calls=[],timers=[];let focused='';
+  const inputRef={current:{value:'',focus(){focused='composer';}}};
+  const props={focus:recordFocus,initialMode:'explore',inputRef,discovery:{query:'',items:[],status:'',busy:false,onQuery(){},onChoose(){}}};
+  const {h,render}=await renderChat(async(url,options)=>{
+   calls.push({url,method:options.method});
+   return url.endsWith('/status')?ready():options.method==='POST'?Response.json({id:'retained-turn'}):Response.json({id:'retained-turn',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Retained county discussion.'}});
+  },props);
+  try{
+   const state={draftRequest:undefined};
+   const scope={useCallback:fn=>fn,isCompact,globalSearchInputRef:inputRef,qwenReturnRef:{current:null},mapUtilityReturnRef:{current:null},qwenPanelRef:{current:{querySelector:()=>({focus(){focused='close';}})}},document:{activeElement:null},HTMLElement:class {},window:{setTimeout:fn=>timers.push(fn)},setAssistantDraftRequest:update=>{state.draftRequest=update(state.draftRequest);},fetch(){assert.fail('opening a composer cannot request the network');}};
+   for(const key of ['PrimaryWorkspace','GuideOpen','WelcomeSourcesOpen','QwenOpen','ChatLayoutSuspended','HelpOpen','MapUtilityOpen','MapQueryCandidates','LeftOpen','RightOpen','TimelineOpen'])scope['set'+key]=value=>{state[key]=value;};
+   for(const name of ['dismissMapUtilityWithoutFocus','openQwenCompanion','openAtlasComposer'])scope[name]=evaluate(declaration(name),scope);
+   const draw=()=>render({...props,draftRequest:state.draftRequest});
+   const press=(tree,label)=>findNode(tree,node=>node.type==='button'&&node.props.children===label).props.onClick();
+   let tree=draw();
+   findNode(tree,node=>node.type==='textarea').props.onChange({target:{value:'Explain this county.'}});tree=draw();
+   await findNode(tree,node=>node.type==='form').props.onSubmit({preventDefault(){},currentTarget:{}});draw();await settle();tree=draw();
+   const conversation=text(findNode(tree,node=>node.props?.role==='log'));
+   assert.match(conversation,/Retained county discussion/);
+   for(const callback of callbacks)for(const previous of ['Find','Evidence']){
+    press(tree,previous);tree=draw();
+    const draft=`Unsent ${previous} question about the selected record`;
+    inputRef.current.value=draft;findNode(tree,node=>node.type==='textarea').props.onChange({target:{value:draft}});tree=draw();
+    const priorRequest=state.draftRequest;
+    evaluate(attribute(toggle,'onQwen').expression,scope)();tree=draw();
+    assert.equal(state.draftRequest,priorRequest,'generic panel toggle issues no mode request');
+    assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children===previous).props['aria-pressed'],true);
+    timers.splice(0).forEach(fn=>fn());
+    for(let repeat=0;repeat<2;repeat++){
+     if(repeat){press(tree,previous);tree=draw();}
+     const id=state.draftRequest?.id??0,before=calls.length;
+     evaluate(callback,scope)();
+     assert.equal(calls.length,before,'the actual page handler performs no request');
+     assert.deepEqual(state.draftRequest,{id:id+1,value:draft,intent:'explore'});
+     tree=draw();await settle();tree=draw();
+     assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props['aria-pressed'],true);
+     assert.equal(findNode(tree,node=>node.type==='textarea').props.value,draft);
+     assert.equal(text(findNode(tree,node=>node.props?.role==='log')),conversation);
+     assert.match(text(findNode(tree,node=>node.props?.['aria-label']==='AI question context')),/Synthetic county.*Synthetic source context/);
+     assert.equal(props.focus,recordFocus);assert.deepEqual(recordFocus.context,{...focus.context,frame:2020,layers:['counties','geology']});
+     assert.equal(state.QwenOpen,true);assert.equal(state.PrimaryWorkspace,'map');
+     timers.splice(0).forEach(fn=>fn());assert.equal(focused,'composer');
+     // Passive effects retain the pre-existing readiness GET; opening never creates a job.
+     assert.ok(calls.slice(before).every(call=>call.url.endsWith('/status')&&call.method==='GET'));
+    }
+   }
+   evaluate(attribute(find,'onClick').expression,scope)();tree=draw();tree=draw();
+   assert.equal(state.draftRequest.intent,'find');
+   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Find').props['aria-pressed'],true);
+   assert.equal(findNode(tree,node=>node.type==='textarea').props.value,inputRef.current.value);
+   assert.equal(calls.filter(call=>call.method==='POST').length,1,'only the explicitly submitted setup conversation sent a question');
+  }finally{h.dispose();}
+ }
+});
+
 test('discussion formatting keeps model HTML as text and renders headings and lists semantically',async()=>{
  const {h}=await renderChat();
  try{

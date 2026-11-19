@@ -13036,7 +13036,7 @@ export default function Home() {
             onTerrain={() => activateMapRepresentation("terrain")} onFlatMap={() => activateMapRepresentation("2d")} readElevation={point => mapRef.current && terrainState === "READY" ? unexaggeratedTerrainElevation(mapRef.current, point) : null}
             isDrawing={() => Boolean(measureModeRef.current)} onDraw={() => toggleMeasure("distance")}
             readTransect={() => measurementGeometryModeRef.current === "distance" && !measureModeRef.current ? measureCoordinatesRef.current.map(p => [...p] as [number, number]) : []}
-            onContext={setSubsurfaceContext} onAsk={() => openQwenCompanion()}
+            onContext={setSubsurfaceContext} onAsk={() => openAtlasComposer("explore")}
             onInspect={inspection => { returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setSubsurfaceInspection(inspection); setResearchOpen(false); setRightOpen(true); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-subsurface-inspector]")?.focus()); }}
             onClose={() => { setUndergroundOpen(false); window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true })); }} onSave={saveCurrentWorkspace}
             onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} />}
@@ -13062,7 +13062,7 @@ export default function Home() {
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
           </div>
-          {subsurfaceInspection ? <SubsurfaceInspector inspection={subsurfaceInspection} onAsk={() => openQwenCompanion()}
+          {subsurfaceInspection ? <SubsurfaceInspector inspection={subsurfaceInspection} onAsk={() => openAtlasComposer("explore")}
             onCenter={() => mapRef.current?.easeTo({ center: subsurfaceInspection.record.coordinates, zoom: 13, duration: motionDuration(400) })}
             onSave={saveCurrentWorkspace} onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} /> : researchOpen && researchContext ? <div className="drawer-scroll">
             {selected && <button className="map-catalog-launch" type="button" onClick={() => { setResearchOpen(false); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus()); }}>Back to selected record</button>}
@@ -13094,7 +13094,7 @@ export default function Home() {
                 <div><dt>Source &amp; limits</dt><dd><strong>{selectedSummary.source}</strong> · {selectedSummary.status}<p>{selectedSummary.limits}</p></dd></div>
               </dl>}
               <div className={researchStyles.actions}>
-                <button type="button" onClick={() => openQwenCompanion()}>Ask AI about this record</button>
+                <button type="button" onClick={() => openAtlasComposer("explore")}>Ask AI about this record</button>
                 <button type="button" onClick={() => { activateDrawerView("evidence"); window.requestAnimationFrame(() => document.getElementById("drawer-tab-evidence")?.focus()); }}>Inspect</button>
                 {selectedResearchRecord && <button type="button" onClick={() => centerResearchRecord(selectedResearchRecord)}>Center</button>}
                 {researchSourceUrl(selectedOfficialConnection?.source.sourceUrl ?? selected.properties.citation) && <a href={researchSourceUrl(selectedOfficialConnection?.source.sourceUrl ?? selected.properties.citation)!} target="_blank" rel="noreferrer">Open source ↗</a>}
