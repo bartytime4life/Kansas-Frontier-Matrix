@@ -5,6 +5,7 @@ import {
 import { type Collection } from '../collection-metadata';
 import {fieldDictionaryRevision} from '../collection-field-dictionary';
 import { recoveredCollection } from '../recovered-collections';
+import {connectRecordContexts,recordContextBrief,type ContextSample} from './record-context';
 
 const FORMAT = 'kfm-record-lab-bundle-v1';
 export const MAX_LAB_BUNDLE_BYTES = 8 * 1024 * 1024;
@@ -25,10 +26,12 @@ export function createLabBundle(
   question: string,
   view: LabMeasurementView | null,
   profile = profileCollection(collection, snapshot),
-) {
+  contexts: readonly ContextSample[] = [],
+):string {
   const defaultField = profile.fields.find(field => field.groups.length);
   const defaultView = defaultField ? { field: defaultField.name, context: defaultField.groups[0].context, range: null } : null;
-  return JSON.stringify({
+  const connections=connectRecordContexts(collection,snapshot,contexts);
+  const contents=JSON.stringify({
     format: FORMAT,
     collection: collection.id,
     fieldDictionaryRevision:fieldDictionaryRevision(collection.id),
@@ -37,8 +40,14 @@ export function createLabBundle(
     capture: { pages: snapshot.pages, hasMore: snapshot.hasMore, reads: snapshot.answers.map(captureRead) },
     profile,
     records: snapshot.rows,
-    brief: storyBrief(collection, snapshot, question, profile),
+    ...(contexts.length?{contexts:contexts.map(context=>{
+      const target=recoveredCollection(context.collectionId)!;
+      return JSON.parse(createLabBundle(target,context.snapshot,'Metadata context for '+collection.id,null));
+    }),connections}:{}),
+    brief: storyBrief(collection, snapshot, question, profile)+recordContextBrief(connections),
   });
+  if(new TextEncoder().encode(contents).length>MAX_LAB_BUNDLE_BYTES)throw new Error('This lab exceeds the 8 MB saved-bundle limit. Remove a context sample before exporting; all loaded records remain available.');
+  return contents;
 }
 
 function captureRead(value: unknown): LabSnapshot['answers'][number] {
@@ -103,9 +112,24 @@ function previousWaterContext(collection:Collection,view:Record<string,unknown>,
 }
 
 export function openLabBundle(contents: string) {
-  if (contents.length > MAX_LAB_BUNDLE_BYTES) throw new Error('Choose a Record Lab JSON file under 8 MB.');
+  if (contents.length > MAX_LAB_BUNDLE_BYTES || new TextEncoder().encode(contents).length > MAX_LAB_BUNDLE_BYTES) throw new Error('Choose a Record Lab JSON file under 8 MB.');
   let value: unknown;
   try { value = JSON.parse(contents); } catch { throw new Error('This file is not valid JSON.'); }
+  const saved=readLabBundle(value);
+  const attached=record(value)?value.contexts:undefined;
+  if(attached!==undefined&&(!Array.isArray(attached)||attached.length>2))throw new Error('Attach at most one station and one series sample.');
+  const contexts:ContextSample[]=(attached??[]).map((entry:unknown)=>{
+    if(!record(entry)||Object.hasOwn(entry,'contexts'))throw new Error('Nested context bundles are not supported.');
+    const context=readLabBundle(entry);
+    return {collectionId:context.collection.id,snapshot:context.snapshot};
+  });
+  // Saved profiles and connection summaries are derived claims. Recompute them
+  // from the validated source rows rather than accepting an imported result.
+  connectRecordContexts(saved.collection,saved.snapshot,contexts);
+  return {...saved,contexts};
+}
+
+function readLabBundle(value:unknown){
   if (!record(value) || typeof value.question !== 'string' || value.question.length > 600 || !Array.isArray(value.records) || value.records.length > LAB_MAX_ROWS) {
     throw new Error('Choose a valid Record Lab JSON bundle.');
   }

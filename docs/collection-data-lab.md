@@ -116,6 +116,38 @@ The metadata API and JSON/story exports carry the same plans and counts. Older
 station/series bundles keep their records and question, with an explicit notice
 when a former measurement selection now has documented units or metadata roles.
 
+## Connect observations to metadata records
+
+After loading daily values, field measurements or peaks, use **Connect station
+and series records** to load a metadata sample or attach a saved station/series
+lab JSON. Each sample retains the existing five-page, 250-record bound. Station
+keys match exactly on `monitoring_location_id`. Daily/peak series match
+`time_series_id` only within their documented `data_type`; field-measurement
+series cannot use this captured metadata namespace.
+
+The lab shows observations with one match, multiple metadata records, no match
+in the sample or a missing key. Repeated captures remain separate. Shared series
+station, parameter, statistic and unit fields are checked for conflicts and
+missing values. A matching identifier does not establish the applicable capture
+version, metadata period, datum, method or observation quality. No field is
+filled, overwritten, converted or chosen as current. These are browser-local
+identity links over loaded records, not a whole-archive or temporal join.
+
+Use the filter and **Inspect matches and source records** to review up to twenty
+observations and five matches per observation. The JSON keeps every original
+observation, metadata row, read receipt and computed link. The story brief records
+match counts, exclusions and comparison limits. Downloaded bundles reopen both
+context samples and recompute the links; imported profiles and match counts are
+never taken as verified results. Metadata files remain user-supplied evidence.
+
+Only one station and one series sample can be attached. The existing 8 MB JSON
+limit also applies to combined exports; an oversized export fails visibly without
+dropping records. Nested, duplicate, unrelated or malformed context bundles are
+rejected. A cancelled or failed metadata read retains the previous sample.
+Loading a new observation sample clears its context attachments; changing the
+question or measurement view preserves them. These controls add no server query
+parameters, native-store writes, source admission or AI review credits.
+
 **Reopen a saved lab bundle** reads the file in the browser and restores its
 record sample, question, field, context and selected interval where present.
 Older JSON downloads reopen their record sample and question. The app checks

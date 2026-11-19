@@ -7,6 +7,8 @@ import {loadLabSample,profileCollection,storyBrief,type LabSnapshot} from '../co
 import CollectionMetadataPanel from '../collection-metadata-panel';
 import MeasurementExplorer from './measurement-explorer';
 import {createLabBundle,MAX_LAB_BUNDLE_BYTES,openLabBundle,type LabMeasurementView} from './lab-bundle';
+import RecordContextPanel from './record-context-panel';
+import {connectRecordContexts,recordContextBrief,type ContextSample} from './record-context';
 import styles from './lab.module.css';
 
 const DEFAULT_QUESTION = 'What do these records contribute to this investigation?';
@@ -35,6 +37,8 @@ export default function DataLab(){
  const [busy,setBusy]=useState(false),[status,setStatus]=useState(INITIAL_STATUS);
  const [question,setQuestion]=useState(DEFAULT_QUESTION),[activePack,setActivePack]=useState<ResearchPack|null>(null);
  const [measurementView,setMeasurementView]=useState<LabMeasurementView|null>(null);
+ const [contexts,setContexts]=useState<ContextSample[]>([]);
+ const [contextGeneration,setContextGeneration]=useState(0);
  const [bundleStatus,setBundleStatus]=useState('');
  const [workbenchVisits,setWorkbenchVisits]=useState(0);
  const request=useRef<AbortController|null>(null),version=useRef(0);
@@ -42,7 +46,7 @@ export default function DataLab(){
  const workbenchHeading=useRef<HTMLHeadingElement>(null);
  const collection=recoveredCollection(id),profile=useMemo(()=>collection&&snapshot?profileCollection(collection,snapshot):null,[collection,snapshot]);
  const eligible=profile?.fields.filter(f=>f.groups.length)??[];
- const brief=useMemo(()=>collection&&snapshot&&profile?storyBrief(collection,snapshot,question,profile):'',[collection,snapshot,profile,question]);
+ const brief=useMemo(()=>collection&&snapshot&&profile?storyBrief(collection,snapshot,question,profile)+recordContextBrief(connectRecordContexts(collection,snapshot,contexts)):'',[collection,snapshot,profile,question,contexts]);
  const displayFields=useMemo(()=>[...(profile?.fields??[])].sort((a,b)=>Number(b.groups.length>0)-Number(a.groups.length>0)||b.missing-a.missing),[profile]);
  const matching=RECOVERED_COLLECTIONS.filter(c=>(c.title+' '+c.id).toLowerCase().includes(search.toLowerCase()));
  useEffect(()=>{
@@ -72,8 +76,10 @@ export default function DataLab(){
  function choose(next:string,pack?:ResearchPack){
   request.current?.abort();
   version.current++;
+  setContextGeneration(version.current);
   setId(next);
   setSnapshot(null);
+  setContexts([]);
   setMeasurementView(null);
   setBundleStatus('');
   setBusy(false);
@@ -93,15 +99,17 @@ export default function DataLab(){
  }
  async function load(){
   if(!collection)return;request.current?.abort();const controller=new AbortController();request.current=controller;const generation=++version.current;
+  setContextGeneration(generation);
   setBundleStatus('');
   setBusy(true);setStatus('Reading up to five pages, at most 250 records…');const timer=setTimeout(()=>controller.abort(),120000);
-  try{const next=await loadLabSample(collection,controller.signal);if(generation!==version.current)return;setSnapshot(next);setMeasurementView(null);setStatus(`${next.rows.length} records loaded from ${next.pages} page(s). ${next.hasMore?'Further records remain.':'No further records were reported at this read.'}`);}
+  try{const next=await loadLabSample(collection,controller.signal);if(generation!==version.current)return;setSnapshot(next);setContexts([]);setMeasurementView(null);setStatus(`${next.rows.length} records loaded from ${next.pages} page(s). ${next.hasMore?'Further records remain.':'No further records were reported at this read.'}`);}
   catch(error){if(generation===version.current)setStatus(controller.signal.aborted?'Read cancelled or timed out. No incomplete sample was substituted.':error instanceof Error?error.message:'The archive could not be read.');}
   finally{clearTimeout(timer);if(generation===version.current)setBusy(false);}
  }
  function bundle(){
   if(!collection||!snapshot||!profile)return;
-  save(`${collection.id}-lab.json`,createLabBundle(collection,snapshot,question,measurementView,profile),'application/json');
+  try{save(`${collection.id}-lab.json`,createLabBundle(collection,snapshot,question,measurementView,profile,contexts),'application/json');}
+  catch(error){setStatus(error instanceof Error?error.message:'The lab bundle could not be exported.');}
  }
  async function restore(file:File){
   const attempt=++bundleVersion.current, generation=version.current;
@@ -113,9 +121,11 @@ export default function DataLab(){
    const saved=openLabBundle(contents);
    request.current?.abort();
    version.current++;
+   setContextGeneration(version.current);
    setId(saved.collection.id);
    setSearch('');
    setSnapshot(saved.snapshot);
+   setContexts(saved.contexts);
    setMeasurementView(saved.view);
    setQuestion(saved.question);
    setActivePack(null);
@@ -167,6 +177,7 @@ export default function DataLab(){
     {snapshot.origin==='saved-bundle'&&<p className={styles.note}>Showing records and source references from your saved file. An archive read loads a new sample from the provider relay.</p>}
     <p className={styles.note}>{profile.sample.scope} {profile.sample.hasMore?'More records remain outside this sample.':''}{profile.spatial.sampleBoundingBox&&<> Loaded geometry extent (longitude/latitude): {profile.spatial.sampleBoundingBox.join(', ')}. This is a sample extent, not collection coverage.</>}</p>
     {profile.sample.stale&&<p className={styles.note}>Some pages came from stale cache. Source times remain authoritative; reloading does not make historical observations current.</p>}
+    <RecordContextPanel key={id+'-'+contextGeneration} collection={collection} snapshot={snapshot} contexts={contexts} busy={busy} onChange={update=>{if(contextGeneration===version.current)setContexts(update);}}/>
     {eligible.length>0?<MeasurementExplorer collection={collection} snapshot={snapshot} fields={eligible} busy={busy} save={save} view={measurementView} onViewChange={setMeasurementView}/>:<p className={styles.note}>The loaded sample has no eligible numeric fields to chart.</p>}
     <h3>Field completeness &amp; recorded measurements</h3><p>Zero is a value. Blank and absent values stay missing. Identifiers, dates, coordinates, categories and quality flags are excluded from measurement summaries. Provider fill codes are retained; check source definitions before interpretation.</p>
     <p className={styles.scrollHint}>Swipe or scroll the table sideways to compare every column.</p><div className={styles.table} role="region" aria-label="Field completeness table; scroll horizontally for all columns" tabIndex={0}><table><caption>Loaded sample only · units and measurement contexts stay separate</caption><thead><tr><th>Field / role</th><th>Present</th><th>Missing</th><th>Recorded numeric groups</th></tr></thead><tbody>{displayFields.map(f=><tr key={f.name}><th scope="row"><code>{f.name}</code><small>{f.role}</small></th><td>{f.present}</td><td>{f.missing}</td><td>{f.groups.map(g=><p key={g.context}><strong>{g.context}</strong><br/>{g.count} numeric values · min {g.min} · max {g.max} · mean {g.mean??'Unavailable'} · median {g.median}</p>)}{!f.groups.length&&'No eligible numeric measurements'}{f.additionalGroups>0&&<p>{f.additionalGroups} additional groups are outside the 12-group summary; all original values remain in the export.</p>}{f.longFields>0&&<p>{f.longFields} long fields require the full-field reader in the Data library.</p>}{f.exampleValues.length>0&&<p>Recorded time values: {f.exampleValues.join(' · ')}. {f.definition??'Field meanings and editions need source documentation.'}</p>}</td></tr>)}</tbody></table></div>
