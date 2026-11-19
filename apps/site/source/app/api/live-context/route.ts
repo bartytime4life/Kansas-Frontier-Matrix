@@ -70,10 +70,15 @@ const asNumeric = (value: unknown) => {
 const fetchBoundedJsonValue = async (url: string, timeoutMs: number, init?: RequestInit): Promise<unknown> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let response: Response | undefined;
+  let complete = false;
   try {
-    const response = await fetch(url, { ...init, cache: "no-store", redirect: "manual", signal: controller.signal });
+    response = await fetch(url, { ...init, cache: "no-store", redirect: "manual", signal: controller.signal });
+    controller.signal.throwIfAborted();
     if (!response.ok) throw new UpstreamError(`Official upstream returned HTTP ${response.status}.`);
-    return await readBoundedJson(response, MAX_RESPONSE_BYTES);
+    const value = await readBoundedJson(response, MAX_RESPONSE_BYTES, controller.signal);
+    complete = true;
+    return value;
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") throw new UpstreamError("Official upstream request timed out.", true);
@@ -81,6 +86,10 @@ const fetchBoundedJsonValue = async (url: string, timeoutMs: number, init?: Requ
     throw new UpstreamError("Official upstream request failed.");
   } finally {
     clearTimeout(timeout);
+    if (!complete) {
+      controller.abort();
+      void response?.body?.cancel().catch(() => undefined);
+    }
   }
 };
 

@@ -3088,4 +3088,15 @@ def test_unused_code_successor_preserves_connections_capture_inventory_and_all_h
         },
         "ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8",
     )
-    assert TOOL.RECEIPT.name == "site-v268-unused-code-overlay-20261119.json"
+    # A later immutable successor now owns the current selector.
+
+
+def test_live_context_deadline_successor_preserves_unused_code_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-live-context-deadline-overlay-20261119.json",
+        "site-v268-unused-code-overlay-20261119.json",
+        "5e1cdd95fe8b727760df4b2e1ffab477221f08aa6347a450a34efc1ae98a0737",
+        {"app/api/live-context/route.ts", "tests/live-context-deadline.test.mjs"},
+        "0c882dedae7a492678b281f3e5be5b8fa3221126",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-live-context-deadline-overlay-20261119.json"
