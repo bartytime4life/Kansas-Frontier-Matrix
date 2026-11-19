@@ -30,7 +30,7 @@ test('54 water fields have source-backed definitions with per-row rather than gu
  assert.equal(documentedCode(daily.id,'statistic_id','00003'),'Mean');
  assert.equal(documentedCode(daily.id,'approval_status','Provisional'),'USGS provisional; subject to revision');
  assert.equal(documentedCode(daily.id,'approval_status','toString'),null);
- assert.deepEqual(collectionMetadata(recoveredCollection('observations-usgs-sites')).documentation,[]);
+ assert.deepEqual(collectionMetadata(recoveredCollection('observations-usgs-samples-results')).documentation,[]);
 });
 
 test('peak comparison years, partial dates and measurement-quality codes are not numeric observations',()=>{

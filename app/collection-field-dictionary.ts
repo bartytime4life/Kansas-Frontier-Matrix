@@ -5,7 +5,7 @@ export type FieldDocument = {
  id:string; title:string; url:string; edition:string|null; sha256:string|null; checkedAt:string; scope:string;
 };
 export type DocumentedField = {
- label?:string; role:FieldRole; definition:string; unit?:string; unitField?:string; reference?:string; encoding?:string;
+ label?:string; role:FieldRole; definition:string; unit?:string; unitField?:string; reference?:string; referenceField?:string; sourceField?:string; encoding?:string;
  codes?:Readonly<Record<string,string>>; sources:readonly string[];
 };
 
@@ -82,6 +82,13 @@ export function recordedUnit(collectionId:string,field:string,values:Record<stri
  const definition=documentedField(collectionId,field);
  if(definition?.unit)return definition.unit;
  const key=definition?.unitField;
+ const value=key&&Object.hasOwn(values,key)?values[key]:null;
+ return typeof value==='string'&&value.trim()?value:null;
+}
+export function recordedReference(collectionId:string,field:string,values:Record<string,unknown>):string|null{
+ const definition=documentedField(collectionId,field);
+ if(definition?.reference)return definition.reference;
+ const key=definition?.referenceField;
  const value=key&&Object.hasOwn(values,key)?values[key]:null;
  return typeof value==='string'&&value.trim()?value:null;
 }

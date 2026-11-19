@@ -22,7 +22,8 @@ function contextLabel(context: string,collectionId:string) {
     .sort(([a], [b]) => Number(isUnit(b)) - Number(isUnit(a)))
     .map(([name, value]) => {
       const meaning=documentedCode(collectionId,name,value);
-      return `${isUnit(name) ? 'Unit' : fieldLabel(name)}: ${value}${meaning?` (${meaning})`:''}`;
+      const unit=!meaning&&value.trim()&&Number.isFinite(Number(value))?documentedField(collectionId,name)?.unit:null;
+      return `${isUnit(name) ? 'Unit' : fieldLabel(name)}: ${value}${unit?` ${unit}`:''}${meaning?` (${meaning})`:''}`;
     })
     .join(' · ');
 }
