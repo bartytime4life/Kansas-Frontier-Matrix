@@ -20,6 +20,10 @@
 .layout { display: grid; grid-template-columns: minmax(0, 46rem) minmax(15rem, 1fr); gap: clamp(1.3rem, 4vw, 3.6rem); align-items: start; }
 .viewerHeading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .65rem; margin-bottom: .75rem; }
 .viewerHeading h2, .context h2, .sources h2 { margin: 0; font: clamp(1.45rem, 3vw, 1.9rem)/1.16 Georgia, serif; letter-spacing: -.02em; }
+.viewerTools { display: flex; gap: .35rem .9rem; align-items: center; flex-wrap: wrap; }
+.markBridge { display: inline-flex; gap: .45rem; align-items: center; min-height: 2.75rem; color: var(--green); font-size: .9rem; cursor: pointer; }
+.markBridge input { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: var(--green); }
+.markBridge input:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 .modes { display: inline-flex; gap: .2rem; padding: .18rem; border: 1px solid var(--line); border-radius: .4rem; }
 .modes button { min-height: 2.75rem; border: 0; border-radius: .3rem; background: transparent; padding: .35rem .7rem; color: var(--green); font: inherit; font-size: .9rem; cursor: pointer; }
 .modes button[aria-pressed='true'] { background: var(--green); color: #fff; }
@@ -39,6 +43,8 @@
 .help { margin: .3rem 0 0; font-size: .9rem; color: var(--muted); }
 .duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
 .duo figure { margin: 0; }
+.editionImage { position: relative; }
+.marker { position: absolute; width: clamp(1.4rem, 3.2vw, 2.4rem); aspect-ratio: 1; box-sizing: border-box; border: 2px solid #fff1ae; border-radius: 50%; box-shadow: 0 0 0 2px #1c372b, inset 0 0 0 1px #1c372b; transform: translate(-50%, -50%); pointer-events: none; }
 .duo img { border-radius: .4rem; background: #e1ddd1; }
 .duo figcaption { margin-top: .45rem; }
 .context { border-top: 2px solid var(--green); padding-top: .9rem; }
@@ -46,6 +52,13 @@
 .context dt { color: var(--green); font-weight: 700; }
 .context dd { margin: .15rem 0 .85rem; }
 .context p { margin: .9rem 0 .4rem; color: var(--muted); }
+.bridgeRecord { border-top: 1px solid var(--line); padding-top: .9rem; }
+.bridgeRecord h3 { margin: 0; font: 1.28rem/1.2 Georgia, serif; }
+.bridgeRecord p { margin-top: .4rem; }
+.bridgeRecord ul { margin: .75rem 0 0; padding-inline-start: 1.1rem; font-size: .9rem; }
+.bridgeRecord li + li { margin-top: .2rem; }
+.bridgeRecord .recordLink { display: inline-flex; gap: .5rem; align-items: center; min-height: 2.75rem; margin-top: .55rem; padding: .4rem .7rem; border-radius: .3rem; background: var(--green); color: #fff; font-weight: 700; text-decoration: none; }
+.bridgeRecord .recordLink:hover { text-decoration: underline; }
 .sources { margin-top: 2.4rem; border-top: 1px solid var(--line); padding-top: 1.2rem; }
 .sources p { color: var(--muted); margin: .45rem 0; }
 .sourceList { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem 1.5rem; margin-block: 1rem; }

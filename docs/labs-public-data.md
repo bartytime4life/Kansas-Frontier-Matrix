@@ -37,6 +37,14 @@ some 2022 reflights. Exact acquisition dates at this crossing remain open.
 The 2024 view shows an interrupted crossing and work areas. KDOT's report
 documents completion of the U.S. 83 Business replacement at the end of 2024.
 
+KDOT project `KA-5707-01` connects the 2023 letting for bridge #004
+to the replacement inventory structure `0028-B0032`. The optional ring
+marks the inventory's point after projecting it to the shared image bounds.
+The Built Kansas link selects that one record in the November 16, 2026
+snapshot. The inspector links back to the aerial comparison. If a later
+snapshot replaces that record binding, the direct KDOT inventory query
+remains available.
+
 This guided Lab displays one fixed pair from same-origin image files. The
 map’s Earth Engine comparison still uses its existing installed-year workflow.
 The checked provider URLs, bounds, and image hashes are
@@ -47,6 +55,7 @@ Pillow and WebP support.
 - [2021 natural-color catalog record](https://www.arcgis.com/home/item.html?id=22c32cb49e8142778080110483c37e45)
 - [2024 natural-color catalog record](https://www.arcgis.com/home/item.html?id=ea609c6281c44aa889c5e1820267c52a)
 - [KDOT annual report](https://www.ksdot.gov/home/showpublisheddocument/5339/638942104104100000)
+- [KDOT letting notice in the Kansas Register](https://sos.ks.gov/publications/Register/Volume-42/Issues/Issue-38/09-21-23-51496.html)
 
 ## Finney County drought replay
 
