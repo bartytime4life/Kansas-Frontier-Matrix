@@ -8,6 +8,7 @@ import { startSubsurfaceWorker } from "./subsurface-workers";
 import { atRecordYear, recordYear } from "./subsurface-materials";
 import { fitRecordedSlice, sliceWindowDepth } from "./subsurface-slice";
 import { cutawayLocatorPlacement } from "./cutaway-locator";
+import { readSuccessfulJson } from "./bounded-json";
 
 const AquiferView = lazy(() => import("./aquifer-volume-view"));
 const ResourceView = lazy(() => import("./underground-resources"));
@@ -24,6 +25,13 @@ type Props = {
 type WorkerResult = { id: number; prepared?: boolean; bounds?: AreaBounds; manifest?: SubsurfaceManifest; columns?: SectionRecord[]; total?: number; partial?: boolean; coverage?: string; failures?: string[]; error?: string; matches?: [string, string, Position, string][] };
 const EMPTY_ROUTE: Position[] = [];
 const EMPTY_COLUMNS: SectionRecord[] = [];
+function validSurveyCatalogue(value: unknown): value is { version: 1; surveys: GeophysicalSurvey[] } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const data = value as Record<string, unknown>;
+  return !("error" in data) && data.version === 1 && Array.isArray(data.surveys) && data.surveys.length <= 100
+    && data.surveys.every(validGeophysicalSurvey) && new Set(data.surveys.map(survey => survey.id)).size === data.surveys.length
+    && data.surveys.every(survey => new Set(survey.profiles.map(profile => profile.id)).size === survey.profiles.length);
+}
 const download = (name: string, value: string | null, type: string) => {
   if (!value) return;
   const url = URL.createObjectURL(new Blob([value], { type })); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -85,8 +93,8 @@ export default function UndergroundPanel(props: Props) {
   const searchRequest = useRef<number | null>(null);
   const [recordTarget, setRecordTarget] = useState<{ id: number; point: Position } | null>(null);
   const [search, setSearch] = useState(""), [matches, setMatches] = useState<NonNullable<WorkerResult["matches"]>>([]);
-  const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[]>([]);
-  const [surveyError, setSurveyError] = useState("");
+  const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[] | null>(null);
+  const [surveyError, setSurveyError] = useState(""), [surveyAttempt, setSurveyAttempt] = useState(0);
   const [surface, setSurface] = useState<{ distance: number; elevation: number | null }[]>([]);
   const worker = useRef<Worker | null>(null), serial = useRef(0), current = useRef(props), pinnedRef = useRef(pinned);
   useEffect(() => { current.current = props; pinnedRef.current = pinned; }, [props, pinned]);
@@ -273,14 +281,27 @@ export default function UndergroundPanel(props: Props) {
     return () => { map.off("styledata", update); for (const id of ["kfm-underground-context", "kfm-underground-context-route"]) if (map.getLayer(id)) map.removeLayer(id); if (map.getSource("kfm-underground-context")) map.removeSource("kfm-underground-context"); };
   }, [map, columns, anchor, route, selected?.id]);
   useEffect(() => {
-    if (display !== "surveys" || surveys.length) return;
-    const controller = new AbortController();
-    void fetch("/data/subsurface/geophysics.json", { signal: controller.signal }).then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(data => {
-      if (data.version !== 1 || !Array.isArray(data.surveys)) throw new Error();
-      if (!controller.signal.aborted) setSurveys(data.surveys.filter(validGeophysicalSurvey));
-    }).catch(() => { if (!controller.signal.aborted) setSurveyError("Published profiles are unavailable."); });
-    return () => controller.abort();
-  }, [display, surveys.length]);
+    if (display !== "surveys" || surveys !== null) return;
+    const controller = new AbortController(); let active = true, removeAbort = () => {};
+    const cancelled = new Promise<never>((_, reject) => {
+      const abort = () => reject(controller.signal.reason);
+      controller.signal.addEventListener("abort", abort, { once: true });
+      removeAbort = () => controller.signal.removeEventListener("abort", abort);
+    });
+    const deadline = setTimeout(() => controller.abort(new Error("Survey catalogue timed out.")), 15000);
+    const dispose = () => { clearTimeout(deadline); removeAbort(); };
+    queueMicrotask(() => { if (active) setSurveyError(""); });
+    const load = async () => {
+      const response = await fetch("/data/subsurface/geophysics.json", { signal: controller.signal });
+      const data = await readSuccessfulJson(response, 2 * 1024 * 1024, controller.signal);
+      if (!validSurveyCatalogue(data)) throw new Error("Unexpected survey catalogue.");
+      return data.surveys;
+    };
+    void Promise.race([load(), cancelled]).then(data => {
+      if (active && !controller.signal.aborted) setSurveys(data);
+    }).catch(() => { if (active) setSurveyError("Published profiles are unavailable or timed out. Retry loading the catalogue."); }).finally(dispose);
+    return () => { active = false; controller.abort(); dispose(); };
+  }, [display, surveys, surveyAttempt]);
   const inspect = useCallback((record: Borehole, interval?: DepthInterval) => {
     setSelectedId(record.id); setPickedInterval(interval ? {recordId:record.id,index:record.intervals.indexOf(interval)} : null); if (interval && display !== "3d") setDepth(Math.max(range[0], Math.min(range[1], meters((interval.top + interval.bottom) / 2, record.depthUnit)))); onInspect({ record, interval, tileId: manifest?.tiles?.find(tile => record.coordinates[0] >= tile.bounds[0] && record.coordinates[0] < tile.bounds[2] && record.coordinates[1] >= tile.bounds[1] && record.coordinates[1] < tile.bounds[3])?.id });
   }, [onInspect, range, display, manifest]);
@@ -370,7 +391,16 @@ export default function UndergroundPanel(props: Props) {
       {missing.length > 0 && <p className={s.limit}>Reopened settings: {missing.length} previously captured records are not in the current eligible response. Saved rows have not been substituted.</p>}
       {display === "section" && <div className={`${s.grid} ${s.specialistResult}`}><div className={s.plotScroll}><SectionPlot columns={columns} route={route} range={range} exaggeration={exaggeration} depth={depth} selectedId={selected?.id} onInspect={inspect} /></div><details className={s.sectionRecords}><summary>Loaded source records · {columns.length}</summary><div className={s.cards}>{columns.map(c => <button className={s.card} key={c.record.id} type="button" aria-pressed={selected?.id === c.record.id} onClick={() => inspect(c.record)}><strong>{c.record.name}</strong><small>{c.record.kind === "core" ? "Core inventory envelope" : "Logged description"} · {(c.distanceMeters / 1000).toFixed(2)} km from probe</small>{route.length > 1 && <small>{(c.offsetMeters / 1000).toFixed(2)} km off section</small>}<small>{c.record.intervals.length} intervals · {c.record.sourceTime}</small></button>)}</div></details></div>}
 
-      {display === "surveys" && <div className={s.specialistResult}><h3>Geophysical surveys</h3><details><summary>Survey filters</summary><label>Survey method <select value={surveyMethod} onChange={e => setSurveyMethod(e.target.value)}>{["all", "gpr", "electromagnetic", "electrical", "seismic"].map(m => <option key={m} value={m}>{m === "gpr" ? "Ground-penetrating radar" : m}</option>)}</select></label></details>{surveyError && <p role="status">{surveyError}</p>}{surveys.filter(v => surveyMethod === "all" || v.method === surveyMethod).map(survey => <SurveyView key={survey.id} survey={survey} anchor={anchor} onLocate={p => { setAnchor(p); setPinned(true); map?.easeTo({ center: p, zoom: 13, duration: 0 }); }} />)}{surveys.length > 0 && !surveys.some(v => surveyMethod === "all" || v.method === surveyMethod) && <p>None in the verified available data for this method.</p>}<details><summary>Survey interpretation limits</summary><p className={s.limit}>Kansas River 3D sediment model: blocked until native numerical geometry, references, and reuse terms qualify. Published report images are not used as numerical surfaces. GPR time is not converted to depth without a documented velocity model.</p></details></div>}
+      {display === "surveys" && <section className={s.specialistResult} aria-label="Published geophysical surveys" aria-busy={surveys === null && !surveyError}>
+        <h3>Geophysical surveys</h3>
+        <details><summary>Survey filters</summary><label>Survey method <select value={surveyMethod} disabled={surveys === null} onChange={e => setSurveyMethod(e.target.value)}>{["all", "gpr", "electromagnetic", "electrical", "seismic"].map(m => <option key={m} value={m}>{m === "gpr" ? "Ground-penetrating radar" : m}</option>)}</select></label></details>
+        {surveys === null && <p role="status">{surveyError || "Loading published surveys…"}</p>}
+        {surveys === null && surveyError && <button type="button" onClick={() => { setSurveyError(""); setSurveyAttempt(value => value + 1); }}>Retry published surveys</button>}
+        {surveys?.length === 0 && <p role="status">No published survey entries were returned. This does not establish that no surveys exist.</p>}
+        {surveys?.filter(v => surveyMethod === "all" || v.method === surveyMethod).map(survey => <SurveyView key={survey.id} survey={survey} anchor={anchor} onLocate={p => { setAnchor(p); setPinned(true); map?.easeTo({ center: p, zoom: 13, duration: 0 }); }} />)}
+        {surveys && surveys.length > 0 && !surveys.some(v => surveyMethod === "all" || v.method === surveyMethod) && <p role="status">No published survey entries in this catalogue match this method.</p>}
+        <details><summary>Survey interpretation limits</summary><p className={s.limit}>Kansas River 3D sediment model: blocked until native numerical geometry, references, and reuse terms qualify. Published report images are not used as numerical surfaces. GPR time is not converted to depth without a documented velocity model.</p></details>
+      </section>}
       {display === "soil" && <section className={s.specialistResult}><h3>Soil horizons</h3>{redacted ? <p className={s.limit}>Location privacy is active. A soil lookup would send this coordinate to USDA, so it is withheld.</p> : <SoilView key={anchor.join(",")} anchor={anchor} />}</section>}
       <details className={s.exportTools}><summary>Save &amp; export</summary><p>Saved reports and exports contain bounded KGS records; survey profiles and live soil results are not included.</p><div className={s.actions}><button type="button" onClick={props.onSave}>Save investigation</button><button type="button" onClick={props.onReport}>Create report</button><button type="button" disabled={redacted || loading || !columns.length} onClick={() => download("kfm-underground-intervals.csv", intervalCsv(context, redacted), "text/csv")}>Export intervals</button><button type="button" disabled={redacted || loading || !columns.length} onClick={() => download("kfm-underground-section.svg", sectionSvg(context, redacted), "image/svg+xml")}>Export section image</button></div></details>
       {redacted && <p className={s.limit}>Location privacy is active. Underground coordinates, routes, records, and images are withheld from saves and exports.</p>}
@@ -402,15 +432,48 @@ function SurveyView({ survey, anchor, onLocate }: { survey: GeophysicalSurvey; a
     {p && <><label>Profile <select value={id} onChange={e => setId(e.target.value)}>{survey.profiles.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}</select></label> <button type="button" onClick={() => onLocate(p.coordinates)}>Locate profile · {(distanceMeters(anchor, p.coordinates) / 1000).toFixed(1)} km from probe</button><svg className={s.chart} viewBox="0 0 680 320" role="img" aria-label={`${p.title}, measured electrical conductivity versus depth`}><text x="50" y="22">Electrical conductivity {minValue.toFixed(1)}–{maxValue.toFixed(1)} {p.valueUnit}; depth 0–{maxDepth.toFixed(1)} {p.depthUnit} below local surface</text><path d={plotted.map((s, i) => `${i ? "L" : "M"}${50 + (s.value - minValue) / (maxValue - minValue) * 570},${40 + s.depth / maxDepth * 230}`).join(" ")} fill="none" stroke="#976037" strokeWidth="1.5" /><text x="50" y="300">{p.samples.length} original samples · decimated line for display · no lithology conversion</text></svg></>}
   </details>;
 }
-type SoilResult = { rows: (string | number | null)[][]; retrievedAt: string; partial: boolean; limitation: string; error?: string };
+type SoilResult = { rows: (string | number | null)[][]; retrievedAt: string; partial: boolean; limitation: string; sourceUrl: string; depthUnit: "cm"; depthReference: "soil surface" };
+function validSoilResult(value: unknown): value is SoilResult {
+  if (!value || typeof value !== "object") return false;
+  const data = value as Record<string, unknown>;
+  return !("error" in data) && Array.isArray(data.rows) && data.rows.length <= 100
+    && data.rows.every(row => Array.isArray(row) && row.length === 14 && row.every(cell => cell === null || typeof cell === "string" || typeof cell === "number" && Number.isFinite(cell)))
+    && typeof data.retrievedAt === "string" && Number.isFinite(Date.parse(data.retrievedAt))
+    && data.partial === (data.rows.length === 100) && typeof data.limitation === "string"
+    && data.sourceUrl === "https://sdmdataaccess.nrcs.usda.gov/" && data.depthUnit === "cm" && data.depthReference === "soil surface";
+}
 function SoilView({ anchor }: { anchor: Position }) {
-  const [data, setData] = useState<SoilResult | null>(null), [state, setState] = useState("Loading soil-map descriptions…");
-  useEffect(() => { const controller = new AbortController();
-    const timer = setTimeout(() => { void fetch(`/api/subsurface/soil?lon=${anchor[0].toFixed(6)}&lat=${anchor[1].toFixed(6)}`, { signal: controller.signal }).then(r => r.json()).then((d: SoilResult) => { if (controller.signal.aborted) return; if (d.error) setState(d.error); else { setData(d); setState(d.rows.length ? "" : "None in the available soil-map data."); } }).catch(() => { if (!controller.signal.aborted) setState("Soil source unavailable."); }); }, 400);
-    return () => { clearTimeout(timer); controller.abort(); };
-  }, [anchor]);
+  const point = `lon=${anchor[0].toFixed(6)}&lat=${anchor[1].toFixed(6)}`;
+  const [reading, setReading] = useState<{ point: string; data: SoilResult | null } | null>(null), [attempt, setAttempt] = useState(0);
+  const current = reading?.point === point ? reading : null, data = current?.data;
+  const state = !current ? "Loading soil-map descriptions…" : !data ? "Soil source unavailable or timed out. Check that the probe is in Kansas, then retry."
+    : data.rows.length ? "" : "No soil horizons returned for this probe. This does not establish that no soil is present.";
+  useEffect(() => {
+    const controller = new AbortController(); let active = true;
+    let deadline: ReturnType<typeof setTimeout> | undefined, removeAbort = () => {};
+    const dispose = () => { clearTimeout(deadline); removeAbort(); };
+    const timer = setTimeout(() => {
+      const cancelled = new Promise<never>((_, reject) => {
+        const abort = () => reject(controller.signal.reason);
+        controller.signal.addEventListener("abort", abort, { once: true });
+        removeAbort = () => controller.signal.removeEventListener("abort", abort);
+      });
+      // The route has an 18s upstream budget; the browser also bounds headers and its body.
+      deadline = setTimeout(() => controller.abort(new Error("Soil lookup timed out.")), 20000);
+      const load = async () => {
+        const response = await fetch(`/api/subsurface/soil?${point}`, { signal: controller.signal, cache: "no-store" });
+        const value = await readSuccessfulJson(response, 512 * 1024, controller.signal);
+        if (!validSoilResult(value)) throw new Error("Unexpected soil response.");
+        return value;
+      };
+      void Promise.race([load(), cancelled]).then(value => {
+        if (active && !controller.signal.aborted) setReading({ point, data: value });
+      }).catch(() => { if (active) setReading({ point, data: null }); }).finally(dispose);
+    }, 400);
+    return () => { active = false; clearTimeout(timer); controller.abort(); dispose(); };
+  }, [point, attempt]);
   const components = [...new Set(data?.rows.map(row => String(row[3])) ?? [])];
-  return <div><p role="status">{state}</p><p className={s.limit}>SSURGO soil-map components are alternatives within a mapped area. They do not identify the exact soil beneath the crosshair.</p>{data && <><p>Retrieved {data.retrievedAt} · {data.partial ? "Partial: 100-horizon limit reached" : `${data.rows.length} horizons returned`} · depths in centimetres below soil surface.</p>{components.map(id => { const rows = data.rows.filter(r => String(r[3]) === id); return <details key={id}><summary>{rows[0][4]} · {rows[0][5]}% of map unit · {rows[0][2]}</summary><ul>{rows.map((r, index) => <li key={index}>{r[8]}: {r[9] ?? "unknown"}–{r[10] ?? "unknown"} cm · sand {r[11] ?? "unknown"}%, silt {r[12] ?? "unknown"}%, clay {r[13] ?? "unknown"}%</li>)}</ul></details>; })}</>}<a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noreferrer">USDA Soil Data Access ↗</a><p className={s.muted}>Live soil responses are not yet captured in the section export; the export includes KGS columns and their source editions only.</p></div>;
+  return <div aria-busy={!current}><p role="status">{state}</p>{current && !data && <button type="button" onClick={() => { setReading(null); setAttempt(value => value + 1); }}>Retry soil lookup</button>}<p className={s.limit}>SSURGO soil-map components are alternatives within a mapped area. They do not identify the exact soil beneath the crosshair.</p>{data && <><p>Retrieved {data.retrievedAt} · {data.partial ? "Partial: 100-horizon limit reached" : `${data.rows.length} horizons returned`} · depths in centimetres below soil surface.</p>{components.map(id => { const rows = data.rows.filter(r => String(r[3]) === id); return <details key={id}><summary>{rows[0][4]} · {rows[0][5]}% of map unit · {rows[0][2]}</summary><ul>{rows.map((r, index) => <li key={index}>{r[8]}: {r[9] ?? "unknown"}–{r[10] ?? "unknown"} cm · sand {r[11] ?? "unknown"}%, silt {r[12] ?? "unknown"}%, clay {r[13] ?? "unknown"}%</li>)}</ul></details>; })}</>}<a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noreferrer">USDA Soil Data Access ↗</a><p className={s.muted}>Live soil responses are not yet captured in the section export; the export includes KGS columns and their source editions only.</p></div>;
 }
 
 export function SubsurfaceInspector({ inspection, onCenter, onSave, onReport, onAsk }: { inspection: SubsurfaceInspection; onCenter: () => void; onSave: () => void; onReport: () => void; onAsk?: () => void }) {
