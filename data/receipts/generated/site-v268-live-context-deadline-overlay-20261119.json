@@ -1796,8 +1796,8 @@
       "state": "identical"
     },
     "app/connections/workspace.tsx": {
-      "difference": "Keep malformed and mismatched capture/replay results out of verified Connections state and retain useful retry errors. Repository-only; no hosted-equivalence or source-release claim.",
-      "mirror_sha256": "426c82945f929e76ea4e1a45baa278c8ee4b2adea339221b0d56267e016c37d5",
+      "difference": "Validate configured-profile response states, outcome shapes, attempt bounds and stored-count consistency before displaying success. Distinguish newly stored, reused and held captures; reject malformed responses with a recovery message and retain existing cancellation behavior. Repository-only; no hosted-equivalence or source-release claim.",
+      "mirror_sha256": "309119436a543918d18a35e1d586169c907e4639e7fa336107f776346b1194fe",
       "site_sha256": "ce46a60f99a705520657d475a6932acc87924cddfedbed9c4281cb7e777d8eae",
       "state": "inherited_repository_overlay"
     },
@@ -4739,6 +4739,12 @@
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
+    "tests/connections-profile-recovery.test.mjs": {
+      "difference": "Validate configured-profile response states, outcome shapes, attempt bounds and stored-count consistency before displaying success. Distinguish newly stored, reused and held captures; reject malformed responses with a recovery message and retain existing cancellation behavior. Repository-only; no hosted-equivalence or source-release claim.",
+      "mirror_sha256": "94715baaa0a9d025fb342dfada7713583398e3dba8591982bcd1bf48889258cc",
+      "site_sha256": null,
+      "state": "repository_only_overlay"
+    },
     "tests/connections-status-recovery.test.mjs": {
       "difference": "Keep malformed and mismatched capture/replay results out of verified Connections state and retain useful retry errors. Repository-only; no hosted-equivalence or source-release claim.",
       "mirror_sha256": "23b5bef7903d559c873fb10a720f888a13c280850343a3157c78e47b20390b09",
@@ -5501,7 +5507,7 @@
       "state": "repository_only_overlay"
     },
     "tests/live-context-deadline.test.mjs": {
-      "difference": "Repository-only reliability fix proposed on branch claude/live-context-deadlines from main@0c882dedae7a492678b281f3e5be5b8fa3221126, rebuilt from PR #5950: the live-context upstream deadline now covers the response body read, a late or failed upstream response cancels its body, and a timeout returns an uncached error instead of an empty ready catalog. Recorded bytes only; no Site deployment implied.",
+      "difference": "Repository-only reliability fix proposed on branch claude/live-context-deadlines from main@162d89630c78860c9e3751bc548153ada62c6f57, rebuilt from PR #5950: the live-context upstream deadline now covers the response body read, a late or failed upstream response cancels its body, and a timeout returns an uncached error instead of an empty ready catalog. Recorded bytes only; no Site deployment implied.",
       "mirror_sha256": "7b10b2690a4545e9e1f8a1653019b41720014a5d988c8b6857e0408369417429",
       "site_sha256": null,
       "state": "repository_only_overlay"
@@ -6254,7 +6260,7 @@
     "inherited_repository_overlay": 69,
     "merged_water_overlay": 0,
     "missing": 0,
-    "repository_only_overlay": 143,
+    "repository_only_overlay": 144,
     "repository_only_water_overlay": 0,
     "repository_safety_overlay": 143,
     "repository_withheld": 262,
@@ -6492,7 +6498,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "6f37e4c93673a518964769740575707d9e266acf54179a7d0adba3529d734fdd",
+  "inventory_sha256": "730dcf2e09176861874e48bf83fb354917972668624c9ae17e78bbedb4e162e3",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8582,8 +8588,8 @@
       }
     ]
   },
-  "predecessor_receipt": "site-v268-unused-code-overlay-20261119.json",
-  "predecessor_receipt_sha256": "5e1cdd95fe8b727760df4b2e1ffab477221f08aa6347a450a34efc1ae98a0737",
+  "predecessor_receipt": "site-v268-connections-profile-outcomes-overlay-20261119.json",
+  "predecessor_receipt_sha256": "4d228837ea07ab67ad06800f09e355c1d5465d39edee1edab73aca5d3fe83597",
   "profile": "kfm.site-mirror-receipt/v1",
   "reconciliation": {
     "base_site": "8b4c03a5ba2c803d1f323460a23778adc8e4c76b",
@@ -8680,12 +8686,12 @@
       ]
     }
   },
-  "recorded_at": "2026-11-19T20:40:54.573508+00:00",
+  "recorded_at": "2026-11-19T20:51:47.267911+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
-  "repository_reconciled_base": "0c882dedae7a492678b281f3e5be5b8fa3221126",
+  "repository_reconciled_base": "162d89630c78860c9e3751bc548153ada62c6f57",
   "repository_reconciliation": {
     "authority": "CONTENT_PARITY_ONLY",
-    "base_commit": "0c882dedae7a492678b281f3e5be5b8fa3221126",
+    "base_commit": "162d89630c78860c9e3751bc548153ada62c6f57",
     "changes": [
       {
         "mirror_sha256": "be32a20aecd5114b85873934b580a3ba9bd26ec08f9b525a7e9fe63f4d848677",
