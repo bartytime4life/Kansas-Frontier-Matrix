@@ -84,6 +84,7 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     ],
     layers: ["noaa-cpc-drought-outlook", "usgs-streamflow", "kgs-aquifer-high-plains"],
     center: [-98.4, 38.5], zoom: 6.3,
+    relatedLab: { href: "/labs/river-flow", label: "Compare daily streamflow in River Flow Lab" },
     ideas: [
       "Check whether the seasonal outlook expects drought to develop, persist or improve over Kansas.",
       "Click river gauges to read their latest provider observations.",
