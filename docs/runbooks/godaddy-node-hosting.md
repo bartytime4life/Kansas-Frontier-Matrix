@@ -310,8 +310,12 @@ At about 20:45 UTC the identity checker reported `APPLICATION_INPUTS_MATCH` for
 digest but `sourceCommit: null` and `commitState: WORKTREE_MODIFIED`. Earlier
 readbacks returned the commit and `CLEAN_CHECKOUT`. The application inputs match
 `c393a352` exactly, so the difference is in how the host's checkout reports
-itself, not in what is served. The cause was not determined from outside the
-host.
+itself, not in what is served. A clean install, build and start of `c393a352`
+in a separate checkout reported `CLEAN_CHECKOUT` with the commit, so no build or
+start step dirties the tree by itself. The checker reports `WORKTREE_MODIFIED`
+when `git status` on the host is not empty, which an untracked or edited file
+anywhere in the host's checkout would cause. Which file was not determined from
+outside the host.
 
 **Not checked.** The published commit carries 17 other merged changes since the
 previous readback (#5916 to #5947, from other work). This readback covered them
