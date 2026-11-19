@@ -148,6 +148,43 @@ Loading a new observation sample clears its context attachments; changing the
 question or measurement view preserves them. These controls add no server query
 parameters, native-store writes, source admission or AI review credits.
 
+## Verify a candidate against the live archive
+
+`scripts/verify-record-context-live.mjs` exercises the three water-observation
+workflows against actual public archive replies. Build and run the current
+checkout on a loopback origin, then use an empty output directory outside this
+application checkout. Replace the output path in this example:
+
+```sh
+node scripts/verify-record-context-live.mjs \
+  --candidate=http://127.0.0.1:8797 \
+  --output=/absolute/path/outside-checkout/new-verification
+```
+
+The script starts an isolated Chrome profile; `--chrome=PATH` selects another
+installed Chrome executable. It checks the candidate's application fingerprint
+against this checkout before reading data. A separate Chrome tab reads only the
+existing public USGS daily, field, peak, station and series archive pages at
+`https://kansasfrontiermatrix.com`. Browser interception carries those exact
+responses to the local candidate. This verifies the local UI with real archive
+reads without configuring another relay, copying signing keys or deploying code.
+Candidate and public build identities remain separate in `verification.json`.
+
+The check compares exported observations and metadata with the actual replies,
+verifies every linked identity and series namespace, reopens combined bundles,
+and checks desktop/phone layout. It injects cancellation and an unavailable
+response only in the candidate browser, checking that prior context survives.
+The gateway, worker and production settings remain untouched. Response hashes,
+source records, cache states, timestamps, exports and screenshots stay in the
+chosen output directory; cached replies are counted separately from live reads.
+Missing or unknown cache claims fail verification rather than being counted as
+cached or live evidence.
+Only the named lab JSON and story Markdown count as exports; additional browser
+artifacts are retained and listed separately, without substituting for either file.
+The tool refuses unrelated routes/parameters, in-source output and nonempty
+output directories. Output artifacts are local verification evidence, not a
+source admission, AI review, whole-archive audit or deployment record.
+
 **Reopen a saved lab bundle** reads the file in the browser and restores its
 record sample, question, field, context and selected interval where present.
 Older JSON downloads reopen their record sample and question. The app checks

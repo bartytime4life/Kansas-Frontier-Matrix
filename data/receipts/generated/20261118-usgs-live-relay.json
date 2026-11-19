@@ -1,0 +1,104 @@
+{
+  "receipt_id": "kfm-usgs-live-relay-20261118",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/verify-record-context-live.mjs",
+    "tests/record-context-verifier.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "scripts/verify-record-context-live.mjs": "sha256:827a05cba19b8b404474c255fc2c34695b078c0e29f77b5b1d1105efe8c94fcf",
+    "tests/record-context-verifier.test.mjs": "sha256:17dd276eac20365a3b201f668224db21b689cda81f6412da41c734134e62cc10",
+    "docs/collection-data-lab.md": "sha256:c0a166d1300a603ef8b295d46af8ef5c1c8b7adb43bbabdd005abf35fb5ad2fb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3ea3e2a4d9e6ed24b17ae7f91756f7531dd3cccd5f7c9f2b0ca1fa2768aabfc2",
+      "sha256:950b5eab69aa97c02675d0194a8328a0d6ab37b0d0f7c9acde06939bc3aa823a",
+      "sha256:0bb1ba984448b5f8fea7648b5591ccbe7b6f59ca0ecf109d07975a23c3c17ae8",
+      "sha256:64357515899bc5fc8f069e70fbfd73a8d321e665c9e8c15ee42c39796dabf724",
+      "sha256:5db63e0e573b3dd505021d228d52906958843232f2200590f5a15be6814939a8"
+    ],
+    "evidence_refs": [
+      "repo:f12300fb520075424813981481a477251e57900d:app/data-lab/record-context.ts",
+      "repo:f12300fb520075424813981481a477251e57900d:scripts/build-identity.mjs",
+      "repo:9d47288715e96e8788771c0406eea99edc6f9753:server/local-data.mjs"
+    ]
+  },
+  "truth_labels": {
+    "scripts/verify-record-context-live.mjs": "CONFIRMED",
+    "tests/record-context-verifier.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "19 focused verifier/link/bundle tests, including eight verifier cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, warning-free targeted ESLint, Node syntax, CLI help and diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Initial public-browser pass: 25 live gateway reads and 15 cache hits; 25 successful worker/gateway replies corroborated",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Final application-fingerprint-bound browser pass: 40 cached public replies, three investigations, 1,250 distinct collection-record identities / 2,000 preserved record instances, JSON/story exports and exact reopening, desktop/phone layout",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Cancellation and candidate-only 503 injection preserve existing context without interrupting production services",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Application full suite, independent review, hosted CI and deployment",
+      "outcome": "SKIPPED",
+      "reason": "Isolated optional verifier/docs addition; no application behavior changed. Independent review, exact-head hosted checks and any publication remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Connected-record matching semantics",
+      "validated": true,
+      "evidence_ref": "repo:f12300fb520075424813981481a477251e57900d:app/data-lab/record-context.ts"
+    },
+    {
+      "id": "Application-input fingerprint and verification",
+      "validated": true,
+      "evidence_ref": "repo:f12300fb520075424813981481a477251e57900d:scripts/build-identity.mjs"
+    },
+    {
+      "id": "Public application identity read through Chrome",
+      "validated": true,
+      "evidence_ref": "https://kansasfrontiermatrix.com/api/build"
+    },
+    {
+      "id": "Pinned public relay signature/cache behavior",
+      "validated": true,
+      "evidence_ref": "repo:9d47288715e96e8788771c0406eea99edc6f9753:server/local-data.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T02:16:15.908884+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Optional verifier only: no application/API/provider/model/publication behavior changes and no signing-key access. Candidate and public identities stay separate; public source observed as 9d47288715e96e8788771c0406eea99edc6f9753. The initial 25 live reads are distinct from the final 40 cache hits. Exact source values, lineage and times are preserved; identity links establish neither applicable metadata versions nor AI review. Source rows/replies, screenshots and worker evidence remain task-local outside the application tree. An intermediate download file-count wait was refined to require the two exact export names and separately record auxiliary Chrome artifacts; original evidence is retained. Human review and deployment remain pending."
+}
