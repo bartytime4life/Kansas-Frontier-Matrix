@@ -71,6 +71,33 @@ the original numeric cells. The resulting JSON SHA-256 is
 `5150c0eb992a333142ce0754b8acd17db8cb9009125cb34ed1c32a50b6e03359`.
 This source qualification does not substitute for renderer or browser acceptance.
 
+## Loading and recovery
+
+Open **Underground → Other tools → Geophysical surveys** to load the bundled
+catalogue. A loading status appears while the method filter waits for the result.
+After a failure, choose **Retry published surveys**; leaving the tool and returning
+also retries an unfinished load. A successful retry clears the earlier failure.
+Completed catalogues, including empty ones, stay cached while Underground is open.
+
+The client requires successful HTTP, limits the response to 2 MiB, and applies one
+15-second deadline across headers and body. It validates the whole version-1
+survey list, with at most 100 entries and unique survey/profile identities, using
+the existing per-survey checks. An invalid entry makes the catalogue unavailable;
+it is not silently discarded to present the remainder as a complete response.
+Closing Underground or changing tools cancels an unfinished read. Late responses
+cannot overwrite a subsequent retry, and their bodies are released.
+
+An empty catalogue or a method with no matching entries describes only the
+returned catalogue. Neither establishes that no surveys exist. Source holds,
+profile units, approximate locations and exclusion from section saves/exports
+continue to apply. This recovery changes no source bytes or qualification.
+
+From the standalone application's source directory, run
+`node --test tests/underground-surveys-view.test.mjs tests/subsurface-geophysics.test.mjs`
+for the parent navigation, response recovery and capture checks. Controlled
+transport/component tests do not establish visual, keyboard or WebGL acceptance,
+or live-provider availability.
+
 ## Remaining source holds
 
 - **GPR:** [KGS GEMS borehole radar, OFR 98-48](https://www.kgs.ku.edu/PRS/publication/OFR98_48/index.html)
