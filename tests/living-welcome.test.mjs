@@ -987,7 +987,7 @@ test('mobile carousel previews the settled center, supports arrows, and does not
  }finally{h.harness.dispose();}
 });
 
-// Wide, tall screens: the live map is the page, the topics a rail, one focus panel for the chosen map.
+// Wide screens: the live map is the page, the topics a rail, one focus panel for the chosen map.
 const wideWindow={matchMedia:query=>({matches:query.includes('min-width:1101px'),addEventListener(){},removeEventListener(){}})};
 const focusPanel=tree=>findNode(tree,node=>node.props?.className==='welcome-focus');
 test('the desktop atlas shows the chosen map from the start and describes it in one panel that follows hover and focus',async()=>{
@@ -1044,7 +1044,7 @@ test('the desktop atlas has no selection tray; its toolbar opens the chosen topi
   assert.deepEqual(h.calls,[['maps',['water','weather']],['close',false]],'the toolbar opens the combined map once');
  }finally{h.harness.dispose();}
 });
-test('narrow or short screens keep the card layout and the static default map',async()=>{
+test('narrow non-carousel screens keep the card layout and the static default map',async()=>{
  const h=await welcome();let tree=h.render();tree=h.render();
  assert.equal(rootOf(tree).props['data-layout'],undefined);
  assert.equal(focusPanel(tree),undefined);
@@ -1056,6 +1056,60 @@ test('narrow or short screens keep the card layout and the static default map',a
  assert.ok(findNode(toolbar,n=>n.props?.className==='welcome-primary selection-open'),'the toolbar opens the ticked topics');
  assert.ok(findNode(toolbar,n=>n.props?.className==='welcome-primary'&&n.props.children?.[0]==='Explore freely '),'tablets keep Explore freely beside it');
  h.harness.dispose();
+});
+
+// Evaluate the component's actual media queries against dimensions, including
+// changes to either axis. Geometry and native input remain browser checks.
+function viewportWindow(initialWidth,initialHeight){
+ let width=initialWidth,height=initialHeight;const queries=new Map();
+ const matches=query=>query.split(',').some(part=>{
+  const bounds=[...part.matchAll(/\((min|max)-(width|height):\s*(\d+)px\)/g)];
+  return bounds.length>0&&bounds.every(([,kind,axis,value])=>kind==='min'?(axis==='width'?width:height)>=Number(value):(axis==='width'?width:height)<=Number(value));
+ });
+ const window={matchMedia(query){
+  if(!queries.has(query))queries.set(query,{query,listeners:new Set(),get matches(){return matches(query);},addEventListener(_type,fn){this.listeners.add(fn);},removeEventListener(_type,fn){this.listeners.delete(fn);}});
+  return queries.get(query);
+ }};
+ return {window,resize(nextWidth,nextHeight){const before=new Map([...queries].map(([query])=>[query,matches(query)]));width=nextWidth;height=nextHeight;for(const [query,media]of queries)if(before.get(query)!==matches(query))for(const listener of media.listeners)listener({matches:media.matches,media:query});},listenerCount:()=>[...queries.values()].reduce((sum,media)=>sum+media.listeners.size,0)};
+}
+for(const [width,height,atlas,carousel]of [[1440,900,true,false],[1280,760,true,false],[1280,720,true,false],[1366,600,true,false],[1101,500,true,false],[1280,360,true,false],[1100,900,false,false],[1024,600,false,false],[390,844,false,true],[844,390,false,true],[640,360,false,true]]){
+ test(`viewport modes preserve the atlas on wide desktops at ${width}x${height}`,async()=>{
+  const viewport=viewportWindow(width,height),h=await welcome(false,{window:viewport.window});
+  try{
+   h.render();const tree=h.render();
+   assert.equal(rootOf(tree).props['data-layout']==='atlas',atlas);
+   assert.equal(rootOf(tree).props['data-carousel'],carousel);
+   assert.equal(Boolean(focusPanel(tree)),atlas,'one chosen-map panel belongs to the atlas');
+   assert.equal(Boolean(findNode(tree,node=>node.props?.className==='welcome-record-search')),atlas,'the newer desktop keeps its record search');
+   assert.equal(rootOf(tree).props['data-selected-count'],0);
+   assert.deepEqual(h.calls,[],'choosing a responsive presentation never opens a map');
+  }finally{h.harness.dispose();}
+  assert.equal(viewport.listenerCount(),0,'unmount releases media listeners');
+ });
+}
+test('height-only atlas resize retains selection, topic filter and the record-search draft',async()=>{
+ const viewport=viewportWindow(1280,900),h=await welcome(false,{window:viewport.window});
+ const filter=tree=>findNode(tree,node=>node.type==='input'&&node.props['aria-describedby']==='topic-search-results');
+ const recordInput=tree=>findNode(findNode(tree,node=>node.props?.className==='welcome-record-search'),node=>node.type==='input');
+ try{
+  let tree=h.render();addCard(tree,'water').props.onClick();tree=h.render();
+  recordInput(tree).props.onChange({target:{value:'Kansas river'}});tree=h.render();
+  filter(tree).props.onChange({target:{value:'network river'}});tree=h.render();
+  for(const [width,height]of [[1280,760],[1280,720],[1366,600],[1101,500],[1280,360],[1280,900]]){
+   viewport.resize(width,height);h.render();tree=h.render();
+   assert.equal(rootOf(tree).props['data-layout'],'atlas',`${width}x${height}: no return to the card grid`);
+   assert.equal(rootOf(tree).props['data-selected-count'],1);
+   assert.equal(addCard(tree,'water').props['aria-pressed'],true);
+   assert.equal(filter(tree).props.value,'network river');
+   assert.equal(recordInput(tree).props.value,'Kansas river');
+   assert.equal(focusPanel(tree).props['data-topic'],'water');
+   assert.deepEqual(h.calls,[]);
+  }
+  for(const [width,height]of [[1100,900],[390,844],[844,390],[1280,720]]){viewport.resize(width,height);h.render();tree=h.render();assert.equal(rootOf(tree).props['data-selected-count'],1);assert.equal(filter(tree).props.value,'network river');}
+  assert.equal(rootOf(tree).props['data-layout'],'atlas');
+  assert.equal(recordInput(tree).props.value,'Kansas river','narrow-layout round trips preserve the record-search draft');
+ }finally{h.harness.dispose();}
+ assert.equal(viewport.listenerCount(),0);
 });
 
 test('phones have no tray: Open my map stands in for Explore freely while topics are ticked',async()=>{

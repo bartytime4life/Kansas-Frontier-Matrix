@@ -26,7 +26,7 @@ assert.equal(welcomeTopics.length, 22, 'the shared taxonomy includes Flora, Faun
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');
   await p.wait(`document.querySelector('.living-welcome')?.dataset.carousel===String(matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)').matches)`, 'responsive chooser settles before input coordinates are measured');
-  await p.wait(`(document.querySelector('.living-welcome')?.dataset.layout==='atlas')===matchMedia('(min-width:1101px) and (min-height:761px)').matches`, 'desktop atlas or compact layout is settled before geometry');
+  await p.wait(`(document.querySelector('.living-welcome')?.dataset.layout==='atlas')===matchMedia('(min-width:1101px)').matches`, 'desktop atlas or compact layout is settled before geometry');
   const actual = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>({id:[...card.classList].find(name=>name.startsWith('topic-')&&name!=='topic-callout')?.slice(6),title:card.querySelector('strong')?.textContent,facets:card.querySelector('small')?.textContent,label:card.getAttribute('aria-label')}))`);
   assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.slice(0,2).join(' · '), label:'Open '+topic.title+' map: '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
   assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video,.living-welcome .motion-portal').length`), 0, 'the welcome does not mount retired footage players');
@@ -1625,7 +1625,7 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
 // Placement follows measured content and the shared taxonomy. Check all rows
 // by scrolling, then exercise the current detail/expanded-view equivalents of
 // the retired footage timeline and footer. Fixtures establish no accepted data.
-for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desktop atlas'],[1024,1366,'tall tablet'],[901,1200,'narrow desktop'],[768,1024,'tablet'],[1280,720,'short desktop'],[1024,600,'landscape'],[320,568,'narrow phone'],[640,360,'200 percent layout equivalent']]) {
+for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desktop atlas'],[1024,1366,'tall tablet'],[901,1200,'narrow desktop'],[768,1024,'tablet'],[1280,720,'short desktop atlas'],[1280,600,'short laptop atlas'],[1101,500,'short width-boundary atlas'],[1024,600,'landscape'],[320,568,'narrow phone'],[640,360,'200 percent layout equivalent']]) {
   test(`welcome content stays composed at ${width}x${height} (${label})`,{timeout:150000},async t=>{
     const b=await browser(t),p=await pageSession(b,width,height,welcomeAttributionBrowserFixtures(origin,'Isolated browser layout fixture attribution — empty geometry; no observations, rights claims or accepted data. <a href="https://openmaptiles.org/">Fixture OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">Fixture OpenStreetMap</a>'));
     if(label==='200 percent layout equivalent')await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:2,mobile:false});
@@ -1646,6 +1646,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desk
       assert.ok(result.attribution.top>=result.root.bottom-.5&&result.attribution.bottom<=height+.5,`${state}: attribution owns a separate viewport strip ${JSON.stringify(result.attribution)}`);
       assert.ok(result.attribution.left>=-.5&&result.attribution.right<=width+.5,`${state}: attribution outer width stays in the viewport`);
       assert.equal(result.cardCount,welcomeTopics.length);
+      assert.equal(result.atlas,width>=1101,'wide desktops retain the atlas regardless of height; narrower layouts keep their existing presentation');
       assert.equal(result.boxes.filter(box=>box.name.startsWith('.welcome-focus:')).length,result.atlas?1:0,'desktop retains one visible chosen-map panel');
       assert.equal(result.heading,true,'compact visual presentation retains the accessible welcome heading');
       assert.equal(result.boxes.filter(box=>box.name.startsWith('.welcome-toolbar:')).length,1,'one painted welcome toolbar remains');

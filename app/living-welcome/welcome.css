@@ -876,7 +876,7 @@
 
 .archive-map-notice { grid-column:1/-1; display:block; padding:4px 8px; color:#e8d6a8; font-size:11px; line-height:1.4; }
 
-/* Desktop atlas (wide and tall screens, not the full-window preview): the live map is the page.
+/* Desktop atlas (wide screens at every height, not the full-window preview): the live map is the page.
    Topics become a rail down the left that scrolls with the page; the chosen map is described once,
    in a panel over the map, instead of on twenty-two identical cards. The DOM is the same as the
    builder layout above; only its arrangement changes, so every card, action and test hook remains. */
