@@ -1,0 +1,98 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/connections/workspace.tsx": "sha256:426c82945f929e76ea4e1a45baa278c8ee4b2adea339221b0d56267e016c37d5",
+    "apps/site/source/tests/connections-capture-recovery.test.mjs": "sha256:615f71286774f553e86f6498db6e8c4aa64b4ffa16e95a197d844aa81614ee2c",
+    "apps/site/source/tests/connections-status-recovery.test.mjs": "sha256:23b5bef7903d559c873fb10a720f888a13c280850343a3157c78e47b20390b09",
+    "data/receipts/generated/site-v268-connections-capture-recovery-overlay-20261119.json": "sha256:d47bf1e7147dcbe9350b6d84e9c662f2a8a18362d64e58fbe055a219830d2df2",
+    "tests/qa/test_site_mirror.py": "sha256:d74282a5dabb10d6da790f98103e88cbcfc2abe1fc987e5046b0fbb96ef9215f",
+    "tools/qa/site_mirror.py": "sha256:374611b769b1bbd59b2f39023986abdb13342790bb38ef1feaa804ee1d008335"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/connections/workspace.tsx",
+    "apps/site/source/tests/connections-capture-recovery.test.mjs",
+    "apps/site/source/tests/connections-status-recovery.test.mjs",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py",
+    "data/receipts/generated/site-v268-connections-capture-recovery-overlay-20261119.json"
+  ],
+  "citations": [],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-19T19:38:05.984572+00:00",
+  "emitter": "OpenAI Codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "codex/geology-preview-recovery-20261119@4e7612adbd5cdee5bfeae87d2a76ae49faa45bdf",
+      "data/receipts/generated/site-v268-geology-preview-recovery-overlay-20261119.json",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/retention.md"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "unspecified"
+  },
+  "notes": "Keep malformed and mismatched capture/replay results out of verified Connections state and retain useful retry errors. The original dirty checkout and historical receipt bytes are unchanged. No independent or human acceptance, deployment or publication claimed.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "local Git inspection",
+      "Node tests",
+      "npm production build",
+      "TypeScript",
+      "Python validators"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:8839c6f31ffd047676c0b1d17a5e3e19ae511b049bba4fb83405b6e52e37b258",
+  "receipt_id": "genrec-connections-capture-recovery-20261119",
+  "truth_labels": {
+    "apps/site/source/app/connections/workspace.tsx": "CONFIRMED",
+    "apps/site/source/tests/connections-capture-recovery.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/connections-status-recovery.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v268-connections-capture-recovery-overlay-20261119.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused_tests",
+      "outcome": "PASS",
+      "reason": "PASS: 18 capture/status recovery tests including real server acquisition/replay, malformed rows/geometry/raster, invalid state and replay identity controls."
+    },
+    {
+      "gate": "negative_controls",
+      "outcome": "PASS",
+      "reason": "PASS: four of the five new capture/replay tests fail on the unchanged parent; all five pass after validation."
+    },
+    {
+      "gate": "app_build_and_tests",
+      "outcome": "PASS",
+      "reason": "PASS: npm test production build and all 2045 application tests, zero failures or skips."
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS",
+      "reason": "PASS: tsc --noEmit --incremental false."
+    },
+    {
+      "gate": "changed_file_lint",
+      "outcome": "PASS",
+      "reason": "PASS: ESLint on the three changed Site files."
+    },
+    {
+      "gate": "browser_provider_deployment",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: browser/device validation, provider readback, deployment, publication and release activation."
+    }
+  ]
+}
