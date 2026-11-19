@@ -1,10 +1,11 @@
 import type {FieldRole} from './collection-metadata';
+import {usgsDictionary} from './usgs-field-dictionary';
 
 export type FieldDocument = {
  id:string; title:string; url:string; edition:string|null; sha256:string|null; checkedAt:string; scope:string;
 };
 export type DocumentedField = {
- label?:string; role:FieldRole; definition:string; unit?:string; reference?:string; encoding?:string;
+ label?:string; role:FieldRole; definition:string; unit?:string; unitField?:string; reference?:string; encoding?:string;
  codes?:Readonly<Record<string,string>>; sources:readonly string[];
 };
 
@@ -68,13 +69,21 @@ const faa:Readonly<Record<string,DocumentedField>>={
 };
 
 export function documentedField(collectionId:string|undefined,name:string):DocumentedField|undefined {
- return collectionId==='observations-faa-obstacles'&&Object.hasOwn(faa,name)?faa[name]:undefined;
+ const fields=collectionId==='observations-faa-obstacles'?faa:usgsDictionary(collectionId)?.fields;
+ return fields&&Object.hasOwn(fields,name)?fields[name]:undefined;
 }
 export function fieldDocuments(collectionId:string):readonly FieldDocument[]{
- return collectionId==='observations-faa-obstacles'?documents:[];
+ return collectionId==='observations-faa-obstacles'?documents:usgsDictionary(collectionId)?.documents??[];
 }
 export function fieldDictionaryRevision(collectionId:string):string|null{
- return collectionId==='observations-faa-obstacles'?FAA_FIELD_DICTIONARY_REVISION:null;
+ return collectionId==='observations-faa-obstacles'?FAA_FIELD_DICTIONARY_REVISION:usgsDictionary(collectionId)?.revision??null;
+}
+export function recordedUnit(collectionId:string,field:string,values:Record<string,unknown>):string|null{
+ const definition=documentedField(collectionId,field);
+ if(definition?.unit)return definition.unit;
+ const key=definition?.unitField;
+ const value=key&&Object.hasOwn(values,key)?values[key]:null;
+ return typeof value==='string'&&value.trim()?value:null;
 }
 export function documentedCode(collectionId:string,name:string,code:string):string|null{
  const codes=documentedField(collectionId,name)?.codes;
@@ -86,5 +95,5 @@ export function collectionFieldNotes(collectionId:string):readonly string[]{
   'Accuracy codes are categories, not distances to average. Height summaries keep FAA verification and accuracy categories separate; unknown codes and missing values remain unchanged.',
   'Quantity can describe a legacy array at one stored point; feature count and represented-obstacle count are different.',
   'The action date is a record-maintenance date. Documentation edition, capture currency, retrieval time and observation time remain distinct.',
- ]:[];
+ ]:usgsDictionary(collectionId)?.notes??[];
 }

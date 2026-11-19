@@ -64,6 +64,31 @@ their explicit unknowns. Previously saved FAA bundles reopen their unchanged
 records and question; an obsolete measurement context is reset with a visible
 notice. New bundles retain their documented context and dictionary revision.
 
+## Documented USGS water fields
+
+Daily values, field measurements and peaks have sourced definitions for all 54
+archived fields, checked against the USGS JSON schemas for
+[daily](https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/schema?f=json),
+[field measurements](https://api.waterdata.usgs.gov/ogcapi/v1/collections/field-measurements/schema?f=json)
+and [peaks](https://api.waterdata.usgs.gov/ogcapi/v1/collections/peaks/schema?f=json).
+The recorded schema fingerprints describe the documentation snapshots, not the
+edition or approval of an archived observation.
+
+The value field names `unit_of_measure` as its per-record unit source. Missing
+units remain unknown. Field summaries distinguish observing procedures,
+sublocations, agencies, control conditions and ratings, in addition to parameter,
+reading type, datum, approval and qualifiers. Peak comparison start years stay
+separate, and `peak_since` is a time field rather than a numeric measurement.
+Water year, calendar year, partial peak dates, observation time, provider refresh
+and archive retrieval time retain their different meanings. No unit conversion,
+date completion or AI review is inferred.
+
+Earlier pooled field/peak bundles retain their records and question and show a
+selection-reset notice. Compatible daily selections remain intact. New documented
+contexts reopen exactly; altered contexts are rejected. Exports carry unit sources,
+field definitions and citations. Map derivatives use per-row units when stored
+geometry is available; this change does not fabricate missing map geometry.
+
 **Reopen a saved lab bundle** reads the file in the browser and restores its
 record sample, question, field, context and selected interval where present.
 Older JSON downloads reopen their record sample and question. The app checks

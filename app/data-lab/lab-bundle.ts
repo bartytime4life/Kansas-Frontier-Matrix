@@ -79,6 +79,29 @@ function viewFromBundle(value: unknown, collection: Collection, snapshot: LabSna
   return { field: value.field, context: value.context, range: candidate };
 }
 
+// Only the known pre-dictionary water grouping is eligible for this upgrade.
+// Validate it against the retained rows; arbitrary or new-format views stay strict.
+function previousWaterContext(collection:Collection,view:Record<string,unknown>,rows:LabSnapshot['rows']){
+ if(typeof view.field!=='string'||typeof view.context!=='string')return false;
+ const dimensions=collection.id==='observations-usgs-field-measurements'?
+  ['parameter_code','unit_of_measure','kind','reading_type','vertical_datum','approval_status','qualifier']:
+  collection.id==='observations-usgs-peaks'?['parameter_code','unit_of_measure','qualifier']:null;
+ if(!dimensions)return false;
+ if(view.field!=='value')return (
+  collection.id==='observations-usgs-peaks'&&view.field==='peak_since'||
+  collection.id==='observations-usgs-field-measurements'&&['measurement_rated','control_condition'].includes(view.field)
+ )&&view.context==='Unit and measurement context not supplied';
+ return rows.some(row=>{
+  const values=row.values;
+  if(!record(values))return false;
+  const context=Object.fromEntries(dimensions.filter(key=>{
+   const value=values[key];
+   return ['string','number'].includes(typeof value)&&String(value).trim();
+  }).map(key=>[key,String(values[key])]));
+  return view.context===(Object.keys(context).length?JSON.stringify(context):'Unit and measurement context not supplied');
+ });
+}
+
 export function openLabBundle(contents: string) {
   if (contents.length > MAX_LAB_BUNDLE_BYTES) throw new Error('Choose a Record Lab JSON file under 8 MB.');
   let value: unknown;
@@ -141,7 +164,9 @@ export function openLabBundle(contents: string) {
   const upgrade=collection.id==='observations-faa-obstacles'&&value.fieldDictionaryRevision==null
     &&record(oldView)&&['quantity','agl_height_ft','amsl_height_ft','horizontal_accuracy'].includes(String(oldView.field))
     &&oldView.context==='Unit and measurement context not supplied'&&validOldRange;
+  const waterUpgrade=value.fieldDictionaryRevision==null&&validOldRange&&record(oldView)
+    &&previousWaterContext(collection,oldView,rows);
   return { collection, snapshot, question: value.question,
-    view:upgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
-    notice:upgrade?'FAA field definitions have changed. Your records and question were preserved; choose a measurement context again.':null };
+    view:upgrade||waterUpgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
+    notice:upgrade||waterUpgrade?`${upgrade?'FAA':'USGS'} field definitions have changed. Your records and question were preserved; choose a measurement context again.`:null };
 }
