@@ -13,6 +13,7 @@ export type LandingGuide = Readonly<{
   zoom: number;
   ideas: readonly string[];
   caution: string;
+  relatedLab?: Readonly<{ href: string; label: string }>;
 }>;
 
 export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
@@ -52,6 +53,7 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
       "Find listed places that sit along the old trail corridors.",
     ],
     caution: "Points are representative locations, not property boundaries. Sensitive and restricted sites are withheld by the National Park Service, and listing does not mean a place is open to visitors.",
+    relatedLab: { href: "/labs/fort-larned", label: "Explore Fort Larned’s parade ground" },
   },
   {
     slug: "hunting-and-wildlife-areas",

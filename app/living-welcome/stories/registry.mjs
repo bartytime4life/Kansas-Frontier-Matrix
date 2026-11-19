@@ -95,11 +95,12 @@ export const STORIES = Object.freeze([
     tables: ['kfm_usfs_ceded_lands', 'kfm_usfs_ceded_land_cessions'],
     feeds: ['ceded-lands'],
   }),
-  planned({
-    id: 'historic-places', group: 'Frontier & settlement', title: 'Historic Places', kicker: 'NATIONAL REGISTER & LOC',
-    summary: 'National Register listings in listing order, with Library of Congress photos, maps and newspapers through time.',
-    try: 'Map listings by resource type and follow newspaper issues per year.',
-    limit: 'Listing dates are not building dates, restricted addresses stay unlocated, and the LOC index is metadata only.',
+  guided({
+    id: 'historic-places', group: 'Frontier & settlement', title: 'Historic Places · Fort Larned', kicker: 'PAWNEE COUNTY · ARCHIVAL PHOTOGRAPHS',
+    href: '/labs/fort-larned',
+    summary: 'Read three buildings around Fort Larned’s parade ground through July 1965 survey photographs.',
+    try: 'Choose a building and follow its Library of Congress photograph and National Park Service history.',
+    limit: 'The photographs record the buildings in 1965. The plan shows three selected locations.',
     palette: ['#14141c', '#e8c76a', '#9d7fc4'],
     sources: ['National Register of Historic Places', 'Library of Congress'],
     tables: ['kfm_nrhp_properties', 'kfm_nrhp_locations', 'kfm_loc_items', 'kfm_loc_newspaper_titles'],
