@@ -1,0 +1,50 @@
+[
+  {
+    "id": "barracks",
+    "side": "North",
+    "mapLabel": "Barracks",
+    "title": "Enlisted barracks",
+    "story": "Two sandstone buildings gave enlisted men places to sleep and eat. Part of the barracks later served as the post hospital. In this 1965 survey photograph, the two buildings had been joined to make a barn during the fort’s years as a ranch.",
+    "alt": "A long stone barn with two rooflines, photographed across a field with trees and a silo.",
+    "caption": "The former west and east barracks joined as a barn.",
+    "survey": "HABS KS-21",
+    "photo": "https://www.loc.gov/pictures/item/ks0026.photos.069951p/",
+    "original": "https://tile.loc.gov/storage-services/service/pnp/habshaer/ks/ks0000/ks0026/photos/069951pv.jpg",
+    "interpretation": "https://www.nps.gov/fols/learn/historyculture/the-company-quarters.htm",
+    "width": 1024,
+    "height": 733,
+    "sha256": "c8a809e93a936b5c2cb79e3a6f4938a601b45b27ddc6bba4915fde8240ad87d5"
+  },
+  {
+    "id": "quarters",
+    "side": "West",
+    "mapLabel": "Officer’s quarters",
+    "title": "Commanding officer’s quarters",
+    "story": "The middle house on Officers’ Row housed the post commander. Its porch faced the parade ground. The Historic American Buildings Survey recorded changes made when the building became a private residence after the Army years.",
+    "alt": "A one-story house with porch columns, a low hedge, and thick ivy covering the near gable.",
+    "caption": "The commanding officer’s quarters from the northeast.",
+    "survey": "HABS KS-28",
+    "photo": "https://www.loc.gov/pictures/item/ks0031.photos.070007p/",
+    "original": "https://tile.loc.gov/storage-services/service/pnp/habshaer/ks/ks0000/ks0031/photos/070007pv.jpg",
+    "interpretation": "https://home.nps.gov/fols/learn/photosmultimedia/officers-row.htm",
+    "width": 1024,
+    "height": 738,
+    "sha256": "d26485b846279a22621df7cf2cc1375b3eea5c64f48c4c6b19da0f10de0f9e05"
+  },
+  {
+    "id": "commissary",
+    "side": "South",
+    "mapLabel": "Old commissary",
+    "title": "Old commissary",
+    "story": "The old commissary stored food and other supplies for the post. Its long sandstone walls are visible in the survey photograph. The survey’s title, “Commissary Storehouse & Stables,” also reflects the building’s use for storage and animals.",
+    "alt": "A low, long stone building with a metal roof and a row of closed white shutters.",
+    "caption": "The north side of the old commissary.",
+    "survey": "HABS KS-25",
+    "photo": "https://www.loc.gov/pictures/item/ks0030.photos.069982p/",
+    "original": "https://tile.loc.gov/storage-services/service/pnp/habshaer/ks/ks0000/ks0030/photos/069982pv.jpg",
+    "interpretation": "https://www.nps.gov/places/old-commissary-arsenal.htm",
+    "width": 1024,
+    "height": 734,
+    "sha256": "45fb5a5e2a2e89394dfe78995ddff31b383bbeeb9e3a16949d74120eb9be944e"
+  }
+]

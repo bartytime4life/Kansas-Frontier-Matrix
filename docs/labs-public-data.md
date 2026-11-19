@@ -16,6 +16,7 @@ dedicated investigations. Their publication is a separate release step.
 | Water Chemistry, `/labs/water-chemistry` | 28 Water Quality Portal records at USGS 07144100 near Sedgwick. The 2019–2020 and 2021–2022 windows use the same dissolved nitrate analyte, units, analytical method, collection method and sampler. One non-detect retains its reporting limit and stays outside the numeric histogram. |
 | Boom & Ghost Towns, `/labs/ghost-towns` | All 59 Douglas County rows matching the county fields in the original geocoded Blevins–Helbock file. The map includes 45 provider-matched locations, and the record view retains unlocated and undated records. County outlines are present-day context. |
 | Newspaper Pulse, `/labs/newspaper-pulse` | All 20 Library of Congress digitized pages from two Abilene Weekly Reflector issues dated January 2, 1890 and January 4, 1900. Rates count pages containing each OCR token and use the matching issue's page inventory as the denominator. |
+| Historic Places · Fort Larned, `/labs/fort-larned` | Three July 1965 Historic American Buildings Survey photographs with National Park Service building histories. A simplified plan links the north, west and south stops. |
 | 2012 Drought Replay, `/labs/drought-replay` | 17 Finney County U.S. Drought Monitor assessments and 119 approved daily means from USGS 07139000. Each map date keeps its validity interval and the selected week shows its seven dated gauge records. |
 | Kansas Then & Now, `/labs/then-now` | Two aligned 768-pixel natural-color views of the Arkansas River crossing at Garden City from the 2021 and 2024 NG911 editions. Shared bounds, original exports, reuse terms, and the bridge project record accompany the comparison. |
 
@@ -23,6 +24,19 @@ Each investigation exposes source records and a free export. Snapshot builders
 capture the provider file or request and digest. A source-file receipt documents
 the material used by the page. For historical dates, use the definitions and
 coverage limits shown on the corresponding investigation.
+
+## Fort Larned photographs
+
+The lab bundles three byte-identical Library of Congress JPEG service copies
+with their original framing. The links beside each photo identify David
+von Riesen's July 1965 survey work and lead to the catalog, JPEG, and NPS
+history. The image paths and SHA-256 values are in
+`app/labs/fort-larned/stops.json`. The original government survey images
+come from the HABS collection. The north-up diagram is a simplified
+arrangement of three selected places based on the NPS site description.
+
+- [NPS audio-described brochure](https://www.nps.gov/fols/planyourvisit/audio-described-brochure.htm)
+- [Library of Congress HABS rights information](https://wwws.loc.gov/rr/print/res/114_habs.html)
 
 ## Garden City aerial comparison
 

@@ -51,6 +51,7 @@ test('implemented instruments are lazy and planned stories cannot load a pretend
   }
   assert.deepEqual(STORIES.filter(entry => entry.status === 'guided').map(({ id, href, load }) => [id, href, load]), [
     ['boom-and-ghost-towns', '/labs/ghost-towns', null],
+    ['historic-places', '/labs/fort-larned', null],
     ['kansas-then-and-now', '/labs/then-now', null],
     ['drought-replay-2012', '/labs/drought-replay', null],
     ['water-chemistry', '/labs/water-chemistry', null],

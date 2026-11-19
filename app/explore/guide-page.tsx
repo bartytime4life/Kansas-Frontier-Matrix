@@ -32,6 +32,7 @@ export function GuidePage({ slug }: { slug: string }) {
       <p><a className={styles.cta} href={href}>Open this map →</a></p>
       <h2>Things to try</h2>
       <ul>{guide.ideas.map(idea => <li key={idea}>{idea}</li>)}</ul>
+      {guide.relatedLab && <p><Link href={guide.relatedLab.href}>{guide.relatedLab.label} →</Link></p>}
       <h2>What the map shows</h2>
       <ul className={styles.layers}>{guide.layers.map(id => {
         const source = OFFICIAL_CONTEXT_BY_ID[id];
