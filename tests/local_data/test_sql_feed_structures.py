@@ -5,6 +5,7 @@ import gzip
 import io
 import json
 import unittest
+from unittest.mock import patch
 import urllib.parse
 import zipfile
 
@@ -20,7 +21,8 @@ def zipped(members: dict) -> bytes:
     out = io.BytesIO()
     with zipfile.ZipFile(out, "w") as archive:
         for name, body in members.items():
-            archive.writestr(name, body)
+            # Receipt hashes must depend on fixture content, not ZIP wall-clock metadata.
+            archive.writestr(zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0)), body)
     return out.getvalue()
 
 
@@ -36,6 +38,16 @@ def params(url: str) -> dict:
 
 def unavailable(url):
     raise core.FeedError("HTTP_503 " + url)
+
+
+class ArchiveFixtureTests(unittest.TestCase):
+    def test_identical_members_have_identical_archive_bytes_across_clock_changes(self):
+        members = {"APT_BASE.csv": b"AIRPORT,STATE\r\nK78,KS\r\n"}
+        with patch("zipfile.time.localtime", return_value=(2026, 11, 19, 14, 0, 0, 3, 323, -1)):
+            before = zipped(members)
+        with patch("zipfile.time.localtime", return_value=(2026, 11, 19, 14, 0, 2, 3, 323, -1)):
+            after = zipped(members)
+        self.assertEqual(before, after)
 
 
 class SharedTests(FeedCase):
