@@ -4,7 +4,7 @@ import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-
 import { hiDpiExportUrl } from "./hd-rasters";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import { KANSAS_DISCOVERY_SOURCES } from "./kansas-discovery-layers";
-import { HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS, TRAIL_PLACE_CLUSTER_MAX_ZOOM, TRAIL_PLACE_CLUSTER_PROPERTIES, TRAIL_PLACE_CLUSTER_RADIUS } from "./context-clusters";
+import { ACCESS_OVERVIEW_CLUSTER_PROPERTIES, ACCESS_OVERVIEW_CLUSTER_RADIUS, ACCESS_OVERVIEW_MAX_ZOOM, ACCESS_OVERVIEW_SOURCE_ID, accessOverviewPoints, HISTORIC_PLACE_CLUSTER_MAX_ZOOM, HISTORIC_PLACE_CLUSTER_PROPERTIES, HISTORIC_PLACE_CLUSTER_RADIUS, TRAIL_PLACE_CLUSTER_MAX_ZOOM, TRAIL_PLACE_CLUSTER_PROPERTIES, TRAIL_PLACE_CLUSTER_RADIUS } from "./context-clusters";
 import { BRIDGE_CLOSED_COLOR, BRIDGE_CLUSTER_MAX_ZOOM, BRIDGE_CLUSTER_RADIUS, BRIDGE_ERA_STOPS, BRIDGE_FEED_IDS, BRIDGE_POSTED_COLOR, BRIDGE_UNKNOWN_ERA_COLOR } from "./kdot-bridges";
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, GeoJSONSource, GeoJSONSourceSpecification, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
@@ -162,8 +162,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     id: "kdwp-wiha-access", title: "KDWP Walk-In Hunting Access tracts · 2026–2027", shortTitle: "Walk-in hunting access",
     organization: "Kansas Department of Wildlife and Parks", domain: "Land cover & ecology", kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-kdwp-wiha-access",
-    layerIds: Object.freeze(["external-kdwp-wiha-access-fill", "external-kdwp-wiha-access-line"]),
-    interactiveLayerIds: Object.freeze(["external-kdwp-wiha-access-fill"]),
+    layerIds: Object.freeze(["external-kdwp-wiha-access-fill", "external-kdwp-wiha-access-line", "external-kdwp-wiha-access-overview", "external-kdwp-wiha-access-overview-count"]),
+    interactiveLayerIds: Object.freeze(["external-kdwp-wiha-access-overview", "external-kdwp-wiha-access-fill"]),
     apiPath: "/api/live-context?feed=kdwp-wiha-access",
     endpointLabel: "services1.arcgis.com · WIHA access layer in KDWP's 2026–2027 WIHA web map",
     sourceUrl: "https://ksoutdoors.gov/Hunting/Where-to-Hunt-in-Kansas/Walk-In-Hunting-Access", serviceUrl: "https://services1.arcgis.com/q2CglofYX6ACNEeu/arcgis/rest/services/24_25_7_29/FeatureServer/0",
@@ -172,7 +172,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     defaultVisibility: false, defaultOpacity: 0.5, color: "#e5b54b",
     attribution: "Kansas Department of Wildlife and Parks · Walk-In Hunting Access",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    legend: "Gold fill · private land enrolled in Walk-In Hunting Access. Click a tract for acres, species and archery-only status.",
+    legend: "Zoomed out, numbered circles count tracts and their recorded acres; zoom in for the tracts themselves. Gold fill · private land enrolled in Walk-In Hunting Access. Click a tract for acres, species and archery-only status.",
     boundary: "Walk-In Hunting Access tracts are private land that owners enroll for public hunting only during posted seasons and under KDWP rules. Outlines are simplified display geometry. Enrollment is not general public access, trespass permission outside the program, ownership information or KFM evidence; public administrative references and notes are tract context, not owner identification or permission to track people. Check the current KDWP atlas and regulations before going.",
     fallback: "A failed KDWP request leaves the layer empty and labeled; a missing tract never implies access is allowed or prohibited.",
   }),
@@ -725,7 +725,9 @@ export function setHmsSmokeFade(map: MapLibreMap, value: number, opacity: number
   balanceMapFills(map);
 }
 export const OFFICIAL_CONTEXT_BY_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source])) as Record<OfficialContextId, OfficialContextSource>);
-export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])) as Record<string, OfficialContextSource>);
+// The hunting-access overview is a second, display-only map source; a hit on it belongs to the hunting-access layer.
+export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze({ ...Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])),
+  [ACCESS_OVERVIEW_SOURCE_ID]: OFFICIAL_CONTEXT_SOURCES.find(source => source.id === "kdwp-wiha-access")! } as Record<string, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CONTEXT_SOURCES.flatMap((source) => source.interactiveLayerIds));
 export const OFFICIAL_CONTEXT_PRESENT_FRAME = BUILD_UTC_YEAR;
 /** Keep dynamic 3DEP image-service requests within the Kansas inspection scale.
@@ -908,6 +910,9 @@ export const defaultOfficialContextVisibility = (): Record<OfficialContextId, bo
 export const defaultOfficialContextOpacity = (): Record<OfficialContextId, number> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultOpacity])) as Record<OfficialContextId, number>;
 
 const EMPTY_CONTEXT: FeatureCollection = { type: "FeatureCollection", features: [] };
+const ACCESS_OVERVIEW_LAYER_ID = "external-kdwp-wiha-access-overview";
+/** Overview circles follow the layer's opacity slider but sit at 0.85 where the tract fill sits at its default 0.5. */
+const overviewOpacity = (layerOpacity: number) => Math.min(1, layerOpacity * 1.7);
 const emptyCollection = (): FeatureCollection => EMPTY_CONTEXT;
 /** Build-year colour for one bridge or, given a cluster's average year, for a cluster. */
 const bridgeEraColor = (year: ExpressionSpecification): ExpressionSpecification =>
@@ -934,6 +939,7 @@ const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, da
  * raster-frame transitions to finish before React reapplies map state. */
 export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContextFeedId): boolean => {
   const cleared = updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
+  if (feed === "kdwp-wiha-access") updateGeoJSON(map.getSource(ACCESS_OVERVIEW_SOURCE_ID) as GeoJSONSource | undefined, accessOverviewPoints(EMPTY_CONTEXT));
   if (feed === "nasa-gibs-fire-points") refreshFireFootprints(map);
   if (feed === "nifc-fire-reports") syncFireReportDisplay(map, false, 0);
   return cleared;
@@ -1136,6 +1142,21 @@ export const applyOfficialContextState = (
     ensureLayer(map, { id: area.layerIds[0], type: "fill", source: area.sourceId, paint: { "fill-color": color, "fill-opacity": area.defaultOpacity } }, firstRegistryLayer(map));
     ensureLayer(map, { id: area.layerIds[1], type: "line", source: area.sourceId, paint: { "line-color": line, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.4, 10, 1.2, 14, 2], "line-opacity": 0.85 } });
   }
+  // Thousands of hunting tracts are specks at statewide scale. Below zoom 8 numbered circles count the
+  // tracts and their recorded acres from one point per tract; from zoom 8 only the tracts are drawn.
+  const access = OFFICIAL_CONTEXT_BY_ID["kdwp-wiha-access"];
+  if (map.getSource(access.sourceId)) {
+    ensureGeoJsonSource(map, { ...access, sourceId: ACCESS_OVERVIEW_SOURCE_ID }, accessOverviewPoints(payloads["kdwp-wiha-access"]?.data ?? emptyCollection()),
+      { cluster: true, clusterMaxZoom: ACCESS_OVERVIEW_MAX_ZOOM - 1, clusterRadius: ACCESS_OVERVIEW_CLUSTER_RADIUS, clusterProperties: ACCESS_OVERVIEW_CLUSTER_PROPERTIES });
+    ensureLayer(map, { id: access.layerIds[2], type: "circle", source: ACCESS_OVERVIEW_SOURCE_ID, maxzoom: ACCESS_OVERVIEW_MAX_ZOOM, filter: ["has", "point_count"], paint: {
+      "circle-color": access.color, "circle-radius": ["step", ["get", "point_count"], 12, 25, 15, 100, 19, 300, 24],
+      "circle-stroke-color": "#5a4210", "circle-stroke-width": 1.4, "circle-opacity": access.defaultOpacity,
+    } });
+    ensureLayer(map, { id: access.layerIds[3], type: "symbol", source: ACCESS_OVERVIEW_SOURCE_ID, maxzoom: ACCESS_OVERVIEW_MAX_ZOOM, filter: ["has", "point_count"], layout: {
+      "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": ["step", ["get", "point_count"], 11.5, 100, 12.5],
+      "text-allow-overlap": true, "text-ignore-placement": true,
+    }, paint: { "text-color": "#2a1d0a", "text-halo-color": "rgba(255,255,255,0.5)", "text-halo-width": 1 } });
+  }
 
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
   ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());
@@ -1250,7 +1271,8 @@ export const applyOfficialContextState = (
           const expression = monitoringWellOpacity(safeOpacity);
           if (JSON.stringify(map.getPaintProperty(layerId, "circle-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-opacity", expression);
         }
-        else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+        // The hunting-access layer's default opacity suits a tract fill; its numbered overview circles need to read more strongly at the same setting.
+        else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : layerId === ACCESS_OVERVIEW_LAYER_ID ? overviewOpacity(safeOpacity) : safeOpacity);
       }
       if (layer?.type === "circle" && source.id === "kgs-monitoring-wells") {
         const expression = monitoringWellOpacity(safeOpacity);
@@ -1259,7 +1281,7 @@ export const applyOfficialContextState = (
       if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
       if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", layerId.endsWith("-glow") ? safeOpacity * 0.3 : source.id === "census-counties" ? safeOpacity * 0.58 : safeOpacity);
       if (layer?.type === "raster") requestRasterOpacity(map, layerId, source.id === "noaa-lightning-density" && layerId.endsWith("-glow") ? 0 : safeOpacity);
-      if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
+      if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", layerId === `${ACCESS_OVERVIEW_LAYER_ID}-count` ? overviewOpacity(safeOpacity) : safeOpacity);
     }
   }
   // County population prisms, for maps that ask for them: they stand in for the
