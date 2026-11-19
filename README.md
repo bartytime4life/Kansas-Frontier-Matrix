@@ -201,6 +201,27 @@ The v216-to-candidate comparison reduced that JavaScript list by 46,290 bytes
 build-size comparison, not a startup timing or frame-rate result. Revert the
 page's loader import to restore eager loading; no data migration is required.
 
+Soil descriptions and published geophysical surveys use bounded, cancellable
+browser reads with an explicit retry after failure. Soil waits 400 ms after a
+probe change, allows 20 seconds for response headers and body (the route retains
+its 18-second upstream budget), and accepts at most 512 KiB with the expected
+14-cell rows, units, source metadata and 100-horizon partial marker. Failed HTTP,
+malformed responses and timeouts show unavailable rather than empty soil. A moved
+or closed probe cannot accept a late result; equivalent query coordinates reuse
+the current reading. Location privacy continues to withhold the soil request.
+
+The on-demand survey catalogue allows 15 seconds and 2 MiB, validates every entry
+and unique survey/profile identities, and distinguishes loading, failed, empty
+and filtered-empty states. A successful catalogue, including an empty one, stays
+cached across tool changes; retry clears the old error. Held and reference-only
+entries retain their status and interpretation limits. This public-composition
+port adapts the merged main fixes from #5930 and #5931; it changes no source
+assets, export contents, release/admission state, startup cards or settings.
+Synthetic hook/transport tests cover failure, retry, cancellation, byte limits
+and stale completions; they are not live-provider or rendered-browser acceptance.
+Rollback: revert the panel, bounded-reader, three regression modules and this
+paragraph together. No data migration or store operation is needed.
+
 Cutaway surface textures are uploaded again only when their image or sampling
 mode changes. Opacity, aquifer opacity, vertical scale, column visibility and
 Orbit/Move changes reuse the current pixels. Newly arriving high-detail images

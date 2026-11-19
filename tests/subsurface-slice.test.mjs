@@ -11,6 +11,7 @@ const materials=await module('subsurface-materials');
 const model=await module('subsurface-model',{'./subsurface-materials':materials});
 const slices=await module('subsurface-slice',{'./subsurface-model':model});
 const locatorPlacement=await module('cutaway-locator');
+const bounded=(await componentHarness('app/bounded-json.ts',{}, {TextDecoder})).exports;
 const record={id:'well-a',sourceId:'kgs-wwc5',kind:'well',name:'WWC5 A',coordinates:[-100.5,38.5],coordinateReference:'WGS84',locationMethod:'approximate',sourceUrl:'https://example.test/a',sourceTime:'1990-01-01',depthUnit:'m',depthReference:'land-surface',totalDepth:30,intervals:[{top:0,bottom:10,description:'sand'},{top:20,bottom:30,description:'clay'}]};
 const other={...record,id:'well-b',name:'WWC5 B',intervals:[{top:100,bottom:180,description:'shale'}]};
 const empty={...record,id:'empty',name:'Empty log',intervals:[]};
@@ -46,9 +47,9 @@ test('core inventory remains an envelope and original interval identity survives
 
 async function panelHarness(initialContext=null,{failWorker=false,failPrepare=false,map=null,skipArea=false}={}){
   const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>{if(failPrepare&&message.kind==='prepare')throw new Error('failed');messages.push(message);},terminate(){this.terminated=true;}};
-  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
+  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement,'./bounded-json':bounded},{
     matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>{const id=++frameSerial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),queueMicrotask,performance,
-    fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:(callback,delay)=>{const id=++timerSerial;timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),
+    fetch:async()=>Response.json({version:1,surveys:[]}),setTimeout:(callback,delay)=>{const id=++timerSerial;timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),
   });
   const props={map,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
   let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();const flushTimers=()=>{for(const [id,{callback}] of [...timers]){timers.delete(id);callback();}};flushTimers();
