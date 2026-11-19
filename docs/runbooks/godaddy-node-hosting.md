@@ -295,6 +295,43 @@ features, and walk-in hunting access 3,591 tracts.
 **Mirror.** [#5910](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5910) carried #5909 into `apps/site/source`. That tree
 has no DeFlock layer, so #5906 has no mirror change.
 
+<a id="public-readback-2026-11-19-later"></a>
+
+### Later publication verified on 2026-11-19: hunting-access overview
+
+At about 20:45 UTC the identity checker reported `APPLICATION_INPUTS_MATCH` for
+`c393a352`, the head of the connected branch at that time.
+
+| Change | Live readback |
+|---|---|
+| [#5924](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5924) walk-in hunting access overview | The tract feed returned 3,591 tracts. In a headless browser at statewide scale the layer drew numbered circles over the tract specks. Hovering one showed "86 walk-in hunting tracts in this area · 46,677 recorded acres · 3 archery-only". Selecting the 364 circle zoomed in one step (scale bar 50 mi to 30 mi). At zoom 8.3 only tract outlines were drawn, and selecting one opened "WIHA tract 44656 · Logan County". No page errors |
+
+**Build identity reads differently.** `/api/build` returned the matching source
+digest but `sourceCommit: null` and `commitState: WORKTREE_MODIFIED`. Earlier
+readbacks returned the commit and `CLEAN_CHECKOUT`. The application inputs match
+`c393a352` exactly, so the difference is in how the host's checkout reports
+itself, not in what is served. A clean install, build and start of `c393a352`
+in a separate checkout reported `CLEAN_CHECKOUT` with the commit, so no build or
+start step dirties the tree by itself. The checker reports `WORKTREE_MODIFIED`
+when `git status` on the host is not empty, which an untracked or edited file
+anywhere in the host's checkout would cause. Which file was not determined from
+outside the host.
+
+**Not checked.** The published commit carries 17 other merged changes since the
+previous readback (#5916 to #5947, from other work). This readback covered them
+only through the identity match.
+
+**DeFlock after a restart, seen again.** The provider was still down. The first
+request took 25.6 seconds and the next 0.6 seconds, as after the earlier publish
+the same day; chat showed "connecting" for about 25 seconds at the same moment.
+Both point to a freshly started process. [#5906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5906) removes the wait for
+every request after the first failure in a process, but each restart still costs
+one visitor up to 25 seconds while the provider is down.
+
+**Other feeds.** The other 14 feeds answered 200 in under two seconds.
+
+**Mirror.** [#5926](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5926) carried #5924 into `apps/site/source`.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
