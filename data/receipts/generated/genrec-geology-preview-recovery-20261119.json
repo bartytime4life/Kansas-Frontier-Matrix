@@ -1,0 +1,98 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/geology-point-explorer.tsx": "sha256:92fc1b046c3f77abb472b57a1c548a8265fc28403da53aee29f9c3668e8500ff",
+    "apps/site/source/tests/geology-point-explorer.test.mjs": "sha256:3cfcf371b36540270dddab08a4f07567c0bb55f7343cbcb53c777f7c8e5c6c87",
+    "apps/site/source/tests/geology-point-lifecycle.test.mjs": "sha256:e74efd27a1daf788a0e7c02cb34d0f6d34a6b7e9112ae422c30bebc1a8c60865",
+    "data/receipts/generated/site-v268-geology-preview-recovery-overlay-20261119.json": "sha256:d0a0062c6d65c177b3d17d892ab9ae3737d2925678497bdf70a5f0a9b49e19ac",
+    "tests/qa/test_site_mirror.py": "sha256:51a4a7db0343c3bc6a07f0de3281560724ee81ef9fe22926a709fb8db2a23152",
+    "tools/qa/site_mirror.py": "sha256:90fa1827ce540b1764de7367c70c6b88eea2631b752a1370a7dd800636b81fa0"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/geology-point-explorer.tsx",
+    "apps/site/source/tests/geology-point-explorer.test.mjs",
+    "apps/site/source/tests/geology-point-lifecycle.test.mjs",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py",
+    "data/receipts/generated/site-v268-geology-preview-recovery-overlay-20261119.json"
+  ],
+  "citations": [],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-19T19:32:11.445197+00:00",
+  "emitter": "OpenAI Codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@6c2fda695a08942e4373420d78418e117c23c8cc",
+      "data/receipts/generated/site-v268-connections-response-recovery-overlay-20261119.json",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/retention.md"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "unspecified"
+  },
+  "notes": "Validate geology sample source identity, frame and rows; bound stalled requests and prevent style-event source rewrite loops. The original dirty checkout and historical receipt bytes are unchanged. No independent or human acceptance, deployment or publication claimed.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "local Git inspection",
+      "Node tests",
+      "npm production build",
+      "TypeScript",
+      "Python validators"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:44d579c15e63b02955e099b2b75945a1bbaacf3fea3972ef961500597cbbb524",
+  "receipt_id": "genrec-geology-preview-recovery-20261119",
+  "truth_labels": {
+    "apps/site/source/app/geology-point-explorer.tsx": "CONFIRMED",
+    "apps/site/source/tests/geology-point-explorer.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/geology-point-lifecycle.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v268-geology-preview-recovery-overlay-20261119.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused_tests",
+      "outcome": "PASS",
+      "reason": "PASS: 10 geology preview/lifecycle tests, including malformed rows, reentrant style events, deadline and unmount controls."
+    },
+    {
+      "gate": "negative_controls",
+      "outcome": "PASS",
+      "reason": "PASS: four of the five initial preview regression tests fail against unchanged main; all six new tests pass with the repair."
+    },
+    {
+      "gate": "app_build_and_tests",
+      "outcome": "PASS",
+      "reason": "PASS: production build succeeded; final full application rerun passed all 2040 tests with zero failures or skips after lifecycle fixture alignment."
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS",
+      "reason": "PASS: tsc --noEmit --incremental false."
+    },
+    {
+      "gate": "changed_file_lint",
+      "outcome": "PASS",
+      "reason": "PASS: ESLint on the three changed Site files."
+    },
+    {
+      "gate": "browser_provider_deployment",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: browser/device validation, provider readback, deployment, publication and release activation."
+    }
+  ]
+}

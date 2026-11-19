@@ -1,10 +1,17 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import ts from "typescript";
 import { componentHarness, findNode, settle } from "./component-harness.mjs";
 
+const subsurfaceCode = ts.transpileModule((await readFile("app/subsurface-model.ts", "utf8"))
+  .replace('import { atRecordYear } from "./subsurface-materials";', "const atRecordYear = () => true;"), {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+}).outputText;
+const subsurface = await import(`data:text/javascript;base64,${Buffer.from(subsurfaceCode).toString("base64")}`);
 const file = "app/geology-point-explorer.tsx";
 const imports = {
+  "./subsurface-model": subsurface,
   "./bounded-json": { readBoundedJson: response => response.json() },
   "./underground-resources-model": { RESOURCE_SOURCES: {
     oilgas: { limitation: "Oil and gas source context", link: "https://example.test/oilgas" },
@@ -12,8 +19,8 @@ const imports = {
   } },
   "./geology-point-explorer.module.css": { default: new Proxy({}, { get: (_target, key) => key }) },
 };
-const row = (id, name = id) => ({ id, name, coordinates: [-98, 38], material: "Recorded material", status: "Recorded status", details: [["Source ID", id]] });
-const response = rows => ({ ok: true, json: async () => ({ rows, partial: false, rejected: 0, retrievedAt: "2026-11-09T12:00:00Z" }) });
+const row = (id, name = id, coordinates = [-98, 38]) => ({ id, name, coordinates, material: "Recorded material", status: "Recorded status", details: [["Source ID", id]] });
+const response = (request, rows) => ({ ok: true, json: async () => ({ kind: request.url.searchParams.get("kind"), bounds: request.url.searchParams.get("bounds").split(",").map(Number), rows, partial: false, rejected: 0, retrievedAt: "2026-11-09T12:00:00Z" }) });
 const status = tree => findNode(tree, node => node.props?.role === "status").props.children;
 
 function mapFixture() {
@@ -97,8 +104,8 @@ test("each geology frame starts loading, then installs source markers and select
     assert.equal(request.options.cache, "no-store"); assert.equal(request.options.signal.aborted, false);
   }
   assert.equal(map.data.features.length, 0);
-  current.requests[0].resolve(response([row("oilgas:1", "Source well")]));
-  current.requests[1].resolve(response([row("minerals:2", "Source mine")]));
+  current.requests[0].resolve(response(current.requests[0], [row("oilgas:1", "Source well")]));
+  current.requests[1].resolve(response(current.requests[1], [row("minerals:2", "Source mine")]));
   await settle(); tree = current.render();
   assert.equal(status(tree), "Select a point for its 2D record details.");
   assert.deepEqual(Array.from(map.data.features, feature => feature.properties.id), ["oilgas:1", "minerals:2"]);
@@ -119,12 +126,12 @@ test("retired geology frames abort requests and cannot overwrite a newer sample"
   assert.ok(old.requests.every(request => request.options.signal.aborted));
   const current = await sample(map, "-97.4,38.6,-96.6,39.4");
   current.render();
-  for (const request of old.requests) request.resolve(response([row("oilgas:old", "STALE source")]));
+  for (const request of old.requests) request.resolve(response(request, [row("oilgas:old", "STALE source")]));
   await settle();
   assert.equal(map.data.features.length, 0, "late retired responses cannot draw markers");
   assert.doesNotMatch(JSON.stringify(old.h.render(old.h.exports.Sample, { map, frameKey: "-98.4,37.6,-97.6,38.4", monitoringVisible: false })), /STALE source/);
-  current.requests[0].resolve(response([row("oilgas:new", "Current source")]));
-  current.requests[1].resolve(response([]));
+  current.requests[0].resolve(response(current.requests[0], [row("oilgas:new", "Current source", [-97, 39])]));
+  current.requests[1].resolve(response(current.requests[1], []));
   await settle(); current.render();
   assert.deepEqual(Array.from(map.data.features, feature => feature.properties.id), ["oilgas:new"]);
   map.hit = "oilgas:new"; map.emit("click");
@@ -138,7 +145,7 @@ test("retired geology frames abort requests and cannot overwrite a newer sample"
   assert.equal(findNode(tree, node => node.type === "h3"), undefined);
   assert.equal(map.data.features.length, 0);
   reopened.h.dispose();
-  for (const request of reopened.requests) request.resolve(response([row("oilgas:hidden", "HIDDEN source")]));
+  for (const request of reopened.requests) request.resolve(response(request, [row("oilgas:hidden", "HIDDEN source")]));
   await settle();
   assert.equal(map.sourceCount, 0); assert.equal(map.layerCount, 0);
   assert.ok(reopened.requests.every(request => request.options.signal.aborted));
@@ -147,7 +154,7 @@ test("retired geology frames abort requests and cannot overwrite a newer sample"
 test("a failed geology source preserves the other source and reports unavailability", async () => {
   const map = mapFixture(), current = await sample(map, "-98.4,37.6,-97.6,38.4");
   current.render();
-  current.requests[0].resolve(response([row("oilgas:1")]));
+  current.requests[0].resolve(response(current.requests[0], [row("oilgas:1")]));
   current.requests[1].resolve({ ok: false });
   await settle(); const tree = current.render();
   assert.ok(findNode(tree, node => node.type === "p" && node.props.children === "One or more KGS resource sources are unavailable in this view."));

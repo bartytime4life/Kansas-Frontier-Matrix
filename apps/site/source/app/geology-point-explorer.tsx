@@ -1,18 +1,44 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
+import type { Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
-import type { AreaBounds } from "./subsurface-model";
+import { validPosition, type AreaBounds } from "./subsurface-model";
 import { RESOURCE_SOURCES, type ResourceKind, type ResourceLocation } from "./underground-resources-model";
 import s from "./geology-point-explorer.module.css";
 
-type SourceResult = { rows: ResourceLocation[]; partial: boolean; rejected: number; retrievedAt: string };
 type SourceState = { rows: ResourceLocation[]; partial: boolean; error: boolean };
 const EMPTY: SourceState = { rows: [], partial: false, error: false };
 const KANSAS: AreaBounds = [-102.1, 36.95, -94.55, 40.05];
 const SOURCE_ID = "kfm-geology-resource-preview";
 export const GEOLOGY_POINT_LAYER_ID = `${SOURCE_ID}-points`;
+
+function sourceState(value: unknown, kind: ResourceKind, bounds: AreaBounds): SourceState {
+  if (!value || typeof value !== "object") throw new Error("Invalid source response");
+  const result = value as Record<string, unknown>;
+  const seen = new Set<string>();
+  if (result.kind !== kind || !Array.isArray(result.bounds) || result.bounds.length !== 4
+    || !result.bounds.every((coordinate, index) => coordinate === bounds[index])
+    || typeof result.partial !== "boolean" || !Number.isSafeInteger(result.rejected) || Number(result.rejected) < 0
+    || typeof result.retrievedAt !== "string" || !Number.isFinite(Date.parse(result.retrievedAt))
+    || !Array.isArray(result.rows) || result.rows.length > 200) throw new Error("Invalid source response");
+  const rows: ResourceLocation[] = [];
+  for (const value of result.rows) {
+    if (!value || typeof value !== "object") throw new Error("Invalid source row");
+    const row = value as Record<string, unknown>;
+    if (typeof row.id !== "string" || !row.id.startsWith(`${kind}:`) || seen.has(row.id)
+      || !validPosition(row.coordinates) || row.coordinates[0] < bounds[0] || row.coordinates[0] > bounds[2]
+      || row.coordinates[1] < bounds[1] || row.coordinates[1] > bounds[3]
+      || ![row.name, row.material, row.status].every(label => typeof label === "string")
+      || !Array.isArray(row.details) || row.details.length > 32
+      || !row.details.every(pair => Array.isArray(pair) && pair.length === 2 && pair.every(label => typeof label === "string"))) {
+      throw new Error("Invalid source row");
+    }
+    seen.add(row.id);
+    rows.push(row as ResourceLocation);
+  }
+  return { rows, partial: result.partial, error: false };
+}
 
 /** A moving local sample, never a statewide inventory or a claim of empty coverage. */
 export function geologyPointFrame(center: [number, number], span: [number, number]): AreaBounds {
@@ -39,9 +65,9 @@ export default function GeologyPointExplorer({ map, enabled, redacted, monitorin
   }, [map, enabled, redacted]);
 
   if (!enabled || redacted || !map || !frame) return null;
+  // A new frame owns a fresh request and selection. Unmounting also discards
+  // aborted work when this layer is hidden and later opened in the same frame.
   const frameKey = frame.join(",");
-  // A different frame owns different requests, markers and selection. React
-  // resets them together instead of resetting state from the loading effect.
   return <GeologyPointSample key={frameKey} map={map} frameKey={frameKey} monitoringVisible={monitoringVisible} />;
 }
 
@@ -54,19 +80,24 @@ function GeologyPointSample({ map, frameKey, monitoringVisible }: { map: MapLibr
 
   useEffect(() => {
     const controller = new AbortController();
+    const bounds = frameKey.split(",").map(Number) as AreaBounds;
+    const timer = setTimeout(() => controller.abort(), 18_000);
+    const aborted = new Promise<SourceState>(resolve => {
+      controller.signal.addEventListener("abort", () => resolve({ ...EMPTY, error: true }), { once: true });
+    });
     const load = async (kind: ResourceKind): Promise<SourceState> => {
       try {
         const response = await fetch(`/api/subsurface/resources?${new URLSearchParams({ kind, bounds: frameKey })}`, { signal: controller.signal, cache: "no-store" });
-        if (!response.ok) throw new Error("Source unavailable");
-        const value = await readBoundedJson(response, 1_000_000, controller.signal) as SourceResult;
-        if (!Array.isArray(value.rows) || value.rows.length > 200 || typeof value.partial !== "boolean") throw new Error("Invalid source response");
-        return { rows: value.rows, partial: value.partial, error: false };
+        if (!response.ok) { void response.body?.cancel().catch(() => undefined); throw new Error("Source unavailable"); }
+        return sourceState(await readBoundedJson(response, 1_000_000, controller.signal), kind, bounds);
       } catch { return { ...EMPTY, error: true }; }
     };
-    void Promise.all([load("oilgas"), load("minerals")]).then(([oilgas, minerals]) => {
-      if (!controller.signal.aborted) { setSources({ oilgas, minerals }); setLoading(false); }
+    let disposed = false;
+    void Promise.all([Promise.race([load("oilgas"), aborted]), Promise.race([load("minerals"), aborted])]).then(([oilgas, minerals]) => {
+      clearTimeout(timer);
+      if (!disposed) { setSources({ oilgas, minerals }); setLoading(false); }
     });
-    return () => controller.abort();
+    return () => { disposed = true; clearTimeout(timer); controller.abort(); };
   }, [frameKey]);
 
   useEffect(() => {
@@ -77,7 +108,6 @@ function GeologyPointSample({ map, frameKey, monitoringVisible }: { map: MapLibr
     const draw = () => {
       if (!map.isStyleLoaded()) return;
       if (!map.getSource(SOURCE_ID)) map.addSource(SOURCE_ID, { type: "geojson", data });
-      else (map.getSource(SOURCE_ID) as GeoJSONSource).setData(data);
       if (!map.getLayer(GEOLOGY_POINT_LAYER_ID)) map.addLayer({ id: GEOLOGY_POINT_LAYER_ID, type: "circle", source: SOURCE_ID, paint: {
         "circle-radius": ["case", ["get", "selected"], 8, 5],
         "circle-color": ["match", ["get", "kind"], "oilgas", "#ef9d51", "minerals", "#bd92e4", "#ffffff"],
