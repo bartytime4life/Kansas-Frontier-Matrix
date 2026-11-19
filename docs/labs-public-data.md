@@ -6,7 +6,7 @@ question shortcuts, previews, controls, tables, record inspection and downloads
 use these same bundles. Additional instruments and planned stories remain
 accessible through **All research**.
 
-## Guided investigations candidate, November 18, 2026
+## Guided investigations
 
 The Labs catalog and the Kansas Record on the map welcome link to these
 dedicated investigations. Their publication is a separate release step.
@@ -17,11 +17,36 @@ dedicated investigations. Their publication is a separate release step.
 | Boom & Ghost Towns, `/labs/ghost-towns` | All 59 Douglas County rows matching the county fields in the original geocoded Blevins–Helbock file. The map includes 45 provider-matched locations, and the record view retains unlocated and undated records. County outlines are present-day context. |
 | Newspaper Pulse, `/labs/newspaper-pulse` | All 20 Library of Congress digitized pages from two Abilene Weekly Reflector issues dated January 2, 1890 and January 4, 1900. Rates count pages containing each OCR token and use the matching issue's page inventory as the denominator. |
 | 2012 Drought Replay, `/labs/drought-replay` | 17 Finney County U.S. Drought Monitor assessments and 119 approved daily means from USGS 07139000. Each map date keeps its validity interval and the selected week shows its seven dated gauge records. |
+| Kansas Then & Now, `/labs/then-now` | Two aligned 768-pixel natural-color views of the Arkansas River crossing at Garden City from the 2021 and 2024 NG911 editions. Shared bounds, original exports, reuse terms, and the bridge project record accompany the comparison. |
 
 Each investigation exposes source records and a free export. Snapshot builders
 capture the provider file or request and digest. A source-file receipt documents
 the material used by the page. For historical dates, use the definitions and
 coverage limits shown on the corresponding investigation.
+
+## Garden City aerial comparison
+
+The 2021 and 2024 DASC natural-color editions carry CC0 1.0 reuse terms.
+Both provider exports use the same EPSG:3857 extent, 768 × 768 dimensions
+and the provider's RGB bands. The swipe and side-by-side views use bundled
+WebP display copies. The page links the original PNG exports. The crop, pixel
+dimensions and geographic alignment are preserved in the display copies.
+
+The catalog dates describe statewide editions. The 2021 edition includes
+some 2022 reflights. Exact acquisition dates at this crossing remain open.
+The 2024 view shows an interrupted crossing and work areas. KDOT's report
+documents completion of the U.S. 83 Business replacement at the end of 2024.
+
+This guided Lab displays one fixed pair from same-origin image files. The
+map’s Earth Engine comparison still uses its existing installed-year workflow.
+The checked provider URLs, bounds, and image hashes are
+in `app/labs/then-now/pair.json`. To rebuild from the verified source packet,
+run `python3 scripts/prepare-garden-city-imagery.py PATH_TO_PAIR_JSON` with
+Pillow and WebP support.
+
+- [2021 natural-color catalog record](https://www.arcgis.com/home/item.html?id=22c32cb49e8142778080110483c37e45)
+- [2024 natural-color catalog record](https://www.arcgis.com/home/item.html?id=ea609c6281c44aa889c5e1820267c52a)
+- [KDOT annual report](https://www.ksdot.gov/home/showpublisheddocument/5339/638942104104100000)
 
 ## Finney County drought replay
 

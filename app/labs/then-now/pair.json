@@ -1,0 +1,38 @@
+{
+  "site": "Arkansas River crossing in Garden City, Kansas",
+  "source": "Kansas Data Access and Support Center · NG911 Natural Color",
+  "license": "CC0 1.0",
+  "retrievedAt": "2026-11-18T19:45:07.086151+00:00",
+  "footprint": {
+    "crs": "EPSG:3857",
+    "bounds": [
+      -11230005,
+      4572899,
+      -11229237,
+      4573667
+    ],
+    "width": 768,
+    "height": 768
+  },
+  "editions": [
+    {
+      "year": 2021,
+      "catalog": "https://www.arcgis.com/home/item.html?id=22c32cb49e8142778080110483c37e45",
+      "export": "https://services.kgs.ku.edu/arcgis7/rest/services/IMAGERY_STATEWIDE/NG911_Imagery_2021/ImageServer/exportImage?bbox=-11230005%2C4572899%2C-11229237%2C4573667&bboxSR=3857&imageSR=3857&size=768%2C768&format=png24&bandIds=0%2C1%2C2&adjustAspectRatio=false&f=image",
+      "window": "Most imagery captured February 26 through April 11, 2021. The statewide edition includes some March 15–16, 2022 reflights.",
+      "sourceSha256": "6158a3106f9b78492a121cc095edf5193708bd6d507adfe9a39ad15720ad9262",
+      "preview": "/labs/then-now/garden-city-2021.webp",
+      "previewSha256": "6ae882345d3e0b4b2fe7610485691a8f9bb38278a1d3f4eedff3ad412827013c"
+    },
+    {
+      "year": 2024,
+      "catalog": "https://www.arcgis.com/home/item.html?id=ea609c6281c44aa889c5e1820267c52a",
+      "export": "https://dascservices.kansasgis.org/arcgis/rest/services/IMAGERY_STATEWIDE/NG911_2024_1ft_Natural_Color/ImageServer/exportImage?bbox=-11230005%2C4572899%2C-11229237%2C4573667&bboxSR=3857&imageSR=3857&size=768%2C768&format=png24&bandIds=0%2C1%2C2&adjustAspectRatio=false&f=image",
+      "window": "February to April 2024 statewide, as reported by DASC.",
+      "sourceSha256": "cd902e31d72b37173e5fb04b6dec0bed37e7ff9d462ca9124f3abd11387bd5cc",
+      "preview": "/labs/then-now/garden-city-2024.webp",
+      "previewSha256": "409917b768f1f26e5930bd572eea15ff3802364f424ecec983265b0d8e2225fd"
+    }
+  ],
+  "project": "https://www.ksdot.gov/home/showpublisheddocument/5339/638942104104100000"
+}

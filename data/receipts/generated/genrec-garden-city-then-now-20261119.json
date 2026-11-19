@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-garden-city-then-now-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/labs/then-now/ThenNow.jsx",
+    "app/labs/then-now/page.jsx",
+    "app/labs/then-now/pair.json",
+    "app/labs/then-now/then-now.module.css",
+    "app/living-welcome/stories/registry.mjs",
+    "docs/labs-public-data.md",
+    "public/labs/then-now/garden-city-2021.webp",
+    "public/labs/then-now/garden-city-2024.webp",
+    "scripts/prepare-garden-city-imagery.py",
+    "tests/story-cards.test.mjs",
+    "tests/then-now.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/labs/then-now/ThenNow.jsx": "sha256:2c63efa14cbbda4a60a66370bce114c599acf1d587de3bb0390efa575c89ec73",
+    "app/labs/then-now/page.jsx": "sha256:b320deb5e8ce349ae3b68e926bf9c241b693d2e66a26998e292706e4b0dadade",
+    "app/labs/then-now/pair.json": "sha256:0a7dcb07ff4b53eed4b072f40bc8b2529fad3261865cf99083622458de2bd2a9",
+    "app/labs/then-now/then-now.module.css": "sha256:6ab3b9b6cdd15e1fcf50cf2d11407767edbf047684239f4a28261876b6e584aa",
+    "app/living-welcome/stories/registry.mjs": "sha256:40dcec1f1fda81e2dd855b493ed937e1f16a841dc95e97adb4b2ab1adbb5a8ce",
+    "docs/labs-public-data.md": "sha256:c5572cb8902370d16437057649f483a1c6c9c1d2f0bfce6ccda251d1b23e0314",
+    "public/labs/then-now/garden-city-2021.webp": "sha256:6ae882345d3e0b4b2fe7610485691a8f9bb38278a1d3f4eedff3ad412827013c",
+    "public/labs/then-now/garden-city-2024.webp": "sha256:409917b768f1f26e5930bd572eea15ff3802364f424ecec983265b0d8e2225fd",
+    "scripts/prepare-garden-city-imagery.py": "sha256:1cace62efde90276b841d111f23e7cd0f00c3fa385b8570aa4a2c89817703972",
+    "tests/story-cards.test.mjs": "sha256:7d6e7d76c6ab9bcaf265c03d065fd3c63f96692cbe70304a774d1626dcff9ef3",
+    "tests/then-now.test.mjs": "sha256:94baacb4fa251c59b0de5818fdf2e8b78fea180a3e53798829572c6422bd13ea"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-6 family"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local shell",
+      "git",
+      "GitHub connector",
+      "Chromium"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6158a3106f9b78492a121cc095edf5193708bd6d507adfe9a39ad15720ad9262",
+      "sha256:8d147c3eb33a166febda081a78616566133bfda77fcc61c0d3ccb187bb8cca23",
+      "sha256:cd902e31d72b37173e5fb04b6dec0bed37e7ff9d462ca9124f3abd11387bd5cc",
+      "sha256:1d6d7ef8cb824b41ff28e46709a36d91e8ee09b5565504a54ab45521bf1f7dbf"
+    ],
+    "evidence_refs": [
+      "git:a9a893fea036b4585df4d6093704f0fb0d710af9",
+      "git:f4d72b365ad1ef9b70a816491906f63e06c7112f",
+      "git:875758d4d90078429a9ac487629458a0852922fa:docs/doctrine/ai-build-operating-contract.md",
+      "https://www.ksdot.gov/home/showpublisheddocument/5339/638942104104100000",
+      "https://www.arcgis.com/home/item.html?id=22c32cb49e8142778080110483c37e45",
+      "https://www.arcgis.com/home/item.html?id=ea609c6281c44aa889c5e1820267c52a"
+    ]
+  },
+  "truth_labels": {
+    "app/labs/then-now/ThenNow.jsx": "CONFIRMED",
+    "app/labs/then-now/page.jsx": "CONFIRMED",
+    "app/labs/then-now/pair.json": "CONFIRMED",
+    "app/labs/then-now/then-now.module.css": "CONFIRMED",
+    "app/living-welcome/stories/registry.mjs": "CONFIRMED",
+    "docs/labs-public-data.md": "CONFIRMED",
+    "public/labs/then-now/garden-city-2021.webp": "CONFIRMED",
+    "public/labs/then-now/garden-city-2024.webp": "CONFIRMED",
+    "scripts/prepare-garden-city-imagery.py": "CONFIRMED",
+    "tests/story-cards.test.mjs": "CONFIRMED",
+    "tests/then-now.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Source reuse terms, footprint and regeneration",
+      "outcome": "PASS",
+      "reason": "Both DASC items declare CC0. Provider exports use equal 768 \u00d7 768 RGB footprints in EPSG:3857. Regeneration reproduced both display files and the manifest."
+    },
+    {
+      "gate": "Production build, TypeScript and scoped ESLint",
+      "outcome": "PASS",
+      "reason": "Validated the committed application input digest sha256:f580a814cbb03307ceeceac4ed428606cd3ee1785d5c9f13a323f319eb47ab32."
+    },
+    {
+      "gate": "Full Node suite",
+      "outcome": "PASS",
+      "reason": "3158 passed, 25 skipped, 0 failed."
+    },
+    {
+      "gate": "Desktop and mobile Chromium",
+      "outcome": "PASS",
+      "reason": "Verified Labs discovery, keyboard Home/End and arrows, real touch movement, two loaded local images, the side-by-side view, and blocked-image fallback."
+    },
+    {
+      "gate": "GitHub checks and human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "dasc-2021-natural-color",
+      "validated": true,
+      "evidence_ref": "https://www.arcgis.com/home/item.html?id=22c32cb49e8142778080110483c37e45"
+    },
+    {
+      "id": "dasc-2024-natural-color",
+      "validated": true,
+      "evidence_ref": "https://www.arcgis.com/home/item.html?id=ea609c6281c44aa889c5e1820267c52a"
+    },
+    {
+      "id": "kdot-district-six-project-history",
+      "validated": true,
+      "evidence_ref": "https://www.ksdot.gov/home/showpublisheddocument/5339/638942104104100000"
+    },
+    {
+      "id": "repository-ai-build-contract",
+      "validated": true,
+      "evidence_ref": "git:875758d4d90078429a9ac487629458a0852922fa:docs/doctrine/ai-build-operating-contract.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T15:04:53.525823+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Covers a single static Labs image pair. The edition labels refer to statewide datasets. Exact acquisition dates at the footprint remain unresolved."
+}
