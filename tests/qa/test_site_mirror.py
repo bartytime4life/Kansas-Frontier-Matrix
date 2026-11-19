@@ -3044,4 +3044,15 @@ def test_connections_response_recovery_successor_preserves_inventory_and_all_hol
         {"app/connections/workspace.tsx", "tests/connections-status-recovery.test.mjs"},
         "1f33854127007e9fffbd2fea59281b39678c02ab",
     )
-    assert TOOL.RECEIPT.name == "site-v268-connections-response-recovery-overlay-20261119.json"
+    # A later immutable successor now owns the current selector.
+
+
+def test_geology_preview_recovery_successor_preserves_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-geology-preview-recovery-overlay-20261119.json",
+        "site-v268-connections-response-recovery-overlay-20261119.json",
+        "f8fc7e73ccb875fac2b97833d1873123646015001b9f9b5aa0b416be2c57f451",
+        {'app/geology-point-explorer.tsx', 'tests/geology-point-explorer.test.mjs', 'tests/geology-point-lifecycle.test.mjs'},
+        "6c2fda695a08942e4373420d78418e117c23c8cc",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-geology-preview-recovery-overlay-20261119.json"
