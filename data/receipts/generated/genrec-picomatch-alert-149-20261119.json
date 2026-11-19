@@ -1,0 +1,124 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/package-lock.json": "sha256:15b90aa8015c6c28feb2876edf6387ce200cdd9c754a47a3aeaa49ec74bd953e",
+    "apps/site/source/tests/picomatch-redos.test.mjs": "sha256:23a11e286919c2ad1b25fbaf699617fc9f2c04a1b69a00cceb466bb5d9abedfd",
+    "apps/site/source/vendor/picomatch-2.3.2-kfm.1.tgz": "sha256:a62951c51a5db475de0b9eafe8cdb202e70a7d132528c2765894b98fac06cd5d",
+    "apps/site/source/vendor/picomatch-kfm.md": "sha256:0b7078d5e0811e37585859742c49d281d8e816d0965d04c833396e27220003d7",
+    "data/receipts/generated/site-v268-picomatch-posix-version-overlay-20261119.json": "sha256:52a77d56d280cbe808bfb4b9afc5174e2b9aa25dde5559db53486727050d807d",
+    "tests/qa/test_site_mirror.py": "sha256:191d90009329cb4be61cfa7d5436072cea6ab115b4a42c31d21d97e07da77af1",
+    "tools/qa/site_mirror.py": "sha256:3bb119e674399312766be9a1266b48d045527721eb9ca528924384b7e1e11a94"
+  },
+  "artifact_paths": [
+    "apps/site/source/package-lock.json",
+    "apps/site/source/tests/picomatch-redos.test.mjs",
+    "apps/site/source/vendor/picomatch-2.3.2-kfm.1.tgz",
+    "apps/site/source/vendor/picomatch-kfm.md",
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-picomatch-posix-version-overlay-20261119.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "https://github.com/micromatch/picomatch/security/advisories/GHSA-3v7f-55p6-f55p",
+      "id": "GHSA-3v7f-55p6-f55p",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-19T17:41:30.091867+00:00",
+  "emitter": "OpenAI Codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@6142bfcc5f50f7db5677ca0d211d0083a5d39df9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/149",
+      "https://github.com/advisories/GHSA-3v7f-55p6-f55p",
+      "https://github.com/advisories/GHSA-fc5q-39xc-vjpf",
+      "apps/site/source/vendor/picomatch-kfm.md",
+      "pnpm-lock.yaml",
+      "tools/ci/corepack/package-lock.json"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "unspecified"
+  },
+  "notes": "Correct vendored 2.x version identity without changing library code or removing existing hardening. No advisory dismissal or new audit exception. Separate author self-review found no surviving POSIX bypass or changed legitimate behavior. Hosted CI, alert closure, deployment and installed-machine acceptance are not established. No independent reviewer or human acceptance claimed.",
+  "parameters": {
+    "tools_enabled": [
+      "filesystem",
+      "GitHub",
+      "npm",
+      "node",
+      "pytest"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "receipt_id": "genrec-picomatch-alert-149-20261119",
+  "truth_labels": {
+    "apps/site/source/package-lock.json": "CONFIRMED",
+    "apps/site/source/tests/picomatch-redos.test.mjs": "CONFIRMED",
+    "apps/site/source/vendor/picomatch-2.3.2-kfm.1.tgz": "CONFIRMED",
+    "apps/site/source/vendor/picomatch-kfm.md": "CONFIRMED",
+    "data/receipts/generated/site-v268-picomatch-posix-version-overlay-20261119.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "install",
+      "outcome": "PASS",
+      "reason": "PASS: clean npm run install:ci; 517 packages installed in isolated temporary checkout."
+    },
+    {
+      "gate": "focused_tests",
+      "outcome": "PASS",
+      "reason": "PASS: 16 Picomatch tests through vite, tinyglobby and micromatch, including inherited POSIX method names, ordinary POSIX classes, patched-version thresholds and existing extglob hardening."
+    },
+    {
+      "gate": "negative_controls",
+      "outcome": "PASS",
+      "reason": "PASS: old prerelease fails the 2.3.2 threshold; corrected build metadata satisfies it and micromatch ^2.3.1. Temporarily removing the null-prototype guard makes the new regression fail; dependency bytes restored."
+    },
+    {
+      "gate": "app_tests",
+      "outcome": "PASS",
+      "reason": "PASS: npm test; production build plus 2029 tests, zero failures or skips. Initial sandbox run hit EPERM subprocess restrictions; full rerun with subprocess access passed."
+    },
+    {
+      "gate": "lint",
+      "outcome": "PASS",
+      "reason": "PASS: zero errors and 54 warnings in unchanged files; changed test lint clean."
+    },
+    {
+      "gate": "audit",
+      "outcome": "PASS",
+      "reason": "PASS: npm audit --package-lock-only --json returned zero known findings. Local file tarballs require independent source/regression checks; audit alone does not establish safety."
+    },
+    {
+      "gate": "archive_integrity",
+      "outcome": "PASS",
+      "reason": "PASS: extracted old/new tarballs differ only in package/package.json version; all library files byte-identical. Lock SHA-512 matches rebuilt tarball."
+    },
+    {
+      "gate": "mirror",
+      "outcome": "PASS",
+      "reason": "PASS: 110 QA tests; 1002 content paths match recorded hashes, 262 withheld paths absent and immutable predecessor chain retained."
+    },
+    {
+      "gate": "topology",
+      "outcome": "PASS",
+      "reason": "PASS: 20 rules, zero new drift, 89 inherited warnings. Rechecked after staging receipts."
+    },
+    {
+      "gate": "provider_and_lifecycle",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: no Site synchronization, deployment, publication, source admission or release activation. GitHub Dependabot alert closure remains unverified until merge and graph refresh."
+    }
+  ]
+}

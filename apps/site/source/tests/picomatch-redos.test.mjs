@@ -3,15 +3,16 @@ import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import test from "node:test";
 
-// picomatch <=4.0.7 is vulnerable to GHSA-fc5q-39xc-vjpf and has no fixed
-// release. package.json overrides every picomatch to a patched fork in vendor/
+// Keep the existing repeated-extglob hardening introduced for the now-withdrawn
+// GHSA-fc5q-39xc-vjpf. package.json overrides picomatch to forks in vendor/
 // (see vendor/picomatch-kfm.md): 4.0.7-kfm.1 for vite and tinyglobby,
-// 2.3.2-kfm.1 for micromatch (used by fast-glob). Resolve the copies they load.
+// 2.3.2+kfm.1 for micromatch (used by fast-glob). Resolve the copies they load.
 const require = createRequire(import.meta.url);
+const semver = require("semver");
 const loaders = {
   vite: { from: createRequire(require.resolve("vite/package.json")), version: "4.0.7-kfm.1" },
   tinyglobby: { from: createRequire(require.resolve("tinyglobby/package.json")), version: "4.0.7-kfm.1" },
-  micromatch: { from: createRequire(require.resolve("micromatch/package.json")), version: "2.3.2-kfm.1" },
+  micromatch: { from: createRequire(require.resolve("micromatch/package.json")), version: "2.3.2+kfm.1" },
 };
 
 // Each advisory case runs in a child process with a hard timeout, so an
@@ -49,7 +50,35 @@ const ordinaryCases = [
 
 for (const [name, { from, version }] of Object.entries(loaders)) {
   test(`${name} resolves the patched picomatch fork`, () => {
-    assert.equal(from("picomatch/package.json").version, version);
+    const installedVersion = from("picomatch/package.json").version;
+    assert.equal(installedVersion, version);
+    assert.ok(semver.gte(installedVersion, name === "micromatch" ? "2.3.2" : "4.0.4"));
+    if (name === "micromatch") assert.ok(semver.satisfies(installedVersion, "^2.3.1"));
+  });
+
+  test(`${name}'s picomatch excludes inherited methods from POSIX classes`, () => {
+    const picomatch = from("picomatch");
+    // GHSA-3v7f-55p6-f55p: inherited names must never enter a generated regex.
+    for (const key of ["constructor", "toString", "valueOf", "hasOwnProperty", "__proto__"]) {
+      const pattern = `[[:${key}:]]`;
+      assert.doesNotMatch(picomatch.makeRe(pattern).source, /function|native code|object Object/);
+      for (const input of ["f", "u", "n", "c", "t", "i", "o"]) {
+        assert.equal(picomatch.isMatch(input, pattern), false, `${pattern} on ${input}`);
+      }
+    }
+  });
+
+  test(`${name}'s picomatch preserves ordinary POSIX classes`, () => {
+    const picomatch = from("picomatch");
+    for (const [input, pattern, expected] of [
+      ["a", "[[:alpha:]]", true], ["7", "[[:alpha:]]", false],
+      ["7", "[[:digit:]]", true], ["a", "[[:digit:]]", false],
+      ["F9", "[[:xdigit:]][[:xdigit:]]", true],
+      ["file7.txt", "file[[:digit:]].txt", true],
+      ["filea.txt", "file[[:digit:]].txt", false],
+    ]) {
+      assert.equal(picomatch.isMatch(input, pattern), expected, `${pattern} on ${input}`);
+    }
   });
 
   test(`${name}'s picomatch answers the advisory's inputs promptly`, () => {
