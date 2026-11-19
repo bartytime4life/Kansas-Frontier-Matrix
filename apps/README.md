@@ -3,12 +3,12 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.12
-prior_version: v0.9
-status: historical snapshot; current app placement noted below
+version: v0.13
+prior_version: v0.12
+status: current application orientation with labeled historical snapshots
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-11-11
+updated: 2026-11-19
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -18,7 +18,13 @@ truth_labels: [CONFIRMED, PROPOSED, UNKNOWN, NEEDS VERIFICATION]
 authority_class: canonical root landing page
 authority_rank: implementation orientation subordinate to adopted doctrine, accepted ADRs, contracts, schemas, policy, evidence, lifecycle records, and release records
 canonical_relationship: same-path update; no sibling authority created
+current_repository_review:
+  date: 2026-11-19
+  base_commit: 162d89630c78860c9e3751bc548153ada62c6f57
+  apps_tree: 3c258296102610830980a2bd11c0a1b45f5499fa
+  scope: direct app lanes, source entrypoints, manifests, and contributor checks; no hosted observation
 evidence_snapshot:
+  scope: historical 2026-08-28 Explorer and scaffold analysis retained below
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
   base_commit: 2a205c8df31ff95a61f72a52489336b924a791ac
@@ -53,6 +59,7 @@ related:
   - governed-api/README.md
   - site/README.md
   - review-console/README.md
+  - land-records/README.md
   - ../packages/kfm-cli/README.md
   - workers/README.md
   - admin/README.md
@@ -89,14 +96,16 @@ notes:
 
 # Deployable Applications
 
-## Repository documentation update — November 11, 2026
+## Repository documentation update — November 19, 2026
 
-Use [Site setup](site/README.md), the [complete Explorer guide index](site/source/docs/README.md)
-and [current review](../docs/reports/documentation-currentness-review-20261111.md)
-for the inspected repository Explorer checkpoint. The metadata-only app README
-repairs in this edition do not establish implementation or deployment of dormant
-application lanes. Existing source snapshots below retain their own scope.
-
+Start with the [current app map](#current-app-map) and [contributor checks](#repository-native-checks).
+They reflect repository source at `main@162d89630c78860c9e3751bc548153ada62c6f57`.
+Use [Site setup](site/README.md), the [Explorer guide index](site/source/docs/README.md),
+the [recovery desk](review-console/recovery-desk.md) and the
+[private land-record runtime](land-records/README.md) for lane-specific instructions.
+The August Explorer/scaffold analysis remains labeled historical below; it does
+not describe the current Site renderer, API route inventory or CLI. This source
+review establishes no current hosted revision or deployment health.
 
 `apps/`
 
@@ -133,13 +142,15 @@ application lanes. Existing source snapshots below retain their own scope.
 The current root contains eight direct lanes:
 
 - [`governed-api/`](governed-api/README.md) — bounded executable public trust membrane;
-- [`site/`](site/README.md) — GPT Site v74-derived source mirror under `site/source/` for local hosting;
-- [`public-site/`](public-site/README.md) — static public front door for kansasfrontiermatrix.com on GoDaddy hosting, built from repository facts and illustrative artwork;
+- [`site/`](site/README.md) — preserved upstream Site source and recorded repository overlays under `site/source/` for local hosting;
+- [`public-site/`](public-site/README.md) — retained static front-door build for review and recovery; its deployment job is retired;
 - [`review-console/`](review-console/README.md) — browser-local feed recovery evidence desk; the authenticated steward review service remains a scaffold;
-- the operator CLI lives in [`packages/kfm-cli`](../packages/kfm-cli/README.md) (the former `apps/cli/` scaffold was removed);
+- [`land-records/`](land-records/README.md) — private, read-only loopback land-record review runtime;
 - [`workers/`](workers/README.md) — non-publishing background runner lane;
 - [`admin/`](admin/README.md) — restricted administrative surface;
 - [`packages/`](packages/README.md) — documented drift guard, not a shared-package authority.
+
+The operator CLI lives outside this root in [`packages/kfm-cli`](../packages/kfm-cli/README.md); the former `apps/cli/` scaffold was removed.
 
 The root README describes current evidence and boundaries. It does not upgrade lane-local proposals, scaffolds, documentation, or tests into deployed product claims.
 
@@ -168,9 +179,15 @@ The root owns deployable composition. It does not own:
 
 **Draft / repository-grounded / mixed maturity.**
 
-This edition is pinned to `main@2a205c8df31ff95a61f72a52489336b924a791ac` and apps tree `0500d246c4153d631753888cc683652835ad867f`. It describes repository bytes and bounded local or CI-facing test definitions. The Sites-derived app records a deployment lineage in its own README, but this root page does not independently verify current production health or grant deployment, release, or publication authority.
+The current lane map and command table are pinned to the November 19 base above.
+Implementation maturity varies by lane. The following evidence table, trust-flow
+diagram and associated Explorer analysis retain the **August 28, 2026** snapshot
+at `main@2a205c8df31ff95a61f72a52489336b924a791ac`; their retired paths and counts
+are historical. Use the [current app map](#current-app-map) for today's repository
+entrypoints. Repository inspection does not establish production health.
+<a id="evidence-boundary"></a>
 
-### Evidence boundary
+### Historical evidence boundary — August 28, 2026
 
 | Claim | Truth | Repository evidence | Limitation |
 |---|---|---|---|
@@ -187,7 +204,9 @@ This edition is pinned to `main@2a205c8df31ff95a61f72a52489336b924a791ac` and ap
 | ADR-0029 and ADR-0006 are accepted; ADR-0004, ADR-0005, ADR-0019, and ADR-0025 remain draft or proposed. | CONFIRMED | Current ADR sources and index | Acceptance of a boundary does not admit a dependency, establish runtime behavior, or approve release. |
 | Deployment, dashboards, audit sinks, live authorization, service health, and public operation are established. | UNKNOWN | No admissible operational evidence inspected | Verify through infrastructure, runtime, logs, and deployed observations. |
 
-### Trust flow
+<a id="trust-flow"></a>
+
+### Historical trust flow — August 28, 2026
 
 ```mermaid
 flowchart TD
@@ -260,16 +279,23 @@ Apps do not directly emit approved release decisions, authoritative catalog stat
 
 ### Repository-native checks
 
-| Command or workflow | Current role | What it proves | What it does not prove |
-|---|---|---|---|
-| `make governed-api-smoke` | Governed API route/envelope tests | Registered routes fail closed and validate against the bounded envelope profile | Production auth, evidence resolution, network policy, load, or deployment |
-| `make governed-api-verify` | API tests plus import boundary | Governed API avoids renderer and direct model-client imports | Runtime process isolation or public readiness |
-| `make boundary-guards` | Cross-root public-boundary tests | Selected public-path and non-publisher invariants hold | Complete data-flow or information-flow proof |
-| `make ui-build` | Explorer type-check and production build | Current source compiles and Vite emits a static bundle | Functional map, live API, accessibility completeness, or deployment |
-| `pnpm --filter explorer-web test` | Explorer unit plus browser suite | Fixture-first finite-state, no-leak, keyboard, and component behavior | Live transport, canonical schema adoption, source access, or production UX |
-| `make validate` | Aggregate repository validation | Configured schema/contract/validator baseline when executed | App deployment, release, or publication readiness |
-| `.github/workflows/api-test.yml` | Hosted API wrapper | Bounded API checks at an exact revision | Human approval or deployment |
-| `.github/workflows/ui-build.yml` | Hosted locked Explorer build/test wrapper | Real package scripts, frozen dependencies, build, unit, and browser tests | A usable map, live governed answer surface, release, or deployment |
+These are current source-defined entrypoints, not fresh execution receipts.
+Use Python 3.11+ and each lane's documented dependency setup; the Site and
+recovery workspace require Node 22.13+.
+
+| Command or workflow | Current role | Boundary |
+|---|---|---|
+| `make site-check` | Locked Site install, lint, TypeScript, production build, tests and local Worker smoke | Disposable local D1/R2; no provider-only route or hosted acceptance claim |
+| `make governed-api-smoke`; `make governed-api-verify` | API route/envelope tests and selected import boundaries | Released-snapshot readers and retained scaffold routes; no deployment or release approval |
+| `make boundary-guards` | Selected public-path and non-publisher checks | Bounded guards, not complete data-flow proof |
+| In `apps/review-console/recovery/`: `npm ci`, `npm run typecheck`, `npm test`, `npm run build` | Separate recovery desk install and checks | Browser-local working evidence; no authenticated steward service |
+| `node --experimental-strip-types apps/public-site/build.mjs`; `node apps/public-site/check.mjs` | Static front-door review build | Static deployment job is retired |
+| `python tools/ci/install_kfm_cli.py`; `kfm --help` | Install and inspect the operator CLI | Read-only comparisons and validator handoffs; no release decision |
+| `.github/workflows/explorer-site.yml`; `.github/workflows/api-test.yml` | Hosted Site/API check definitions | Read actual runs at the proposed revision for results |
+
+`make ui-build` and `make native-explorer-check` deliberately return
+`WORKFLOW_HOLD` for the retired Explorer. Do not use the removed
+`pnpm --filter explorer-web test` lane for current Site validation.
 
 A README update does not establish a fresh execution result. Local or hosted conclusions must be reported from the exact proposed head.
 
@@ -351,11 +377,15 @@ Accepted Directory Rules and current repository evidence control placement and c
 
 ## Last reviewed
 
-**2026-08-28**, against `main@2a205c8df31ff95a61f72a52489336b924a791ac`, root tree `9108caa78993edd313d23a5860d6e54a2deedf53`, and apps tree `0500d246c4153d631753888cc683652835ad867f`.
+**Current lane/command review: 2026-11-19**, against `main@162d89630c78860c9e3751bc548153ada62c6f57` and apps tree `3c258296102610830980a2bd11c0a1b45f5499fa`. Source inspection only.
+
+**Historical Explorer/scaffold review: 2026-08-28**, against `main@2a205c8df31ff95a61f72a52489336b924a791ac`, root tree `9108caa78993edd313d23a5860d6e54a2deedf53`, and apps tree `0500d246c4153d631753888cc683652835ad867f`.
 
 Re-review after any app-lane creation or removal, public-route change, package-manager or lockfile change, renderer/runtime integration, worker write-target change, deployment exposure change, accepted app-architecture ADR, or child README update that materially changes the maturity map.
 
 ## Evidence ledger
+
+The identifiers in this ledger belong to the historical August snapshot. The current map links the source files inspected at the November base.
 
 | Evidence | Identifier | Supports | Does not support |
 |---|---|---|---|
@@ -381,6 +411,8 @@ Re-review after any app-lane creation or removal, public-route change, package-m
 
 ## Source-informed architecture pressure
 
+This section retains the August snapshot's design-source reconciliation. Current app placement and entrypoints are recorded in the next section.
+
 The supplied corpus was used as read-only design input and then reconciled against the pinned repository. It can explain why an app boundary matters or identify a candidate slice; it cannot prove that the repository implements a proposal, admit a source or dependency, accept an ADR, or establish review, release, deployment, promotion, or publication.
 
 | Source input | Retained application pressure | Current repository reconciliation | Status carried here |
@@ -398,18 +430,25 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 
 **Deployment correction, 2026-10-20:** [PR #5361](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5361) retired the static deployment job. The existing GoDaddy Node app `urdng3v1vk`, connected to standalone branch `a0-hosted-ai-web-20261017` in the [recorded Node runbook](../docs/runbooks/godaddy-node-hosting.md), remains the intended public production path. Verify Published and Preview revisions through that runbook before an authorized operation. The monorepo static workflow supplies build validation and review artifacts only; Sites environments and historical deployment and rollback evidence are preserved separately. The older implementation snapshots below retain their original dates and scope.
 
-| Lane | Current implementation truth | Verified entrypoint or check | Failure-safe posture |
-|---|---|---|---|
-| [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
-| [`site/`](site/README.md) | Reconciled source mirror of the deployed GPT Site v74 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
-| [`public-site/`](public-site/README.md) | Retained zero-dependency static front-door build for review; Explorer feature cards generated from `site/source/app/site-features.ts` | `node --experimental-strip-types apps/public-site/build.mjs`; `node apps/public-site/check.mjs`; build-only `godaddy-public-site` | No browser scripts, lifecycle stores or data release; no deployment job or hosting credentials. `GODADDY_DEPLOY_ENABLED` cannot re-enable static deployment. |
-| [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
-| CLI | Removed 2026-09-29; the operator CLI is the installable [`packages/kfm-cli`](../packages/kfm-cli/README.md) (`doctor`, `diff`, `release-diff`, `telemetry`) | `kfm --help` after `tools/ci/install_kfm_cli.py` | Read-only local comparisons and bounded validator handoffs; no review, release, or publication authority |
-| [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |
-| [`admin/`](admin/README.md) | README-only restricted boundary | No executable admin surface | Restricted and absent by default |
-| [`packages/`](packages/README.md) | README and `.gitkeep` drift guard | No local manifest or package activation | Must not shadow top-level `packages/` |
+The eight direct child directories at the November 19 base are listed below.
+The CLI is included separately to explain its current location. Read source
+entrypoints when a child README retains an older scaffold checkpoint.
 
-### Explorer maturity split
+| Lane | Inspected implementation | Entry point and limit |
+|---|---|---|
+| [`governed-api/`](governed-api/README.md) | [WSGI dispatch](governed-api/src/governed_api/main.py) includes `/healthz` and read-only `/v1` water, weather, soil, storm-event and earthquake snapshot families, alongside legacy scaffold routes | [Water serving runbook](../docs/runbooks/water-pilot.md); missing or ineligible released snapshots fail closed. A live health response does not establish evidence readiness. |
+| [`site/`](site/README.md) | Executable Explorer in `site/source/`, with a [MapLibre seam](site/source/app/maplibre-seam.ts), API routes and a locked [app manifest](site/source/package.json) | `make site-check`; source parity is checked by `tools/qa/site_mirror.py --check`. Local success does not establish hosted equivalence. |
+| [`land-records/`](land-records/README.md) | Standard-library Python [server](land-records/server.py) for private, read-only review of an external land-record store | Follow the [ingest/review runbook](../docs/runbooks/land-records-ingest.md). Loopback and bearer authentication; no public record release or publishing. |
+| [`review-console/`](review-console/README.md) | Executable browser-local recovery desk in [recovery/](review-console/recovery/package.json); the restricted steward service remains a scaffold | [Recovery desk guide](review-console/recovery-desk.md). Local attestations are not authenticated ReviewRecords or publication authority. |
+| [`public-site/`](public-site/README.md) | Static front-door builder and checker, retained for review | Build/check commands above; the static deployment job is retired. Provider operations need separate current readback. |
+| [`workers/`](workers/README.md) | Named lanes with explicit placeholder Python entrypoints | No implemented queue or schedule is established; worker candidates never authorize publication. |
+| [`admin/`](admin/README.md) | Documentation-only restricted boundary | No executable administrative service is established. |
+| [`packages/`](packages/README.md) | README and `.gitkeep` drift guard | Shared packages belong in top-level `packages/`. |
+| CLI — outside `apps/` | Installable [`packages/kfm-cli`](../packages/kfm-cli/README.md): `doctor`, `diff`, `release-diff`, `telemetry` | Local configuration/comparison checks and bounded validator delegation. `telemetry` does not collect operational telemetry. |
+
+<a id="explorer-maturity-split"></a>
+
+### Historical Explorer maturity split — August 28, 2026
 
 **CONFIRMED integrated default shell:**
 
@@ -442,6 +481,18 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 - deployment, telemetry, service-level objectives, or public operation.
 
 ## Verified gaps and next work
+
+Current repository follow-up is to keep source-based lane guidance current,
+validate changes through the owning app's checks, and preserve explicit holds
+for Admin, Workers and the restricted steward service. Hosted/provider acceptance
+requires separate observations; it cannot be inferred from repository tests.
+The Governed API child README also retains an older three-route scaffold analysis;
+use its [current dispatch](governed-api/src/governed_api/main.py) and the serving
+runbooks when assessing executable routes.
+
+**Historical gap ledger — August 28, 2026.** The table below records the older
+Explorer/scaffold checkpoint. Its CLI, renderer and API limitations are not
+current repository inventory.
 
 | Gap | Truth | Disposition | Dependency-safe next step |
 |---|---|---|---|
@@ -514,6 +565,6 @@ A README rollback changes no application code, dependency, route, test, workflow
 
 ---
 
-> **Current conclusion:** `apps/` is correctly placed but not uniformly implemented. Governed API provides a small fail-closed route slice. `explorer-web` provides a substantial mounted local composition with synthetic map/runtime, Focus, evidence, correction, and public trust interactions; the package-owned exact MapLibre dependency, adapter, worker seam, and bounded browser fixture now exist, but its normal entrypoint remains on `NullMapRuntime`. The separately tracked Sites-derived Explorer also boots `NullMapRuntime`; full renderer capability and parallel-shell reconciliation remain held. Neither lane establishes live Governed API transport, production EvidenceBundle resolution, released sources/layers, repository-wide deployment authority, or publication authority. Review Console and Admin remain documentation-led, CLI and Workers remain explicit placeholders, and `apps/packages/` remains a drift guard.
+> **Historical conclusion — August 28, 2026:** `apps/` is correctly placed but not uniformly implemented. Governed API provides a small fail-closed route slice. `explorer-web` provides a substantial mounted local composition with synthetic map/runtime, Focus, evidence, correction, and public trust interactions; the package-owned exact MapLibre dependency, adapter, worker seam, and bounded browser fixture now exist, but its normal entrypoint remains on `NullMapRuntime`. The separately tracked Sites-derived Explorer also boots `NullMapRuntime`; full renderer capability and parallel-shell reconciliation remain held. Neither lane establishes live Governed API transport, production EvidenceBundle resolution, released sources/layers, repository-wide deployment authority, or publication authority. Review Console and Admin remain documentation-led, CLI and Workers remain explicit placeholders, and `apps/packages/` remains a drift guard.
 
 <p align="right"><a href="#top">Back to top</a></p>

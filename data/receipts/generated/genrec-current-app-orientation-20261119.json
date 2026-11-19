@@ -1,0 +1,159 @@
+{
+  "receipt_id": "genrec-current-app-orientation-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/README.md": "sha256:1b0c186835eb1a6412fadb045e09426c1252bbad7b6a4e3b4497de3665b05e8b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:fc9f456195bd62b3d3b23c8f0d566d1fb04a738a6b6ce17404b5b71da9d3a246",
+      "sha256:9a61011ad620b22df44e13819110e8dddcd8ad7f4f728321ff2d2d95d71871ce",
+      "sha256:8846c093ddc5ba66631c3f688662cf3d8388bc224e93a15d1adda5df33d0085b",
+      "sha256:156202fea46c2c307f81ce3231e4791d5ef0ee2f6a203ed31d7d2dd3b6ab3c85",
+      "sha256:05ff998b81252dc64b4d11dfe1a7aef5d7312b7f5decf41e524fce7e414e9e79",
+      "sha256:77d577062d93af6bdaaa1b4027ad04846f585416d79e04f07ac110b5b2962bd3",
+      "sha256:0c2707865a0bbc841cc7a3cc2037aadac1baeee008c6334b9eea5b7b03be33d3",
+      "sha256:7e32017f9086a3d0958c195abf99b648fd16e08f596355e7765ddd9c6db170b0",
+      "sha256:146a6f0292e3c29e9b1eb291587834302b9084fb68afa037bd033addddbc17e2",
+      "sha256:64b09b76bedaa008c3645efb1257c30e108a59e7f042e36f2740ec09b18db6f9",
+      "sha256:4fc2d0472707467ed813bcd098cf30d7430581243ae03af742eaf40cd9997ca9"
+    ],
+    "evidence_refs": [
+      "main@162d89630c78860c9e3751bc548153ada62c6f57",
+      "apps tree@3c258296102610830980a2bd11c0a1b45f5499fa",
+      "Makefile",
+      "apps/site/source/package.json",
+      "apps/site/source/app/maplibre-seam.ts",
+      "apps/governed-api/src/governed_api/main.py",
+      "apps/review-console/recovery/package.json",
+      "apps/review-console/recovery-desk.md",
+      "apps/land-records/server.py",
+      "apps/land-records/README.md",
+      "packages/kfm-cli/README.md",
+      "apps/public-site/README.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1; closed comments and fences; no structural findings."
+    },
+    {
+      "gate": "local-links-and-anchors",
+      "outcome": "PASS",
+      "reason": "75 local targets resolve; 9 external targets classified without network requests."
+    },
+    {
+      "gate": "source-and-lane-inventory",
+      "outcome": "PASS",
+      "reason": "Eight direct app directories, separate CLI, source-defined commands and current API dispatch inspected at the pinned base."
+    },
+    {
+      "gate": "gap-and-scaffold-ratchets",
+      "outcome": "PASS",
+      "reason": "No new findings."
+    },
+    {
+      "gate": "hosted-ci-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; source inspection and local checks do not authenticate acceptance or establish deployment health."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Makefile",
+      "validated": true,
+      "evidence_ref": "Makefile@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/site/source/package.json",
+      "validated": true,
+      "evidence_ref": "apps/site/source/package.json@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/site/source/app/maplibre-seam.ts",
+      "validated": true,
+      "evidence_ref": "apps/site/source/app/maplibre-seam.ts@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/governed-api/src/governed_api/main.py",
+      "validated": true,
+      "evidence_ref": "apps/governed-api/src/governed_api/main.py@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/review-console/recovery/package.json",
+      "validated": true,
+      "evidence_ref": "apps/review-console/recovery/package.json@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/review-console/recovery-desk.md",
+      "validated": true,
+      "evidence_ref": "apps/review-console/recovery-desk.md@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/land-records/server.py",
+      "validated": true,
+      "evidence_ref": "apps/land-records/server.py@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/land-records/README.md",
+      "validated": true,
+      "evidence_ref": "apps/land-records/README.md@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "packages/kfm-cli/README.md",
+      "validated": true,
+      "evidence_ref": "packages/kfm-cli/README.md@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "apps/public-site/README.md",
+      "validated": true,
+      "evidence_ref": "apps/public-site/README.md@162d89630c78860c9e3751bc548153ada62c6f57"
+    },
+    {
+      "id": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md@162d89630c78860c9e3751bc548153ada62c6f57"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T20:44:29.095672Z",
+  "emitter": "codex/repository-orientation",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only source orientation. The historical Explorer/scaffold evidence remains dated and its prior anchor names are preserved. Artifact hashes bind final bytes. Current source inspection is distinct from runtime checks on the separate deadline PR, hosted behavior, review, merge, release and deployment. Unknown model version and generation parameters are recorded without inference."
+}
