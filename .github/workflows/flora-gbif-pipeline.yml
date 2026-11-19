@@ -1,0 +1,79 @@
+name: flora-gbif-pipeline
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/flora-gbif-pipeline.yml"
+      - "pipelines/domains/flora/**"
+      - "pipeline_specs/flora/gbif_ingest.yaml"
+      - "packages/domains/flora/normalizers/**"
+      - "packages/connectors-core/**"
+      - "contracts/domains/flora/flora_occurrence_candidate.md"
+      - "contracts/domains/flora/flora_occurrence_intake_decision.md"
+      - "schemas/contracts/v1/domains/flora/flora_occurrence*.schema.json"
+      - "fixtures/domains/flora/flora_occurrence_candidate/**"
+      - "fixtures/domains/flora/flora_occurrence_intake_decision/**"
+      - "data/registry/flora/sources/gbif_plants.yaml"
+      - "tests/pipelines/domains/flora/**"
+      - "tests/packages/domains/flora/normalizers/**"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/flora-gbif-pipeline.yml"
+      - "pipelines/domains/flora/**"
+      - "pipeline_specs/flora/gbif_ingest.yaml"
+      - "packages/domains/flora/normalizers/**"
+      - "packages/connectors-core/**"
+      - "contracts/domains/flora/flora_occurrence_candidate.md"
+      - "contracts/domains/flora/flora_occurrence_intake_decision.md"
+      - "schemas/contracts/v1/domains/flora/flora_occurrence*.schema.json"
+      - "fixtures/domains/flora/flora_occurrence_candidate/**"
+      - "fixtures/domains/flora/flora_occurrence_intake_decision/**"
+      - "data/registry/flora/sources/gbif_plants.yaml"
+      - "tests/pipelines/domains/flora/**"
+      - "tests/packages/domains/flora/normalizers/**"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: flora-gbif-pipeline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  replay:
+    name: gbif-fixture-replay (${{ matrix.python }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: tools/ci/python-test.lock
+      - name: Install locked test dependencies
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test
+          python tools/ci/install_python_ci.py connectors-core
+      - name: Validate the bound declaration and replay without network access
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python tools/validators/validate_pipeline_spec_declarations.py
+          python -B -m pytest tests/pipelines/domains/flora/test_gbif_pipeline.py tests/packages/domains/flora/normalizers -q --strict-config --strict-markers
+          python -B -m pipelines.domains.flora.gbif_ingest big-bluestem
+          python -B -m pipelines.domains.flora.gbif_ingest no-coordinate

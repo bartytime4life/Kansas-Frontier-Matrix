@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-gbif-main-closure-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/flora-gbif-pipeline.yml",
+    "contracts/pipeline_spec_declaration.md",
+    "data/receipts/generated/genrec-gbif-pipeline-buildout-20261119.json",
+    "docs/runbooks/pipeline-fixture-replay.md",
+    "pipeline_specs/README.md",
+    "pipeline_specs/flora/gbif_ingest.yaml",
+    "pipelines/domains/flora/README.md",
+    "pipelines/domains/flora/gbif_ingest.py",
+    "tests/pipelines/domains/flora/test_gbif_pipeline.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/flora-gbif-pipeline.yml": "sha256:9c7a26b974f9d840d4228ab8c358591746a92ff895e51c3377c49144194526f7",
+    "contracts/pipeline_spec_declaration.md": "sha256:c2420e01e8e38f99a98735d7a0d5804d70d89ef6f3acdea2b11fbe720a31c5fc",
+    "data/receipts/generated/genrec-gbif-pipeline-buildout-20261119.json": "sha256:4c0e0a036ec4cf2db669f10eb006fae79883547ac13ee627b255c78a5b0683dc",
+    "docs/runbooks/pipeline-fixture-replay.md": "sha256:497ea4599dc0f89d6e062fa1a77dd3e9d1f5c267959659b5f98898b485ebfc2f",
+    "pipeline_specs/README.md": "sha256:5084db9604b9207266d4a59a68ceaa5230755f634f2da0b5004c7e9cdc932237",
+    "pipeline_specs/flora/gbif_ingest.yaml": "sha256:7e0dae13f63b0df4ea4ecb7d1291f428f9d59ef6af456998bed4a65744c25e8c",
+    "pipelines/domains/flora/README.md": "sha256:d1b4cc6f819bf330e74213851de1b626cb492872c06f4267add721882bbc4efb",
+    "pipelines/domains/flora/gbif_ingest.py": "sha256:24df2ec858e58d313c72634499c71eaec5662b5be846ed80f5ea565c149ade9f",
+    "tests/pipelines/domains/flora/test_gbif_pipeline.py": "sha256:861ad7443a7ac6ecf9aaf0ad22af4df8dabd2059a329bb7a7aac98d7a99a8e03"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:01b64ccc441e39a0b61fbe5f6b99e9ef0aed9f636427c126965328096558d753",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@39cde13d556923c1927eebfa0d57a91e9003152d",
+      "github:bartytime4life/Kansas-Frontier-Matrix/pull/5963",
+      "84344b10b150e5a05533458b064dda1fe8e10bf8"
+    ],
+    "evidence_hashes": [
+      "sha256:9c7a26b974f9d840d4228ab8c358591746a92ff895e51c3377c49144194526f7",
+      "sha256:c2420e01e8e38f99a98735d7a0d5804d70d89ef6f3acdea2b11fbe720a31c5fc",
+      "sha256:4c0e0a036ec4cf2db669f10eb006fae79883547ac13ee627b255c78a5b0683dc",
+      "sha256:497ea4599dc0f89d6e062fa1a77dd3e9d1f5c267959659b5f98898b485ebfc2f",
+      "sha256:5084db9604b9207266d4a59a68ceaa5230755f634f2da0b5004c7e9cdc932237",
+      "sha256:7e0dae13f63b0df4ea4ecb7d1291f428f9d59ef6af456998bed4a65744c25e8c",
+      "sha256:d1b4cc6f819bf330e74213851de1b626cb492872c06f4267add721882bbc4efb",
+      "sha256:24df2ec858e58d313c72634499c71eaec5662b5be846ed80f5ea565c149ade9f",
+      "sha256:861ad7443a7ac6ecf9aaf0ad22af4df8dabd2059a329bb7a7aac98d7a99a8e03"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/flora-gbif-pipeline.yml": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "data/receipts/generated/genrec-gbif-pipeline-buildout-20261119.json": "PROPOSED",
+    "docs/runbooks/pipeline-fixture-replay.md": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/flora/gbif_ingest.yaml": "PROPOSED",
+    "pipelines/domains/flora/README.md": "PROPOSED",
+    "pipelines/domains/flora/gbif_ingest.py": "PROPOSED",
+    "tests/pipelines/domains/flora/test_gbif_pipeline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-source-closure",
+      "outcome": "PASS",
+      "reason": "All nine original Git blob SHAs match the tested source commit exactly; main absence confirmed."
+    },
+    {
+      "gate": "focused-gbif-and-declaration-regression",
+      "outcome": "PASS",
+      "reason": "51 tests and 22 subtests on the original and main-targeted identical source tree."
+    },
+    {
+      "gate": "qualified-pipeline-and-full-collection",
+      "outcome": "PASS",
+      "reason": "313 pipeline tests pass, one raster module skipped; 10304 tests collect without errors."
+    },
+    {
+      "gate": "main-merge-and-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending a main-targeted PR. The original intermediate-branch merge is not counted as main delivery."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": ".github/workflows/flora-gbif-pipeline.yml",
+      "validated": true,
+      "evidence_ref": ".github/workflows/flora-gbif-pipeline.yml@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "contracts/pipeline_spec_declaration.md",
+      "validated": true,
+      "evidence_ref": "contracts/pipeline_spec_declaration.md@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "data/receipts/generated/genrec-gbif-pipeline-buildout-20261119.json",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-gbif-pipeline-buildout-20261119.json@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "docs/runbooks/pipeline-fixture-replay.md",
+      "validated": true,
+      "evidence_ref": "docs/runbooks/pipeline-fixture-replay.md@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "pipeline_specs/README.md",
+      "validated": true,
+      "evidence_ref": "pipeline_specs/README.md@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "pipeline_specs/flora/gbif_ingest.yaml",
+      "validated": true,
+      "evidence_ref": "pipeline_specs/flora/gbif_ingest.yaml@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "pipelines/domains/flora/README.md",
+      "validated": true,
+      "evidence_ref": "pipelines/domains/flora/README.md@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "pipelines/domains/flora/gbif_ingest.py",
+      "validated": true,
+      "evidence_ref": "pipelines/domains/flora/gbif_ingest.py@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    },
+    {
+      "id": "tests/pipelines/domains/flora/test_gbif_pipeline.py",
+      "validated": true,
+      "evidence_ref": "tests/pipelines/domains/flora/test_gbif_pipeline.py@84344b10b150e5a05533458b064dda1fe8e10bf8"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T23:30:51.419476Z",
+  "emitter": "codex/gbif-main-closure",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Main-targeted successor to PR 5963, which merged externally into codex/pipeline-bindings-20261119 after that branch had already reached main. Main@39cde13d556923c1927eebfa0d57a91e9003152d lacked pipelines/domains/flora/gbif_ingest.py. All nine original source, test, CI, declaration, documentation and receipt Git blobs exactly match 84344b10b150e5a05533458b064dda1fe8e10bf8. The earlier authoring receipt is preserved byte-for-byte. No new source semantics, admission, review approval, data mutation, release or publication authority."
+}

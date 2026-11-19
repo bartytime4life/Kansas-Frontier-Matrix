@@ -121,9 +121,9 @@ life-safety authority. A pipeline declaration must not imply otherwise.
 | Boundary READMEs | 23 | One root boundary and 22 lane or sub-lane boundaries; each local contract owns its profile |
 | `.gitkeep` markers | 8 | Retained as topology-compatible zero-byte markers; they create no declaration or execution authority |
 
-Four YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
-USGS water observations, USGS earthquakes, and NOAA Storm Events. Each remains
-`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 35 pipeline
+Five YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
+USGS water observations, USGS earthquakes, NOAA Storm Events, and GBIF Flora intake. Each remains
+`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 34 pipeline
 candidates still need bounded implementations and bindings. The 65 stage boundaries
 and six compatibility aliases retain `NOT_IMPLEMENTED` by contract; they are not
 71 runnable pipelines awaiting activation.
@@ -131,6 +131,9 @@ and six compatibility aliases retain `NOT_IMPLEMENTED` by contract; they are not
 The [fixture replay runbook](../docs/runbooks/pipeline-fixture-replay.md) gives the
 three sealed capture commands and their verification limits. The original WBD
 candidate retains its dedicated implementation and workflow.
+The [GBIF pipeline](../pipelines/domains/flora/README.md) composes the existing
+Darwin Core normalizer and intake classifier with schema checks; its CLI exposes
+aggregate status only and does not resolve the proposed source descriptor.
 
 Compatibility YAML is limited to the five Archaeology `*.spec.yaml` aliases and
 `hydrology/ingest_wbd.yaml`. The documentation-only compatibility lanes `air/`,
@@ -224,6 +227,6 @@ Open verification items:
 - assign and verify human owners and CODEOWNERS coverage;
 - decide the flora/shared-watcher and Hydrology NHDPlus placement holds;
 - define a separate activation registry only through an accepted authority decision;
-- implement and bind the remaining 35 pipeline candidates with source, contract,
+- implement and bind the remaining 34 pipeline candidates with source, contract,
   fixture, test, and workflow evidence; keep activation and release review separate;
 - retain the contract-required inactive posture of stage boundaries and aliases.
