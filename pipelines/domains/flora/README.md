@@ -76,6 +76,67 @@ notes:
 
 # 🌿 Flora Domain Pipeline
 
+## GBIF fixture implementation — November 19, 2026
+
+The [GBIF intake entrypoint](gbif_ingest.py) composes the existing Darwin Core
+normalizer, candidate schema, intake classifier, and decision schema. It handles
+1–300 supplied records in a strict JSON packet of at most 1 MiB. Candidates
+and proposed decisions stay in memory; the CLI emits aggregate status only.
+
+From the repository root with Python 3.11 or later:
+
+```bash
+python tools/ci/install_python_ci.py project-test
+python tools/ci/install_python_ci.py connectors-core
+export KFM_NO_NETWORK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="$PWD/tools/ci/kfm_no_network:$PWD"
+python -B -m pipelines.domains.flora.gbif_ingest big-bluestem
+python -B -m pipelines.domains.flora.gbif_ingest no-coordinate
+python -B -m pytest tests/pipelines/domains/flora/test_gbif_pipeline.py tests/packages/domains/flora/normalizers -q
+```
+
+Library callers use `prepare_records(raw_bytes)` with a closed JSON object
+containing a `records` array. They own the provenance and private handling of
+those supplied bytes and returned candidates. A malformed batch or duplicate
+source identity fails as a whole. Individual malformed records remain explicit
+by input index and finite reason code; valid siblings remain review candidates.
+Candidates are classified in stable candidate-ID order against earlier
+candidates as peers. The existing institutional/catalog and fallback matching
+rules can propose duplicates; this does not establish biological equivalence.
+Rights and sensitivity summary counts are independent of duplicate proposals and
+can overlap them, so a duplicate never hides an unresolved review requirement.
+`BatchResult.summary()` omits candidate payloads and geometry, while its hidden
+candidate and decision fields hold the private in-memory results.
+
+The existing source fields, scientific names, missing coordinates, uncertainty,
+rights strings, and sensitivity hints are retained. Taxonomy is not resolved or
+inferred. Missing, conditional, or unrecognized licenses go to the existing
+quarantine disposition; this includes license URLs the current shorthand-only
+classifier does not recognize. The pipeline does not rewrite terms to make them
+pass. Exact sensitive geometry stays internal and held for review; it is not
+generalized or made public-safe by this implementation.
+
+The [declaration](../../../pipeline_specs/flora/gbif_ingest.yaml) is FIXTURE_ONLY
+and inactive. Its [source descriptor](../../../data/registry/flora/sources/gbif_plants.yaml)
+is still proposed with unresolved role, rights and sensitivity fields. No source
+admission, policy evaluation, review approval, lifecycle write, promotion,
+release, or publication occurs. The name `ingest` identifies the planned lane;
+this bounded implementation normalizes the two synthetic Darwin Core fixtures
+and supplied local records. It does not capture GBIF API pages, reconcile a live
+download, establish dataset completeness, or infer species presence/absence.
+
+The [dedicated workflow](../../../.github/workflows/flora-gbif-pipeline.yml)
+runs normalizer, classifier and integration regressions under the repository's
+Python no-network guard on Python 3.11 and 3.12. Dependency setup happens before
+the guard. This is Python-process egress control, not host-wide isolation.
+
+## Historical directory inspection
+
+The inspection below is retained from before this fixture-first implementation.
+Its proposed paths and maturity statements do not supersede the bounded current implementation above.
+
+
 > Executable Flora-domain pipeline lane for converting admitted plant taxonomy, occurrence, specimen, vegetation-community, invasive-plant, phenology, restoration, and botanical-context source material into governed candidates, quarantine records, processed records, catalog/triplet handoffs, receipts, and release-review packages — without bypassing evidence, policy, geoprivacy, sensitivity, review, or release gates.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
