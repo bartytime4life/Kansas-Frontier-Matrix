@@ -25,6 +25,13 @@ type Props = {
 type WorkerResult = { id: number; prepared?: boolean; bounds?: AreaBounds; manifest?: SubsurfaceManifest; columns?: SectionRecord[]; total?: number; partial?: boolean; coverage?: string; failures?: string[]; error?: string; matches?: [string, string, Position, string][] };
 const EMPTY_ROUTE: Position[] = [];
 const EMPTY_COLUMNS: SectionRecord[] = [];
+function validSurveyCatalogue(value: unknown): value is { version: 1; surveys: GeophysicalSurvey[] } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const data = value as Record<string, unknown>;
+  return !("error" in data) && data.version === 1 && Array.isArray(data.surveys) && data.surveys.length <= 100
+    && data.surveys.every(validGeophysicalSurvey) && new Set(data.surveys.map(survey => survey.id)).size === data.surveys.length
+    && data.surveys.every(survey => new Set(survey.profiles.map(profile => profile.id)).size === survey.profiles.length);
+}
 const download = (name: string, value: string | null, type: string) => {
   if (!value) return;
   const url = URL.createObjectURL(new Blob([value], { type })); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -83,8 +90,8 @@ export default function UndergroundPanel(props: Props) {
   const [locatorSlot,setLocatorSlot] = useState<HTMLDivElement|null>(null);
   const initialKansasLocator = useRef(false);
   const [search, setSearch] = useState(""), [matches, setMatches] = useState<NonNullable<WorkerResult["matches"]>>([]);
-  const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[]>([]);
-  const [surveyError, setSurveyError] = useState("");
+  const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[] | null>(null);
+  const [surveyError, setSurveyError] = useState(""), [surveyAttempt, setSurveyAttempt] = useState(0);
   const [surface, setSurface] = useState<{ distance: number; elevation: number | null }[]>([]);
   const worker = useRef<Worker | null>(null), serial = useRef(0), current = useRef(props), pinnedRef = useRef(pinned);
   useEffect(() => { current.current = props; pinnedRef.current = pinned; }, [props, pinned]);
@@ -262,14 +269,27 @@ export default function UndergroundPanel(props: Props) {
     return () => { map.off("styledata", update); for (const id of ["kfm-underground-context", "kfm-underground-context-route"]) if (map.getLayer(id)) map.removeLayer(id); if (map.getSource("kfm-underground-context")) map.removeSource("kfm-underground-context"); };
   }, [map, columns, anchor, route, selected?.id]);
   useEffect(() => {
-    if (display !== "surveys" || surveys.length) return;
-    const controller = new AbortController();
-    void fetch("/data/subsurface/geophysics.json", { signal: controller.signal }).then(r => { if (!r.ok) throw new Error(); return r.json(); }).then(data => {
-      if (data.version !== 1 || !Array.isArray(data.surveys)) throw new Error();
-      if (!controller.signal.aborted) setSurveys(data.surveys.filter(validGeophysicalSurvey));
-    }).catch(() => { if (!controller.signal.aborted) setSurveyError("Published profiles are unavailable."); });
-    return () => controller.abort();
-  }, [display, surveys.length]);
+    if (display !== "surveys" || surveys !== null) return;
+    const controller = new AbortController(); let active = true, removeAbort = () => {};
+    const cancelled = new Promise<never>((_, reject) => {
+      const abort = () => reject(controller.signal.reason);
+      controller.signal.addEventListener("abort", abort, { once: true });
+      removeAbort = () => controller.signal.removeEventListener("abort", abort);
+    });
+    const deadline = setTimeout(() => controller.abort(new Error("Survey catalogue timed out.")), 15000);
+    const dispose = () => { clearTimeout(deadline); removeAbort(); };
+    queueMicrotask(() => { if (active) setSurveyError(""); });
+    const load = async () => {
+      const response = await fetch("/data/subsurface/geophysics.json", { signal: controller.signal });
+      const data = await readSuccessfulJson(response, 2 * 1024 * 1024, controller.signal);
+      if (!validSurveyCatalogue(data)) throw new Error("Unexpected survey catalogue.");
+      return data.surveys;
+    };
+    void Promise.race([load(), cancelled]).then(data => {
+      if (active && !controller.signal.aborted) setSurveys(data);
+    }).catch(() => { if (active) setSurveyError("Published profiles are unavailable or timed out. Retry loading the catalogue."); }).finally(dispose);
+    return () => { active = false; controller.abort(); dispose(); };
+  }, [display, surveys, surveyAttempt]);
   const inspect = useCallback((record: Borehole, interval?: DepthInterval) => {
     setSelectedId(record.id); setPickedInterval(interval ? {recordId:record.id,index:record.intervals.indexOf(interval)} : null); if (interval && display !== "3d") setDepth(Math.max(range[0], Math.min(range[1], meters((interval.top + interval.bottom) / 2, record.depthUnit)))); onInspect({ record, interval });
   }, [onInspect, range, display]);
@@ -346,7 +366,16 @@ export default function UndergroundPanel(props: Props) {
       {missing.length > 0 && <p className={s.limit}>Reopened settings: {missing.length} previously captured records are not in the current eligible response. Saved rows have not been substituted.</p>}
       {display === "section" && <div className={`${s.grid} ${s.specialistResult}`}><div className={s.plotScroll}><SectionPlot columns={columns} route={route} range={range} exaggeration={exaggeration} depth={depth} selectedId={selected?.id} onInspect={inspect} /></div><details className={s.sectionRecords}><summary>Loaded source records · {columns.length}</summary><div className={s.cards}>{columns.map(c => <button className={s.card} key={c.record.id} type="button" aria-pressed={selected?.id === c.record.id} onClick={() => inspect(c.record)}><strong>{c.record.name}</strong><small>{c.record.kind === "core" ? "Core inventory envelope" : "Logged description"} · {(c.distanceMeters / 1000).toFixed(2)} km from probe</small>{route.length > 1 && <small>{(c.offsetMeters / 1000).toFixed(2)} km off section</small>}<small>{c.record.intervals.length} intervals · {c.record.sourceTime}</small></button>)}</div></details></div>}
 
-      {display === "surveys" && <div className={s.specialistResult}><h3>Geophysical surveys</h3><details><summary>Survey filters</summary><label>Survey method <select value={surveyMethod} onChange={e => setSurveyMethod(e.target.value)}>{["all", "gpr", "electromagnetic", "electrical", "seismic"].map(m => <option key={m} value={m}>{m === "gpr" ? "Ground-penetrating radar" : m}</option>)}</select></label></details>{surveyError && <p role="status">{surveyError}</p>}{surveys.filter(v => surveyMethod === "all" || v.method === surveyMethod).map(survey => <SurveyView key={survey.id} survey={survey} anchor={anchor} onLocate={p => { setAnchor(p); setPinned(true); map?.easeTo({ center: p, zoom: 13, duration: 0 }); }} />)}{surveys.length > 0 && !surveys.some(v => surveyMethod === "all" || v.method === surveyMethod) && <p>None in the verified available data for this method.</p>}<details><summary>Survey interpretation limits</summary><p className={s.limit}>Kansas River 3D sediment model: blocked until native numerical geometry, references, and reuse terms qualify. Published report images are not used as numerical surfaces. GPR time is not converted to depth without a documented velocity model.</p></details></div>}
+      {display === "surveys" && <section className={s.specialistResult} aria-label="Published geophysical surveys" aria-busy={surveys === null && !surveyError}>
+        <h3>Geophysical surveys</h3>
+        <details><summary>Survey filters</summary><label>Survey method <select value={surveyMethod} disabled={surveys === null} onChange={e => setSurveyMethod(e.target.value)}>{["all", "gpr", "electromagnetic", "electrical", "seismic"].map(m => <option key={m} value={m}>{m === "gpr" ? "Ground-penetrating radar" : m}</option>)}</select></label></details>
+        {surveys === null && <p role="status">{surveyError || "Loading published surveys…"}</p>}
+        {surveys === null && surveyError && <button type="button" onClick={() => { setSurveyError(""); setSurveyAttempt(value => value + 1); }}>Retry published surveys</button>}
+        {surveys?.length === 0 && <p role="status">No published survey entries were returned. This does not establish that no surveys exist.</p>}
+        {surveys?.filter(v => surveyMethod === "all" || v.method === surveyMethod).map(survey => <SurveyView key={survey.id} survey={survey} anchor={anchor} onLocate={p => { setAnchor(p); setPinned(true); map?.easeTo({ center: p, zoom: 13, duration: 0 }); }} />)}
+        {surveys && surveys.length > 0 && !surveys.some(v => surveyMethod === "all" || v.method === surveyMethod) && <p role="status">No published survey entries in this catalogue match this method.</p>}
+        <details><summary>Survey interpretation limits</summary><p className={s.limit}>Kansas River 3D sediment model: blocked until native numerical geometry, references, and reuse terms qualify. Published report images are not used as numerical surfaces. GPR time is not converted to depth without a documented velocity model.</p></details>
+      </section>}
       {display === "soil" && <section className={s.specialistResult}><h3>Soil horizons</h3>{redacted ? <p className={s.limit}>Location privacy is active. A soil lookup would send this coordinate to USDA, so it is withheld.</p> : <SoilView key={anchor.join(",")} anchor={anchor} />}</section>}
       <details className={s.exportTools}><summary>Save &amp; export</summary><p>Saved reports and exports contain bounded KGS records; survey profiles and live soil results are not included.</p><div className={s.actions}><button type="button" onClick={props.onSave}>Save investigation</button><button type="button" onClick={props.onReport}>Create report</button><button type="button" disabled={redacted || loading || !columns.length} onClick={() => download("kfm-underground-intervals.csv", intervalCsv(context, redacted), "text/csv")}>Export intervals</button><button type="button" disabled={redacted || loading || !columns.length} onClick={() => download("kfm-underground-section.svg", sectionSvg(context, redacted), "image/svg+xml")}>Export section image</button></div></details>
       {redacted && <p className={s.limit}>Location privacy is active. Underground coordinates, routes, records, and images are withheld from saves and exports.</p>}

@@ -3010,4 +3010,15 @@ def test_underground_soil_recovery_successor_preserves_hunting_inventory_and_all
          "tests/subsurface-slice.test.mjs", "tests/underground-soil-view.test.mjs"},
         "ca7c97598e96f7891f17ad32190462c46130a380",
     )
-    assert TOOL.RECEIPT.name == "site-v268-underground-soil-recovery-overlay-20261118.json"
+
+
+def test_underground_survey_recovery_successor_preserves_soil_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-underground-survey-recovery-overlay-20261119.json",
+        "site-v268-underground-soil-recovery-overlay-20261118.json",
+        "9ee93aae7ba3e13eb2ccc8263de7c251e91433960db4fde5ac3b32f631152b58",
+        {"app/underground-panel.tsx", "docs/subsurface-geophysics.md",
+         "tests/underground-surveys-view.test.mjs"},
+        "875758d4d90078429a9ac487629458a0852922fa",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-underground-survey-recovery-overlay-20261119.json"

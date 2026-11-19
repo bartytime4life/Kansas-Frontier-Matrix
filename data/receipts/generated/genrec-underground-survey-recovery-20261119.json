@@ -1,0 +1,134 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/underground-panel.tsx": "sha256:fbfddf6a466cf8c1e11b60e14e43376fc32ad4d5f6872a0d5d0f9fe18bdf0454",
+    "apps/site/source/docs/subsurface-geophysics.md": "sha256:a887bc27000322764f9db6f8313de1e600f6c298a5cdb394ef1caf755930ef8a",
+    "apps/site/source/tests/underground-surveys-view.test.mjs": "sha256:3aeb248f5e106f929f93725abd8433dfe60faf5c690b223711ef384da3d6335c",
+    "data/receipts/generated/site-v268-underground-survey-recovery-overlay-20261119.json": "sha256:492ef2cb2d1ef42f6f1bd987b85083d2695d9e729dedd0be7c166c019054edc0",
+    "tests/qa/test_site_mirror.py": "sha256:daba2ad952ec39bffd29971ba27bcc70ed71c3a25534123398a2e00b4a996876",
+    "tools/qa/site_mirror.py": "sha256:a2467ee8d1e7277a6ea3514508af6fd82d1e1a81eb1997267f6349d318a29147"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/subsurface-geophysics.md",
+    "apps/site/source/tests/underground-surveys-view.test.mjs",
+    "data/receipts/generated/site-v268-underground-survey-recovery-overlay-20261119.json",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "git:875758d4d90078429a9ac487629458a0852922fa:apps/site/source/public/data/subsurface/geophysics.json",
+      "id": "Pinned geophysical catalogue and source contracts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "git:875758d4d90078429a9ac487629458a0852922fa:apps/site/source/app/underground-panel.tsx",
+      "id": "Pinned parent loading and navigation flow",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-19T05:33:39.272782+00:00",
+  "emitter": "Codex owning conversation",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:5150c0eb992a333142ce0754b8acd17db8cb9009125cb34ed1c32a50b6e03359",
+      "sha256:9ee93aae7ba3e13eb2ccc8263de7c251e91433960db4fde5ac3b32f631152b58"
+    ],
+    "evidence_refs": [
+      "main@875758d4d90078429a9ac487629458a0852922fa",
+      "apps/site/source/public/data/subsurface/geophysics.json",
+      "data/receipts/generated/site-v268-underground-soil-recovery-overlay-20261118.json"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex agent",
+    "provider": "OpenAI",
+    "version": "Runtime build identifier not exposed"
+  },
+  "notes": "Geophysical catalogue client recovery only. Runtime behavior remains proposed pending independent review. The existing source capture, units, held profiles, reference-only entries and exclusion from section saves/exports remain unchanged. This authoring receipt excludes itself to avoid a circular digest and binds every other changed artifact, including the content-parity successor and selector/QA. No prompts, hidden reasoning, credentials, acquired provider data or private coordinates are included.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "receipt_id": "genrec-underground-survey-recovery-20261119",
+  "truth_labels": {
+    "apps/site/source/app/underground-panel.tsx": "PROPOSED",
+    "apps/site/source/docs/subsurface-geophysics.md": "PROPOSED",
+    "apps/site/source/tests/underground-surveys-view.test.mjs": "PROPOSED",
+    "data/receipts/generated/site-v268-underground-survey-recovery-overlay-20261119.json": "PROPOSED",
+    "tests/qa/test_site_mirror.py": "PROPOSED",
+    "tools/qa/site_mirror.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "survey_soil_and_section_checks",
+      "outcome": "PASS",
+      "reason": "81 controlled checks, including 22 survey-catalogue scenarios using actual parent navigation and response readers."
+    },
+    {
+      "gate": "pinned_base_negative_control",
+      "outcome": "PASS",
+      "reason": "20 of the exact final 22 survey scenarios fail on the pinned base; all 22 pass with the correction."
+    },
+    {
+      "gate": "site_full_suite",
+      "outcome": "PASS",
+      "reason": "2023 tests after production build."
+    },
+    {
+      "gate": "production_build_and_output_containment",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "eslint",
+      "outcome": "PASS",
+      "reason": "Zero errors; 54 inherited warnings retained."
+    },
+    {
+      "gate": "mirror_parity_and_qa",
+      "outcome": "PASS",
+      "reason": "109 tests; immutable predecessor and current inventory; 262 withheld paths absent."
+    },
+    {
+      "gate": "directory_topology",
+      "outcome": "PASS",
+      "reason": "20 rules, zero new drift and 89 inherited warnings."
+    },
+    {
+      "gate": "gap_and_scaffold_checks",
+      "outcome": "PASS",
+      "reason": "No broken links or new scaffold drift; inherited markers remain recorded."
+    },
+    {
+      "gate": "visual_keyboard_touch_and_webgl_acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Connected Chrome page observation failed before page capture with a timeoutMs error."
+    },
+    {
+      "gate": "live_provider_and_hosted_lifecycle",
+      "outcome": "SKIPPED",
+      "reason": "No live-provider qualification, Site synchronization, source admission, release activation, deployment or publication."
+    }
+  ]
+}
