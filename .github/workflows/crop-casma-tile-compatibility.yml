@@ -6,6 +6,9 @@ name: Crop CASMA Tile Compatibility
     paths:
       - ".github/workflows/crop-casma-tile-compatibility.yml"
       - "pipelines/domains/soil/crop_casma_tiles/**"
+      - "pipelines/normalize/geography/historical_topo_tiles.py"
+      - "tests/pipelines/test_historical_topo_tiles.py"
+      - "tools/ci/kfm_no_network/**"
       - "tools/ci/install_python_ci.py"
       - "tests/ci/test_install_python_ci.py"
   push:
@@ -13,6 +16,9 @@ name: Crop CASMA Tile Compatibility
     paths:
       - ".github/workflows/crop-casma-tile-compatibility.yml"
       - "pipelines/domains/soil/crop_casma_tiles/**"
+      - "pipelines/normalize/geography/historical_topo_tiles.py"
+      - "tests/pipelines/test_historical_topo_tiles.py"
+      - "tools/ci/kfm_no_network/**"
       - "tools/ci/install_python_ci.py"
       - "tests/ci/test_install_python_ci.py"
   workflow_dispatch:
@@ -49,3 +55,11 @@ jobs:
           python -c "from PIL import Image; assert Image.__version__ == '13.0.0', Image.__version__"
       - name: Verify synthetic tiles and tamper rejection
         run: python -m unittest discover -s pipelines/domains/soil/crop_casma_tiles -p 'test_*.py' -v
+
+      - name: Verify the historical topographic tile pipeline
+        env:
+          KFM_NO_NETWORK: "1"
+          PROJ_NETWORK: "OFF"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: python -m unittest discover -s tests/pipelines -p 'test_historical_topo_tiles.py' -v

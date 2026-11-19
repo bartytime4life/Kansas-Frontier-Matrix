@@ -14,6 +14,7 @@ name: offline-pipeline-check
       - "tools/validators/**"
       - "tools/ci/**"
       - "tests/pipelines/**"
+      - "tests/packages/pipelines_core/**"
       - "tests/conftest.py"
       - "data/receipts/generated/genrec-pipeline-ci-completion-20260917.json"
       - "tests/domains/hydrology/test_no_network_proof.py"
@@ -32,6 +33,7 @@ name: offline-pipeline-check
       - "tools/validators/**"
       - "tools/ci/**"
       - "tests/pipelines/**"
+      - "tests/packages/pipelines_core/**"
       - "tests/conftest.py"
       - "data/receipts/generated/genrec-pipeline-ci-completion-20260917.json"
       - "tests/domains/hydrology/test_no_network_proof.py"
@@ -74,6 +76,15 @@ jobs:
         run: |
           python tools/ci/install_python_ci.py project-test
           python tools/ci/install_python_ci.py geo-transforms
+      - name: Build and install the pipeline core without network access
+        run: |
+          python -m pip wheel --no-index --no-deps --no-build-isolation \
+            --wheel-dir "$RUNNER_TEMP/pipeline-wheels" packages/pipelines-core
+          python -m venv "$RUNNER_TEMP/pipeline-wheel-smoke"
+          "$RUNNER_TEMP/pipeline-wheel-smoke/bin/python" -m pip install \
+            --no-index --no-deps --find-links "$RUNNER_TEMP/pipeline-wheels" kfm-pipelines-core
+          cd "$RUNNER_TEMP"
+          "$RUNNER_TEMP/pipeline-wheel-smoke/bin/python" -c 'from pipelines_core import Stage, run_pipeline; result = run_pipeline([Stage("copy", lambda c: c["input"])], {"fixture": True}, spec_hash="sha256:" + "a" * 64, code_ref="synthetic:wheel-smoke"); assert result["outcome"] == "SUCCESS" and result["artifacts"]["copy"] == {"fixture": True} and result["release_authorized"] is False'
       - name: Replay the synthetic pipelines with Python and PROJ network denial
         env:
           PYTEST_ADDOPTS: --junitxml=${{ runner.temp }}/offline-pipelines.xml

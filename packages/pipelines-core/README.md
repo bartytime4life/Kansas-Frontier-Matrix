@@ -2,14 +2,15 @@
 doc_id: kfm://doc/packages-pipelines-core-readme
 title: packages/pipelines-core/ — Package Boundary and Greenfield Pipeline-Control Scaffold
 type: readme
-version: v1.1
-status: draft
+version: v1.2
+status: implemented local execution and packaging; historical inspection retained below
 owners: OWNER_TBD — Package steward · Pipeline steward · Runtime steward · Contract steward · Schema steward · Policy steward · Evidence/receipt steward · Validation steward · Security steward · Release steward · CI steward · Docs steward
 created: NEEDS VERIFICATION — target existed before this evidence-grounded revision
-updated: 2026-07-15
+updated: 2026-11-19
 policy_label: "public-doctrine; package-boundary; python-package-scaffold; greenfield-placeholder; build-unconfigured; api-unratified; consumers-unverified; tests-unestablished; no-network-by-default; deterministic-helper-candidate; run-receipt-aware; lifecycle-subordinate; evidence-subordinate; policy-subordinate; release-subordinate; fail-closed; no-truth-authority; no-publication-authority; migration-required; rollback-aware"
 current_path: packages/pipelines-core/README.md
-truth_posture: >
+truth_posture: CONFIRMED bounded in-memory stage execution, schema-shaped RunReceipts, deterministic replay, installed-wheel smoke and local tests; NEEDS VERIFICATION exact-head hosted CI and human review
+historical_truth_posture: >
   CONFIRMED target README v1, package metadata name kfm-pipelines-core and version 0.0.0,
   repository-present package README, minimal package pyproject, merged source-envelope README v1.1,
   merged pipelines_core namespace README v1.1, empty pipelines_core/__init__.py, comment-only
@@ -110,7 +111,43 @@ notes:
 
 <a id="top"></a>
 
-# Pipelines Core Package Boundary and Greenfield Pipeline-Control Scaffold
+# Pipeline Core: Execution and Planning
+
+## Current implementation — November 19, 2026
+
+This candidate completes the formerly empty core and package build. The
+[implementation](src/pipelines_core/core.py) exports `Stage`, `PipelineError` and `run_pipeline`.
+Callers explicitly supply trusted Python transforms and optional validators.
+The runner checks the complete dependency graph before executing, gives each
+stage independent JSON inputs, blocks descendants of failed stages, and keeps
+independent branches available. Replay identity binds the input, code/spec
+references, topology and declared source/validation references.
+
+Each computed artifact is content-addressed in memory. Each stage emits the
+existing RunReceipt shape with `SUCCESS` or `FAIL`; the aggregate can report
+`PARTIAL`. Input and output trees, stage count, individual artifact bytes and
+total retained bytes are bounded. Callbacks are trusted application code, not
+sandboxed code. The runner does not infer source admission, evidence closure,
+release or publication from successful computation.
+
+The package builds a standalone `kfm-pipelines-core` 0.1.0 wheel with no runtime
+dependencies and supports Python 3.11+. [Tests](../../tests/packages/pipelines_core/test_core.py) cover graph errors,
+mutation isolation, validator rejection, failures, cancellation, resource
+limits, schema-conforming receipts and the existing Mesonet normalizer.
+[Pipeline CI](../../.github/workflows/offline-pipeline-check.yml) builds and installs the wheel outside the source tree
+and runs both new execution tests and the existing planning tests.
+
+Repository installation, pipeline declaration binding and source activation
+remain separate. This library does not discover or execute inactive YAML,
+fetch providers, persist data, schedule jobs, or apply releases.
+
+## Historical inspection
+
+The following analysis retains its own earlier commit pins and describes the
+package before this build-out. Its placeholder and unconfigured-build claims
+are historical; use the implementation and validation links above for this
+candidate.
+
 
 `packages/pipelines-core/`
 
