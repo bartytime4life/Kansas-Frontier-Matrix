@@ -192,6 +192,24 @@ use current sources; the original saved entry remains. Unsupported settings do
 not reopen. The science notebook format is `kfm-science-notebook-v1`; `/data-lab`
 keeps its separate Record Lab bundle workflow and limits.
 
+The notebook's starter shelf opens three source-bound questions without saving
+anything automatically: Finney/Riley population and poverty histories, Sedgwick
+comparison counties, and consecutive annual changes in Kansas wind production
+and coal consumption. A downloadable starter notebook contains those controls,
+current source fingerprints and empty reasoning prompts. It does not prefill
+findings or causal conclusions. Each download has new entry identities; importing
+the same downloaded file again follows the usual duplicate/conflict checks.
+
+Optional research notes are plain text of up to 4,000 UTF-16 code units per
+entry and remain within the combined 512 KB notebook bound. Save/import/export
+preserve notes; public view links omit them. Editing notes retains the original
+entry identity, creation time, controls, source hashes and attachments. A save
+compares the entry seen when editing began with the current stored entry; a
+changed note, changed analytical snapshot or deleted entry refuses the update
+rather than overwriting another tab's work or recreating a removed entry. The
+interface keeps an unsaved draft on conflicts and storage failures. Notes record the visitor's reasoning,
+not provider observations or reviewed scientific findings.
+
 ## Scientific tools and replay
 
 Relationships use all complete pairs in the current selection, with Pearson r,
