@@ -197,6 +197,16 @@ export const STORIES = Object.freeze([
     tables: ['kfm_nass_quickstats'], feeds: ['nass'],
   }),
   guided({
+    id: 'kansas-then-and-now', group: 'Living record', title: 'Kansas Then & Now', kicker: 'GARDEN CITY · TWO AERIAL EDITIONS',
+    href: '/labs/then-now',
+    summary: 'Compare two aligned aerial views of the Arkansas River crossing at Garden City.',
+    try: 'Move the divider, compare both editions side by side, and read the bridge project record.',
+    limit: 'Edition labels identify the statewide collections. Exact flight dates at the crossing remain unconfirmed.',
+    palette: ['#f6f5ec', '#244c3b', '#867553'],
+    sources: ['Kansas Data Access and Support Center', 'Kansas Department of Transportation'],
+    tables: [], feeds: [],
+  }),
+  guided({
     id: 'drought-replay-2012', group: 'Living record', title: '2012 Drought Replay', kicker: 'FINNEY COUNTY · ARKANSAS RIVER',
     href: '/labs/drought-replay',
     summary: 'Follow 17 Finney County drought assessments alongside 119 daily discharge values at Garden City.',
