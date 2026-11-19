@@ -81,6 +81,34 @@ function captureResult(value:unknown,sourceId:string,captureId?:string):value is
   &&(view.features===undefined||(Array.isArray(view.features)&&view.features.every(capturedFeature)))
   &&(view.raster===undefined||capturedRaster(view.raster));
 }
+type ProfileOutcome={sourceId:string}&({state:"quarantined"|"already-captured";captureId:string}|{state:"held";code:string});
+type ProfileRun={state:"schedule-disabled"|"complete"|"partial";captured:number;outcomes:ProfileOutcome[]};
+function profileRun(value:unknown):value is ProfileRun {
+ if(!record(value)||!byteCount(value.captured)||!Array.isArray(value.outcomes))return false;
+ if(value.state==="schedule-disabled")return value.captured===0&&value.outcomes.length===0;
+ if(value.state!=="complete"&&value.state!=="partial")return false;
+ // scheduledProfiles attempts one or two configured plans per run. A held or
+ // previously saved capture must never be counted as a newly stored capture.
+ if(value.outcomes.length<1||value.outcomes.length>2)return false;
+ let stored=0,held=0;
+ for(const outcome of value.outcomes){
+  if(!record(outcome)||typeof outcome.sourceId!=="string"||!outcome.sourceId)return false;
+  if(outcome.state==="held"){
+   if(typeof outcome.code!=="string"||!outcome.code)return false;
+   held++;
+  }else if(outcome.state==="quarantined"||outcome.state==="already-captured"){
+   if(typeof outcome.captureId!=="string"||!(/^[a-f0-9]{64}$/).test(outcome.captureId))return false;
+   if(outcome.state==="quarantined")stored++;
+  }else return false;
+ }
+ return value.captured===stored&&value.state===(held>0?"partial":"complete");
+}
+function profileRunMessage(value:ProfileRun):string {
+ if(value.state==="schedule-disabled")return "Configured-profile capture is disabled.";
+ const reused=value.outcomes.filter(outcome=>outcome.state==="already-captured").length;
+ const held=value.outcomes.filter(outcome=>outcome.state==="held").length;
+ return `${value.captured} configured-profile capture(s) stored${reused?`; ${reused} previously saved capture(s) reused`:""}${held?`; ${held} profile(s) held. Review source setup and saved captures before retrying`:""}. Review and release remain pending.`;
+}
 export default function ConnectionsWorkspace(){
  const [catalog,setCatalog]=useState<Catalog|null>(null),[selected,setSelected]=useState("noaa-ncei"),[query,setQuery]=useState<Record<string,string>>({});
  const [result,setResult]=useState<Result|null>(null),[receipts,setReceipts]=useState<Receipt[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState(""),[page,setPage]=useState(0),[metric,setMetric]=useState("");
@@ -135,7 +163,17 @@ export default function ConnectionsWorkspace(){
   }catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Capture held.");}
   finally{if(!controller.signal.aborted)setBusy(false);}
  };
- const runProfiles=async()=>{request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);try{const response=await fetch("/api/connections/run",{method:"POST",signal:controller.signal});const value=await response.json();if(controller.signal.aborted)return;if(!response.ok)throw new Error("Hosted capture profiles are not configured or enabled.");setMessage(value.state==="schedule-disabled"?"Configured-profile capture is disabled.":String(value.captured)+" configured-profile capture(s) stored; review is pending.");void refresh();}catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Profile capture held.");}finally{if(!controller.signal.aborted)setBusy(false);}};
+ const runProfiles=async()=>{
+  request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);
+  try{
+   const response=await fetch("/api/connections/run",{method:"POST",signal:controller.signal});
+   const value:unknown=await response.json().catch(()=>null);if(controller.signal.aborted)return;
+   if(!response.ok)throw new Error("Hosted capture profiles are not configured or enabled.");
+   if(!profileRun(value))throw new Error("Profile capture returned invalid data. Review saved captures before retrying.");
+   setMessage(profileRunMessage(value));void refresh();
+  }catch(error){if(!controller.signal.aborted)setMessage(error instanceof Error?error.message:"Profile capture held.");}
+  finally{if(!controller.signal.aborted)setBusy(false);}
+ };
  const view=result?.view;
  const keys=view?.rows.length?Array.from(new Set(view.rows.slice(0,20).flatMap(row=>Object.keys(row)))):[];
  const columns=preferred[view?.sourceId??""]??keys.slice(0,8);
