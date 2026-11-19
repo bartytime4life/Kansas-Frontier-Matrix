@@ -55,7 +55,6 @@ test("real NOAA compressed NetCDF decodes geolocation, packed unsigned time and 
 const fakeDecode = () => ({ flashes: [{ id: "known", longitude: -98, latitude: 38.5, timeMs: start + 1000, observedAt: new Date(start + 1000).toISOString(), energyFj: null, areaKm2: null }], omittedQuality: 0 });
 function fakeArchive({ missing = 0, corrupt = false, abort } = {}) {
   const total = 46 - missing, id = "a".repeat(64);
-  const flash = { id: "known", longitude: -98, latitude: 38.5, timeMs: start + 1000, observedAt: new Date(start + 1000).toISOString(), energyFj: null, areaKm2: null };
   return async url => {
     const p = new URL(url, "https://site.test").searchParams;
     if (!p.has("part")) return Response.json({ id, query, start: new Date(start).toISOString(), end: new Date(end).toISOString(), files: Array.from({ length: total }, () => ({})), expectedFiles: 46, missingFiles: missing, parts: total });

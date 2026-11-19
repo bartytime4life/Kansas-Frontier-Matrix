@@ -3066,4 +3066,26 @@ def test_connections_capture_recovery_successor_preserves_inventory_and_all_hold
         {'tests/connections-capture-recovery.test.mjs', 'app/connections/workspace.tsx', 'tests/connections-status-recovery.test.mjs'},
         "4e7612adbd5cdee5bfeae87d2a76ae49faa45bdf",
     )
-    assert TOOL.RECEIPT.name == "site-v268-connections-capture-recovery-overlay-20261119.json"
+    # A later immutable successor now owns the current selector.
+
+
+def test_unused_code_successor_preserves_connections_capture_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-unused-code-overlay-20261119.json",
+        "site-v268-connections-capture-recovery-overlay-20261119.json",
+        "d47bf1e7147dcbe9350b6d84e9c662f2a8a18362d64e58fbe055a219830d2df2",
+        {
+            "app/api-connections-runtime/provider-10.mjs",
+            "app/api-connections-runtime/provider-14.mjs",
+            "app/api-connections-runtime/provider-6.mjs",
+            "app/crop-casma-control.tsx",
+            "eslint.config.mjs",
+            "tests/aquifer-layers.test.mjs",
+            "tests/lightning-archive.test.mjs",
+            "tests/rendered-html.test.mjs",
+            "tests/river-network-budget.test.mjs",
+            "tests/water-flow-sync.test.mjs",
+        },
+        "ff0d7b7a4a0ee54395c5039ae03b6ec8ecbbf3f8",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-unused-code-overlay-20261119.json"

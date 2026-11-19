@@ -15,6 +15,13 @@ const eslintConfig = defineConfig([
     // Installed, pinned third-party browser decoder; not application source.
     "public/vendor/h5wasm/**",
   ]),
+  {
+    rules: {
+      // `const { secret: _secret, ...safe } = row` and `_unused` parameters are
+      // deliberate omissions; report every other unused binding.
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", ignoreRestSiblings: true }],
+    },
+  },
 ]);
 
 export default eslintConfig;

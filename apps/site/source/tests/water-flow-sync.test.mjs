@@ -113,7 +113,7 @@ test("cell and gauge bursts build once per display frame with byte-identical geo
   const original = layer.setGeometry;
   let builds = 0, submittedSegments = 0, finalGeometry;
   layer.setGeometry = (geometry) => { builds++; submittedSegments += geometry?.count ?? 0; finalGeometry = geometry; original(geometry); };
-  const allReaches = requests.map(({ key }, cell) => Array.from({ length: 200 }, (_, i) => fixtureReach(`R${cell}X${i}`,
+  const allReaches = requests.map((_request, cell) => Array.from({ length: 200 }, (_, i) => fixtureReach(`R${cell}X${i}`,
     Array.from({ length: 16 }, (_, vertex) => [-97.2 + cell * 0.01 + vertex * 0.0001, 38.1 + i * 0.0001]))));
   const started = performance.now();
   for (let i = 0; i < requests.length; i++) {

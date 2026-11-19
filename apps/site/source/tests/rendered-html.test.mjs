@@ -110,7 +110,6 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
     fileName: "explorer-data.ts",
   }).outputText;
   const explorer = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
-  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
   assert.equal(explorer.LAYER_REGISTRY.length, 0);
   assert.match(runtime, /setElevationExaggeration/);
@@ -389,7 +388,6 @@ test("keeps Focus Mode fail closed and share state complete", async () => {
 test("adds device-local Places trails and faster layer isolation controls", async () => {
   const ts = await import("typescript");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const placesSource = await readFile(new URL("../app/places-trail.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   const javascript = ts.transpileModule(placesSource, {
