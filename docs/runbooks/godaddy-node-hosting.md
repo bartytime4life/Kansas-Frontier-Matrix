@@ -11,7 +11,7 @@ policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
 responsibility: Identify the existing Node deployment, select its exact standalone source, validate changes and verify or roll back application delivery
-truth_posture: CONFIRMED source inspection at main 91ca0314 and hosted 65d56575 on 2026-10-21; CONFIRMED public build-identity parity with 43ea4988 on 2026-11-13; historical dashboard observations are not a fresh live readback
+truth_posture: CONFIRMED source inspection at main 91ca0314 and hosted 65d56575 on 2026-10-21; CONFIRMED public build-identity parity with 43ea4988 on 2026-11-13 and b2f20e01 on 2026-11-19; historical dashboard observations are not a fresh live readback
 related:
   - godaddy-hosting.md
   - godaddy-hosted-capture.md
@@ -296,6 +296,42 @@ features, and walk-in hunting access 3,591 tracts.
 has no DeFlock layer, so #5906 has no mirror change.
 
 <a id="verified-starting-point-2026-10-19"></a>
+
+<a id="public-record-lab-2026-11-19"></a>
+
+### Public acceptance on 2026-11-19: connected records and portable investigations
+
+Fresh Chrome reads of the canonical public application matched a clean standalone
+checkout of [`b2f20e0171875795a28f85134a90b65e14c5cd17`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b2f20e0171875795a28f85134a90b65e14c5cd17).
+The application was already serving those inputs during preparation; this check
+did not perform a dashboard Publish or inspect hosting settings. The earlier
+independently observed public source `9d472887` was retained as source-only
+rollback material, not asserted to be the provider's current rollback selection.
+
+| Check | Observed result and limit |
+|---|---|
+| Public identity | [`/api/build`](https://kansasfrontiermatrix.com/api/build) reported app `urdng3v1vk`, 1,353 application inputs and digest `sha256:719caeab9b6d64c422bf92056dee41d8d193e9316ad62cc5f9b7ad9e4f72326e`, matching the clean checkout |
+| Git stamp | Published `sourceCommit` was null and `commitState` was `WORKTREE_MODIFIED`. Input parity was verified; a clean deployment checkout was not claimed |
+| Local release checks | Production build, type check and full suite passed: 3,143 tests, 25 existing skips, zero failures |
+| [Record Lab](https://kansasfrontiermatrix.com/data-lab?collection=observations-usgs-daily-values) | All 135 documented FAA/USGS fields were available across six collections. Three live water investigations preserved 1,250 distinct sampled records / 2,000 record instances through linked metadata, JSON/story exports and reopening; desktop/phone layout passed |
+| Metadata interpretation | Station and daily/peak series samples retain exact provider keys, repeated captures, units, datums, time fields and missing matches. These bounded links neither select a current metadata version nor establish a temporal or archive-wide join |
+| [County Observatory](https://kansasfrontiermatrix.com/labs/observatory) | County histories, peer selection and both evidence CSV exports worked. Changing the comparison county retained the anchor county |
+| [Science notebook](https://kansasfrontiermatrix.com/labs/notebook) | A clearly named, browser-local QA investigation saved, exported, imported and reopened the same counties/settings with four source fingerprints. The QA entry was removed; no user notebook was overwritten |
+| [2012 drought replay](https://kansasfrontiermatrix.com/labs/drought-replay) | First/last assessment controls and source JSON download worked; the export retained 17 weekly assessments and 119 daily readings |
+| Existing map | The normal Welcome → Explore freely path completed renderer startup, showed the toolbar and map canvas, and produced no browser errors |
+| Public boundaries | Anonymous `/admin` returned 404; the retired report-pricing endpoint returned 404 on POST. Free exports remained available |
+| Home AI | Public [`/api/ai/status`](https://kansasfrontiermatrix.com/api/ai/status) returned configured/online/ready via `home-ollama`, labeled `qwen3.5:9b-q4_K_M`. This was readiness verification, not factual-answer qualification |
+
+All native intake/data gateway/data worker/Ollama services remained active. No
+hosting, signing-key, database, model or original Sites audience/storage setting
+was changed by this verification. The notebook test used an isolated browser
+context; raw source replies and screenshots stayed in task-local recovery.
+
+Operational details: command-line requests received Cloudflare 1010 while Chrome
+could read the public endpoints. The map's live background requests and Welcome
+screen also made generic network-idle waiting unsuitable: acceptance used the
+visible entry control and completed renderer state. Preserve these distinctions
+when repeating checks rather than declaring an outage or bypassing a gate.
 
 ## Historical verified starting point, 2026-10-19
 

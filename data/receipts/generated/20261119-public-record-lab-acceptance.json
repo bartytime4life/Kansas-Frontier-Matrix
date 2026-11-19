@@ -1,0 +1,91 @@
+{
+  "receipt_id": "kfm-public-record-lab-acceptance-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/godaddy-node-hosting.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/godaddy-node-hosting.md": "sha256:98b3113e7c6cec3f40a89d882281d71ec6976f49aa1a741db54713c27c33e630"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "Playwright browser verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2511d4fa25778a1bce7e99d8abd8c594f717b23f36f58f972ef31ae3710546cc",
+      "sha256:955d9ef8f2c967ac5ec17751bc064aa2b564f1576a08143f05aae958ccfdaf75",
+      "sha256:da958f9cac84c96ca6b6c3cdb1716c51f54675b19da60a8e9b2597eebfdfad7c",
+      "sha256:44997c85dd2ff8924b0a6ec526af84bb4556dc933e33b458fd784d8800fd18d8",
+      "sha256:c57bfafe1a4f24a8eede2546f699209e42d756dc5128d7fc3281ce4a4a876324",
+      "sha256:719caeab9b6d64c422bf92056dee41d8d193e9316ad62cc5f9b7ad9e4f72326e"
+    ],
+    "evidence_refs": [
+      "repo:ca7c97598e96f7891f17ad32190462c46130a380:docs/runbooks/godaddy-node-hosting.md",
+      "repo:b2f20e0171875795a28f85134a90b65e14c5cd17:scripts/build-identity.mjs"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/godaddy-node-hosting.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused Markdown/evidence, unique-anchor, fence, whitespace and diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Recorded application release: clean build/typecheck, 3,143 passed / 25 existing skips, public input parity and actual live browser workflows",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Dashboard publication/settings/rollback selection, factual AI qualification and independent documentation review",
+      "outcome": "SKIPPED",
+      "reason": "Not performed or not claimed; the app was already serving matching inputs when observed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Public application identity",
+      "validated": true,
+      "evidence_ref": "https://kansasfrontiermatrix.com/api/build"
+    },
+    {
+      "id": "Exact clean application-input source",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b2f20e0171875795a28f85134a90b65e14c5cd17"
+    },
+    {
+      "id": "Public record lab",
+      "validated": true,
+      "evidence_ref": "https://kansasfrontiermatrix.com/data-lab?collection=observations-usgs-daily-values"
+    },
+    {
+      "id": "Public notebook and county workspace",
+      "validated": true,
+      "evidence_ref": "https://kansasfrontiermatrix.com/labs/notebook"
+    },
+    {
+      "id": "Public drought replay",
+      "validated": true,
+      "evidence_ref": "https://kansasfrontiermatrix.com/labs/drought-replay"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T03:32:57.907404+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Authorship/integrity of a dated documentation observation only. The public app was already serving matching inputs; this agent performed no dashboard Publish. Public Git commit metadata was null / WORKTREE_MODIFIED, while input parity with the clean b2f20e01 checkout was verified. Raw records, screenshots, profiles and model/host settings remain outside this repository. Readiness does not establish factual model output, data approval, applicable metadata versions or whole-archive coverage. Independent documentation review remains pending."
+}
