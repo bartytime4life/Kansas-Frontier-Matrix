@@ -17,6 +17,8 @@ const now = new Date('2026-10-28T18:00:00Z');
 // Synthetic points: not a real camera inventory.
 const node = (id, lon = -97.37123, lat = 37.67123) => ({ type: 'node', id, lon, lat, tags: { man_made: 'surveillance', 'surveillance:type': 'ALPR', operator: 'SHOULD_NOT_LEAVE_ADAPTER', image: 'https://untrusted.invalid/image', direction: '90', note: '<script>alert(1)</script>' } });
 const raw = (nodes = [node(1), node(2, -97.36123)]) => ({ osm3s: { timestamp_osm_base: '2026-10-28T17:00:00Z' }, elements: [{ type: 'area', id: 3600161161 }, ...nodes] });
+const settle = () => new Promise(resolve => setImmediate(resolve));
+const checking = /Next provider check is running now/;
 
 test('generalization preserves counts and stable cells while dropping exact positions, IDs and every tag', () => {
   const result = d.parseDeflock(raw(), now);
@@ -46,9 +48,8 @@ test('invalid, non-ALPR, out-of-bounds and inactive-tagged reports are visibly w
   assert.match(result.limitation, /5 invalid, out-of-scope or inactive-tagged records withheld/);
 });
 
-test('concurrent reads coalesce; the one-hour cache preserves retrieval time and never returns expired data after failure', async () => {
-  let time = now.getTime(), calls = 0, fail = false, release;
-  const gate = new Promise(resolve => { release = resolve; });
+test('the one-hour cache preserves provenance and expired reads share one foreground refresh', async () => {
+  let time = now.getTime(), calls = 0, gate = Promise.resolve(), fail = false;
   const read = reader.createDeflockReader(async (url, options) => {
     calls++; assert.equal(new URL(url).origin, 'https://overpass-api.de'); assert.equal(options.redirect, 'manual');
     assert.match(new URL(url).searchParams.get('data'), /"ISO3166-2"="US-KS"/);
@@ -57,39 +58,102 @@ test('concurrent reads coalesce; the one-hour cache preserves retrieval time and
     if (fail) throw new Error('secret provider failure');
     return Response.json(raw());
   }, () => time);
-  const promises = Array.from({ length: 25 }, () => read());
-  assert.equal(calls, 1); release(); const results = await Promise.all(promises);
-  assert.ok(results.every(r => r === results[0]));
-  time += 3_599_999; assert.equal((await read()).retrievedAt, results[0].retrievedAt); assert.equal(calls, 1);
-  time++; fail = true; await assert.rejects(read(), /unavailable/); assert.equal(calls, 2);
+  await assert.rejects(read(), checking);
+  await settle();
+  const first = await read();
+  assert.equal(first.state, 'ready');
+  assert.notEqual(first.retrievedAt, first.upstreamUpdatedAt);
+  assert.match(first.source, /OpenStreetMap contributors.*ODbL/);
+  time += 3_599_999; assert.equal(await read(), first); assert.equal(calls, 1);
+  time++;
+  let release;
+  gate = new Promise(resolve => { release = resolve; });
+  fail = true;
+  const refreshes = Promise.all(Array.from({ length: 25 }, () => assert.rejects(read(), /unavailable/)));
+  await settle();
+  assert.equal(calls, 2);
+  release();
+  await refreshes;
   await assert.rejects(read(), e => !e.message.includes('secret')); assert.equal(calls, 2, 'failure cooldown prevents a request storm');
-  // After a failure the next check runs in the background; the request after it gets the fresh data.
-  time += 60_000; fail = false; await assert.rejects(read(), /Next provider check is running now/); assert.equal(calls, 3);
-  await new Promise(resolve => setImmediate(resolve)); assert.notEqual((await read()).retrievedAt, results[0].retrievedAt); assert.equal(calls, 3);
+  time += 60_000; fail = false; await assert.rejects(read(), checking);
+  await settle();
+  const recovered = await read();
+  assert.notEqual(recovered.retrievedAt, first.retrievedAt);
+  assert.equal(recovered.upstreamUpdatedAt, first.upstreamUpdatedAt);
+  assert.equal(calls, 3);
 });
 
 test('redirects, failed status, declared oversize and streamed oversize responses fail closed', async () => {
   for (const response of [new Response('', { status: 302, headers: { location: 'http://127.0.0.1/' } }), new Response('', { status: 429 }),
-    new Response('{}', { headers: { 'content-length': String(2 * 1024 * 1024 + 1) } }), new Response(' '.repeat(2 * 1024 * 1024 + 1))]) {
+    new Response('{}', { headers: { 'content-length': String(2 * 1024 * 1024 + 1) } }), new Response(' '.repeat(2 * 1024 * 1024 + 1)),
+    new Response('{')]) {
     const read = reader.createDeflockReader(async () => response, () => now.getTime());
-    await assert.rejects(read(), /unavailable/);
+    await assert.rejects(read(), checking);
+    await settle();
+    await assert.rejects(read(), /about 1 minute/);
   }
 });
 
-test('the existing route exposes only the fixed current feed, with no coordinates, arbitrary queries or historical dates', async () => {
-  let calls = 0;
-  const route = await compile('app/api/live-context/route.ts', { './kdot-bridges': { isBridgeFeed: () => false, kdotBridges: {} }, '../../wiha-public-record': await compile('app/wiha-public-record.ts'), '../../trail-place-record': await compile('app/trail-place-record.ts'),
+async function compileLiveContext(readDeflock) {
+  return compile('app/api/live-context/route.ts', { './kdot-bridges': { isBridgeFeed: () => false, kdotBridges: {} }, '../../wiha-public-record': await compile('app/wiha-public-record.ts'), '../../trail-place-record': await compile('app/trail-place-record.ts'),
     './civic-history':{readCivicHistory:async()=>{throw new Error('No historical fixture');}},'../../civic-history':{civicCongressForDay:day=>day>='1861-01-29'&&day<'2027-01-03'?119:null},'./civic-districts': { readCivicDistricts: async () => { throw new Error('Unexpected civic read'); } },
-    './deflock': { readDeflock: async () => { calls++; return d.parseDeflock(raw(), now); } },
+    './deflock': { readDeflock },
     'cloudflare:workers': { env: {} }, 'next/server': { NextResponse: Response }, '../../bounded-json': bounded,
     '../../event-atlas': { eventDay: value => /^\d{4}-\d{2}-\d{2}$/.test(value) }, '../event-atlas/upstream': {}, '../../county-baseline': {}, '../../fema-declarations': {}, '@mapbox/vector-tile': {}, pbf: {},
   });
-  const req = query => ({ nextUrl: new URL(`https://kfm.invalid/api/live-context?${query}`), signal: new AbortController().signal });
+}
+const req = (query = 'feed=deflock-alpr', signal = new AbortController().signal) => ({ nextUrl: new URL(`https://kfm.invalid/api/live-context?${query}`), signal });
+
+test('the existing route exposes only the fixed current feed, with no coordinates, arbitrary queries or historical dates', async () => {
+  let calls = 0;
+  const route = await compileLiveContext(async () => { calls++; return d.parseDeflock(raw(), now); });
   for (const query of ['feed=deflock-alpr&url=https://evil.invalid', 'feed=deflock-alpr&longitude=-97', 'feed=deflock-alpr&day=2026-10-01', 'feed=deflock-alpr&feed=deflock-alpr', 'feed=deflock-alpr&data=anything']) assert.equal((await route.GET(req(query))).status, 400);
   assert.equal(calls, 0);
   const response = await route.GET(req('feed=deflock-alpr'));
   assert.equal(response.status, 200); assert.equal(response.headers.get('cache-control'), 'no-store');
   assert.equal((await response.json()).feed, 'deflock-alpr'); assert.equal(calls, 1);
+});
+
+test('the first route read and concurrent cold readers return 503 before one provider check finishes', async () => {
+  let calls = 0, providerSignal;
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  const route = await compileLiveContext(reader.createDeflockReader(async (_, { signal }) => {
+    calls++;
+    providerSignal = signal;
+    await gate;
+    return Response.json(raw([]));
+  }, () => now.getTime()));
+  assert.equal(calls, 0, 'a fresh reader stays idle without demand');
+  const visitor = new AbortController();
+  const requests = [route.GET(req(undefined, visitor.signal)), ...Array.from({ length: 24 }, () => route.GET(req()))];
+  try {
+    const responses = await Promise.race([Promise.all(requests), settle().then(() => null)]);
+    assert.ok(responses, 'every response completes while the provider is held');
+    assert.equal(calls, 1);
+    visitor.abort();
+    assert.equal(providerSignal.aborted, false, 'the provider check outlives the browser consumer');
+    for (const response of responses) {
+      assert.equal(response.status, 503);
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+      assert.equal(response.headers.get('x-kfm-context-state'), 'error');
+      const body = await response.json();
+      assert.equal(body.state, 'error');
+      assert.match(body.error, /No camera locations or absence claim can be inferred/);
+      assert.match(body.error, checking);
+      assert.equal(body.data, undefined);
+    }
+  } finally {
+    release();
+    await Promise.all(requests);
+  }
+  await settle();
+  const recovered = await route.GET(req());
+  assert.equal(recovered.status, 200);
+  const body = await recovered.json();
+  assert.equal(body.state, 'empty');
+  assert.equal(body.featureCount, 0);
+  assert.equal(calls, 1);
 });
 
 const modules = new Map();
@@ -138,25 +202,40 @@ test('map cells and counts restore after style replacement, respect hide/opacity
 
 test('repeated provider failures back off up to 15 minutes, answer instantly meanwhile, and reset after success', async () => {
   let time = now.getTime(), calls = 0, fail = true;
-  const settle = () => new Promise(resolve => setImmediate(resolve));
-  const read = reader.createDeflockReader(async () => { calls++; if (fail) throw new Error('down'); return Response.json(raw()); }, () => time);
-  assert.deepEqual([1, 2, 3, 4, 5, 6].map(reader.deflockCooldownMs), [60_000, 120_000, 240_000, 480_000, 900_000, 900_000]);
-  await assert.rejects(read(), /Next provider check in about 1 minute\./); assert.equal(calls, 1);
-  // Once the provider is known to be failing, the next check runs in the background.
-  time += 60_000; await assert.rejects(read(), /Next provider check is running now; try again in about a minute\./); assert.equal(calls, 2);
-  await settle(); await assert.rejects(read(), /about 2 minutes/); assert.equal(calls, 2);
-  time += 60_000; await assert.rejects(read(), /about 1 minute/); assert.equal(calls, 2, 'still inside the doubled window: no provider request');
-  time += 60_000; await assert.rejects(read(), /running now/); assert.equal(calls, 3);
-  await settle(); await assert.rejects(read(), /about 4 minutes/); assert.equal(calls, 3);
-  // Recovery: the background check succeeds, and the request after it gets the data.
-  time += 240_000; fail = false; await assert.rejects(read(), /running now/); assert.equal(calls, 4);
-  await settle(); assert.equal((await read()).feed, 'deflock-alpr'); assert.equal(calls, 4);
-  time += 3_600_000; fail = true; await assert.rejects(read(), /about 1 minute\./); assert.equal(calls, 5, 'success reset the backoff');
+  const read = reader.createDeflockReader(() => {
+    calls++;
+    if (fail && calls === 1) throw new Error('synchronous provider failure');
+    if (fail) return Promise.reject(new Error('down'));
+    return Promise.resolve(Response.json(raw()));
+  }, () => time);
+  const minutes = [1, 2, 4, 8, 15, 15];
+  for (const [index, wait] of minutes.entries()) {
+    await assert.rejects(read(), checking);
+    await settle();
+    await assert.rejects(read(), new RegExp(`about ${wait} minute`));
+    time += wait * 60_000 - 1;
+    await assert.rejects(read(), /about 1 minute\./);
+    assert.equal(calls, index + 1, 'cooldown prevents provider calls up to its boundary');
+    time++;
+    await settle();
+    assert.equal(calls, index + 1, 'an idle reader does not schedule a new attempt');
+  }
+  fail = false;
+  await assert.rejects(read(), checking);
+  await settle();
+  assert.equal((await read()).feed, 'deflock-alpr');
+  assert.equal(calls, 7);
+  time += 3_600_000;
+  fail = true;
+  await assert.rejects(read(), /about 1 minute\./);
+  assert.equal(calls, 8, 'success reset the backoff');
 });
 
 test('a re-check after a failure never holds a visitor while the provider hangs', async () => {
   let time = now.getTime(), calls = 0, release;
   const read = reader.createDeflockReader(() => { calls++; return calls === 1 ? Promise.reject(new Error('down')) : new Promise((_, reject) => { release = () => reject(new Error('still down')); }); }, () => time);
+  await assert.rejects(read(), checking);
+  await settle();
   await assert.rejects(read(), /about 1 minute\./);
   time += 60_000;
   // The provider now hangs. Every request during the hung check is answered at once with the outage sentence.
@@ -166,10 +245,28 @@ test('a re-check after a failure never holds a visitor while the provider hangs'
   await assert.rejects(read(), /about 2 minutes/); assert.equal(calls, 2);
 });
 
-test('the first read still waits for the provider and concurrent first reads share one request', async () => {
-  let calls = 0, respond;
-  const read = reader.createDeflockReader(() => { calls++; return new Promise(resolve => { respond = () => resolve(Response.json(raw())); }); }, () => now.getTime());
-  const first = read(), second = read();
-  respond(); const [a, b] = await Promise.all([first, second]);
-  assert.equal(a.feed, 'deflock-alpr'); assert.equal(a, b); assert.equal(calls, 1);
-});
+for (const stage of ['headers', 'body']) {
+  test(`the cold background check aborts a stalled ${stage} read at 25 seconds`, async t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    let time = now.getTime(), providerSignal, bodyCancelled = false;
+    const read = reader.createDeflockReader((_, { signal }) => {
+      providerSignal = signal;
+      if (stage === 'headers') return new Promise((_, reject) => signal.addEventListener('abort', () => reject(signal.reason), { once: true }));
+      return Promise.resolve(new Response(new ReadableStream({ cancel() { bodyCancelled = true; } })));
+    }, () => time);
+    await assert.rejects(read(), checking);
+    await settle();
+    time += 24_999;
+    t.mock.timers.tick(24_999);
+    assert.equal(providerSignal.aborted, false);
+    await assert.rejects(read(), checking);
+    time++;
+    t.mock.timers.tick(1);
+    await settle();
+    assert.equal(providerSignal.aborted, true);
+    if (stage === 'body') assert.equal(bodyCancelled, true);
+    await assert.rejects(read(), /about 1 minute\./);
+    time += 59_999;
+    await assert.rejects(read(), /about 1 minute\./);
+  });
+}
