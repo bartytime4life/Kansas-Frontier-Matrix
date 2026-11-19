@@ -56,6 +56,23 @@ The fourth dimension is **record time**, not geological evolution. Choose an ava
 
 **Soil horizons** queries the existing public USDA Soil Data Access service through a bounded, read-only Site route. It retains separate soil-map components, proportions, centimetre depth units, retrieval time, and the 100-horizon response limit. These alternatives do not establish the exact soil beneath the pointer. Browser-location privacy suppresses this external coordinate lookup.
 
+The soil panel waits 400 ms after a probe selection and accepts only successful
+HTTP responses matching the route's row, source, depth-unit, retrieval-time and
+partial-result contract. The browser allows up to 20 seconds for headers and the
+bounded response body, covering the route's existing 18-second upstream budget.
+An unavailable, malformed or timed-out response offers **Retry soil lookup**.
+A valid empty response says no horizons were returned for that probe; it does
+not establish that soil is absent. Moving the probe or closing the soil view
+cancels pending work, and late responses cannot update a replacement view.
+
+The November 18, 2026 repository candidate based on main
+`ca7c97598e96f7891f17ad32190462c46130a380` adds synthetic component regressions in
+`tests/underground-soil-view.test.mjs`, alongside the existing route and section
+tests. They exercise HTTP failure, malformed and oversized bodies, header/body
+deadlines, retry, keyed probe remounts, cancellation and zero/null values. They
+do not establish live USDA availability or browser, keyboard, touch or WebGL
+acceptance; browser observation remained unavailable during this review.
+
 ## Persistence and exports
 
 The optional validated `SubsurfaceContext` extends existing workspaces/reports without changing storage keys or the database. Workspaces retain settings, source hashes/editions, and record IDs, then reload eligible current assets. Missing records and changed source versions are labelled; captured rows never masquerade as a fresh response. Old workspaces/reports remain readable and quota/storage errors follow existing handling.
