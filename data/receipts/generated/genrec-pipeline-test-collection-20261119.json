@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-pipeline-test-collection-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/pipelines-core/README.md",
+    "packages/pipelines-core/src/README.md",
+    "packages/pipelines-core/src/pipelines_core/README.md",
+    "tests/packages/pipelines_core/test_pipeline_core.py"
+  ],
+  "artifact_hashes": {
+    "packages/pipelines-core/README.md": "sha256:f32c63cb6afaca3450c5d1447edf97744b986fe695625b73b708c1480e5e50fe",
+    "packages/pipelines-core/src/README.md": "sha256:311217456bf6c4878c2fbb11a655d71753f00d42c66fdb2be67377ed07b0c103",
+    "packages/pipelines-core/src/pipelines_core/README.md": "sha256:23839e9bb8698c3bb601181ad510165f05edc2ffe99084f67e62dfd73a57c149",
+    "tests/packages/pipelines_core/test_pipeline_core.py": "sha256:ec1b560b0f8445ec529426c7c863f01f3f48adaa887a6e8b43ed0b110a705b5b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:a1deb51074af4ea0786b35c69b4921aa451d1826f86f7f9c9c6095e2098a51f1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f614a191e4fc133e989a6a14ad3f64e6e10e65e74b91860e82ce744f0d65f39e",
+      "sha256:571ae0bc10a380bbcca9ab025478d591ac0d4a727ab68be61fcb382d206e8ca2",
+      "sha256:6e654f6b861b2f9268a80045e9ed3c85e80c63ce0c8bcb46fe248d76d8f10a1e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "evidence_refs": [
+      "main@9e3a15df9b4e6468ad18788df1919b02a1a83c26",
+      "contracts/runtime/run_receipt.md",
+      "schemas/contracts/v1/runtime/run_receipt.schema.json",
+      "contracts/pipeline_spec_declaration.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "packages/pipelines-core/README.md": "PROPOSED",
+    "packages/pipelines-core/src/README.md": "PROPOSED",
+    "packages/pipelines-core/src/pipelines_core/README.md": "PROPOSED",
+    "tests/packages/pipelines_core/test_pipeline_core.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "package-regression",
+      "outcome": "PASS",
+      "reason": "96 core and connector-core tests pass together after giving the pipeline test a unique basename."
+    },
+    {
+      "gate": "full-local-bundle-collection",
+      "outcome": "PASS",
+      "reason": "10275 repository tests collect with no errors under the supported hash-locked full-local CPython 3.12 bundle."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending the successor PR. Prior PR 5959 merged before its test collection failure was repaired."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "contracts/runtime/run_receipt.md",
+      "validated": true,
+      "evidence_ref": "contracts/runtime/run_receipt.md@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    },
+    {
+      "id": "schemas/contracts/v1/runtime/run_receipt.schema.json",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/runtime/run_receipt.schema.json@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    },
+    {
+      "id": "contracts/pipeline_spec_declaration.md",
+      "validated": true,
+      "evidence_ref": "contracts/pipeline_spec_declaration.md@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    },
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e3a15df9b4e6468ad18788df1919b02a1a83c26"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-19T22:06:53.523773Z",
+  "emitter": "codex/pipeline-collection-fix",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Successor to merged PR 5959. Renames only the pipeline core test basename and updates its documentation links. The older authoring receipt remains unchanged as historical evidence. This does not claim all planned domain pipelines are built and grants no activation or release authority."
+}
