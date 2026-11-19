@@ -6,7 +6,6 @@ import test from 'node:test';
 import ts from 'typescript';
 const transportJs = ts.transpileModule(await readFile('app/streamflow-transport.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const transportUrl = `data:text/javascript;base64,${Buffer.from(transportJs).toString('base64')}`;
-const { decodeStreamflowTransport } = await import(transportUrl);
 const boundedJs = ts.transpileModule(await readFile('app/bounded-json.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const boundedUrl = `data:text/javascript;base64,${Buffer.from(boundedJs).toString('base64')}`;
 const bounded = await import(boundedUrl);

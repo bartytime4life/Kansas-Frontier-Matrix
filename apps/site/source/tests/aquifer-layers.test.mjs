@@ -15,7 +15,6 @@ async function moduleUrl(file) {
 }
 const context = await import(await moduleUrl("app/live-context.ts"));
 const workspaces = await import(await moduleUrl("app/layer-workspaces.ts"));
-const { KANSAS_REFERENCE_SOURCES: references, BLM_MLRS_DIRECT_KANSAS_WHERE } = await import(await moduleUrl("app/kansas-reference-layers.ts"));
 
 function mapHarness() {
   const sources = new Map(), layers = new Map();
