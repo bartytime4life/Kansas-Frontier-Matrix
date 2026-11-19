@@ -250,6 +250,70 @@
   margin: 0 0 8px;
 }
 
+.recordContext {
+  margin-block: 24px;
+  padding-block: 16px;
+  border-block: 1px solid #436168;
+}
+
+.contextChoices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 16px;
+}
+
+.contextChoices > div {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #42616b;
+  border-radius: 8px;
+}
+
+.contextChoices h4 {
+  margin: 0;
+}
+
+.recordContext article {
+  padding-top: 18px;
+}
+
+.recordContext article h4 {
+  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.contextTable {
+  max-height: 500px;
+  overflow: auto;
+  border: 1px solid #42616b;
+  border-radius: 8px;
+}
+
+.contextTable table {
+  width: 100%;
+  min-width: 660px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 13px;
+}
+
+.contextTable th,
+.contextTable td,
+.contextTable caption {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px;
+  border-bottom: 1px solid #42616b;
+}
+
+.contextTable th:first-child { width: 28%; }
+.contextTable th:nth-child(2) { width: 22%; }
+.contextTable thead th { position: sticky; top: 0; background: #15333d; }
+.contextTable dl { display: block; }
+.contextTable dd { margin-bottom: 8px; }
+.contextTable:focus-visible { outline: 3px solid #f0d69b; outline-offset: 3px; }
+
 @media (max-width: 650px) {
   .measurementControls {
     grid-template-columns: minmax(0, 1fr);
