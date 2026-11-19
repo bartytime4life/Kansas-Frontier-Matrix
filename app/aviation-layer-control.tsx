@@ -14,17 +14,25 @@ import {
   type AirspaceGroup, type AirwaySegment, type AviationContext,
 } from "./aviation-airspace";
 import {
-  AVIATION_METAR_API_PATH, AVIATION_PIREP_API_PATH, FLIGHT_CATEGORY_COLORS, basicVfrCheck, metarFeatures, pirepAltitudeLabel, pirepFeatures,
-  type AviationWeatherEnvelope, type MetarObservation, type PirepReport,
+  AVIATION_METAR_API_PATH, AVIATION_PIREP_API_PATH, AVIATION_TAF_API_PATH, FLIGHT_CATEGORY_COLORS, basicVfrCheck, metarFeatures, pirepAltitudeLabel, pirepFeatures, tafOutlook, tafTimeText,
+  type AviationWeatherEnvelope, type MetarObservation, type PirepReport, type TafForecast,
 } from "./aviation-weather";
-import { AVIATION_TRAFFIC_API_PATH, TRAFFIC_ALTITUDE_COLORS, aircraftDisplayAltitude, freshAircraft, type TrafficEnvelope } from "./aviation-traffic";
+import { AVIATION_TRAFFIC_API_PATH, TRAFFIC_ALTITUDE_COLORS, aircraftDisplayAltitude, freshAircraft, trafficFeatures, type TrafficEnvelope } from "./aviation-traffic";
+import { PHASE_DERIVATION, observedPhase, type PhaseFacility } from "./aviation-phase";
+import { AIRCRAFT_TYPE_SOURCE, decodeAircraftType } from "./aircraft-types";
+import { ACTIVITY_BASIS, ACTIVITY_GROUP_TITLES, activityBoard, runwayLine, tfrsTouchingAirport, towerText, type ActivityGroup } from "./aviation-dossier";
 import { KansasSkyControl } from "./kansas-sky-control";
 import { TFR_API_PATH, TFR_COLOR, TFR_HOME, UASFM_API_PATH, UAS_CEILING_COLORS, formatTfrLimit, tfrFeatures, tfrsAtPoint, uasCeilingAt, uasFeatures, type TfrEntry, type TfrShape, type UasCell } from "./aviation-drone-data";
 
 const PREFIX = "kfm-aviation";
-const SOURCES = ["airspace", "drone", "uas", "airways", "runways", "airports", "metar", "ceilings", "pireps", "tfr", "profile", "pick"].map(name => `${PREFIX}-${name}`);
+const SOURCES = ["airspace", "drone", "uas", "airways", "runways", "airports", "metar", "ceilings", "pireps", "tfr", "profile", "pick", "traffic"].map(name => `${PREFIX}-${name}`);
 const LAYERS = ["airspace-3d", "airspace-edge", "airspace-label", "drone-3d", "drone-edge", "uas-3d", "uas-label", "airways-line", "airways-label", "runways-line",
-  "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "tfr-3d", "tfr-edge", "tfr-label", "profile-line", "profile-label", "pick-dot"].map(name => `${PREFIX}-${name}`);
+  "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "tfr-3d", "tfr-edge", "tfr-label", "profile-line", "profile-label", "pick-dot", "traffic-label"].map(name => `${PREFIX}-${name}`);
+/** Aircraft text labels (callsign, type, height, observed phase) appear from this zoom; the silhouettes themselves come from Kansas Sky. */
+const TRAFFIC_LABEL_MINZOOM = 8;
+const EMPTY_COLLECTION: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
+const ACTIVITY_GROUP_ORDER: readonly ActivityGroup[] = ["descending-toward", "climbing-away", "on-surface", "other-low"];
+const typeText = (code: string | null) => { const info = decodeAircraftType(code); return code ? `${code}${info ? ` ${info.manufacturer} ${info.model}` : ""}` : null; };
 const WEATHER_REFRESH_MS = 5 * 60_000;
 const TRAFFIC_REFRESH_MS = 20_000;
 const TRAFFIC_EXPIRY_TICK_MS = 5_000;
@@ -141,6 +149,9 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   const [slice, setSlice] = useState<AltitudeSlice>(ALL_ALTITUDES);
   const [metar, setMetar] = useState<WeatherState<MetarObservation>>({ state: "idle", envelope: null, message: "" });
   const [pireps, setPireps] = useState<WeatherState<PirepReport>>({ state: "idle", envelope: null, message: "" });
+  const [taf, setTaf] = useState<WeatherState<TafForecast>>({ state: "idle", envelope: null, message: "" });
+  // The airport dossier: one public-use airport chosen by clicking its dot or from the list.
+  const [dossierId, setDossierId] = useState<string | null>(null);
   const [picking, setPicking] = useState(false);
   const [sideStep, setSideStep] = useState<"a" | "b" | null>(null);
   const [sideA, setSideA] = useState<Readonly<{ lon: number; lat: number }> | null>(null);
@@ -159,6 +170,10 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   const contextRequest = useRef<AbortController | null>(null);
   const uasLoaded = useRef(false);
   const drawingRef = useRef(false);
+  // The collapsible controls holding the inspector and the dossier; map clicks expand them.
+  const detailsRef = useRef<HTMLDetailsElement | null>(null);
+  // Redraws the aircraft label source after a full source rebuild, with the latest feed closure.
+  const redrawLabels = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     drawingRef.current = visible && (picking || sideStep !== null);
@@ -204,7 +219,9 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
         if (!signal.aborted) set({ state: "error", envelope: null, message: "Unavailable. No cached or synthetic observations are shown." });
       }
     };
+    // TAFs ride with the METAR refresh: same provider, same cadence, one more fixed-URL product.
     await Promise.all([showMetar ? read<MetarObservation>(AVIATION_METAR_API_PATH, setMetar) : Promise.resolve(),
+      showMetar ? read<TafForecast>(AVIATION_TAF_API_PATH, setTaf) : Promise.resolve(),
       showPireps ? read<PirepReport>(AVIATION_PIREP_API_PATH, setPireps) : Promise.resolve()]);
   }, [showMetar, showPireps]);
 
@@ -264,6 +281,10 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   }, [onResearchRecords, visible, context, metarRecords, metar.envelope]);
   useEffect(() => () => onResearchRecords?.(null), [onResearchRecords]);
   const pirepRecords = useMemo(() => showPireps ? pireps.envelope?.records ?? [] : [], [showPireps, pireps.envelope]);
+  const tafRecords = useMemo(() => showMetar ? taf.envelope?.records ?? [] : [], [showMetar, taf.envelope]);
+  // Public-use, non-heliport facilities: the reference set for "low near KICT" and the activity board.
+  const phaseFacilities = useMemo((): readonly PhaseFacility[] => context ? groundAnchors(context.airports).filter(airport => airport.use === "PUBLIC") : [], [context]);
+  const publicAirports = useMemo(() => context ? [...context.airports.filter(airport => airport.use === "PUBLIC")].sort((a, b) => a.name.localeCompare(b.name)) : [], [context]);
 
   // Install every aviation source/layer together; any toggle rebuilds them from pure feature builders.
   useEffect(() => {
@@ -302,6 +323,8 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
         { type: "Feature", geometry: { type: "Point", coordinates: [side.a.lon, side.a.lat] }, properties: { label: "A" } },
         { type: "Feature", geometry: { type: "Point", coordinates: [side.b.lon, side.b.lat] }, properties: { label: "B" } }] : [] });
       add("pick", { type: "FeatureCollection", features: picked ? [{ type: "Feature", geometry: { type: "Point", coordinates: [picked.lon, picked.lat] }, properties: {} }] : [] });
+      // Aircraft labels are filled by their own effect (every feed tick), not by this rebuild.
+      add("traffic", EMPTY_COLLECTION);
       const font = ["Noto Sans Regular"];
       // Every 3D form has a flat twin: extruded from floor to ceiling in 3D, a filled outline in 2D.
       const volume = (name: string, opacity3d: number, opacity2d: number, minzoom?: number) => map.addLayer((flat
@@ -356,15 +379,23 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
         paint: { "text-color": "#1d2f44", "text-halo-color": "#ffffff", "text-halo-width": 1.3 } });
       map.addLayer({ id: `${PREFIX}-pick-dot`, type: "circle", source: `${PREFIX}-pick`, paint: {
         "circle-radius": 7, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#111111", "circle-stroke-width": 2.5 } });
+      // Observed-phase text at the aircraft's ground position from zoom 8; the lifted silhouette is Kansas Sky's.
+      map.addLayer({ id: `${PREFIX}-traffic-label`, type: "symbol", source: `${PREFIX}-traffic`, minzoom: TRAFFIC_LABEL_MINZOOM, layout: {
+        "text-font": font, "text-field": ["get", "label"], "text-size": 10, "text-offset": [0, 1.1], "text-anchor": "top", "text-optional": true, "text-max-width": 14 },
+        paint: { "text-color": ["case", ["get", "emergency"], "#9b0014", "#1d2f44"], "text-halo-color": "#ffffff", "text-halo-width": 1.3 } });
       const choose = (event: MapLayerMouseEvent) => {
         if (drawingRef.current) return;
         const id = event.features?.[0]?.properties?.faa_id;
         const airport = context.airports.find(item => item.faa_id === id);
-        if (airport) setPicked({ lon: airport.lon, lat: airport.lat, terrainFt: terrainFtAt(map, airport.lon, airport.lat), label: `${airport.name} (${airport.icao_id ?? airport.faa_id}${airport.use === "PRIVATE" ? `, private-use ${airport.facility_type.toLowerCase()}` : ""})` });
+        if (!airport) return;
+        setPicked({ lon: airport.lon, lat: airport.lat, terrainFt: terrainFtAt(map, airport.lon, airport.lat), label: `${airport.name} (${airport.icao_id ?? airport.faa_id}${airport.use === "PRIVATE" ? `, private-use ${airport.facility_type.toLowerCase()}` : ""})` });
+        // The dossier is for public-use airports; a private strip keeps the point inspector only.
+        if (airport.use === "PUBLIC") { setDossierId(airport.faa_id); if (detailsRef.current) detailsRef.current.open = true; }
       };
       const rendered = () => setRender("Map frame drawn");
       map.on("click", `${PREFIX}-airports-dot`, choose);
       map.once("render", rendered);
+      redrawLabels.current?.();
       return () => { map.off("click", `${PREFIX}-airports-dot`, choose); map.off("render", rendered); remove(); };
     } catch {
       // The external renderer failed during source installation; surface that failure immediately.
@@ -372,6 +403,26 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
       setRender("Map rendering unavailable"); remove();
     }
   }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, showPrivate, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells, tfrShapes, view, slice, side]);
+
+  // Aircraft labels follow each feed tick without rebuilding every other source; nothing is computed below the label zoom.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady || !visible || !context) return;
+    const anchors = groundAnchors(context.airports);
+    const groundAt = (lon: number, lat: number) => nearestAirport(anchors, lon, lat)?.airport.elevation_ft ?? 0;
+    const draw = () => {
+      try {
+        const source = map.getSource(`${PREFIX}-traffic`) as unknown as { setData?: (data: GeoJSON.FeatureCollection) => void } | undefined;
+        if (!source?.setData) return;
+        const records = skyReplay || map.getZoom() < TRAFFIC_LABEL_MINZOOM - 0.5 ? [] : trafficRecords;
+        source.setData(records.length ? trafficFeatures(records, groundAt, exaggeration, () => "", aircraft => observedPhase(aircraft, phaseFacilities).label) : EMPTY_COLLECTION);
+      } catch { /* The map is tearing down; the next install redraws. */ }
+    };
+    redrawLabels.current = draw;
+    draw();
+    map.on("zoomend", draw);
+    return () => { map.off("zoomend", draw); if (redrawLabels.current === draw) redrawLabels.current = null; };
+  }, [mapRef, styleReady, visible, context, trafficRecords, skyReplay, exaggeration, phaseFacilities]);
 
   // Point inspection is opt-in so the page's own click tools keep working.
   useEffect(() => {
@@ -385,7 +436,6 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
 
   // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
   const inspectorRef = useRef<HTMLDivElement | null>(null);
-  const detailsRef = useRef<HTMLDetailsElement | null>(null);
   // A remounted category panel must not replay an already issued request.
   const seenAircraftShowRequest=useRef(aircraftShowRequest??0);
   useEffect(()=>{
@@ -484,6 +534,21 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
     return { ground, groundFt, column, drone, station: usable, vfr, routes, reports, laanc, aircraft, restrictions };
   }, [context, picked, metarRecords, pirepRecords, uasCells, trafficRecords, tfrShapes, skyReplay]);
 
+  // The airport dossier: NASR fields, this station's METAR and TAF, TFR areas reaching the field, LAANC ceiling and the observed activity board.
+  const dossier = useMemo(() => {
+    const airport = context && dossierId ? context.airports.find(item => item.faa_id === dossierId && item.use === "PUBLIC") ?? null : null;
+    if (!airport) return null;
+    const ownMetar = airport.icao_id ? metarRecords.find(record => record.station === airport.icao_id) ?? null : null;
+    const nearest = ownMetar ? null : metarRecords.map(record => ({ record, km: distanceKm(airport.lon, airport.lat, record.lon, record.lat) })).sort((a, b) => a.km - b.km)[0] ?? null;
+    const nearMetar = nearest && nearest.km <= 50 ? nearest : null;
+    const ownTaf = airport.icao_id ? tafRecords.find(record => record.station === airport.icao_id) ?? null : null;
+    const outlook = ownTaf ? tafOutlook(ownTaf, trafficNow) : [];
+    const restrictions = tfrsTouchingAirport(airport, tfrShapes);
+    const laanc = uasCeilingAt(uasCells, airport.lon, airport.lat);
+    const board = activityBoard(airport, skyReplay ? [] : trafficRecords, trafficNow);
+    return { airport, ownMetar, nearMetar, ownTaf, outlook, restrictions, laanc, board };
+  }, [context, dossierId, metarRecords, tafRecords, tfrShapes, uasCells, trafficRecords, trafficNow, skyReplay]);
+
   const toggleGroup = (group: AirspaceGroup, on: boolean) => setGroups(current => { const next = new Set(current); if (on) next.add(group); else next.delete(group); return next; });
   const toggleAirway = (kinds: AirwaySegment["type"][], on: boolean) => setAirwayKinds(current => { const next = new Set(current); for (const kind of kinds) { if (on) next.add(kind); else next.delete(kind); } return next; });
   const cameraDuration = (duration: number) => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : duration;
@@ -503,9 +568,9 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Kansas Sky · observed aircraft, trails and recorded replay</label>
           <ul className="aviation-legend">{TRAFFIC_ALTITUDE_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value === 0 ? "Below 1,000 ft / reported surface / unknown height" : `${value.toLocaleString("en-US")} reported ft and above (approximate)`}</li>)}<li><i style={{ background: "#e0301e" }} /> Emergency squawk (7500/7600/7700)</li><li><i style={{ background: "#ffd66b" }} /> Selected aircraft and trail (overrides altitude color)</li></ul>
           {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{trafficRecords.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){trafficRecords.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
-          <KansasSkyControl mapRef={mapRef} styleReady={styleReady} enabled={visible && showTraffic} flat={view === "2d"} onReplayMode={setSkyReplay} onAircraftInspect={inspectAircraft} envelope={traffic.value} feedState={traffic.state} />
-          {skyReplay && <small>Flight replay active: current aircraft are omitted from the side profile and nearby-point inspection. Use Kansas Sky for the selected historical aircraft.</small>}
-          <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic.</small>
+          <KansasSkyControl mapRef={mapRef} styleReady={styleReady} enabled={visible && showTraffic} flat={view === "2d"} onReplayMode={setSkyReplay} onAircraftInspect={inspectAircraft} envelope={traffic.value} feedState={traffic.state} facilities={phaseFacilities} />
+          {skyReplay && <small>Flight replay active: current aircraft are omitted from the side profile, the airport activity board and nearby-point inspection. Use Kansas Sky for the selected historical aircraft.</small>}
+          <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic. Map labels from zoom {TRAFFIC_LABEL_MINZOOM} add the observed phase (on surface, climbing, level, descending, low near a field), derived only from the reported surface flag, vertical rate and height above the nearest public-use facility.</small>
       </fieldset>
       {context && <>
         <fieldset><legend>Airspace volumes</legend>
@@ -538,6 +603,33 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           <label><input type="checkbox" checked={showPrivate} onChange={event => setShowPrivate(event.target.checked)} /> Private-use airports, heliports and strips ({context.airports.filter(airport => airport.use === "PRIVATE").length}; hollow dots, “PVT”). Landing needs the owner’s permission.</label>
           <label><input type="checkbox" checked={airwayKinds.has("VICTOR")} onChange={event => toggleAirway(["VICTOR", "RNAV_T"], event.target.checked)} /> Low airways (Victor, T routes) · 1,200 AGL–below FL180</label>
           <label><input type="checkbox" checked={airwayKinds.has("JET")} onChange={event => toggleAirway(["JET", "RNAV_Q"], event.target.checked)} /> High routes (Jet, Q routes) · FL180–FL450</label>
+          <label>Airport dossier<select aria-label="Airport dossier" value={dossierId ?? ""} onChange={event => setDossierId(event.target.value || null)}><option value="">Choose a public-use airport, or click its dot</option>{publicAirports.map(airport => <option key={airport.faa_id} value={airport.faa_id}>{airport.name} ({airport.icao_id ?? airport.faa_id})</option>)}</select></label>
+          {dossier && <div className="aviation-column aviation-dossier" data-aviation-dossier aria-label={`Airport dossier: ${dossier.airport.name}`}>
+            <p><strong>{dossier.airport.name} ({dossier.airport.icao_id ?? dossier.airport.faa_id})</strong>{dossier.airport.city ? ` · ${dossier.airport.city}` : ""}{dossier.airport.county ? `, ${dossier.airport.county} County` : ""} · public-use {dossier.airport.facility_type.toLowerCase().replace("_", " ")} · {towerText(dossier.airport)} <button type="button" onClick={() => setDossierId(null)}>Close dossier</button></p>
+            <dl><div><dt>Field elevation</dt><dd>{feet(dossier.airport.elevation_ft)} MSL (NASR)</dd></div>
+              <div><dt>Traffic pattern altitude</dt><dd>{dossier.airport.traffic_pattern_ft_agl !== null ? `${feet(dossier.airport.traffic_pattern_ft_agl)} AGL (NASR)` : "not listed in NASR"}</dd></div>
+              <div><dt>CTAF</dt><dd>{dossier.airport.ctaf_mhz !== null ? `${dossier.airport.ctaf_mhz.toFixed(3)} MHz` : "not listed"}</dd></div>
+              <div><dt>Weather sensor</dt><dd>{dossier.airport.weather_station ?? "none listed in NASR"}</dd></div>
+              {dossier.airport.ownership && <div><dt>Ownership</dt><dd>{dossier.airport.ownership.toLowerCase()}</dd></div>}</dl>
+            <p><strong>Runways ({dossier.airport.runways.length}, NASR surveyed ends):</strong></p>
+            {dossier.airport.runways.length ? <ul>{dossier.airport.runways.map(runway => <li key={runway.id}>{runwayLine(runway)}</li>)}</ul> : <p>No runway record in the pinned NASR product.</p>}
+            <p><strong>Weather now:</strong> {dossier.ownMetar ? <>{dossier.ownMetar.raw} <small>({dossier.ownMetar.flightCategory ?? "category not derivable"}, {minutesAgo(dossier.ownMetar.observedAt, clock)} min old, station {dossier.ownMetar.station} at this airport)</small></>
+              : dossier.nearMetar ? <>No METAR reported under {dossier.airport.icao_id ?? dossier.airport.faa_id} in the last 90 minutes. Nearest station: {dossier.nearMetar.record.raw} <small>({dossier.nearMetar.record.station}, {dossier.nearMetar.km.toFixed(0)} km away, {minutesAgo(dossier.nearMetar.record.observedAt, clock)} min old; it describes its own site)</small></>
+              : showMetar ? (metar.state === "ready" ? "No METAR station within 50 km reported in the last 90 minutes." : metar.state === "error" ? "METAR unavailable." : "Checking METAR…") : "METAR stations are turned off."}</p>
+            <p><strong>Forecast (TAF):</strong> {dossier.ownTaf ? <>Issued {dossier.ownTaf.issuedAt.slice(11, 16)} UTC, valid {tafTimeText(dossier.ownTaf.validFrom)}–{tafTimeText(dossier.ownTaf.validTo)}. Forecast flight category over the next 12 hours, computed from each period&apos;s forecast ceiling and visibility:</>
+              : showMetar ? (taf.state === "ready" ? `No TAF is issued for ${dossier.airport.icao_id ?? dossier.airport.faa_id}; most Kansas fields have none.` : taf.state === "error" ? "TAF unavailable." : "Checking TAF…") : "TAF reads with the METAR toggle, which is off."}</p>
+            {dossier.ownTaf && dossier.outlook.length > 0 && <ul>{dossier.outlook.map(({ period, current }) => <li key={`${period.from}:${period.change ?? "base"}:${period.probability ?? ""}`}><strong style={{ color: period.flightCategory ? FLIGHT_CATEGORY_COLORS[period.flightCategory] : undefined }}>{period.flightCategory ?? "category not derivable"}</strong> · {period.change ?? "base"}{period.probability !== null ? ` ${period.probability}%` : ""} {tafTimeText(period.from)}–{tafTimeText(period.to)}{current ? " (in force now)" : ""} · {period.ceilingFtAgl !== null ? `ceiling ${feet(period.ceilingFtAgl)} ${period.ceilingCover}` : "no ceiling forecast"} · {period.visibilitySm !== null ? `${period.visibilityAtLeast ? "≥" : ""}${period.visibilitySm} SM` : "visibility not forecast"}{period.windKt !== null ? ` · wind ${period.windVariable ? "VRB" : String(period.windDirDeg ?? "").padStart(3, "0")}@${period.windKt}${period.gustKt ? `G${period.gustKt}` : ""} kt` : ""}{period.weather ? ` · ${period.weather}` : ""}</li>)}</ul>}
+            {dossier.ownTaf && <small>Raw: {dossier.ownTaf.raw}</small>}
+            {dossier.restrictions.length > 0 ? <div style={{ borderLeft: `4px solid ${TFR_COLOR}`, paddingLeft: 8 }}><p><strong>Temporary flight restriction areas reaching this airport:</strong> drawn boundary contains the field or a runway end, or comes within 3 NM. Check the FAA NOTAM for effective times and exceptions.</p>
+              <ul>{dossier.restrictions.map(shape => <li key={`${shape.notam}:${shape.name ?? ""}`}><strong>{shape.notam}</strong>{shape.type ? ` ${shape.type}` : ""}{shape.name ? ` · ${shape.name}` : ""}: {formatTfrLimit(shape.floor)} to {formatTfrLimit(shape.ceiling)}{shape.effective || shape.expires ? ` · ${shape.effective ?? "?"} to ${shape.expires ?? "until further notice"} (UTC)` : ""}</li>)}</ul></div>
+              : <p><strong>TFRs:</strong> {tfrs.state === "ready" && tfrs.value ? `No drawn TFR area reaches this airport${tfrs.value.detailsFailed > 0 ? `, but ${tfrs.value.detailsFailed} boundary file(s) could not be read in full` : ""}.` : tfrs.state === "error" ? "FAA TFR list unavailable." : "Checking…"}</p>}
+            {dossier.laanc && <p><strong>LAANC ceiling at the field reference point:</strong> {dossier.laanc.ceilingFt} ft AGL <small>(FAA UAS Facility Map; the most LAANC can approve, not an approval)</small></p>}
+            <p><strong>Observed activity, within 10 NM and 3,000 ft above the field:</strong> {skyReplay ? "paused during flight replay." : !showTraffic ? "Kansas Sky traffic is turned off." : traffic.state === "error" ? "live feed unavailable." : traffic.state !== "ready" ? "waiting for the live feed…" : dossier.board.rows.length ? `${dossier.board.rows.length} aircraft observed.` : "none observed. Receiver coverage near the ground is incomplete; this is not evidence of no activity."}</p>
+            {dossier.board.rows.length > 0 && ACTIVITY_GROUP_ORDER.filter(group => dossier.board.groups[group].length).map(group => <div key={group}><p><em>{ACTIVITY_GROUP_TITLES[group]}</em></p>
+              <ul>{dossier.board.groups[group].map(row => <li key={row.hex}><strong>{row.label}</strong>{row.type ? ` · ${typeText(row.type)}` : ""} · {row.group === "on-surface" ? "on surface" : row.aboveFieldFt !== null ? `${feet(row.aboveFieldFt)} above field` : "height not reported"} · {row.distanceNm} NM · observed {row.observationAgeS !== null ? `${row.observationAgeS} s ago` : "time unavailable"}{row.emergency ? ` · EMERGENCY ${row.emergency.toUpperCase()}` : ""} <small>({row.basis})</small></li>)}</ul></div>)}
+            {dossier.board.truncated && <small>Only the 40 nearest aircraft are listed.</small>}
+            <small>{ACTIVITY_BASIS} {PHASE_DERIVATION} Airport facts: FAA NASR cycle {context.nasrCycle}. Weather: NOAA/NWS Aviation Weather Center. Aircraft types: {AIRCRAFT_TYPE_SOURCE} This site knows no schedules, flight plans, cancellations or ETAs.</small>
+          </div>}
         </fieldset>
         <fieldset><legend>Airport weather &amp; pilot reports (live)</legend>
           <label><input type="checkbox" checked={showMetar} onChange={event => setShowMetar(event.target.checked)} /> METAR stations (ASOS/AWOS) by flight category</label>
@@ -546,6 +638,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           {showPireps && <small>Climb/descent and unknown altitudes remain in the point inspector; no height is drawn for them.</small>}
           <ul className="aviation-legend">{(Object.keys(FLIGHT_CATEGORY_COLORS) as (keyof typeof FLIGHT_CATEGORY_COLORS)[]).map(category => <li key={category}><i style={{ background: FLIGHT_CATEGORY_COLORS[category] }} /> {category}</li>)}</ul>
           {showMetar && <small role="status">METAR: {metar.state === "ready" && metar.envelope ? `${metar.envelope.records.length} stations · retrieved ${minutesAgo(metar.envelope.retrievedAt, clock)} min ago` : metar.state === "error" ? metar.message : "Checking…"}</small>}
+          {showMetar && <small role="status">TAF: {taf.state === "ready" && taf.envelope ? `${taf.envelope.records.length} stations with a current forecast · shown in the airport dossier` : taf.state === "error" ? "Unavailable. No cached or synthetic forecasts are shown." : "Checking…"}</small>}
           {showPireps && <small role="status">PIREP: {pireps.state === "ready" && pireps.envelope ? `${pireps.envelope.records.length} reports in 3 h${pireps.envelope.records.some(report => report.urgent) ? " · includes URGENT" : ""}` : pireps.state === "error" ? pireps.message : "Checking…"}</small>}
           <small>NOAA/NWS Aviation Weather Center. Observations describe each station site; an absent report is not evidence of good weather or no traffic.</small>
         </fieldset>
@@ -574,7 +667,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
               <tbody>{[...inspection.column].reverse().map(band => <tr key={band.key}><th scope="row">{band.label}</th><td>{band.floorText} → {band.ceilingText}</td>
                 <td>{feet(band.floorFtAgl)} → {feet(band.ceilingFtAgl)}</td><td>{band.manned} <small>({band.cite})</small></td></tr>)}</tbody></table>
             <p><strong>Weather now:</strong> {inspection.station ? <>{inspection.station.record.raw} <small>({inspection.station.km.toFixed(0)} km away, {minutesAgo(inspection.station.record.observedAt, clock)} min old{inspection.station.record.densityAltitudeFt !== null ? `, density altitude ≈ ${feet(inspection.station.record.densityAltitudeFt)}` : ""})</small></> : "No METAR station within 50 km."} {inspection.vfr.text} <small>({inspection.vfr.cite})</small></p>
-            {inspection.aircraft.length > 0 && <><p><strong>Aircraft within 15 km now:</strong></p><ul>{inspection.aircraft.map(item => <li key={item.record.hex}>{item.record.callsign ?? item.record.registration ?? item.record.hex.toUpperCase()}{item.record.type ? ` (${item.record.type})` : ""} · {item.record.onGround ? "on ground" : item.msl === null ? "altitude n/a" : `${feet(item.msl)} reported (approximate)`} · {item.km.toFixed(1)} km · {item.airspace}{item.record.emergency ? ` · ${item.record.squawk ?? ""} ${item.record.emergency.toUpperCase()}` : ""}</li>)}</ul></>}
+            {inspection.aircraft.length > 0 && <><p><strong>Aircraft within 15 km now:</strong></p><ul>{inspection.aircraft.map(item => <li key={item.record.hex}>{item.record.callsign ?? item.record.registration ?? item.record.hex.toUpperCase()}{item.record.type ? ` (${typeText(item.record.type)})` : ""} · {item.record.onGround ? "on ground" : item.msl === null ? "altitude n/a" : `${feet(item.msl)} reported (approximate)`} · {item.km.toFixed(1)} km · observed phase: {observedPhase(item.record, phaseFacilities).label} · {item.airspace}{item.record.emergency ? ` · ${item.record.squawk ?? ""} ${item.record.emergency.toUpperCase()}` : ""}</li>)}</ul></>}
             {inspection.routes.length > 0 && <p><strong>Airways within 4 NM:</strong> {inspection.routes.map(route => `${route.designation}${route.mea_ft ? ` (MEA ${route.mea_ft.toLocaleString("en-US")})` : ""}`).join(", ")}</p>}
             {inspection.reports.length > 0 && <p><strong>Pilot reports within 60 km (3 h):</strong> {inspection.reports.slice(0, 5).map(report => `${report.raw} (${pirepAltitudeLabel(report)})`).join(" · ")}</p>}
           </div>}

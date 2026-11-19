@@ -10,9 +10,13 @@ export const AWC_API_BASE = "https://aviationweather.gov/api/data";
 export const AWC_KANSAS_BBOX = "36.7,-102.3,40.3,-94.3";
 export const AVIATION_METAR_API_PATH = "/api/aviation/metar";
 export const AVIATION_PIREP_API_PATH = "/api/aviation/pireps";
+export const AVIATION_TAF_API_PATH = "/api/aviation/taf";
 export const METAR_MAX_AGE_MINUTES = 90;
 export const MAX_METARS = 400;
 export const MAX_PIREPS = 300;
+export const MAX_TAFS = 120;
+/** A TAF is valid for 24 or 30 hours; one issued longer ago than this is stale even if its validity text has not ended. */
+export const TAF_MAX_ISSUE_AGE_HOURS = 30;
 
 export type FlightCategory = "VFR" | "MVFR" | "IFR" | "LIFR";
 const PIREP_FLIGHT_LEVEL_TYPES = ["GRND", "DURC", "DURD", "CRUISE", "OTHER", "UNKN"] as const;
@@ -28,6 +32,17 @@ export type MetarObservation = Readonly<{
 export type PirepReport = Readonly<{
   id: string; observedAt: string; aircraftType: string | null; lon: number; lat: number; altitudeFtMsl: number | null; flightLevelType: PirepFlightLevelType | null; urgent: boolean;
   turbulence: string | null; icing: string | null; skyCondition: string | null; raw: string;
+}>;
+export type TafPeriod = Readonly<{
+  from: string; to: string;
+  /** AWC `fcstChange`: null for the base forecast, else FM, BECMG, TEMPO or PROB. */
+  change: string | null; probability: number | null;
+  windDirDeg: number | null; windVariable: boolean; windKt: number | null; gustKt: number | null;
+  visibilitySm: number | null; visibilityAtLeast: boolean; weather: string | null;
+  clouds: readonly CloudLayer[]; ceilingFtAgl: number | null; ceilingCover: string | null; flightCategory: FlightCategory | null;
+}>;
+export type TafForecast = Readonly<{
+  station: string; name: string | null; lon: number; lat: number; issuedAt: string; validFrom: string; validTo: string; raw: string; periods: readonly TafPeriod[];
 }>;
 export type AviationWeatherEnvelope<T> = Readonly<{ retrievedAt: string; sourceTitle: string; sourceUrl: string; evidenceRole: "EXTERNAL_CONTEXT_ONLY"; records: readonly T[]; dropped: number; limitation: string }>;
 
@@ -88,12 +103,9 @@ export function parseMetars(value: unknown, now: number): Readonly<{ records: re
     if (!isObject(item) || lon === null || lat === null || !station || !/^[A-Z0-9]{3,4}$/.test(station) || !observedAt || !raw || !inRegion(lon, lat)) { dropped++; continue; }
     const ageMinutes = (now - Date.parse(observedAt)) / 60000;
     if (ageMinutes > METAR_MAX_AGE_MINUTES || ageMinutes < -10) { dropped++; continue; }
-    const clouds = (Array.isArray(item.clouds) ? item.clouds : []).filter(isObject).slice(0, 8)
-      .map(layer => Object.freeze({ cover: str(layer.cover, 8) ?? "?", baseFtAgl: num(layer.base, 0, 60000) }));
+    const clouds = cloudLayers(item.clouds);
     const vis = visibility(item.visib);
-    // Vertical visibility (VVhhh) may arrive in hundreds of feet or in feet; the smallest real value is 100 ft.
-    const verticalVisibility = num(item.vertVis, 0, 10000);
-    const ceiling = ceilingOf(clouds, verticalVisibility === null ? null : verticalVisibility < 100 ? verticalVisibility * 100 : verticalVisibility);
+    const ceiling = ceilingOf(clouds, verticalVisibilityFt(item.vertVis));
     const elevationM = num(item.elev, -500, 5000);
     const altimeterRaw = num(item.altim, 20, 1100);
     // AWC reports altimeter in hPa; values under 40 are already inHg.
@@ -110,6 +122,65 @@ export function parseMetars(value: unknown, now: number): Readonly<{ records: re
   const records = [...latest.values()].sort((left, right) => left.station.localeCompare(right.station)).slice(0, MAX_METARS);
   return Object.freeze({ records: Object.freeze(records), dropped });
 }
+
+const cloudLayers = (value: unknown): readonly CloudLayer[] => (Array.isArray(value) ? value : []).filter(isObject).slice(0, 8)
+  .map(layer => Object.freeze({ cover: str(layer.cover, 8) ?? "?", baseFtAgl: num(layer.base, 0, 60000) }));
+// Vertical visibility (VVhhh) may arrive in hundreds of feet or in feet; the smallest real value is 100 ft.
+const verticalVisibilityFt = (value: unknown): number | null => { const raw = num(value, 0, 10000); return raw === null ? null : raw < 100 ? raw * 100 : raw; };
+
+/**
+ * Latest TAF per station inside the Kansas region, from the AWC `taf` product
+ * (`fcsts` periods as decoded by AWC). A forecast is kept only while its
+ * validity has not ended and it was issued within 30 hours; nothing is
+ * extrapolated past a TAF's own validity. Each period's flight category is
+ * computed from its forecast ceiling and visibility with the METAR rule.
+ */
+export function parseTafs(value: unknown, now: number): Readonly<{ records: readonly TafForecast[]; dropped: number }> {
+  if (!Array.isArray(value)) throw new Error("The TAF response was not a list.");
+  const latest = new Map<string, TafForecast>();
+  let dropped = 0;
+  for (const item of value.slice(0, MAX_TAFS * 4)) {
+    const lon = isObject(item) ? num(item.lon, -180, 180) : null, lat = isObject(item) ? num(item.lat, -90, 90) : null;
+    const station = isObject(item) ? str(item.icaoId, 8) : null, raw = isObject(item) ? str(item.rawTAF, 2048) : null;
+    const issuedAt = isObject(item) ? observationTime(item.issueTime) : null, validFrom = isObject(item) ? observationTime(item.validTimeFrom) : null, validTo = isObject(item) ? observationTime(item.validTimeTo) : null;
+    if (!isObject(item) || lon === null || lat === null || !station || !/^[A-Z0-9]{3,4}$/.test(station) || !raw || !issuedAt || !validFrom || !validTo || validTo <= validFrom || !inRegion(lon, lat)) { dropped++; continue; }
+    const issueAgeHours = (now - Date.parse(issuedAt)) / 3600000;
+    if (issueAgeHours > TAF_MAX_ISSUE_AGE_HOURS || issueAgeHours < -0.5 || Date.parse(validTo) < now) { dropped++; continue; }
+    const periods = (Array.isArray(item.fcsts) ? item.fcsts : []).filter(isObject).slice(0, 24).flatMap((period): TafPeriod[] => {
+      const from = observationTime(period.timeFrom), to = observationTime(period.timeTo);
+      if (!from || !to || to <= from) return [];
+      const clouds = cloudLayers(period.clouds), vis = visibility(period.visib);
+      const ceiling = ceilingOf(clouds, verticalVisibilityFt(period.vertVis));
+      const change = str(period.fcstChange, 8);
+      return [Object.freeze({ from, to, change: change ? change.toUpperCase() : null, probability: num(period.probability, 0, 100),
+        windDirDeg: num(period.wdir, 0, 360), windVariable: period.wdir === "VRB", windKt: num(period.wspd, 0, 250), gustKt: num(period.wgst, 0, 300),
+        visibilitySm: vis.sm, visibilityAtLeast: vis.atLeast, weather: str(period.wxString, 64), clouds, ceilingFtAgl: ceiling.ft, ceilingCover: ceiling.cover,
+        flightCategory: flightCategory(ceiling.ft, vis.sm) })];
+    });
+    if (!periods.length) { dropped++; continue; }
+    const record = Object.freeze({ station, name: str(item.name, 160), lon, lat, issuedAt, validFrom, validTo, raw, periods: Object.freeze(periods) });
+    const previous = latest.get(station);
+    if (!previous || previous.issuedAt < issuedAt) latest.set(station, record);
+  }
+  const records = [...latest.values()].sort((left, right) => left.station.localeCompare(right.station)).slice(0, MAX_TAFS);
+  return Object.freeze({ records: Object.freeze(records), dropped });
+}
+
+export type TafOutlookEntry = Readonly<{ period: TafPeriod; current: boolean }>;
+
+/**
+ * The TAF periods that overlap the next `hours` from `now`, in forecast order,
+ * flagging the ones in force now. TEMPO/PROB periods overlay the base
+ * forecast rather than replacing it, so several entries can be current at once.
+ */
+export function tafOutlook(taf: Pick<TafForecast, "periods">, now: number, hours = 12): readonly TafOutlookEntry[] {
+  const end = now + hours * 3600000;
+  return taf.periods.filter(period => Date.parse(period.to) > now && Date.parse(period.from) < end)
+    .map(period => Object.freeze({ period, current: Date.parse(period.from) <= now && now < Date.parse(period.to) }));
+}
+
+/** "18Z–07Z" day-hour text for a period in UTC, as a TAF reads. */
+export const tafTimeText = (iso: string): string => { const date = new Date(iso); return `${String(date.getUTCDate()).padStart(2, "0")}/${String(date.getUTCHours()).padStart(2, "0")}Z`; };
 
 const intensity = (item: Record<string, unknown>, prefix: "tb" | "icg"): string | null => {
   const level = str(item[`${prefix}Int1`], 16);

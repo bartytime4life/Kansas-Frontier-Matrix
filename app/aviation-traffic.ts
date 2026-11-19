@@ -132,12 +132,15 @@ const altitudeColor = (feet: number | null) => feet === null ? TRAFFIC_ALTITUDE_
  * Each aircraft is a small arrowhead pointing along its track, lifted to its
  * altitude above an approximate ground elevation (nearest airport). Emergencies
  * are red. The marker is ~1.3 km long so it stays visible at regional zoom.
+ * `phaseOf`, when given, appends the observed phase (see aviation-phase.ts)
+ * to the zoom-8+ label, always introduced as "observed phase".
  */
 export function trafficFeatures(records: readonly Aircraft[], groundFtAt: (lon: number, lat: number) => number, exaggeration: number,
-  _occupied: (aircraft: Aircraft, groundFt: number) => string): GeoJSON.FeatureCollection {
+  _occupied: (aircraft: Aircraft, groundFt: number) => string, phaseOf?: (aircraft: Aircraft) => string | null): GeoJSON.FeatureCollection {
   // Preserve the legacy call signature without treating approximate heights as occupancy evidence.
   void _occupied;
   const features: GeoJSON.Feature[] = records.map(aircraft => {
+    const phase = phaseOf?.(aircraft) ?? null;
     const ground = groundFtAt(aircraft.lon, aircraft.lat);
     const msl = aircraftDisplayAltitude(aircraft);
     const lift = msl === null ? 0 : Math.max(0, msl - ground) * 0.3048 * exaggeration;
@@ -151,7 +154,8 @@ export function trafficFeatures(records: readonly Aircraft[], groundFtAt: (lon: 
     return { type: "Feature", id: aircraft.hex, geometry: { type: "Polygon", coordinates: [ring] },
       properties: { hex: aircraft.hex, base: lift, top: lift + 90 * exaggeration, groundFt: ground, emergency: Boolean(aircraft.emergency),
         color: aircraft.emergency ? "#e0301e" : altitudeColor(msl),
-        label: `${aircraft.callsign ?? aircraft.registration ?? aircraft.hex.toUpperCase()}${aircraft.type ? ` ${aircraft.type}` : ""} · ${altitudeText}${aircraft.groundSpeedKt !== null ? ` · ${Math.round(aircraft.groundSpeedKt)} kt` : ""}${aircraft.emergency ? ` · ${aircraft.squawk ?? ""} ${aircraft.emergency.toUpperCase()}` : ""}`,
+        label: `${aircraft.callsign ?? aircraft.registration ?? aircraft.hex.toUpperCase()}${aircraft.type ? ` ${aircraft.type}` : ""} · ${altitudeText}${aircraft.groundSpeedKt !== null ? ` · ${Math.round(aircraft.groundSpeedKt)} kt` : ""}${phase ? ` · observed phase: ${phase}` : ""}${aircraft.emergency ? ` · ${aircraft.squawk ?? ""} ${aircraft.emergency.toUpperCase()}` : ""}`,
+        phase: phase ?? "",
         airspace: aircraft.onGround ? "surface report" : "Not established: altitude datum differs from airspace limits" } };
   });
   return { type: "FeatureCollection", features };
