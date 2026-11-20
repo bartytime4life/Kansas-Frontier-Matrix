@@ -1,5 +1,6 @@
-# Optional NWM binary reader; Linux x86_64 CPython 3.11/3.12 wheels.
-# Source: PyPI release JSON, verified 2026-10-07; no source distributions.
+# Optional NWM binary reader; Linux x86_64 CPython 3.11, 3.12 and 3.13 wheels.
+# Source: PyPI release JSON, verified 2026-10-07; cp313 numpy hash added 2026-11-20
+# from the same JSON. No source distributions.
 certifi==2026.10.23 \
     --hash=sha256:e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1
 cftime==1.6.6 \
@@ -8,5 +9,6 @@ netcdf4==1.7.4 \
     --hash=sha256:7ecf471ba8a6ddb2200121949bedfa0095db228822f38227d5da680694a38358 \
     --hash=sha256:a72c9f58767779ec14cb7451c3b56bdd8fdc027a792fac2062b14e090c5617f3
 numpy==2.3.3 \
+    --hash=sha256:5b83648633d46f77039c29078751f80da65aa64d5622a3cd62aaef9d835b6c93 \
     --hash=sha256:bc92a5dedcc53857249ca51ef29f5e5f2f8c513e22cfb90faeb20343b8c6f7a6 \
     --hash=sha256:d9192da52b9745f7f0766531dcfa978b7763916f158bb63bdb8a1eca0068ab20

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.4.1
+version: v0.4.2
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -207,7 +207,7 @@ make offline-pipeline-check
 ```
 
 The optional `nwm-netcdf` profile uses `python-nwm.lock` for Linux x86_64
-Python 3.11/3.12 binary readers. The local-data workflow uses it for synthetic
+Python 3.11, 3.12 and 3.13 binary readers. The local-data workflow uses it for synthetic
 NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
 change root runtime dependencies.
 
