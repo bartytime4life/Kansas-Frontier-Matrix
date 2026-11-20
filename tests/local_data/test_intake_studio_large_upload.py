@@ -19,6 +19,7 @@ from tools.local_data.intake_studio.intake_server import Server, Store
 PNG = b"\x89PNG\r\n\x1a\n"
 CHUNK = 4096
 SINGLE = 1024
+OWNER = "a" * 32
 
 
 def fake_extract(cmd, **kwargs):
@@ -56,15 +57,15 @@ class LargeUploadStoreTests(unittest.TestCase):
     def send_all(self, upload, data):
         for offset in range(0, len(data), CHUNK):
             part = data[offset:offset + CHUNK]
-            upload = self.uploads.append(upload["id"], offset, part, sha(part))
+            upload = self.uploads.append(upload["id"], offset, part, sha(part), owner=OWNER)
         return upload
 
     def test_parts_reassemble_into_one_verified_record(self):
         data = body(3 * CHUNK + 123)
-        upload = self.uploads.create("survey-map.png", len(data))
+        upload = self.uploads.create("survey-map.png", len(data), owner=OWNER)
         self.assertEqual((upload["received"], upload["chunkBytes"]), (0, CHUNK))
         self.assertEqual(self.send_all(upload, data)["received"], len(data))
-        record, duplicate = self.store.ingest_upload(upload["id"])
+        record, duplicate = self.store.ingest_upload(upload["id"], owner=OWNER)
         self.assertFalse(duplicate)
         self.assertEqual((record["size"], record["sha256"], record["mime"], record["name"]),
                          (len(data), sha(data), "image/png", "survey-map.png"))
@@ -72,34 +73,34 @@ class LargeUploadStoreTests(unittest.TestCase):
         self.assertEqual(list((self.root / "studio" / "uploads").iterdir()), [])
         self.assertEqual(list((self.root / "studio").glob("upload-*")), [])
         # The same bytes again make a second record over one stored object.
-        again = self.uploads.create("copy.png", len(data))
+        again = self.uploads.create("copy.png", len(data), owner=OWNER)
         self.send_all(again, data)
-        second, duplicate = self.store.ingest_upload(again["id"])
+        second, duplicate = self.store.ingest_upload(again["id"], owner=OWNER)
         self.assertTrue(duplicate)
         self.assertNotEqual(second["id"], record["id"])
         self.assertEqual(second["sha256"], record["sha256"])
 
     def test_resume_uses_the_stored_byte_count(self):
         data = body(2 * CHUNK + 10)
-        upload = self.uploads.create("resume.png", len(data))
-        self.uploads.append(upload["id"], 0, data[:CHUNK], sha(data[:CHUNK]))
+        upload = self.uploads.create("resume.png", len(data), owner=OWNER)
+        self.uploads.append(upload["id"], 0, data[:CHUNK], sha(data[:CHUNK]), owner=OWNER)
         # An interrupted write leaves a correct prefix; status reports it.
         with open(self.root / "studio" / "uploads" / upload["id"] / "data", "ab") as stream:
             stream.write(data[CHUNK:CHUNK + 100])
-        status = self.uploads.status(upload["id"])
+        status = self.uploads.status(upload["id"], owner=OWNER)
         self.assertEqual(status["received"], CHUNK + 100)
         with self.assertRaisesRegex(RuntimeError, f"at byte {CHUNK + 100}"):
-            self.uploads.append(upload["id"], CHUNK, data[CHUNK:2 * CHUNK], sha(data[CHUNK:2 * CHUNK]))
+            self.uploads.append(upload["id"], CHUNK, data[CHUNK:2 * CHUNK], sha(data[CHUNK:2 * CHUNK]), owner=OWNER)
         offset = status["received"]
         while offset < len(data):
             part = data[offset:offset + CHUNK]
-            offset = self.uploads.append(upload["id"], offset, part, sha(part))["received"]
-        record, _ = self.store.ingest_upload(upload["id"])
+            offset = self.uploads.append(upload["id"], offset, part, sha(part), owner=OWNER)["received"]
+        record, _ = self.store.ingest_upload(upload["id"], owner=OWNER)
         self.assertEqual(record["sha256"], sha(data))
 
     def test_bad_parts_are_refused_before_any_write(self):
         data = body(CHUNK + 10)
-        upload = self.uploads.create("bad.png", len(data))
+        upload = self.uploads.create("bad.png", len(data), owner=OWNER)
         path = self.root / "studio" / "uploads" / upload["id"] / "data"
         cases = [
             (data[:CHUNK], "0" * 64, ValueError, "integrity"),
@@ -110,14 +111,14 @@ class LargeUploadStoreTests(unittest.TestCase):
         ]
         for part, digest, error, message in cases:
             with self.subTest(message=message), self.assertRaisesRegex(error, message):
-                self.uploads.append(upload["id"], 0, part, digest)
+                self.uploads.append(upload["id"], 0, part, digest, owner=OWNER)
             self.assertEqual(path.stat().st_size, 0)
-        self.uploads.append(upload["id"], 0, data[:CHUNK], sha(data[:CHUNK]))
+        self.uploads.append(upload["id"], 0, data[:CHUNK], sha(data[:CHUNK]), owner=OWNER)
         overflow = data[CHUNK:] + b"overflow"
         with self.assertRaisesRegex(ValueError, "past the declared file size"):
-            self.uploads.append(upload["id"], CHUNK, overflow, sha(overflow))
+            self.uploads.append(upload["id"], CHUNK, overflow, sha(overflow), owner=OWNER)
         with self.assertRaisesRegex(ValueError, f"incomplete: {CHUNK} of {len(data)}"):
-            self.store.ingest_upload(upload["id"])
+            self.store.ingest_upload(upload["id"], owner=OWNER)
 
     def test_session_limits_and_identifiers(self):
         for name, size, message in [("", 10, "file name"), ("a\nb.png", 10, "file name"),
@@ -126,45 +127,45 @@ class LargeUploadStoreTests(unittest.TestCase):
                                     ("huge.png", intake_backend.MAX_BYTES + 1, "1 byte to 2 GiB"),
                                     ("float.png", 10.0, "1 byte to 2 GiB")]:
             with self.subTest(name=name), self.assertRaisesRegex(ValueError, message):
-                self.uploads.create(name, size)
+                self.uploads.create(name, size, owner=OWNER)
         for bad in ("../" + "a" * 30, "A" * 32, "a" * 31, "a" * 32):
             with self.subTest(bad=bad), self.assertRaises(KeyError):
-                self.uploads.status(bad)
-        made = [self.uploads.create(f"{n}.png", 10) for n in range(large_upload.MAX_ACTIVE_SESSIONS)]
+                self.uploads.status(bad, owner=OWNER)
+        made = [self.uploads.create(f"{n}.png", 10, owner=OWNER) for n in range(large_upload.MAX_ACTIVE_SESSIONS)]
         with self.assertRaisesRegex(RuntimeError, "Too many unfinished uploads"):
-            self.uploads.create("one-more.png", 10)
-        self.uploads.cancel(made[0]["id"])
+            self.uploads.create("one-more.png", 10, owner=OWNER)
+        self.uploads.cancel(made[0]["id"], owner=OWNER)
         with self.assertRaises(KeyError):
-            self.uploads.status(made[0]["id"])
-        self.uploads.create("after-cancel.png", 10)
+            self.uploads.status(made[0]["id"], owner=OWNER)
+        self.uploads.create("after-cancel.png", 10, owner=OWNER)
 
     def test_free_space_is_checked_before_accepting_bytes(self):
         usage = type("Usage", (), {"free": large_upload.FREE_SPACE_MARGIN + 99})
         with patch.object(large_upload.shutil, "disk_usage", return_value=usage):
             with self.assertRaisesRegex(ValueError, "free disk space"):
-                self.uploads.create("big.png", 100)
-            upload = self.uploads.create("fits.png", 99)
+                self.uploads.create("big.png", 100, owner=OWNER)
+            upload = self.uploads.create("fits.png", 99, owner=OWNER)
         usage.free = large_upload.FREE_SPACE_MARGIN + 10
         part = body(50)
         with patch.object(large_upload.shutil, "disk_usage", return_value=usage):
             with self.assertRaisesRegex(ValueError, "free disk space"):
-                self.uploads.append(upload["id"], 0, part, sha(part))
+                self.uploads.append(upload["id"], 0, part, sha(part), owner=OWNER)
 
     def test_stale_sessions_are_removed(self):
         clock = [1_000_000.0]
         self.uploads.clock = lambda: clock[0]
-        stale = self.uploads.create("stale.png", 10)
+        stale = self.uploads.create("stale.png", 10, owner=OWNER)
         session = self.root / "studio" / "uploads" / stale["id"]
         os.utime(session, (clock[0], clock[0]))
         clock[0] += large_upload.STALE_SECONDS + 1
-        self.uploads.create("fresh.png", 10)
+        self.uploads.create("fresh.png", 10, owner=OWNER)
         self.assertFalse(session.exists())
 
     def test_streamed_readers_verify_before_and_preserve_bytes(self):
         data = body(3 * CHUNK)
-        upload = self.uploads.create("export.png", len(data))
+        upload = self.uploads.create("export.png", len(data), owner=OWNER)
         self.send_all(upload, data)
-        record, _ = self.store.ingest_upload(upload["id"])
+        record, _ = self.store.ingest_upload(upload["id"], owner=OWNER)
         with self.store.open_original(record) as stream:
             self.assertEqual(stream.read(), data)
         package = io.BytesIO()
@@ -186,6 +187,24 @@ class LargeUploadStoreTests(unittest.TestCase):
                        lambda: self.store.export_to(record["id"], io.BytesIO())):
             with self.assertRaisesRegex(ValueError, "integrity"):
                 reader()
+
+    def test_sessions_belong_to_the_account_that_started_them(self):
+        data = body(CHUNK + 10)
+        upload = self.uploads.create("owned.png", len(data), owner=OWNER)
+        part = data[:CHUNK]
+        other = "b" * 32
+        for action in (lambda: self.uploads.status(upload["id"], owner=other),
+                       lambda: self.uploads.append(upload["id"], 0, part, sha(part), owner=other),
+                       lambda: self.store.ingest_upload(upload["id"], owner=other),
+                       lambda: self.uploads.cancel(upload["id"], owner=other),
+                       lambda: self.uploads.status(upload["id"], owner="")):
+            with self.subTest(action=action), self.assertRaisesRegex(KeyError, "Upload not found"):
+                action()
+        # The owner's session is untouched by the refused requests.
+        self.assertEqual(self.uploads.status(upload["id"], owner=OWNER)["received"], 0)
+        for owner in ("", None, "x" * 129):
+            with self.subTest(owner=owner), self.assertRaisesRegex(ValueError, "signed-in account"):
+                self.uploads.create("anonymous.png", 10, owner=owner)
 
     def test_single_request_ingest_still_accepts_bytes(self):
         data = body(SINGLE)
@@ -265,6 +284,28 @@ class LargeUploadHttpTests(unittest.TestCase):
             self.assertEqual(archive.read("original/map.png"), data)
         status, _ = self.call(f"/api/uploads/{upload['id']}")
         self.assertEqual(status, 404)
+
+    def test_uploads_are_bound_to_the_signed_in_account(self):
+        start = json.dumps({"name": "map.png", "size": 10}).encode()
+        # A client-supplied principal header is replaced by the gateway.
+        status, raw = self.call("/api/uploads", start, {"X-KFM-Principal": "f" * 32})
+        self.assertEqual(status, 201)
+        upload_id = json.loads(raw)["upload"]["id"]
+        principal = self.server.accounts.session(self.auth["Cookie"].split("=", 1)[1])
+        meta = json.loads((self.server.store.uploads.root / upload_id / "meta.json").read_text())
+        self.assertEqual(meta["owner"], principal["id"])
+        self.assertEqual(self.call(f"/api/uploads/{upload_id}")[0], 200)
+        other = {**principal, "id": "e" * 32, "username": "second-editor"}
+        with patch.object(self.server.accounts, "session", return_value=other):
+            for path, data in ((f"/api/uploads/{upload_id}", None),
+                               (f"/api/uploads/{upload_id}/complete", b"{}"),
+                               (f"/api/uploads/{upload_id}/cancel", b"{}")):
+                with self.subTest(path=path):
+                    status, raw = self.call(path, data)
+                    # GET answers the generic 404; actions answer "Upload not found".
+                    self.assertIn(status, (400, 404))
+                    self.assertIn(b"not found", raw.lower())
+        self.assertEqual(self.call(f"/api/uploads/{upload_id}")[0], 200)
 
     def test_viewers_and_anonymous_clients_cannot_upload(self):
         start = json.dumps({"name": "map.png", "size": 10}).encode()

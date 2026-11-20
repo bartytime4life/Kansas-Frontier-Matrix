@@ -67,6 +67,8 @@ class AccessMixin:
         return super().respond(code,body,kind,attachment)
 
     def _host(self):
+        # Only the gateway names the principal to the legacy handler.
+        del self.headers['X-KFM-Principal']
         if self.client_address[0] != '127.0.0.1' or self.headers.get_all('Host',[]) != [self.server.origin[7:]]:
             raise AccessError('EXACT_LOOPBACK_HOST_REQUIRED',403)
         if any(self.headers.get(k) for k in ('Forwarded','X-Forwarded-For','X-Forwarded-Host','X-Forwarded-Proto')):
@@ -98,6 +100,8 @@ class AccessMixin:
                 self.headers.replace_header(name,self.server.token)
             else:
                 self.headers[name]=self.server.token
+        del self.headers['X-KFM-Principal']
+        self.headers['X-KFM-Principal']=self.principal['id']
 
     def _page(self, path):
         content=(WEB/'studio-shell.html').read_text()

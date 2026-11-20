@@ -358,8 +358,8 @@ class Store:
             stream.write(body)
         return self.ingest_file(name, Path(staged))
 
-    def ingest_upload(self, upload_id):
-        staged, name = self.uploads.take(upload_id)
+    def ingest_upload(self, upload_id, *, owner):
+        staged, name = self.uploads.take(upload_id, owner=owner)
         return self.ingest_file(name, staged)
 
     def ingest_file(self, name, staged):
@@ -862,7 +862,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, {"url": self.server.store.working_url()})
             m = re.fullmatch(r"/api/uploads/([a-f0-9]{32})", path)
             if m:
-                return self.respond(200, {"upload": self.server.store.uploads.status(m[1])})
+                return self.respond(200, {"upload": self.server.store.uploads.status(
+                    m[1], owner=self.headers.get("X-KFM-Principal", ""))})
             if path in ("/working-data", "/library"):
                 from tools.local_data.intake_studio.workspace import page
                 return self.respond(200, page("working" if path == "/working-data" else "library"), "text/html")
@@ -949,23 +950,25 @@ class Handler(BaseHTTPRequestHandler):
                 record, duplicate = self.server.store.ingest(name, body)
                 return self.respond(201, {"file": record, "duplicate": duplicate})
             uploads = self.server.store.uploads
+            # Set by the account gateway from the signed-in session, never by the client.
+            owner = self.headers.get("X-KFM-Principal", "")
             if path.path == "/api/uploads":
                 value = json.loads(body)
                 if not isinstance(value, dict) or set(value) != {"name", "size"}:
                     raise ValueError("Start an upload with its name and size.")
-                return self.respond(201, {"upload": uploads.create(value["name"], value["size"])})
+                return self.respond(201, {"upload": uploads.create(value["name"], value["size"], owner=owner)})
             if chunk:
                 offset = parse_qs(path.query).get("offset", [""])
                 if len(offset) != 1 or not re.fullmatch(r"[0-9]{1,10}", offset[0]):
                     raise ValueError("Upload part needs one numeric offset.")
                 return self.respond(200, {"upload": uploads.append(
-                    chunk[1], int(offset[0]), body, self.headers.get("X-KFM-Chunk-SHA256", ""))})
+                    chunk[1], int(offset[0]), body, self.headers.get("X-KFM-Chunk-SHA256", ""), owner=owner)})
             m = re.fullmatch(r"/api/uploads/([a-f0-9]{32})/(complete|cancel)", path.path)
             if m and m[2] == "complete":
-                record, duplicate = self.server.store.ingest_upload(m[1])
+                record, duplicate = self.server.store.ingest_upload(m[1], owner=owner)
                 return self.respond(201, {"file": record, "duplicate": duplicate})
             if m:
-                uploads.cancel(m[1])
+                uploads.cancel(m[1], owner=owner)
                 return self.respond(200, {"cancelled": True})
             m = re.fullmatch(r"/api/files/([a-f0-9]{32})/send", path.path)
             if m:
