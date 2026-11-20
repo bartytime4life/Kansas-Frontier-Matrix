@@ -78,7 +78,12 @@ jobs:
           PROJ_NETWORK: "OFF"
         run: |
           set -euo pipefail
-          OPA_BIN="$RUNNER_TEMP/opa" "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -m pytest \
+          # Activate the bundle on PATH: some tests run repository scripts that
+          # call `python`/`python3` or use a `#!/usr/bin/env python3` shebang,
+          # and the runner's own interpreter lacks the bundle's packages.
+          export VIRTUAL_ENV="$RUNNER_TEMP/kfm-full-local-venv"
+          export PATH="$VIRTUAL_ENV/bin:$PATH"
+          OPA_BIN="$RUNNER_TEMP/opa" python -m pytest \
             -q -p no:cacheprovider -rs tests
 
       - name: Confirm the suite left the checkout unchanged
