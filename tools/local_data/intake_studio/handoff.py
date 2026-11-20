@@ -12,7 +12,8 @@ from tools.local_data import intake, intake_review, manage
 from tools.local_data.acquisition import validate_root
 from tools.local_data.file_io import capture_file, check_directory, read_regular, write_new
 
-MAX_BYTES = 25 * 1024 * 1024
+# Matches intake_backend.MAX_BYTES; capture streams, so the size needs no buffer.
+MAX_BYTES = 2 * 1024 ** 3
 MAX_REVIEW_BYTES = 4 * 1024 * 1024
 
 

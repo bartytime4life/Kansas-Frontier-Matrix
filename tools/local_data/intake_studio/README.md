@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-local_data-intake_studio-readme
 title: Local intake studio operator
 type: readme
-version: v1
+version: v1.1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
-updated: 2026-11-17
+updated: 2026-11-20
 policy_label: public
 owning_root: tools/
 responsibility: Describe local photo and PDF preparation implementation.
@@ -22,7 +22,9 @@ This Linux loopback operator prepares private held proposals and can explicitly
 send a saved ready review into private Working Data capture and indexing.
 `handoff.py` preserves original bytes, review history and sharing holds using
 the established capture and intake primitives. `intake_server.py` is the protected
-entrypoint; `intake_backend.py` retains storage and review; `intake_worker.py` performs
+entrypoint; `intake_backend.py` retains storage and review; `large_upload.py` keeps
+resumable, chunk-verified upload sessions for files over 25 MiB (up to 2 GiB);
+`intake_worker.py` performs
 sandboxed extraction, and `local-web/` supplies the local client. The launcher is
 on demand; it does not install packages, services or public routes.
 `workspace.py` mounts the existing Working Data and read-only Library desks

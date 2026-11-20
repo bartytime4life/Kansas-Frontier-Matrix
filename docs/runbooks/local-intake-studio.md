@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-runbooks-local-intake-studio
 title: Local photo and PDF intake review
 type: runbook
-version: v1.2
+version: v1.3
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
-updated: 2026-11-07
+updated: 2026-11-20
 policy_label: public
 owning_root: docs/
 responsibility: Explain private preparation and governed capture handoff.
@@ -106,8 +106,30 @@ Run the native tests below to check the complete installed chain. Missing tools,
 disabled user namespaces, invalid files or timeouts leave extraction failed and
 held; there is no unsandboxed fallback. Windows/macOS setup is unverified.
 
-Supported bytes: PDF, JPEG, PNG, WebP and TIFF, up to **25 MiB per file**. HEIC must
-first be converted to JPEG/PNG. PDF text covers at most 30 pages; scanned-PDF OCR
+Supported bytes: PDF, JPEG, PNG, WebP and TIFF, up to **2 GiB per file**. HEIC must
+first be converted to JPEG/PNG.
+
+### Large files
+
+Files up to 25 MiB upload in one request. Larger files upload in 8 MiB parts:
+
+- **Integrity:** the browser sends each part's SHA-256, and the Studio checks it
+  before writing. The file type is checked on the first part, so an unsupported
+  file is refused before the rest arrives.
+- **Resume:** the stored byte count is the resume point. If the connection drops,
+  the browser retries, then resumes from that count. After a page reload, choose
+  the same file again to continue where it stopped.
+- **Limits:** at most four unfinished uploads are kept, under `uploads/` in the
+  private inbox. One untouched for 24 hours is removed. Each upload and part needs
+  its own size plus 256 MiB of free disk space, or it is refused.
+- **Completion:** the whole file is hashed, extracted and quarantined exactly
+  like a small upload, and gets the same review gates.
+- **Reading and export:** the original download and the held-review export
+  stream from a descriptor that has just been verified in full, so neither holds
+  the file in memory. Exports store originals above 25 MiB uncompressed, and
+  use zip64 when needed.
+- **Extraction:** the limits below apply unchanged. A very large scan can exceed
+  them; its original is then kept, and review is manual. PDF text covers at most 30 pages; scanned-PDF OCR
 covers at most three pages. Image OCR covers the first frame. Mixed scanned/text
 PDFs can omit regions. Text is capped at 250,000 characters. Previews show the
 first page/frame and strip metadata; originals retain their bytes and possibly
@@ -122,7 +144,8 @@ objects. Identical bytes reuse storage but receive separate source and review
 records; rights never transfer merely because hashes match. Browser clearing
 does not erase this inbox. Back it up while stopped, or export individual records
 while running. No automated deletion, retention budget or disk-space reserve is
-implemented; monitor free space before large batches.
+implemented beyond the per-upload free-space check; monitor free space before
+large batches.
 
 The server binds only `127.0.0.1`, enforces exact Host and same-origin requests,
 and requires a fresh session token for data APIs. Uploaded documents are never

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Account-protected public entrypoint for the local KFM Studio.
 
-The byte-preserved legacy implementation lives in intake_backend.py. Its
+The legacy implementation lives in intake_backend.py. Its
 storage/extraction primitives are implementation details, not a second supported
 HTTP entrypoint. Both the normal launcher and this historical CLI require login.
 """
