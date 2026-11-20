@@ -33,6 +33,16 @@ test("every map guide is crawlable, plain-language and links only to public cont
   }
 });
 
+test("guides for layers drawn as counted circles tell visitors what the circles are", () => {
+  // These four guides open layers that show numbered circles at the zoom the guide opens at.
+  for (const [slug, layer] of [["kansas-bridges", "kdot-bridges-state"], ["historic-places", "nps-nrhp-places"], ["frontier-trails", "nps-trail-places"], ["hunting-and-wildlife-areas", "kdwp-wiha-access"]]) {
+    const guide = guides.landingGuide(slug);
+    assert.ok(guide.layers.includes(layer), `${slug} opens ${layer}`);
+    assert.match(guide.intro.join(" "), /numbered circles/i, `${slug} explains the numbered circles`);
+    assert.match(guide.intro.join(" "), /zoom/i, `${slug} says zooming splits them`);
+  }
+});
+
 test("the sitemap lists the guide index and every guide", async () => {
   const discovery = await readFile("app/crawler-discovery.ts", "utf8");
   assert.match(discovery, /\/explore<\/loc>/);
