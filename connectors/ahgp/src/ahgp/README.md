@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-ahgp-src-package-readme
 title: connectors/ahgp/src/ahgp/ — AHGP Connector Python Package
 type: readme
-version: v0.1
+version: v0.1.1
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · People/Genealogy steward · Data steward · Validation steward · Docs steward
 created: 2026-07-10
-updated: 2026-07-10
+updated: 2026-11-20
 policy_label: public; package-readme; implementation-support; source-admission-only
 related:
   - ../../README.md
@@ -44,6 +44,10 @@ notes:
 </p>
 
 `connectors/ahgp/src/ahgp/`
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`fetch.py`](./fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`admit.py`](./admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Quick jumps
 

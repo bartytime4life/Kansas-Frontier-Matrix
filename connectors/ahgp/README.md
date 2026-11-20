@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-ahgp-readme
 title: connectors/ahgp/ — AHGP Source Connector Lane
 type: readme; directory-readme; implementation-status-boundary
-version: v0.2
+version: v0.2.1
 status: repository-grounded; connector-placeholder; source-admission-unproved; non-publisher
 owners: NEEDS VERIFICATION — source, connector, people/genealogy, rights, sensitivity, data, and independent review stewards
 created: 2026-06-16
-updated: 2026-09-05
+updated: 2026-11-20
 current_path: connectors/ahgp/README.md
 owning_root: connectors/
 policy_label: repository-facing; source-admission-only; no-network-by-default; non-publisher
@@ -47,6 +47,10 @@ notes:
 **Navigate:** [Inventory](#canonical-fit) · [Authority](#authority-boundary) ·
 [Admission](#ahgp-admission-posture) · [Validation](#validation-expectations) ·
 [Next change](#safe-change-pattern) · [Completion gates](#definition-of-done)
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`src/ahgp/fetch.py`](./src/ahgp/fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`src/ahgp/admit.py`](./src/ahgp/admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-loc-src-package-readme
 title: connectors/loc/src/loc/ — Library of Congress Greenfield Connector Package Boundary
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · LOC source steward · Archives steward · People-DNA-Land steward · Genealogy steward · Rights reviewer · Privacy/sensitivity reviewer · CARE/cultural review steward · Security reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-11-20
 policy_label: public-doctrine; package-boundary; greenfield-scaffold; candidate-family; beyond-directory-rules-7-3; open-dsc-10; source-admission; no-network; rights-fail-closed; sensitivity-fail-closed; care-review; no-activation; no-publication
 current_path: connectors/loc/src/loc/README.md
 truth_posture: CONFIRMED repository-present 0.0.0 scaffold, empty initializer, comment-only fetch and admit modules, four-field local descriptor, README-only named test lane, TODO-only connector workflows, empty source-authority register, and LOC family documentation / CONFLICTED final LOC connector-family placement, SourceDescriptor schema authority, source-role machine vocabulary, product-module topology, and source-page naming / PROPOSED future bounded package contract / UNKNOWN buildability, supported imports, runtime, source access, activation, current endpoint behavior, current rights, fixtures, executable tests, substantive CI, deployment, and release readiness
@@ -74,6 +74,10 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current package](#current-package-state) · [Family placement](#loc-family-placement-and-open-dsc-10) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Source surfaces](#loc-source-surface-boundaries) · [Inputs](#inputs) · [Outputs](#outputs) · [Descriptor boundary](#descriptor-registry-and-policy-boundary) · [Rights and CARE](#rights-sensitivity-care-and-cultural-review) · [Uncertainty](#ocr-georeferencing-identity-and-crosswalk-uncertainty) · [Runtime](#runtime-and-configuration-posture) · [Lifecycle](#lifecycle-and-publication-boundary) · [Validation](#validation) · [Testing](#testing-and-ci-boundary) · [Evidence](#evidence-basis) · [Review](#review-burden) · [ADRs](#adr-and-migration-triggers) · [Definition of done](#definition-of-done) · [Rollback](#rollback) · [Backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`fetch.py`](./fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`admit.py`](./admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

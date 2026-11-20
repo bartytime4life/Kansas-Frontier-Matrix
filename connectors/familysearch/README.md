@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-familysearch-readme
 title: connectors/familysearch/ — FamilySearch Connector Lane
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · People/DNA/Land steward · Privacy/consent steward · Rights reviewer · Security reviewer · Validation steward · Data steward · Docs steward
 created: 2026-06-18
-updated: 2026-07-11
+updated: 2026-11-20
 policy_label: public-doctrine; connector-lane; high-sensitivity; greenfield; not-activated; no-network-default; raw-or-quarantine-only; no-publication
 proposed_path: connectors/familysearch/README.md
 truth_posture: CONFIRMED greenfield scaffold / PLACEHOLDER implementation / README-only tests / NOT ACTIVATED / live source behavior UNKNOWN
@@ -62,6 +62,10 @@ notes:
 **Quick jumps:** [Purpose](#purpose) · [Verified repository state](#verified-repository-state) · [Evidence ledger](#evidence-ledger) · [Authority boundary](#authority-boundary) · [Blocking drift](#blocking-drift) · [Source-family posture](#source-family-posture) · [Lifecycle boundary](#lifecycle-boundary) · [Privacy consent and rights](#privacy-consent-and-rights) · [Allowed future responsibilities](#allowed-future-responsibilities) · [Forbidden responsibilities](#forbidden-responsibilities) · [Target architecture](#target-architecture) · [Runtime posture](#runtime-posture) · [Input and output contract](#input-and-output-contract) · [Testing relationship](#testing-relationship) · [Activation gates](#activation-gates) · [Implementation sequence](#implementation-sequence) · [Review and rollback](#review-and-rollback) · [Definition of done](#definition-of-done) · [Verification backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch module is no longer comment-only. [`src/familysearch/fetch.py`](./src/familysearch/fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`. The module imports only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

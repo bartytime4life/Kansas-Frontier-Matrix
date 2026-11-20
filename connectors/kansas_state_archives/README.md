@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-kansas-state-archives-readme
 title: connectors/kansas_state_archives/ — Kansas State Archives Greenfield Compatibility Connector Boundary
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · Kansas source steward · Archives steward · Rights reviewer · Sensitivity/privacy reviewer · CARE/cultural/sovereignty reviewer · Security reviewer · Validation steward · Test steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-11-20
 policy_label: public-doctrine; connector-boundary; greenfield-scaffold; compatibility-path; path-and-surface-conflict; source-admission; rights-fail-closed; sensitivity-fail-closed; care-review; no-network; no-activation; no-publication
 current_path: connectors/kansas_state_archives/README.md
 truth_posture: CONFIRMED repository-present 0.0.0 scaffold, one Python package, README-only local test lane, placeholder descriptor, and TODO-only connector workflows / CONFLICTED compatibility class, final connector path, package scope, KSHS umbrella-versus-surface topology, SourceDescriptor authority, registry migration, and fixture routing / PROPOSED future bounded source-admission contract / UNKNOWN executable runtime, source access, activation, substantive CI coverage, deployment, and release
@@ -66,6 +66,10 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current status](#current-status) · [Repository snapshot](#repository-snapshot) · [Path conflict](#path-and-scope-conflict) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Descriptor boundary](#descriptor-and-registry-boundary) · [Surface boundaries](#kshs-surface-boundaries) · [Validation](#validation) · [Review](#review-burden) · [Evidence](#evidence-basis) · [ADRs](#adrs-and-migration) · [Rollback](#rollback) · [Definition of done](#definition-of-done) · [Backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`src/kansas_state_archives/fetch.py`](./src/kansas_state_archives/fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`src/kansas_state_archives/admit.py`](./src/kansas_state_archives/admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-khri-src-package-readme
 title: connectors/khri/src/khri/ — KHRI Greenfield Compatibility Package Scaffold
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · Kansas/KHRI source steward · KSHS/SHPO liaison · Archaeology steward · Settlements steward · People/privacy reviewer · Rights reviewer · Sensitivity/cultural-review steward · Security reviewer · Validation steward · Test steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-11-20
 policy_label: public-doctrine; greenfield-package; compatibility-path; canonical-family-conflict; source-admission; historic-resource-anti-collapse; rights-fail-closed; cultural-sensitivity-fail-closed; private-location-fail-closed; no-network; no-activation; no-publication
 current_path: connectors/khri/src/khri/README.md
 truth_posture: CONFIRMED repository-present 0.0.0 package scaffold with empty initializer, comment-only fetch/admit modules, nonconforming four-field descriptor, and documentation-only local test lane; named richer modules and conventional tests were not found at exact probes / CONFLICTED final package path, compatibility class, source-role mapping, SourceDescriptor authority, product decomposition, fixture/test routing, registry activation, and public sensitivity floor / PROPOSED bounded compatibility and future source-admission package contract / UNKNOWN buildability, imports, executable behavior, test collection, live source access, current rights and terms, endpoint/source-head state, substantive CI enforcement, deployment, and release readiness
@@ -74,6 +74,10 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current scaffold](#current-scaffold) · [Path conflict](#path-and-migration-conflict) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Descriptor boundary](#descriptor-registry-and-activation-boundary) · [Surface identity](#khri-and-kshs-surface-identity) · [Record meanings](#khri-record-and-claim-boundaries) · [Rights and sensitivity](#rights-cultural-sensitivity-privacy-and-geometry) · [Time and identity](#identity-time-and-correction) · [Lifecycle](#lifecycle-boundary) · [Failure contract](#failure-contract) · [Validation](#validation) · [Review](#review-burden) · [Evidence](#evidence-basis) · [ADRs](#adrs-and-migration) · [Definition of done](#definition-of-done) · [Rollback](#rollback) · [Backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`fetch.py`](./fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`admit.py`](./admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

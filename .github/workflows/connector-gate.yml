@@ -70,6 +70,14 @@ jobs:
           --strict-config
           --strict-markers
 
+      - name: Run held connector seam tests
+        run: >-
+          python -m pytest
+          tests/connectors/test_held_connector_seams.py
+          -q
+          --strict-config
+          --strict-markers
+
       - name: Run bounded connector-output and legacy publication-target static checks
         run: >-
           python -m pytest

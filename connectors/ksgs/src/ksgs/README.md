@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-ksgs-src-package-readme
 title: connectors/ksgs/src/ksgs/ — KSGS Greenfield Package Scaffold
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · KGS source steward · Geology steward · Hydrology steward · Rights reviewer · Sensitivity reviewer · Security reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-12
+updated: 2026-11-20
 policy_label: public-doctrine; greenfield-scaffold; noncanonical-path; path-and-slug-conflict; source-admission; no-network; no-activation; no-publication
 proposed_path: connectors/ksgs/src/ksgs/README.md
 truth_posture: CONFIRMED 0.0.0 greenfield scaffold and placeholder package files / KGS connector path CONFLICTED / connector-local descriptor NONCONFORMING and non-authoritative / executable fetch, admission, validation, lifecycle handoff, tests, and CI ABSENT or UNKNOWN
@@ -47,6 +47,10 @@ notes:
 
 > [!CAUTION]
 > Do not add operational code here merely because the import package exists. The repository has not settled the canonical KGS connector path or the `kgs` versus `ksgs` identity. Resolve placement, descriptor authority, product boundaries, ownership, and migration before this package gains behavior.
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`fetch.py`](./fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`admit.py`](./admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Quick links
 
