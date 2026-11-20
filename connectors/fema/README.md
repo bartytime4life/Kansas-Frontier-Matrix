@@ -2,14 +2,14 @@
 doc_id: kfm://doc/connectors-fema-readme
 title: connectors/fema/ — FEMA Connector Family Lane
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Connector steward · FEMA source steward · NFHL product steward · OpenFEMA product steward · Hazards steward · Hydrology steward · Settlements/Infrastructure steward · Privacy/sensitivity reviewer · Rights reviewer · Security reviewer · Validation steward · Docs steward
 created: 2026-06-18
-updated: 2026-09-27
+updated: 2026-11-19
 policy_label: public-context-only; source-family-connector; shared-fema-package; greenfield; no-network-default; no-secret-import; per-product-admission; per-table-openfema-admission; raw-or-quarantine-only; not-for-life-safety; no-publication
 proposed_path: connectors/fema/README.md
-truth_posture: CONFIRMED family scaffold / package implementation ABSENT / sources NOT ACTIVATED / flat NFHL and OpenFEMA paths compatibility-only / executable tests ABSENT / CI UNKNOWN
+truth_posture: CONFIRMED bounded OpenFEMA parser and injected retrieval/routing tests; current pipeline fixture bindings; historical family scaffold inspection retained; NEEDS VERIFICATION source activation, live provider behavior, NFHL and release
 related:
   - ../README.md
   - pyproject.toml
@@ -51,11 +51,28 @@ notes:
   - "One shared implementation package is preferred at connectors/fema/src/fema/. Product documentation remains separate at connectors/fema/nfhl/ and source-catalog pages."
   - "The flat connectors/fema-nfhl/ and connectors/fema-openfema/ paths are noncanonical compatibility pointers and must not host parallel implementation or activation state."
   - "NFHL remains regulatory context; Disaster Declarations remain administrative; OpenFEMA aggregates require an explicit aggregation unit; no FEMA record becomes observed-event truth by convenience."
+owning_root: connectors/
+responsibility: define FEMA connector family boundaries and record bounded source-parser implementation
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # FEMA Connector Family
+
+## Current bounded implementation (2026-11-19)
+
+The OpenFEMA declaration parser, injected retrieval/episode routing and synthetic
+connector tests are implemented. Parser timestamps now retain subseconds and
+pagination metadata requires actual integers. The new [held ingest pipeline](../../docs/runbooks/openfema-fixture-ingest.md)
+composes supplied pages with strict candidate validation and guarded CI. It does
+not acquire from FEMA, admit a domain source or establish provider coverage.
+NFHL, other OpenFEMA tables, source activation and release remain separate work.
+
+## Historical family scaffold inspection
+
+The earlier summary, ledger and future-work requirements below are retained as
+historical evidence. Statements that the package or tests were absent describe
+that earlier inspection; the bounded current implementation is recorded above.
 
 > Evidence-grounded family overview for future FEMA source-admission code. The current lane is a documentation-only greenfield scaffold. It does **not** provide an importable package, live FEMA access, an activated product or table, executable connector tests, lifecycle promotion, or publication capability.
 

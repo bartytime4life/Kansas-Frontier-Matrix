@@ -58,7 +58,7 @@ def _instant(value: object, code: str = "TIME_FORMAT") -> datetime:
 
 
 def _iso(value: datetime | None) -> str | None:
-    return None if value is None else value.isoformat(timespec="seconds").replace("+00:00", "Z")
+    return None if value is None else value.isoformat().replace("+00:00", "Z")
 
 
 def _calendar_date(value: object) -> str:
@@ -350,7 +350,9 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     count = metadata.get("count")
     if type(count) is not int or count < 0:
         raise OpenFemaInputError("COUNT_ABSENT")
-    if (metadata.get("skip") not in (None, 0) or metadata.get("top") != request.top
+    skip, top = metadata.get("skip"), metadata.get("top")
+    if ((skip is not None and (type(skip) is not int or skip != 0))
+            or type(top) is not int or top != request.top
             or metadata.get("filter") != request.odata_filter
             or metadata.get("entityname") not in (None, ENTITY)):
         raise OpenFemaInputError("METADATA_REQUEST_MISMATCH")

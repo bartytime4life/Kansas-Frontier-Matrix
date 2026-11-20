@@ -1,0 +1,193 @@
+{
+  "receipt_id": "genrec-openfema-ingest-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/openfema-pipeline.yml",
+    "connectors/fema/README.md",
+    "connectors/fema/src/fema/openfema_declarations.py",
+    "connectors/fema/tests/test_openfema_declarations.py",
+    "contracts/domains/hazards/README.md",
+    "contracts/domains/hazards/openfema_ingest_candidate.md",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/openfema-fixture-ingest.md",
+    "fixtures/domains/hazards/openfema_ingest/README.md",
+    "fixtures/domains/hazards/openfema_ingest/complete.json",
+    "fixtures/domains/hazards/openfema_ingest/count-drift.json",
+    "fixtures/domains/hazards/openfema_ingest/empty.json",
+    "pipeline_specs/README.md",
+    "pipeline_specs/hazards/README.md",
+    "pipeline_specs/hazards/fema_openfema.yaml",
+    "pipelines/domains/hazards/README.md",
+    "pipelines/domains/hazards/openfema_ingest.py",
+    "schemas/contracts/v1/domains/hazards/openfema_ingest_candidate.schema.json",
+    "tests/pipelines/domains/hazards/test_openfema_ingest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/openfema-pipeline.yml": "sha256:2d70a9b61a5f1095b1e1fccfc0c75ff23e096a94a9c054ee58a5e32ba45a8019",
+    "connectors/fema/README.md": "sha256:f7546cac181438e56a9f1ebd81e889e93ee0bb071f31bde0a2fa65b1293be2f1",
+    "connectors/fema/src/fema/openfema_declarations.py": "sha256:f4fc28b243bddf65023660888b4e859108d67d3c9c62b4f2bc00c7859a2f3d0d",
+    "connectors/fema/tests/test_openfema_declarations.py": "sha256:9fe300d5174775e8e7058fca48b4a32c71ff22dbef43259832fca646dab465c5",
+    "contracts/domains/hazards/README.md": "sha256:38ccb16dd9a4a6e0aaaec490272a00cfd024460952528cb9ec88c648515c61b5",
+    "contracts/domains/hazards/openfema_ingest_candidate.md": "sha256:f8719e79cb37cf6393f22ee7d2b6a6118420cc261aa62900fc0c2d9e2b535495",
+    "contracts/pipeline_spec_declaration.md": "sha256:b4724cdfd4500c6d0e9c335b244176e428555e20b706904dd47148431f3953e2",
+    "docs/runbooks/openfema-fixture-ingest.md": "sha256:40e209bcd6fe7c406fdacf49c772e1d3d83b016f792fc55cc308f7f10edb6e56",
+    "fixtures/domains/hazards/openfema_ingest/README.md": "sha256:c71938419a4be2eada74b7762df8871b82ac43de88de65072b1b2e017e0556d2",
+    "fixtures/domains/hazards/openfema_ingest/complete.json": "sha256:6e3ea1aa40da85bece425235e9f3aeca50f06d3ead5a04d4ddd48a8c2841ddd0",
+    "fixtures/domains/hazards/openfema_ingest/count-drift.json": "sha256:2185b4f433ec0cba757c8155a5a2c0162105a4199cb7239985b942122785300c",
+    "fixtures/domains/hazards/openfema_ingest/empty.json": "sha256:226de8f5382e60e699e2c32358b2f7d15f4bb0155bde03317e54891c149ec23d",
+    "pipeline_specs/README.md": "sha256:96c8a834e5c0cb0bcd46fa62ba0e567341fe2b8e6a9851a94ae6b2d4ca9fdd1e",
+    "pipeline_specs/hazards/README.md": "sha256:09799da2d7c264a35916dcf9648ca387fc176f6df5b4000c67c38005c613dea2",
+    "pipeline_specs/hazards/fema_openfema.yaml": "sha256:e6f3e476ee6a29053182b079d08211a305c175e22a702ce69b39def79bddb246",
+    "pipelines/domains/hazards/README.md": "sha256:0b8c42d3cddd2fb6313c79214ba0154b93667287df5cbf579b09f82e83fab093",
+    "pipelines/domains/hazards/openfema_ingest.py": "sha256:f18c73f9bdd252264c433113272964b52cf9483fd4650605f4b62319706636bd",
+    "schemas/contracts/v1/domains/hazards/openfema_ingest_candidate.schema.json": "sha256:04b071d84e85060c5f39fc62b94e510733ecf63a6ac4060ce87969f4af14b39d",
+    "tests/pipelines/domains/hazards/test_openfema_ingest.py": "sha256:7c1515fe1454ee31be52da20302c77f0906ce1214c8246594e99d63eb8068b09"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:1820c9459ae583d0ed5562f777b427530b28a9069bc8647aa741b651bdca074e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7d044f8a892c3e3d611849056c7aa24469094100",
+      "contracts/domains/hazards/README.md@7d044f8a892c3e3d611849056c7aa24469094100",
+      "data/registry/hazards/sources/fema_disaster_declarations.yaml@7d044f8a892c3e3d611849056c7aa24469094100",
+      "connectors/fema/src/fema/openfema_declarations.py@7d044f8a892c3e3d611849056c7aa24469094100",
+      "connectors/fema/tests/test_openfema_declarations.py@7d044f8a892c3e3d611849056c7aa24469094100",
+      "connectors/fema/src/fema/admit.py@7d044f8a892c3e3d611849056c7aa24469094100"
+    ],
+    "evidence_hashes": [
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:9f47b07f13b3b255bf2ad8f82bfd585ca3af3ab6e60c0849bf9c707965f1670c",
+      "sha256:719e17ac627c675fddb311200fa4f5cf719b8a14df4aff6f60e2d7adefc4d1b1",
+      "sha256:95946d6f0f40bb0cfcc991834ffa2f09787697b3cfef39c68188fa6697fed876",
+      "sha256:28a3aa01c5c13e2b15ff82a5e3139b372d2f43ac0cf1bf83933e246d9f780163",
+      "sha256:d904041e7f53cfa6382be4c50181ee307dfbb5a64e11f8c0319030e920a1b5cd"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/openfema-pipeline.yml": "PROPOSED",
+    "connectors/fema/README.md": "PROPOSED",
+    "connectors/fema/src/fema/openfema_declarations.py": "PROPOSED",
+    "connectors/fema/tests/test_openfema_declarations.py": "PROPOSED",
+    "contracts/domains/hazards/README.md": "PROPOSED",
+    "contracts/domains/hazards/openfema_ingest_candidate.md": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/openfema-fixture-ingest.md": "PROPOSED",
+    "fixtures/domains/hazards/openfema_ingest/README.md": "PROPOSED",
+    "fixtures/domains/hazards/openfema_ingest/complete.json": "PROPOSED",
+    "fixtures/domains/hazards/openfema_ingest/count-drift.json": "PROPOSED",
+    "fixtures/domains/hazards/openfema_ingest/empty.json": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/hazards/README.md": "PROPOSED",
+    "pipeline_specs/hazards/fema_openfema.yaml": "PROPOSED",
+    "pipelines/domains/hazards/README.md": "PROPOSED",
+    "pipelines/domains/hazards/openfema_ingest.py": "PROPOSED",
+    "schemas/contracts/v1/domains/hazards/openfema_ingest_candidate.schema.json": "PROPOSED",
+    "tests/pipelines/domains/hazards/test_openfema_ingest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "reproduced-source-parser-defects-and-regressions",
+      "outcome": "PASS",
+      "reason": "Before repair, .123 declaration and .456 capture fractions were discarded, Boolean top=true and skip=false were accepted as integer metadata. Source now preserves subseconds and requires actual integers. 15 parser tests and 43 subtests pass; all 28 FEMA connector unittest cases pass."
+    },
+    {
+      "gate": "fixture-intake-and-source-parser",
+      "outcome": "PASS",
+      "reason": "49 passed and 43 subtests, including sealed complete/count-drift/empty walks, cursor gaps, terminal-page requirements, byte/page/record budgets, canonical queries, capture times, full snapshot replay, authority tamper and aggregate-only no-file/no-network CLI."
+    },
+    {
+      "gate": "general-pipelines-core-source-and-declarations",
+      "outcome": "PASS",
+      "reason": "426 passed, two separately qualified raster modules skipped, 45 subtests under the Python network guard; project-test/connectors-core/geo-transforms locks retained."
+    },
+    {
+      "gate": "hazards-regressions",
+      "outcome": "PASS",
+      "reason": "126 passed and 94 subtests. The restricted run had 19 failures creating repository-local temporary test directories; the qualified rerun with those required writes passes. No source workaround or test skip was introduced."
+    },
+    {
+      "gate": "supported-full-local-collection",
+      "outcome": "PASS",
+      "reason": "10421 tests collected without errors using the supported full-local bundle, tests scope and CI network/PROJ guard; this is collection, not full execution."
+    },
+    {
+      "gate": "qa-and-installer-regressions",
+      "outcome": "PASS",
+      "reason": "385 passed and 74 subtests with required temporary task-worktree files and local loopback sockets. No dependency locks changed."
+    },
+    {
+      "gate": "docs-declarations-workflow-and-ratchets",
+      "outcome": "PASS",
+      "reason": "Nine docs have zero structural failures, 143 local targets resolve, 17 inherited common-contract nested-metadata warnings remain. 110 repository and four fixture declarations pass; dedicated workflow zero security findings. Gap/scaffold pass, count remains 856; topology zero new drift and 89 inherited warnings."
+    },
+    {
+      "gate": "hosted-ci-human-review-and-main-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending published exact-head hosted CI, independent human review and main merge. Prior TIGER/NWS source trees were verified identical on main7d044f8a; their checks had no failures but canceled full-collection jobs. No source admission, provider snapshot/coverage proof, eligibility decision, evidence closure, release or deployment."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "contracts/domains/hazards/README.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/hazards/README.md@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "data/registry/hazards/sources/fema_disaster_declarations.yaml",
+      "validated": true,
+      "evidence_ref": "data/registry/hazards/sources/fema_disaster_declarations.yaml@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "connectors/fema/src/fema/openfema_declarations.py",
+      "validated": true,
+      "evidence_ref": "connectors/fema/src/fema/openfema_declarations.py@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "connectors/fema/tests/test_openfema_declarations.py",
+      "validated": true,
+      "evidence_ref": "connectors/fema/tests/test_openfema_declarations.py@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "connectors/fema/src/fema/admit.py",
+      "validated": true,
+      "evidence_ref": "connectors/fema/src/fema/admit.py@7d044f8a892c3e3d611849056c7aa24469094100"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T03:53:44.501721Z",
+  "emitter": "codex/openfema-ingest",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Nine of 39 YAML candidates are fixture-first on this proposed change; 30 remain unimplemented. This is exactly Disaster Declarations Summaries v2 administrative context, not observed hazards, designated hazard footprints, aid eligibility, NFHL or umbrella OpenFEMA admission. The proposed domain source descriptor remains unresolved despite separate connector-family settings. Only supplied HTTP200 canonical Kansas keyset pages are supported: 2MiB envelope, 256KiB per body, 1MiB combined bodies, 16pages, top64, 256records, reported count<=1000000 and 8MiB canonical output. Missing pages/count drift remain incomplete; a consistent reported walk cannot prove an unchanged provider snapshot or world coverage. No network acquisition, cursor following, scheduling, storage, lifecycle advancement, persistent evidence closure, public release or deployment. Exact original byte hashes are separate from source-provided hash fields; snapshots remain private. Accepted ADR-0029 reference supports repository placement/authority boundaries only, not source/rights/sensitivity/data-policy approval. Older FEMA declaration and nesting-bound receipts remain byte-for-byte unchanged; this successor binds the repaired source and new pipeline. The only open PR returned in bounded coordination was unrelated hosting readback documentation5969, no overlap. Original dirty checkout is preserved; current task worktree reused. Git CLI publication auth remains unavailable; use connected-app verified blobs/tree and a main-targeted PR."
+}

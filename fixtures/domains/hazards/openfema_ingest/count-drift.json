@@ -1,0 +1,221 @@
+{
+  "fixture_kind": "SYNTHETIC_OPENFEMA_DECLARATIONS",
+  "capture": "{\"pages\":[{\"body\":\"{\\\"DisasterDeclarationsSummaries\\\":[{\\\"declarationDate\\\":\\\"2020-05-01T00:00:00.123Z\\\",\\\"declarationRequestNumber\\\":\\\"synthetic\\\",\\\"declarationTitle\\\":\\\"SYNTHETIC ADMINISTRATIVE DESIGNATION\\\",\\\"declarationType\\\":\\\"DR\\\",\\\"designatedArea\\\":\\\"SYNTHETIC DESIGNATED JURISDICTION\\\",\\\"disasterCloseoutDate\\\":null,\\\"disasterNumber\\\":9001,\\\"femaDeclarationString\\\":\\\"DR-9001-KS\\\",\\\"fipsCountyCode\\\":\\\"001\\\",\\\"fipsStateCode\\\":\\\"20\\\",\\\"fyDeclared\\\":2020,\\\"hash\\\":\\\"synthetic-provider-hash\\\",\\\"hmProgramDeclared\\\":true,\\\"iaProgramDeclared\\\":true,\\\"id\\\":\\\"00000000-0000-4000-8000-000000000001\\\",\\\"ihProgramDeclared\\\":false,\\\"incidentBeginDate\\\":\\\"2020-04-01T00:00:00Z\\\",\\\"incidentEndDate\\\":null,\\\"incidentType\\\":\\\"Synthetic flood context\\\",\\\"lastRefresh\\\":\\\"2026-01-01T00:00:00.789Z\\\",\\\"paProgramDeclared\\\":true,\\\"placeCode\\\":\\\"99001\\\",\\\"region\\\":7,\\\"state\\\":\\\"KS\\\",\\\"tribalRequest\\\":false},{\\\"declarationDate\\\":\\\"2020-05-01T00:00:00.123Z\\\",\\\"declarationRequestNumber\\\":\\\"synthetic\\\",\\\"declarationTitle\\\":\\\"SYNTHETIC ADMINISTRATIVE DESIGNATION\\\",\\\"declarationType\\\":\\\"DR\\\",\\\"designatedArea\\\":\\\"SYNTHETIC DESIGNATED JURISDICTION\\\",\\\"disasterCloseoutDate\\\":null,\\\"disasterNumber\\\":9001,\\\"femaDeclarationString\\\":\\\"DR-9001-KS\\\",\\\"fipsCountyCode\\\":\\\"003\\\",\\\"fipsStateCode\\\":\\\"20\\\",\\\"fyDeclared\\\":2020,\\\"hash\\\":\\\"synthetic-provider-hash\\\",\\\"hmProgramDeclared\\\":true,\\\"iaProgramDeclared\\\":true,\\\"id\\\":\\\"00000000-0000-4000-8000-000000000002\\\",\\\"ihProgramDeclared\\\":false,\\\"incidentBeginDate\\\":\\\"2020-04-01T00:00:00Z\\\",\\\"incidentEndDate\\\":\\\"2020-04-10T00:00:00Z\\\",\\\"incidentType\\\":\\\"Synthetic flood context\\\",\\\"lastRefresh\\\":\\\"2026-01-01T00:00:00.789Z\\\",\\\"paProgramDeclared\\\":true,\\\"placeCode\\\":\\\"99001\\\",\\\"region\\\":7,\\\"state\\\":\\\"KS\\\",\\\"tribalRequest\\\":false}],\\\"metadata\\\":{\\\"count\\\":3,\\\"entityname\\\":\\\"DisasterDeclarationsSummaries\\\",\\\"filter\\\":\\\"state eq 'KS'\\\",\\\"rundate\\\":\\\"2026-09-27T00:00:00Z\\\",\\\"skip\\\":0,\\\"top\\\":2}}\",\"retrieved_at\":\"2026-09-27T12:00:00.123Z\",\"source_url\":\"https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=state+eq+%27KS%27&%24orderby=id&%24top=2&%24count=true\",\"status\":200},{\"body\":\"{\\\"DisasterDeclarationsSummaries\\\":[{\\\"declarationDate\\\":\\\"2020-05-01T00:00:00.123Z\\\",\\\"declarationRequestNumber\\\":\\\"synthetic\\\",\\\"declarationTitle\\\":\\\"SYNTHETIC ADMINISTRATIVE DESIGNATION\\\",\\\"declarationType\\\":\\\"DR\\\",\\\"designatedArea\\\":\\\"SYNTHETIC DESIGNATED JURISDICTION\\\",\\\"disasterCloseoutDate\\\":\\\"2019-01-01T00:00:00Z\\\",\\\"disasterNumber\\\":9001,\\\"femaDeclarationString\\\":\\\"DR-9001-KS\\\",\\\"fipsCountyCode\\\":\\\"005\\\",\\\"fipsStateCode\\\":\\\"20\\\",\\\"fyDeclared\\\":2020,\\\"hash\\\":\\\"synthetic-provider-hash\\\",\\\"hmProgramDeclared\\\":true,\\\"iaProgramDeclared\\\":true,\\\"id\\\":\\\"00000000-0000-4000-8000-000000000003\\\",\\\"ihProgramDeclared\\\":false,\\\"incidentBeginDate\\\":\\\"2020-04-01T00:00:00Z\\\",\\\"incidentEndDate\\\":\\\"2020-04-10T00:00:00Z\\\",\\\"incidentType\\\":\\\"Synthetic flood context\\\",\\\"lastRefresh\\\":\\\"2026-01-01T00:00:00.789Z\\\",\\\"newSyntheticField\\\":{\\\"retained\\\":true},\\\"paProgramDeclared\\\":true,\\\"placeCode\\\":\\\"99001\\\",\\\"region\\\":7,\\\"state\\\":\\\"KS\\\",\\\"tribalRequest\\\":false}],\\\"metadata\\\":{\\\"count\\\":9,\\\"entityname\\\":\\\"DisasterDeclarationsSummaries\\\",\\\"filter\\\":\\\"state eq 'KS' and id gt '00000000-0000-4000-8000-000000000002'\\\",\\\"rundate\\\":\\\"2026-09-27T00:00:00Z\\\",\\\"skip\\\":0,\\\"top\\\":2}}\",\"retrieved_at\":\"2026-09-27T12:00:00.456Z\",\"source_url\":\"https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=state+eq+%27KS%27+and+id+gt+%2700000000-0000-4000-8000-000000000002%27&%24orderby=id&%24top=2&%24count=true\",\"status\":200}]}",
+  "capture_sha256": "sha256:21fa0d362983129b46100332e941cc4a2a66aa5f595cf3a9ce1e132ec682885d",
+  "expected": {
+    "object_type": "OpenFemaDeclarationsIngestCandidate",
+    "schema_version": "1.0.0",
+    "source_descriptor_ref": "data/registry/hazards/sources/fema_disaster_declarations.yaml",
+    "source_role": "administrative",
+    "query": {
+      "base_filter": "state eq 'KS'",
+      "top": 2
+    },
+    "pages": [
+      {
+        "source_url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=state+eq+%27KS%27&%24orderby=id&%24top=2&%24count=true",
+        "retrieved_at": "2026-09-27T12:00:00.123000Z",
+        "body": "{\"DisasterDeclarationsSummaries\":[{\"declarationDate\":\"2020-05-01T00:00:00.123Z\",\"declarationRequestNumber\":\"synthetic\",\"declarationTitle\":\"SYNTHETIC ADMINISTRATIVE DESIGNATION\",\"declarationType\":\"DR\",\"designatedArea\":\"SYNTHETIC DESIGNATED JURISDICTION\",\"disasterCloseoutDate\":null,\"disasterNumber\":9001,\"femaDeclarationString\":\"DR-9001-KS\",\"fipsCountyCode\":\"001\",\"fipsStateCode\":\"20\",\"fyDeclared\":2020,\"hash\":\"synthetic-provider-hash\",\"hmProgramDeclared\":true,\"iaProgramDeclared\":true,\"id\":\"00000000-0000-4000-8000-000000000001\",\"ihProgramDeclared\":false,\"incidentBeginDate\":\"2020-04-01T00:00:00Z\",\"incidentEndDate\":null,\"incidentType\":\"Synthetic flood context\",\"lastRefresh\":\"2026-01-01T00:00:00.789Z\",\"paProgramDeclared\":true,\"placeCode\":\"99001\",\"region\":7,\"state\":\"KS\",\"tribalRequest\":false},{\"declarationDate\":\"2020-05-01T00:00:00.123Z\",\"declarationRequestNumber\":\"synthetic\",\"declarationTitle\":\"SYNTHETIC ADMINISTRATIVE DESIGNATION\",\"declarationType\":\"DR\",\"designatedArea\":\"SYNTHETIC DESIGNATED JURISDICTION\",\"disasterCloseoutDate\":null,\"disasterNumber\":9001,\"femaDeclarationString\":\"DR-9001-KS\",\"fipsCountyCode\":\"003\",\"fipsStateCode\":\"20\",\"fyDeclared\":2020,\"hash\":\"synthetic-provider-hash\",\"hmProgramDeclared\":true,\"iaProgramDeclared\":true,\"id\":\"00000000-0000-4000-8000-000000000002\",\"ihProgramDeclared\":false,\"incidentBeginDate\":\"2020-04-01T00:00:00Z\",\"incidentEndDate\":\"2020-04-10T00:00:00Z\",\"incidentType\":\"Synthetic flood context\",\"lastRefresh\":\"2026-01-01T00:00:00.789Z\",\"paProgramDeclared\":true,\"placeCode\":\"99001\",\"region\":7,\"state\":\"KS\",\"tribalRequest\":false}],\"metadata\":{\"count\":3,\"entityname\":\"DisasterDeclarationsSummaries\",\"filter\":\"state eq 'KS'\",\"rundate\":\"2026-09-27T00:00:00Z\",\"skip\":0,\"top\":2}}",
+        "body_sha256": "sha256:dcb51984229787987651e642f1cec95af6adf8ccd257a02e8b13106051c7ebf4",
+        "byte_length": 1718
+      },
+      {
+        "source_url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=state+eq+%27KS%27+and+id+gt+%2700000000-0000-4000-8000-000000000002%27&%24orderby=id&%24top=2&%24count=true",
+        "retrieved_at": "2026-09-27T12:00:00.456000Z",
+        "body": "{\"DisasterDeclarationsSummaries\":[{\"declarationDate\":\"2020-05-01T00:00:00.123Z\",\"declarationRequestNumber\":\"synthetic\",\"declarationTitle\":\"SYNTHETIC ADMINISTRATIVE DESIGNATION\",\"declarationType\":\"DR\",\"designatedArea\":\"SYNTHETIC DESIGNATED JURISDICTION\",\"disasterCloseoutDate\":\"2019-01-01T00:00:00Z\",\"disasterNumber\":9001,\"femaDeclarationString\":\"DR-9001-KS\",\"fipsCountyCode\":\"005\",\"fipsStateCode\":\"20\",\"fyDeclared\":2020,\"hash\":\"synthetic-provider-hash\",\"hmProgramDeclared\":true,\"iaProgramDeclared\":true,\"id\":\"00000000-0000-4000-8000-000000000003\",\"ihProgramDeclared\":false,\"incidentBeginDate\":\"2020-04-01T00:00:00Z\",\"incidentEndDate\":\"2020-04-10T00:00:00Z\",\"incidentType\":\"Synthetic flood context\",\"lastRefresh\":\"2026-01-01T00:00:00.789Z\",\"newSyntheticField\":{\"retained\":true},\"paProgramDeclared\":true,\"placeCode\":\"99001\",\"region\":7,\"state\":\"KS\",\"tribalRequest\":false}],\"metadata\":{\"count\":9,\"entityname\":\"DisasterDeclarationsSummaries\",\"filter\":\"state eq 'KS' and id gt '00000000-0000-4000-8000-000000000002'\",\"rundate\":\"2026-09-27T00:00:00Z\",\"skip\":0,\"top\":2}}",
+        "body_sha256": "sha256:54d51b7d806d6efe68147940ad3f8d3d61bfe1e984a835cd91559d69b3d44924",
+        "byte_length": 1062
+      }
+    ],
+    "capture": {
+      "admission": "NOT_ADMITTED",
+      "coverage": "NOT_ESTABLISHED",
+      "outcome": "INCOMPLETE_CAPTURE",
+      "page_sha256": [
+        "sha256:dcb51984229787987651e642f1cec95af6adf8ccd257a02e8b13106051c7ebf4",
+        "sha256:54d51b7d806d6efe68147940ad3f8d3d61bfe1e984a835cd91559d69b3d44924"
+      ],
+      "reasons": [
+        "COUNT_DRIFT"
+      ],
+      "records": [
+        {
+          "admission": "NOT_ADMITTED",
+          "declaration_date": "2020-05-01T00:00:00.123000Z",
+          "declaration_title": "SYNTHETIC ADMINISTRATIVE DESIGNATION",
+          "declaration_type": "DR",
+          "designated_area": "SYNTHETIC DESIGNATED JURISDICTION",
+          "designated_area_kind": "county",
+          "disaster_closeout_date": null,
+          "disaster_number": 9001,
+          "fema_declaration_string": "DR-9001-KS",
+          "fips_county_code": "001",
+          "fips_state_code": "20",
+          "geography_semantics": "DESIGNATED_JURISDICTION_NOT_HAZARD_FOOTPRINT",
+          "incident_begin_date": "2020-04-01T00:00:00Z",
+          "incident_end_date": null,
+          "incident_type": "Synthetic flood context",
+          "last_refresh": "2026-01-01T00:00:00.789000Z",
+          "place_code": "99001",
+          "programs_declared": [
+            [
+              "ihProgramDeclared",
+              false
+            ],
+            [
+              "iaProgramDeclared",
+              true
+            ],
+            [
+              "paProgramDeclared",
+              true
+            ],
+            [
+              "hmProgramDeclared",
+              true
+            ],
+            [
+              "tribalRequest",
+              false
+            ]
+          ],
+          "raw_record_json": "{\"declarationDate\":\"2020-05-01T00:00:00.123Z\",\"declarationRequestNumber\":\"synthetic\",\"declarationTitle\":\"SYNTHETIC ADMINISTRATIVE DESIGNATION\",\"declarationType\":\"DR\",\"designatedArea\":\"SYNTHETIC DESIGNATED JURISDICTION\",\"disasterCloseoutDate\":null,\"disasterNumber\":9001,\"femaDeclarationString\":\"DR-9001-KS\",\"fipsCountyCode\":\"001\",\"fipsStateCode\":\"20\",\"fyDeclared\":2020,\"hash\":\"synthetic-provider-hash\",\"hmProgramDeclared\":true,\"iaProgramDeclared\":true,\"id\":\"00000000-0000-4000-8000-000000000001\",\"ihProgramDeclared\":false,\"incidentBeginDate\":\"2020-04-01T00:00:00Z\",\"incidentEndDate\":null,\"incidentType\":\"Synthetic flood context\",\"lastRefresh\":\"2026-01-01T00:00:00.789Z\",\"paProgramDeclared\":true,\"placeCode\":\"99001\",\"region\":7,\"state\":\"KS\",\"tribalRequest\":false}",
+          "reasons": [
+            "INCIDENT_END_UNSET"
+          ],
+          "record_id": "00000000-0000-4000-8000-000000000001",
+          "record_sha256": "sha256:373eea8ee9a9c274e710297beb72da8f20c1cb75e80a48d1d8ac477fbfb291e9",
+          "role_authority": "FEMA",
+          "route": "RAW_CANDIDATE",
+          "source_hash": "synthetic-provider-hash",
+          "source_role": "administrative"
+        },
+        {
+          "admission": "NOT_ADMITTED",
+          "declaration_date": "2020-05-01T00:00:00.123000Z",
+          "declaration_title": "SYNTHETIC ADMINISTRATIVE DESIGNATION",
+          "declaration_type": "DR",
+          "designated_area": "SYNTHETIC DESIGNATED JURISDICTION",
+          "designated_area_kind": "county",
+          "disaster_closeout_date": null,
+          "disaster_number": 9001,
+          "fema_declaration_string": "DR-9001-KS",
+          "fips_county_code": "003",
+          "fips_state_code": "20",
+          "geography_semantics": "DESIGNATED_JURISDICTION_NOT_HAZARD_FOOTPRINT",
+          "incident_begin_date": "2020-04-01T00:00:00Z",
+          "incident_end_date": "2020-04-10T00:00:00Z",
+          "incident_type": "Synthetic flood context",
+          "last_refresh": "2026-01-01T00:00:00.789000Z",
+          "place_code": "99001",
+          "programs_declared": [
+            [
+              "ihProgramDeclared",
+              false
+            ],
+            [
+              "iaProgramDeclared",
+              true
+            ],
+            [
+              "paProgramDeclared",
+              true
+            ],
+            [
+              "hmProgramDeclared",
+              true
+            ],
+            [
+              "tribalRequest",
+              false
+            ]
+          ],
+          "raw_record_json": "{\"declarationDate\":\"2020-05-01T00:00:00.123Z\",\"declarationRequestNumber\":\"synthetic\",\"declarationTitle\":\"SYNTHETIC ADMINISTRATIVE DESIGNATION\",\"declarationType\":\"DR\",\"designatedArea\":\"SYNTHETIC DESIGNATED JURISDICTION\",\"disasterCloseoutDate\":null,\"disasterNumber\":9001,\"femaDeclarationString\":\"DR-9001-KS\",\"fipsCountyCode\":\"003\",\"fipsStateCode\":\"20\",\"fyDeclared\":2020,\"hash\":\"synthetic-provider-hash\",\"hmProgramDeclared\":true,\"iaProgramDeclared\":true,\"id\":\"00000000-0000-4000-8000-000000000002\",\"ihProgramDeclared\":false,\"incidentBeginDate\":\"2020-04-01T00:00:00Z\",\"incidentEndDate\":\"2020-04-10T00:00:00Z\",\"incidentType\":\"Synthetic flood context\",\"lastRefresh\":\"2026-01-01T00:00:00.789Z\",\"paProgramDeclared\":true,\"placeCode\":\"99001\",\"region\":7,\"state\":\"KS\",\"tribalRequest\":false}",
+          "reasons": [],
+          "record_id": "00000000-0000-4000-8000-000000000002",
+          "record_sha256": "sha256:6d71cda7858b1ae0ca23f32d24b79eb7a30351d6dbdff3ed1bdd554a3a94085c",
+          "role_authority": "FEMA",
+          "route": "RAW_CANDIDATE",
+          "source_hash": "synthetic-provider-hash",
+          "source_role": "administrative"
+        },
+        {
+          "admission": "NOT_ADMITTED",
+          "declaration_date": "2020-05-01T00:00:00.123000Z",
+          "declaration_title": "SYNTHETIC ADMINISTRATIVE DESIGNATION",
+          "declaration_type": "DR",
+          "designated_area": "SYNTHETIC DESIGNATED JURISDICTION",
+          "designated_area_kind": "county",
+          "disaster_closeout_date": "2019-01-01T00:00:00Z",
+          "disaster_number": 9001,
+          "fema_declaration_string": "DR-9001-KS",
+          "fips_county_code": "005",
+          "fips_state_code": "20",
+          "geography_semantics": "DESIGNATED_JURISDICTION_NOT_HAZARD_FOOTPRINT",
+          "incident_begin_date": "2020-04-01T00:00:00Z",
+          "incident_end_date": "2020-04-10T00:00:00Z",
+          "incident_type": "Synthetic flood context",
+          "last_refresh": "2026-01-01T00:00:00.789000Z",
+          "place_code": "99001",
+          "programs_declared": [
+            [
+              "ihProgramDeclared",
+              false
+            ],
+            [
+              "iaProgramDeclared",
+              true
+            ],
+            [
+              "paProgramDeclared",
+              true
+            ],
+            [
+              "hmProgramDeclared",
+              true
+            ],
+            [
+              "tribalRequest",
+              false
+            ]
+          ],
+          "raw_record_json": "{\"declarationDate\":\"2020-05-01T00:00:00.123Z\",\"declarationRequestNumber\":\"synthetic\",\"declarationTitle\":\"SYNTHETIC ADMINISTRATIVE DESIGNATION\",\"declarationType\":\"DR\",\"designatedArea\":\"SYNTHETIC DESIGNATED JURISDICTION\",\"disasterCloseoutDate\":\"2019-01-01T00:00:00Z\",\"disasterNumber\":9001,\"femaDeclarationString\":\"DR-9001-KS\",\"fipsCountyCode\":\"005\",\"fipsStateCode\":\"20\",\"fyDeclared\":2020,\"hash\":\"synthetic-provider-hash\",\"hmProgramDeclared\":true,\"iaProgramDeclared\":true,\"id\":\"00000000-0000-4000-8000-000000000003\",\"ihProgramDeclared\":false,\"incidentBeginDate\":\"2020-04-01T00:00:00Z\",\"incidentEndDate\":\"2020-04-10T00:00:00Z\",\"incidentType\":\"Synthetic flood context\",\"lastRefresh\":\"2026-01-01T00:00:00.789Z\",\"newSyntheticField\":{\"retained\":true},\"paProgramDeclared\":true,\"placeCode\":\"99001\",\"region\":7,\"state\":\"KS\",\"tribalRequest\":false}",
+          "reasons": [
+            "SCHEMA_DRIFT_ADDITIONAL_FIELD",
+            "CLOSEOUT_BEFORE_DECLARATION"
+          ],
+          "record_id": "00000000-0000-4000-8000-000000000003",
+          "record_sha256": "sha256:cf5ea0bdf7cba915f4829bfd9d7c5d5aa100cdfbf783fa786ab48a0b7b88124f",
+          "role_authority": "FEMA",
+          "route": "QUARANTINE_CANDIDATE",
+          "source_hash": "synthetic-provider-hash",
+          "source_role": "administrative"
+        }
+      ],
+      "reported_count": 3
+    },
+    "route": "HOLD",
+    "reason_codes": [
+      "SOURCE_ADMISSION_UNVERIFIED",
+      "SOURCE_DESCRIPTOR_UNRESOLVED",
+      "RIGHTS_UNVERIFIED",
+      "SENSITIVITY_NOT_EVALUATED",
+      "COUNT_DRIFT",
+      "RECORD_QUARANTINE_CANDIDATES"
+    ],
+    "authority": {
+      "source_admitted": false,
+      "review_completed": false,
+      "evidence_closed": false,
+      "lifecycle_write": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false,
+      "eligibility_determination_authorized": false,
+      "life_safety_authority": false
+    },
+    "candidate_id": "openfema-ingest:sha256:c6bf4cbe332d22850944d253f1d28b6739456e222003496e9a1a52fb0e6407b4",
+    "spec_hash": "sha256:1829ea7555cc1497fde64c14d4013526aafec4778020bbdc59dd1b159bd903f9"
+  }
+}

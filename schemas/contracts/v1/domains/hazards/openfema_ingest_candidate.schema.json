@@ -1,0 +1,487 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/openfema_ingest_candidate.schema.json",
+  "title": "OpenFemaDeclarationsIngestCandidate",
+  "description": "Private held administrative-context intake from supplied counted keyset pages; never an observed hazard footprint or aid eligibility determination.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "candidate_id",
+    "source_descriptor_ref",
+    "source_role",
+    "query",
+    "pages",
+    "capture",
+    "route",
+    "reason_codes",
+    "authority",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "OpenFemaDeclarationsIngestCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^openfema-ingest:sha256:[a-f0-9]{64}$"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/hazards/sources/fema_disaster_declarations.yaml"
+    },
+    "source_role": {
+      "const": "administrative"
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base_filter",
+        "top"
+      ],
+      "properties": {
+        "base_filter": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "top": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_url",
+          "retrieved_at",
+          "body",
+          "body_sha256",
+          "byte_length"
+        ],
+        "properties": {
+          "source_url": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 262144
+          },
+          "body_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "byte_length": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 262144
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasons",
+        "reported_count",
+        "records",
+        "page_sha256",
+        "coverage",
+        "admission"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "CAPTURE_CANDIDATE",
+            "INCOMPLETE_CAPTURE"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "enum": [
+              "CURSOR_NOT_FROM_START",
+              "CURSOR_GAP_OR_OVERLAP",
+              "COUNT_DRIFT",
+              "END_NOT_REACHED",
+              "EARLY_END",
+              "DUPLICATE_ACROSS_PAGES",
+              "ORDER_NOT_DETERMINISTIC",
+              "COUNT_MISMATCH"
+            ]
+          }
+        },
+        "reported_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "records": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "record_id",
+              "fema_declaration_string",
+              "disaster_number",
+              "declaration_type",
+              "incident_type",
+              "declaration_title",
+              "declaration_date",
+              "incident_begin_date",
+              "incident_end_date",
+              "disaster_closeout_date",
+              "last_refresh",
+              "programs_declared",
+              "fips_state_code",
+              "fips_county_code",
+              "place_code",
+              "designated_area",
+              "designated_area_kind",
+              "source_hash",
+              "route",
+              "reasons",
+              "raw_record_json",
+              "record_sha256",
+              "source_role",
+              "role_authority",
+              "geography_semantics",
+              "admission"
+            ],
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+              },
+              "fema_declaration_string": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "disaster_number": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "declaration_type": {
+                "enum": [
+                  "DR",
+                  "EM",
+                  "FM"
+                ]
+              },
+              "incident_type": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "declaration_title": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "declaration_date": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "incident_begin_date": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "incident_end_date": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "disaster_closeout_date": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "last_refresh": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "programs_declared": {
+                "type": "array",
+                "minItems": 5,
+                "maxItems": 5,
+                "prefixItems": [
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "const": "ihProgramDeclared"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "items": false
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "const": "iaProgramDeclared"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "items": false
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "const": "paProgramDeclared"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "items": false
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "const": "hmProgramDeclared"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "items": false
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "prefixItems": [
+                      {
+                        "const": "tribalRequest"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ],
+                    "items": false
+                  }
+                ],
+                "items": false
+              },
+              "fips_state_code": {
+                "const": "20"
+              },
+              "fips_county_code": {
+                "type": "string",
+                "pattern": "^[0-9]{3}$"
+              },
+              "place_code": {
+                "type": "string",
+                "pattern": "^[0-9]{1,6}$"
+              },
+              "designated_area": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "designated_area_kind": {
+                "enum": [
+                  "county",
+                  "statewide"
+                ]
+              },
+              "source_hash": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 128
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "route": {
+                "enum": [
+                  "RAW_CANDIDATE",
+                  "QUARANTINE_CANDIDATE"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 6,
+                "items": {
+                  "enum": [
+                    "SCHEMA_DRIFT_ADDITIONAL_FIELD",
+                    "DECLARATION_IDENTITY_INCONSISTENT",
+                    "INCIDENT_BEGIN_ABSENT",
+                    "INCIDENT_END_UNSET",
+                    "INCIDENT_END_BEFORE_BEGIN",
+                    "CLOSEOUT_BEFORE_DECLARATION"
+                  ]
+                }
+              },
+              "raw_record_json": {
+                "type": "string",
+                "maxLength": 8388608
+              },
+              "record_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "source_role": {
+                "const": "administrative"
+              },
+              "role_authority": {
+                "const": "FEMA"
+              },
+              "geography_semantics": {
+                "const": "DESIGNATED_JURISDICTION_NOT_HAZARD_FOOTPRINT"
+              },
+              "admission": {
+                "const": "NOT_ADMITTED"
+              }
+            }
+          }
+        },
+        "page_sha256": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        },
+        "coverage": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "admission": {
+          "const": "NOT_ADMITTED"
+        }
+      }
+    },
+    "route": {
+      "const": "HOLD"
+    },
+    "reason_codes": {
+      "type": "array",
+      "maxItems": 13,
+      "items": {
+        "enum": [
+          "SOURCE_ADMISSION_UNVERIFIED",
+          "SOURCE_DESCRIPTOR_UNRESOLVED",
+          "RIGHTS_UNVERIFIED",
+          "SENSITIVITY_NOT_EVALUATED",
+          "RECORD_QUARANTINE_CANDIDATES",
+          "CURSOR_NOT_FROM_START",
+          "CURSOR_GAP_OR_OVERLAP",
+          "COUNT_DRIFT",
+          "END_NOT_REACHED",
+          "EARLY_END",
+          "DUPLICATE_ACROSS_PAGES",
+          "ORDER_NOT_DETERMINISTIC",
+          "COUNT_MISMATCH"
+        ]
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "review_completed",
+        "evidence_closed",
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "eligibility_determination_authorized",
+        "life_safety_authority"
+      ],
+      "properties": {
+        "source_admitted": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "evidence_closed": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "eligibility_determination_authorized": {
+          "const": false
+        },
+        "life_safety_authority": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}
