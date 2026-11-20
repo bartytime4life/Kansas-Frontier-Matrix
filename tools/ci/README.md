@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.4
+version: v0.4.1
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-10-16
+updated: 2026-11-20
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
 owning_root: tools/
 responsibility: Long-lived CI support helpers for deterministic dependency bootstrap, bounded process controls, and reviewer-readable signals; never workflow, policy, test, proof, or release authority.
@@ -122,6 +122,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 |---|---|---|
 | `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
 | `install_full_local_test` | Compose the existing fixed installers for repository-wide Python collection in a Linux x86_64 CPython 3.12 virtual environment; `--plan` validates inputs without installing. | Implemented with focused positive/negative tests; collection and hosted execution remain separately verifiable. |
+| `ci_test_inventory` | List the `tests/` modules that no workflow step or invoked Makefile target executes, by parsing step `run:` text (never `on.paths` filters) and ignoring `pytest --collect-only`. `--unexecuted` feeds the [unwired-python-tests](../../.github/workflows/unwired-python-tests.yml) job, which runs exactly that list in the full bundle. | Implemented with synthetic-repository tests; a scheduling aid, not readiness evidence. |
 | `python-dependency-lock-migration.json` | Bind each historical workflow hash to exactly one reviewed locked-install transition. | VERIFIED by the installer and generated-receipt suites; one-time migration only. |
 | `kfm_no_network/sitecustomize.py` | Fail closed on named IPv4/IPv6 connection, socket-send, resolver, and URL-open APIs for explicitly guarded Python processes. | VERIFIED by the Hydrology subprocess negative proof; not runner-wide, non-Python, or non-named API isolation. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |

@@ -1,0 +1,100 @@
+# KFM unwired Python tests.
+#
+# Most workflows run explicit slices of tests/, and the full-suite job in
+# python-dependency-lock.yml only collects. tools/ci/ci_test_inventory.py lists
+# the tests/ modules that no workflow step (or invoked Makefile target) executes;
+# this job runs exactly that list in the complete locked bundle, so a module that
+# nothing else wires in still fails CI when it breaks. A green run proves only
+# that those modules passed; it grants no readiness, release, or publication
+# authority.
+name: unwired-python-tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unwired-python-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unwired-python-tests:
+    name: run tests no other workflow executes (Python 3.12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONHASHSEED: "0"
+      TZ: UTC
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up the complete bundle's pinned interpreter
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            tools/ci/python-test.lock
+            tools/ci/python-cli.lock
+            tools/ci/python-geo.lock
+            tools/ci/python-nwm.lock
+            tools/ci/geoparquet-pyarrow-25.lock
+
+      - name: Install the full bundle in a fresh virtual environment
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/kfm-full-local-venv"
+          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" tools/ci/install_full_local_test.py
+
+      - name: Install the checksum-pinned OPA used by the policy lanes
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error \
+            --output "$RUNNER_TEMP/opa.download" \
+            https://github.com/open-policy-agent/opa/releases/download/v1.19.0/opa_linux_amd64_static
+          echo "1dd5c5591ff856f5e20a1d66bafae9511ddf3c5552ed3b5070c70b2b6580ee3f  $RUNNER_TEMP/opa.download" | sha256sum --check --strict
+          mv "$RUNNER_TEMP/opa.download" "$RUNNER_TEMP/opa"
+          chmod 0755 "$RUNNER_TEMP/opa"
+          "$RUNNER_TEMP/opa" version
+
+      - name: List tests no other workflow executes
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" tools/ci/ci_test_inventory.py
+          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" tools/ci/ci_test_inventory.py --unexecuted \
+            > "$RUNNER_TEMP/unwired-tests.txt"
+          echo "Unwired test modules: $(wc -l < "$RUNNER_TEMP/unwired-tests.txt")"
+
+      - name: Run the unwired tests
+        env:
+          KFM_NO_NETWORK: "1"
+          PROJ_NETWORK: "OFF"
+          PYTHONPATH: tools/ci/kfm_no_network
+        run: |
+          set -euo pipefail
+          if [[ ! -s "$RUNNER_TEMP/unwired-tests.txt" ]]; then
+            echo "Every tests/ module is executed by another workflow."
+            exit 0
+          fi
+          mapfile -t modules < "$RUNNER_TEMP/unwired-tests.txt"
+          OPA_BIN="$RUNNER_TEMP/opa" "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -m pytest \
+            -q -p no:cacheprovider -rfEs "${modules[@]}"
+
+      - name: Record unwired-test scope
+        if: always()
+        run: |
+          {
+            echo "## unwired-python-tests"
+            echo
+            echo "Runs the tests/ modules that no other workflow step executes, as listed by tools/ci/ci_test_inventory.py."
+            echo "It is test evidence only; it grants no readiness, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
