@@ -1,35 +1,44 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.hazards.nws-alerts-context
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: hazards
 stage: INGEST
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/hazards/nws_alerts_context.yaml
-purpose: Preserve the Hazards nws alerts context proposal as a reviewable inactive pipeline candidate
-  without activating sources or lifecycle writes.
+purpose: Prepare private held NWS source context from bounded supplied Kansas collection bytes; preserve
+  lineage, expiry and partial capture without alert delivery, live fetching or lifecycle writes.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/hazards/MISSING_OR_PLANNED_FILES.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/atmosphere/sources/noaa_nws.yaml
+  contract_refs:
+  - contracts/domains/hazards/README.md
+  - contracts/domains/hazards/nws_context_ingest_candidate.md
+  schema_refs:
+  - schemas/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json
+  implementation_refs:
+  - connectors/noaa/src/noaa/nws_alerts.py
+  - pipelines/domains/hazards/nws_context_ingest.py
+  fixture_refs:
+  - fixtures/domains/hazards/nws_context_ingest/
+  test_refs:
+  - connectors/noaa/tests/test_nws_alerts.py
+  - tests/pipelines/domains/hazards/test_nws_context_ingest.py
+  workflow_refs:
+  - .github/workflows/nws-context-pipeline.yml
 lifecycle:
   candidate_inputs:
-  - SOURCE_CAPTURE_CANDIDATE
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - RAW
+  - NWS_CONTEXT_INGEST_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,7 +57,7 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
 - SOURCE_ADMISSION_UNVERIFIED
@@ -63,4 +72,8 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:a88fb5ff7d4cf5035efc573d0749dba368fbac7e9065038cc913bae35a851923
+spec_hash: sha256:5d2ae306244178a6620291efe08b0f3a2a3847350661088bf0d17f1693d1cfdd
+validation:
+  command: python -B -m pytest tests/pipelines/domains/hazards/test_nws_context_ingest.py connectors/noaa/tests/test_nws_alerts.py
+    -q --strict-config --strict-markers
+  workflow: .github/workflows/nws-context-pipeline.yml

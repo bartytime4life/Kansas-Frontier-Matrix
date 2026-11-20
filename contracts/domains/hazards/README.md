@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-domains-hazards-readme
 title: Hazards Contracts — README
 type: readme
-version: v0.2
+version: v0.3
 status: draft; PROPOSED; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Hazards domain steward
@@ -14,7 +14,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-22
-updated: 2026-06-22
+updated: 2026-11-19
 policy_label: public; contract-root; hazards; not-for-life-safety; release-gated; evidence-bound
 related:
   - ../../../docs/domains/hazards/README.md
@@ -37,6 +37,9 @@ notes:
   - "Hazards is life-safety-adjacent but KFM is never an emergency alert authority; official sources own operational warnings and instructions."
   - "This directory owns human-readable object meanings for Hazards contracts. Machine shape stays in schemas/, admissibility in policy/, fixtures/tests in fixtures/ and tests/, release decisions in release/, and data lifecycle artifacts in data/."
   - "Most observed implementation-adjacent files remain scaffolds/placeholders; this README therefore separates CONFIRMED repo evidence from PROPOSED contract coverage and NEEDS VERIFICATION enforcement."
+owning_root: contracts/
+responsibility: define Hazards semantic boundaries and record current bounded source-context candidate contracts
+truth_posture: CONFIRMED current contract paths and bounded fixture profiles; PROPOSED semantics; historical inspections retained; NEEDS VERIFICATION source admission and release
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -59,6 +62,23 @@ notes:
 **Status:** draft / contract-root README  
 **Owners:** `OWNER_TBD` — assign Hazards + Contracts + Source + Evidence + Policy + Release stewards before promotion.  
 **Authority posture:** this directory defines **meaning**, not machine shape, source admission, policy, runtime behavior, or release authority.
+
+## Current bounded contract checkpoint (2026-11-19)
+
+The [NWS ingest candidate](./nws_context_ingest_candidate.md) now defines a private,
+held source-context projection with strict schema, sealed synthetic cases and
+no-network CI. It preserves lineage and evaluation-time freshness without alert,
+instruction or life-safety authority. Its proposed Atmosphere source descriptor
+remains unresolved. Earthquake and Storm Events source-specific contracts and
+[sealed replay bindings](../../../docs/runbooks/pipeline-fixture-replay.md) also
+exist. None of these closes rights, sensitivity, source admission, EvidenceBundle
+or release review, or implements the remaining Hazards candidates.
+
+## Historical boundary review
+
+The older inspection and scaffold examples below are retained as historical
+evidence. Current bounded implementation is described above; the earlier example
+that calls the NWS declaration a placeholder no longer describes its present binding.
 
 ## Quick jumps
 

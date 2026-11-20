@@ -2,7 +2,7 @@
 doc_id: kfm://contract/pipeline-spec-declaration
 title: KfmPipelineSpecDeclaration Contract
 type: contract
-version: v1.5
+version: v1.6
 status: proposed-inactive
 owners: OWNER_TBD — Pipeline specification steward · Schema steward · Validation steward · Domain steward
 created: 2026-08-30
@@ -46,7 +46,7 @@ tags: [kfm, pipeline-spec, declaration, inactive, fixture-only, compatibility-al
 notes:
   - "This contract governs declarative repository records only."
   - "A conforming declaration cannot activate a source, execute a network request, write a lifecycle target, promote, release, or publish."
-  - "Version v1.5 adds held TIGER roads intake. Version v1.4 added bounded NLCD candidate conformance. Version v1.3 added the bounded GBIF fixture pipeline. Version v1.2 added the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
+  - "Version v1.6 adds private NWS context intake. Version v1.5 added held TIGER roads intake. Version v1.4 added bounded NLCD candidate conformance. Version v1.3 added the bounded GBIF fixture pipeline. Version v1.2 added the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
 [/KFM_META_BLOCK_V2] -->
 
 # KfmPipelineSpecDeclaration Contract
@@ -69,9 +69,9 @@ promotion, release, publication, or public-use authority.
 
 ### Repository checkpoint (2026-11-19)
 
-The declaration corpus still contains 110 records. Seven of the 39 pipeline
+The declaration corpus still contains 110 records. Eight of the 39 pipeline
 candidates now bind fixture-first implementations: WBD HUC12, USGS water
-observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, and held TIGER roads intake.
+observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, and private NWS context intake.
 The earthquake, storm-event and water-observation pipelines replay
 sealed synthetic capture packets through the existing normalizers and validators
 without network access or lifecycle writes. Their bindings include the
@@ -86,7 +86,11 @@ TIGER roads binds bounded archive inspection and provider-reference comparison a
 INGEST. It does not decode road geometry; the unresolved domain descriptor keeps
 all candidates on HOLD with every authority flag false.
 
-The remaining 32 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
+NWS context binds the existing source parser to held private capture candidates,
+with explicit lineage, evaluation time and partial capture. Its proposed Atmosphere
+source descriptor remains unresolved; no alert or instruction is emitted.
+
+The remaining 31 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
 compatibility aliases retain their contract-required NOT_IMPLEMENTED posture.
 No execution authority changes. See the
 [fixture replay runbook](../docs/runbooks/pipeline-fixture-replay.md).
