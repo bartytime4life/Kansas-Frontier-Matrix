@@ -20,6 +20,7 @@ from typing import Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LOCKFILE = REPO_ROOT / "tools/ci/python-cli.lock"
+BUILD_LOCKFILE = REPO_ROOT / "tools/ci/python-build.lock"
 LOCAL_PACKAGE = REPO_ROOT / "packages/kfm-cli"
 LOCAL_SPEC = "./packages/kfm-cli"
 LOCK_LIMIT_BYTES = 262_144
@@ -27,6 +28,8 @@ MAX_LOCK_LINE_LENGTH = 1_024
 MAX_LOCK_LINES = 8_192
 MAX_REQUIREMENTS = 128
 MAX_HASHES_PER_REQUIREMENT = 32
+# The shared build-tools lock lists every Cython wheel (one per platform).
+BUILD_LOCK_MAX_HASHES = 64
 INSTALL_TIMEOUT_SECONDS = 300
 UNSAFE_PYTHON_ENVIRONMENT = {"PYTHONHOME", "PYTHONPATH", "PYTHONUSERBASE"}
 NONCANONICAL_LINE_BREAKS = ("\v", "\f", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029")
@@ -53,7 +56,7 @@ class CliInstallConfigurationError(ValueError):
     """Raised when the committed CLI install inputs are unsafe."""
 
 
-def validate_lockfile(path: Path = LOCKFILE) -> None:
+def validate_lockfile(path: Path = LOCKFILE, *, max_hashes: int = MAX_HASHES_PER_REQUIREMENT) -> None:
     """Fail closed unless every CLI requirement is exact and SHA-256 hashed."""
 
     if path.is_symlink() or not path.is_file():
@@ -120,7 +123,7 @@ def validate_lockfile(path: Path = LOCKFILE) -> None:
                 )
             hash_coverage[-1] += 1
             hash_groups[-1].append(line)
-            if hash_coverage[-1] > MAX_HASHES_PER_REQUIREMENT:
+            if hash_coverage[-1] > max_hashes:
                 raise CliInstallConfigurationError(
                     "CLI_LOCKFILE_HASH_LIMIT_EXCEEDED"
                 )
@@ -169,9 +172,12 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
     """Return the finite pip command sequence for the committed CLI package."""
 
     validate_lockfile()
+    validate_lockfile(BUILD_LOCKFILE, max_hashes=BUILD_LOCK_MAX_HASHES)
     validate_local_package()
     python = executable or sys.executable
     return (
+        # antlr4-python3-runtime 4.9.3 is source-only: build it with the
+        # hash-locked build tools instead of unhashed, isolated downloads.
         (
             python,
             "-I",
@@ -181,6 +187,20 @@ def build_commands(executable: str | None = None) -> tuple[tuple[str, ...], ...]
             "--disable-pip-version-check",
             "--no-input",
             "--require-hashes",
+            "--only-binary=:all:",
+            "--requirement",
+            str(BUILD_LOCKFILE),
+        ),
+        (
+            python,
+            "-I",
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--no-input",
+            "--require-hashes",
+            "--no-build-isolation",
             "--requirement",
             str(LOCKFILE),
         ),

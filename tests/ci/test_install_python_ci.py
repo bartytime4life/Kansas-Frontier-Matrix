@@ -43,15 +43,38 @@ class InstallPythonCiTests(unittest.TestCase):
         )
         for name, profile in module.PROFILES.items():
             with self.subTest(profile=name):
-                commands = module.build_commands(name, executable="python")
+                commands = module.build_commands(name, executable="python", python_version=(3, 12))
                 self.assertIn("--require-hashes", commands[0])
                 self.assertIn("--requirement", commands[0])
+                self.assertNotIn("--no-build-isolation", commands[0])
                 if profile.local_specs:
                     self.assertEqual(2, len(commands))
                     self.assertIn("--no-deps", commands[1])
                     self.assertIn("--no-build-isolation", commands[1])
                 else:
                     self.assertEqual(1, len(commands))
+
+    def test_source_builds_use_hash_locked_build_tools(self) -> None:
+        build_lock = str(REPO_ROOT / module.BUILD_LOCK)
+        module.validate_lockfile(Path(build_lock))
+        for name, profile in module.PROFILES.items():
+            with self.subTest(profile=name):
+                plain = module.build_commands(name, executable="python", python_version=(3, 14))
+                newest = module.build_commands(name, executable="python", python_version=(3, 15))
+                if profile.lockfile != "tools/ci/python-test.lock":
+                    self.assertEqual(plain, newest)
+                    continue
+                # PyYAML has no cp315 wheel, so 3.15 builds it from the hashed sdist
+                # with the hash-locked build tools and no isolated downloads.
+                self.assertEqual(len(plain) + 1, len(newest))
+                self.assertEqual(newest[0][-2:], ("--requirement", build_lock))
+                self.assertIn("--require-hashes", newest[0])
+                self.assertIn("--only-binary=:all:", newest[0])
+                self.assertEqual(newest[1], plain[0] + ("--no-build-isolation",))
+                self.assertEqual(newest[2:], plain[1:])
+        text = Path(build_lock).read_text(encoding="utf-8")
+        self.assertIn("setuptools==", text)
+        self.assertIn("cython==", text)
 
     def test_committed_locks_pin_direct_dependencies(self) -> None:
         test_lock = (REPO_ROOT / "tools/ci/python-test.lock").read_text(
@@ -95,7 +118,7 @@ class InstallPythonCiTests(unittest.TestCase):
         # locked schema/test and capture primitives; keep the allowlist exact.
         self.assertEqual(frozenset({"crop-casma-tiles", "project-test", "connectors-core"}),
                          module.profiles_for_workflow(workflow))
-        self.assertNotIn("--only-binary=:all:", module.build_commands("project-test")[0])
+        self.assertNotIn("--only-binary=:all:", module.build_commands("project-test", python_version=(3, 12))[0])
 
     def test_geo_profile_matches_declared_optional_transform_dependency(self) -> None:
         import tomllib
@@ -412,7 +435,9 @@ class InstallPythonCiTests(unittest.TestCase):
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with mock.patch.object(module.subprocess, "run") as run:
             module.install("project-test")
-        self.assertEqual(2, run.call_count)
+        # From CPython 3.15 the hash-locked build tools install first.
+        expected = 3 if module.needs_build_tools(module.PROFILES["project-test"]) else 2
+        self.assertEqual(expected, run.call_count)
         for call in run.call_args_list:
             self.assertIsInstance(call.args[0], tuple)
             self.assertIs(call.kwargs["shell"], False)

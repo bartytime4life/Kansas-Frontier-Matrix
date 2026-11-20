@@ -25,11 +25,17 @@ class InstallKfmCliTests(unittest.TestCase):
         module.validate_lockfile()
 
     def test_commands_use_hash_lock_and_fixed_local_package(self) -> None:
-        dependency, local = module.build_commands(executable="python")
+        tools, dependency, local = module.build_commands(executable="python")
+        # antlr4-python3-runtime is source-only: it builds with hash-locked tools.
+        self.assertEqual(("python", "-I"), tools[:2])
+        self.assertIn("--require-hashes", tools)
+        self.assertIn("--only-binary=:all:", tools)
+        self.assertEqual(str(module.BUILD_LOCKFILE), tools[-1])
         self.assertEqual("python", dependency[0])
         self.assertEqual("-I", dependency[1])
         self.assertEqual("-I", local[1])
         self.assertIn("--require-hashes", dependency)
+        self.assertIn("--no-build-isolation", dependency)
         self.assertEqual(str(module.LOCKFILE), dependency[-1])
         self.assertIn("--no-deps", local)
         self.assertIn("--no-build-isolation", local)
@@ -267,11 +273,11 @@ class InstallKfmCliTests(unittest.TestCase):
 
     def test_install_executes_argument_vectors_without_a_shell(self) -> None:
         with (
-            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0, 175.0)),
             mock.patch.object(module.subprocess, "run") as run,
         ):
             module.install()
-        self.assertEqual(2, run.call_count)
+        self.assertEqual(3, run.call_count)
         for call in run.call_args_list:
             self.assertIsInstance(call.args[0], tuple)
             self.assertIs(call.kwargs["shell"], False)
@@ -279,7 +285,7 @@ class InstallKfmCliTests(unittest.TestCase):
             self.assertEqual(REPO_ROOT, call.kwargs["cwd"])
             self.assertIs(module.subprocess.DEVNULL, call.kwargs["stdin"])
         self.assertEqual(
-            [300.0, 250.0],
+            [300.0, 250.0, 225.0],
             [call.kwargs["timeout"] for call in run.call_args_list],
         )
 
@@ -353,11 +359,11 @@ class InstallKfmCliTests(unittest.TestCase):
         }
         with (
             mock.patch.dict(module.os.environ, inherited, clear=False),
-            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0)),
+            mock.patch.object(module.time, "monotonic", side_effect=(100.0, 100.0, 150.0, 175.0)),
             mock.patch.object(module.subprocess, "run") as run,
         ):
             module.install()
-        self.assertEqual(2, run.call_count)
+        self.assertEqual(3, run.call_count)
         for call in run.call_args_list:
             environment = call.kwargs["env"]
             self.assertFalse(any(key.upper().startswith("PIP_") for key in environment if key not in {
