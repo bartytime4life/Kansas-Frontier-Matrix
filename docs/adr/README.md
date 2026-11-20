@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v2.10
+version: v2.11
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -27,6 +27,7 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
+  - "v2.11 separates the historical 2026-11-19 review from the later ADR-0003 acceptance and verifies the 50-record inventory against main@40761caa66. No additional ADR lifecycle transition is introduced."
   - "v2.10 records ADR-0003 (policy/ singular is canonical; policies/ is compatibility) as accepted by the repository owner on 2026-11-20 and refreshes the decision counters and badge (source metadata 27 proposed, 11 draft, 12 accepted; 12 accepted and 38 proposed effective)."
   - "2026-11-19 review: 66 direct Markdown files, 50 numbered ADRs, 11 accepted and 39 proposed effective; source metadata 28 proposed, 11 draft, 11 accepted. All 12 unassigned scaffolds are now indexed; no existing effective decision status changes."
   - "v2.8 records ADR-0049 (owner self-release for admitted public USGS ComCat earthquake data) as accepted by the repository owner on 2026-10-12 and refreshes the snapshot counters and badges (65 direct files; 49 numbered; source metadata 27 proposed, 11 draft, 11 accepted; 11 accepted, 38 proposed effective)."
@@ -63,7 +64,7 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The inventory is recounted against `main@c47f52e185bd1c6540801af8551c75cf12e6cbb6` plus this proposal packet (2026-11-19) and the ADR-0003 acceptance (2026-11-20). The [ADR review](../reports/adr-review-2026-11-19.md) separates existing decisions, implementation observations and proposed changes.
+The inventory is recounted against `main@40761caa66f9f455aabd78565e99b186e9ad1fe6` plus the ADR-0003 acceptance (2026-11-20). The [ADR review](../reports/adr-review-2026-11-19.md) separates existing decisions, implementation observations and proposed changes.
 
 | Surface | Verified state | Meaning |
 |---|---:|---|
@@ -80,7 +81,7 @@ The exact numbered records and unassigned scaffolds are listed in the [canonical
 
 ### Review reconciliation — 2026-11-19
 
-This packet repairs index/scaffold coherence, rewrites the unaccepted retired-shell proposal, adds implementation addenda to ADR-0006/0007, and proposes ADR-0050. Existing decision statuses and runtime behavior are unchanged. The restored Habitat draft remains unassigned.
+The 2026-11-19 packet repaired index/scaffold coherence, rewrote the unaccepted retired-shell proposal, added implementation addenda to ADR-0006/0007, and proposed ADR-0050 without changing existing decision statuses or runtime behavior. The restored Habitat draft remains unassigned.
 
 ## Authority and boundaries
 
