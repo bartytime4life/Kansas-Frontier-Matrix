@@ -139,6 +139,25 @@ class ClassifyTests(unittest.TestCase):
                                  (status, precision))
                 self.assertEqual(candidate.route, "QUARANTINE_CANDIDATE")
 
+    def test_obscured_requires_boolean_or_null_without_numeric_coercion(self):
+        for value in (0, 1, 0.0, 1.0, "true", [], {}):
+            with self.subTest(kind=type(value).__name__), self.assertRaises(obs.ObservationInputError) as caught:
+                parse([record(obscured=value)])
+            self.assertEqual(str(caught.exception), "OBSCURED_FLAG")
+        for value, expected in ((None, "open"), (False, "open"), (True, "obscured")):
+            with self.subTest(value=value):
+                (candidate,) = parse([record(obscured=value)]).records
+                self.assertEqual(candidate.geoprivacy_status, expected)
+
+    def test_geoprivacy_values_produce_finite_errors_for_nonstring_inputs(self):
+        for field in ("geoprivacy", "taxon_geoprivacy"):
+            for value in ([], {}, ["private"], {"private-marker": True}, 0, 1, True):
+                with self.subTest(field=field, kind=type(value).__name__), \
+                        self.assertRaises(obs.ObservationInputError) as caught:
+                    parse([record(**{field: value})])
+                self.assertEqual(str(caught.exception), "GEOPRIVACY_STATE")
+                self.assertNotIn("private-marker", str(caught.exception))
+
     def test_obscured_coordinates_carried_unmodified(self):
         (candidate,) = parse([record(geoprivacy="obscured", geojson={
             "type": "Point", "coordinates": [-98.123456, 38.654321]})]).records

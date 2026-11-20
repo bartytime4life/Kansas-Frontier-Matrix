@@ -195,6 +195,24 @@ class AdmissionTests(unittest.TestCase):
                          (admit.QUARANTINE, ("PARSE_CURSOR_ORDER",)))
         self.assertIsNone(decision.page)
 
+    def test_malformed_privacy_fields_route_to_quarantine_without_payload(self):
+        for fields, code in (({"obscured": 1}, "OBSCURED_FLAG"),
+                             ({"obscured": 1.0}, "OBSCURED_FLAG"),
+                             ({"geoprivacy": {"private-marker": True}}, "GEOPRIVACY_STATE"),
+                             ({"taxon_geoprivacy": ["private"]}, "GEOPRIVACY_STATE")):
+            payload = page([fixtures.record(1), fixtures.record(2, **fields)])
+            for descriptor in (RESOLVED, None):
+                with self.subTest(field=next(iter(fields)), descriptor=descriptor is not None):
+                    decision = decide(payload, descriptor=descriptor)
+                    self.assertEqual(decision.provisional_route, admit.QUARANTINE)
+                    self.assertEqual(decision.route, admit.QUARANTINE if descriptor else admit.HOLD)
+                    self.assertEqual(decision.reasons[0], "PARSE_" + code)
+                    self.assertIsNone(decision.page)
+                    self.assertFalse(decision.write_performed)
+                    self.assertEqual(decision.admission, "NOT_ADMITTED")
+                    self.assertNotIn("private-marker", repr(decision))
+                    self.assertNotIn("38.5", repr(decision))
+
     def test_uncaptured_page_is_held_with_contract_reason(self):
         decision = admit.admit(retrieve(response(403, b"no"))[0], descriptor=RESOLVED)
         self.assertEqual((decision.route, decision.reasons), (admit.HOLD, ("ACCESS_DENIED",)))
