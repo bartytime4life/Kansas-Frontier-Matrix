@@ -88,6 +88,12 @@ class BrowserTests(unittest.TestCase):
                         page.on("dialog", lambda dialog: dialog.accept())
                         try:
                             page.goto(server.origin)
+                            # "0 files" is in the static HTML. Wait for app.js to
+                            # replace the connecting placeholder, which happens only
+                            # after it holds the session token that upload() needs.
+                            expect(page.locator("#file-list")).to_contain_text(
+                                "No files yet"
+                            )
                             expect(page.locator("#visible-count")).to_have_text(
                                 "0 files"
                             )
