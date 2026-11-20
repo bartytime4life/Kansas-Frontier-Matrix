@@ -18,12 +18,14 @@ const isUnit = (name: string) => /(^|_)units?(_|$)/.test(name);
 
 function contextLabel(context: string,collectionId:string) {
   if (!context.startsWith('{')) return context;
-  return Object.entries(JSON.parse(context) as Record<string, string>)
+  const entries=Object.entries(JSON.parse(context) as Record<string,string>);
+  const multipleUnits=entries.filter(([name])=>isUnit(name)).length>1;
+  return entries
     .sort(([a], [b]) => Number(isUnit(b)) - Number(isUnit(a)))
     .map(([name, value]) => {
       const meaning=documentedCode(collectionId,name,value);
       const unit=!meaning&&value.trim()&&Number.isFinite(Number(value))?documentedField(collectionId,name)?.unit:null;
-      return `${isUnit(name) ? 'Unit' : fieldLabel(name)}: ${value}${unit?` ${unit}`:''}${meaning?` (${meaning})`:''}`;
+      return `${isUnit(name)&&!multipleUnits ? 'Unit' : fieldLabel(name)}: ${value}${unit?` ${unit}`:''}${meaning?` (${meaning})`:''}`;
     })
     .join(' · ');
 }
@@ -49,6 +51,9 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
 }) {
   const field = fields.find(candidate => candidate.name === view?.field) ?? fields[0];
   const group = field.groups.find(candidate => candidate.context === view?.context) ?? field.groups[0];
+  const contextUnits=group.context.startsWith('{')
+    ?Object.fromEntries(Object.entries(JSON.parse(group.context) as Record<string,string>).filter(([name])=>isUnit(name)))
+    :{};
   const distribution = useMemo(
     () => measurementDistribution(collection, snapshot, field.name, group.context),
     [collection, snapshot, field.name, group.context],
@@ -88,7 +93,11 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
       </label>
     </div>
 
-    <p className={styles.note}>Selected context: {contextLabel(group.context,collection.id)}.</p>
+    {Object.keys(contextUnits).length>0&&<p className={styles.note}>{contextLabel(JSON.stringify(contextUnits),collection.id)}.</p>}
+    <details>
+      <summary>Selected context · inspect all recorded fields</summary>
+      <p className={styles.note}>{contextLabel(group.context,collection.id)}.</p>
+    </details>
     {firstBin && lastBin && <div className={styles.measurementPlot} role="region" aria-label="Measurement distribution">
       <p className={styles.plotLabel}>Records per range</p>
       <div className={styles.plotScroll}>

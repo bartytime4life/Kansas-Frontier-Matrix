@@ -1,4 +1,5 @@
 import type {FieldRole} from './collection-metadata';
+import {waterQualityDictionary} from './water-quality-dictionary';
 import {usgsDictionary} from './usgs-field-dictionary';
 
 export type FieldDocument = {
@@ -69,14 +70,14 @@ const faa:Readonly<Record<string,DocumentedField>>={
 };
 
 export function documentedField(collectionId:string|undefined,name:string):DocumentedField|undefined {
- const fields=collectionId==='observations-faa-obstacles'?faa:usgsDictionary(collectionId)?.fields;
+ const fields=collectionId==='observations-faa-obstacles'?faa:(usgsDictionary(collectionId)??waterQualityDictionary(collectionId))?.fields;
  return fields&&Object.hasOwn(fields,name)?fields[name]:undefined;
 }
 export function fieldDocuments(collectionId:string):readonly FieldDocument[]{
- return collectionId==='observations-faa-obstacles'?documents:usgsDictionary(collectionId)?.documents??[];
+ return collectionId==='observations-faa-obstacles'?documents:(usgsDictionary(collectionId)??waterQualityDictionary(collectionId))?.documents??[];
 }
 export function fieldDictionaryRevision(collectionId:string):string|null{
- return collectionId==='observations-faa-obstacles'?FAA_FIELD_DICTIONARY_REVISION:usgsDictionary(collectionId)?.revision??null;
+ return collectionId==='observations-faa-obstacles'?FAA_FIELD_DICTIONARY_REVISION:(usgsDictionary(collectionId)??waterQualityDictionary(collectionId))?.revision??null;
 }
 export function recordedUnit(collectionId:string,field:string,values:Record<string,unknown>):string|null{
  const definition=documentedField(collectionId,field);
@@ -102,5 +103,5 @@ export function collectionFieldNotes(collectionId:string):readonly string[]{
   'Accuracy codes are categories, not distances to average. Height summaries keep FAA verification and accuracy categories separate; unknown codes and missing values remain unchanged.',
   'Quantity can describe a legacy array at one stored point; feature count and represented-obstacle count are different.',
   'The action date is a record-maintenance date. Documentation edition, capture currency, retrieval time and observation time remain distinct.',
- ]:usgsDictionary(collectionId)?.notes??[];
+ ]:(usgsDictionary(collectionId)??waterQualityDictionary(collectionId))?.notes??[];
 }

@@ -1,0 +1,143 @@
+{
+  "receipt_id": "kfm-water-quality-metadata-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/water-quality-dictionary.ts",
+    "app/water-quality-context.ts",
+    "app/collection-field-dictionary.ts",
+    "app/collection-lab.ts",
+    "app/collection-metadata-panel.tsx",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/measurement-explorer.tsx",
+    "tests/water-quality-metadata.test.mjs",
+    "tests/collection-integration.test.mjs",
+    "tests/usgs-field-metadata.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/water-quality-dictionary.ts": "sha256:612124807aa9cc71f4683a9cc6c116b87d632d241f72e45ecdaee1963138bc45",
+    "app/water-quality-context.ts": "sha256:450c1ce6097cba41921f8f1e86461bbd0cf9cbffc0eeb2b2567ef74625a564ac",
+    "app/collection-field-dictionary.ts": "sha256:3598ed15e21111db5c2293f4bac7c76dde40cfb4cc5c4c25d137d63e4c43d61a",
+    "app/collection-lab.ts": "sha256:3e14cffc3e6aada5fa941b85a8459e52b0e4673d1f6d0d41ffb50306f0cef79e",
+    "app/collection-metadata-panel.tsx": "sha256:f75ba9fc9dfaf661f19f187b3b4434ac12c63eb451916a198e8b787f08bb9c40",
+    "app/data-lab/lab-bundle.ts": "sha256:651cf1f95a61ac45161bc632060858537c2b78411a7ddd9aab1fd3acb7754584",
+    "app/data-lab/measurement-explorer.tsx": "sha256:f15f9aa426f5060668be9d6098b9074ffaed766cbf684373d240ac7aaa617db3",
+    "tests/water-quality-metadata.test.mjs": "sha256:43d59dffda4db9eb6a602dbaf16f223b73cfbd197a06f41cde0ff7d88c2ab051",
+    "tests/collection-integration.test.mjs": "sha256:211b6015d8b4d6a122e7b9b40c43bee2c82eef9b48179600f55047302bed8c06",
+    "tests/usgs-field-metadata.test.mjs": "sha256:8b69dfcf2cbbbcb820a8185c48ee0d7baa3041720e1820e7d34a6f94cb58d82a",
+    "docs/collection-data-lab.md": "sha256:a7ed116890d6ecbd7e04519bb09ce4c6e8ecaa83d6746b1976812d7d691c05b4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:48208f7d16cccd3a24e614698d89940ae0d1922221388a9ac63362cc9b79e808",
+      "sha256:ab44cc71d81098c76d54748654d9b46b73b0b8349f1c9430469801df4eb555bb",
+      "sha256:3400e65132cade7a22271847c438ee97264551e26665c4f2879652f320fc53ae",
+      "sha256:32ddea92ad7812ffbbb7534a90d0e37b9f617bb6a4928611e6a824c0367acc9a",
+      "sha256:2174cdc24ab1d88d47b4d25ba4c0961b4c78c2c0a7b25add0ea7189b80e51d44",
+      "sha256:fb31e80e2db14f1196a95a36da4697c33f26496a16936aa74a0a131913f852c6",
+      "sha256:43fa7be061d5740e504da27fa3ca766a516dcc290d1933129d0578e5e94be1fa"
+    ],
+    "evidence_refs": [
+      "repo:fd177091eb6eb770458e989442b797c72faae312:app/collection-lab.ts",
+      "https://www.waterqualitydata.us/portal_userguide/",
+      "https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv",
+      "https://www.epa.gov/system/files/other-files/2025-09/schema_outbound_wqx3.0_profiles_1.csv",
+      "https://api.waterdata.usgs.gov/samples-data/openapi.json",
+      "repo:3618a710b6bcc997288554f501f6ec5d995e8ce5:tools/local_data/sql_feed_institutions.py",
+      "repo:3618a710b6bcc997288554f501f6ec5d995e8ce5:tools/local_data/sql_feed_water.py"
+    ]
+  },
+  "truth_labels": {
+    "app/water-quality-dictionary.ts": "CONFIRMED",
+    "app/water-quality-context.ts": "CONFIRMED",
+    "app/collection-field-dictionary.ts": "CONFIRMED",
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/collection-metadata-panel.tsx": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/measurement-explorer.tsx": "CONFIRMED",
+    "tests/water-quality-metadata.test.mjs": "CONFIRMED",
+    "tests/collection-integration.test.mjs": "CONFIRMED",
+    "tests/usgs-field-metadata.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite: 3,251 passed, 25 existing skips, zero failures; preceded final display-only refinements",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "43 focused dictionary/context/saved-bundle regression checks on final source",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Final production build, TypeScript and targeted ESLint",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone browser checks preserved 500 real archived records, 116 definitions, legacy/new bundles, literal values, units, citations, null AI credit and expandable context; zero browser errors",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Git diff whitespace and generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted checks and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Draft source candidate only; exact-head CI is read from GitHub after PR creation, and deployment is not included."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "WQP legacy result definitions",
+      "validated": true,
+      "evidence_ref": "https://www.waterqualitydata.us/portal_userguide/"
+    },
+    {
+      "id": "EPA WQX3 outbound schema",
+      "validated": true,
+      "evidence_ref": "https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv"
+    },
+    {
+      "id": "EPA WQX3 profile matrix",
+      "validated": true,
+      "evidence_ref": "https://www.epa.gov/system/files/other-files/2025-09/schema_outbound_wqx3.0_profiles_1.csv"
+    },
+    {
+      "id": "USGS samples API",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/samples-data/openapi.json"
+    },
+    {
+      "id": "KFM capture mappings",
+      "validated": true,
+      "evidence_ref": "repo:3618a710b6bcc997288554f501f6ec5d995e8ce5:tools/local_data/sql_feed_institutions.py"
+    },
+    {
+      "id": "KFM legacy capture mappings",
+      "validated": true,
+      "evidence_ref": "repo:3618a710b6bcc997288554f501f6ec5d995e8ce5:tools/local_data/sql_feed_water.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T00:27:03.957969+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Deterministic, source-backed field curation. All 49 legacy WQP fields and 67 of 183 USGS sample fields are documented; 116 remaining USGS definitions stay unknown. No source-data Qwen review, new AI credit, source admission, public data promotion, numeric censoring substitution, chemical equivalence, regulatory assessment, source rewrite or deployment is performed. Documentation snapshot fingerprints do not establish captured data editions. Native records were read only through the existing public reader against read-only SQLite. Initial focused assertions and browser harness selectors/waits were corrected; final checks passed. Final unit-label and expandable-context refinements are covered by build, types, lint, focused tests and real browser verification. Independent review and exact-head hosted CI remain pending."
+}
