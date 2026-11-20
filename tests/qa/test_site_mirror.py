@@ -3149,4 +3149,14 @@ def test_connections_action_deadlines_successor_preserves_inventory_and_all_hold
         {'tests/connections-status-recovery.test.mjs', 'tests/connections-action-deadlines.test.mjs', 'app/connections/workspace.tsx'},
         "f0bda109e334964776e9cd5362a4b309dba2ced4",
     )
-    assert TOOL.RECEIPT.name == "site-v268-connections-action-deadlines-overlay-20261119.json"
+
+
+def test_guides_counted_circles_successor_preserves_connections_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-guides-counted-circles-overlay-20261120.json",
+        "site-v268-connections-action-deadlines-overlay-20261119.json",
+        "04e89490eedac516d9c56ff92a2848485d833bbc93cadec6310210f771ded8f7",
+        {"app/landing-guides.ts", "tests/landing-guides.test.mjs"},
+        "c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-guides-counted-circles-overlay-20261120.json"
