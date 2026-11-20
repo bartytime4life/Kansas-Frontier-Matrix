@@ -2,11 +2,11 @@
 doc_id: kfm://register/repository-gap-fill-goal-2026-10-02
 title: KFM Repository Gap-Fill Goal — 2026-10-02
 type: goal-and-procedure-ledger
-version: v1.4
+version: v1.5
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-02
-updated: 2026-11-19
+updated: 2026-11-20
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "State a measurable goal for closing repository gaps, record the gaps observed in a full-tree audit, define repeatable fill procedures, and point each gap at its existing machine projection or validator without creating source, policy, lifecycle, release, or publication authority."
@@ -38,6 +38,34 @@ notes:
 > This ledger is a review aid. It records what the audit saw and how to close it. It does not approve, admit, release, or publish anything.
 
 ---
+
+## Gap status reconciliation — 2026-11-20
+
+Base: `main@62d0a8b0db`, after PRs #5978 to #5981 merged. This checkpoint changes
+no code. It re-runs each row's evidence command and records what is now fixed in
+the register table (section 3); the 2026-10-02 snapshot evidence there is kept.
+
+| Gap | Current evidence | Result |
+|---|---|---|
+| `G-DOC-01` | `python tools/qa/gap_scan.py` reports `BROKEN_LOCAL_LINK: 0` and no missing targets | FIXED for the census. Links held behind `G-DOC-02` to `G-DOC-04` are plain text, not links, so those rows stay open. |
+| `G-ENV-01` | PR #5979 adds 3.13 to the `python-dependency-lock`, `offline-pipeline-check` and `root-python-distribution` matrices and the `cp313` pyproj hashes to `tools/ci/python-geo.lock` | FIXED. |
+| `G-ENV-02` | PR #5213 adds `tools/ci/install_full_local_test.py`. In that bundle on CPython 3.12, `pytest --collect-only tests` collects 10,508 tests with no errors, matching the hosted `collect full Python suite` job | FIXED. Connector-local suites and `pipelines/domains/soil/crop_casma_tiles` keep their own runners and are outside `tests/`. |
+| `G-SITE-01` | `python tools/qa/site_mirror.py --check` returns `PASS` against `site-v268-guides-counted-circles-overlay-20261120.json`, and `water-pilot` is green on this base | FIXED for drift. The receipt's own review acceptance is still `NOT_EVALUATED`. |
+| `G-PLACE-01` | PR #5978 accepts ADR-0003, retires the three `release/*.rego` scaffolds in favour of their `policy/` counterparts, and records `migrations/policy/20261120_g_place_01_release_rego.yaml` with a forward-fix rollback | FIXED. |
+| `G-POL-01` | `docs/readiness-lanes.md` documents the checksum-verified OPA 1.19.0 install for `OPA_BIN`; `policy-test.yml` installs the same pinned binary and is green on this base | FIXED. |
+| `G-SCAF-01` | Backlog: 717 `NOT_INSPECTED`, 30 `PARTIAL`. Scaffold baseline: 836 findings. PR #5980 retired three hydrology test placeholders already covered elsewhere; PR #5981 turned seven catalog-closure placeholders into tested holds wired into their domain workflows | Open. The remaining P1 test entry, `tests/domains/hydrology/test_evidence_bundle_closure.py`, is pinned documentation-only by the `verify-evidence-bundle-closure` job and needs an owner decision. Remaining P1 schema, policy and pipeline entries need contract or policy decisions. |
+| `G-SCAF-02` | `gap_scan.py --list` reports 5 `UNRATCHETED_PLACEHOLDER` files: `artifacts/build/env/tool-versions.yaml`, `artifacts/qa/lint/mypy.txt`, the two fauna `valid/` fixtures and `infra/compose/docker-compose.yml` | Open, down from 10. The compose file is deliberately payload-free and covered by `tests/infra` and `infra-compose-smoke.yml`. |
+| `G-DOM-01` | `spatial-foundation` now has 29 tracked files, including `contracts/spatial-foundation/`; `planetary-3d` still has only `docs/domains/planetary-3d/README.md` and `docs/architecture/planetary-3d.md` | Open for `planetary-3d`. |
+| `G-ADR-01` | `docs/adr/INDEX.md`: 50 numbered records, 12 accepted and 38 proposed | Open. |
+
+`G-DOC-02`, `G-DOC-03` and `G-DOC-04` were not re-assessed beyond the link
+census; 310 Markdown files under `docs/`, `apps/` and `packages/` still name
+`apps/explorer-web`.
+
+The additive provenance record is
+[`genrec-gap-register-status-reconciliation-20261120.json`](../../data/receipts/generated/genrec-gap-register-status-reconciliation-20261120.json).
+Rollback reverts this section, the section 3 dispositions and the changelog row;
+preserve the provenance record.
 
 ## Repository audit and deny-result repair — 2026-11-19
 
@@ -236,19 +264,19 @@ Deliberately **not** changed, because the repository already records them as hel
 | `G-TEST-01` | Test package shadowed `pipelines/` | Section 2 | CONFIRMED | FIXED | tests/ |
 | `G-TEST-02` | IPv6 guard test depended on host kernel | Section 2 | CONFIRMED | FIXED | tests/ + CI steward |
 | `G-DATA-01` | Unparseable fauna `valid/` fixtures | Section 2 | CONFIRMED | FIXED (slot remains placeholder) | Fauna steward |
-| `G-DOC-01` | 456 broken local links to 214 distinct targets | `gap_scan.py`: 283 into `docs/`, 86 into `apps/` (retired Explorer Web), 19 to root contract, 21 into `schemas/` | CONFIRMED | Procedure P-03 | Docs steward |
+| `G-DOC-01` | 456 broken local links to 214 distinct targets | `gap_scan.py`: 283 into `docs/`, 86 into `apps/` (retired Explorer Web), 19 to root contract, 21 into `schemas/` | CONFIRMED | FIXED for the census (2026-11-20: 0 broken local links); held repoints stay under `G-DOC-02` to `G-DOC-04` | Docs steward |
 | `G-DOC-02` | Doctrine filename conflicts drive 97 of the broken links | `DOC-DOC-002/003/004` in `docs/doctrine/README.md` | CONFIRMED | Needs steward naming decision, then a scripted rewrite (P-03 step 4) | Doctrine steward |
 | `G-DOC-03` | Retired `apps/explorer-web` still linked from ADR-0004, ADR-0007, and domain feature READMEs | 86 references | CONFIRMED | Point at the live Site source or mark as historical; ADRs need append-only notes, not rewrites | Docs + ADR steward |
 | `G-DOC-04` | Link repairs blocked by pre-existing metadata or held links | Fixed for three source-catalog documents (`G-DOC-04a`). Still held: `docs/doctrine/{ai-as-assistant,map-first,trust-membrane,truth-posture}.md` — besides invalid `doc_id` and missing fields, each carries links the diff-scoped link check rejects and this ledger may not rewrite: `ai-build-operating-contract.md` (`DOC-DOC-002`), retired `apps/explorer-web`, and section anchors absent from the receipt-pinned `docs/doctrine/directory-rules.md`; `truth-posture.md` is byte-identical to `trust-membrane.md`. `docs/domains/habitat/PRESERVATION_MATRIX.md` carries one `DOC-DOC-002` link. | CONFIRMED | Remaining 5: wait for the `G-DOC-02` naming decision and a directory-rules anchor decision, then repair metadata and apply the 19 held repoints together | Doctrine steward, document owners |
-| `G-ENV-01` | `requires-python = ">=3.11"` is unbounded, but CI locks cover 3.11 and 3.12 only | `install_python_ci.py geo-transforms` fails on 3.13 with a hash mismatch: no `cp313` wheel hashes in `tools/ci/python-geo.lock` | CONFIRMED | Choose: cap `requires-python` at `<3.13`, or add 3.13 to the CI matrix and its wheel hashes | CI steward |
-| `G-ENV-02` | No single documented profile installs everything the full suite imports | 4 collection errors remain after `all-local-test` + `water-pilot`: three `tests/packages/kfm_cli` modules need `tools/ci/install_kfm_cli.py`; `tests/release/test_geoparquet_2_rc_pyarrow_carriers.py` needs the `geoparquet-pyarrow-25` profile | CONFIRMED | Add a `full-local-test` profile or document the profile per test folder | CI steward |
-| `G-SITE-01` | Site mirror receipt drift on `main` | `python tools/qa/site_mirror.py --check` → `MIRROR_FILE_SET_DRIFT`: 6 unrecorded mirror paths, 15 changed files. `water-pilot.yml` runs this step | CONFIRMED locally; hosted result UNKNOWN | Reviewed mirror receipt refresh; do not regenerate unreviewed | Site/source owner |
-| `G-PLACE-01` | Three PROPOSED-scaffold `.rego` files at the `release/` root | `release/{hydrology_publication,public_safe_geometry,source_role_anti_collapse}.rego` — policy source outside `policy/`, and outside the scaffold ratchet | CONFIRMED | Migrate under `policy/` or retire, via migration note per Directory Rules §9.3 | Policy steward |
+| `G-ENV-01` | `requires-python = ">=3.11"` is unbounded, but CI locks cover 3.11 and 3.12 only | `install_python_ci.py geo-transforms` fails on 3.13 with a hash mismatch: no `cp313` wheel hashes in `tools/ci/python-geo.lock` | CONFIRMED | FIXED (2026-11-20): 3.13 added to the CI matrix and its wheel hashes, PR #5979 | CI steward |
+| `G-ENV-02` | No single documented profile installs everything the full suite imports | 4 collection errors remain after `all-local-test` + `water-pilot`: three `tests/packages/kfm_cli` modules need `tools/ci/install_kfm_cli.py`; `tests/release/test_geoparquet_2_rc_pyarrow_carriers.py` needs the `geoparquet-pyarrow-25` profile | CONFIRMED | FIXED (2026-11-20): `tools/ci/install_full_local_test.py`, PR #5213 | CI steward |
+| `G-SITE-01` | Site mirror receipt drift on `main` | `python tools/qa/site_mirror.py --check` → `MIRROR_FILE_SET_DRIFT`: 6 unrecorded mirror paths, 15 changed files. `water-pilot.yml` runs this step | CONFIRMED locally; hosted result UNKNOWN | FIXED for drift (2026-11-20): `site_mirror.py --check` PASS; receipt review acceptance still pending | Site/source owner |
+| `G-PLACE-01` | Three PROPOSED-scaffold `.rego` files at the `release/` root | `release/{hydrology_publication,public_safe_geometry,source_role_anti_collapse}.rego` — policy source outside `policy/`, and outside the scaffold ratchet | CONFIRMED | FIXED (2026-11-20): retired with migration record under accepted ADR-0003, PR #5978 | Policy steward |
 | `G-SCAF-01` | Scaffold backlog is uninspected | 747 backlog entries: 732 `NOT_INSPECTED`, 15 `PARTIAL`; priorities P1 95 / P2 513 / P3 139; by root: `schemas` 387, `policy` 112, `tests` 89 | CONFIRMED | Procedure P-05 | Owning-root stewards |
 | `G-SCAF-02` | Placeholders outside scaffold surfaces | 10 files: `CITATION.cff`, `artifacts/build/env/tool-versions.yaml`, `artifacts/qa/lint/mypy.txt`, 2 fauna fixtures, `infra/compose/docker-compose.yml`, 3 `release/*.rego`, `runtime/model_adapters/OllamaAdapter.py` | CONFIRMED | Now counted by `gap_scan.py`; fill or retire each | Root owners |
 | `G-DOM-01` | Two domain lanes are documentation-only | `planetary-3d` and `spatial-foundation`: one file under `docs/domains/`, nothing under `schemas/`, `contracts/`, `policy/`, `pipelines/`, `packages/`, `tests/`, or `fixtures/` | CONFIRMED | Decide: real lane (scaffold through P-06) or fold into existing lanes | Domain steward |
 | `G-ADR-01` | Most ADRs remain proposed | `docs/adr/INDEX.md`: 5 accepted, 38 proposed | CONFIRMED | Prioritise ADRs that block P1 backlog entries | ADR steward |
-| `G-POL-01` | Policy readiness lane cannot run without OPA | `make policy` → HOLD `OPA_BINARY_UNAVAILABLE` in the audit environment | CONFIRMED locally | Document the OPA install for local runs; hosted lane UNKNOWN | Policy steward |
+| `G-POL-01` | Policy readiness lane cannot run without OPA | `make policy` → HOLD `OPA_BINARY_UNAVAILABLE` in the audit environment | CONFIRMED locally | FIXED (2026-11-20): install documented in `docs/readiness-lanes.md`; hosted `policy-test` green | Policy steward |
 
 ### 3.1 Domain coverage snapshot
 
@@ -372,6 +400,7 @@ Revert the commit that adds this ledger. That restores `tests/pipelines/__init__
 |---|---|---|
 | v1.0 | 2026-10-02 | First audit snapshot, five fixes, gap scan, and procedures P-01 to P-07. |
 | v1.1 | 2026-10-02 | `G-DOC-04a`: three source-catalog documents repaired; the remaining five `G-DOC-04` documents stay held behind doctrine decisions. Revert that commit to restore their prior bytes, the 339 gap-scan baseline, and the 115-warning topology baseline. |
+| v1.5 | 2026-11-20 | Gap status reconciliation: `G-DOC-01`, `G-ENV-01`, `G-ENV-02`, `G-SITE-01`, `G-PLACE-01` and `G-POL-01` marked FIXED with current evidence; `G-SCAF-01`, `G-SCAF-02`, `G-DOM-01` and `G-ADR-01` progress recorded. No code changes. |
 | v1.3 | 2026-10-16 | P-04 checkpoint: `OllamaAdapter.py` became a tested fail-closed hold (non-Markdown placeholder allowance 9 → 8), and `docs/readiness-lanes.md` was aligned with the lane registry under a parity test. |
 
 [Back to top](#top)
