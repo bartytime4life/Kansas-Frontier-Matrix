@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks/kdot-kanplan-fixture-integration
 title: KDOT KanPlan private-fixture integration
 type: runbook
-version: v0.1.0
+version: v0.1.1
 status: draft; fixture-only; no-source-admission
 owners: ["@bartytime4life"]
 created: 2026-09-05
-updated: 2026-09-05
+updated: 2026-11-20
 owning_root: docs/
 policy_label: public
 truth_posture: CONFIRMED bounded implementation; PROPOSED integration; NEEDS VERIFICATION graduation
@@ -50,7 +50,7 @@ inspected responsibility-root READMEs, not the handoff's temporary file layout.
 |---|---|
 | `connectors/kansas/kanplan.py` | Source-specific capture under the existing Kansas family, `DIR-EXEC-002`. This dormant module does not select a final canonical KDOT child directory or source identity. Final client packaging remains PROPOSED; review or relocate this one module before activation. |
 | `packages/geo/src/geo/esri_polyline.py` | Reusable geometry implementation, `DIR-EXEC-001` and `DIR-DEP-001`. It has its own finite geometry errors and does not import connectors, pipelines, apps, or tools. |
-| `packages/geo/pyproject.toml` | Declares only the optional `pyproj==3.7.2` transform dependency and Python baseline. It does not establish built/installed/distributed package maturity. |
+| `packages/geo/pyproject.toml` | Declares only the optional pyproj transform dependency (`3.7.2` on CPython 3.11 through 3.14, `3.8.0` on 3.15) and Python baseline. It does not establish built/installed/distributed package maturity. |
 | `pipelines/normalize/roads-rail-trade/kanplan_state_system.py` | Stage-first normalization and private-fixture candidate composition, adopted `DIR-EXEC-004`. No real lifecycle or release transitions. |
 | `fixtures/synthetic/kanplan/` | Reusable authored synthetic inputs, not real captures or registry records. |
 | `tests/pipelines/kanplan/` | Changed-area conformance and integration tests; network denial is scoped to this directory. |
