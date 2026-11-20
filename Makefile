@@ -52,6 +52,15 @@ site-check:
 local-data-check:
 	$(KFM_VALIDATION_ENV) PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/local_data
 
+# Loopback-only HTTP checks that local-data-check skips under KFM_NO_NETWORK=1.
+# They bind 127.0.0.1 only; nothing leaves the host.
+local-data-loopback-check:
+	KFM_NO_NETWORK=0 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 TZ=UTC python -m pytest -q -p no:cacheprovider --strict-config --strict-markers \
+		"tests/local_data/test_studio_accounts_recovery.py::GatewayTests" \
+		"tests/local_data/test_intake_studio.py::Tests::test_http_boundaries" \
+		"tests/local_data/test_intake_studio_integrity.py::IntegrityHTTPTests" \
+		"tests/local_data/test_intake_studio_security.py::HeaderTests::test_production_routes_do_not_reflect_upload_names_into_headers"
+
 local-data-doctor:
 	python3 tools/local_data/doctor.py
 
@@ -72,6 +81,7 @@ help:
 	@echo "  normalized-summary-check Test summary structure, compatibility and CI failure propagation"
 	@echo "  local-data-doctor     Inspect local-PC prerequisites without installing or starting services"
 	@echo "  local-data-check      Test offline local-data capture, safety, and recovery"
+	@echo "  local-data-loopback-check Run the loopback-only local-data HTTP checks that local-data-check skips"
 	@echo "  offline-pipeline-check Test synthetic ingestion, normalization, replay and rollback boundaries"
 	@echo "  native-explorer-check Retired app check (explicit HOLD)"
 	@echo "  site-check            Lint, typecheck, test and smoke the mirrored Explorer Site"

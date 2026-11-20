@@ -65,3 +65,9 @@ jobs:
         run: python tools/ci/install_python_ci.py nwm-netcdf
       - name: Check local capture and operator contracts without network
         run: make local-data-check
+      # local-data-check skips the loopback HTTP checks under KFM_NO_NETWORK=1;
+      # they bind 127.0.0.1 only, so run them here without the egress guard.
+      - name: Check loopback-only local-data HTTP boundaries
+        env:
+          KFM_NO_NETWORK: "0"
+        run: make local-data-loopback-check
