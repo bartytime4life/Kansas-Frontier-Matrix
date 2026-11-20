@@ -1,0 +1,27 @@
+# Paired recovery record for migrations/policy/20261120_g_place_01_release_rego.yaml (G-PLACE-01).
+recovery:
+  recovery_id: "g-place-01-release-rego-recovery"
+  pairs_with: "migrations/policy/20261120_g_place_01_release_rego.yaml"
+  decision_ref: "ADR-0003"
+  mode: "forward_fix"
+  reason: >-
+    Restoring the release/ copies would recreate policy rule source outside
+    policy/, which DIR-AUTHROOT-003 forbids and which would reintroduce the
+    duplicate authority this migration removed (Directory Rules DIR-MIGRATE-004).
+    The retired files are four-line default allow := false scaffolds with no
+    producers or consumers, so nothing evaluates them.
+  forward_fix: >-
+    Author any needed rule at the canonical policy/ path named in the
+    migration record (policy/domains/hydrology/release.rego or
+    policy/domains/geology/release/*.rego); do not recreate release/*.rego.
+  full_revert: >-
+    Reverting the whole pull request restores the three release/ files, the
+    previous ADR-0003 status and the six topology-baseline entries together. Only do this
+    with an accepted decision that supersedes ADR-0003.
+  restore_reference:
+    base_ref: f0bda109e334964776e9cd5362a4b309dba2ced4
+    blobs:
+      release/hydrology_publication.rego: 221eb067495bc99a57cf206fffd50aee5f2e070c
+      release/public_safe_geometry.rego: 78f44e806959f263199b59c47d1d83ccb66c0a47
+      release/source_role_anti_collapse.rego: 8664dcfb547443c2a3d94021e577bc9b14b48bf9
+  rehearsal: "not required: no runtime, data, bundle or release state depends on these files"

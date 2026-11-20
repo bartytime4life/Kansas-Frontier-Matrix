@@ -94,7 +94,7 @@ This revision replaces the May 2026 proposal posture with a commit-pinned curren
 | Transition profile | `SourceRoleTransitionAssessment` has a separate proposed, fixture-first profile for passthrough, generalization, lifecycle promotion, aggregation, modeling, and synthesis. | Proves declared transformation checks only; its seven-role vocabulary is profile-local. |
 | Cross-lane candidate profile | [`Cross-Lane Relations`](cross-lane-relations.md) records a bounded candidate-assessment slice and inactive generic join policy. | Candidate computation is not relationship truth, policy permission, release, or publication. |
 | Source policy | [`policy/source/`](../../../policy/source/README.md) is documented, but its descriptor prerequisite module remains a non-enforcing stub and no accepted source-role policy bundle is established. | Architecture requirements are not operational policy proof. |
-| Release Rego | [`release/source_role_anti_collapse.rego`](../../../release/source_role_anti_collapse.rego) is a four-line proposed default-deny scaffold. | Not an active policy bundle or release decision. |
+| Release Rego | [`policy/domains/geology/release/source_role_anti_collapse.rego`](../../../policy/domains/geology/release/source_role_anti_collapse.rego) is a four-line proposed default-deny scaffold. The duplicate at the `release/` root was retired on 2026-11-20 (`G-PLACE-01`). | Not an active policy bundle or release decision. |
 | Public/runtime integration | No deployed API, map, graph, export, embedding, Focus Mode, or AI source-role enforcement was established by this evidence slice. | **UNKNOWN / NEEDS VERIFICATION**; public seam remains `HOLD`. |
 
 ### Truth posture
@@ -337,7 +337,7 @@ Precedence is `ERROR > DENY > HOLD > RESTRICT > ABSTAIN > PASS`.
 Current repository evidence does not establish an active generic source-role policy bundle:
 
 - `policy/source/descriptor_required_before_ingest.rego` remains a non-enforcing proposal stub;
-- the root `release/source_role_anti_collapse.rego` is a proposed default-deny scaffold in a placement-drift surface;
+- `policy/domains/geology/release/source_role_anti_collapse.rego` is a proposed default-deny scaffold; its former duplicate at the `release/` root was retired on 2026-11-20 under ADR-0003;
 - domain-specific Rego files and source-role matrices vary in maturity and bounded-context vocabulary;
 - release-review documentation is guidance, not an authenticated review record or release decision;
 - validator outcomes do not authenticate support references or emit `PolicyDecision` / `ReviewRecord` / `ReleaseManifest` objects.
@@ -487,7 +487,7 @@ A documentation-only clarification that preserves current meaning, links current
 | [`source-role anti-collapse workflow`](../../../.github/workflows/source-role-anti-collapse.yml) | Read-only path-scoped downstream-use CI. | Does not path-filter this page or prove generic cross-domain enforcement. |
 | [`source-role transition workflow`](../../../.github/workflows/source-role-transition-assessment.yml) | Read-only path-scoped transformation CI. | Does not path-filter this page or prove deployed transformations. |
 | [`policy/source/`](../../../policy/source/README.md) | Source-policy boundary documentation and current stubs. | Confirms active source-role policy remains unproved. |
-| [`release/source_role_anti_collapse.rego`](../../../release/source_role_anti_collapse.rego) | Proposed default-deny scaffold. | Presence and default deny are not active release policy. |
+| [`policy/domains/geology/release/source_role_anti_collapse.rego`](../../../policy/domains/geology/release/source_role_anti_collapse.rego) | Proposed default-deny scaffold. | Presence and default deny are not active release policy. |
 
 [Back to top](#top)
 

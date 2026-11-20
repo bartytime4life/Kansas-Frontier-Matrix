@@ -48,7 +48,7 @@ evidence_snapshot:
   release_alias_workflow_blob: 3a9739ee096f18ae5dee2074a90d125848ab1d6c
   pass12_release_gate_blob: 175871cb929663e7a19345fd18f97a81a850b628
   direct_child_directories: 18
-  root_rego_files: 3
+  root_rego_files: 0
   open_prs_touching_target: 0
 directory_governance: ADR-0029 accepted Directory Rules v2; same-path update receives PLACE
 related:
@@ -344,13 +344,9 @@ Unknown rights, consent, sovereignty, sensitivity, review, or public-use scope r
 
 ### Existing placement drift
 
-The following direct-child policy-shaped files are `CONFIRMED` at the pinned release tree:
+Directory Rules and the root registry prohibit `policy_rule` under `release/`; canonical policy source belongs under [`policy/`](../policy/).
 
-- `hydrology_publication.rego`
-- `public_safe_geometry.rego`
-- `source_role_anti_collapse.rego`
-
-Directory Rules and the root registry prohibit `policy_rule` under `release/`; canonical policy source belongs under [`policy/`](../policy/). This README does not edit, move, delete, mirror, or canonize those files. A migration requires object classification, producer/consumer inventory, accepted authority, reference repair, validation, and rollback.
+On 2026-11-20, under accepted ADR-0003, the three policy-shaped files that sat at this root were retired: `hydrology_publication.rego`, `public_safe_geometry.rego` and `source_role_anti_collapse.rego` (gap `G-PLACE-01`). Each was a four-line `default allow := false` scaffold with no consumers. Their canonical counterparts are `policy/domains/hydrology/release.rego` and `policy/domains/geology/release/`. The migration record is [`migrations/policy/20261120_g_place_01_release_rego.yaml`](../migrations/policy/20261120_g_place_01_release_rego.yaml), paired with a recovery record under [`migrations/rollback/`](../migrations/rollback/).
 
 [Back to top](#top)
 
@@ -491,19 +487,16 @@ release/
 ├── correction_notices/          # Canonical public correction objects under v2 naming
 ├── corrections/                 # Existing plural/domain lane; classification required
 ├── decisions/                   # Release decision records
-├── hydrology_publication.rego   # Existing policy-shaped placement drift
 ├── manifest/                    # Noncanonical compatibility or migration source
 ├── manifests/                   # Canonical manifest collection under v2 naming
 ├── people-dna-land/             # Sensitive-domain release-review material
 ├── policy/                      # Release-facing policy review pointers, not canonical policy
 ├── promotion_decisions/         # Promotion-decision records
-├── public_safe_geometry.rego    # Existing policy-shaped placement drift
 ├── reviews/                     # Accountable release-review records
 ├── rollback/                    # Existing generic lane; object classification required
 ├── rollback_cards/              # Canonical rollback-decision cards under v2 naming
 ├── signatures/                  # Signature and signoff packets
 ├── source_role_anti_collapse/   # Release-facing source-role review material
-├── source_role_anti_collapse.rego # Existing policy-shaped placement drift
 └── withdrawal_notices/          # Withdrawal communication records
 ```
 
@@ -517,7 +510,6 @@ The map is descriptive and direct-child-only. It does not claim equal maturity, 
 | `MIGRATE` after inventory | `manifest/`, `rollback/`, `agriculture/`, `people-dna-land/` |
 | `HOLD / MIGRATE` | `correction/`, `corrections/` |
 | `HOLD` | `decisions/`, `reviews/`, `policy/`, `source_role_anti_collapse/` |
-| `DENY_NEW_WRITES / MIGRATE` | `hydrology_publication.rego`, `public_safe_geometry.rego`, `source_role_anti_collapse.rego` |
 
 ### Related responsibility roots
 

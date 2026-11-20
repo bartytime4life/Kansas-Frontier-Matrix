@@ -1,0 +1,181 @@
+{
+  "artifact_hashes": {
+    "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md": "sha256:73649e9a80b8eec67a4912f68154661c7e41e3ef91999a616359ef72439ce17c",
+    "docs/adr/README.md": "sha256:8f7d1e042f33e0648f1c2b22e594a2a0a19adae9847b8c548e6799d50efc829b"
+  },
+  "artifact_paths": [
+    "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md",
+    "docs/adr/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "CONTRIBUTING.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "id": "CONTRIBUTING.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/ai-build-operating-contract.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "id": "docs/doctrine/ai-build-operating-contract.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "id": "docs/doctrine/directory-rules.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/retention.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "id": "docs/doctrine/retention.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/INDEX.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "id": "docs/adr/INDEX.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/README.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "id": "docs/adr/README.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@fdb0c5c75aefe3750e424e0fe3cdac9ef02fca0f",
+      "id": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "migrations/policy/20261120_g_place_01_release_rego.yaml@fdb0c5c75aefe3750e424e0fe3cdac9ef02fca0f",
+      "id": "migrations/policy/20261120_g_place_01_release_rego.yaml",
+      "validated": true
+    },
+    {
+      "evidence_ref": "migrations/rollback/20261120_g_place_01_release_rego.yaml@fdb0c5c75aefe3750e424e0fe3cdac9ef02fca0f",
+      "id": "migrations/rollback/20261120_g_place_01_release_rego.yaml",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/INDEX.md@40761caa66f9f455aabd78565e99b186e9ad1fe6",
+      "id": "docs/adr/INDEX.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/README.md@6fd2c051b19dc18275741f922a566da96156fd27",
+      "id": "docs/adr/README.md",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-20T06:10:47.933215+00:00",
+  "emitter": "OpenAI Codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7ddcc32632aa2fad1dd8900ab32a0dbc891806e55dd7e5ba4018c042f89e0e9b",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:570e1c1dfe413c537feaea1b7950e014efa07647c32170f4d4da57cb5d13aab8",
+      "sha256:7edf2352b58e30270c4a1d56267136ea27448e86a747768601e566afd457f7c1",
+      "sha256:3c4af49e3d03aaa46a90c0b4406f1b83c0143d26112d3acb6cce98218353b8b2",
+      "sha256:22ff57f5dd49ef8a6dc84eee0920bb83f9bb762c31c05d7c443062ed4a75d1fd",
+      "sha256:50992b44ae956db94b3a05dc5f3acabac8e9f0918d671c3f53afaeab122bb472",
+      "sha256:f851d1de38cebd93184b4d52a5de58b9eed82388afabcdcfb6d26ea865626d11",
+      "sha256:7edf2352b58e30270c4a1d56267136ea27448e86a747768601e566afd457f7c1",
+      "sha256:4cf3d3ced65d84dc10e5f975eaa66e2188a75d855cb22ed44e3bd14b59d2b6e4"
+    ],
+    "evidence_refs": [
+      "CONTRIBUTING.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "docs/doctrine/ai-build-operating-contract.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "docs/doctrine/directory-rules.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "docs/doctrine/retention.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "docs/adr/INDEX.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "docs/adr/README.md@5129f60cab4cc3cb51722ac3d430e4b1a6569193",
+      "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@fdb0c5c75aefe3750e424e0fe3cdac9ef02fca0f",
+      "migrations/policy/20261120_g_place_01_release_rego.yaml@fdb0c5c75aefe3750e424e0fe3cdac9ef02fca0f",
+      "migrations/rollback/20261120_g_place_01_release_rego.yaml@fdb0c5c75aefe3750e424e0fe3cdac9ef02fca0f",
+      "docs/adr/INDEX.md@40761caa66f9f455aabd78565e99b186e9ad1fe6",
+      "docs/adr/README.md@6fd2c051b19dc18275741f922a566da96156fd27"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md",
+    "drift_register_entry": null,
+    "pr_number": 5978
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "unspecified by runtime"
+  },
+  "notes": "Based on concurrent PR update 6fd2c051b19dc18275741f922a566da96156fd27, which already resolved the main merge conflict and retained ADR-0050 and the Habitat scaffold. This repair reconciles the remaining contradictory ADR-0003 lifecycle/migration/rollback text and distinguishes the dated README review from later acceptance. It preserves the 50-record inventory, pinned historical evidence, all committed receipt bytes, and the existing dirty primary checkout. This receipt binds only the two documents substantively modified by this repair and provides no independent review, merge, release, deployment or publication authorization. The initial sandbox test run had five environment failures (socket denial and subprocess Python without dependencies, including topology replay); the configured native reruns passed all 703 tests and 587 subtests. An initial make policy invocation rejected the temporary executable basename; using the allowlisted opa basename with identical checksum-verified bytes passed.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "local Git inspection and merge resolution",
+      "Python validators and pytest",
+      "checksum-pinned OPA 1.19.0",
+      "GitHub PR readback"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "receipt_id": "genrec-pr5978-adr-status-reconciliation-20261120",
+  "truth_labels": {
+    "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md": "CONFIRMED",
+    "docs/adr/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "adr-index-coherence",
+      "outcome": "PASS",
+      "reason": "50 numbered records, 12 unassigned scaffolds; 12 accepted and 38 proposed effective. ADR-0050 remains proposed."
+    },
+    {
+      "gate": "targeted-regressions",
+      "outcome": "PASS",
+      "reason": "703 tests and 587 subtests passed across ADR, directory governance, QA, documentation and policy suites. Repository Python 3.12 environment, native local socket access, checksum-verified OPA 1.19.0; no skips in final run."
+    },
+    {
+      "gate": "repository-topology-and-ratchets",
+      "outcome": "PASS",
+      "reason": "Trusted-main topology: 83 inherited warnings, zero invariant violations, zero new drift, zero stale entries. Gap scan: zero broken targets, 5 unratcheted placeholders. Scaffold ratchet at 850 after the separate main retirement; no additions or baseline changes in this repair."
+    },
+    {
+      "gate": "repository-governance-parity",
+      "outcome": "PASS",
+      "reason": "make repository-governance-parity: profile integrity PASS, conformance HOLD_INHERITED; six resolved and zero introduced findings against trusted main. Trusted base: main@40761caa66f9f455aabd78565e99b186e9ad1fe6."
+    },
+    {
+      "gate": "bounded-policy-lane",
+      "outcome": "PASS",
+      "reason": "make policy: BOUNDED_REGO_PAIR_PASSED using checksum-verified OPA 1.19.0."
+    },
+    {
+      "gate": "migration-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "All three before/after SHA-256 mappings, retirements, unchanged canonical target bytes and recovery Git blobs verified against the migration base."
+    },
+    {
+      "gate": "markdown-metadata-structure-navigation",
+      "outcome": "PASS",
+      "reason": "Three valid metadata blocks, zero failing findings; 32 unsupported-nesting warnings retained in the historical evidence block. Critical structure passes; 208 local targets resolve. External badge URLs not requested."
+    },
+    {
+      "gate": "whitespace-and-merge-resolution",
+      "outcome": "PASS",
+      "reason": "git diff --cached --check passes; no unmerged index entries remain."
+    },
+    {
+      "gate": "exact-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after delivery of the final commit and are reported separately from local validation."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; repository owner is the sole verified CODEOWNERS route. This receipt does not supply approval."
+    }
+  ]
+}
