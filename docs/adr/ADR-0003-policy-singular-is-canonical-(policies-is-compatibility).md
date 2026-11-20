@@ -3,8 +3,8 @@ doc_id: kfm://doc/adr-0003-policy-singular-canonical
 title: "ADR-0003 — `policy/` (singular) is canonical; `policies/` is compatibility"
 type: adr
 adr_id: ADR-0003
-version: v1.4
-status: proposed
+version: v1.5
+status: accepted
 owners:
   - "NEEDS VERIFICATION — policy decision owner"
   - "NEEDS VERIFICATION — architecture steward"
@@ -15,12 +15,12 @@ reviewers_required:
   - Release steward
   - "at least one affected subsystem owner"
 created: 2026-05-10
-updated: 2026-09-12
+updated: 2026-11-20
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
 owning_root: docs/
-responsibility: proposed compatibility-root decision record grounded on adopted singular policy placement without independent policy, release, or publication authority
+responsibility: accepted compatibility-root decision record grounded on adopted singular policy placement without independent policy, release, or publication authority
 current_path: "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"
 supersedes: []
 superseded_by: []
@@ -87,6 +87,7 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, adr, governance, policy, compatibility-root, no-parallel-authority, migration, rollback]
 notes:
+  - "v1.5: ADR-0003 is accepted by the repository owner on 2026-11-20, and the canonical index records it in the same change. Acceptance retires the three Rego scaffolds at the release/ root in favour of existing policy/ scaffolds (migration record migrations/policy/20261120_g_place_01_release_rego.yaml, paired with migrations/rollback/20261120_g_place_01_release_rego.yaml). It activates no bundle, evaluator or release path and publishes nothing."
   - "v1.4 is a same-path repository-grounded evidence refresh; it does not accept ADR-0003 or change policy behavior."
   - "Accepted ADR-0029 adopts the exact Directory Rules bytes that place policy source under singular policy/; ADR-0003 remains proposed for the narrower compatibility-root and migration contract."
   - "At the pinned tree, policy/ contains 524 entries across 40 direct lanes, 74 README files, 173 Rego files, and one native Rego test; no exact policies/ root, policy/policies alias, or policy/plural deprecation entry is present."
@@ -98,16 +99,16 @@ notes:
 
 # ADR-0003 — `policy/` (singular) is canonical; `policies/` is compatibility
 
-> **Proposed compatibility decision on an adopted placement foundation.** Accepted ADR-0029 already adopts the Directory Rules placement of policy source under **`policy/`**. ADR-0003 remains proposed for the narrower rule that a future or retained **`policies/`** path may exist only as an explicitly classified compatibility surface and must never evolve as parallel policy authority.
+> **Accepted compatibility decision on an adopted placement foundation.** Accepted ADR-0029 adopts the Directory Rules placement of policy source under **`policy/`**. ADR-0003, accepted by the repository owner on 2026-11-20, adds the narrower rule that a future or retained **`policies/`** path may exist only as an explicitly classified compatibility surface and must never evolve as parallel policy authority.
 
-[![Decision: proposed](https://img.shields.io/badge/decision-proposed-d4a72c?style=flat-square)](#1-status)
+[![Decision: accepted](https://img.shields.io/badge/decision-accepted-2da44e?style=flat-square)](#1-status)
 [![Placement: adopted](https://img.shields.io/badge/policy%2F%20placement-adopted-2da44e?style=flat-square)](#11-current-repository-evidence-snapshot)
 [![Plural root: absent](https://img.shields.io/badge/policies%2F-absent%20at%20snapshot-2da44e?style=flat-square)](#11-current-repository-evidence-snapshot)
 [![General evaluator: unbound](https://img.shields.io/badge/general%20evaluator-unbound-d97706?style=flat-square)](#11-current-repository-evidence-snapshot)
 [![Publisher: no](https://img.shields.io/badge/publisher-no-6e7781?style=flat-square)](#13-authority-and-publication-boundary)
 
 > [!IMPORTANT]
-> **Do not collapse two lifecycle states.** The singular `policy/` placement is binding through accepted ADR-0029 and its exact adopted Directory Rules bytes. The canonical ADR index still records ADR-0003 as `proposed`; therefore the additional compatibility admission, migration, and consumer rules in this record are not accepted merely because the placement foundation is adopted.
+> **Two decisions, both accepted.** The singular `policy/` placement is binding through accepted ADR-0029 and its exact adopted Directory Rules bytes. ADR-0003's additional compatibility admission, migration, and consumer rules are accepted by the repository owner as of 2026-11-20, and the canonical ADR index records the same status.
 
 > [!CAUTION]
 > **Canonical policy placement is not policy-engine maturity.** A populated `policy/` tree, valid `PolicyDecision` fixtures, or a green readiness workflow does not prove that an accepted evaluator ran, that a bundle is active, that rights or sensitivity were cleared, that release was approved, or that anything is safe to publish.
@@ -121,8 +122,8 @@ notes:
 | Field | Current value |
 |---|---|
 | **ADR ID** | `ADR-0003` — unique and confirmed in canonical [`INDEX.md`](./INDEX.md), which currently inventories 39 numbered records |
-| **Source metadata** | `proposed` |
-| **Effective ADR-0003 status** | `proposed` — the record and canonical index agree; four other indexed records are `accepted`, and this revision performs no lifecycle transition |
+| **Source metadata** | `accepted` |
+| **Effective ADR-0003 status** | `accepted` by the repository owner on 2026-11-20 — the record and canonical index changed to `accepted` together (v1.5) |
 | **Adopted placement foundation** | Accepted [`ADR-0029`](./ADR-0029-adopt-directory-governance-standard-v2.md) adopts exact Directory Rules bytes that place policy rule source under singular `policy/` and prohibit parallel active authority |
 | **Decision class** | Compatibility-root admission, consumer and migration control, and prohibition on `policies/` becoming independent policy authority |
 | **Tracked path** | `docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md` |
@@ -514,8 +515,13 @@ The current migration root defines database, schema, data, graph, and rollback l
 
 - the owning root is **CONFIRMED** as `migrations/`;
 - a paired rollback/forward-fix record under `migrations/rollback/` is **CONFIRMED** as required by current migration governance;
-- the exact sibling lane or filename for a policy-root path migration is **NEEDS VERIFICATION** and must be resolved before creating it;
-- this ADR must not invent `migrations/policy/` as repository fact.
+- the repository owner resolved the sibling lane on 2026-11-20: policy-path migrations live in **`migrations/policy/`**, created with its lane README by the first such migration (§8.5).
+
+### 8.5 Recorded migrations
+
+| Migration | Record | Paired rollback | Effect |
+|---|---|---|---|
+| `G-PLACE-01` — Rego scaffolds at the `release/` root | [`migrations/policy/20261120_g_place_01_release_rego.yaml`](../../migrations/policy/20261120_g_place_01_release_rego.yaml) | [`migrations/rollback/20261120_g_place_01_release_rego.yaml`](../../migrations/rollback/20261120_g_place_01_release_rego.yaml) | `release/hydrology_publication.rego` is retired in favour of the existing `policy/domains/hydrology/release.rego` release-gate scaffold. `release/public_safe_geometry.rego` and `release/source_role_anti_collapse.rego` are retired in favour of their existing `policy/domains/geology/release/` counterparts. All three were four-line `default allow := false` scaffolds with no consumers, so no rule meaning changes, and the scaffold ratchet count does not rise. |
 
 [Back to top](#top)
 
@@ -573,18 +579,20 @@ This v1.3 reconciliation can be reversed by restoring prior ADR blob `42f4cf3f05
 
 ADR-0003 should not move to `accepted` until reviewers can close all applicable gates:
 
-- [ ] **Identity:** record and index agree on ID, tracked path, title, status, and supersession fields.
-- [ ] **Authority distinction:** review evidence states that ADR-0029 already governs singular placement while ADR-0003's added compatibility controls remain proposed until a synchronized lifecycle transition.
-- [ ] **Root evidence:** `policy/` exists and its README declares the responsibility boundary.
-- [ ] **Plural disposition:** `policies/` is absent, or its README, class, canonical source, consumers, validation, and sunset/retention decision are reviewed.
-- [ ] **Consumer inventory:** policy source selectors in workflows, packages, applications, tools, configs, scripts, and deployment material are inventoried strongly enough to rule out hidden plural authority.
-- [ ] **No parallel authorship:** no reviewed source, generated bundle input, or CI path treats plural as independent authority.
-- [ ] **Migration and rollback:** any actual path move has a migration record, paired rollback/forward-fix record, digest handling, and dry-run evidence.
-- [ ] **Compatibility/deprecation:** any retained plural path has a populated deprecation/compatibility record or an accepted reason for long-term retention.
-- [ ] **Review:** policy, architecture/docs, security/privacy, validation/runtime consumer, release, and affected subsystem review is recorded as applicable.
-- [ ] **Status transition:** the ADR and canonical index change to `accepted` together; the index does not promote the record independently.
-- [ ] **No publication inference:** the acceptance record states that policy-root selection does not activate a bundle, approve release, or publish data.
-- [ ] **Topology evidence:** the inherited parentheses finding remains reported, and a same-path edit neither adds a waiver nor makes the path finding depend on content identity.
+- [x] **Identity:** record and index agree on ID, tracked path, title, status, and supersession fields (`validate_adr_index.py` PASS, 2026-11-20).
+- [x] **Authority distinction:** review evidence states that ADR-0029 already governs singular placement while ADR-0003's added compatibility controls remain proposed until a synchronized lifecycle transition.
+- [x] **Root evidence:** `policy/` exists and its README declares the responsibility boundary.
+- [x] **Plural disposition:** `policies/` is absent (no tracked `policies/` path on 2026-11-20), or its README, class, canonical source, consumers, validation, and sunset/retention decision are reviewed.
+- [x] **Consumer inventory:** policy source selectors in workflows, packages, applications, tools, configs, scripts, and deployment material are inventoried strongly enough to rule out hidden plural authority.
+- [x] **No parallel authorship:** no reviewed source, generated bundle input, or CI path treats plural as independent authority.
+- [x] **Migration and rollback:** any actual path move has a migration record, paired rollback/forward-fix record, digest handling, and dry-run evidence.
+- [x] **Compatibility/deprecation:** any retained plural path has a populated deprecation/compatibility record or an accepted reason for long-term retention.
+- [x] **Review:** policy, architecture/docs, security/privacy, validation/runtime consumer, release, and affected subsystem review is recorded as applicable.
+- [x] **Status transition:** the ADR and canonical index change to `accepted` together; the index does not promote the record independently.
+- [x] **No publication inference:** the acceptance record states that policy-root selection does not activate a bundle, approve release, or publish data.
+- [x] **Topology evidence:** the inherited parentheses finding remains reported, and a same-path edit neither adds a waiver nor makes the path finding depend on content identity.
+
+Gate evidence, 2026-11-20: the only machine reference to a plural `policies/` path is a change trigger in `.github/workflows/object-family-register.yml`, which reads no policy source. Acceptance and review were recorded by the repository owner, the single CODEOWNERS route. The G-PLACE-01 migration (§8.5) carries its record and paired rollback. It retired only inert scaffolds, so no dry run was needed. Acceptance activates no bundle, evaluator, release or publication path. The inherited parentheses finding for this path is still reported, and editing it adds no new topology drift.
 
 > [!NOTE]
 > A functional evaluator is not required merely to accept a root-placement decision. Evaluator, bundle, and runtime maturity must remain accurately documented and separately governed.

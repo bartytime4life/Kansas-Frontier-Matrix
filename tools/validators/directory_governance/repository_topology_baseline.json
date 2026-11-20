@@ -61,13 +61,6 @@
     {
       "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
       "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
-      "fingerprint": "sha256:290f9efe3dbceff387c49f406c1c645dd647a956041670ba5a8c903f9808d691",
-      "rule_id": "KFM-TOPO-012",
-      "subject": "release/public_safe_geometry.rego"
-    },
-    {
-      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
-      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
       "fingerprint": "sha256:2c4fb339ee8582a442da202a4a3f64b66a26f1e1abb9bb0caa0ff9888386f04e",
       "rule_id": "KFM-TOPO-012",
       "subject": "tools/validators/hydro/policy/hydro_publication.rego"
@@ -199,25 +192,11 @@
       "subject": "release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"
     },
     {
-      "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
-      "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
-      "fingerprint": "sha256:5cc012601c1db89269624e39da827ef191725cad1e98fa4c695e87f9c4ad4606",
-      "rule_id": "KFM-TOPO-011",
-      "subject": "release/source_role_anti_collapse.rego"
-    },
-    {
       "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
       "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF2GKxJelFhVn5ufBZYozEo1MzQDXxibJ",
       "fingerprint": "sha256:5d9bbcc4e195962be0428df9d0c6afeb99418d7801b702546ceb355d46bd748c",
       "rule_id": "KFM-TOPO-017",
       "subject": "artifacts/qa/lint/markdownlint.json"
-    },
-    {
-      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
-      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
-      "fingerprint": "sha256:5f2fa42a92e70cecbcbfe568f31415e5abc51af354d84255e31cfe864d2f40d7",
-      "rule_id": "KFM-TOPO-012",
-      "subject": "release/source_role_anti_collapse.rego"
     },
     {
       "evidence_sha256": "sha256:66a47b7cb0f2d4e6dcacb1f5d405b2be65af9ba5a390bda575a3cd1434f4fe8a",
@@ -423,13 +402,6 @@
       "subject": "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md"
     },
     {
-      "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
-      "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
-      "fingerprint": "sha256:953300d8e1d4ae0adf9c9f29288b0e91784d4965dc24016b3454d9177fa6087b",
-      "rule_id": "KFM-TOPO-011",
-      "subject": "release/public_safe_geometry.rego"
-    },
-    {
       "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
       "evidence_zlib_base64": "eNrLTS1JTEksSYwvzStLLcpMy0xNsUpNySyJL8jPyUyuZMjFIp+empdalFiSmhKfVpSfi09JfhF+2XigUHFmfh5WVcUZiUamZgA/JT9b",
       "fingerprint": "sha256:9f7caca1153d28bd7c05283f40fc287e04b3eb8d62061de3319afe9ae0e90de3",
@@ -528,13 +500,6 @@
       "subject": "data/trade-routes/"
     },
     {
-      "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
-      "evidence_zlib_base64": "eNoL8PfxdI6MD/YPDXJ2jfcPDQn2dHGNDwCLAgB+VQis",
-      "fingerprint": "sha256:da5a2accc8625952a68005b8ede2d1ca447e014160f09364abbbeee2e35db378",
-      "rule_id": "KFM-TOPO-012",
-      "subject": "release/hydrology_publication.rego"
-    },
-    {
       "evidence_sha256": "sha256:867adc1763205ca6d8ecdc83f7f643d92e60bb8051ff4c70adfe526b8d7d74f0",
       "evidence_zlib_base64": "eNqdk7FOxDAMhnmhtKgS7EjcyMILIF/sawNuHDmOUHl6Cgy3nOSUxUPyfXb0y0EwGONeWOYRZYWUx9fT0/PLaVjxDm/cwqwpNram5JEaFyDZTzaPtFVqWchveQXLOj28TffT43+UKMwULUke3qvkm+IFWgan+R9T2plT7EKVqu35GaGHs6g3fe4Kd4FzMrBOiqIozXsw1RW+QNGlNtSeRxaSwhQwQ2DIeJD+KUE+M2ldUumS+yB0N0AFsAaFxMEUkI7i1US3kAXJi7KSGdNK2brBGlK+KOwr1+Lvhx3mZB9E5ajnDJTEV+QbneSIzw==",
       "fingerprint": "sha256:dac10301275769ce63ab4cb2250734076f5dc3cbcb5ef6da0ed5e4793f2025c7",
@@ -568,13 +533,6 @@
       "fingerprint": "sha256:f025c1a05a10399dd2011d799e48db740c9e7529f852d015bd428b4996fe169c",
       "rule_id": "KFM-TOPO-011",
       "subject": "release/promotion_decisions/hazards-r0002.yaml"
-    },
-    {
-      "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
-      "evidence_zlib_base64": "eNoLcvVxdQx2jQ/y9w+JD3CM9PF3dIl3cfXzdHUBAHJwCBY=",
-      "fingerprint": "sha256:f037bb9801d1690154bbb3058f863254d5644e1a126d0a7fe37cfa8fca4bee0c",
-      "rule_id": "KFM-TOPO-011",
-      "subject": "release/hydrology_publication.rego"
     },
     {
       "evidence_sha256": "sha256:43145b92a489c0e0d4b7104ce4d04d6275b3bf5b8cd6b1d5441df51654de6049",

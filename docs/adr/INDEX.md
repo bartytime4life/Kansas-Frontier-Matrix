@@ -2,13 +2,13 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.20
+version: v1.21
 status: draft; repository-grounded
 owners:
   - Architecture steward
   - Docs steward
 created: 2026-07-22
-updated: 2026-10-12
+updated: 2026-11-20
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -25,6 +25,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
+  - "ADR-0003 is accepted by the repository owner on 2026-11-20; the record and this index change to accepted together. It adds the policies/ compatibility and policy-path migration controls on top of ADR-0029's singular policy/ placement, names migrations/policy/ as the policy-path migration lane, and activates no bundle, evaluator, release or publication path."
   - "ADR-0049 is accepted by the repository owner on 2026-10-12; it extends the owner self-release rule to the USGS ComCat earthquake gate with its own license list, and does not widen water, weather, soil or storm events self-release."
   - "ADR-0048 is accepted by the repository owner on 2026-10-12 as the interpretation of Directory Rules §13.2 for upstream-backed names in receipt-pinned external byte mirrors; it does not change Directory Rules bytes, its adopted digest, or ADR-0029, and carries the literal §13.2 text to the next doctrine revision."
   - "ADR-0044 is accepted by the repository owner on 2026-10-10; it allows owner self-release of governed water packages only when every evidence bundle is public and carries an admitted public-domain license, and changes no other release path."
@@ -47,14 +48,14 @@ notes:
 # Architecture Decision Record Index
 
 [![numbered records](https://img.shields.io/badge/numbered_records-49-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-5_accepted_%7C_38_proposed-1a7f37)](#status-interpretation)
+[![effective status](https://img.shields.io/badge/effective_status-12_accepted_%7C_37_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-11-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, ADR-0048, and ADR-0049 have effective status `accepted`. The other 38 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement. ADR-0044 accepts owner self-release only for admitted public water data; all other water packages keep two-person review. ADR-0045 accepts the same rule for admitted public GHCN-Daily weather data only. ADR-0046 accepts it for admitted public USCRN daily soil data only. ADR-0047 accepts it for admitted public NOAA Storm Events data only. ADR-0049 accepts it for admitted public USGS ComCat earthquake data only.
+> ADR-0003, ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, ADR-0048, and ADR-0049 have effective status `accepted`. The other 37 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement. ADR-0044 accepts owner self-release only for admitted public water data; all other water packages keep two-person review. ADR-0045 accepts the same rule for admitted public GHCN-Daily weather data only. ADR-0046 accepts it for admitted public USCRN daily soil data only. ADR-0047 accepts it for admitted public NOAA Storm Events data only. ADR-0049 accepts it for admitted public USGS ComCat earthquake data only.
 
 ## Status interpretation
 
@@ -68,14 +69,14 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0049`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, ADR-0048, and ADR-0049 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0049`. ADR-0003, ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, ADR-0048, and ADR-0049 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
 | --- | --- | --- | --- | --- | --- |
 | `ADR-0001` | [Schema Home: `schemas/contracts/v1/` is Canonical](./ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | `proposed` | `proposed` | — | — |
 | `ADR-0002` | [Contracts vs Schemas Split](./ADR-0002-contracts-vs-schemas-split.md) | `proposed` | `draft` | — | — |
-| `ADR-0003` | [`policy/` is canonical; `policies/` is compatibility](<./ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | `proposed` | `proposed` | — | — |
+| `ADR-0003` | [`policy/` is canonical; `policies/` is compatibility](<./ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | `accepted` | `accepted` | — | — |
 | `ADR-0004` | [`apps/governed-api/` is the Trust Membrane](./ADR-0004-apps-governed-api-is-the-trust-membrane.md) | `proposed` | `draft` | — | — |
 | `ADR-0005` | [`apps/explorer-web` is the canonical map-first shell](./ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md) | `proposed` | `proposed` | — | — |
 | `ADR-0006` | [Only `MapLibreAdapter` Imports MapLibre](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | `accepted` | `accepted` | — | — |

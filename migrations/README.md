@@ -206,6 +206,7 @@ Public clients and normal UI surfaces continue to use governed APIs and released
 | `data/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; runner, payload, target dataset, and execution unestablished** |
 | `graph/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; graph store, query language, runner, target, and execution unestablished** |
 | `rollback/` lane | v1.1 README plus `0001_init.placeholder` | **CONFIRMED — documented placeholder only; pairing, rehearsal, backup capability, and execution unverified** |
+| `policy/` lane | README plus `20261120_g_place_01_release_rego.yaml` (added 2026-11-20 under accepted ADR-0003 §8.4) | **CONFIRMED — first policy-path migration record; paired recovery record under `rollback/`** |
 | Recursive `migrations/` inventory | Eleven paths at the pinned base | **CONFIRMED — complete repository-root inventory for this snapshot** |
 | Schema-validation workflow | Parses and meta-validates schemas, checks configured fixture families, and runs selected schema/contract tests | **CONFIRMED bounded machine-shape validation; not migration adoption or execution proof** |
 | Rollback-drill workflow | Inspects rollback readiness and asserts known placeholders/holds | **CONFIRMED readiness hold; no rollback simulated** |
@@ -447,6 +448,7 @@ CODEOWNERS routing is not proof that the required review occurred. For material 
 | [`data/`](./data/README.md) | Data-state backfills, repairs, remaps, relocations, and deterministic rebuilds |
 | [`graph/`](./graph/README.md) | Graph/triplet topology, identity, evidence links, relationship vocabulary, and projections |
 | [`rollback/`](./rollback/README.md) | Migration-level reversal, disablement, restore coordination, compensation, and forward-fix records |
+| [`policy/`](./policy/README.md) | Moves, renames, and retirements of policy rule source into or within `policy/` (added 2026-11-20, ADR-0003 §8.4) |
 | [`../contracts/`](../contracts/README.md) | Semantic meaning and invariants |
 | [`../schemas/`](../schemas/README.md) | Machine-checkable shape |
 | [`../policy/`](../policy/README.md) | Admissibility, rights, sensitivity, access, and obligations |
@@ -695,6 +697,7 @@ Classify by the **primary state transition**, not by file language or storage te
 | Field, enum, requiredness, type, `$id`, `$ref`, version, validation behavior, producer/consumer compatibility | `schema/` | Contracts, validators, fixtures, generated clients, data, graph, API |
 | Record values, identifiers, crosswalks, lifecycle-safe location, repair, backfill, rebuild | `data/` | Database, schema, evidence, policy, release |
 | Node/edge/triplet identity, relationship vocabulary, topology, evidence link, projection, graph index | `graph/` | Data, contracts, schemas, evidence, policy, API |
+| Policy rule source moved, renamed, or retired into or within `policy/` | `policy/` | Rollback, contracts, schemas, tests, release |
 | Reversal, disablement, restore coordination, compensation, forward fix | `rollback/` | Paired primary migration and relevant runbooks |
 | Multiple equally primary changes | Coordinated records in each owning lane | One umbrella coordination section or issue may link the packet set |
 

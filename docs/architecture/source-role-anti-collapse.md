@@ -105,7 +105,7 @@ notes:
 | **Downstream-use validator** | `SourceRoleUseRequest` has a proposed-inactive, deterministic, no-network profile with six finite outcomes, 14 exact synthetic cases, focused tests, a compatibility shim, and a read-only workflow. |
 | **Transformation validator** | `SourceRoleTransitionAssessment` has a separate proposed, fixture-first, no-network profile for passthrough, generalization, lifecycle promotion, aggregation, modeling, and synthesis. |
 | **Vocabulary posture** | The repository currently exposes at least three related vocabularies: a 16-value SourceDescriptor enum, a seven-class transition profile, and a broader human source-role reference. No accepted global crosswalk was proved. |
-| **Policy posture** | Domain and release-oriented Rego files exist in mixed locations and maturity. The root `release/source_role_anti_collapse.rego` is a four-line proposed scaffold, not an active policy bundle. |
+| **Policy posture** | Domain and release-oriented Rego files exist in mixed locations and maturity. `policy/domains/geology/release/source_role_anti_collapse.rego` is a four-line proposed scaffold, not an active policy bundle; its former duplicate at the `release/` root was retired on 2026-11-20 (`G-PLACE-01`). |
 | **Release posture** | `release/source_role_anti_collapse/README.md` is release-review guidance only. It does not authenticate review, execute policy, issue a decision, or release an artifact. |
 | **Runtime posture** | No deployed source-role resolver, authenticated EvidenceRef chain, governed API integration, map/UI enforcement, AI-output lint, public alias, or production release path was established by this evidence slice. |
 | **Mutation effect** | This revision changes one explanatory Markdown page. It does not assign a role, activate a source, mutate a descriptor, change policy, approve review, promote lifecycle state, release, deploy, or publish. |
@@ -649,10 +649,10 @@ Both specialized workflows:
 
 Neither workflow currently lists this architecture page in its path filter. A docs-only update to this page does not independently rerun or prove either implementation profile.
 
-The repository also contains policy-shaped files, including domain rules and a root `release/source_role_anti_collapse.rego`. The root file is only:
+The repository also contains policy-shaped files, including domain rules and `policy/domains/geology/release/source_role_anti_collapse.rego`. That file is only:
 
 ```rego
-package kfm.generated.release.source_role_anti_collapse
+package kfm.generated.policy.domains.geology.release.source_role_anti_collapse
 default allow := false
 ```
 
@@ -834,7 +834,7 @@ Current evidence does not establish:
 | Treating a validator `PASS` as evidence, policy, review, release, or public permission | The current reports fix all authority effects false. | Resolve and authenticate each authority object separately. |
 | Treating declared support refs as resolved support | Current use-request checks presence only. | Use governed resolvers with identity/digest binding. |
 | Treating workflow success as production enforcement | Workflows are read-only fixture orchestration. | Prove consumer invocation, deployed parity, and persisted decisions. |
-| Treating `release/source_role_anti_collapse.rego` as active policy | It is a proposed default-deny scaffold in a drifted responsibility root. | Keep policy authority under accepted policy homes and migrate only through governed work. |
+| Treating `policy/domains/geology/release/source_role_anti_collapse.rego` as active policy | It is a proposed default-deny scaffold. | Keep policy authority under accepted policy homes and migrate only through governed work. |
 | Treating the release review README as approval | It is guidance with placeholder owners, not an authenticated ReviewRecord. | Require accountable assignments and persisted review. |
 | Inferring role from AI, file path, publisher reputation, URL, or popularity | Authority must be governed and claim-specific. | Deny unsupported origin and route to steward review. |
 | Dropping role/rank/limits from a map, graph, export, embedding, or AI answer | Presentation silently strengthens support. | Preserve role-visible payload and finite outcomes on every surface. |
@@ -873,7 +873,7 @@ Current evidence does not establish:
 | CI orchestration | `.github/workflows/source-role-anti-collapse.yml`, `.github/workflows/source-role-transition-assessment.yml` | Read-only, no-network workflows. |
 | Source adaptation | `docs/intake/exploratory/source-role-anti-collapse-source-map.md` | Documents the implementation slice and domain/DDD basis. |
 | Release-review guidance | `release/source_role_anti_collapse/README.md` | Review lane guidance only; exact authority and record shape unverified. |
-| Root release Rego | `release/source_role_anti_collapse.rego` | Proposed scaffold and placement drift; not active policy. |
+| Release-gate Rego | `policy/domains/geology/release/source_role_anti_collapse.rego` | Proposed scaffold; not active policy. The `release/` root duplicate was retired on 2026-11-20. |
 | Domain semantics/policy | `docs/domains/*`, `contracts/domains/*`, `policy/domains/*` | Mixed maturity; preserve bounded contexts. |
 
 ### 14.2 Structural convergence remains held
@@ -932,7 +932,7 @@ The diagram shows responsibility direction, not a fully deployed runtime.
 | P1 | `SRCROLE-VB-11` | Visual role distinctness | Architecture requirement only | Style/legend/popup/drawer contracts, accessibility review, visual regression, screenshot/export parity |
 | P1 | `SRCROLE-VB-12` | Domain crosswalks | Domain matrices/policies use mixed vocabularies | Per-domain semantic mappings, steward approval, fixtures, no-loss transition tests |
 | P1 | `SRCROLE-VB-13` | Workflow significance | Specialized workflows exist; this doc is outside their path filters; required-check coupling unverified | Exact-head hosted results, ruleset/required-check evidence, bypass posture, consumer workflow wiring |
-| P1 | `SRCROLE-VB-14` | Policy placement drift | Root `release/source_role_anti_collapse.rego` is a proposed scaffold | Policy inventory, accepted target, zero-writer/consumer closure, migration receipt, tests, rollback |
+| P1 | `SRCROLE-VB-14` | Policy placement drift | Closed 2026-11-20: the root `release/source_role_anti_collapse.rego` scaffold was retired under accepted ADR-0003 (`migrations/policy/20261120_g_place_01_release_rego.yaml`) | Policy inventory, accepted target, zero-writer/consumer closure, migration receipt, tests, rollback |
 | P2 | `SRCROLE-VB-15` | Documentation convergence | Architecture taxonomy, source guidance, atlas extracts, and pointers overlap | Full no-loss comparison, doc identity, inbound links/fragments, consumer closure, reviewed convergence PR |
 | P2 | `SRCROLE-VB-16` | Release-review record contract | README provides an unvalidated template and custom outcomes | Accepted ReviewRecord/profile, schema, fixtures, authenticated reviewer binding, release integration |
 | P2 | `SRCROLE-VB-17` | Transition hash-profile convergence | Transition validator uses sorted JSON SHA-256, not proved shared RFC 8785 implementation | Shared hashing authority, byte-for-byte vectors, migration note, regenerated fixtures and receipts |
@@ -1007,7 +1007,7 @@ Before merge, close the draft pull request and delete the feature branch. After 
 | [`schemas/contracts/v1/sources/source_descriptor.schema.json`](../../schemas/contracts/v1/sources/source_descriptor.schema.json) | Proposed plural compatibility alias. |
 | [`tools/validators/source_role/IMPLEMENTATION.md`](../../tools/validators/source_role/IMPLEMENTATION.md) | Current bounded implementation note for the downstream-use validator. |
 | [`release/source_role_anti_collapse/README.md`](../../release/source_role_anti_collapse/README.md) | Release-review guidance only. |
-| [`release/source_role_anti_collapse.rego`](../../release/source_role_anti_collapse.rego) | Proposed default-deny scaffold in a drifted policy location. |
+| [`policy/domains/geology/release/source_role_anti_collapse.rego`](../../policy/domains/geology/release/source_role_anti_collapse.rego) | Proposed default-deny scaffold. |
 
 [Back to top](#top)
 

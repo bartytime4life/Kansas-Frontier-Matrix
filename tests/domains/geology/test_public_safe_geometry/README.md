@@ -21,7 +21,7 @@ related:
   - ../../../../fixtures/domains/geology/README.md
   - ../../../../packages/domains/geology/geometry/README.md
   - ../../../../policy/domains/geology/public_safe_geometry.policy.json
-  - ../../../../release/public_safe_geometry.rego
+  - ../../../../policy/domains/geology/release/public_safe_geometry.rego
   - ../../../../docs/domains/geology/README.md
   - ../../../../docs/domains/geology/POLICY.md
   - ../../../../docs/domains/geology/PRESERVATION_MATRIX.md
@@ -94,7 +94,7 @@ A passing test here should **not** mean that a public geometry product is releas
 | Domain public-safe geometry tests | `tests/domains/geology/test_public_safe_geometry/` | This directory. |
 | Synthetic geometry fixtures and expected outcomes | `fixtures/domains/geology/` | Preferred source for toy inputs and expected envelopes. |
 | Geometry helper code | `packages/domains/geology/geometry/` | System under test where helper behavior exists. |
-| Public-safe geometry policy | `policy/domains/geology/public_safe_geometry.policy.json`, `release/public_safe_geometry.rego` if accepted | Referenced by tests, not redefined here. |
+| Public-safe geometry policy | `policy/domains/geology/public_safe_geometry.policy.json`, `policy/domains/geology/release/public_safe_geometry.rego` if accepted | Referenced by tests, not redefined here. |
 | Semantic geometry meaning | `contracts/domains/geology/` | Referenced by tests, not duplicated here. |
 | Machine shape | `schemas/contracts/v1/domains/geology/` | Referenced by tests, not duplicated here. |
 | Receipts and proofs | `data/receipts/`, `data/proofs/` | Expected references; not authored as test truth here. |

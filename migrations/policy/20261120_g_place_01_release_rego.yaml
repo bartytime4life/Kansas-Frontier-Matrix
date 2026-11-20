@@ -1,0 +1,81 @@
+# G-PLACE-01: Rego scaffolds at the release/ root are retired in favour of policy/.
+# Directory Rules DIR-AUTHROOT-003 makes policy rule source singular under
+# policy/, and control_plane/root_registry.yaml prohibits policy_rule under
+# release/. Each entry follows the Directory Rules §18.2 migration minimum.
+# Paired recovery record: migrations/rollback/20261120_g_place_01_release_rego.yaml
+# No migration-manifest schema exists yet; the keys below are exactly §18.2's.
+schema_note: "Directory Rules §18.2 migration minimum; no machine schema is established yet"
+base_ref: f0bda109e334964776e9cd5362a4b309dba2ced4
+gap_ref: "G-PLACE-01 in docs/registers/repository-gap-fill-goal-2026-10-02.md"
+migrations:
+  - migration:
+      migration_id: "g-place-01-hydrology-publication"
+      decision_ref: "ADR-0003"
+      object_family: "policy_rule"
+      old_path: "release/hydrology_publication.rego"
+      new_path: "policy/domains/hydrology/release.rego"
+      object_id_rule: >-
+        Retired in favour of the existing hydrology release-gate scaffold at
+        the new path (package kfm.generated.policy.domains.hydrology.release),
+        which has the same default allow := false body and is unchanged.
+        Moving the stub into policy/ instead would have added a new scaffold
+        finding under the shrink-only scaffold ratchet. No consumer imports
+        either package.
+      content_digest_before: "sha256:a36db5a605d04834a6dfbbbcb4166f984ff79cd2791414665d898583e0c49ddd"
+      content_digest_after: "sha256:f72582398fa39ff9a3ad3a0ac3d757bf2b98cd13c70cf41a0b22b5a8f2b8a8a3"
+      producers: []
+      consumers: []
+      compatibility_mode: "none"
+      effective_at: "2026-11-20T00:00:00Z"
+      sunset_at: "immediate: the stub is removed in the same change"
+      validation_refs:
+        - "OPA_BIN=<verified OPA 1.19.0> python -m pytest tests/policy (114 passed)"
+        - "python tools/validators/directory_governance/validate_repository_topology.py (PASS)"
+        - "python tools/qa/scaffold_inventory.py --check (PASS)"
+        - "python tools/qa/gap_scan.py (PASS)"
+      rollback_or_forward_fix: "migrations/rollback/20261120_g_place_01_release_rego.yaml"
+      result: "VERIFIED"
+  - migration:
+      migration_id: "g-place-01-public-safe-geometry"
+      decision_ref: "ADR-0003"
+      object_family: "policy_rule"
+      old_path: "release/public_safe_geometry.rego"
+      new_path: "policy/domains/geology/release/public_safe_geometry.rego"
+      object_id_rule: >-
+        Retired duplicate. The canonical scaffold already existed at the new
+        path with package kfm.generated.policy.domains.geology.release.public_safe_geometry
+        and the same default allow := false body; it is unchanged.
+      content_digest_before: "sha256:f400f72b20b70bf4063043bea6f871fbfea224a9a13e708d4f0405284a7ea231"
+      content_digest_after: "sha256:a41e4073b78515fe79e6389515793d11768638c4deb1a54e972770dcd349f199"
+      producers: []
+      consumers: []
+      compatibility_mode: "none"
+      effective_at: "2026-11-20T00:00:00Z"
+      sunset_at: "immediate: the duplicate is removed in the same change"
+      validation_refs:
+        - "OPA_BIN=<verified OPA 1.19.0> python -m pytest tests/policy (114 passed)"
+        - "python tools/validators/directory_governance/validate_repository_topology.py (PASS)"
+      rollback_or_forward_fix: "migrations/rollback/20261120_g_place_01_release_rego.yaml"
+      result: "VERIFIED"
+  - migration:
+      migration_id: "g-place-01-source-role-anti-collapse"
+      decision_ref: "ADR-0003"
+      object_family: "policy_rule"
+      old_path: "release/source_role_anti_collapse.rego"
+      new_path: "policy/domains/geology/release/source_role_anti_collapse.rego"
+      object_id_rule: >-
+        Retired duplicate. The canonical scaffold already existed at the new
+        path with package kfm.generated.policy.domains.geology.release.source_role_anti_collapse
+        and the same default allow := false body; it is unchanged.
+      content_digest_before: "sha256:b93c9f3a9650f6d941688751d32e9649b5963bf2cdfbb583616808656ffcfeb4"
+      content_digest_after: "sha256:3e3eb9eae8a534952ba8f9719e75e3d8eda8a4cb9dc022b20550bc49f46148b7"
+      producers: []
+      consumers: []
+      compatibility_mode: "none"
+      effective_at: "2026-11-20T00:00:00Z"
+      sunset_at: "immediate: the duplicate is removed in the same change"
+      validation_refs:
+        - "OPA_BIN=<verified OPA 1.19.0> python -m pytest tests/policy (114 passed)"
+        - "python tools/validators/directory_governance/validate_repository_topology.py (PASS)"
+      rollback_or_forward_fix: "migrations/rollback/20261120_g_place_01_release_rego.yaml"
+      result: "VERIFIED"
