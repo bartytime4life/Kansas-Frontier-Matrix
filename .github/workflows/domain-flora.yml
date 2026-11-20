@@ -74,6 +74,10 @@ jobs:
             --start-directory tests/domains/flora \
             --pattern 'test_flora_smoke.py' \
             --verbose
+          python -m unittest discover \
+            --start-directory tests/domains/flora \
+            --pattern 'test_catalog_closure.py' \
+            --verbose
 
       - name: Record bounded Flora validation scope
         if: always()

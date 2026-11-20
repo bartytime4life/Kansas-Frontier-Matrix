@@ -9,6 +9,8 @@ emission itself is held separately (tests/qa/test_held_entry_points.py).
 """
 from __future__ import annotations
 
+import tempfile
+import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -37,24 +39,31 @@ def catalog_records(root: Path) -> list[str]:
     return sorted(found)
 
 
-def test_catalog_closure_is_held_while_no_records_exist() -> None:
-    records = catalog_records(REPO_ROOT)
-    assert records == [], (
-        "CATALOG_CLOSURE_NOT_IMPLEMENTED: archaeology catalog records exist without "
-        "closure tests. Replace this hold with closure tests before admitting: "
-        + ", ".join(records)
-    )
+class CatalogClosureHoldTests(unittest.TestCase):
+    def test_catalog_closure_is_held_while_no_records_exist(self) -> None:
+        records = catalog_records(REPO_ROOT)
+        self.assertEqual(
+            records,
+            [],
+            "CATALOG_CLOSURE_NOT_IMPLEMENTED: archaeology catalog records exist without "
+            "closure tests. Replace this hold with closure tests before admitting: "
+            + ", ".join(records),
+        )
+
+    def test_hold_detects_a_record_and_ignores_docs(self) -> None:
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            lane = root / LANES[0]
+            lane.mkdir(parents=True)
+            (lane / "README.md").write_text("docs", encoding="utf-8")
+            (lane / ".gitkeep").write_text("", encoding="utf-8")
+            self.assertEqual(catalog_records(root), [])
+            (lane / "collection.json").write_text("{}", encoding="utf-8")
+            self.assertEqual(catalog_records(root), [f"{LANES[0]}/collection.json"])
+
+    def test_hold_scans_the_canonical_domain_catalog_lane(self) -> None:
+        self.assertTrue((REPO_ROOT / LANES[0] / "README.md").is_file())
 
 
-def test_hold_detects_a_record_and_ignores_docs(tmp_path: Path) -> None:
-    lane = tmp_path / LANES[0]
-    lane.mkdir(parents=True)
-    (lane / "README.md").write_text("docs", encoding="utf-8")
-    (lane / ".gitkeep").write_text("", encoding="utf-8")
-    assert catalog_records(tmp_path) == []
-    (lane / "collection.json").write_text("{}", encoding="utf-8")
-    assert catalog_records(tmp_path) == [f"{LANES[0]}/collection.json"]
-
-
-def test_hold_scans_the_canonical_domain_catalog_lane() -> None:
-    assert (REPO_ROOT / LANES[0] / "README.md").is_file()
+if __name__ == "__main__":
+    unittest.main()
