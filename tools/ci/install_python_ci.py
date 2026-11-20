@@ -127,6 +127,8 @@ PROFILES = {
         only_binary=True,
     ),
     "geo-transforms": InstallProfile("tools/ci/python-geo.lock"),
+    # Playwright's driver only; the browser is the runner's installed Chromium.
+    "intake-browser": InstallProfile("tools/ci/python-browser.lock", only_binary=True),
     "nwm-netcdf": InstallProfile("tools/ci/python-nwm.lock"),
     "geoparquet-pyarrow-25": InstallProfile(
         "tools/ci/geoparquet-pyarrow-25.lock"

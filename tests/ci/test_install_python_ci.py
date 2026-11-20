@@ -27,6 +27,7 @@ class InstallPythonCiTests(unittest.TestCase):
                 "connectors-core",
                 "crop-casma-tiles",
                 "geo-transforms",
+                "intake-browser",
                 "nwm-netcdf",
                 "geoparquet-pyarrow-25",
                 "project-runtime",
