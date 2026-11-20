@@ -109,6 +109,28 @@ function profileRunMessage(value:ProfileRun):string {
  const held=value.outcomes.filter(outcome=>outcome.state==="held").length;
  return `${value.captured} configured-profile capture(s) stored${reused?`; ${reused} previously saved capture(s) reused`:""}${held?`; ${held} profile(s) held. Review source setup and saved captures before retrying`:""}. Review and release remain pending.`;
 }
+// Each provider acquisition has a 30s budget. Allow archive overhead for one
+// capture, and two sequential configured profiles, while bounding the whole body.
+const ACTION_DEADLINES={capture:60_000,replay:30_000,profiles:120_000};
+async function actionPayload(url:string,options:RequestInit&{signal:AbortSignal},timeoutMs:number,timeoutMessage:string):Promise<{response:Response;value:unknown}> {
+ const deadline=new AbortController(),signal=AbortSignal.any([options.signal,deadline.signal]);
+ let cancel=()=>{};
+ const aborted=new Promise<never>((_resolve,reject)=>{
+  cancel=()=>reject(signal.reason);signal.addEventListener("abort",cancel,{once:true});
+ });
+ const timer=setTimeout(()=>deadline.abort(new Error(timeoutMessage)),timeoutMs);
+ try{
+  signal.throwIfAborted();
+  const load=async()=>{
+   const response=await fetch(url,{...options,signal});signal.throwIfAborted();
+   const value:unknown=await response.json().catch(()=>null);signal.throwIfAborted();
+   return {response,value};
+  };
+  // Race explicitly: an adapter that ignores abort must not strand the UI or
+  // install a late result. This only ends the browser wait, not a stored write.
+  return await Promise.race([load(),aborted]);
+ }finally{clearTimeout(timer);signal.removeEventListener("abort",cancel);}
+}
 export default function ConnectionsWorkspace(){
  const [catalog,setCatalog]=useState<Catalog|null>(null),[selected,setSelected]=useState("noaa-ncei"),[query,setQuery]=useState<Record<string,string>>({});
  const [result,setResult]=useState<Result|null>(null),[receipts,setReceipts]=useState<Receipt[]>([]),[busy,setBusy]=useState(false),[message,setMessage]=useState(""),[page,setPage]=useState(0),[metric,setMetric]=useState("");
@@ -154,8 +176,8 @@ export default function ConnectionsWorkspace(){
  const inspect=async(receipt?:Receipt)=>{
   request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);setMessage("");setPage(0);
   try{
-   const response=await fetch(receipt?"/api/connections?action=view&id="+receipt.captureId:"/api/connections",receipt?{cache:"no-store",signal:controller.signal}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sourceId:selected,query}),signal:controller.signal});
-   const value:unknown=await response.json().catch(()=>null);if(controller.signal.aborted)return;
+   const {response,value}=await actionPayload(receipt?"/api/connections?action=view&id="+receipt.captureId:"/api/connections",receipt?{cache:"no-store",signal:controller.signal}:{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sourceId:selected,query}),signal:controller.signal},receipt?ACTION_DEADLINES.replay:ACTION_DEADLINES.capture,receipt?"Saved capture took too long to respond. Try replaying it again.":"Capture took too long to respond. Storage may still have completed. Refresh saved captures before retrying.");
+   if(controller.signal.aborted)return;
    if(!response.ok)throw new Error((record(value)&&typeof value.error==="string"?labels[value.error]:undefined)??"This request is held. Check configuration, dates and the source limitations.");
    if(!captureResult(value,receipt?.sourceId??selected,receipt?.captureId))throw new Error("Capture returned invalid data. Please retry.");
    if(receipt){setSelected(receipt.sourceId);setQuery(receipt.query);}
@@ -166,8 +188,8 @@ export default function ConnectionsWorkspace(){
  const runProfiles=async()=>{
   request.current?.abort();const controller=new AbortController();request.current=controller;setBusy(true);setMessage("");setResult(null);
   try{
-   const response=await fetch("/api/connections/run",{method:"POST",signal:controller.signal});
-   const value:unknown=await response.json().catch(()=>null);if(controller.signal.aborted)return;
+   const {response,value}=await actionPayload("/api/connections/run",{method:"POST",signal:controller.signal},ACTION_DEADLINES.profiles,"Profile capture took too long to respond. Some captures may have been stored. Refresh saved captures before retrying.");
+   if(controller.signal.aborted)return;
    if(!response.ok)throw new Error("Hosted capture profiles are not configured or enabled.");
    if(!profileRun(value))throw new Error("Profile capture returned invalid data. Review saved captures before retrying.");
    setMessage(profileRunMessage(value));void refresh();

@@ -90,7 +90,8 @@ test("background status failure keeps a successful capture message and verified 
   });
   render(); await settle(); let tree = render();
   findNode(tree, node => node.type === "form").props.onSubmit({ preventDefault() {} });
-  await settle(); tree = render();
+  // Wait through capture completion and the independent background status load.
+  await settle(); await settle(); tree = render();
   assert.match(alert(tree).props.children, /Source status is unavailable/);
   assert.ok(findNode(tree, node => node.props?.role === "status" && node.props.children === "Verified saved capture replayed."));
   assert.ok(findNode(tree, node => node.type === "section" && node.props["aria-label"] === "Verified capture"));
