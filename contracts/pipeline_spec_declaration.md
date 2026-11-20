@@ -2,7 +2,7 @@
 doc_id: kfm://contract/pipeline-spec-declaration
 title: KfmPipelineSpecDeclaration Contract
 type: contract
-version: v1.7
+version: v1.8
 status: proposed-inactive
 owners: OWNER_TBD — Pipeline specification steward · Schema steward · Validation steward · Domain steward
 created: 2026-08-30
@@ -46,7 +46,7 @@ tags: [kfm, pipeline-spec, declaration, inactive, fixture-only, compatibility-al
 notes:
   - "This contract governs declarative repository records only."
   - "A conforming declaration cannot activate a source, execute a network request, write a lifecycle target, promote, release, or publish."
-  - "Version v1.7 adds held OpenFEMA declarations intake. Version v1.6 added private NWS context intake. Version v1.5 added held TIGER roads intake. Version v1.4 added bounded NLCD candidate conformance. Version v1.3 added the bounded GBIF fixture pipeline. Version v1.2 added the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
+  - "Version v1.8 adds private iNaturalist plant-query intake. Version v1.7 added held OpenFEMA declarations intake. Version v1.6 added private NWS context intake. Version v1.5 added held TIGER roads intake. Version v1.4 added bounded NLCD candidate conformance. Version v1.3 added the bounded GBIF fixture pipeline. Version v1.2 added the 2026-11-19 fixture-first checkpoint; historical pins below remain unchanged. Version v1.1 was a repository-evidence/currentness refresh; it does not change field meaning, canonicalization, denied authorities, or activation posture."
 [/KFM_META_BLOCK_V2] -->
 
 # KfmPipelineSpecDeclaration Contract
@@ -69,9 +69,9 @@ promotion, release, publication, or public-use authority.
 
 ### Repository checkpoint (2026-11-19)
 
-The declaration corpus still contains 110 records. Nine of the 39 pipeline
+The declaration corpus still contains 110 records. Ten of the 39 pipeline
 candidates now bind fixture-first implementations: WBD HUC12, USGS water
-observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, private NWS context intake, and OpenFEMA declarations intake.
+observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, private NWS context intake, OpenFEMA declarations intake, and private iNaturalist plant-query intake.
 The earthquake, storm-event and water-observation pipelines replay
 sealed synthetic capture packets through the existing normalizers and validators
 without network access or lifecycle writes. Their bindings include the
@@ -94,7 +94,11 @@ OpenFEMA binds supplied counted keyset pages to private administrative-context
 candidates. Missing pages and count drift stay incomplete; its proposed domain
 source descriptor remains unresolved, and no eligibility or hazard claim is made.
 
-The remaining 30 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
+iNaturalist binds the fixed plant-query profile with minimized private snapshots,
+separate original-byte verification and held unknown plant lineage. The existing
+Fauna descriptor and cross-domain Flora use remain unreviewed.
+
+The remaining 29 candidates are NOT_IMPLEMENTED. All 65 stage boundaries and six
 compatibility aliases retain their contract-required NOT_IMPLEMENTED posture.
 No execution authority changes. See the
 [fixture replay runbook](../docs/runbooks/pipeline-fixture-replay.md).

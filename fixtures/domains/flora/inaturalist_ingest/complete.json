@@ -1,0 +1,171 @@
+{
+  "fixture_kind": "SYNTHETIC_INATURALIST_PLANT_QUERY",
+  "capture": "{\"pages\":[{\"body\":\"{\\\"incidental_top_level\\\":\\\"DO_NOT_RETURN_TOP_LEVEL\\\",\\\"page\\\":1,\\\"per_page\\\":2,\\\"results\\\":[{\\\"captive\\\":false,\\\"geojson\\\":{\\\"coordinates\\\":[-98.5,38.5],\\\"type\\\":\\\"Point\\\"},\\\"geoprivacy\\\":null,\\\"id\\\":900000101,\\\"identifications\\\":[{\\\"user\\\":{\\\"bio\\\":\\\"DO_NOT_RETURN_NESTED_PROFILE\\\",\\\"id\\\":900000003,\\\"login\\\":\\\"synthetic_identifier\\\"}}],\\\"license_code\\\":\\\"cc-by\\\",\\\"obscured\\\":false,\\\"observed_on\\\":\\\"2020-05-01\\\",\\\"positional_accuracy\\\":10,\\\"quality_grade\\\":\\\"research\\\",\\\"taxon\\\":{\\\"ancestor_ids\\\":[47126],\\\"id\\\":900000001,\\\"name\\\":\\\"Synthetica planta\\\",\\\"rank\\\":\\\"species\\\"},\\\"taxon_geoprivacy\\\":\\\"open\\\",\\\"unknown_synthetic_field\\\":{\\\"retained\\\":true},\\\"updated_at\\\":\\\"2020-05-02T00:00:00.123Z\\\",\\\"user\\\":{\\\"email\\\":\\\"invented@example.invalid\\\",\\\"id\\\":900000002,\\\"login\\\":\\\"synthetic_observer\\\",\\\"name\\\":\\\"DO_NOT_RETURN_PROFILE\\\"}},{\\\"captive\\\":false,\\\"geojson\\\":{\\\"coordinates\\\":[-98.5,38.5],\\\"type\\\":\\\"Point\\\"},\\\"geoprivacy\\\":\\\"obscured\\\",\\\"id\\\":900000102,\\\"identifications\\\":[{\\\"user\\\":{\\\"bio\\\":\\\"DO_NOT_RETURN_NESTED_PROFILE\\\",\\\"id\\\":900000003,\\\"login\\\":\\\"synthetic_identifier\\\"}}],\\\"license_code\\\":\\\"cc-by-nc\\\",\\\"obscured\\\":true,\\\"observed_on\\\":\\\"2020-05-01\\\",\\\"positional_accuracy\\\":10,\\\"quality_grade\\\":\\\"needs_id\\\",\\\"taxon\\\":{\\\"ancestor_ids\\\":[47126],\\\"id\\\":900000001,\\\"name\\\":\\\"Synthetica planta\\\",\\\"rank\\\":\\\"species\\\"},\\\"taxon_geoprivacy\\\":\\\"open\\\",\\\"unknown_synthetic_field\\\":{\\\"retained\\\":true},\\\"updated_at\\\":\\\"2020-05-02T00:00:00.123Z\\\",\\\"user\\\":{\\\"email\\\":\\\"invented@example.invalid\\\",\\\"id\\\":900000002,\\\"login\\\":\\\"synthetic_observer\\\",\\\"name\\\":\\\"DO_NOT_RETURN_PROFILE\\\"}}],\\\"total_results\\\":3}\",\"retrieved_at\":\"2026-09-27T12:00:00.123456Z\",\"source_url\":\"https://api.inaturalist.org/v1/observations?swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&taxon_id=47126&per_page=2&order=asc&order_by=id&id_above=0\",\"status\":200},{\"body\":\"{\\\"incidental_top_level\\\":\\\"DO_NOT_RETURN_TOP_LEVEL\\\",\\\"page\\\":1,\\\"per_page\\\":2,\\\"results\\\":[{\\\"captive\\\":false,\\\"geojson\\\":null,\\\"geoprivacy\\\":null,\\\"id\\\":900000103,\\\"identifications\\\":[{\\\"user\\\":{\\\"bio\\\":\\\"DO_NOT_RETURN_NESTED_PROFILE\\\",\\\"id\\\":900000003,\\\"login\\\":\\\"synthetic_identifier\\\"}}],\\\"license_code\\\":null,\\\"obscured\\\":false,\\\"observed_on\\\":\\\"2020-05-01\\\",\\\"positional_accuracy\\\":10,\\\"quality_grade\\\":\\\"research\\\",\\\"taxon\\\":{\\\"id\\\":900000004,\\\"name\\\":\\\"Synthetica incerta\\\",\\\"rank\\\":\\\"species\\\"},\\\"taxon_geoprivacy\\\":\\\"private\\\",\\\"unknown_synthetic_field\\\":{\\\"retained\\\":true},\\\"updated_at\\\":\\\"2020-05-02T00:00:00.123Z\\\",\\\"user\\\":{\\\"email\\\":\\\"invented@example.invalid\\\",\\\"id\\\":900000002,\\\"login\\\":\\\"synthetic_observer\\\",\\\"name\\\":\\\"DO_NOT_RETURN_PROFILE\\\"}}],\\\"total_results\\\":1}\",\"retrieved_at\":\"2026-09-27T12:00:01.654321Z\",\"source_url\":\"https://api.inaturalist.org/v1/observations?swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&taxon_id=47126&per_page=2&order=asc&order_by=id&id_above=900000102\",\"status\":200}]}",
+  "capture_sha256": "sha256:6b01ae1a75f09fc9450779a1776dda1e9b0c381a7205a271991b9fbd92e82cbd",
+  "expected": {
+    "object_type": "INaturalistFloraIngestCandidate",
+    "schema_version": "1.0.0",
+    "source_descriptor_ref": "data/registry/fauna/sources/inaturalist.yaml",
+    "query": {
+      "taxon_id": 47126,
+      "bounds": [
+        -102.1,
+        36.9,
+        -94.5,
+        40.1
+      ],
+      "per_page": 2
+    },
+    "pages": [
+      {
+        "source_url": "https://api.inaturalist.org/v1/observations?swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&taxon_id=47126&per_page=2&order=asc&order_by=id&id_above=0",
+        "retrieved_at": "2026-09-27T12:00:00.123456Z",
+        "source_body_sha256": "sha256:eeb407de6511b7f6c62e4cce1cae2199220481875b0299ac7369d4c3b1ef92c9",
+        "source_byte_length": 1428,
+        "minimized_body": "{\"per_page\":2,\"results\":[{\"captive\":false,\"geojson\":{\"coordinates\":[-98.5,38.5],\"type\":\"Point\"},\"geoprivacy\":null,\"id\":900000101,\"identifications\":[{\"user\":{\"id\":900000003,\"login\":\"synthetic_identifier\"}}],\"license_code\":\"cc-by\",\"obscured\":false,\"observed_on\":\"2020-05-01\",\"positional_accuracy\":10,\"quality_grade\":\"research\",\"taxon\":{\"ancestor_ids\":[47126],\"id\":900000001,\"name\":\"Synthetica planta\",\"rank\":\"species\"},\"taxon_geoprivacy\":\"open\",\"unknown_synthetic_field\":{\"retained\":true},\"updated_at\":\"2020-05-02T00:00:00.123Z\",\"user\":{\"id\":900000002,\"login\":\"synthetic_observer\"}},{\"captive\":false,\"geojson\":{\"coordinates\":[-98.5,38.5],\"type\":\"Point\"},\"geoprivacy\":\"obscured\",\"id\":900000102,\"identifications\":[{\"user\":{\"id\":900000003,\"login\":\"synthetic_identifier\"}}],\"license_code\":\"cc-by-nc\",\"obscured\":true,\"observed_on\":\"2020-05-01\",\"positional_accuracy\":10,\"quality_grade\":\"needs_id\",\"taxon\":{\"ancestor_ids\":[47126],\"id\":900000001,\"name\":\"Synthetica planta\",\"rank\":\"species\"},\"taxon_geoprivacy\":\"open\",\"unknown_synthetic_field\":{\"retained\":true},\"updated_at\":\"2020-05-02T00:00:00.123Z\",\"user\":{\"id\":900000002,\"login\":\"synthetic_observer\"}}],\"total_results\":3}",
+        "minimized_body_sha256": "sha256:798c3c39f1989ef567340d74bc6400fae6f9877d8103403b128f2637d8e56818",
+        "minimized_byte_length": 1164
+      },
+      {
+        "source_url": "https://api.inaturalist.org/v1/observations?swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&taxon_id=47126&per_page=2&order=asc&order_by=id&id_above=900000102",
+        "retrieved_at": "2026-09-27T12:00:01.654321Z",
+        "source_body_sha256": "sha256:7ae33c46360055367dc4dc6c8a02e6e7fddec219c67a2aabaf65f1f7ad8260d9",
+        "source_byte_length": 700,
+        "minimized_body": "{\"per_page\":2,\"results\":[{\"captive\":false,\"geojson\":null,\"geoprivacy\":null,\"id\":900000103,\"identifications\":[{\"user\":{\"id\":900000003,\"login\":\"synthetic_identifier\"}}],\"license_code\":null,\"obscured\":false,\"observed_on\":\"2020-05-01\",\"positional_accuracy\":10,\"quality_grade\":\"research\",\"taxon\":{\"id\":900000004,\"name\":\"Synthetica incerta\",\"rank\":\"species\"},\"taxon_geoprivacy\":\"private\",\"unknown_synthetic_field\":{\"retained\":true},\"updated_at\":\"2020-05-02T00:00:00.123Z\",\"user\":{\"id\":900000002,\"login\":\"synthetic_observer\"}}],\"total_results\":1}",
+        "minimized_body_sha256": "sha256:2c4bbf82bbceb667316eab9bd3cb0ea7e6da5bbb2fa649fb39ce2032f0e9ef71",
+        "minimized_byte_length": 539
+      }
+    ],
+    "capture": {
+      "admission": "NOT_ADMITTED",
+      "coverage": "NOT_ESTABLISHED",
+      "outcome": "CAPTURE_CANDIDATE",
+      "page_sha256": [
+        "sha256:eeb407de6511b7f6c62e4cce1cae2199220481875b0299ac7369d4c3b1ef92c9",
+        "sha256:7ae33c46360055367dc4dc6c8a02e6e7fddec219c67a2aabaf65f1f7ad8260d9"
+      ],
+      "reasons": [],
+      "records": [
+        {
+          "admission": "NOT_ADMITTED",
+          "geoprivacy_status": "open",
+          "latitude": 38.5,
+          "license_code": "cc-by",
+          "longitude": -98.5,
+          "observation_id": 900000101,
+          "observed_on": "2020-05-01",
+          "positional_accuracy_m": 10.0,
+          "precision_class": "source_point",
+          "quality_grade": "research",
+          "raw_record_json": "{\"captive\":false,\"geojson\":{\"coordinates\":[-98.5,38.5],\"type\":\"Point\"},\"geoprivacy\":null,\"id\":900000101,\"identifications\":[{\"user\":{\"id\":900000003,\"login\":\"synthetic_identifier\"}}],\"license_code\":\"cc-by\",\"obscured\":false,\"observed_on\":\"2020-05-01\",\"positional_accuracy\":10,\"quality_grade\":\"research\",\"taxon\":{\"ancestor_ids\":[47126],\"id\":900000001,\"name\":\"Synthetica planta\",\"rank\":\"species\"},\"taxon_geoprivacy\":\"open\",\"unknown_synthetic_field\":{\"retained\":true},\"updated_at\":\"2020-05-02T00:00:00.123Z\",\"user\":{\"id\":900000002,\"login\":\"synthetic_observer\"}}",
+          "reasons": [],
+          "record_sha256": "sha256:10611f1cd1edcd17ccc060ee714d9f9720514f2892f01a92fe8dcea514f6e54e",
+          "rights_holder": "synthetic_observer",
+          "route": "RAW_CANDIDATE",
+          "sensitivity": "NOT_EVALUATED",
+          "taxon_id": 900000001,
+          "taxon_name": "Synthetica planta",
+          "taxon_rank": "species",
+          "updated_at": "2020-05-02T00:00:00.123Z"
+        },
+        {
+          "admission": "NOT_ADMITTED",
+          "geoprivacy_status": "obscured",
+          "latitude": 38.5,
+          "license_code": "cc-by-nc",
+          "longitude": -98.5,
+          "observation_id": 900000102,
+          "observed_on": "2020-05-01",
+          "positional_accuracy_m": 10.0,
+          "precision_class": "obscured_randomized",
+          "quality_grade": "needs_id",
+          "raw_record_json": "{\"captive\":false,\"geojson\":{\"coordinates\":[-98.5,38.5],\"type\":\"Point\"},\"geoprivacy\":\"obscured\",\"id\":900000102,\"identifications\":[{\"user\":{\"id\":900000003,\"login\":\"synthetic_identifier\"}}],\"license_code\":\"cc-by-nc\",\"obscured\":true,\"observed_on\":\"2020-05-01\",\"positional_accuracy\":10,\"quality_grade\":\"needs_id\",\"taxon\":{\"ancestor_ids\":[47126],\"id\":900000001,\"name\":\"Synthetica planta\",\"rank\":\"species\"},\"taxon_geoprivacy\":\"open\",\"unknown_synthetic_field\":{\"retained\":true},\"updated_at\":\"2020-05-02T00:00:00.123Z\",\"user\":{\"id\":900000002,\"login\":\"synthetic_observer\"}}",
+          "reasons": [
+            "NOT_RESEARCH_GRADE",
+            "NONCOMMERCIAL_TERMS",
+            "GEOPRIVACY_OBSCURED"
+          ],
+          "record_sha256": "sha256:35a3d82b4299ca0ce9af5058dacb9429d7b16b3efd4915e95e01e1516cf1c7be",
+          "rights_holder": "synthetic_observer",
+          "route": "QUARANTINE_CANDIDATE",
+          "sensitivity": "NOT_EVALUATED",
+          "taxon_id": 900000001,
+          "taxon_name": "Synthetica planta",
+          "taxon_rank": "species",
+          "updated_at": "2020-05-02T00:00:00.123Z"
+        },
+        {
+          "admission": "NOT_ADMITTED",
+          "geoprivacy_status": "private",
+          "latitude": null,
+          "license_code": null,
+          "longitude": null,
+          "observation_id": 900000103,
+          "observed_on": "2020-05-01",
+          "positional_accuracy_m": 10.0,
+          "precision_class": "withheld",
+          "quality_grade": "research",
+          "raw_record_json": "{\"captive\":false,\"geojson\":null,\"geoprivacy\":null,\"id\":900000103,\"identifications\":[{\"user\":{\"id\":900000003,\"login\":\"synthetic_identifier\"}}],\"license_code\":null,\"obscured\":false,\"observed_on\":\"2020-05-01\",\"positional_accuracy\":10,\"quality_grade\":\"research\",\"taxon\":{\"id\":900000004,\"name\":\"Synthetica incerta\",\"rank\":\"species\"},\"taxon_geoprivacy\":\"private\",\"unknown_synthetic_field\":{\"retained\":true},\"updated_at\":\"2020-05-02T00:00:00.123Z\",\"user\":{\"id\":900000002,\"login\":\"synthetic_observer\"}}",
+          "reasons": [
+            "LICENSE_UNRESOLVED",
+            "GEOPRIVACY_PRIVATE"
+          ],
+          "record_sha256": "sha256:4e4ff7e401dfb9a243992eb7f51b130c9300f42cdfbd75b479fb0ad2c1af7290",
+          "rights_holder": "synthetic_observer",
+          "route": "QUARANTINE_CANDIDATE",
+          "sensitivity": "NOT_EVALUATED",
+          "taxon_id": 900000004,
+          "taxon_name": "Synthetica incerta",
+          "taxon_rank": "species",
+          "updated_at": "2020-05-02T00:00:00.123Z"
+        }
+      ],
+      "reported_total": 3
+    },
+    "flora_checks": [
+      {
+        "observation_id": 900000101,
+        "flora_scope": "SOURCE_PLANT_LINEAGE",
+        "route": "RAW_CANDIDATE",
+        "reason_codes": []
+      },
+      {
+        "observation_id": 900000102,
+        "flora_scope": "SOURCE_PLANT_LINEAGE",
+        "route": "QUARANTINE_CANDIDATE",
+        "reason_codes": []
+      },
+      {
+        "observation_id": 900000103,
+        "flora_scope": "UNVERIFIED",
+        "route": "QUARANTINE_CANDIDATE",
+        "reason_codes": [
+          "FLORA_LINEAGE_UNVERIFIED"
+        ]
+      }
+    ],
+    "route": "HOLD",
+    "reason_codes": [
+      "SOURCE_ADMISSION_UNVERIFIED",
+      "SOURCE_DESCRIPTOR_UNRESOLVED",
+      "CROSS_DOMAIN_USE_UNREVIEWED",
+      "RIGHTS_UNVERIFIED",
+      "SENSITIVITY_NOT_EVALUATED",
+      "RECORD_QUARANTINE_CANDIDATES"
+    ],
+    "authority": {
+      "source_admitted": false,
+      "review_completed": false,
+      "evidence_closed": false,
+      "lifecycle_write": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false,
+      "taxonomy_authority": false,
+      "geoprivacy_transform_authorized": false
+    },
+    "candidate_id": "inaturalist-ingest:sha256:e63e0c9ef7c1d3c86fe4bf023f39d99f44526eaf99313e478d058fe284f7b2ab",
+    "spec_hash": "sha256:844a585268c843a87f528f658eb5531ce8027c638a15af0f07f8c7e68865b250"
+  }
+}

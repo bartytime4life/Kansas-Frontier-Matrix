@@ -14,7 +14,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-11-19
 policy_label: public
 path: pipelines/domains/flora/README.md
 related:
@@ -70,11 +70,30 @@ notes:
   - "Flora pipeline logic is executable implementation support only; it does not own object meaning, schemas, source descriptors, policy, lifecycle data, catalog truth, geoprivacy decisions, or release decisions."
   - "Rare, protected, culturally sensitive, steward-reviewed, and unresolved flora records fail closed by default and require governed public-safe transformation before release."
   - "Concrete executable behavior, source activation, schedules, CI coverage, schema paths, release wiring, and public API/map behavior remain NEEDS VERIFICATION until implemented and tested."
+owning_root: pipelines/
+responsibility: implement bounded Flora source and normalized candidate preparation
+truth_posture: CONFIRMED bounded GBIF normalization and iNaturalist source intake; PROPOSED profiles; historical inspection retained; NEEDS VERIFICATION admission, taxonomy, sensitivity and release
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # 🌿 Flora Domain Pipeline
+
+## iNaturalist fixture implementation — November 19, 2026
+
+The [iNaturalist intake](inaturalist_ingest.py) now binds supplied, bounded Kansas
+plant-query pages through the existing source parser and cursor reconciler.
+Complete/count-drift/empty sealed cases run under locked Python 3.11/3.12 CI.
+User profiles are minimized before snapshots are returned; original byte hashes
+remain separate and need original capture bytes for later verification.
+Source rights/geoprivacy and unknown plant lineage keep explicit holds.
+The existing Fauna descriptor remains unresolved and cross-domain use unreviewed.
+This is INGEST source context, not Darwin Core normalization or FloraOccurrence
+promotion. No source, taxonomy, redaction, write or release authority is granted.
+
+See the [contract](../../../contracts/domains/flora/inaturalist_ingest_candidate.md)
+and [runbook](../../../docs/runbooks/inaturalist-fixture-ingest.md) for bounds,
+commands, private handling and the two replay-verification modes.
 
 ## GBIF fixture implementation — November 19, 2026
 

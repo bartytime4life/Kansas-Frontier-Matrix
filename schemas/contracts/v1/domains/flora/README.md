@@ -1,9 +1,8 @@
-# `schemas/contracts/v1/domains/flora/` — Flora Domain Schema Index
-
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-domains-flora-readme
 title: schemas/contracts/v1/domains/flora/ — Flora Domain Schema Index
-version: v1
+version: v1.1
+type: schema-index
 status: draft
 policy_label: public
 owners:
@@ -13,9 +12,17 @@ owners:
   - <contract-steward>
   - <validation-steward>
   - <docs-steward>
-updated: 2026-07-03
+created: 2026-07-03
+created_note: Date of the earlier schema-index edition; path predates this checkpoint.
+updated: 2026-11-19
 tags: [kfm, schemas, contracts, v1, domains, flora, rare-plants, geoprivacy, sensitivity, redaction-receipt, json-schema]
+owning_root: schemas/
+responsibility: index Flora machine shapes and distinguish bounded candidates from historical scaffolds
+truth_posture: CONFIRMED iNaturalist source-edge schema and replay; PROPOSED semantics; historical inspection retained; NEEDS VERIFICATION other object families and all release authority
 [/KFM_META_BLOCK_V2] -->
+
+# `schemas/contracts/v1/domains/flora/` — Flora Domain Schema Index
+
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![root](https://img.shields.io/badge/root-schemas%2F-blue)
@@ -23,6 +30,23 @@ tags: [kfm, schemas, contracts, v1, domains, flora, rare-plants, geoprivacy, sen
 ![posture](https://img.shields.io/badge/posture-domain--schema--index-orange)
 ![canonical](https://img.shields.io/badge/canonical-PROPOSED-yellow)
 ![sensitivity](https://img.shields.io/badge/sensitivity-fail--closed-red)
+
+## Current bounded schema checkpoint (2026-11-19)
+
+The [iNaturalist ingest schema](inaturalist_ingest_candidate.schema.json) is a closed
+private source-edge candidate shape paired with its
+[contract](../../../../../contracts/domains/flora/inaturalist_ingest_candidate.md)
+and [runbook](../../../../../docs/runbooks/inaturalist-fixture-ingest.md).
+It binds minimized replay snapshots, separate original byte identities, source
+rights/geoprivacy and unverified plant lineage. Candidate-only replay cannot verify
+discarded original bytes; stronger validation requires the original capture.
+All authority flags remain false, and source/cross-domain admission is unresolved.
+This does not implement the other proposed Flora object families or approve public use.
+
+## Historical schema-index inspection
+
+The older inspection below is retained from the earlier edition. Its limited
+schema map and scaffold statements do not supersede the bounded checkpoint above.
 
 ## Purpose
 
