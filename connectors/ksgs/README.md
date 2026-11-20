@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-ksgs-readme
 title: connectors/ksgs/ — KSGS Greenfield Connector Scaffold Boundary
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · KGS source steward · Geology steward · Hydrology steward · Hazards steward · Rights reviewer · Privacy/sensitivity reviewer · Security reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-11-20
 policy_label: public-doctrine; connector-root; greenfield-scaffold; noncanonical-path; path-and-slug-conflict; source-admission; no-network; fail-closed; no-activation; no-publication
 current_path: connectors/ksgs/README.md
 truth_posture: CONFIRMED repository-present 0.0.0 scaffold, exact placeholder package bytes, README-only named test lane, absent proposed Kansas child, empty source-authority register, unresolved registry templates, and TODO-only connector workflows / CONFLICTED final KGS connector, distribution, import, source-ID, schema, registry, fixture, and test placement / PROPOSED fail-closed parent boundary / UNKNOWN package runtime, source access, activation, rights clearance, sensitive-location transforms, substantive CI, deployment, and owners
@@ -63,6 +63,10 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#current-status) · [Placement](#placement-package-and-slug-conflict) · [Descriptor boundary](#descriptor-registry-and-policy-boundary) · [Product boundaries](#product-and-source-role-boundaries) · [Lifecycle](#lifecycle-and-publication-boundary) · [Validation](#validation) · [Evidence](#evidence-basis) · [Rollback](#rollback) · [Backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`src/ksgs/fetch.py`](./src/ksgs/fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`src/ksgs/admit.py`](./src/ksgs/admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

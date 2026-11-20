@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-kansas-state-archives-src-package-readme
 title: connectors/kansas_state_archives/src/kansas_state_archives/ — Kansas State Archives Greenfield Package Scaffold
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · Kansas source steward · Archives steward · Rights reviewer · Sensitivity/privacy reviewer · CARE/cultural/sovereignty reviewer · Security reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-11-20
 policy_label: public-doctrine; greenfield-scaffold; compatibility-path; path-and-surface-conflict; source-admission; rights-fail-closed; sensitivity-fail-closed; care-review; no-network; no-activation; no-publication
 current_path: connectors/kansas_state_archives/src/kansas_state_archives/README.md
 truth_posture: CONFIRMED 0.0.0 scaffold and placeholder package files / CONFLICTED compatibility class, final connector path, package scope, SourceDescriptor authority, and local sensitivity floor / PROPOSED future admission contract / UNKNOWN executable tests, CI, runtime, activation, source access, and deployment
@@ -63,6 +63,10 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Current package](#current-package) · [Repository fit](#repository-fit) · [Descriptor conflict](#descriptor-conflict) · [Surface boundaries](#kshs-surface-boundaries) · [Inputs and outputs](#inputs-and-outputs) · [Implementation boundary](#implementation-boundary) · [Failure contract](#failure-contract) · [Validation](#validation) · [Evidence](#evidence) · [Review and rollback](#review-and-rollback) · [Definition of done](#definition-of-done)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`fetch.py`](./fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`admit.py`](./admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

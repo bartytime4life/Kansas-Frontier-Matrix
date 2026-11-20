@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-kdwp-readme
 title: connectors/kdwp/ — KDWP Greenfield Compatibility Connector Boundary
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · Kansas/KDWP source steward · Fauna steward · Flora steward · Habitat steward · Rights reviewer · Sensitivity/privacy reviewer · Security reviewer · Validation steward · Test steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-11-20
 policy_label: public-doctrine; greenfield-scaffold; compatibility-path; canonical-family-migration; product-and-role-conflict; source-admission; rights-fail-closed; sensitivity-fail-closed; no-network; no-activation; no-publication
 current_path: connectors/kdwp/README.md
 truth_posture: CONFIRMED repository-present 0.0.0 Python scaffold, merged v0.2 source-layout, package-boundary, and test-boundary READMEs, empty initializer, comment-only fetch/admit modules, nonconforming four-field descriptor, and documentation-only local test lane / CONFLICTED final connector path, compatibility class, package migration, product decomposition, SourceDescriptor authority, narrative-to-machine role mapping, registry activation, fixture routing, and public sensitivity floor / PROPOSED bounded compatibility and future source-admission contract / UNKNOWN buildability, executable package behavior, collected tests, runtime, live source access, current rights and terms, substantive CI enforcement, deployment, and release readiness
@@ -81,6 +81,10 @@ notes:
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current status](#current-status) · [Repository snapshot](#repository-snapshot) · [Path conflict](#path-and-migration-conflict) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Descriptor boundary](#descriptor-registry-and-activation-boundary) · [Product boundaries](#kdwp-product-and-source-role-boundaries) · [Sensitivity](#rights-sensitivity-privacy-and-geometry) · [Lifecycle](#lifecycle-boundary) · [Failure contract](#failure-contract) · [Validation](#validation) · [Review](#review-burden) · [Evidence](#evidence-basis) · [ADRs](#adrs-and-migration) · [Definition of done](#definition-of-done) · [Rollback](#rollback) · [Backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`src/kdwp/fetch.py`](./src/kdwp/fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`src/kdwp/admit.py`](./src/kdwp/admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Purpose
 

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-ksu-research-extension-readme
 title: connectors/ksu_research_extension/ — KSU Research and Extension Compatibility Connector Lane
 type: readme
-version: v0.1
+version: v0.1.1
 status: draft
 owners: OWNER_TBD — Connector steward · Kansas source steward · Agriculture steward · Weather steward · Soil steward · Rights reviewer · Sensitivity reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-06-19
+updated: 2026-11-20
 policy_label: public-doctrine; compatibility-lane; noncanonical-path; snake-case-compatibility; umbrella-source; rights-gated; sensitivity-gated; no-publication
 proposed_path: connectors/ksu_research_extension/README.md
 truth_posture: CONFIRMED path exists / NONCANONICAL compatibility README / CANONICAL HOME CONFIRMED AS connectors/kansas/ksu-research-extension/ BY SOURCE PROFILE
@@ -57,6 +57,10 @@ notes:
 **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence ledger](#evidence-ledger) · [Admission posture](#admission-posture) · [Anti-collapse rules](#anti-collapse-rules) · [Validation](#validation) · [Rollback](#rollback) · [Verification backlog](#verification-backlog)
 
 ---
+
+## Held seams — 2026-11-20
+
+The connector's fetch and admission modules are no longer comment-only. [`src/ksu_research_extension/fetch.py`](./src/ksu_research_extension/fetch.py) raises `ConnectorFetchHold` (`CONNECTOR_FETCH_NOT_ADMITTED`) from `retrieve()`, and [`src/ksu_research_extension/admit.py`](./src/ksu_research_extension/admit.py) raises `ConnectorAdmissionHold` (`CONNECTOR_ADMISSION_NOT_ADMITTED`) from `admit()`. Both modules import only `__future__`, perform no I/O on import, and refuse every call with that named hold. No source is admitted: `descriptor.yaml` still leaves `role` and `rights` as `TBD`. [`tests/connectors/test_held_connector_seams.py`](../../tests/connectors/test_held_connector_seams.py) proves the holds in the `connector-gate` workflow and fails if the descriptor is resolved while the hold remains. Text below that calls these modules comment-only or placeholders describes the earlier snapshot.
 
 ## Scope
 
