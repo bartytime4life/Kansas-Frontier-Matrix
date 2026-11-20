@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-19
+updated: 2026-11-20
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -331,6 +331,34 @@ one visitor up to 25 seconds while the provider is down.
 **Other feeds.** The other 14 feeds answered 200 in under two seconds.
 
 **Mirror.** [#5926](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5926) carried #5924 into `apps/site/source`.
+
+<a id="public-readback-2026-11-20"></a>
+
+### Publication verified on 2026-11-20: DeFlock answers promptly on the first check
+
+At about 01:35 UTC on 2026-11-20 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `fd177091`. The connected branch was one merge
+ahead at `213e62b7`, which was not yet published.
+
+| Change | Live readback |
+|---|---|
+| [#5961](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5961) DeFlock returns promptly on the first provider check | The provider was still down. On a freshly started process (chat still showed "connecting"), the first request returned in 0.8 seconds with "Next provider check is running now; try again in about a minute". The second returned in 0.4 seconds. About 40 seconds later a request returned in 0.6 seconds with "Next provider check in about 1 minute" |
+| [#5957](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5957) test limit for the network-isolation browser test | Test-only; nothing to read back on the site |
+
+**This supersedes two earlier notes.** The readbacks of
+[2026-11-19](#public-readback-2026-11-19) and
+[later that day](#public-readback-2026-11-19-later) say the first DeFlock
+request after a restart still waits up to 25 seconds. With #5961 it no longer
+does: a cold read starts the provider check in the background and answers at
+once. The layer still shows no cameras while its provider is down.
+
+**Build identity.** `/api/build` still returned `sourceCommit: null` and
+`commitState: WORKTREE_MODIFIED`, as on 2026-11-19. The application inputs match
+`fd177091` exactly.
+
+**Other feeds.** The other 14 feeds answered 200 in about two seconds or less.
+Chat reported ready on `qwen3.5:9b-q4_K_M` about 40 seconds after the first
+request.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
