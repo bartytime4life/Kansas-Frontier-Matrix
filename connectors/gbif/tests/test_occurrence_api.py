@@ -70,6 +70,18 @@ class PlanTests(unittest.TestCase):
                     self.assertRaises(occ.OccurrenceInputError):
                 occ.plan_pages(occ.OccurrenceQuery(**kwargs), **plan_kwargs)
 
+    def test_malformed_required_and_enum_filters_have_finite_errors(self):
+        cases = [({"country": value}, "COUNTRY_CODE")
+                 for value in (None, {}, [], True, 1, 1.0, b"US")]
+        cases += [({"basis_of_record": value}, "BASIS_OF_RECORD")
+                  for value in ({}, [], True, 1, 1.0, b"HUMAN_OBSERVATION")]
+        cases += [({"state_province": value}, "TEXT_SHAPE")
+                  for value in (None, {}, [], True, 1, "")]
+        for kwargs, code in cases:
+            with self.subTest(kwargs=kwargs), self.assertRaises(occ.OccurrenceInputError) as ctx:
+                occ.plan_pages(occ.OccurrenceQuery(**kwargs), max_records=1)
+            self.assertEqual(str(ctx.exception), code)
+
     def test_source_url_allowlist(self):
         good = url()
         for bad in (good.replace("https://", "http://"), good.replace("api.gbif.org", "example.org"),

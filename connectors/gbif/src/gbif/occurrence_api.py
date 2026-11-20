@@ -90,9 +90,10 @@ class OccurrenceQuery:
     has_coordinate: bool | None = None
 
     def params(self) -> dict[str, str]:
-        if not re.fullmatch(r"[A-Z]{2}", self.country or ""):
+        if not isinstance(self.country, str) or not re.fullmatch(r"[A-Z]{2}", self.country):
             raise OccurrenceInputError("COUNTRY_CODE")
-        _text(self.state_province, limit=64)
+        if _text(self.state_province, limit=64) is None:
+            raise OccurrenceInputError("TEXT_SHAPE")
         params = {"country": self.country, "stateProvince": self.state_province}
         if self.taxon_key is not None:
             params["taxonKey"] = str(_integer(self.taxon_key, 0, 2**31 - 1))
@@ -102,7 +103,7 @@ class OccurrenceQuery:
                 raise OccurrenceInputError("YEAR_RANGE")
             params["year"] = self.year
         if self.basis_of_record is not None:
-            if self.basis_of_record not in BASIS_OF_RECORD:
+            if not isinstance(self.basis_of_record, str) or self.basis_of_record not in BASIS_OF_RECORD:
                 raise OccurrenceInputError("BASIS_OF_RECORD")
             params["basisOfRecord"] = self.basis_of_record
         if self.has_coordinate is not None:

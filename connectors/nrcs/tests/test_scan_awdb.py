@@ -82,6 +82,20 @@ class PlannerTests(unittest.TestCase):
                 sa.data_url(STATIONS, ELEMENTS, **merged)
             self.assertEqual(str(ctx.exception), code)
 
+    def test_nonstring_members_and_duration_have_finite_errors(self):
+        for value in ({}, [], None, True, 1, 1.0, b"99901", ("99901",)):
+            for field, code in (("stations", "STATION"), ("elements", "ELEMENT")):
+                stations, elements = ((value,), ELEMENTS) if field == "stations" else (STATIONS, (value,))
+                with self.subTest(field=field, value=value), self.assertRaises(sa.ScanInputError) as ctx:
+                    sa.data_url(stations, elements, duration="DAILY", begin_date="2023-06-01",
+                                end_date="2023-06-02")
+                self.assertEqual(str(ctx.exception), code)
+        for value in ({}, [], None, True, 1, 1.0, b"DAILY"):
+            with self.subTest(duration=value), self.assertRaises(sa.ScanInputError) as ctx:
+                sa.data_url(STATIONS, ELEMENTS, duration=value, begin_date="2023-06-01",
+                            end_date="2023-06-02")
+            self.assertEqual(str(ctx.exception), "DURATION")
+
     def test_non_canonical_urls_are_refused(self):
         base = URL.split("?")[0] + "?"
         cases = {

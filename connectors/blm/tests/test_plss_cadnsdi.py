@@ -59,6 +59,16 @@ class PlannerTests(unittest.TestCase):
             with self.subTest(body=body), self.assertRaises(pl.PlssInputError):
                 pl.parse_count(body, status=200, layer="first_division")
 
+    def test_layer_type_errors_are_finite_for_page_count_and_count_parse(self):
+        for value in (None, {}, [], True, 1, 1.0, b"township"):
+            for planner in (pl.query_url, pl.count_url):
+                with self.subTest(value=value, planner=planner.__name__), self.assertRaises(pl.PlssInputError) as ctx:
+                    planner(value)
+                self.assertEqual(str(ctx.exception), "LAYER")
+            with self.subTest(value=value), self.assertRaises(pl.PlssInputError) as ctx:
+                pl.parse_count(b'{"count":0}', status=200, layer=value)
+            self.assertEqual(str(ctx.exception), "LAYER")
+
     def test_bounded_planning(self):
         for kwargs, code in (({"layer": "parcels"}, "LAYER"), ({"offset": -1}, "OFFSET"),
                              ({"count": 0}, "PAGE_SIZE"), ({"count": 1001}, "PAGE_SIZE"),
