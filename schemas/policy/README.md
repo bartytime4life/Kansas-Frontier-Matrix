@@ -2,11 +2,11 @@
 doc_id: kfm://doc/schemas-policy-readme
 title: schemas/policy/ — Policy-Schema Compatibility and Routing Boundary
 type: README
-version: v0.2
+version: v0.2.1
 status: draft; repository-grounded; compatibility-orientation-only; no-direct-schema-payloads; migration-unresolved; non-authoritative; non-enforcing
 owner: NEEDS VERIFICATION — CODEOWNERS routes /schemas/ to @bartytime4life, but routing is not accepted stewardship or independent approval
 created: 2026-07-04
-updated: 2026-08-13
+updated: 2026-11-20
 policy_label: public
 owning_root: schemas/
 current_path: schemas/policy/README.md
@@ -70,7 +70,7 @@ This README does not make the path canonical, accepted, active, implemented, or 
 | [`schemas/README.md`](../README.md) | **CURRENT ROOT CONTRACT** | Supplies the parent machine-shape boundary, validation posture, maturity rules, and compatibility controls. |
 | [ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Describes the versioned schema-home decision but is not accepted authority. The adopted Directory Rules independently provide the current default placement. |
 | [ADR-0002](../../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | **DRAFT source / effectively PROPOSED** | Useful design context only; it does not accept object-family placement or migration. |
-| [ADR-0003](../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Concerns the singular policy-rule root. It does not make this schema compatibility lane canonical or active. |
+| [ADR-0003](../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **ACCEPTED** (2026-11-20) | Concerns the singular policy-rule root. It does not make this schema compatibility lane canonical or active. |
 
 ### Local authority statement
 

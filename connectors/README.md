@@ -2,12 +2,12 @@
 doc_id: kfm://doc/connectors-readme
 title: connectors/ — Source-Specific Fetch, Capture, and Admission Implementation
 type: readme; directory-readme; canonical-root-landing-page
-version: v0.7
+version: v0.7.1
 prior_version: v0.6
 status: repository-grounded; canonical-active-projection; mixed-maturity; internal-core-implemented; partial-no-network-enforcement; connector-run-receipt-presence-held; non-publisher
 owners: "NEEDS VERIFICATION — Root Registry and CODEOWNERS route connectors/ to @bartytime4life; accepted source stewards, rights reviewers, domain owners, security reviewers, and independent release approvers remain unverified"
 created: 2026-06-20
-updated: 2026-08-08
+updated: 2026-11-20
 supersedes: v0.6 documentation at the same path; no connector implementation, source activation, SourceDescriptor, schema, contract, policy, fixture, validator, workflow, receipt instance, lifecycle object, release decision, runtime behavior, or public behavior is superseded
 policy_label: repository-facing; source-edge; internal; descriptor-gated; rights-aware; sensitivity-aware; no-network-by-default; raw-quarantine-receipt-only; non-publisher
 current_path: connectors/README.md
@@ -467,7 +467,7 @@ Escalate unresolved rights, sensitivity, source identity, alias ownership, or pu
 | [`ADR-0029 — Adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Governs current root placement and machine projection |
 | [`ADR-0017 — Source Descriptor Admission Process`](../docs/adr/ADR-0017-source-descriptor-admission-process.md) | **PROPOSED** | Descriptor/record admission model; not accepted authority |
 | [`ADR-0001 — Schema Home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Relevant to circular singular/plural SourceDescriptor metadata |
-| [`ADR-0003 — Singular Policy Root`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Policy-root compatibility; does not activate source policy |
+| [`ADR-0003 — Singular Policy Root`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **ACCEPTED** (2026-11-20) | Policy-root compatibility; does not activate source policy |
 | Connector alias/source-ID normalization | **NOT ACCEPTED / NEEDS VERIFICATION** | Required before universal family/product/alias topology claims |
 | Root-wide connector outcome and receipt normalization | **NOT ACCEPTED / NEEDS VERIFICATION** | Required before one machine outcome/receipt contract is claimed |
 

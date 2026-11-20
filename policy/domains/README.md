@@ -2,11 +2,11 @@
 doc_id: kfm://policy/domains
 title: Domain Policy Boundary, Lane Inventory, and Activation Contract
 type: readme
-version: v0.4
+version: v0.4.1
 status: draft; BOUNDARY_COMPACT; repository-grounded; current-state-reconciled; mixed-maturity; machine-register-projected; evaluator-unbound; fail-closed; non-release; non-publication
 owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted domain-policy stewardship, specialist review, and independent approval controls remain unproved
 created: 2026-06-15
-updated: 2026-08-13
+updated: 2026-11-20
 current_path: policy/domains/README.md
 owning_root: policy/
 responsibility: Document the domain-specific admissibility-policy boundary, canonical lane projection, physical child inventory, local maturity, activation requirements, validation limits, and compatibility conflicts without creating domain truth, activating policy, approving release, or authorizing publication.
@@ -386,7 +386,7 @@ Unknown owner identities, required approvals, branch rules, or deployed consumer
 | Decision surface | Current status | Relevance |
 |---|---:|---|
 | [`ADR-0029 — Adopt Directory Governance Standard v2`](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Establishes the current Directory Rules authority and domain placement law. |
-| [`ADR-0003 — policy/ singular is canonical`](../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Documents singular-root intent; ADR-0029 now supplies accepted directory authority. |
+| [`ADR-0003 — policy/ singular is canonical`](../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **ACCEPTED** (2026-11-20) | Adds the `policies/` compatibility and policy-path migration controls; ADR-0029 supplies the accepted directory authority. |
 | [`ADR-0001 — schema home`](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Domain-policy machine shapes remain under canonical `schemas/`. |
 | [`ADR-0002 — contracts vs schemas`](../../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | **DRAFT** | Preserves meaning/shape separation. |
 | [`ADR-0020 — abstain is first class`](../../docs/adr/ADR-0020-abstain-is-a-first-class-decision.md) | **PROPOSED** | Outward abstention semantics and normalization pressure. |
