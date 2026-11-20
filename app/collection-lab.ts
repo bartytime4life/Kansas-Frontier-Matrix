@@ -1,3 +1,4 @@
+import {waterQualityDimensions} from './water-quality-context';
 import {collectionMetadata,fieldRole,type Collection} from './collection-metadata';
 import {documentedField,collectionFieldNotes,recordedUnit,recordedReference} from './collection-field-dictionary';
 import {fetchArchive,validArchiveGeometry,type ArchiveAnswer,type ArchiveRow} from './archive-layer-data';
@@ -53,37 +54,7 @@ const collectionDimensions: Partial<Record<string, Readonly<Record<string, reado
   observation_percent: aqsObservationDimensions,
   aqi: aqsObservationDimensions,
  },
- 'observations-usgs-samples-results': {
-  result_measure: [
-   'result_characteristic', 'usgs_pcode', 'result_measure_unit', 'activity_media', 'activity_media_subdivision',
-   'result_sample_fraction',
-   'result_measure_type', 'result_weight_basis', 'result_time_basis', 'result_measure_temperature_basis',
-   'result_measure_particle_size_basis', 'result_statistical_base', 'result_result_detection_condition',
-   'result_measure_qualifier_code', 'result_measure_status_identifier', 'result_analytical_method_identifier',
-   'result_analytical_method_identifier_context', 'result_analytical_method_name',
-  ],
-  activity_location_horz_accuracy_measure: ['activity_location_horz_accuracy_measure_unit'],
-  activity_depth_height_measure: ['activity_depth_height_measure_unit'],
-  activity_top_depth_measure: ['activity_top_depth_measure_unit'],
-  activity_bottom_depth_measure: ['activity_bottom_depth_measure_unit'],
-  group_summary_weight_measure: ['group_summary_weight_measure_unit'],
-  result_depth_height_measure: ['result_depth_height_measure_unit', 'result_depth_height_altitude_reference_point'],
-  detection_limit_measure_a: ['result_characteristic', 'detection_limit_type_a', 'detection_limit_measure_unit_a'],
-  detection_limit_measure_b: ['result_characteristic', 'detection_limit_type_b', 'detection_limit_measure_unit_b'],
- },
- 'observations-wqp-results': {
-  result_measure_value: [
-   'characteristic_name', 'usgs_pcode', 'result_measure_unit_code', 'activity_media_name', 'activity_media_subdivision_name',
-   'result_sample_fraction_text',
-   'result_value_type_name', 'result_weight_basis_text', 'result_time_basis_text', 'result_temperature_basis_text',
-   'result_particle_size_basis_text', 'statistical_base_code', 'result_detection_condition_text',
-   'measure_qualifier_code', 'result_status_identifier', 'result_analytical_method_identifier',
-   'result_analytical_method_identifier_context', 'result_analytical_method_name',
-  ],
-  activity_depth_height_value: ['activity_depth_height_unit_code'],
-  result_depth_height_value: ['result_depth_height_unit_code'],
-  detection_quantitation_limit_value: ['characteristic_name', 'detection_quantitation_limit_type_name', 'detection_quantitation_limit_unit_code'],
- },
+ ...waterQualityDimensions,
 };
 
 function groupKey(collection: Collection, field: string, values: Record<string, unknown>) {

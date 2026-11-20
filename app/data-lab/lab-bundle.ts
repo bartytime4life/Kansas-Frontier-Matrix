@@ -2,7 +2,8 @@ import {
   LAB_MAX_PAGES, LAB_MAX_ROWS, measurementDistribution, profileCollection, storyBrief,
   type LabSnapshot, type MeasurementBin,
 } from '../collection-lab';
-import { type Collection } from '../collection-metadata';
+import {fieldRole, type Collection } from '../collection-metadata';
+import {previousWaterQualityDimensions} from '../water-quality-context';
 import {fieldDictionaryRevision} from '../collection-field-dictionary';
 import { recoveredCollection } from '../recovered-collections';
 import {connectRecordContexts,recordContextBrief,type ContextSample} from './record-context';
@@ -111,6 +112,24 @@ function previousWaterContext(collection:Collection,view:Record<string,unknown>,
  });
 }
 
+function previousQualityContext(collection:Collection,view:Record<string,unknown>,rows:LabSnapshot['rows']){
+ const fields=previousWaterQualityDimensions[collection.id];
+ if(!fields||typeof view.field!=='string'||typeof view.context!=='string'||!collection.columns.includes(view.field)
+  ||fieldRole(view.field,collection.keys)!=='value')return false;
+ const field=view.field,dimensions=fields[field]??[];
+ return rows.some(row=>{
+  const values=row.values;if(!record(values))return false;
+  const raw=values[field];
+  // Match the previous profiler's numeric eligibility before resetting its saved view.
+  if(typeof raw!=='number'&&(typeof raw!=='string'||!/^[+-]?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/.test(raw.trim())))return false;
+  const n=Number(raw);if(!Number.isFinite(n)||(Number.isInteger(n)&&!Number.isSafeInteger(n)))return false;
+  const context=Object.fromEntries(dimensions.filter(key=>{
+   const v=values[key];return ['string','number'].includes(typeof v)&&String(v).trim();
+  }).map(key=>[key,String(values[key])]));
+  return view.context===(Object.keys(context).length?JSON.stringify(context):'Unit and measurement context not supplied');
+ });
+}
+
 export function openLabBundle(contents: string) {
   if (contents.length > MAX_LAB_BUNDLE_BYTES || new TextEncoder().encode(contents).length > MAX_LAB_BUNDLE_BYTES) throw new Error('Choose a Record Lab JSON file under 8 MB.');
   let value: unknown;
@@ -194,9 +213,10 @@ function readLabBundle(value:unknown){
     &&oldView.context==='Unit and measurement context not supplied'&&(
      collection.id==='observations-usgs-sites'&&['drainage_area','contributing_drainage_area','altitude','altitude_accuracy','horizontal_positional_accuracy','well_constructed_depth','hole_constructed_depth'].includes(String(oldView.field))||
      collection.id==='observations-usgs-series'&&['data_type','parameter_name','web_description','parameter_description','thresholds'].includes(String(oldView.field)));
+  const qualityUpgrade=value.fieldDictionaryRevision==null&&validOldRange&&record(oldView)&&previousQualityContext(collection,oldView,rows);
   const seriesNotice=contextUpgrade&&collection.id==='observations-usgs-series';
   return { collection, snapshot, question: value.question,
-    view:upgrade||waterUpgrade||contextUpgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
-    notice:seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
+    view:upgrade||waterUpgrade||contextUpgrade||qualityUpgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
+    notice:qualityUpgrade?'Water-quality definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
      upgrade||waterUpgrade||contextUpgrade?`${upgrade?'FAA':'USGS'} field definitions have changed. Your records and question were preserved; choose a measurement context again.`:null };
 }

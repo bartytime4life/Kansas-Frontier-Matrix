@@ -16,7 +16,7 @@ export default function CollectionMetadataPanel({collection, inLab = false}:{col
    <dt>Provider, rights, edition &amp; review</dt><dd>Inspect record lineage and provider documentation. Collection names do not establish these fields.</dd></dl>
   {!inLab&&<p><Link href={labUrl(collection.id)}>Open in the record lab →</Link></p>}
   <details><summary>Field dictionary · {metadata.fields.length} fields</summary>
-   <p>Documented fields link to their sources. Other roles are hints from field names; their definitions and units remain unspecified.</p>
+   <p>{metadata.fields.filter(field=>field.definition).length} of {metadata.fields.length} fields have sourced definitions. Documented fields link to their sources. Other roles are hints from field names; their definitions and units remain unspecified.</p>
    {metadata.documentation.length>0&&<><p>Documentation editions describe the format; they do not establish a record’s edition, accuracy or review.</p>
     <ul>{metadata.documentation.map(d=><li key={d.id}><a href={d.url}>{d.title}</a>{d.edition&&` · documentation edition ${d.edition}`} · checked {d.checkedAt}</li>)}</ul>
     <ul>{metadata.fieldNotes.map(note=><li key={note}>{note}</li>)}</ul></>}

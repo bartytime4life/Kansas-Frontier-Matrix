@@ -178,10 +178,11 @@ test('USGS Samples and WQP keep result qualifiers and ancillary measurement unit
   }}));
   const profile=lab.profileCollection(source,snapshot(rows));
   const groupsFor=field=>profile.fields.find(entry=>entry.name===field).groups;
-  assert.deepEqual(groupsFor(result).map(group=>JSON.parse(group.context)),expected);
+  assert.deepEqual(groupsFor(result).map(group=>JSON.parse(group.context)),expected.map(context=>({...context,[limit]:'1',[limitUnit]:'µg/L'})));
   assert.equal(groupsFor(depth)[0].count,expected.length);
   assert.deepEqual(JSON.parse(groupsFor(depth)[0].context),{[depthUnit]:'m'});
-  assert.deepEqual(JSON.parse(groupsFor(limit)[0].context),{[limitUnit]:'µg/L'});
+  assert.equal(groupsFor(limit).length,expected.length);
+  assert.deepEqual(groupsFor(limit).map(group=>JSON.parse(group.context)),expected.map(context=>({...context,[limitUnit]:'µg/L'})));
  }
 });
 test('long fields, stale cache, unknown units and summary group limits stay visible',()=>{
