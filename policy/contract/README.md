@@ -2,11 +2,11 @@
 doc_id: kfm://policy/contract
 title: policy/contract/ — Contract-Change Admissibility Boundary
 type: readme
-version: v0.4
+version: v0.4.1
 status: draft; BOUNDARY_COMPACT; repository-grounded; readme-only-direct-lane; accepted-directory-rules; adjacent-contract-schema-tests-confirmed; adjacent-policy-validators-confirmed; contract-policy-enforcement-not-established; fail-closed; non-release; non-publication
 owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted Contract policy stewardship, independent approval controls, and a stable local scope ID were not established
 created: 2026-06-15
-updated: 2026-08-13
+updated: 2026-11-20
 policy_label: "public; policy; contract-change; admissibility; trust-membrane; fail-closed; no-semantic-authority; no-schema-authority; no-evidence-authority; no-release-authority; no-publication-authority"
 current_path: policy/contract/README.md
 owning_root: policy/
@@ -252,7 +252,7 @@ Accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-
 
 - No root is added, removed, moved, or renamed.
 - No parallel contract, schema, policy, registry, proof, receipt, or release home is created.
-- The singular policy root is adopted placement through ADR-0029; ADR-0003 remains proposed only for the narrower `policy/` versus `policies/` compatibility decision.
+- The singular policy root is adopted placement through ADR-0029; ADR-0003, accepted on 2026-11-20, covers the narrower `policy/` versus `policies/` compatibility decision.
 - The child name `contract/` is retained because it is the current repository path and no competing `contracts/` child lane was found.
 - Ratifying a repo-wide child-lane naming law remains a separate governance decision.
 
@@ -278,7 +278,7 @@ The former uppercase architecture duplicate is absent from the current tree. Thi
 | `contracts/README.md` | repository-grounded v0.4 canonical semantic root | Owns human-readable object meaning and invariants. |
 | ADR-0001 | repository-present / `proposed` | Proposed canonical machine-schema home. |
 | ADR-0002 | repository-present / `draft` | Proposed contracts-schemas-policy-fixtures-tests-validators split. |
-| ADR-0003 | repository-present / `proposed` | Proposed singular policy-root decision. |
+| ADR-0003 | repository-present / `accepted` (2026-11-20) | Accepted singular policy-root and compatibility decision. |
 | `docs/registers/POLICY_GATE.md` | repository-present / draft register | Human-facing gate vocabulary; not executable policy. |
 | `policy/bundles/` | documentation plus inactive Pass 12 profile | No accepted repository-wide bundle selection or activation. |
 | `tests/contracts/` | two test modules plus manifest and documentation | Bounded contract/fixture integrity evidence; not complete semantic proof. |
@@ -686,7 +686,7 @@ A README, passing schema fixture, or green readiness workflow does not satisfy t
 | `contracts/README.md` blob `e0b7c126…` | `contracts/` owns semantic meaning and invariants under a repository-grounded v0.4 boundary | Does not prove every semantic contract correct or implemented |
 | ADR-0001 | Proposed `schemas/contracts/v1/` machine-schema home | Status remains proposed |
 | ADR-0002 | Proposed division across contracts, schemas, policy, fixtures, tests, validators, receipts, proofs, release, and control plane | Status remains draft/proposed |
-| ADR-0003 | Proposed singular policy-root decision | Does not specifically ratify the child name `contract/` |
+| ADR-0003 | Accepted singular policy-root and compatibility decision | Does not specifically ratify the child name `contract/` |
 | `tests/schemas/test_common_contracts.py` | Selected schema families use valid/invalid fixture validation | Does not prove semantic or policy enforcement |
 | `tests/contracts/` tree `7aaff0b5…` | Two executable modules, 12 source-declared tests, and a three-family manifest exist | Bounded shape/cross-root evidence, not complete semantic equivalence or Contract policy |
 | `Makefile` | `make test`, `make validate`, `make boundary-guards`, and `make boundary-guards-ci` are command-bearing; `make policy` remains a TODO output | No OPA evaluation or contract-change policy command |

@@ -2,11 +2,11 @@
 doc_id: kfm://policy/geoprivacy/flora
 title: Flora Geoprivacy Policy Routing Boundary
 type: policy-readme
-version: v0.1
+version: v0.1.1
 status: draft; placement-conflicted; non-executable; fail-closed
 owner: NEEDS VERIFICATION — policy steward, Flora steward, sensitivity reviewer, rights reviewer, security/privacy reviewer, release reviewer, docs steward
 created: 2026-07-24
-updated: 2026-07-24
+updated: 2026-11-20
 policy_label: public
 current_path: policy/geoprivacy/flora/README.md
 owning_root: policy/
@@ -108,7 +108,7 @@ Current repository evidence creates a placement conflict:
 | [`docs/domains/flora/CANONICAL_PATHS.md`](../../../docs/domains/flora/CANONICAL_PATHS.md) | Names `policy/sensitivity/flora/` and `policy/domains/flora/`; explicitly says their relationship needs verification. | Does not name `policy/geoprivacy/flora/` as a policy home. |
 | [`policy/sensitivity/flora/README.md`](../../sensitivity/flora/README.md) | Exists as a proposed scaffold. | Current sensitivity-lane candidate, not active policy. |
 | [`rare_plant_geoprivacy.rego`](../../sensitivity/flora/rare_plant_geoprivacy.rego) | Contains a generated package declaration and `default allow := false`. | Fail-closed scaffold only; no accepted semantics or execution proof. |
-| [`ADR-0003`](../../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | Proposed; confirms the singular root and forbids parallel policy authority if accepted. | Supports one policy root, but does not settle these nested Flora lanes. |
+| [`ADR-0003`](../../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | Accepted (2026-11-20); confirms the singular root and forbids parallel policy authority if accepted. | Supports one policy root, but does not settle these nested Flora lanes. |
 | This path | Tracked README existed with empty content at the inspected base. | Complete as a routing boundary; do not add executable rules yet. |
 
 ### Interim classification
@@ -444,7 +444,7 @@ Never correct a sensitivity exposure by silently deleting history or overwriting
 - [`rare_plant_geoprivacy.md`](../../sensitivity/flora/rare_plant_geoprivacy.md) and [`rare_plant_geoprivacy.rego`](../../sensitivity/flora/rare_plant_geoprivacy.rego) — proposed scaffold pair.
 - [`policy/access/flora-steward/README.md`](../../access/flora-steward/README.md) — bounded steward-review access posture.
 - [`Directory Rules`](../../../docs/doctrine/directory-rules.md) — responsibility-root and no-parallel-authority doctrine.
-- [`ADR-0003`](../../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) — proposed singular policy-root decision.
+- [`ADR-0003`](../../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) — accepted (2026-11-20) singular policy-root and compatibility decision.
 
 ### Flora doctrine and contracts
 
