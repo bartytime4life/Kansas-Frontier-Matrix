@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 699,
-   "STUB_MODULE": 139,
+   "PLACEHOLDER_MARKER": 692,
+   "STUB_MODULE": 132,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 383,
    "scripts": 1,
-   "tests": 164,
+   "tests": 150,
    "tools": 24
   },
-  "files": 700,
-  "total": 850
+  "files": 693,
+  "total": 836
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -683,8 +683,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/governance/consent_receipt.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/governance/overlay_pointer.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "scripts/maintenance/audit_published_aliases.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_catalog_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_farm_operator_join_deny.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_farm_operator_join_deny.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_nass_aggregate_only.py"},
@@ -697,8 +695,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_vegetation_index_mask_time.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_ai_exact_location_denial.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_ai_exact_location_denial.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_catalog_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_evidence_bundle_required.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_evidence_bundle_required.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_exact_sensitive_geometry_denial.py"},
@@ -749,8 +745,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_source_role_authority.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_api_envelopes.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/flora/test_api_envelopes.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_catalog_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/flora/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_geometry_validity.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/flora/test_geometry_validity.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_no_live_network.py"},
@@ -769,8 +763,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/flora/test_taxonomy_reconciliation.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_temporal_logic.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/flora/test_temporal_logic.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_catalog_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_habitat_fauna_thin_slice.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_habitat_fauna_thin_slice.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_modeled_as_critical_denied.py"},
@@ -781,8 +773,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_release_manifest.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_source_descriptors.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_source_descriptors.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hazards/test_catalog_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/hazards/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hazards/test_drawer_disclaimer.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/hazards/test_drawer_disclaimer.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hazards/test_emergency_alert_denial.py"},
@@ -823,8 +813,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_transport_graph_rollback.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_wzdx_v4_validator.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_wzdx_v4_validator.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_catalog_release_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_catalog_release_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_census_vintage.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_census_vintage.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_census_vs_municipality.py"},
@@ -837,8 +825,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_stale_census_place.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_topology.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_topology.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/soil/test_catalog_closure_evidence_drawer.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/soil/test_catalog_closure_evidence_drawer.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/soil/test_dual_hash_stability.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/soil/test_dual_hash_stability.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/soil/test_horizon_depth_sanity.py"},
