@@ -29,14 +29,21 @@ env:
 jobs:
   # Executes every tests/**/test_*.py file once. Domain and lane workflows run
   # bounded slices; this job closes the gap for files that no slice names.
+  # Python 3.12 installs the complete bundle. The newest supported CPython
+  # installs the same profiles except the PyArrow 25 experiment, whose lock is
+  # CPython 3.12-only; that module skips itself there.
   # It omits tools/ci/kfm_no_network from PYTHONPATH because serving tests bind
   # loopback HTTP servers and that guard denies socket.getfqdn; KFM_NO_NETWORK
   # and PROJ_NETWORK still apply. Full history is required because the
   # installer migration tests replay historical commits. It is test evidence only.
   test-full-local:
-    name: run full Python suite (Python 3.12)
+    name: run full Python suite (Python ${{ matrix.python }})
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.15"]
     steps:
       - name: Check out the triggering revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -44,10 +51,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Set up the complete bundle's pinned interpreter
+      - name: Set up the suite interpreter
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: |
             tools/ci/python-test.lock
@@ -57,10 +64,23 @@ jobs:
             tools/ci/geoparquet-pyarrow-25.lock
 
       - name: Install the full bundle in a fresh virtual environment
+        if: matrix.python == '3.12'
         run: |
           set -euo pipefail
           python -m venv "$RUNNER_TEMP/kfm-full-local-venv"
           "$RUNNER_TEMP/kfm-full-local-venv/bin/python" tools/ci/install_full_local_test.py
+
+      - name: Install the bundle profiles that support the newest interpreter
+        if: matrix.python != '3.12'
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/kfm-full-local-venv"
+          venv_python="$RUNNER_TEMP/kfm-full-local-venv/bin/python"
+          for profile in all-local-test water-pilot geo-transforms nwm-netcdf; do
+            "$venv_python" tools/ci/install_python_ci.py "$profile"
+          done
+          "$venv_python" tools/ci/install_kfm_cli.py
+          "$venv_python" -I -m pip check
 
       - name: Install checksum-pinned OPA 1.19.0
         run: |

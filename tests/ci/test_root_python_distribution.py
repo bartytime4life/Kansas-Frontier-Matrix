@@ -452,7 +452,7 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     job = workflow["jobs"]["artifacts"]
     assert set(job) == {"name", "runs-on", "timeout-minutes", "strategy", "env", "steps"}
     assert job["runs-on"] == "ubuntu-24.04" and job["timeout-minutes"] == 10
-    assert job["strategy"] == {"fail-fast": False, "matrix": {"python-version": ["3.11", "3.12", "3.13"]}}
+    assert job["strategy"] == {"fail-fast": False, "matrix": {"python-version": ["3.11", "3.12", "3.13", "3.14", "3.15"]}}
     steps = job["steps"]
     assert len(steps) == 7
     assert set(steps[0]) == {"name", "uses", "with"}

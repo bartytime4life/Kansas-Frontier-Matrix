@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-diff-readme
 title: tools/diff README
 type: README
-version: v0.3
+version: v0.3.1
 status: draft
 owner: TODO-tooling-qa-owner
 created: 2026-07-07
-updated: 2026-09-25
+updated: 2026-11-20
 policy_label: public
 owning_root: tools/
 responsibility: repo-wide diff helpers for deterministic reviewer and CI comparisons
@@ -209,7 +209,8 @@ offline comparator for two JSON files that declare `object_type: ReleaseManifest
 and each contain 1–10,000 artifacts with unique, bounded `artifact_ref` strings.
 It reuses the stable comparator's strict JSON parser: duplicate keys, non-finite
 numbers, malformed JSON, missing files and non-object roots fail closed. Each
-input is capped at 8 MiB. The report lists sorted top-level field changes and
+input is capped at 8 MiB and 64 levels of nesting; the depth is checked before
+parsing because Python versions differ in when `json` raises `RecursionError`. The report lists sorted top-level field changes and
 sorted added, removed and changed artifact references; it never copies artifact
 object contents or payloads. An array reorder alone can change the top-level `artifacts`
 field without changing the artifact-reference summary.

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.4.2
+version: v0.4.3
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -194,7 +194,7 @@ advance a lifecycle state.
 
 | Target | Scope | Continuous workflow |
 |---|---|---|
-| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11, 3.12 and 3.13 |
+| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 through 3.14 (binary-only; PyYAML 6.0.3 has no CPython 3.15 wheel) |
 | `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD` for a retired target |
 | `make site-check` | Mirrored Explorer Site lint, typecheck, build, node tests and local Worker smoke on temporary storage | [explorer-site](../../.github/workflows/explorer-site.yml), on `apps/site/**` changes |
 
@@ -207,7 +207,8 @@ make offline-pipeline-check
 ```
 
 The optional `nwm-netcdf` profile uses `python-nwm.lock` for Linux x86_64
-Python 3.11, 3.12 and 3.13 binary readers. The local-data workflow uses it for synthetic
+CPython 3.11 through 3.15 binary readers. CPython 3.15 gets `numpy==2.5.4`, the
+first release with cp315 wheels; 3.11 through 3.14 keep `numpy==2.3.3`. The local-data workflow uses it for synthetic
 NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
 change root runtime dependencies.
 
@@ -221,7 +222,10 @@ acquisition, lifecycle promotion or publication is authorized by this profile.
 The `dependency-scan / pip-audit` job audits every `tools/ci/*.lock` (the
 PyArrow, audit-tool, CLI, geo, NWM and test profiles) in one run with the same
 `--require-hashes --disable-pip --strict` options, so it reads the exact pins
-without installing them. Dependabot does not parse these lock files, so this job
+without installing them. pip-audit evaluates environment markers against its own
+Python 3.11, so a second step audits the pins gated to other interpreters: it runs
+`marker_gated_pins.py` to copy them, with hashes and without markers, to temporary
+requirement files. Dependabot does not parse these lock files, so this job
 is their only advisory check. A lock added to this directory must also be added
 to that step; `tests/ci/test_dependency_scan_workflow.py` fails until it is.
 
@@ -240,8 +244,10 @@ python -m unittest discover -s tests/ci -p 'test_dependency_scan_workflow.py' -v
 ```
 
 The finite `geo-transforms` profile uses `python-geo.lock`: the optional
-`pyproj==3.7.2` declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
-Wheel hashes cover Python 3.11, 3.12 and 3.13; CI requires binary distributions. This adds
+pyproj pins declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
+CPython 3.11 through 3.14 use `pyproj==3.7.2` (PROJ 9.5.1). CPython 3.15 uses
+`pyproj==3.8.0` (PROJ 9.8.1), the first release with cp315 wheels, which needs
+Python 3.12 or later. CI requires binary distributions. This adds
 an optional test dependency without changing the root runtime dependency set.
 The Make target injects the existing Python startup guard and sets
 `PROJ_NETWORK=OFF` to prevent native PROJ grid downloads. This is bounded
