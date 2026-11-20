@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.4
+version: v0.4.1
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-10-16
+updated: 2026-11-20
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
 owning_root: tools/
 responsibility: Long-lived CI support helpers for deterministic dependency bootstrap, bounded process controls, and reviewer-readable signals; never workflow, policy, test, proof, or release authority.
@@ -164,8 +164,8 @@ preserves each existing installer's hash and local-package checks. It requires
 a virtual environment and the common supported interpreter/platform of all
 included profiles, including the experiment's exact `cp312` PyArrow pin. It
 does not change committed requirements or lock hashes, or run the test suite;
-the `test-full-local` job in `python-dependency-lock.yml` runs the suite after
-this installer.
+the `test-full-local` job in [`full-python-suite.yml`](../../.github/workflows/full-python-suite.yml)
+runs the suite after this installer on every pull request.
 Its regressions live in
 [`tests/ci/test_install_full_local_test.py`](../../tests/ci/test_install_full_local_test.py).
 

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/installation
 title: Install and configure KFM locally
 type: guide
-version: v1.1
+version: v1.1.1
 status: repository-grounded; local-development-only
 owners: ["@bartytime4life"]
 created: 2026-09-27
-updated: 2026-11-11
+updated: 2026-11-20
 policy_label: public-documentation
 current_path: docs/installation.md
 owning_root: docs/
@@ -128,9 +128,11 @@ does not change the root distribution's Python requirement, install the Site's
 JavaScript dependencies, fetch source datasets, or start services.
 
 The `python-dependency-lock` workflow installs this bundle into a fresh 3.12
-virtual environment twice. The `collect-full-local` job collects `tests/` under
+virtual environment, and its `collect-full-local` job collects `tests/` under
 the existing bounded Python network guard, which proves the tests can be
-imported. The `test-full-local` job runs all of `tests/` with
+imported. The separate `full-python-suite` workflow, which has no path filter
+and so runs on every pull request and push to `main`, installs the same bundle
+and its `test-full-local` job runs all of `tests/` with
 `KFM_NO_NETWORK=1`, `PROJ_NETWORK=OFF` and `OPA_BIN` set to a checksum-pinned
 OPA 1.19.0. It leaves `tools/ci/kfm_no_network` off `PYTHONPATH` because the
 serving tests bind loopback HTTP servers, which that guard denies. The run takes
