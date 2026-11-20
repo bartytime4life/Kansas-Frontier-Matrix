@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.4.3
+version: v0.4.4
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -212,6 +212,14 @@ first release with cp315 wheels; 3.11 through 3.14 keep `numpy==2.3.3`. The loca
 NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
 change root runtime dependencies.
 
+The optional `intake-browser` profile uses `python-browser.lock`: binary-only,
+hash-pinned Playwright 1.64.1 and its dependencies for CPython 3.11, 3.12 and 3.13.
+It installs Playwright's Python driver only, never a browser. The
+[intake-studio-browser](../../.github/workflows/intake-studio-browser.yml) workflow
+installs it on Python 3.12 with `project-test`. It then runs the opt-in
+`tests/local_data/test_intake_studio_browser.py` against the runner's preinstalled
+Chrome (`KFM_INTAKE_BROWSER_TESTS=1`, `KFM_INTAKE_TEST_CHROMIUM`).
+
 The finite `crop-casma-tiles` profile reuses the existing
 `pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock` without changing
 its dependency pins or hashes. The Crop CASMA Tile Compatibility workflow calls
@@ -220,7 +228,7 @@ distributions. Its synthetic tests still reject tampered inputs; no source
 acquisition, lifecycle promotion or publication is authorized by this profile.
 
 The `dependency-scan / pip-audit` job audits every `tools/ci/*.lock` (the
-PyArrow, audit-tool, CLI, geo, NWM and test profiles) in one run with the same
+PyArrow, audit-tool, browser, CLI, geo, NWM and test profiles) in one run with the same
 `--require-hashes --disable-pip --strict` options, so it reads the exact pins
 without installing them. pip-audit evaluates environment markers against its own
 Python 3.11, so a second step audits the pins gated to other interpreters: it runs

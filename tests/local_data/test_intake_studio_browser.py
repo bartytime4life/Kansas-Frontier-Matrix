@@ -15,8 +15,25 @@ from pathlib import Path
 from unittest.mock import patch
 from urllib.parse import urlsplit
 
+from tests.local_data.studio_auth import session_headers, signed_in_headers
 from tests.local_data.test_intake_studio import fake_extract
 from tools.local_data.intake_studio.intake_server import Server, Store
+
+
+def add_session_cookie(context, origin, headers):
+    """Give the browser the synthetic owner's session cookie."""
+    name, token = headers["Cookie"].split("=", 1)
+    context.add_cookies(
+        [
+            {
+                "name": name,
+                "value": token,
+                "url": origin,
+                "httpOnly": True,
+                "sameSite": "Strict",
+            }
+        ]
+    )
 
 
 @unittest.skipUnless(
@@ -48,6 +65,10 @@ class BrowserTests(unittest.TestCase):
                         thread.start()
                         context = browser.new_context(
                             viewport=viewport, accept_downloads=True
+                        )
+                        # The Studio requires an account session.
+                        add_session_cookie(
+                            context, server.origin, signed_in_headers(self, server.accounts)
                         )
                         page = context.new_page()
                         errors, external = [], []
@@ -151,6 +172,11 @@ class BrowserTests(unittest.TestCase):
                                 target=server.serve_forever, daemon=True
                             )
                             thread.start()
+                            # Sessions do not survive a restart: each process
+                            # keys them afresh, so the stored owner signs in again.
+                            add_session_cookie(
+                                context, server.origin, session_headers(server.accounts)
+                            )
                             page.reload()
                             page.locator("[data-file]").click()
                             expect(flag).to_have_count(1)

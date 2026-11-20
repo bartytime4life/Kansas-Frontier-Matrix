@@ -63,6 +63,7 @@ jobs:
           python -m pip_audit
           --requirement tools/ci/geoparquet-pyarrow-25.lock
           --requirement tools/ci/python-audit.lock
+          --requirement tools/ci/python-browser.lock
           --requirement tools/ci/python-cli.lock
           --requirement tools/ci/python-geo.lock
           --requirement tools/ci/python-nwm.lock
