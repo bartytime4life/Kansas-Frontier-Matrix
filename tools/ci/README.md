@@ -121,7 +121,7 @@ CI helpers make governance signals readable and repeatable. They do not invent g
 | Family | Purpose | Status |
 |---|---|---|
 | `install_python_ci` | Install fixed third-party locks, then approved local packages without dependency resolution or build isolation. | VERIFIED with focused tests and Python 3.11/3.12 workflow coverage. |
-| `install_full_local_test` | Compose the existing fixed installers for repository-wide Python collection in a Linux x86_64 CPython 3.12 virtual environment; `--plan` validates inputs without installing. | Implemented with focused positive/negative tests; collection and hosted execution remain separately verifiable. |
+| `install_full_local_test` | Compose the existing fixed installers for repository-wide Python collection and execution in a Linux x86_64 CPython 3.12 virtual environment; `--plan` validates inputs without installing. | Implemented with focused positive/negative tests; `python-dependency-lock.yml` collects the suite in `collect-full-local` and runs it in `test-full-local`. |
 | `python-dependency-lock-migration.json` | Bind each historical workflow hash to exactly one reviewed locked-install transition. | VERIFIED by the installer and generated-receipt suites; one-time migration only. |
 | `kfm_no_network/sitecustomize.py` | Fail closed on named IPv4/IPv6 connection, socket-send, resolver, and URL-open APIs for explicitly guarded Python processes. | VERIFIED by the Hydrology subprocess negative proof; not runner-wide, non-Python, or non-named API isolation. |
 | `render_validation_summary` | Convert validator/test output into reviewer-readable Markdown or JSON. | PROPOSED. |
@@ -163,7 +163,9 @@ For the complete collection bundle, see
 preserves each existing installer's hash and local-package checks. It requires
 a virtual environment and the common supported interpreter/platform of all
 included profiles, including the experiment's exact `cp312` PyArrow pin. It
-does not change committed requirements or lock hashes, or run the test suite.
+does not change committed requirements or lock hashes, or run the test suite;
+the `test-full-local` job in `python-dependency-lock.yml` runs the suite after
+this installer.
 Its regressions live in
 [`tests/ci/test_install_full_local_test.py`](../../tests/ci/test_install_full_local_test.py).
 

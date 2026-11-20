@@ -128,9 +128,15 @@ does not change the root distribution's Python requirement, install the Site's
 JavaScript dependencies, fetch source datasets, or start services.
 
 The `python-dependency-lock` workflow installs this bundle into a fresh 3.12
-virtual environment and collects `tests/` under the existing bounded Python
-network guard. Collection proves that tests can be imported; executing them,
-browser acceptance, native-process isolation and release remain separate checks.
+virtual environment twice. The `collect-full-local` job collects `tests/` under
+the existing bounded Python network guard, which proves the tests can be
+imported. The `test-full-local` job runs all of `tests/` with
+`KFM_NO_NETWORK=1`, `PROJ_NETWORK=OFF` and `OPA_BIN` set to a checksum-pinned
+OPA 1.19.0. It leaves `tools/ci/kfm_no_network` off `PYTHONPATH` because the
+serving tests bind loopback HTTP servers, which that guard denies. The run takes
+about 12 minutes. To reproduce it locally, set the same variables and run
+`python -m pytest -q -p no:cacheprovider tests`. Browser acceptance,
+native-process isolation and release remain separate checks.
 
 ## Shared JavaScript workspace
 
