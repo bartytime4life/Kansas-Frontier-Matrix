@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbook/noaa-nwm-local-capture
 title: Bounded National Water Model capture for Kansas
 type: runbook
-version: v1
+version: v1.1
 status: implementation-candidate; private-WORK-only
 owners: ["@bartytime4life"]
 created: 2026-10-07
-updated: 2026-10-07
+updated: 2026-11-20
 policy_label: public
 owning_root: docs/
 responsibility: Explain bounded source capture, local verification and recovery without model activation.
@@ -70,7 +70,7 @@ operator decision; this tool has no automatic expansion or cleanup.
 
 ## Commands
 
-Use Linux x86_64, Python 3.11 or 3.12, and the existing initialized private
+Use Linux x86_64, Python 3.11, 3.12 or 3.13, and the existing initialized private
 external KFM store. Preparation and capture use the standard library. Binary
 verification additionally needs the optional, hash-locked reader:
 
