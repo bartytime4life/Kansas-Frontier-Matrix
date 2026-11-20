@@ -8,6 +8,7 @@ owners: ["@bartytime4life"]
 created: 2026-09-05
 updated: 2026-11-20
 owning_root: docs/
+responsibility: Explain the bounded KanPlan private-fixture slice, its file placement and its verification without source admission.
 policy_label: public
 truth_posture: CONFIRMED bounded implementation; PROPOSED integration; NEEDS VERIFICATION graduation
 [/KFM_META_BLOCK_V2] -->
