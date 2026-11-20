@@ -192,7 +192,7 @@ advance a lifecycle state.
 
 | Target | Scope | Continuous workflow |
 |---|---|---|
-| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 and 3.12 |
+| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11, 3.12 and 3.13 |
 | `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD` for a retired target |
 | `make site-check` | Mirrored Explorer Site lint, typecheck, build, node tests and local Worker smoke on temporary storage | [explorer-site](../../.github/workflows/explorer-site.yml), on `apps/site/**` changes |
 
@@ -239,7 +239,7 @@ python -m unittest discover -s tests/ci -p 'test_dependency_scan_workflow.py' -v
 
 The finite `geo-transforms` profile uses `python-geo.lock`: the optional
 `pyproj==3.7.2` declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
-Wheel hashes cover Python 3.11/3.12; CI requires binary distributions. This adds
+Wheel hashes cover Python 3.11, 3.12 and 3.13; CI requires binary distributions. This adds
 an optional test dependency without changing the root runtime dependency set.
 The Make target injects the existing Python startup guard and sets
 `PROJ_NETWORK=OFF` to prevent native PROJ grid downloads. This is bounded
