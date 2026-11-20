@@ -78,6 +78,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # The receipt replay below reads its authored revision.
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -110,12 +112,15 @@ jobs:
             --validated-at 2026-10-29T00:00:00Z \
             --evidence-bundles fixtures/domains/fauna/evidence_bindings/bundles.json
 
-      - name: Validate current generated authoring receipt
+      # The receipt also records tools/qa/scaffold_baseline.json, which every
+      # scaffold ratchet rewrites, so it is replayed at its authored revision.
+      - name: Replay the generated authoring receipt at its authored revision
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-fauna-evidence-bindings-20261029.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 3ad262ac13b25afd8ff378aef7c49a44760ee596
 
       - name: Record trust boundary
         if: always()
