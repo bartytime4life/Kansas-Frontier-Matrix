@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-runbooks-local-intake-studio
 title: Local photo and PDF intake review
 type: runbook
-version: v1.4
+version: v1.5
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
@@ -10,7 +10,7 @@ updated: 2026-11-20
 policy_label: public
 owning_root: docs/
 responsibility: Explain private preparation and governed capture handoff.
-truth_posture: CONFIRMED targeted local regressions and synthetic Chromium review flow; NEEDS VERIFICATION native extraction on this revision, camera and owner-PC acceptance; no admission or publication.
+truth_posture: CONFIRMED targeted local regressions, synthetic Chromium review flow and native extraction in CI (intake-studio-native); NEEDS VERIFICATION camera and owner-PC acceptance; no admission or publication.
 [/KFM_META_BLOCK_V2] -->
 
 # Review photos and PDFs on your development PC
@@ -312,6 +312,13 @@ Installed Linux extraction regressions (actual sandbox, Pillow, PDF and OCR):
 ```bash
 KFM_INTAKE_NATIVE_TESTS=1 /usr/bin/python3 -m unittest tests.local_data.test_intake_studio -v
 ```
+
+The [intake-studio-native](../../.github/workflows/intake-studio-native.yml) workflow
+runs these cases on Ubuntu 24.04 for every Studio change:
+
+- the tools come from the Ubuntu archive;
+- Tesseract is copied into the runtime layout above;
+- user namespaces are allowed for bubblewrap.
 
 Capture/index handoff regressions, including retry and provenance isolation:
 
