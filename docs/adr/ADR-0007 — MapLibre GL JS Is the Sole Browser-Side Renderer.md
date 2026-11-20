@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0007-maplibre-sole-browser-renderer
 title: "ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer"
 type: adr
 adr_id: ADR-0007
-version: v1.4
+version: v1.5
 status: accepted
 effective_decision_status: accepted
 owners: ["@bartytime4life"]
@@ -14,7 +14,7 @@ reviewers_required:
   - Explorer Web subsystem owner
   - Docs steward
 created: 2026-05-10
-updated: 2026-09-12
+updated: 2026-11-19
 accepted_on: 2026-08-21
 policy_label: public
 truth_posture: "ACCEPTED renderer-family architecture / scoped implementation observed / bounded evidence / no operational authority"
@@ -41,6 +41,11 @@ evidence_snapshot:
   explorer_composition_blob: 65e5e575f0c116fe60d70d83cf9d631eefe745ca
   explorer_style_blob: 8e45ea05e81c7c2375a6528e19e03759140f27e2
   legacy_harness_blob: ac2522686546b7428ad0cc5c8cd76860ab285998
+implementation_review_2026_11_19:
+  base_commit: c47f52e185bd1c6540801af8551c75cf12e6cbb6
+  package_manifest_blob: b10ac08816eb181114de840f78d4e4d23a86b501
+  site_manifest_blob: 7e5e984dd15948f1a5372e430fca1eee881952dc
+  scope: "Current implementation observations only; preserve accepted decision and earlier evidence snapshots."
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -57,6 +62,7 @@ related:
   - .github/workflows/maplibre-perf-governance.yml
 tags: [kfm, adr, maplibre, browser-renderer, renderer-family, peer-renderer, currentness-correction, no-parallel-authority]
 notes:
+  - "v1.5 adds a 2026-11-19 pinned implementation review: both MapLibre manifests are 6.9.0, Explorer Web is retired, the accepted Site seam remains scoped, and a Three.js exception is only proposed in ADR-0050. Earlier evidence remains historical; the accepted decision is unchanged."
   - "v1.4 is a documentation-only current-source reconciliation. It preserves the accepted renderer-family decision and does not add, change, or admit a dependency, source, release, deployment, promotion, public serving, or publication."
   - "At the pinned source, private package @kfm/maplibre declares and the scoped lockfile resolves maplibre-gl 6.7.0; the package contains a concrete MapLibre adapter and a package-owned Vite worker helper."
   - "The current Explorer composition uses the package Vite adapter with an inline local style. That bounded source fact and its fixture evidence do not activate an external source, establish runtime readiness, or imply operational authorization."
@@ -67,14 +73,35 @@ notes:
 
 # ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer
 
-> **Accepted architecture; reconciled current source.** MapLibre GL JS remains KFM's sole normal production browser map/scene renderer family. At the pinned source snapshot, a private package-owned `maplibre-gl@6.7.0` implementation and Vite worker helper exist, and Explorer composes that helper. Those are bounded implementation facts—not a blanket dependency-admission, source-activation, readiness, release, deployment, or publication decision.
+> **Accepted architecture; dated implementation evidence.** The accepted decision is preserved. Use the [2026-11-19 implementation review](#implementation-review-2026-11-19) for current source observations; the earlier snapshot tables and version numbers below remain historical evidence.
 
 > [!IMPORTANT]
 > **Family acceptance is distinct from exact dependency governance and operational authority.** ADR-0007 selects the browser-renderer family. It does not make a manifest entry, lockfile resolution, plug-in, protocol, worker, style, source, browser result, or hosted application automatically admitted, safe, operational, released, deployed, or public.
 
-**Quick navigation:** [Status](#1-status) · [Decision](#2-decision-preserved) · [Current source](#3-current-source-snapshot) · [Boundary and conformance](#4-boundary-and-conformance) · [Evidence limits](#5-evidence-and-limits) · [Consequences](#6-consequences-and-open-work) · [References](#7-references-and-change-history)
+**Quick navigation:** [November implementation review](#implementation-review-2026-11-19) · [Status](#1-status) · [Decision](#2-decision-preserved) · [Current source](#3-current-source-snapshot) · [Boundary and conformance](#4-boundary-and-conformance) · [Evidence limits](#5-evidence-and-limits) · [Consequences](#6-consequences-and-open-work) · [References](#7-references-and-change-history)
 
 ---
+
+<a id="implementation-review-2026-11-19"></a>
+
+## Implementation review — 2026-11-19
+
+Source review at `main@c47f52e185bd1c6540801af8551c75cf12e6cbb6` updates implementation
+observations without changing the accepted architecture or its acceptance evidence.
+
+| Surface | Current observation | Boundary |
+|---|---|---|
+| `packages/maplibre/package.json` and scoped `pnpm-lock.yaml` importer | MapLibre 6.9.0, concrete adapter and Vite worker helper remain. | Exact source configuration, not fresh dependency admission or browser acceptance. |
+| `apps/explorer-web/` and its policy guard | Retired; paths are absent. | Older consumer/build/browser descriptions below are historical, not runnable coverage. |
+| `apps/site/source/` | Existing separately built Explorer; its manifest declares MapLibre 6.9.0. | Preserve same-Site identity, source and storage bindings. |
+| Site seam | `app/maplibre-seam.ts`, `app/maplibre-seam.css` and Site manifest are the accepted ADR-0006 §2.6 acquisition exception. | Not a second reusable package home or blanket peer-renderer permission. |
+| Site Three.js scenes | `subsurface-three.tsx` and `aquifer-volume-view.tsx` dynamically load Three.js and OrbitControls. | ADR-0007 §2.3 requires a scoped accepted exception. [ADR-0050](./ADR-0050-bounded-site-subsurface-three-scenes.md) is proposed only; conformance remains unresolved. |
+| Validation | Acquisition inventory targets the Site and package seams; focused scene tests are recorded in the [ADR review](../reports/adr-review-2026-11-19.md). | Source/tests do not establish dependency admission, hosted revision, GPU support, data release or publication. |
+
+The old 6.7.0/6.6.0, Explorer composition and retired-harness statements
+remain tied to their named earlier snapshots. Do not use them as present-tense
+instructions. No accepted status or supersession relationship changes in this
+review. ADR-0006's Site exception addresses MapLibre packaging only.
 
 ## 1. Status
 
@@ -121,11 +148,11 @@ This ADR therefore records the exact current source configuration only. A later 
 
 KFM accepts **MapLibre GL JS** as its sole normal production browser map/scene renderer family. The family choice is an architectural constraint for the browser map/scene lane; it does not claim that KFM presently operates a production browser service.
 
-The current package seam remains governed by [ADR-0006](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md):
+The package seam, including the later separately built Site exception in §2.6, remains governed by [ADR-0006](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md):
 
 - `packages/maplibre/` owns the reusable concrete MapLibre implementation;
 - the KFM-owned `MapRuntimePort` is the consumer-facing runtime contract;
-- an app must not acquire `maplibre-gl` directly; and
+- normal package consumers must not acquire `maplibre-gl` directly; the Site uses only its explicitly accepted seam paths; and
 - new browser renderer code must not form a parallel owner outside the accepted seam.
 
 ### 2.2 Subordinate capabilities

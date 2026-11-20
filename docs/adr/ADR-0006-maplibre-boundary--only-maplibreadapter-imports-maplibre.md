@@ -3,7 +3,7 @@ doc_id: kfm://adr/0006
 title: "ADR-0006 — MapLibre Boundary: Only MapLibreAdapter Imports MapLibre"
 type: adr
 adr_id: ADR-0006
-version: v1.6
+version: v1.7
 status: accepted
 effective_decision_status: accepted
 owners: ["@bartytime4life"]
@@ -14,7 +14,7 @@ reviewers_required:
   - Package/tooling owner
   - Docs steward
 created: 2026-05-10
-updated: 2026-09-28
+updated: 2026-11-19
 accepted_on: 2026-08-21
 policy_label: public
 truth_posture: "ACCEPTED architecture / scoped implementation observed / bounded evidence / no operational authority"
@@ -38,6 +38,11 @@ evidence_snapshot:
   adapter_blob: e201a7717a0a10efc72440e1c71fd4e07fd919cc
   vite_adapter_blob: 57e0f7da9b13006cde2da2592869fc2ba06a4512
   explorer_composition_blob: 65e5e575f0c116fe60d70d83cf9d631eefe745ca
+implementation_review_2026_11_19:
+  base_commit: c47f52e185bd1c6540801af8551c75cf12e6cbb6
+  package_manifest_blob: b10ac08816eb181114de840f78d4e4d23a86b501
+  site_manifest_blob: 7e5e984dd15948f1a5372e430fca1eee881952dc
+  scope: "Current implementation observations only; preserve accepted decision and earlier evidence snapshots."
 related:
   - docs/adr/README.md
   - docs/adr/INDEX.md
@@ -56,6 +61,7 @@ related:
   - .github/workflows/maplibre-perf-governance.yml
 tags: [kfm, adr, maplibre, map-runtime-port, maplibre-adapter, dependency-owner, acquisition-boundary, trust-membrane, currentness-correction]
 notes:
+  - "v1.7 adds a 2026-11-19 pinned implementation review: both MapLibre manifests are 6.9.0, Explorer Web is retired, the accepted Site seam remains scoped, and a Three.js exception is only proposed in ADR-0050. Earlier evidence remains historical; the accepted decision is unchanged."
   - "v1.5 is a documentation-only current-source reconciliation. It preserves the accepted architecture decision and does not re-admit a dependency, source, release, deployment, promotion, or publication."
   - "v1.6 adds the owner-directed Site exception in section 2.6: apps/site/source keeps one seam module, stylesheet and manifest for maplibre-gl, enforced by exact paths in the acquisition inventory."
   - "At the pinned source, @kfm/maplibre declares maplibre-gl 6.7.0 and contains a concrete adapter plus a package-owned Vite worker helper."
@@ -67,14 +73,35 @@ notes:
 
 # ADR-0006 — MapLibre Boundary: Only `MapLibreAdapter` Imports MapLibre
 
-> **Accepted architecture; reconciled current source.** KFM retains one browser-renderer dependency seam: `packages/maplibre/` owns the MapLibre implementation, `MapRuntimePort` remains the KFM-owned runtime contract, and consumers must not acquire `maplibre-gl` directly. At the evidence snapshot, the package contains a concrete `maplibre-gl@6.7.0` implementation and Explorer composes it through the package-owned Vite adapter.
+> **Accepted architecture; dated implementation evidence.** The accepted decision is preserved. Use the [2026-11-19 implementation review](#implementation-review-2026-11-19) for current source observations; the earlier snapshot tables and version numbers below remain historical evidence.
 
 > [!IMPORTANT]
 > **This is not an operational authorization.** The source snapshot establishes a bounded implementation and limited test evidence. It does not itself establish dependency governance completion, data-source admission, policy or evidence authority, release, deployment, promotion, public serving, or publication.
 
-**Quick navigation:** [Status](#1-status) · [Decision](#2-decision-preserved) · [Current implementation](#3-current-source-snapshot) · [Boundary contract](#4-boundary-contract) · [Evidence and limits](#5-evidence-and-its-limits) · [Consequences](#6-consequences) · [Open work](#7-open-work) · [References](#8-references)
+**Quick navigation:** [November implementation review](#implementation-review-2026-11-19) · [Status](#1-status) · [Decision](#2-decision-preserved) · [Current implementation](#3-current-source-snapshot) · [Boundary contract](#4-boundary-contract) · [Evidence and limits](#5-evidence-and-its-limits) · [Consequences](#6-consequences) · [Open work](#7-open-work) · [References](#8-references)
 
 ---
+
+<a id="implementation-review-2026-11-19"></a>
+
+## Implementation review — 2026-11-19
+
+Source review at `main@c47f52e185bd1c6540801af8551c75cf12e6cbb6` updates implementation
+observations without changing the accepted architecture or its acceptance evidence.
+
+| Surface | Current observation | Boundary |
+|---|---|---|
+| `packages/maplibre/package.json` and scoped `pnpm-lock.yaml` importer | MapLibre 6.9.0, concrete adapter and Vite worker helper remain. | Exact source configuration, not fresh dependency admission or browser acceptance. |
+| `apps/explorer-web/` and its policy guard | Retired; paths are absent. | Older consumer/build/browser descriptions below are historical, not runnable coverage. |
+| `apps/site/source/` | Existing separately built Explorer; its manifest declares MapLibre 6.9.0. | Preserve same-Site identity, source and storage bindings. |
+| Site seam | `app/maplibre-seam.ts`, `app/maplibre-seam.css` and Site manifest are the accepted ADR-0006 §2.6 acquisition exception. | Not a second reusable package home or blanket peer-renderer permission. |
+| Site Three.js scenes | `subsurface-three.tsx` and `aquifer-volume-view.tsx` dynamically load Three.js and OrbitControls. | ADR-0007 §2.3 requires a scoped accepted exception. [ADR-0050](./ADR-0050-bounded-site-subsurface-three-scenes.md) is proposed only; conformance remains unresolved. |
+| Validation | Acquisition inventory targets the Site and package seams; focused scene tests are recorded in the [ADR review](../reports/adr-review-2026-11-19.md). | Source/tests do not establish dependency admission, hosted revision, GPU support, data release or publication. |
+
+The old 6.7.0/6.6.0, Explorer composition and retired-harness statements
+remain tied to their named earlier snapshots. Do not use them as present-tense
+instructions. No accepted status or supersession relationship changes in this
+review. ADR-0006's Site exception addresses MapLibre packaging only.
 
 ## 1. Status
 
@@ -147,7 +174,7 @@ The port does not expose raw MapLibre maps, event objects, source objects, layer
 
 ### 2.4 Dependency ownership
 
-The package manifest is the current dependency owner:
+At the earlier snapshot, the package manifest declared:
 
 ~~~json
 {
@@ -170,7 +197,7 @@ Explorer Web may compose a `MapRuntimePort` supplied by `@kfm/maplibre`. It may 
 - interpret a rendered feature, popup, screenshot, or runtime metric as evidence or publication truth; or
 - bypass upstream policy, source, evidence, review, release, or correction decisions.
 
-The existing policy test scans Explorer Web source for static, dynamic, and CommonJS raw renderer acquisition. That is useful structural evidence, but it is not a complete repository-wide authorization mechanism.
+The historical policy test scanned Explorer Web source for static, dynamic and CommonJS raw renderer acquisition. It was removed with that app; current seam checks target the Site and package scope. Neither proof is a repository-wide authorization mechanism.
 
 ### 2.6 Separately built Site exception (v1.6, 2026-09-28)
 
