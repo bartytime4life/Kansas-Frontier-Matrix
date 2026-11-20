@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-hazards-readme
 title: Hazards Domain Pipeline README
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners:
   - <hazards-pipeline-owner>
@@ -111,6 +111,11 @@ source descriptor remains unresolved. See the [runbook](../../../docs/runbooks/n
 and [candidate contract](../../../contracts/domains/hazards/nws_context_ingest_candidate.md).
 The prior earthquake and storm-event [sealed replay](../../../docs/runbooks/pipeline-fixture-replay.md)
 paths remain bound separately. Broader pipeline, release and source work remains open.
+
+`openfema_ingest.py` now prepares held administrative declaration captures from
+supplied counted keyset pages. Source timestamps preserve subseconds; drift and
+missing pages remain incomplete. No eligibility or hazard-footprint authority is
+created. See its [runbook](../../../docs/runbooks/openfema-fixture-ingest.md).
 
 ## Historical boundary review
 

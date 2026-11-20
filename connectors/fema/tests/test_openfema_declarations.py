@@ -158,6 +158,26 @@ class ParseTests(unittest.TestCase):
             self.assertEqual(str(caught.exception), code)
 
 
+class PrecisionAndMetadataTests(unittest.TestCase):
+    def test_subsecond_source_and_capture_times_are_preserved(self):
+        raw = body([record(declarationDate="2020-05-01T00:00:00.123Z",
+                           lastRefresh="2026-01-01T00:00:00.789Z")], top=1)
+        page = of.parse_page(raw, status=200, source_url=of.page_url(FILTER, top=1),
+                             retrieved_at="2026-09-27T07:00:00.456-05:00")
+        self.assertEqual(page.retrieved_at, "2026-09-27T12:00:00.456000Z")
+        self.assertEqual(page.records[0].declaration_date, "2020-05-01T00:00:00.123000Z")
+        self.assertEqual(page.records[0].last_refresh, "2026-01-01T00:00:00.789000Z")
+
+    def test_numeric_metadata_requires_actual_integers(self):
+        for key, value in (("top", True), ("top", 1.0), ("skip", False), ("skip", 0.0)):
+            payload = json.loads(body([record()], top=1))
+            payload["metadata"][key] = value
+            with self.subTest(key=key, value=value), self.assertRaises(of.OpenFemaInputError) as caught:
+                of.parse_page(json.dumps(payload).encode(), status=200,
+                              source_url=of.page_url(FILTER, top=1), retrieved_at=NOW)
+            self.assertEqual(str(caught.exception), "METADATA_REQUEST_MISMATCH")
+
+
 class WindowTests(unittest.TestCase):
     def test_rows_outside_requested_window_reject_page(self):
         base = of.declaration_filter(declared_from="2020-01-01", declared_to="2021-01-01")

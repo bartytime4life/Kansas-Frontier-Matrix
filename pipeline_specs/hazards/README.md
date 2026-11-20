@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipeline-specs-hazards-readme
 title: pipeline_specs/hazards/ — Pipeline Specification Boundary
 type: readme
-version: v1.1
+version: v1.2
 status: proposed-inactive; repository-grounded
 owners: OWNER_TBD — pipeline-spec steward; domain steward; validation reviewer
 created: 2026-06-13
@@ -31,7 +31,7 @@ notes: ["Metadata is flat by contract; validation does not activate a source, pi
 Directory Rules v2 is adopted by [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). This README applies its `BOUNDARY_COMPACT` profile.
 
 > [!IMPORTANT]
-> File presence does not activate execution. All declarations are `PROPOSED_INACTIVE`; earthquakes, storm events and NWS context bind fixture-first paths, while the other candidates and stage boundaries remain `NOT_IMPLEMENTED`; network access, source activation, lifecycle writes, promotion, release, publication, and public alerting remain `DENIED`.
+> File presence does not activate execution. All declarations are `PROPOSED_INACTIVE`; earthquakes, storm events, NWS context and OpenFEMA declarations bind fixture-first paths, while the other candidates and stage boundaries remain `NOT_IMPLEMENTED`; network access, source activation, lifecycle writes, promotion, release, publication, and public alerting remain `DENIED`.
 
 > [!CAUTION]
 > Hazard feeds are time-, source-, coverage-, and correction-dependent context. They are not emergency instructions, forecasts, legal determinations, or proof of current exposure. Never delay or replace official alerts; restricted infrastructure, household, health, or vulnerability joins fail closed.
@@ -104,7 +104,7 @@ pipeline_specs/hazards/
 | `publish.yaml` | `STAGE_BOUNDARY / PUBLISH` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `drought_monitor.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `fema_nfhl.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
-| `fema_openfema.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
+| `fema_openfema.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `IMPLEMENTED_FIXTURE_FIRST / FIXTURE_ONLY` |
 | `nasa_firms.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `noaa_hms_smoke.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `noaa_storm_events.yaml` | `PIPELINE_CANDIDATE / NORMALIZE` | `PROPOSED_INACTIVE` | `IMPLEMENTED_FIXTURE_FIRST / FIXTURE_ONLY` |
@@ -118,6 +118,9 @@ The [NWS intake runbook](../../docs/runbooks/nws-context-fixture-ingest.md) desc
 private held source context. The prior earthquake and storm-event bindings retain
 their separate [sealed replay](../../docs/runbooks/pipeline-fixture-replay.md) paths.
 None activates a source, sends alerts or writes a lifecycle target.
+
+The [OpenFEMA intake runbook](../../docs/runbooks/openfema-fixture-ingest.md) binds
+counted administrative page walks while retaining incomplete-capture and source holds.
 
 ## Validation
 

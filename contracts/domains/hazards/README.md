@@ -2,7 +2,7 @@
 doc_id: kfm://doc/contracts-domains-hazards-readme
 title: Hazards Contracts — README
 type: readme
-version: v0.3
+version: v0.4
 status: draft; PROPOSED; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Hazards domain steward
@@ -73,6 +73,10 @@ remains unresolved. Earthquake and Storm Events source-specific contracts and
 [sealed replay bindings](../../../docs/runbooks/pipeline-fixture-replay.md) also
 exist. None of these closes rights, sensitivity, source admission, EvidenceBundle
 or release review, or implements the remaining Hazards candidates.
+
+The [OpenFEMA ingest candidate](./openfema_ingest_candidate.md) adds private held
+administrative page-walk context, preserving explicit count/cursor drift and all
+source/review holds. It is not an observed hazard footprint or eligibility decision.
 
 ## Historical boundary review
 

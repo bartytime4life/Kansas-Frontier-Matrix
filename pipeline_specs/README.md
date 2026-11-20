@@ -121,9 +121,9 @@ life-safety authority. A pipeline declaration must not imply otherwise.
 | Boundary READMEs | 23 | One root boundary and 22 lane or sub-lane boundaries; each local contract owns its profile |
 | `.gitkeep` markers | 8 | Retained as topology-compatible zero-byte markers; they create no declaration or execution authority |
 
-Eight YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
-USGS water observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, and private NWS context intake. Each remains
-`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 31 pipeline
+Nine YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
+USGS water observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, private NWS context intake, and OpenFEMA declarations intake. Each remains
+`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 30 pipeline
 candidates still need bounded implementations and bindings. The 65 stage boundaries
 and six compatibility aliases retain `NOT_IMPLEMENTED` by contract; they are not
 71 runnable pipelines awaiting activation.
@@ -142,6 +142,9 @@ package inspection at INGEST; geometry normalization remains a later stage.
 
 The [NWS context runbook](../docs/runbooks/nws-context-fixture-ingest.md) binds source
 lineage and time-of-evaluation context without alerts or instructions.
+
+The [OpenFEMA runbook](../docs/runbooks/openfema-fixture-ingest.md) binds supplied
+counted page walks as held administrative context, never hazard footprints.
 
 Compatibility YAML is limited to the five Archaeology `*.spec.yaml` aliases and
 `hydrology/ingest_wbd.yaml`. The documentation-only compatibility lanes `air/`,
@@ -235,6 +238,6 @@ Open verification items:
 - assign and verify human owners and CODEOWNERS coverage;
 - decide the flora/shared-watcher and Hydrology NHDPlus placement holds;
 - define a separate activation registry only through an accepted authority decision;
-- implement and bind the remaining 31 pipeline candidates with source, contract,
+- implement and bind the remaining 30 pipeline candidates with source, contract,
   fixture, test, and workflow evidence; keep activation and release review separate;
 - retain the contract-required inactive posture of stage boundaries and aliases.
