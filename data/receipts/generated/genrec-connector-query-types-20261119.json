@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-connector-query-types-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/blm/src/blm/plss_cadnsdi.py",
+    "connectors/blm/tests/test_plss_cadnsdi.py",
+    "connectors/gbif/src/gbif/occurrence_api.py",
+    "connectors/gbif/tests/test_occurrence_api.py",
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/test_scan_awdb.py",
+    "docs/runbooks/connector-query-input-validation.md"
+  ],
+  "artifact_hashes": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:9891fdbbdcb467451d7d36a149e316cf923ab4d6a740d1a03e7a7f0f726667d4",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:a93392c2bfd88247e5099792dbd16811c9cb9a72b7545cd2c8ffbe7bf339f9c5",
+    "connectors/gbif/src/gbif/occurrence_api.py": "sha256:a079f6654aae2847b374309ea07d73ea3234e720e1590ee10343d80fd89c21c4",
+    "connectors/gbif/tests/test_occurrence_api.py": "sha256:7db5b5175825f5c2f717fbab081e7a845f6c0f034a25fc2835c9f3177d9128d5",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:6dc5193476b11b91cbda8ebb3f8d878fa712202626a936cb7bacaf0c0ec08a93",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:a0f4f1e2c87eaea4a161903cd3c384a4e150193aaf47d6e12f249c13a2a0beac",
+    "docs/runbooks/connector-query-input-validation.md": "sha256:758451b028016aaf6e81e9ab7107fa97e2f3ff45e5161e7501762129e295d402"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "connectors/gbif/src/gbif/occurrence_api.py@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "connectors/blm/src/blm/plss_cadnsdi.py@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "connectors/nrcs/src/nrcs/scan_awdb.py@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      ".github/workflows/gbif-occurrence-offline.yml@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      ".github/workflows/blm-connector-offline.yml@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      ".github/workflows/nrcs-connector-offline.yml@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    ],
+    "evidence_hashes": [
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:98c7fcb1d6548a0dd1e3c3cc8ae581cc7ea50e60cd0b9c0e87c0d0ac258913e8",
+      "sha256:b3239e39ce66b3ebc9e1b1d50ef243105607b71aa51f7a99510f325e12b7cc35",
+      "sha256:0b0a3f3a54589e209ca1b96f37faa72928102031170cbe7d52cd886d2eae4f19",
+      "sha256:618526f380d0192f95e4e3574196dd3be5d0009c7385a4b9987ed8bcd3a974d4",
+      "sha256:173b5b20789d44999235354c84c3320587e7d4a97a65c9ba069139f6a45fcfe5",
+      "sha256:d7d8907d547009f76879dc0c95ead92144a976ac92507aa25d394e27d0f51b47"
+    ]
+  },
+  "truth_labels": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "PROPOSED",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "PROPOSED",
+    "connectors/gbif/src/gbif/occurrence_api.py": "PROPOSED",
+    "connectors/gbif/tests/test_occurrence_api.py": "PROPOSED",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "PROPOSED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "PROPOSED",
+    "docs/runbooks/connector-query-input-validation.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "negative-controls-and-finite-input-regressions",
+      "outcome": "PASS",
+      "reason": "All three new regression methods fail on unmodified parent source; negative run reports three parent failures and three failed subtests after raw TypeErrors. Direct reproductions also show GBIF null state encoding as literal stateProvince=None. After repair53 source tests and189 subtests pass under the Python network guard, preserving valid canonical URL, round-trip, duplicate and bounds behavior."
+    },
+    {
+      "gate": "complete-connector-suites",
+      "outcome": "PASS",
+      "reason": "Full existing source/parser/injected-transport/routing unittest suites pass separately: GBIF33, BLM31, NRCS29, total93. No provider request, network activation, transport or candidate-routing change."
+    },
+    {
+      "gate": "documentation-and-governance",
+      "outcome": "PASS",
+      "reason": "New runbook metadata has zero failures/warnings and all nine local targets resolve. Gap/scaffold/whitespace pass, scaffold856unchanged. Topology has zero new drift,89 inherited warnings. No dependency locks, schemas, descriptors, workflow permissions or baselines change."
+    },
+    {
+      "gate": "hosted-ci-human-review-main-and-runtime",
+      "outcome": "SKIPPED",
+      "reason": "Pending this branch exact-head hosted checks, human review and main merge. Existing GBIF/BLM/NRCS workflows watch all changed source/tests and run complete suites on Python3.11/3.12. Reproduced source errors do not demonstrate deployed failures or establish live caller impact."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "connectors/gbif/src/gbif/occurrence_api.py",
+      "validated": true,
+      "evidence_ref": "connectors/gbif/src/gbif/occurrence_api.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "connectors/blm/src/blm/plss_cadnsdi.py",
+      "validated": true,
+      "evidence_ref": "connectors/blm/src/blm/plss_cadnsdi.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "connectors/nrcs/src/nrcs/scan_awdb.py",
+      "validated": true,
+      "evidence_ref": "connectors/nrcs/src/nrcs/scan_awdb.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": ".github/workflows/gbif-occurrence-offline.yml",
+      "validated": true,
+      "evidence_ref": ".github/workflows/gbif-occurrence-offline.yml@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": ".github/workflows/blm-connector-offline.yml",
+      "validated": true,
+      "evidence_ref": ".github/workflows/blm-connector-offline.yml@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": ".github/workflows/nrcs-connector-offline.yml",
+      "validated": true,
+      "evidence_ref": ".github/workflows/nrcs-connector-offline.yml@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T04:55:06.760495Z",
+  "emitter": "codex/connector-query-types",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "A separate main-based bounded source/runtime repair, independent of pipeline PR5973 and unrelated Connections5972. GBIF validates country/basis strings before regex/set operations and rejects null required state text; optional basis remains optional. BLM validates string layer before page/count mapping membership. NRCS validates station/element tuple members before set duplicate checks and duration strings before mapping membership. Malformed inputs now raise existing finite domain-specific ValueError codes. Valid encodings, allowed products/filters, page/date/resource bounds, parsers, rights/sensitivity, transport, provisional candidate routes and denied authorities remain unchanged. No fetch, source admission/activation, scheduling, lifecycle writes, release, deployment or pipeline-inventory change. Source reproductions and negative controls are synthetic; no operational failure claimed. ADR0029 supports existing source/test/runbook/receipt homes only. Historical receipts remain append-only. Original dirty checkout preserved, clean managed task worktree reused. Publish exact verified blobs/tree through connected GitHub app and target main; Git CLI has no write authentication. Pipeline5973 remains separate: its latest CI129success3skip2running, including both dedicated intake and reused source jobs3.11/3.12 success; no failure returned."
+}
