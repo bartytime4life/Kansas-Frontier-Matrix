@@ -86,6 +86,42 @@ jobs:
           OPA_BIN="$RUNNER_TEMP/opa" python -m pytest \
             -q -p no:cacheprovider -rs tests
 
+      # Test modules outside tests/ (connector, app and tool suites) each set up
+      # their own import paths and reuse module names such as test_fetch_admit,
+      # so they run one directory at a time. Several are executed by no other
+      # workflow. crop_casma_tiles needs Pillow from its own lock and runs in
+      # crop-casma-tile-compatibility; a directory holding only a placeholder
+      # collects nothing (pytest exit 5), which is reported, not failed.
+      - name: Run test suites outside tests/
+        env:
+          KFM_NO_NETWORK: "1"
+          PROJ_NETWORK: "OFF"
+        run: |
+          set -euo pipefail
+          export VIRTUAL_ENV="$RUNNER_TEMP/kfm-full-local-venv"
+          export PATH="$VIRTUAL_ENV/bin:$PATH"
+          mapfile -t dirs < <(git ls-files -- ':(glob)**/test_*.py' | grep -v '^tests/' | xargs -r -n1 dirname | sort -u)
+          failed=()
+          for d in "${dirs[@]}"; do
+            case "$d" in
+              pipelines/domains/soil/crop_casma_tiles)
+                echo "skip $d: runs in crop-casma-tile-compatibility with its own lock"
+                continue
+                ;;
+            esac
+            rc=0
+            OPA_BIN="$RUNNER_TEMP/opa" python -m pytest -q -p no:cacheprovider "$d" || rc=$?
+            if [ "$rc" -eq 5 ]; then
+              echo "no tests collected in $d"
+            elif [ "$rc" -ne 0 ]; then
+              failed+=("$d")
+            fi
+          done
+          if [ "${#failed[@]}" -gt 0 ]; then
+            printf 'out-of-tree suite failed: %s\n' "${failed[@]}" >&2
+            exit 1
+          fi
+
       - name: Confirm the suite left the checkout unchanged
         run: |
           set -euo pipefail
