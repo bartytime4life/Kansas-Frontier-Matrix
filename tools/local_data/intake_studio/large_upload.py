@@ -4,13 +4,15 @@ An upload session lives in ``<store>/uploads/<id>/`` as ``meta.json`` and a
 ``data`` file. The bytes on disk are the progress record: a client resumes at
 the current size of ``data``. Every chunk carries its SHA-256 and is checked
 before it is written, so an interrupted write leaves only a correct prefix.
-Completing a session hands the staged file to the Store, which hashes,
+Each session belongs to the account that started it; another account sees
+it as absent. Completing a session hands the staged file to the Store, which hashes,
 extracts and quarantines it exactly as a single-request upload. Sessions grant
 no review, admission or publication state.
 """
 from __future__ import annotations
 
 import hashlib
+import hmac
 import json
 import os
 from pathlib import Path
@@ -47,6 +49,13 @@ class UploadSessions:
             raise KeyError("Upload not found.")
         return path
 
+    def _owned(self, upload_id, owner):
+        path = self._dir(upload_id)
+        meta = json.loads((path / "meta.json").read_text(encoding="utf-8"))
+        if not isinstance(owner, str) or not hmac.compare_digest(meta.get("owner", ""), owner):
+            raise KeyError("Upload not found.")
+        return path
+
     def _meta(self, path):
         meta = json.loads((path / "meta.json").read_text(encoding="utf-8"))
         data = path / "data"
@@ -70,7 +79,9 @@ class UploadSessions:
                     and child.stat().st_mtime < cutoff):
                 shutil.rmtree(child)
 
-    def create(self, name, size):
+    def create(self, name, size, *, owner):
+        if not isinstance(owner, str) or not 0 < len(owner) <= 128:
+            raise ValueError("Upload needs a signed-in account.")
         if (not isinstance(name, str) or not 0 < len(name) <= MAX_NAME_CHARACTERS
                 or re.search(r"[\x00-\x1f\x7f]", name)):
             raise ValueError("Upload needs a file name of 1 to 255 visible characters.")
@@ -86,15 +97,16 @@ class UploadSessions:
             upload_id = uuid.uuid4().hex
             path = self.root / upload_id
             path.mkdir(mode=0o700)
-            (path / "meta.json").write_text(json.dumps({"name": name, "size": size}), encoding="utf-8")
+            (path / "meta.json").write_text(json.dumps({"name": name, "size": size, "owner": owner}),
+                                            encoding="utf-8")
             os.close(os.open(path / "data", os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600))
             return self._meta(path)
 
-    def status(self, upload_id):
+    def status(self, upload_id, *, owner):
         with self.lock:
-            return self._meta(self._dir(upload_id))
+            return self._meta(self._owned(upload_id, owner))
 
-    def append(self, upload_id, offset, chunk, digest):
+    def append(self, upload_id, offset, chunk, digest, *, owner):
         if not isinstance(digest, str) or not DIGEST.fullmatch(digest):
             raise ValueError("Each upload part needs its SHA-256 in X-KFM-Chunk-SHA256.")
         if not chunk or len(chunk) > self.chunk_bytes:
@@ -102,7 +114,7 @@ class UploadSessions:
         if hashlib.sha256(chunk).hexdigest() != digest:
             raise ValueError("Upload part failed its integrity check. Send it again.")
         with self.lock:
-            path = self._dir(upload_id)
+            path = self._owned(upload_id, owner)
             current = self._meta(path)
             if offset != current["received"]:
                 raise RuntimeError(f"Upload is at byte {current['received']}. Resume from there.")
@@ -126,10 +138,10 @@ class UploadSessions:
             os.utime(path)
             return self._meta(path)
 
-    def take(self, upload_id):
+    def take(self, upload_id, *, owner):
         """Move a complete upload's bytes out of its session for ingestion."""
         with self.lock:
-            path = self._dir(upload_id)
+            path = self._owned(upload_id, owner)
             current = self._meta(path)
             if current["received"] != current["size"]:
                 raise ValueError(f"Upload is incomplete: {current['received']} of {current['size']} bytes received.")
@@ -138,6 +150,6 @@ class UploadSessions:
             shutil.rmtree(path)
             return staged, current["name"]
 
-    def cancel(self, upload_id):
+    def cancel(self, upload_id, *, owner):
         with self.lock:
-            shutil.rmtree(self._dir(upload_id))
+            shutil.rmtree(self._owned(upload_id, owner))

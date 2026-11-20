@@ -245,9 +245,9 @@ class BrowserTests(unittest.TestCase):
                 thread = threading.Thread(target=server.serve_forever, daemon=True)
                 thread.start()
                 context = browser.new_context()
-                add_session_cookie(
-                    context, server.origin, signed_in_headers(self, server.accounts)
-                )
+                auth = signed_in_headers(self, server.accounts)
+                add_session_cookie(context, server.origin, auth)
+                owner = server.accounts.session(auth["Cookie"].split("=", 1)[1])["id"]
                 page = context.new_page()
                 parts = []
                 page.on(
@@ -259,10 +259,12 @@ class BrowserTests(unittest.TestCase):
                 try:
                     # A half-finished upload of the same file, remembered by the
                     # browser, resumes from the server's stored byte count.
-                    upload = store.uploads.create("large-synthetic.png", len(body))
+                    upload = store.uploads.create(
+                        "large-synthetic.png", len(body), owner=owner
+                    )
                     first = body[:chunk]
                     store.uploads.append(
-                        upload["id"], 0, first, hashlib.sha256(first).hexdigest()
+                        upload["id"], 0, first, hashlib.sha256(first).hexdigest(), owner=owner
                     )
                     page.goto(server.origin)
                     expect(page.locator("#file-list")).to_contain_text("No files yet")
