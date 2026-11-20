@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from decimal import Decimal, InvalidOperation
+from decimal import MAX_EMAX, MIN_EMIN, Decimal, InvalidOperation
 from hashlib import sha256
 import json
 import re
@@ -43,6 +43,11 @@ class _SourceNumber(Decimal):
 
     def __new__(cls, token: str) -> "_SourceNumber":
         number = super().__new__(cls, token)
+        # The C decimal module refuses exponents outside its range; the
+        # pure-Python fallback, used where CPython is built without libmpdec
+        # (as on hosted CPython 3.15), does not. Apply the same bound to both.
+        if number.is_finite() and not MIN_EMIN <= number.adjusted() <= MAX_EMAX:
+            raise InvalidOperation("exponent outside the decimal range")
         number.token = token
         return number
 
