@@ -130,6 +130,37 @@ def derive(record):
         return "ERROR", ["RECORD_MALFORMED"]
 
 
+# Checked before parsing: CPython 3.15 sizes its recursion guard from the real
+# C stack, so json can parse 100,000+ levels without RecursionError.
+MAX_JSON_DEPTH = 256
+
+
+def _json_depth_exceeded(text: str | bytes) -> bool:
+    if isinstance(text, bytes):
+        text = text.decode("latin-1")  # ASCII structure bytes keep their positions
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+            continue
+        if character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > MAX_JSON_DEPTH:
+                return True
+        elif character in "]}":
+            depth -= 1
+    return False
+
+
 def load(path):
     def reject_duplicate_keys(pairs):
         output = {}
@@ -139,8 +170,11 @@ def load(path):
             output[key] = value
         return output
 
+    text = Path(path).read_text(encoding="utf-8")
+    if _json_depth_exceeded(text):
+        raise ValueError("JSON_NESTING_LIMIT")
     return json.loads(
-        Path(path).read_text(encoding="utf-8"),
+        text,
         object_pairs_hook=reject_duplicate_keys,
         parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f"non-finite value: {value}")),
     )
