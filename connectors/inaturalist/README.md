@@ -2,14 +2,14 @@
 doc_id: kfm://doc/connectors-inaturalist-readme
 title: connectors/inaturalist/ — iNaturalist Source-Family Connector Contract
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · Python/package steward · Test steward · Fauna steward · Flora steward · Biodiversity/taxonomy steward · Rights reviewer · Sensitivity/geoprivacy reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-09-26
+updated: 2026-11-19
 policy_label: public-doctrine; source-family-connector; repository-present; implementation-placeholder; no-network-by-default; descriptor-and-activation-gated; product-explicit; rights-gated; geoprivacy-preserving; sensitivity-fail-closed; raw-quarantine-receipts-only; no-publication
 path: connectors/inaturalist/README.md
-truth_posture: CONFIRMED repository scaffold and current child contracts / PROPOSED family API, product routing, implementation sequence, and finite outcomes / CONFLICTED descriptor, registry, schema, and adjacent documentation details / CONFIRMED offline observation cursor planner/parser with synthetic tests (src/inaturalist/observations_api.py) / UNKNOWN package installability, other executable tests, activation, source access, runtime behavior, and public-client coupling
+truth_posture: CONFIRMED bounded observation parser and injected retrieval/routing regressions with finite geoprivacy failures; historical inspected-state notes retained; PROPOSED family/source treatment; NEEDS VERIFICATION descriptor admission, source activation, sensitivity review and public use
 related:
   - ../README.md
   - ./pyproject.toml
@@ -49,6 +49,8 @@ notes:
   - "The connector-local descriptor.yaml and data/registry/fauna/sources/inaturalist.yaml are unresolved placeholders and are not accepted SourceDescriptor or activation authority."
   - "The rich singular SourceDescriptor schema identifies the plural schema path as canonical, while the plural schema is still a permissive empty scaffold. Treat descriptor validation as CONFLICTED until governance resolves it."
   - "This revision coordinates documentation and a safe implementation sequence only. It creates no executable connector behavior, endpoint choice, source activation, source payload, fixture, test, policy decision, or public artifact."
+owning_root: connectors/
+responsibility: define iNaturalist source-family boundaries and finite geoprivacy input validation
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -81,6 +83,23 @@ notes:
 
 > [!WARNING]
 > **Source geoprivacy is evidence, not a puzzle to solve.** Open, obscured, private, generalized, missing, and policy-restricted spatial states are distinct. Connector code must not deobscure, infer, back-fill, log, or publish exact restricted coordinates.
+
+## Geoprivacy input validation checkpoint (2026-11-19)
+
+The observation parser now requires `obscured` to be a JSON Boolean or null;
+numeric `0`/`1` and floating equivalents are rejected instead of being accepted
+as open source points. Both observer and taxon geoprivacy fields require recognized
+strings or null. Lists/dictionaries produce finite `GEOPRIVACY_STATE` errors rather
+than unhandled `TypeError` exceptions. The retrieval adapter maps these errors to
+quarantine candidates; the unresolved checked-in descriptor still holds the final
+route. Rejected pages expose no parsed records or coordinates.
+
+Existing true/false/null handling, most-restrictive source geoprivacy, user-profile
+minimization, no-deobscuring behavior and source/admission/sensitivity boundaries
+remain in force. Synthetic parser and injected-retrieval regressions verify these
+cases under the existing offline workflow. This change activates no source, writes
+no lifecycle state and grants no public use. Earlier inspected-state notes remain
+historical; this checkpoint records only the bounded repair.
 
 **Quick jumps:** [Purpose](#purpose) · [Placement and canonicality](#placement-and-canonicality) · [Current repository state](#current-repository-state) · [Family navigation](#family-navigation) · [Authority boundary](#authority-boundary) · [Source family and products](#source-family-and-products) · [Descriptor activation and registry](#descriptor-activation-and-registry) · [Source role and claim boundary](#source-role-and-claim-boundary) · [Identity rights and attribution](#identity-rights-and-attribution) · [Geoprivacy sensitivity and public precision](#geoprivacy-sensitivity-and-public-precision) · [Quality grade and taxonomy](#quality-grade-and-taxonomy) · [Time geometry and provenance](#time-geometry-and-provenance) · [Access admission and finite outcomes](#access-admission-and-finite-outcomes) · [Replay correction and withdrawal](#replay-correction-and-withdrawal) · [Cross-domain routing](#cross-domain-routing) · [Security logging and privacy](#security-logging-and-privacy) · [Testing and CI evidence](#testing-and-ci-evidence) · [Implementation sequence](#implementation-sequence) · [Definition of done](#definition-of-done) · [Verification backlog](#verification-backlog) · [Review and rollback](#review-and-rollback)
 

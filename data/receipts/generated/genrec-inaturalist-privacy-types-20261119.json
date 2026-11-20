@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-inaturalist-privacy-types-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/inaturalist/README.md",
+    "connectors/inaturalist/src/inaturalist/observations_api.py",
+    "connectors/inaturalist/tests/test_fetch_admit.py",
+    "connectors/inaturalist/tests/test_observations_api.py"
+  ],
+  "artifact_hashes": {
+    "connectors/inaturalist/README.md": "sha256:8afde86df8b84a25313af55b8269e791ce4d715f44cdbe26e2993ea76af74a6a",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:1eb381d07dae232c40ba93aa652e096cb3b7e1ce92991d766ace0b986022f583",
+    "connectors/inaturalist/tests/test_fetch_admit.py": "sha256:0ffb5d95b8d95204b2f42aba096744da46bd5afacd68025a168dae87c5912447",
+    "connectors/inaturalist/tests/test_observations_api.py": "sha256:38e0f26644a137ff07bd5113e44c129029c639658509c76621ae509487c7c1b4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:6f11f8d3238c404f5be60906618ef48763ae01d56751a7460c9ffddf0218f46e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7d044f8a892c3e3d611849056c7aa24469094100",
+      "connectors/inaturalist/src/inaturalist/observations_api.py@7d044f8a892c3e3d611849056c7aa24469094100",
+      "connectors/inaturalist/src/inaturalist/admit.py@7d044f8a892c3e3d611849056c7aa24469094100",
+      ".github/workflows/inaturalist-observations-offline.yml@7d044f8a892c3e3d611849056c7aa24469094100",
+      "connectors/inaturalist/src/inaturalist/descriptor.yaml@7d044f8a892c3e3d611849056c7aa24469094100"
+    ],
+    "evidence_hashes": [
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:50064df77b9294fbd1044022725625c86d5166a5b6dcb7c1058ae53793971746",
+      "sha256:3f1dbd9e4efb64b983b75784494a944a3af591027d1f7af1e599e2ce09efd80e",
+      "sha256:710c75184cc7f803ea821c87a38b1320dbc13f2f384f34d5fbcc19c94b72110a",
+      "sha256:767ca9b6bd180c2f80cc67b4182c2761c9341a0fa1c2e212cb3b8fe0dd727824"
+    ]
+  },
+  "truth_labels": {
+    "connectors/inaturalist/README.md": "PROPOSED",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "PROPOSED",
+    "connectors/inaturalist/tests/test_fetch_admit.py": "PROPOSED",
+    "connectors/inaturalist/tests/test_observations_api.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "reproduced-malformed-privacy-behavior",
+      "outcome": "PASS",
+      "reason": "Before repair numeric obscured values0/1/0.0/1.0 returned RAW_CANDIDATE with source_point precision; dictionary/list geoprivacy raised raw TypeError. Repaired parser raises finite OBSCURED_FLAG or GEOPRIVACY_STATE instead."
+    },
+    {
+      "gate": "complete-connector-offline-suite",
+      "outcome": "PASS",
+      "reason": "37 unittest cases pass under the Python network guard. New parser cases cover numeric and container types plus valid Boolean/null behavior; injected retrieval-adapter cases reject a mixed valid/invalid page whole, expose no parsed page or coordinates, quarantine under a synthetic resolved descriptor and retain HOLD under the checked-in unresolved descriptor."
+    },
+    {
+      "gate": "documentation-and-ratchets",
+      "outcome": "PASS",
+      "reason": "One required-metadata document passes with no warnings;50 local targets resolve. Gap/scaffold pass, count856 unchanged; topology zero new drift with89 inherited warnings; whitespace passes."
+    },
+    {
+      "gate": "existing-ci-bindings",
+      "outcome": "PASS",
+      "reason": "Existing inaturalist-observations-offline workflow already watches the changed source/test paths and runs both complete parser and retrieval-adapter suites on Python3.11/3.12. No workflow or dependency changes required."
+    },
+    {
+      "gate": "hosted-ci-human-review-and-main-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending published exact-head hosted CI, independent human review and main merge. This is a source/runtime validation repair, not implementation of the unbound Flora iNaturalist pipeline or source activation. No rights/sensitivity approval, coordinate inference, lifecycle write, public use or deployment."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "connectors/inaturalist/src/inaturalist/observations_api.py",
+      "validated": true,
+      "evidence_ref": "connectors/inaturalist/src/inaturalist/observations_api.py@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "connectors/inaturalist/src/inaturalist/admit.py",
+      "validated": true,
+      "evidence_ref": "connectors/inaturalist/src/inaturalist/admit.py@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": ".github/workflows/inaturalist-observations-offline.yml",
+      "validated": true,
+      "evidence_ref": ".github/workflows/inaturalist-observations-offline.yml@7d044f8a892c3e3d611849056c7aa24469094100"
+    },
+    {
+      "id": "connectors/inaturalist/src/inaturalist/descriptor.yaml",
+      "validated": true,
+      "evidence_ref": "connectors/inaturalist/src/inaturalist/descriptor.yaml@7d044f8a892c3e3d611849056c7aa24469094100"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T04:00:12.477612Z",
+  "emitter": "codex/inaturalist-privacy-types",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Independent main-based source repair, separate from OpenFEMA PR5970. Two geoprivacy checks now validate types before dictionary lookup/equality: unknown containers and numeric Boolean-like fields cannot cause unhandled TypeError or be silently treated as open source points. Valid recognized string/null states, true/false/null flags, most-restrictive geoprivacy, existing user minimization and descriptor/sensitivity/rights holds retain their behavior. Rejected mixed pages return no partial parsed data. No deobscuring, source retrieval, activation, new taxonomy/privacy policy, public coordinate output, lifecycle write, release or deployment. Accepted ADR-0029 reference supports placement/authority only, not data-policy or source approval. Previous receipts remain unchanged. The source-specific pipeline build-out remains separate: eight candidates are fixture-first on main, OpenFEMA PR5970 proposes the ninth,30 remain unimplemented on that proposed state. This repair does not change those counts. Original dirty checkout preserved and existing clean taskworktree reused. Publish only verified blobs/tree with main-targeted PR."
+}

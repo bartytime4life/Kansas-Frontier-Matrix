@@ -260,11 +260,12 @@ def _classify(record: dict[str, object]) -> ObservationCandidate:
         reasons.append("ATTRIBUTION_MISSING")
     # The more restrictive of observer and taxon geoprivacy governs.
     states = (record.get("geoprivacy"), record.get("taxon_geoprivacy"))
-    if any(state not in GEOPRIVACY for state in states):
+    if any(state is not None and (not isinstance(state, str) or state not in GEOPRIVACY)
+           for state in states):
         raise ObservationInputError("GEOPRIVACY_STATE")
     level = max(GEOPRIVACY[state] for state in states)
     obscured_flag = record.get("obscured")
-    if obscured_flag not in (None, True, False):
+    if obscured_flag is not None and type(obscured_flag) is not bool:
         raise ObservationInputError("OBSCURED_FLAG")
     if obscured_flag is True:
         level = max(level, 1)
