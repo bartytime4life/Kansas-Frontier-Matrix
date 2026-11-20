@@ -120,7 +120,7 @@ def test_crs_and_z_m_rules():
 
 def test_epsg_6923_projection_roundtrip_is_synthetic_not_source_validation():
     from pyproj import Transformer
-    forward=Transformer.from_crs(4326,6923,always_xy=True,allow_ballpark=False,only_best=True)
+    forward=Transformer.from_crs(4326,6923,always_xy=True,allow_ballpark=False)
     x0,y0=forward.transform(-98,38);x1,y1=forward.transform(-97.99,38.01)
     out,receipt=polyline_to_geojson({'paths':[[[x0,y0],[x1,y1]]]},{'wkid':6923},has_z=False,has_m=False)
     assert out['coordinates'][0]==pytest.approx([-98,38],abs=1e-7)
