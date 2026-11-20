@@ -1,0 +1,93 @@
+{
+  "fixture_kind": "SYNTHETIC_TIGER_ROADS",
+  "file_name": "tl_2025_20001_roads.zip",
+  "retrieved_at": "2026-11-19T00:00:00Z",
+  "package_base64": "UEsDBBQAAAAIAAAAIVBQPIEOBwAAAAUAAAAXAAAAdGxfMjAyNV8yMDAwMV9yb2Fkcy5jcGcLDXHTtQAAUEsDBBQAAAAIAAAAIVAjd6oGVwAAAMwAAAAXAAAAdGxfMjAyNV8yMDAwMV9yb2Fkcy5kYmZjrmVkZGJgYEhkMGXABnw8/VwdgzxdgExnEF8MTd4t1MfHz9HXFSYvhybPq1BcmVeSkVqSmaxrqIAAwZF+IR6uIZ7OCkH+ji4KyFIggNBkhFuTEaoeKQBQSwMEFAAAAAgAAAAhUGB+FKqFAAAApQAAABcAAAB0bF8yMDI1XzIwMDAxX3JvYWRzLnByam2MvQrDIBRG38VZgl5j1TFUsRnyg0mmIFKCNBmaghT6+r3du3x8nAPHu8Ffp5XgpP5V3ntqnrkc2/1M3GhBqG3mpVuJ/W+n8ebC0FoMhOnHGKEXoTQXioLRFUgFAJzxGOkY2s5hypecz8+x7YSySJe+nTGfH0gRVIyrWgowILkxNR4Z4xdQSwMEFAAAAAgAAAAhUJXRavZOAAAAFAEAABcAAAB0bF8yMDI1XzIwMDAxX3JvYWRzLnNocGNgUOdiwA66XjAzMDDDeAciDkAYzg6zZgLBzogDZ88AAY+zAw79yIARiDWwmQU2Y0/EgTQQYHN2AClkQtaJRy1UKdhcdDl0NyKbS0gtAFBLAwQUAAAACAAAACFQvpEKhjEAAAB0AAAAFwAAAHRsXzIwMjVfMjAwMDFfcm9hZHMuc2h4Y2BQ52LADqxeMDMwMMN4ByIOQBjODrNmAsHOiANnzwABj7MDDv3IwAiINYA4DkQDAFBLAQIUAxQAAAAIAAAAIVBQPIEOBwAAAAUAAAAXAAAAAAAAAAAAAACAAQAAAAB0bF8yMDI1XzIwMDAxX3JvYWRzLmNwZ1BLAQIUAxQAAAAIAAAAIVAjd6oGVwAAAMwAAAAXAAAAAAAAAAAAAACAATwAAAB0bF8yMDI1XzIwMDAxX3JvYWRzLmRiZlBLAQIUAxQAAAAIAAAAIVBgfhSqhQAAAKUAAAAXAAAAAAAAAAAAAACAAcgAAAB0bF8yMDI1XzIwMDAxX3JvYWRzLnByalBLAQIUAxQAAAAIAAAAIVCV0Wr2TgAAABQBAAAXAAAAAAAAAAAAAACAAYIBAAB0bF8yMDI1XzIwMDAxX3JvYWRzLnNocFBLAQIUAxQAAAAIAAAAIVC+kQqGMQAAAHQAAAAXAAAAAAAAAAAAAACAAQUCAAB0bF8yMDI1XzIwMDAxX3JvYWRzLnNoeFBLBQYAAAAABQAFAFkBAABrAgAAAAA=",
+  "package_sha256": "sha256:16acb0b324294fb719d47d59f3a52720fb6e0a76ccb89c67fff6285dee68f892",
+  "expected": {
+    "object_type": "TigerRoadsIngestCandidate",
+    "schema_version": "1.0.0",
+    "created_at": "2026-11-19T00:00:00Z",
+    "file_name": "tl_2025_20001_roads.zip",
+    "vintage": 2025,
+    "county_fips": "20001",
+    "source_descriptor_ref": "data/registry/roads-rail-trade/sources/census_tiger_roads.yaml",
+    "source_role": "REFERENCE_GEOMETRY_CANDIDATE",
+    "artifact": {
+      "sha256": "sha256:16acb0b324294fb719d47d59f3a52720fb6e0a76ccb89c67fff6285dee68f892",
+      "byte_length": 986
+    },
+    "reference": {
+      "path": "connectors/census/tiger-line-2025-kansas-core.source-reference.json",
+      "sha256": "sha256:040820aaf62a48f07fe02c0b7a2096f48236d0c73989b1bb5231b6b58b308161",
+      "expected_sha256": "sha256:7e321cf36d0eebe4126869378d3c9c7dc0df48436f2bff471df3b0b49db1e1e4",
+      "expected_byte_length": 394339,
+      "exact_bytes_match": false
+    },
+    "inspection": {
+      "bbox": [
+        -99.0,
+        38.0,
+        -98.9,
+        38.1
+      ],
+      "crs": "NAD83_GEOGRAPHIC",
+      "deleted_count": 0,
+      "feature_count": 2,
+      "fields": [
+        {
+          "decimals": 0,
+          "kind": "C",
+          "length": 22,
+          "name": "LINEARID"
+        },
+        {
+          "decimals": 0,
+          "kind": "C",
+          "length": 30,
+          "name": "FULLNAME"
+        }
+      ],
+      "identity_digest": "sha256:552816cbb304062a2439ec3b47ed62b7cc6f26e068c98a07f3b5d4bc444d9908",
+      "identity_field": "LINEARID",
+      "kansas_feature_count": null,
+      "members": [
+        "tl_2025_20001_roads.cpg",
+        "tl_2025_20001_roads.dbf",
+        "tl_2025_20001_roads.prj",
+        "tl_2025_20001_roads.shp",
+        "tl_2025_20001_roads.shx"
+      ],
+      "provisional_route": "RAW_CANDIDATE",
+      "reason_codes": [],
+      "shape_type": 3
+    },
+    "route": "HOLD",
+    "reason_codes": [
+      "SOURCE_ADMISSION_UNVERIFIED",
+      "DOMAIN_DESCRIPTOR_UNRESOLVED",
+      "RIGHTS_UNVERIFIED",
+      "SENSITIVITY_NOT_EVALUATED",
+      "REFERENCE_BYTES_NOT_MATCHED"
+    ],
+    "limitations": [
+      "GEOMETRY_NOT_DECODED",
+      "HEADER_CRS_NOT_TRANSFORM_VERIFIED",
+      "COUNTY_SCOPE_FROM_FILE_NAME",
+      "COVERAGE_NOT_ESTABLISHED",
+      "NOT_ROAD_ACCESS_OR_ROUTING_AUTHORITY"
+    ],
+    "authority": {
+      "source_admitted": false,
+      "review_completed": false,
+      "evidence_closed": false,
+      "lifecycle_write": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    },
+    "candidate_id": "tiger-roads-ingest:sha256:18c742502f9dcab3111ce336a1f7f8baabce3f983205eb8a81f6a317bede7182",
+    "spec_hash": "sha256:16b2703aa2d0f21e83f953fcefde6b8f98cca461ed2966b2727819fd10a8595a"
+  }
+}

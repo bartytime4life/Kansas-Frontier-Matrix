@@ -1,0 +1,117 @@
+{
+  "fixture_kind": "SYNTHETIC_NWS_CONTEXT",
+  "body": "{\"features\":[{\"geometry\":null,\"id\":\"https://api.weather.gov/alerts/urn:oid:kfm.synthetic.context.1\",\"properties\":{\"effective\":\"2026-01-01T10:00:00Z\",\"event\":\"Synthetic context message\",\"expires\":\"2026-01-01T18:00:00Z\",\"geocode\":{\"UGC\":[\"KSZ001\"]},\"id\":\"urn:oid:kfm.synthetic.context.1\",\"instruction\":\"SYNTHETIC SOURCE INSTRUCTION - PRIVATE CONTEXT ONLY\",\"messageType\":\"Alert\",\"references\":[],\"sender\":\"synthetic.invalid\",\"sent\":\"2026-01-01T10:00:00Z\",\"status\":\"Actual\",\"unknown_field\":{\"preserved\":true}},\"type\":\"Feature\"},{\"geometry\":null,\"id\":\"https://api.weather.gov/alerts/urn:oid:kfm.synthetic.context.2\",\"properties\":{\"effective\":\"2026-01-01T10:00:00Z\",\"event\":\"Synthetic context message\",\"expires\":\"2026-01-01T18:00:00Z\",\"geocode\":{\"UGC\":[\"KSZ001\"]},\"id\":\"urn:oid:kfm.synthetic.context.2\",\"instruction\":\"SYNTHETIC SOURCE INSTRUCTION - PRIVATE CONTEXT ONLY\",\"messageType\":\"Update\",\"references\":[{\"identifier\":\"urn:oid:kfm.synthetic.context.1\"}],\"sender\":\"synthetic.invalid\",\"sent\":\"2026-01-01T10:00:00Z\",\"status\":\"Actual\",\"unknown_field\":{\"preserved\":true}},\"type\":\"Feature\"}],\"type\":\"FeatureCollection\"}",
+  "body_sha256": "sha256:ee5e4faa7f02f60bd442840d4c61f10537d66876b0b4869b280722dfb516ef44",
+  "retrieved_at": "2026-01-01T12:00:00Z",
+  "as_of": "2026-01-01T12:00:00Z",
+  "expected": {
+    "object_type": "NwsContextIngestCandidate",
+    "schema_version": "1.0.0",
+    "source_descriptor_ref": "data/registry/atmosphere/sources/noaa_nws.yaml",
+    "source_role": "regulatory",
+    "artifact": {
+      "sha256": "sha256:ee5e4faa7f02f60bd442840d4c61f10537d66876b0b4869b280722dfb516ef44",
+      "byte_length": 1110
+    },
+    "evaluated_at": "2026-01-01T12:00:00Z",
+    "context": {
+      "active_endpoint": true,
+      "alerts": [
+        {
+          "admission": "NOT_ADMITTED",
+          "alert_id": "urn:oid:kfm.synthetic.context.1",
+          "authority": "NWS_ISSUED_CONTEXT_ONLY",
+          "canonical_url": "https://api.weather.gov/alerts/urn:oid:kfm.synthetic.context.1",
+          "certainty": null,
+          "effective": "2026-01-01T10:00:00Z",
+          "ends": null,
+          "event": "Synthetic context message",
+          "expires": "2026-01-01T18:00:00Z",
+          "feature_sha256": "sha256:3cae572c952a490394ae1c31fb09e5fd114be362292340790fd42b683695b1d9",
+          "freshness_as_of": "2026-01-01T12:00:00Z",
+          "freshness_state": "SUPERSEDED_IN_COLLECTION",
+          "has_geometry": false,
+          "has_instruction": true,
+          "life_safety_authority": false,
+          "message_type": "Alert",
+          "onset": null,
+          "raw_feature_json": "{\"geometry\":null,\"id\":\"https://api.weather.gov/alerts/urn:oid:kfm.synthetic.context.1\",\"properties\":{\"effective\":\"2026-01-01T10:00:00Z\",\"event\":\"Synthetic context message\",\"expires\":\"2026-01-01T18:00:00Z\",\"geocode\":{\"UGC\":[\"KSZ001\"]},\"id\":\"urn:oid:kfm.synthetic.context.1\",\"instruction\":\"SYNTHETIC SOURCE INSTRUCTION - PRIVATE CONTEXT ONLY\",\"messageType\":\"Alert\",\"references\":[],\"sender\":\"synthetic.invalid\",\"sent\":\"2026-01-01T10:00:00Z\",\"status\":\"Actual\",\"unknown_field\":{\"preserved\":true}},\"type\":\"Feature\"}",
+          "reasons": [],
+          "references": [],
+          "route": "RAW_CANDIDATE",
+          "sender": "synthetic.invalid",
+          "sent": "2026-01-01T10:00:00Z",
+          "severity": null,
+          "status": "Actual",
+          "ugc_codes": [
+            "KSZ001"
+          ],
+          "urgency": null
+        },
+        {
+          "admission": "NOT_ADMITTED",
+          "alert_id": "urn:oid:kfm.synthetic.context.2",
+          "authority": "NWS_ISSUED_CONTEXT_ONLY",
+          "canonical_url": "https://api.weather.gov/alerts/urn:oid:kfm.synthetic.context.2",
+          "certainty": null,
+          "effective": "2026-01-01T10:00:00Z",
+          "ends": null,
+          "event": "Synthetic context message",
+          "expires": "2026-01-01T18:00:00Z",
+          "feature_sha256": "sha256:f981927bcc44eed577d50964bfb12edc513f1ae90351fcaac37d3f504afdd042",
+          "freshness_as_of": "2026-01-01T12:00:00Z",
+          "freshness_state": "WITHIN_SOURCE_WINDOW_AT_AS_OF",
+          "has_geometry": false,
+          "has_instruction": true,
+          "life_safety_authority": false,
+          "message_type": "Update",
+          "onset": null,
+          "raw_feature_json": "{\"geometry\":null,\"id\":\"https://api.weather.gov/alerts/urn:oid:kfm.synthetic.context.2\",\"properties\":{\"effective\":\"2026-01-01T10:00:00Z\",\"event\":\"Synthetic context message\",\"expires\":\"2026-01-01T18:00:00Z\",\"geocode\":{\"UGC\":[\"KSZ001\"]},\"id\":\"urn:oid:kfm.synthetic.context.2\",\"instruction\":\"SYNTHETIC SOURCE INSTRUCTION - PRIVATE CONTEXT ONLY\",\"messageType\":\"Update\",\"references\":[{\"identifier\":\"urn:oid:kfm.synthetic.context.1\"}],\"sender\":\"synthetic.invalid\",\"sent\":\"2026-01-01T10:00:00Z\",\"status\":\"Actual\",\"unknown_field\":{\"preserved\":true}},\"type\":\"Feature\"}",
+          "reasons": [],
+          "references": [
+            "urn:oid:kfm.synthetic.context.1"
+          ],
+          "route": "RAW_CANDIDATE",
+          "sender": "synthetic.invalid",
+          "sent": "2026-01-01T10:00:00Z",
+          "severity": null,
+          "status": "Actual",
+          "ugc_codes": [
+            "KSZ001"
+          ],
+          "urgency": null
+        }
+      ],
+      "area": "KS",
+      "body_sha256": "sha256:ee5e4faa7f02f60bd442840d4c61f10537d66876b0b4869b280722dfb516ef44",
+      "cache_headers": [],
+      "coverage": "NOT_ESTABLISHED",
+      "http_status": 200,
+      "outcome": "CAPTURE_CANDIDATE",
+      "reasons": [],
+      "retrieved_at": "2026-01-01T12:00:00Z",
+      "source_url": "https://api.weather.gov/alerts/active?area=KS"
+    },
+    "route": "HOLD",
+    "reason_codes": [
+      "SOURCE_ADMISSION_UNVERIFIED",
+      "SOURCE_DESCRIPTOR_UNRESOLVED",
+      "RIGHTS_UNVERIFIED",
+      "SENSITIVITY_NOT_EVALUATED"
+    ],
+    "authority": {
+      "source_admitted": false,
+      "review_completed": false,
+      "evidence_closed": false,
+      "lifecycle_write": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false,
+      "life_safety_authority": false,
+      "alert_delivery_authorized": false
+    },
+    "candidate_id": "nws-context-ingest:sha256:776dcf6b47c84a4017d1d7dc0648b545644b88b5cebe84b5ad72eb74b61f6992",
+    "spec_hash": "sha256:71d26118f915a908ea6b6f2c5eb680036df6b0e49b42765cad55da82f721d1aa"
+  }
+}

@@ -1,35 +1,44 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.roads-rail-trade.tiger-roads
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: roads-rail-trade
 stage: INGEST
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/roads-rail-trade/tiger_roads.yaml
-purpose: Preserve the Roads/Rail/Trade tiger roads proposal as a reviewable inactive pipeline candidate
-  without activating sources or lifecycle writes.
+purpose: Inspect supplied Kansas county TIGER 2025 ROADS packages as bounded held ingest candidates; compare
+  provider reference bytes without geometry decoding, source admission or lifecycle writes.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/roads-rail-trade/MISSING_OR_PLANNED_FILES.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/roads-rail-trade/sources/census_tiger_roads.yaml
+  contract_refs:
+  - contracts/domains/roads-rail-trade/road_segment.md
+  - contracts/domains/roads-rail-trade/tiger_roads_ingest_candidate.md
+  schema_refs:
+  - schemas/contracts/v1/domains/roads-rail-trade/tiger_roads_ingest_candidate.schema.json
+  implementation_refs:
+  - connectors/census/src/census/tiger_package.py
+  - pipelines/domains/roads-rail-trade/ingest_tiger_roads.py
+  fixture_refs:
+  - fixtures/domains/roads-rail-trade/tiger_roads_ingest/
+  test_refs:
+  - connectors/census/tests/test_tiger_package.py
+  - tests/pipelines/domains/roads_rail_trade/test_tiger_roads_ingest.py
+  workflow_refs:
+  - .github/workflows/tiger-roads-pipeline.yml
 lifecycle:
   candidate_inputs:
-  - SOURCE_CAPTURE_CANDIDATE
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - RAW
+  - TIGER_ROADS_INGEST_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,7 +57,7 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
 - SOURCE_ADMISSION_UNVERIFIED
@@ -63,4 +72,8 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:ea8472bc4258d9b05f5aa65ad2249a6f303d5c6059babecfebf910e9b17a0144
+spec_hash: sha256:0833912a18659957d67174b18a98822c7b713b4ec21628a43d1a0c45c88bafc6
+validation:
+  command: python -B -m pytest tests/pipelines/domains/roads_rail_trade/test_tiger_roads_ingest.py connectors/census/tests/test_tiger_package.py
+    -q --strict-config --strict-markers
+  workflow: .github/workflows/tiger-roads-pipeline.yml

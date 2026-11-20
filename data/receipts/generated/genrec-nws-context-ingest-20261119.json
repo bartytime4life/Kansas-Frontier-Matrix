@@ -1,0 +1,167 @@
+{
+  "receipt_id": "genrec-nws-context-ingest-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/nws-context-pipeline.yml",
+    "contracts/domains/hazards/README.md",
+    "contracts/domains/hazards/nws_context_ingest_candidate.md",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/nws-context-fixture-ingest.md",
+    "fixtures/domains/hazards/nws_context_ingest/README.md",
+    "fixtures/domains/hazards/nws_context_ingest/empty.json",
+    "fixtures/domains/hazards/nws_context_ingest/expired-partial.json",
+    "fixtures/domains/hazards/nws_context_ingest/lineage.json",
+    "pipeline_specs/README.md",
+    "pipeline_specs/hazards/README.md",
+    "pipeline_specs/hazards/nws_alerts_context.yaml",
+    "pipelines/domains/hazards/README.md",
+    "pipelines/domains/hazards/nws_context_ingest.py",
+    "schemas/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json",
+    "tests/pipelines/domains/hazards/test_nws_context_ingest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/nws-context-pipeline.yml": "sha256:5246fd7397e27ea3cc9dc4b3381af594c0e79e2e89eda9f3d1a758f3341b77fc",
+    "contracts/domains/hazards/README.md": "sha256:9f47b07f13b3b255bf2ad8f82bfd585ca3af3ab6e60c0849bf9c707965f1670c",
+    "contracts/domains/hazards/nws_context_ingest_candidate.md": "sha256:bc3526348f7c6f3914aff276708c7bbba73e7e35d14e10b8ef3f6bf722994f53",
+    "contracts/pipeline_spec_declaration.md": "sha256:15e6452e8387887ae6517973aaab696f919d64629f79a0f9ca9fbc94a94a27e2",
+    "docs/runbooks/nws-context-fixture-ingest.md": "sha256:ec76bdcb3331ecba440800e193df9cbbb218fbbd99b2104cc44bd5c96371ed84",
+    "fixtures/domains/hazards/nws_context_ingest/README.md": "sha256:f59cee38190c23211a1ad975b2b04fb65f3e6aabf8a32c117e43ee043527007e",
+    "fixtures/domains/hazards/nws_context_ingest/empty.json": "sha256:24d5f018b3695e86ce8ea56d05033f77b539649cf7f327180390d43b8ed7554c",
+    "fixtures/domains/hazards/nws_context_ingest/expired-partial.json": "sha256:4e31c75766276203398bc3ef29196781c86a952cbf920ad615cc9d32bf014a42",
+    "fixtures/domains/hazards/nws_context_ingest/lineage.json": "sha256:49b9f5e841547e5150a7b9e719d9154754f0b766b2c5c19d40b747e7e8a83fc2",
+    "pipeline_specs/README.md": "sha256:73ded0b76ed57a427010bdcdddda1ba133e60f181734727c851a076fa6ef99bc",
+    "pipeline_specs/hazards/README.md": "sha256:ce570085d2aac20d6c6994b530e616b9690f5b1ff00e68611cec101820461a59",
+    "pipeline_specs/hazards/nws_alerts_context.yaml": "sha256:03dc91bbb9f50c4741fa101b9db58d6ba690d6dd115e973b0454665559d7d45b",
+    "pipelines/domains/hazards/README.md": "sha256:b7e503dd51f4dc48f09ff48d952ef0d61aff6cd0f96365f1c0df1610ac72e8d1",
+    "pipelines/domains/hazards/nws_context_ingest.py": "sha256:e2183c94fb1528b5da3f1407494ebaf09d72e4105658dbb7d9e236072632192a",
+    "schemas/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json": "sha256:787e50884a39cfa0f91af56ad6f2c6d58c1505383e5f06a69f8a19f4c6c01748",
+    "tests/pipelines/domains/hazards/test_nws_context_ingest.py": "sha256:3823043a449261fff3462608a13bc756c0c7cd0eaac70a5d37eb7b0af1eaae34"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:66511f3116f625f03dc479a2d7d3db9b7f015a947f233057df1afbe93e618748",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@20811963cf1ce2d276b0578a413533faba72855f",
+      "contracts/domains/hazards/README.md@20811963cf1ce2d276b0578a413533faba72855f",
+      "data/registry/atmosphere/sources/noaa_nws.yaml@20811963cf1ce2d276b0578a413533faba72855f",
+      "connectors/noaa/src/noaa/nws_alerts.py@20811963cf1ce2d276b0578a413533faba72855f",
+      "connectors/noaa/src/noaa/admit.py@20811963cf1ce2d276b0578a413533faba72855f"
+    ],
+    "evidence_hashes": [
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:f0ef494e442752d71ecbb1b5c4aedc52057aaeebb23b47ec30d2c8ed1592db8e",
+      "sha256:8945122b36e68efa9105b209bd46ebc8425276d472d9c1f4681ad2a270eb24bf",
+      "sha256:4b748cc383e1f15ca50ee10025e6a9aa82a4246ac8efc60780a7e45354134071",
+      "sha256:81f2d6b3f8f5ff2ca7a5111179ec09078071c2d88347a8e8bfe81f52ffb42036"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/nws-context-pipeline.yml": "PROPOSED",
+    "contracts/domains/hazards/README.md": "PROPOSED",
+    "contracts/domains/hazards/nws_context_ingest_candidate.md": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/nws-context-fixture-ingest.md": "PROPOSED",
+    "fixtures/domains/hazards/nws_context_ingest/README.md": "PROPOSED",
+    "fixtures/domains/hazards/nws_context_ingest/empty.json": "PROPOSED",
+    "fixtures/domains/hazards/nws_context_ingest/expired-partial.json": "PROPOSED",
+    "fixtures/domains/hazards/nws_context_ingest/lineage.json": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/hazards/README.md": "PROPOSED",
+    "pipeline_specs/hazards/nws_alerts_context.yaml": "PROPOSED",
+    "pipelines/domains/hazards/README.md": "PROPOSED",
+    "pipelines/domains/hazards/nws_context_ingest.py": "PROPOSED",
+    "schemas/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json": "PROPOSED",
+    "tests/pipelines/domains/hazards/test_nws_context_ingest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "nws-intake-and-source-parser",
+      "outcome": "PASS",
+      "reason": "44 passed and 27 subtests. Sealed lineage, expired/partial and empty captures; strict malformed input, bounds, exact byte versus time identity, snapshot integrity, parser replay of freshness/lineage, all denied authority, aggregate-only CLI, no files/network/next-page following."
+    },
+    {
+      "gate": "general-pipelines-core-and-nws-source-lane",
+      "outcome": "PASS",
+      "reason": "373 passed, two separately qualified raster modules skipped, 27 subtests under the Python network guard; qualified minimal lock profiles retained."
+    },
+    {
+      "gate": "supported-full-local-collection",
+      "outcome": "PASS",
+      "reason": "10387 tests collected without errors using the supported full-local bundle, tests scope and CI network/PROJ guard; collection is not full test execution."
+    },
+    {
+      "gate": "qa-and-installer-regressions",
+      "outcome": "PASS",
+      "reason": "385 passed and 74 subtests with required temporary task-worktree files and local loopback sockets; no dependency lock changes."
+    },
+    {
+      "gate": "docs-declarations-workflow-and-ratchets",
+      "outcome": "PASS",
+      "reason": "Eight docs have zero structural failures, 89 local targets resolve, 17 inherited common-contract nested-metadata warnings remain. 110 repository and four fixture declarations pass; dedicated workflow zero security findings. Gap/scaffold pass, count remains 856; topology zero new drift and 89 inherited warnings."
+    },
+    {
+      "gate": "hosted-ci-human-review-and-main-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending published exact-head CI, independent review and main merge. Parent TIGER PR 5966 is main-targeted; both its Python replay jobs passed on hosted CI at readback, other jobs still running. No source admission, cross-domain source ownership approval, evidence closure, warning/notification/life-safety authority, release or deployment."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@20811963cf1ce2d276b0578a413533faba72855f"
+    },
+    {
+      "id": "contracts/domains/hazards/README.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/hazards/README.md@20811963cf1ce2d276b0578a413533faba72855f"
+    },
+    {
+      "id": "data/registry/atmosphere/sources/noaa_nws.yaml",
+      "validated": true,
+      "evidence_ref": "data/registry/atmosphere/sources/noaa_nws.yaml@20811963cf1ce2d276b0578a413533faba72855f"
+    },
+    {
+      "id": "connectors/noaa/src/noaa/nws_alerts.py",
+      "validated": true,
+      "evidence_ref": "connectors/noaa/src/noaa/nws_alerts.py@20811963cf1ce2d276b0578a413533faba72855f"
+    },
+    {
+      "id": "connectors/noaa/src/noaa/admit.py",
+      "validated": true,
+      "evidence_ref": "connectors/noaa/src/noaa/admit.py@20811963cf1ce2d276b0578a413533faba72855f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T00:35:32.148508Z",
+  "emitter": "codex/nws-context-ingest",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Eight of 39 YAML candidates are fixture-first on this stack; 31 remain unimplemented. NWS context uses the existing proposed Atmosphere source record rather than duplicating a source descriptor. Its role/rights/sensitivity/admission and cross-domain use remain unresolved; NOAA family settings do not admit it. The existing NOAA product role for NWS is regulatory context, not observed hazard truth. Only supplied HTTP-200 Kansas active-surface collections within 256 KiB/64 features are supported; non-200 and unbound 304s are refused. Private source snapshots retain instructions without surfacing them as fields or CLI content. Partial captures and zero messages never establish complete coverage or hazard absence. No source retrieval, next-page following, polling, notification, lifecycle write, persistence, geometry qualification, EvidenceBundle closure, release or deployment. Current Hazards indexes reconcile earlier stale placeholder statements while retaining their historical inspections. Accepted ADR-0029 reference supports repository placement/authority boundaries only, not data-policy, source, cross-domain ownership or public-use approval. Prior receipts and source records are unchanged. Main-targeted PR must follow TIGER PR 5966; no intermediate-base PR. Git CLI write auth remains unavailable; publish exact verified blobs/tree through the connected app."
+}

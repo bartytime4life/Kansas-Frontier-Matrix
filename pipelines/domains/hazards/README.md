@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-hazards-readme
 title: Hazards Domain Pipeline README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <hazards-pipeline-owner>
@@ -16,7 +16,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-11-19
 policy_label: public
 path: pipelines/domains/hazards/README.md
 related:
@@ -74,6 +74,9 @@ notes:
   - "Hazards outputs must preserve knowledge-character separation between historical events, regulatory context, observations, remote-sensing detections, modeled derivatives, operational warning context, declarations, exposure summaries, and generated summaries."
   - "Operational warning/advisory/watch context is contextual only, must carry issue/expiry/freshness/source identity, and must redirect to official sources."
   - "Concrete executable behavior, source activation, schedules, CI coverage, schema paths, release wiring, and public API/map behavior remain NEEDS VERIFICATION until implemented and tested."
+owning_root: pipelines/
+responsibility: define executable Hazards pipeline boundaries and bounded context intake
+truth_posture: CONFIRMED bounded fixture implementations; PROPOSED candidate profiles; NEEDS VERIFICATION source admission, evidence closure and release
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -98,6 +101,21 @@ notes:
 **Public posture:** no direct publication and no life-safety alerting; public output requires lifecycle, EvidenceBundle, source-role, freshness/expiry, sensitivity, policy, catalog/triplet, release, correction, and rollback closure
 
 ---
+
+## Current bounded implementation (2026-11-19)
+
+`nws_context_ingest.py` now prepares private held NWS context from fixed synthetic
+captures, preserving lineage and freshness at an explicit instant. It sends no
+alerts, prints no source instructions and writes no files. Its proposed Atmosphere
+source descriptor remains unresolved. See the [runbook](../../../docs/runbooks/nws-context-fixture-ingest.md)
+and [candidate contract](../../../contracts/domains/hazards/nws_context_ingest_candidate.md).
+The prior earthquake and storm-event [sealed replay](../../../docs/runbooks/pipeline-fixture-replay.md)
+paths remain bound separately. Broader pipeline, release and source work remains open.
+
+## Historical boundary review
+
+The earlier detailed inspection below is retained as historical context. It does
+not negate these bounded current paths or prove the remaining surfaces complete.
 
 ## Quick jump
 

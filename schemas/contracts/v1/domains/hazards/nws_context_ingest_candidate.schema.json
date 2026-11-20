@@ -1,0 +1,426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json",
+  "title": "NwsContextIngestCandidate",
+  "description": "Private held ingest projection of existing NWS source context, not an alert, current-warning determination or release.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "candidate_id",
+    "source_descriptor_ref",
+    "source_role",
+    "artifact",
+    "evaluated_at",
+    "context",
+    "route",
+    "reason_codes",
+    "authority",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "NwsContextIngestCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^nws-context-ingest:sha256:[a-f0-9]{64}$"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/atmosphere/sources/noaa_nws.yaml"
+    },
+    "source_role": {
+      "const": "regulatory"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "byte_length"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 262144
+        }
+      }
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_url",
+        "area",
+        "active_endpoint",
+        "retrieved_at",
+        "http_status",
+        "cache_headers",
+        "body_sha256",
+        "alerts",
+        "outcome",
+        "reasons",
+        "coverage"
+      ],
+      "properties": {
+        "source_url": {
+          "const": "https://api.weather.gov/alerts/active?area=KS"
+        },
+        "area": {
+          "const": "KS"
+        },
+        "active_endpoint": {
+          "const": true
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "http_status": {
+          "const": 200
+        },
+        "cache_headers": {
+          "const": []
+        },
+        "body_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "alerts": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "alert_id",
+              "canonical_url",
+              "event",
+              "status",
+              "message_type",
+              "sender",
+              "severity",
+              "certainty",
+              "urgency",
+              "sent",
+              "effective",
+              "onset",
+              "expires",
+              "ends",
+              "references",
+              "ugc_codes",
+              "has_geometry",
+              "has_instruction",
+              "freshness_as_of",
+              "freshness_state",
+              "route",
+              "reasons",
+              "raw_feature_json",
+              "feature_sha256",
+              "authority",
+              "life_safety_authority",
+              "admission"
+            ],
+            "properties": {
+              "alert_id": {
+                "type": "string",
+                "pattern": "^urn:oid:",
+                "maxLength": 256
+              },
+              "canonical_url": {
+                "type": "string",
+                "maxLength": 262144
+              },
+              "event": {
+                "type": "string",
+                "maxLength": 262144
+              },
+              "status": {
+                "enum": [
+                  "Actual",
+                  "Exercise",
+                  "System",
+                  "Test",
+                  "Draft"
+                ]
+              },
+              "message_type": {
+                "enum": [
+                  "Alert",
+                  "Update",
+                  "Cancel",
+                  "Ack",
+                  "Error"
+                ]
+              },
+              "sender": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 262144
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "severity": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 262144
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "certainty": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 262144
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "urgency": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 262144
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "sent": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "effective": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "onset": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "expires": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "ends": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "references": {
+                "type": "array",
+                "maxItems": 4096,
+                "items": {
+                  "type": "string",
+                  "maxLength": 262144
+                }
+              },
+              "ugc_codes": {
+                "type": "array",
+                "maxItems": 4096,
+                "items": {
+                  "type": "string",
+                  "maxLength": 262144
+                }
+              },
+              "has_geometry": {
+                "type": "boolean"
+              },
+              "has_instruction": {
+                "type": "boolean"
+              },
+              "freshness_as_of": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "freshness_state": {
+                "enum": [
+                  "SUPERSEDED_IN_COLLECTION",
+                  "CANCELLATION_MESSAGE",
+                  "ENDED",
+                  "EXPIRED",
+                  "NOT_YET_EFFECTIVE",
+                  "UNKNOWN_NO_END_TIME",
+                  "WITHIN_SOURCE_WINDOW_AT_AS_OF"
+                ]
+              },
+              "route": {
+                "enum": [
+                  "RAW_CANDIDATE",
+                  "QUARANTINE_CANDIDATE"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "maxItems": 4,
+                "items": {
+                  "enum": [
+                    "STATUS_NOT_ACTUAL",
+                    "OUTSIDE_REQUESTED_AREA",
+                    "EXPIRES_BEFORE_SENT",
+                    "LINEAGE_REFERENCE_MISSING"
+                  ]
+                }
+              },
+              "raw_feature_json": {
+                "type": "string",
+                "maxLength": 3145728
+              },
+              "feature_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "authority": {
+                "const": "NWS_ISSUED_CONTEXT_ONLY"
+              },
+              "life_safety_authority": {
+                "const": false
+              },
+              "admission": {
+                "const": "NOT_ADMITTED"
+              }
+            }
+          }
+        },
+        "outcome": {
+          "enum": [
+            "INCOMPLETE_CAPTURE",
+            "CAPTURE_CANDIDATE"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "enum": [
+              "PARTIAL_COLLECTION_MORE_PAGES"
+            ]
+          }
+        },
+        "coverage": {
+          "const": "NOT_ESTABLISHED"
+        }
+      }
+    },
+    "route": {
+      "const": "HOLD"
+    },
+    "reason_codes": {
+      "type": "array",
+      "maxItems": 6,
+      "items": {
+        "enum": [
+          "SOURCE_ADMISSION_UNVERIFIED",
+          "SOURCE_DESCRIPTOR_UNRESOLVED",
+          "RIGHTS_UNVERIFIED",
+          "SENSITIVITY_NOT_EVALUATED",
+          "PARTIAL_COLLECTION_MORE_PAGES",
+          "MESSAGE_QUARANTINE_CANDIDATES"
+        ]
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "review_completed",
+        "evidence_closed",
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "life_safety_authority",
+        "alert_delivery_authorized"
+      ],
+      "properties": {
+        "source_admitted": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "evidence_closed": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "life_safety_authority": {
+          "const": false
+        },
+        "alert_delivery_authorized": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}

@@ -61,7 +61,7 @@ Declaration presence never activates execution. Network access, lifecycle writes
 | Inputs | References to admitted source descriptors, contracts, schemas, fixtures, implementations, and evidence; no embedded payloads |
 | Candidate outputs | Lifecycle-state names and artifact-family references only |
 | Writes | `false` for every current declaration |
-| Runtime effects | None; all declarations are `PROPOSED_INACTIVE` and `DISABLED` |
+| Runtime effects | None from declarations; all are inactive, TIGER roads binds `FIXTURE_ONLY`, the rest are `DISABLED` |
 
 Any later activation requires separate source admission, schema and policy conformance, fixture-backed tests, evidence review, an activation record, and release authority.
 
@@ -95,10 +95,11 @@ roads-rail-trade/
 | Declaration class | Files | Count | Status |
 |---|---|---:|---|
 | Stage boundaries | `ingest.yaml`, `normalize.yaml`, `validate.yaml`, `catalog.yaml`, `publish.yaml` | 5 | `PROPOSED_INACTIVE`; `NOT_IMPLEMENTED`; `DISABLED` |
-| Pipeline candidates | `fra_gcis.yaml`, `historic_routes.yaml`, `tiger_roads.yaml`, `wzdx_v4.yaml` | 4 | `PROPOSED_INACTIVE`; `NOT_IMPLEMENTED`; `DISABLED` |
+| TIGER roads candidate | `tiger_roads.yaml` | 1 | `PROPOSED_INACTIVE`; `IMPLEMENTED_FIXTURE_FIRST`; `FIXTURE_ONLY` |
+| Other candidates | `fra_gcis.yaml`, `historic_routes.yaml`, `wzdx_v4.yaml` | 3 | `PROPOSED_INACTIVE`; `NOT_IMPLEMENTED`; `DISABLED` |
 | Total YAML declarations | All rows above | 9 | No source, network, write, promotion, release, or publication authority |
 
-The four candidate names are inventory, not proof of source admission, supported format, operational currency, or consumer binding.
+TIGER roads binds a [held package-ingest profile](../../docs/runbooks/tiger-roads-fixture-ingest.md), not road geometry normalization. Its domain source descriptor remains proposed and unresolved. The other three candidate names are inventory, not proof of source admission, supported format, operational currency, or consumer binding.
 
 ## Validation
 

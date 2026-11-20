@@ -1,0 +1,80 @@
+name: nws-context-pipeline
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/nws-context-pipeline.yml"
+      - "pipelines/domains/hazards/nws_context_ingest.py"
+      - "pipeline_specs/hazards/nws_alerts_context.yaml"
+      - "connectors/noaa/src/noaa/nws_alerts.py"
+      - "connectors/noaa/src/noaa/admit.py"
+      - "connectors/noaa/tests/test_nws_alerts.py"
+      - "packages/connectors-core/**"
+      - "contracts/domains/hazards/nws_context_ingest_candidate.md"
+      - "contracts/domains/hazards/README.md"
+      - "schemas/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json"
+      - "data/registry/atmosphere/sources/noaa_nws.yaml"
+      - "fixtures/domains/hazards/nws_context_ingest/**"
+      - "tests/pipelines/domains/hazards/test_nws_context_ingest.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/nws-context-pipeline.yml"
+      - "pipelines/domains/hazards/nws_context_ingest.py"
+      - "pipeline_specs/hazards/nws_alerts_context.yaml"
+      - "connectors/noaa/src/noaa/nws_alerts.py"
+      - "connectors/noaa/src/noaa/admit.py"
+      - "connectors/noaa/tests/test_nws_alerts.py"
+      - "packages/connectors-core/**"
+      - "contracts/domains/hazards/nws_context_ingest_candidate.md"
+      - "contracts/domains/hazards/README.md"
+      - "schemas/contracts/v1/domains/hazards/nws_context_ingest_candidate.schema.json"
+      - "data/registry/atmosphere/sources/noaa_nws.yaml"
+      - "fixtures/domains/hazards/nws_context_ingest/**"
+      - "tests/pipelines/domains/hazards/test_nws_context_ingest.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: nws-context-pipeline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  replay:
+    name: nws-context-fixture-replay (${{ matrix.python }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: tools/ci/python-test.lock
+      - name: Install locked test and capture dependencies
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test
+          python tools/ci/install_python_ci.py connectors-core
+      - name: Validate and replay without network access
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python -B tools/validators/validate_pipeline_spec_declarations.py
+          python -B -m pytest tests/pipelines/domains/hazards/test_nws_context_ingest.py connectors/noaa/tests/test_nws_alerts.py -q --strict-config --strict-markers
+          python -B -m pipelines.domains.hazards.nws_context_ingest lineage
+          python -B -m pipelines.domains.hazards.nws_context_ingest expired-partial
+          python -B -m pipelines.domains.hazards.nws_context_ingest empty
