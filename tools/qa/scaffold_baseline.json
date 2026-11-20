@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 702,
-   "STUB_MODULE": 142,
+   "PLACEHOLDER_MARKER": 699,
+   "STUB_MODULE": 139,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 383,
    "scripts": 1,
-   "tests": 170,
+   "tests": 164,
    "tools": 24
   },
-  "files": 703,
-  "total": 856
+  "files": 700,
+  "total": 850
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -803,12 +803,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/hazards/test_ui_no_direct_source.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hydrology/test_evidence_bundle_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_evidence_bundle_closure.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hydrology/test_huc12_fingerprint.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_huc12_fingerprint.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hydrology/test_nfhl_role_separation.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_nfhl_role_separation.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hydrology/test_reach_identity_ambiguity.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_reach_identity_ambiguity.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_evidence_bundle_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_evidence_bundle_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_historic_overprecision_deny.py"},

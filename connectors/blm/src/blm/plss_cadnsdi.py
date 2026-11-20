@@ -111,7 +111,7 @@ def _params(layer: str, offset: int, count: int) -> dict[str, str]:
 
 def query_url(layer: str, *, offset: int = 0, count: int = MAX_PAGE) -> str:
     """Return one canonical paged query URL for Kansas features of a CadNSDI layer."""
-    if layer not in LAYERS:
+    if not isinstance(layer, str) or layer not in LAYERS:
         raise PlssInputError("LAYER")
     if type(offset) is not int or not 0 <= offset <= MAX_OFFSET:
         raise PlssInputError("OFFSET")
@@ -123,7 +123,7 @@ def query_url(layer: str, *, offset: int = 0, count: int = MAX_PAGE) -> str:
 
 def count_url(layer: str) -> str:
     """Return the matching provider count query for a Kansas PLSS layer."""
-    if layer not in LAYERS:
+    if not isinstance(layer, str) or layer not in LAYERS:
         raise PlssInputError("LAYER")
     where = _params(layer, 0, MAX_PAGE)["where"]
     return (f"{HOST}{SERVICE}/{LAYERS[layer][0]}/query?"

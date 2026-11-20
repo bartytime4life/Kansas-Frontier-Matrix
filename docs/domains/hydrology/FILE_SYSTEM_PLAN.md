@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: ["TODO: hydrology-domain-stewards", "TODO: directory-rules-owners"]
 created: 2026-05-17
-updated: 2026-07-30
+updated: 2026-11-20
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
@@ -333,11 +333,11 @@ Each subsection below is a **placement contract** for one lane segment. Lane *ex
 
 | Proposed file | Role | Status |
 |---|---|---|
-| `tests/domains/hydrology/test_huc12_fingerprint.py` | HUC12 shape and fingerprint validation. | **PROPOSED** |
-| `tests/domains/hydrology/test_reach_identity_ambiguity.py` | ABSTAIN behavior when NHDPlus identity is ambiguous. | **PROPOSED** |
+| ~~`tests/domains/hydrology/test_huc12_fingerprint.py`~~ | HUC12 shape and fingerprint validation. Retired placeholder: covered by `tests/validators/domains/hydrology/wbd_huc12_material_change/test_validate_wbd_huc12_material_change.py` (feature fingerprint, HUC12 identity mismatch, coordinate range). | **RETIRED** |
+| ~~`tests/domains/hydrology/test_reach_identity_ambiguity.py`~~ | ABSTAIN behavior when NHDPlus identity is ambiguous. Retired placeholder: covered by `tests/domains/hydrology/test_nhdplus_hr_ambiguity.py` (many-to-many abstains) and the `MULTIPLE_REACH_CANDIDATES` case in `tests/domains/hydrology/test_proof_slice.py`. | **RETIRED** |
 | `tests/domains/hydrology/test_usgs_water_normalizer.py` | parameter/unit/qualifier/no-data normalization. | **PROPOSED** |
-| `tests/domains/hydrology/test_nfhl_role_separation.py` | NFHL role-collapse refusal. | **PROPOSED** |
-| `tests/domains/hydrology/test_evidence_bundle_closure.py` | EvidenceBundle closure for hydrology objects. | **PROPOSED** |
+| ~~`tests/domains/hydrology/test_nfhl_role_separation.py`~~ | NFHL role-collapse refusal. Retired placeholder: covered by `test_source_role_collapse_is_denied` in `tests/domains/hydrology/test_proof_slice.py` (`SOURCE_ROLE_COLLAPSE`) and `tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py`. | **RETIRED** |
+| `tests/domains/hydrology/test_evidence_bundle_closure.py` | EvidenceBundle closure for hydrology objects. Held placeholder: the `verify-evidence-bundle-closure` job in `.github/workflows/hydrology-proof-slice.yml` requires it to stay documentation-only until closure semantics are reviewed. | **PROPOSED** |
 | `fixtures/domains/hydrology/valid/kansas_huc12_sample.json` | A single Kansas HUC12 polygon + crosswalk row. | **PROPOSED** |
 | `fixtures/domains/hydrology/valid/usgs_gauge_sample.json` | One gauge with normalized observation. | **PROPOSED** |
 | `fixtures/domains/hydrology/valid/nhdplus_identity_sample.json` | One NHDPlus identity crosswalk row. | **PROPOSED** |

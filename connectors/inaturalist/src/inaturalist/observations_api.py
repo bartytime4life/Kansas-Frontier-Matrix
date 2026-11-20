@@ -61,7 +61,7 @@ def _utc(value: object) -> str:
         result = datetime.fromisoformat(value.replace("Z", "+00:00"))
         if result.tzinfo is None or result.utcoffset() is None:
             raise ValueError
-        return result.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+        return result.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     except (ValueError, TypeError, OverflowError):
         raise ObservationInputError("UTC_TIME") from None
 
@@ -112,7 +112,7 @@ class ObservationQuery:
         if self.taxon_id is not None:
             params["taxon_id"] = str(_integer(self.taxon_id, 1, 2**31 - 1))
         if self.quality_grade is not None:
-            if self.quality_grade not in QUALITY_GRADES:
+            if not isinstance(self.quality_grade, str) or self.quality_grade not in QUALITY_GRADES:
                 raise ObservationInputError("QUALITY_GRADE")
             params["quality_grade"] = self.quality_grade
         for key, value in (("d1", self.observed_from), ("d2", self.observed_to)):

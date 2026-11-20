@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-inaturalist-ingest-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/inaturalist-pipeline.yml",
+    "connectors/inaturalist/README.md",
+    "connectors/inaturalist/src/inaturalist/observations_api.py",
+    "connectors/inaturalist/tests/test_observations_api.py",
+    "contracts/domains/flora/README.md",
+    "contracts/domains/flora/inaturalist_ingest_candidate.md",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/inaturalist-fixture-ingest.md",
+    "fixtures/domains/flora/inaturalist_ingest/README.md",
+    "fixtures/domains/flora/inaturalist_ingest/complete.json",
+    "fixtures/domains/flora/inaturalist_ingest/count-drift.json",
+    "fixtures/domains/flora/inaturalist_ingest/empty.json",
+    "pipeline_specs/README.md",
+    "pipeline_specs/flora/README.md",
+    "pipeline_specs/flora/inaturalist_ingest.yaml",
+    "pipelines/domains/flora/README.md",
+    "pipelines/domains/flora/inaturalist_ingest.py",
+    "schemas/contracts/v1/domains/flora/README.md",
+    "schemas/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json",
+    "tests/pipelines/domains/flora/test_inaturalist_ingest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/inaturalist-pipeline.yml": "sha256:0f49ce53ea50581d0dcee5078a6914c90d571f8208e41ee92a546930d3640e39",
+    "connectors/inaturalist/README.md": "sha256:e7498eff769f2315d7f5eec25ac119ad510cde825f83d41df5127c6be1d260eb",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:ba1f35a9190c5cdbad81fcda9ef42c91bb2e4523fa86b3e7c2f201f9697a7f12",
+    "connectors/inaturalist/tests/test_observations_api.py": "sha256:389c359189dfba41bb2d969f3b8fe7cc64cdf15addd73a2ec52e96ecf702bf93",
+    "contracts/domains/flora/README.md": "sha256:c2eaa273c3482173396515b8e7937957ed6d4566a9fc5075db886d8138b68400",
+    "contracts/domains/flora/inaturalist_ingest_candidate.md": "sha256:ffb573efda8ed0dbddea8d4914d4baa4de54e9bc3b23218f572192a1bceb62d1",
+    "contracts/pipeline_spec_declaration.md": "sha256:10aee6f4c7dc71ca053f199e4f776a825de9929b74b5a70c00e650ab91410294",
+    "docs/runbooks/inaturalist-fixture-ingest.md": "sha256:0ca41395e95ce816e4ad96bd41f652001f2f5bc7ee7573b08924f2fd6bec9f6e",
+    "fixtures/domains/flora/inaturalist_ingest/README.md": "sha256:ed7676d2eeebcce95801d6f2980891f38ae43e434a272d9d9cb852e5a08c21a4",
+    "fixtures/domains/flora/inaturalist_ingest/complete.json": "sha256:f4d79a749a375b9303f040dc190ef3b173aeff57281a1a7f4c0d7d13e6a2dede",
+    "fixtures/domains/flora/inaturalist_ingest/count-drift.json": "sha256:7089482264a0df1f58144a97125c3f562a1c063e29366860dd4d6758162a2250",
+    "fixtures/domains/flora/inaturalist_ingest/empty.json": "sha256:6223df470aacbeafbf10264ce0e1c3265d6472e9d536019cefeea8d221c43175",
+    "pipeline_specs/README.md": "sha256:a467e387e42f1ac568008ed709c61c05dcd4ff127e6f5d7c7a15b52e7c1e75aa",
+    "pipeline_specs/flora/README.md": "sha256:39bb43f6a6cef97ef10cae778942347d8fd65a2ed45a49dfa1475fbe8bad6711",
+    "pipeline_specs/flora/inaturalist_ingest.yaml": "sha256:c8dd49acc2d9e0dc8a644f95ee57c7da07ff7b7ccc7785c9064c2a1ce131c0c8",
+    "pipelines/domains/flora/README.md": "sha256:49889a3d639489d60fd68efc5c74f902d9432ac04cba5d36e840c3428473959c",
+    "pipelines/domains/flora/inaturalist_ingest.py": "sha256:0349c2a609b1a9c4d55e2691d6a25766c1d2e6143a9d4654e771393e63ca84c4",
+    "schemas/contracts/v1/domains/flora/README.md": "sha256:e578e8e5a588bc98ade328eeddd899b8d966fd53b6fbbb08c61d84b756696c7e",
+    "schemas/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json": "sha256:ea56b3393522f5bf3a05230a75b3faaa342ab678b87a62d2d276448130b04044",
+    "tests/pipelines/domains/flora/test_inaturalist_ingest.py": "sha256:bf6bbc6ec5c2c5d602146e2fd5f5ad610d3c977857498c01fe1a39f21505f4ee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "contracts/domains/flora/README.md@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "data/registry/fauna/sources/inaturalist.yaml@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "policy/rights/flora/inaturalist_usage.md@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "connectors/inaturalist/src/inaturalist/observations_api.py@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "connectors/inaturalist/tests/test_observations_api.py@f0bda109e334964776e9cd5362a4b309dba2ced4",
+      "connectors/inaturalist/src/inaturalist/admit.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    ],
+    "evidence_hashes": [
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:3b44c6f01bdbf837ebf9801c82493bda03f0dfa13e6d0af3f58dbb505991819e",
+      "sha256:14df2f9f99c57b83c46001f8df32745a2981b5fc902c4785bffa8078cfc52c16",
+      "sha256:6f66795c35a7da809b47d93ccb2ea1ec6090fc04c6469bafb20bb5fed5199091",
+      "sha256:1eb381d07dae232c40ba93aa652e096cb3b7e1ce92991d766ace0b986022f583",
+      "sha256:38e0f26644a137ff07bd5113e44c129029c639658509c76621ae509487c7c1b4",
+      "sha256:3f1dbd9e4efb64b983b75784494a944a3af591027d1f7af1e599e2ce09efd80e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/inaturalist-pipeline.yml": "PROPOSED",
+    "connectors/inaturalist/README.md": "PROPOSED",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "PROPOSED",
+    "connectors/inaturalist/tests/test_observations_api.py": "PROPOSED",
+    "contracts/domains/flora/README.md": "PROPOSED",
+    "contracts/domains/flora/inaturalist_ingest_candidate.md": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/inaturalist-fixture-ingest.md": "PROPOSED",
+    "fixtures/domains/flora/inaturalist_ingest/README.md": "PROPOSED",
+    "fixtures/domains/flora/inaturalist_ingest/complete.json": "PROPOSED",
+    "fixtures/domains/flora/inaturalist_ingest/count-drift.json": "PROPOSED",
+    "fixtures/domains/flora/inaturalist_ingest/empty.json": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/flora/README.md": "PROPOSED",
+    "pipeline_specs/flora/inaturalist_ingest.yaml": "PROPOSED",
+    "pipelines/domains/flora/README.md": "PROPOSED",
+    "pipelines/domains/flora/inaturalist_ingest.py": "PROPOSED",
+    "schemas/contracts/v1/domains/flora/README.md": "PROPOSED",
+    "schemas/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json": "PROPOSED",
+    "tests/pipelines/domains/flora/test_inaturalist_ingest.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "reproduced-source-defects-and-complete-connector-regressions",
+      "outcome": "PASS",
+      "reason": "Before repair, dictionary/list quality-grade query inputs raised unhandled TypeError and capture formatting dropped fractional seconds. Query grades now require strings and fail with finite QUALITY_GRADE; UTC capture timestamps retain subseconds. All 39 complete iNaturalist connector unittest cases pass under the Python network guard, preserving parser/privacy and injected adapter behavior."
+    },
+    {
+      "gate": "plant-query-fixture-and-source-regressions",
+      "outcome": "PASS",
+      "reason": "80 passed and 71 subtests: full complete/count-drift/empty goldens, fixed query/plant lineage, source privacy/rights, minimized nested users, original versus minimized hashes, stronger original-capture verification, page/record/byte/depth budgets, whole-page malformed privacy failure, temporal rules, duplicate identities, cursor terminal requirement and aggregate-only non-writing guarded CLI."
+    },
+    {
+      "gate": "general-pipelines-core-source-and-declarations",
+      "outcome": "PASS",
+      "reason": "491 passed, 73 subtests; two raster modules skipped in this qualified non-raster dependency profile, previously qualified separately. Existing project-test/connectors-core/geo-transforms locks retained. No dependency or workflow-security permissions broadened."
+    },
+    {
+      "gate": "supported-full-local-collection",
+      "outcome": "PASS",
+      "reason": "10478 tests collected without errors with the supported Python3.12 full-local bundle, explicit tests scope and Python network/PROJ guard. This is collection, not full-suite execution."
+    },
+    {
+      "gate": "declarations-workflow-and-ratchets",
+      "outcome": "PASS",
+      "reason": "110 repository and four fixture declarations pass. Dedicated workflow has zero security findings. Tracked-path gap/scaffold pass after staging the referenced new files; scaffold remains856. Topology has zero new drift and89 inherited warnings. Whitespace passes. No baseline or lockfile changes."
+    },
+    {
+      "gate": "documentation",
+      "outcome": "PASS",
+      "reason": "Ten changed docs have no structural metadata failures;124 local targets resolve. Seventeen inherited nested-metadata warnings in the common declaration contract remain. The changed schema index metadata was moved first to remove its inherited placement warning. Source guidance for Plantae47126 was read from official iNaturalist help; no live observation API capture was made."
+    },
+    {
+      "gate": "hosted-ci-human-review-main-and-operational-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending this branch exact-head hosted CI, independent human review and main merge. Prior OpenFEMA5970 and privacy5971 are merged into mainf0bda109; their implementation bytes match the tested branches. Prior exact-head CI:5970 has130success3skips1canceled full collection;5971 has112success3skips, no failures. No live source activation, cross-domain admission, taxonomy approval, geoprivacy transform, persistence, release or deployment."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "contracts/domains/flora/README.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/flora/README.md@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "data/registry/fauna/sources/inaturalist.yaml",
+      "validated": true,
+      "evidence_ref": "data/registry/fauna/sources/inaturalist.yaml@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "policy/rights/flora/inaturalist_usage.md",
+      "validated": true,
+      "evidence_ref": "policy/rights/flora/inaturalist_usage.md@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "connectors/inaturalist/src/inaturalist/observations_api.py",
+      "validated": true,
+      "evidence_ref": "connectors/inaturalist/src/inaturalist/observations_api.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "connectors/inaturalist/tests/test_observations_api.py",
+      "validated": true,
+      "evidence_ref": "connectors/inaturalist/tests/test_observations_api.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    },
+    {
+      "id": "connectors/inaturalist/src/inaturalist/admit.py",
+      "validated": true,
+      "evidence_ref": "connectors/inaturalist/src/inaturalist/admit.py@f0bda109e334964776e9cd5362a4b309dba2ced4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T04:48:53.310321Z",
+  "emitter": "codex/inaturalist-ingest",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Ten of39 YAML candidates are fixture-first on this proposed change;29 remain unimplemented. Existing65 stage boundaries and6 aliases retain NOT_IMPLEMENTED by contract. This source-edge profile covers exactly supplied HTTP200 canonical ascending-ID Kansas-context Plantae47126 queries without grade/date/place filters:2MiB envelope,256KiB per body,1MiB source bytes,16pages,per_page64,256records,reported total<=1000000,depth32,8MiB output. Internal cursor/count conformance is not stable provider-snapshot or biological/geographic completeness; empty does not prove absence. The existing Fauna source template is unchanged/unresolved; Flora cross-domain use remains explicitly unreviewed. Plant lineage checks only source taxon/ancestor IDs, not KFM taxonomy authority. Every final candidate HOLD, all ten authorities false. Nested user objects are minimized to scalar ID/login before returned snapshots; incidental top-level metadata is discarded. Unknown record fields, source text and source-supplied restricted geometry remain private, not broadly redacted or public-safe. Original source-body and minimized replay digests/lengths are separate. Candidate-only replay cannot verify a discarded original preimage; original_capture enables strong byte binding and prepare_capture always performs it. No fetch/follow/schedule/store/lifecycle write, source admission, public use, release or provider change. ADR0029 is placement/authority-boundary basis only. Earlier receipts are append-only and unchanged. Unrelated open PR5972 modifies Connections deadlines/Site parity/QA without overlap and is left untouched. Original dirty checkout preserved; managed task worktree reused. Connected GitHub publication must verify every blob and full tree and target main."
+}

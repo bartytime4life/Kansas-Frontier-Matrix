@@ -1,35 +1,46 @@
 schema_version: 1.0.0
 object_type: KfmPipelineSpecDeclaration
 spec_id: kfm.pipeline.flora.inaturalist-ingest
-spec_version: 0.1.0
+spec_version: 0.2.0
 profile_kind: PIPELINE_CANDIDATE
 domain_id: flora
 stage: INGEST
 status: PROPOSED_INACTIVE
-implementation_status: NOT_IMPLEMENTED
+implementation_status: IMPLEMENTED_FIXTURE_FIRST
 path: pipeline_specs/flora/inaturalist_ingest.yaml
-purpose: Preserve the Flora inaturalist ingest proposal as a reviewable inactive pipeline candidate
-  without activating sources or lifecycle writes.
+purpose: Reconcile bounded supplied Kansas plant-query pages into private held iNaturalist
+  source candidates with minimized replay snapshots and no taxonomy, geoprivacy transformation
+  or lifecycle authority.
 canonicalization_profile: kfm-canonical-json-v1
 source_docs:
 - docs/domains/flora/FILE_SYSTEM_PLAN.md
 bindings:
-  source_descriptor_refs: []
-  contract_refs: []
-  schema_refs: []
-  implementation_refs: []
-  fixture_refs: []
-  test_refs: []
-  workflow_refs: []
+  source_descriptor_refs:
+  - data/registry/fauna/sources/inaturalist.yaml
+  contract_refs:
+  - contracts/domains/flora/README.md
+  - contracts/domains/flora/inaturalist_ingest_candidate.md
+  schema_refs:
+  - schemas/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json
+  implementation_refs:
+  - connectors/inaturalist/src/inaturalist/observations_api.py
+  - pipelines/domains/flora/inaturalist_ingest.py
+  fixture_refs:
+  - fixtures/domains/flora/inaturalist_ingest/
+  test_refs:
+  - connectors/inaturalist/tests/test_observations_api.py
+  - tests/pipelines/domains/flora/test_inaturalist_ingest.py
+  workflow_refs:
+  - .github/workflows/inaturalist-observations-offline.yml
+  - .github/workflows/inaturalist-pipeline.yml
 lifecycle:
   candidate_inputs:
-  - SOURCE_CAPTURE_CANDIDATE
+  - FIXTURE
   candidate_outputs:
-  - QUARANTINE
-  - RAW
+  - INATURALIST_FLORA_INGEST_CANDIDATE
   writes_targets: false
 execution:
-  mode: DISABLED
+  mode: FIXTURE_ONLY
   network_access: DENIED
   source_activation: DENIED
   lifecycle_write: DENIED
@@ -48,7 +59,7 @@ required_gates:
 - SOURCE_ROLE
 - VALIDATION
 reason_codes:
-- IMPLEMENTATION_NOT_BOUND
+- FIXTURE_ONLY
 - INACTIVE_DECLARATION
 - REVIEW_NOT_COMPLETE
 - SOURCE_ADMISSION_UNVERIFIED
@@ -63,4 +74,8 @@ non_effects:
 - NO_SOURCE_ACTIVATION
 rollback:
   strategy: REVERT_DECLARATION_CHANGE
-spec_hash: sha256:0cdd98fed181833b663e974caa4c29d2ac64d845e9d1dde40911c6d2063e22c8
+spec_hash: sha256:e3561d4ae36a63403ac35819d2ed1cabef71fb3509b11047c65e11ce9438b1db
+validation:
+  command: python -B -m pytest tests/pipelines/domains/flora/test_inaturalist_ingest.py
+    connectors/inaturalist/tests/test_observations_api.py -q --strict-config --strict-markers
+  workflow: .github/workflows/inaturalist-pipeline.yml

@@ -117,14 +117,14 @@ class DataRequest:
 def _validate(station_ids: object, elements: object, duration: object, begin_date: object,
               end_date: object) -> DataRequest:
     if (not isinstance(station_ids, tuple) or not 1 <= len(station_ids) <= MAX_STATIONS
-            or len(set(station_ids)) != len(station_ids)
-            or any(not isinstance(s, str) or not STATION_ID.fullmatch(s) for s in station_ids)):
+            or any(not isinstance(s, str) or not STATION_ID.fullmatch(s) for s in station_ids)
+            or len(set(station_ids)) != len(station_ids)):
         raise ScanInputError("STATION")
     if (not isinstance(elements, tuple) or not 1 <= len(elements) <= MAX_ELEMENTS
-            or len(set(elements)) != len(elements)
-            or any(not isinstance(e, str) or not ELEMENT.fullmatch(e) for e in elements)):
+            or any(not isinstance(e, str) or not ELEMENT.fullmatch(e) for e in elements)
+            or len(set(elements)) != len(elements)):
         raise ScanInputError("ELEMENT")
-    if duration not in DURATIONS:
+    if not isinstance(duration, str) or duration not in DURATIONS:
         raise ScanInputError("DURATION")
     begin, end = _day(begin_date), _day(end_date)
     if not date(1980, 1, 1) <= begin <= end or (end - begin).days + 1 > DURATIONS[duration]:

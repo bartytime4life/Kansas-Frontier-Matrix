@@ -1,0 +1,223 @@
+{
+  "artifact_hashes": {
+    "docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md": "sha256:cde5389702cf5e9e03fa5c5e5e5576d07e3cf58178b6dd511a5122c86a6496f2",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "sha256:2e29140835fb128dcdc75e3c1abba33b4a6a58fd0f72e40974ad306ba5ea0e80",
+    "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md": "sha256:1869a7616ec144463d5de9c66f8740ec6438fff0d64a9a9ca788827e3cabad33",
+    "docs/adr/ADR-0050-bounded-site-subsurface-three-scenes.md": "sha256:73df699407c97d04b7c84fbdeb03ad076f7198000edf07a36eeef70b7abacd53",
+    "docs/adr/INDEX.md": "sha256:7edf2352b58e30270c4a1d56267136ea27448e86a747768601e566afd457f7c1",
+    "docs/adr/README.md": "sha256:3c4af49e3d03aaa46a90c0b4406f1b83c0143d26112d3acb6cce98218353b8b2",
+    "docs/registers/ADR_INDEX.md": "sha256:f22f3c8aa25bd25a1ce50b0626978fba2f96182770bf0e2094c559edb1652431",
+    "docs/reports/adr-review-2026-11-19.md": "sha256:5dc9fd243a44b4ea753b5576f27033a9afe1c5ad0e054ed31078083c606fc15b",
+    "tests/validators/test_validate_adr_index.py": "sha256:1ea6b2da27f7d5f54ad911eafc21a7071b14300849cb823f6c0ccbf00a83c0e5",
+    "tools/validators/validate_adr_index.py": "sha256:54665b148fef1644bdff5f104fae044d9bc25b0c7d7db44da2ad0831d89c686c"
+  },
+  "artifact_paths": [
+    "docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "docs/adr/ADR-0050-bounded-site-subsurface-three-scenes.md",
+    "docs/adr/INDEX.md",
+    "docs/adr/README.md",
+    "docs/registers/ADR_INDEX.md",
+    "docs/reports/adr-review-2026-11-19.md",
+    "tests/validators/test_validate_adr_index.py",
+    "tools/validators/validate_adr_index.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "packages/maplibre/package.json@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "packages/maplibre/package.json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "packages/maplibre/src/maplibre-adapter.ts@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "packages/maplibre/src/maplibre-adapter.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "packages/maplibre/src/maplibre-vite-adapter.ts@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "packages/maplibre/src/maplibre-vite-adapter.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/package.json@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/package.json",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/app/maplibre-seam.ts@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/app/maplibre-seam.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/app/maplibre-seam.css@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/app/maplibre-seam.css",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/app/subsurface-three.tsx@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/app/subsurface-three.tsx",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/app/aquifer-volume-view.tsx@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/app/aquifer-volume-view.tsx",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/app/aquifer-volume-mesh.ts@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/app/aquifer-volume-mesh.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/app/cutaway-model.ts@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/app/cutaway-model.ts",
+      "validated": true
+    },
+    {
+      "evidence_ref": "apps/site/source/AGENTS.md@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "apps/site/source/AGENTS.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "id": "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-20T05:29:07.577478+00:00",
+  "emitter": "OpenAI Codex",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:dab98c355d84ac028e0497e37f6f4f7f1afa8cf58541da41f0e17ad331c84f32",
+      "sha256:d331f630dd5c43179dcfe9f8a59c2e82b08ad1aa196ce021d1ff351a4e56d5cd",
+      "sha256:0d6af17f77f3fecedcfca3b4623fd67cf863c687d775ac3b44a6c8f172c32aa5",
+      "sha256:9a61011ad620b22df44e13819110e8dddcd8ad7f4f728321ff2d2d95d71871ce",
+      "sha256:8846c093ddc5ba66631c3f688662cf3d8388bc224e93a15d1adda5df33d0085b",
+      "sha256:06142bf2dc02e9f1fb93de47c8f5df4335ec8342c90cb962549ac15b94cbdd02",
+      "sha256:cd0bb0042d5686d69b326fb42e7ea3ed1120e652334dd010c2b2d7956e629b86",
+      "sha256:5bb92df7d6f0cbd511496b4a2e140ce8396c028e358e84a1897797748b16a26f",
+      "sha256:fbb91c5da70b6ea7dc7db130dadd909c51a5afc10bffae84c41491b68ae49ecf",
+      "sha256:deb81b09b4f3a19c68da7f3fea3f9e6f6b05ab3ee3372e455c066e07738f0642",
+      "sha256:0b6e1ad45d719742fd442064ab8c7cc6b35487c4abe795acc5e010bcec899c7b",
+      "sha256:444b41c3ec2cd8fde16baa6daf3f062dd634342ad168a2d05757b0b2a5123762",
+      "sha256:1ffd2322271cefeeaeec937f57517657d6c52e7f6c18af4ae6525670f93764b0",
+      "sha256:20d8eccabbf0623c4469e87da8dab84b49f1a047d8ee889e90eb654c22b0e7e2"
+    ],
+    "evidence_refs": [
+      "main@c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+      "packages/maplibre/package.json@b10ac08816eb181114de840f78d4e4d23a86b501",
+      "packages/maplibre/src/maplibre-adapter.ts@42a4cecb7f955c66b6018d312075b43bac22430f",
+      "packages/maplibre/src/maplibre-vite-adapter.ts@f8380f0f9155419001dbcbd2fb9c8cad96c01b29",
+      "apps/site/source/package.json@7e5e984dd15948f1a5372e430fca1eee881952dc",
+      "apps/site/source/app/maplibre-seam.ts@95662ba88cfd0028651a2a111aeecf86c5f6314f",
+      "apps/site/source/app/maplibre-seam.css@d7e6b70f15e229336d63ec47feb6c6458eda6220",
+      "apps/site/source/app/subsurface-three.tsx@977035394733f73a4b22fe412e6e3a04aad24313",
+      "apps/site/source/app/aquifer-volume-view.tsx@a712090639c94418ed901e0758946e4c81eea72a",
+      "apps/site/source/app/aquifer-volume-mesh.ts@7b04daccb631bad35a861698dcb8187e770406ca",
+      "apps/site/source/app/cutaway-model.ts@ab07b38aaa1729a52aee0aa413135ce212cce9ef",
+      "apps/site/source/AGENTS.md@b92042bfafe3104b1ac360bb528bd90069469567",
+      "docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md@8a57e48d4edbf5ca342d57e8ca89f2d9200366a9",
+      "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@50502a0e4a02faba59d612d894120085efc2bab0",
+      "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md@6dc3eeb787d3abf52d79bc5126c9ab286e576ec3"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0050-bounded-site-subsurface-three-scenes.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "unspecified by runtime"
+  },
+  "notes": "Review ADR inventory; restore the omitted Habitat draft; rewrite the retired-shell proposal; preserve accepted renderer history with current evidence; propose a bounded Three.js exception without acceptance or runtime change. All old receipt bytes, accepted decision evidence, original document identity and creation date, and the dirty original checkout are preserved. This receipt records generation and validation only; it does not accept either proposal.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "local Git and source inspection",
+      "Python validators and pytest",
+      "Node focused tests",
+      "GitHub readback",
+      "engineering architecture skill"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:38d50e4db3020c2b658fb3c54ce0dcee76a2738449647ad71f8697c8db9d78a0",
+  "receipt_id": "genrec-adr-review-20261119",
+  "truth_labels": {
+    "docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md": "PROPOSED",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "CONFIRMED",
+    "docs/adr/ADR-0007 \u2014 MapLibre GL JS Is the Sole Browser-Side Renderer.md": "CONFIRMED",
+    "docs/adr/ADR-0050-bounded-site-subsurface-three-scenes.md": "PROPOSED",
+    "docs/adr/INDEX.md": "CONFIRMED",
+    "docs/adr/README.md": "CONFIRMED",
+    "docs/registers/ADR_INDEX.md": "CONFIRMED",
+    "docs/reports/adr-review-2026-11-19.md": "CONFIRMED",
+    "tests/validators/test_validate_adr_index.py": "CONFIRMED",
+    "tools/validators/validate_adr_index.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "adr-coherence",
+      "outcome": "PASS",
+      "reason": "50 numbered records, 12 unassigned drafts; existing effective statuses unchanged."
+    },
+    {
+      "gate": "adr-regressions",
+      "outcome": "PASS",
+      "reason": "15 tests passed. Five of the seven new tests failed on the unmodified validator."
+    },
+    {
+      "gate": "repository-qa-and-program-baseline",
+      "outcome": "PASS",
+      "reason": "384 tests and 45 subtests passed; includes repository QA, ADR and adjacent pinned program-baseline parser tests."
+    },
+    {
+      "gate": "existing-subsurface-scenes",
+      "outcome": "PASS",
+      "reason": "35 local tests passed. No independent browser, GPU or physical/domain acceptance claimed."
+    },
+    {
+      "gate": "markdown-and-local-navigation",
+      "outcome": "PASS",
+      "reason": "Changed Markdown unique metadata, H1, fences/comments and local links/anchors checked."
+    },
+    {
+      "gate": "gap-and-scaffold-ratchets",
+      "outcome": "PASS",
+      "reason": "No new findings or broken local links; existing baseline debt retained."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "PASS",
+      "reason": "Zero invariant violations or new drift; 89 inherited baseline warnings."
+    },
+    {
+      "gate": "maplibre-acquisition-governance",
+      "outcome": "FAIL",
+      "reason": "Current inventory returns HOLD, exit 3, RENDERER_ACQUISITION_PRESENT, with zero boundary findings. This finite governance hold is reported, not waived; no application/dependency bytes change in this packet."
+    },
+    {
+      "gate": "hosted-browser-provider-and-release",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted CI pending. No browser/device, dependency admission, source activation, release, deployment or publication acceptance."
+    }
+  ]
+}

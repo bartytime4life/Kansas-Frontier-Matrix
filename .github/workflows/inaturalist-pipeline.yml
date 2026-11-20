@@ -1,0 +1,79 @@
+name: inaturalist-pipeline
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/inaturalist-pipeline.yml"
+      - "pipelines/domains/flora/inaturalist_ingest.py"
+      - "pipeline_specs/flora/inaturalist_ingest.yaml"
+      - "connectors/inaturalist/src/inaturalist/**"
+      - "connectors/inaturalist/tests/**"
+      - "packages/connectors-core/**"
+      - "contracts/domains/flora/inaturalist_ingest_candidate.md"
+      - "contracts/domains/flora/README.md"
+      - "schemas/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json"
+      - "data/registry/fauna/sources/inaturalist.yaml"
+      - "fixtures/domains/flora/inaturalist_ingest/**"
+      - "tests/pipelines/domains/flora/test_inaturalist_ingest.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/**"
+      - "pyproject.toml"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/inaturalist-pipeline.yml"
+      - "pipelines/domains/flora/inaturalist_ingest.py"
+      - "pipeline_specs/flora/inaturalist_ingest.yaml"
+      - "connectors/inaturalist/src/inaturalist/**"
+      - "connectors/inaturalist/tests/**"
+      - "packages/connectors-core/**"
+      - "contracts/domains/flora/inaturalist_ingest_candidate.md"
+      - "contracts/domains/flora/README.md"
+      - "schemas/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json"
+      - "data/registry/fauna/sources/inaturalist.yaml"
+      - "fixtures/domains/flora/inaturalist_ingest/**"
+      - "tests/pipelines/domains/flora/test_inaturalist_ingest.py"
+      - "tools/local_data/file_io.py"
+      - "tools/ci/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: inaturalist-pipeline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  replay:
+    name: inaturalist-fixture-replay (${{ matrix.python }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: tools/ci/python-test.lock
+      - name: Install locked test and capture dependencies
+        run: |
+          set -euo pipefail
+          python tools/ci/install_python_ci.py project-test
+          python tools/ci/install_python_ci.py connectors-core
+      - name: Validate and replay without network access
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONPATH: ${{ github.workspace }}/tools/ci/kfm_no_network:${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          python -B tools/validators/validate_pipeline_spec_declarations.py
+          python -B -m unittest discover -s connectors/inaturalist/tests -p 'test_*.py' -v
+          python -B -m pytest tests/pipelines/domains/flora/test_inaturalist_ingest.py -q --strict-config --strict-markers
+          python -B -m pipelines.domains.flora.inaturalist_ingest complete
+          python -B -m pipelines.domains.flora.inaturalist_ingest count-drift
+          python -B -m pipelines.domains.flora.inaturalist_ingest empty

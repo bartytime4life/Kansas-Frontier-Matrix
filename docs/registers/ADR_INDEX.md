@@ -2,13 +2,13 @@
 doc_id: kfm://doc/registers/adr-index
 title: ADR Index Cross-Register
 type: register-pointer
-version: v1.7
+version: v1.8
 status: draft; repository-grounded
 owners:
   - Docs steward
   - Architecture steward
 created: 2026-07-22
-updated: 2026-08-26
+updated: 2026-11-19
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -23,6 +23,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, registers, adr, pointer, governance]
 notes:
+  - "2026-11-19 review removes stale copied inventory totals; counts and statuses are read from the canonical index, including the restored Habitat scaffold and proposed ADR-0050."
   - "This file is a non-duplicating human cross-register pointer; numbered ADRs are indexed only in docs/adr/INDEX.md."
   - "ADR-0037 raises the inventory to 37 records while remaining proposed; this summary creates no decision or migration authority."
 [/KFM_META_BLOCK_V2] -->
@@ -46,9 +47,9 @@ This register connects the human register lane to the canonical Architecture Dec
 | Register lane | `docs/registers/` |
 | Canonical ADR inventory | [`docs/adr/INDEX.md`](../adr/INDEX.md) |
 | ADR operating rules | [`docs/adr/README.md`](../adr/README.md) |
-| Current numbered inventory | 37 tracked records, `ADR-0001` through `ADR-0037` |
-| Current effective decision status | ADR-0006, ADR-0007, and ADR-0029 `accepted`; 34 numbered records remain `proposed` |
-| Current unassigned scaffolds | 12, unchanged by the ADR-0037 packet |
+| Current numbered inventory | [Canonical numbered inventory](../adr/INDEX.md#numbered-records); no independent count |
+| Current effective decision status | [Canonical source/effective status crosswalk](../adr/INDEX.md#numbered-records); no independent status tally |
+| Current unassigned scaffolds | [Canonical scaffold inventory](../adr/INDEX.md#unassigned-scaffolds); includes metadata-only candidates |
 | Review route | `@bartytime4life` via `.github/CODEOWNERS` |
 | Validation | [`tools/validators/validate_adr_index.py`](../../tools/validators/validate_adr_index.py) |
 | Authority limit | Inventory and routing only; never decision acceptance, policy, release, promotion, or publication authority |
@@ -95,7 +96,7 @@ A green result confirms the checked revision has one coherent human ADR inventor
 
 ## Open governance work
 
-- Human status review for the remaining 34 proposed numbered ADRs and any later-review triggers retained by accepted records.
+- Human status review for proposed numbered ADRs in the canonical index and any later-review triggers retained by accepted records.
 - Metadata normalization for records whose source metadata says `draft` or uses legacy structure.
 - Acceptance or rejection of proposed ADR-0035 before repository-wide numbering and pointer-only domain-index guidance becomes binding.
 - Acceptance or rejection of proposed ADR-0036 before the encyclopedia lane, chapter writer, generated mirror, or compatibility migration becomes binding.

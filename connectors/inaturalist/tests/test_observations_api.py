@@ -71,6 +71,17 @@ class QueryTests(unittest.TestCase):
         place = obs.ObservationQuery(bounds=None, place_id=5)
         self.assertIn("place_id=5", obs.page_url(place))
 
+    def test_malformed_quality_grade_has_finite_error(self):
+        for value in ({}, [], True, 1, 1.0):
+            with self.subTest(value=value), self.assertRaisesRegex(obs.ObservationInputError, "^QUALITY_GRADE$"):
+                obs.page_url(obs.ObservationQuery(quality_grade=value))
+
+    def test_capture_timestamp_retains_fraction_and_utc(self):
+        p = obs.parse_page(body([]), status=200,
+                           source_url=obs.page_url(QUERY, per_page=2),
+                           retrieved_at="2026-09-26T07:00:00.123456-05:00")
+        self.assertEqual(p.retrieved_at, "2026-09-26T12:00:00.123456Z")
+
     def test_source_url_allowlist(self):
         good = obs.page_url(QUERY, per_page=2)
         for bad in (good.replace("https://", "http://"),

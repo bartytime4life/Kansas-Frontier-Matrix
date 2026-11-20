@@ -3134,8 +3134,29 @@ def test_live_context_deadline_profile_reconciliation_preserves_both_histories()
         {"app/api/live-context/route.ts", "tests/live-context-deadline.test.mjs"},
         "162d89630c78860c9e3751bc548153ada62c6f57",
     )
-    assert TOOL.RECEIPT.name == 'site-v268-live-context-deadline-profile-reconciliation-20261119.json'
-    current = json.loads(TOOL.RECEIPT.read_text())
+    # A later immutable successor now owns the current selector.
+    current = json.loads((ROOT / 'data/receipts/generated/site-v268-live-context-deadline-profile-reconciliation-20261119.json').read_text())
     prior = ROOT / "data/receipts/generated" / current["repository_reconciliation"]["prior_branch_receipt"]
     assert prior.name == 'site-v268-live-context-deadline-main-reconciliation-20261119.json'
     assert hashlib.sha256(prior.read_bytes()).hexdigest() == current["repository_reconciliation"]["prior_branch_receipt_sha256"] == '625ee4c76b964dbf77221a866f3fa42639680f57a0d506014c2167c65d378ec7'
+
+
+def test_connections_action_deadlines_successor_preserves_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-connections-action-deadlines-overlay-20261119.json",
+        "site-v268-live-context-deadline-profile-reconciliation-20261119.json",
+        "aaf6382348101fb0c649427ca03152a490d8b0089b5ffa9dca0013f844ef195d",
+        {'tests/connections-status-recovery.test.mjs', 'tests/connections-action-deadlines.test.mjs', 'app/connections/workspace.tsx'},
+        "f0bda109e334964776e9cd5362a4b309dba2ced4",
+    )
+
+
+def test_guides_counted_circles_successor_preserves_connections_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-guides-counted-circles-overlay-20261120.json",
+        "site-v268-connections-action-deadlines-overlay-20261119.json",
+        "04e89490eedac516d9c56ff92a2848485d833bbc93cadec6310210f771ded8f7",
+        {"app/landing-guides.ts", "tests/landing-guides.test.mjs"},
+        "c47f52e185bd1c6540801af8551c75cf12e6cbb6",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-guides-counted-circles-overlay-20261120.json"

@@ -1,0 +1,65 @@
+{
+  "fixture_kind": "SYNTHETIC_INATURALIST_PLANT_QUERY",
+  "capture": "{\"pages\":[{\"body\":\"{\\\"incidental_top_level\\\":\\\"DO_NOT_RETURN_TOP_LEVEL\\\",\\\"page\\\":1,\\\"per_page\\\":2,\\\"results\\\":[],\\\"total_results\\\":0}\",\"retrieved_at\":\"2026-09-27T12:00:00.123456Z\",\"source_url\":\"https://api.inaturalist.org/v1/observations?swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&taxon_id=47126&per_page=2&order=asc&order_by=id&id_above=0\",\"status\":200}]}",
+  "capture_sha256": "sha256:cfaa4fc8f59fd08aa087c95c636fb3d5a0b26bbb89cca6f83b5ad7fd9128a362",
+  "expected": {
+    "object_type": "INaturalistFloraIngestCandidate",
+    "schema_version": "1.0.0",
+    "source_descriptor_ref": "data/registry/fauna/sources/inaturalist.yaml",
+    "query": {
+      "taxon_id": 47126,
+      "bounds": [
+        -102.1,
+        36.9,
+        -94.5,
+        40.1
+      ],
+      "per_page": 2
+    },
+    "pages": [
+      {
+        "source_url": "https://api.inaturalist.org/v1/observations?swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&taxon_id=47126&per_page=2&order=asc&order_by=id&id_above=0",
+        "retrieved_at": "2026-09-27T12:00:00.123456Z",
+        "source_body_sha256": "sha256:2dca7e66499bc52ad490b1b2bde197b50fb2cce24cf2ded53623212b44c0976b",
+        "source_byte_length": 103,
+        "minimized_body": "{\"per_page\":2,\"results\":[],\"total_results\":0}",
+        "minimized_body_sha256": "sha256:306f3131f89635c1ee1018dfbd57a6db97f1b2789ee19d21da1c76f443b696a7",
+        "minimized_byte_length": 45
+      }
+    ],
+    "capture": {
+      "admission": "NOT_ADMITTED",
+      "coverage": "NOT_ESTABLISHED",
+      "outcome": "CAPTURE_CANDIDATE",
+      "page_sha256": [
+        "sha256:2dca7e66499bc52ad490b1b2bde197b50fb2cce24cf2ded53623212b44c0976b"
+      ],
+      "reasons": [],
+      "records": [],
+      "reported_total": 0
+    },
+    "flora_checks": [],
+    "route": "HOLD",
+    "reason_codes": [
+      "SOURCE_ADMISSION_UNVERIFIED",
+      "SOURCE_DESCRIPTOR_UNRESOLVED",
+      "CROSS_DOMAIN_USE_UNREVIEWED",
+      "RIGHTS_UNVERIFIED",
+      "SENSITIVITY_NOT_EVALUATED"
+    ],
+    "authority": {
+      "source_admitted": false,
+      "review_completed": false,
+      "evidence_closed": false,
+      "lifecycle_write": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false,
+      "taxonomy_authority": false,
+      "geoprivacy_transform_authorized": false
+    },
+    "candidate_id": "inaturalist-ingest:sha256:c401d58ddcd7a82672c1c32b1ce5a789c1553f35c5ac4779fd114e20fc2d6762",
+    "spec_hash": "sha256:fdf49934d1d84de1f87adf993a11d3c734b18fc792da6d6cd93b76f0871fdaee"
+  }
+}

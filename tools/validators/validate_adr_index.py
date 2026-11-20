@@ -18,7 +18,6 @@ from typing import Iterable
 
 ALLOWED_EFFECTIVE_STATUSES = {"proposed", "accepted", "superseded", "rejected"}
 NUMBERED_NAME_RE = re.compile(r"^ADR-(\d{4})(?:-|\s)")
-PLACEHOLDER_NAME_RE = re.compile(r"^ADR-(?:NNNN|XXXX)(?:-|\s)")
 ADR_REF_RE = re.compile(r"ADR-\d{4}")
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\((?:<([^>]+)>|([^)]+))\)")
 
@@ -64,6 +63,11 @@ def _cells(line: str) -> list[str]:
     return [cell.strip() for cell in stripped.strip("|").split("|")]
 
 
+def _is_separator(line: str, width: int) -> bool:
+    cells = _cells(line)
+    return len(cells) == width and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells)
+
+
 def _link_target(cell: str) -> str | None:
     match = MARKDOWN_LINK_RE.search(cell)
     if not match:
@@ -100,6 +104,9 @@ def parse_numbered_index(index_path: Path) -> tuple[list[IndexRow], list[str]]:
     ]
     if header != expected_header:
         errors.append(f"{index_path}:{marked_lines[0][0]}: expected header {expected_header!r}, found {header!r}")
+
+    if not _is_separator(marked_lines[1][1], 6):
+        errors.append(f"{index_path}:{marked_lines[1][0]}: invalid numbered table separator")
 
     rows: list[IndexRow] = []
     for line_no, line in marked_lines[2:]:
@@ -138,6 +145,9 @@ def parse_scaffold_index(index_path: Path) -> tuple[dict[str, str], list[str]]:
     expected_header = ["File", "Classification", "Decision status"]
     if header != expected_header:
         errors.append(f"{index_path}:{marked_lines[0][0]}: expected header {expected_header!r}, found {header!r}")
+
+    if not _is_separator(marked_lines[1][1], 3):
+        errors.append(f"{index_path}:{marked_lines[1][0]}: invalid scaffold table separator")
 
     rows: dict[str, str] = {}
     for line_no, line in marked_lines[2:]:
@@ -207,17 +217,12 @@ def _numbered_files(adr_dir: Path) -> dict[str, Path]:
 
 
 def _scaffold_files(adr_dir: Path) -> set[str]:
-    scaffolds: set[str] = set()
-    for path in adr_dir.glob("ADR-*.md"):
-        if path.name == "ADR-template.md" or NUMBERED_NAME_RE.match(path.name):
-            continue
-        if PLACEHOLDER_NAME_RE.match(path.name):
-            scaffolds.add(path.name)
-            continue
-        text = path.read_text(encoding="utf-8")
-        if "PROPOSED scaffold" in text:
-            scaffolds.add(path.name)
-    return scaffolds
+    # Inventory is determined by paths, never by a prose incantation. A draft
+    # remains unassigned when its author changes its title or metadata format.
+    return {
+        path.name for path in adr_dir.glob("ADR-*.md")
+        if path.name != "ADR-template.md" and not NUMBERED_NAME_RE.match(path.name)
+    }
 
 
 def _validate_supersession(rows: Iterable[IndexRow], errors: list[str]) -> None:
@@ -326,6 +331,20 @@ def validate_repository(repo_root: Path) -> list[str]:
         errors.append(f"INDEX.md numbered_records metadata must equal {len(files)}")
     if not scaffold_count_match or int(scaffold_count_match.group(1)) != len(actual_scaffolds):
         errors.append(f"INDEX.md unassigned_scaffolds metadata must equal {len(actual_scaffolds)}")
+
+    visible_counts = {
+        "numbered_records": str(len(files)),
+        "unassigned_scaffolds": str(len(actual_scaffolds)),
+        "effective_status": (
+            f"{sum(row.effective_status == 'accepted' for row in rows)}_accepted_%7C_"
+            f"{sum(row.effective_status == 'proposed' for row in rows)}_proposed"
+        ),
+    }
+    for label, expected in visible_counts.items():
+        badges = re.findall(rf"https://img\.shields\.io/badge/{label}-([^-\s)]+)-", index_text)
+        for actual in badges:
+            if actual != expected:
+                errors.append(f"INDEX.md {label} badge must equal {expected!r}, found {actual!r}")
 
     register_text = register_path.read_text(encoding="utf-8")
     if "canonical_adr_index: ../adr/INDEX.md" not in register_text:
