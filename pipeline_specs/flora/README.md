@@ -6,7 +6,7 @@ version: v1.0
 status: proposed-inactive; repository-grounded
 owners: OWNER_TBD — pipeline-spec steward; domain steward; validation reviewer
 created: 2026-06-13
-updated: 2026-08-30
+updated: 2026-11-19
 policy_label: public-metadata; declarative-only; fail-closed; no-live-activation
 owning_root: pipeline_specs/
 responsibility: govern inactive declarative pipeline intent for the flora scope
@@ -100,14 +100,21 @@ pipeline_specs/flora/
 | `validate.yaml` | `STAGE_BOUNDARY / VALIDATE` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `catalog.yaml` | `STAGE_BOUNDARY / CATALOG` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `publish.yaml` | `STAGE_BOUNDARY / PUBLISH` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
-| `gbif_ingest.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
-| `inaturalist_ingest.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
+| `gbif_ingest.yaml` | `PIPELINE_CANDIDATE / NORMALIZE` | `PROPOSED_INACTIVE` | `IMPLEMENTED_FIXTURE_FIRST` |
+| `inaturalist_ingest.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `IMPLEMENTED_FIXTURE_FIRST` |
 | `usfws_ecos_ingest.yaml` | `PIPELINE_CANDIDATE / INGEST` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `flora_publish_dryrun.yaml` | `PIPELINE_CANDIDATE / PUBLISH_DRY_RUN` | `PROPOSED_INACTIVE` | `NOT_IMPLEMENTED` |
 | `plants_drift_watcher.yaml` | `PIPELINE_CANDIDATE / WATCH` | `PROPOSED_INACTIVE`; `HOLD` | `NOT_IMPLEMENTED` |
 | `source_readiness/materiality_profile.v1.json` | `FloraSourceReadinessMaterialityProfile` | `PROPOSED_INACTIVE` | Schema-specific profile |
 
 All ten YAML files use `KfmPipelineSpecDeclaration`. The JSON profile keeps its established, schema-specific contract and is not silently converted.
+
+GBIF binds the existing Darwin Core normalizer and intake classifier; iNaturalist
+binds supplied plant-query cursor pages with minimized private replay snapshots.
+Both are FIXTURE_ONLY, non-writing and inactive. Neither admits a source, resolves
+taxonomy, approves sensitivity or authorizes public use. iNaturalist references the
+existing Fauna source template without duplicating or approving cross-domain use.
+See the [iNaturalist runbook](../../docs/runbooks/inaturalist-fixture-ingest.md).
 
 ## Validation
 

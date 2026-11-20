@@ -121,9 +121,9 @@ life-safety authority. A pipeline declaration must not imply otherwise.
 | Boundary READMEs | 23 | One root boundary and 22 lane or sub-lane boundaries; each local contract owns its profile |
 | `.gitkeep` markers | 8 | Retained as topology-compatible zero-byte markers; they create no declaration or execution authority |
 
-Nine YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
-USGS water observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, private NWS context intake, and OpenFEMA declarations intake. Each remains
-`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 30 pipeline
+Ten YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
+USGS water observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, held TIGER roads intake, private NWS context intake, OpenFEMA declarations intake, and private iNaturalist plant-query intake. Each remains
+`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 29 pipeline
 candidates still need bounded implementations and bindings. The 65 stage boundaries
 and six compatibility aliases retain `NOT_IMPLEMENTED` by contract; they are not
 71 runnable pipelines awaiting activation.
@@ -145,6 +145,9 @@ lineage and time-of-evaluation context without alerts or instructions.
 
 The [OpenFEMA runbook](../docs/runbooks/openfema-fixture-ingest.md) binds supplied
 counted page walks as held administrative context, never hazard footprints.
+
+The [iNaturalist runbook](../docs/runbooks/inaturalist-fixture-ingest.md) binds
+private minimized plant-query captures with separate original-byte proof.
 
 Compatibility YAML is limited to the five Archaeology `*.spec.yaml` aliases and
 `hydrology/ingest_wbd.yaml`. The documentation-only compatibility lanes `air/`,

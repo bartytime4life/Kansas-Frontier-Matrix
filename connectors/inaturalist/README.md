@@ -2,12 +2,12 @@
 doc_id: kfm://doc/connectors-inaturalist-readme
 title: connectors/inaturalist/ — iNaturalist Source-Family Connector Contract
 type: readme
-version: v0.3
+version: v0.4
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · Python/package steward · Test steward · Fauna steward · Flora steward · Biodiversity/taxonomy steward · Rights reviewer · Sensitivity/geoprivacy reviewer · Validation steward · Docs steward
 created: 2026-06-19
 updated: 2026-11-19
-policy_label: public-doctrine; source-family-connector; repository-present; implementation-placeholder; no-network-by-default; descriptor-and-activation-gated; product-explicit; rights-gated; geoprivacy-preserving; sensitivity-fail-closed; raw-quarantine-receipts-only; no-publication
+policy_label: public-doctrine; source-family-connector; repository-present; bounded-offline-implementation; no-network-by-default; descriptor-and-activation-gated; product-explicit; rights-gated; geoprivacy-preserving; sensitivity-fail-closed; raw-quarantine-receipts-only; no-publication
 path: connectors/inaturalist/README.md
 truth_posture: CONFIRMED bounded observation parser and injected retrieval/routing regressions with finite geoprivacy failures; historical inspected-state notes retained; PROPOSED family/source treatment; NEEDS VERIFICATION descriptor admission, source activation, sensitivity review and public use
 related:
@@ -48,7 +48,7 @@ notes:
   - "The parent pyproject.toml reserves kfm-connector-inaturalist version 0.0.0; no build backend, dependencies, package discovery, Python version, install command, or stable import API is verified."
   - "The connector-local descriptor.yaml and data/registry/fauna/sources/inaturalist.yaml are unresolved placeholders and are not accepted SourceDescriptor or activation authority."
   - "The rich singular SourceDescriptor schema identifies the plural schema path as canonical, while the plural schema is still a permissive empty scaffold. Treat descriptor validation as CONFLICTED until governance resolves it."
-  - "This revision coordinates documentation and a safe implementation sequence only. It creates no executable connector behavior, endpoint choice, source activation, source payload, fixture, test, policy decision, or public artifact."
+  - "The historical documentation revision coordinated a safe implementation sequence without creating executable behavior; current bounded parser and pipeline checkpoints supersede that inspected maturity only."
 owning_root: connectors/
 responsibility: define iNaturalist source-family boundaries and finite geoprivacy input validation
 [/KFM_META_BLOCK_V2] -->
@@ -62,7 +62,7 @@ responsibility: define iNaturalist source-family boundaries and finite geoprivac
 <p>
   <img alt="Status: family contract draft" src="https://img.shields.io/badge/status-family__contract__draft-yellow">
   <img alt="Placement: source first" src="https://img.shields.io/badge/placement-source__first-blue">
-  <img alt="Implementation: placeholder scaffold" src="https://img.shields.io/badge/implementation-placeholder__scaffold-lightgrey">
+  <img alt="Implementation: bounded offline intake" src="https://img.shields.io/badge/implementation-bounded__offline__intake-blue">
   <img alt="Network: explicit activation only" src="https://img.shields.io/badge/network-explicit__activation__only-critical">
   <img alt="Product routing: explicit" src="https://img.shields.io/badge/product__routing-explicit-purple">
   <img alt="Geoprivacy: preserve do not deobscure" src="https://img.shields.io/badge/geoprivacy-preserve__no__deobscure-critical">
@@ -83,6 +83,18 @@ responsibility: define iNaturalist source-family boundaries and finite geoprivac
 
 > [!WARNING]
 > **Source geoprivacy is evidence, not a puzzle to solve.** Open, obscured, private, generalized, missing, and policy-restricted spatial states are distinct. Connector code must not deobscure, infer, back-fill, log, or publish exact restricted coordinates.
+
+## Plant-query intake and source parser checkpoint (2026-11-19)
+
+Malformed non-string quality-grade inputs now raise finite `QUALITY_GRADE` rather
+than an unhandled `TypeError`; normalized capture timestamps retain subseconds.
+The [Flora intake](../../pipelines/domains/flora/inaturalist_ingest.py) composes
+supplied pages into private held candidates, preserving rights/geoprivacy and
+checking supplied plant lineage without taxonomy reconciliation. Returned snapshots
+minimize user objects and retain separate original/minimized hashes. Original-byte
+reverification requires original capture bytes; minimized replay cannot prove those
+preimages. See the [runbook](../../docs/runbooks/inaturalist-fixture-ingest.md).
+The existing Fauna source template stays unresolved and Flora use unreviewed.
 
 ## Geoprivacy input validation checkpoint (2026-11-19)
 

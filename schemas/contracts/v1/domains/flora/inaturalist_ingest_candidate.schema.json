@@ -1,0 +1,507 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/flora/inaturalist_ingest_candidate.schema.json",
+  "title": "INaturalistFloraIngestCandidate",
+  "description": "Held private plant-query capture with minimized replay snapshots. Original body hashes require original bytes; source taxonomy is not KFM authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "candidate_id",
+    "source_descriptor_ref",
+    "query",
+    "pages",
+    "capture",
+    "flora_checks",
+    "route",
+    "reason_codes",
+    "authority",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "INaturalistFloraIngestCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^inaturalist-ingest:sha256:[a-f0-9]{64}$"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/fauna/sources/inaturalist.yaml"
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taxon_id",
+        "bounds",
+        "per_page"
+      ],
+      "properties": {
+        "taxon_id": {
+          "const": 47126
+        },
+        "bounds": {
+          "const": [
+            -102.1,
+            36.9,
+            -94.5,
+            40.1
+          ]
+        },
+        "per_page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_url",
+          "retrieved_at",
+          "source_body_sha256",
+          "source_byte_length",
+          "minimized_body",
+          "minimized_body_sha256",
+          "minimized_byte_length"
+        ],
+        "properties": {
+          "source_url": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source_body_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "source_byte_length": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 262144
+          },
+          "minimized_body": {
+            "type": "string",
+            "maxLength": 262144
+          },
+          "minimized_body_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "minimized_byte_length": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 262144
+          }
+        }
+      },
+      "maxItems": 16,
+      "minItems": 1
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasons",
+        "reported_total",
+        "records",
+        "page_sha256",
+        "coverage",
+        "admission"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "CAPTURE_CANDIDATE",
+            "INCOMPLETE_CAPTURE"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "CURSOR_NOT_FROM_START",
+              "CURSOR_GAP_OR_OVERLAP",
+              "COUNT_DRIFT",
+              "END_NOT_REACHED",
+              "EARLY_END",
+              "COUNT_MISMATCH"
+            ]
+          },
+          "maxItems": 8,
+          "minItems": 0
+        },
+        "reported_total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "observation_id",
+              "quality_grade",
+              "license_code",
+              "rights_holder",
+              "taxon_id",
+              "taxon_name",
+              "taxon_rank",
+              "observed_on",
+              "updated_at",
+              "latitude",
+              "longitude",
+              "positional_accuracy_m",
+              "geoprivacy_status",
+              "precision_class",
+              "route",
+              "reasons",
+              "raw_record_json",
+              "record_sha256",
+              "sensitivity",
+              "admission"
+            ],
+            "properties": {
+              "observation_id": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740992
+              },
+              "quality_grade": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 16
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "license_code": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "rights_holder": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 128
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "taxon_id": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740992
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "taxon_name": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "taxon_rank": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 64
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "observed_on": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "updated_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 64
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "latitude": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "longitude": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "positional_accuracy_m": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "geoprivacy_status": {
+                "enum": [
+                  "open",
+                  "obscured",
+                  "private"
+                ]
+              },
+              "precision_class": {
+                "enum": [
+                  "withheld",
+                  "private_supplied",
+                  "obscured_randomized",
+                  "source_point",
+                  "absent"
+                ]
+              },
+              "route": {
+                "enum": [
+                  "RAW_CANDIDATE",
+                  "QUARANTINE_CANDIDATE"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "QUALITY_GRADE_UNKNOWN",
+                    "NOT_RESEARCH_GRADE",
+                    "LICENSE_UNRESOLVED",
+                    "NONCOMMERCIAL_TERMS",
+                    "SHAREALIKE_TERMS",
+                    "NODERIVATIVES_TERMS",
+                    "ATTRIBUTION_MISSING",
+                    "GEOPRIVACY_PRIVATE",
+                    "GEOPRIVACY_OBSCURED",
+                    "COORDINATES_ABSENT",
+                    "TAXON_ABSENT",
+                    "CAPTIVE_OR_CULTIVATED"
+                  ]
+                },
+                "maxItems": 16,
+                "minItems": 0
+              },
+              "raw_record_json": {
+                "type": "string",
+                "maxLength": 262144
+              },
+              "record_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              },
+              "sensitivity": {
+                "const": "NOT_EVALUATED"
+              },
+              "admission": {
+                "const": "NOT_ADMITTED"
+              }
+            }
+          },
+          "maxItems": 256,
+          "minItems": 0
+        },
+        "page_sha256": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "maxItems": 16,
+          "minItems": 1
+        },
+        "coverage": {
+          "const": "NOT_ESTABLISHED"
+        },
+        "admission": {
+          "const": "NOT_ADMITTED"
+        }
+      }
+    },
+    "flora_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "observation_id",
+          "flora_scope",
+          "route",
+          "reason_codes"
+        ],
+        "properties": {
+          "observation_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740992
+          },
+          "flora_scope": {
+            "enum": [
+              "SOURCE_PLANT_LINEAGE",
+              "UNVERIFIED"
+            ]
+          },
+          "route": {
+            "enum": [
+              "RAW_CANDIDATE",
+              "QUARANTINE_CANDIDATE"
+            ]
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {
+              "const": "FLORA_LINEAGE_UNVERIFIED"
+            },
+            "maxItems": 1,
+            "minItems": 0
+          }
+        }
+      },
+      "maxItems": 256,
+      "minItems": 0
+    },
+    "route": {
+      "const": "HOLD"
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SOURCE_ADMISSION_UNVERIFIED",
+          "SOURCE_DESCRIPTOR_UNRESOLVED",
+          "CROSS_DOMAIN_USE_UNREVIEWED",
+          "RIGHTS_UNVERIFIED",
+          "SENSITIVITY_NOT_EVALUATED",
+          "CURSOR_NOT_FROM_START",
+          "CURSOR_GAP_OR_OVERLAP",
+          "COUNT_DRIFT",
+          "END_NOT_REACHED",
+          "EARLY_END",
+          "COUNT_MISMATCH",
+          "RECORD_QUARANTINE_CANDIDATES"
+        ]
+      },
+      "maxItems": 16,
+      "minItems": 0
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "review_completed",
+        "evidence_closed",
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed",
+        "taxonomy_authority",
+        "geoprivacy_transform_authorized"
+      ],
+      "properties": {
+        "source_admitted": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "evidence_closed": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        },
+        "taxonomy_authority": {
+          "const": false
+        },
+        "geoprivacy_transform_authorized": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}
