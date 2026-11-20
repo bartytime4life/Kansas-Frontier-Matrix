@@ -1,0 +1,172 @@
+{
+  "artifact_hashes": {
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:c134877060623d625d50be0541e1b0f8d238386d7d8fca5f3995e29e43cfddb7"
+  },
+  "artifact_paths": [
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "CONTRIBUTING.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "CONTRIBUTING.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/ai-build-operating-contract.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "docs/doctrine/ai-build-operating-contract.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "docs/doctrine/directory-rules.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/registers/repository-gap-fill-goal-2026-10-02.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "tools/qa/gap_scan.py@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "tools/qa/gap_scan.py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "tools/ci/install_full_local_test.py@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "tools/ci/install_full_local_test.py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "tools/qa/site_mirror.py@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "tools/qa/site_mirror.py",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/readiness-lanes.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "docs/readiness-lanes.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": ".github/workflows/policy-test.yml@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": ".github/workflows/policy-test.yml",
+      "validated": true
+    },
+    {
+      "evidence_ref": "migrations/policy/20261120_g_place_01_release_rego.yaml@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "migrations/policy/20261120_g_place_01_release_rego.yaml",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/INDEX.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "docs/adr/INDEX.md",
+      "validated": true
+    },
+    {
+      "evidence_ref": "control_plane/verification_backlog.yaml@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "control_plane/verification_backlog.yaml",
+      "validated": true
+    },
+    {
+      "evidence_ref": "tools/qa/scaffold_baseline.json@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "id": "tools/qa/scaffold_baseline.json",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-11-20T07:26:22Z",
+  "emitter": "Claude Code repository-authoring session",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7ddcc32632aa2fad1dd8900ab32a0dbc891806e55dd7e5ba4018c042f89e0e9b",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:e81144eda169778818de8379dd134163a272a54c498e694b706199dd1374f347",
+      "sha256:3eddb444bb1b7cad03b2b317b26cd9595ae28a8d68aff15a2863ea7398673c6e",
+      "sha256:1000f9d52e7567dc2166657d5d74ca3f209b8fdfad5a524d2096856abdf6c915",
+      "sha256:52ac78076b3c0d862dd979afee5abc455ddaf649fe89b6b79026ed78399f0a0d",
+      "sha256:dbc7f6100d24a08951f56fe2e56bb596c7974606dae5b2d47db425f62ee8f7d4",
+      "sha256:2dd3787fcc147df348810a2992b33b2c8205a673eaa02806a72acae20ac95dc4",
+      "sha256:50992b44ae956db94b3a05dc5f3acabac8e9f0918d671c3f53afaeab122bb472",
+      "sha256:ee7086104bd2552f1584d92b37014cbb744c7e591a8c6f6a64ad151e1f16d3a9",
+      "sha256:39b23b4e6a951df4881892fda7b63a240902c0e485742d99876aab7d14657574",
+      "sha256:41a00fcbe175285792fdba68c5c83b21d96b0fb0397e2583db416f790b3d06cc"
+    ],
+    "evidence_refs": [
+      "CONTRIBUTING.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "docs/doctrine/ai-build-operating-contract.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "docs/doctrine/directory-rules.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "docs/registers/repository-gap-fill-goal-2026-10-02.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "tools/qa/gap_scan.py@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "tools/ci/install_full_local_test.py@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "tools/qa/site_mirror.py@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "docs/readiness-lanes.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      ".github/workflows/policy-test.yml@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "migrations/policy/20261120_g_place_01_release_rego.yaml@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "docs/adr/INDEX.md@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "control_plane/verification_backlog.yaml@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e",
+      "tools/qa/scaffold_baseline.json@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "provider": "Anthropic",
+    "version": "Runtime build identifier not exposed"
+  },
+  "notes": "Documentation-only reconciliation of the 2026-10-02 gap register against main@62d0a8b0db8b66338c2e81bd8b31d7f13d0ad19e. Marks G-DOC-01, G-ENV-01, G-ENV-02, G-SITE-01, G-PLACE-01 and G-POL-01 FIXED with current evidence and records progress on G-SCAF-01, G-SCAF-02, G-DOM-01 and G-ADR-01. Earlier receipts, including genrec-repo-audit-deny-runner-20261119, are preserved unchanged.",
+  "override_record": null,
+  "parameters": {
+    "tools_enabled": [
+      "local Git inspection",
+      "Python QA and validator commands",
+      "pytest collection in the full local test bundle",
+      "GitHub Actions run readback"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "receipt_id": "genrec-gap-register-status-reconciliation-20261120",
+  "truth_labels": {
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "gap-scan-census",
+      "outcome": "PASS",
+      "reason": "gap_scan.py on main@62d0a8b0db: BROKEN_LOCAL_LINK 0, UNRATCHETED_PLACEHOLDER 5, MARKDOWN_PLACEHOLDER 7; --check passes."
+    },
+    {
+      "gate": "full-bundle-collection",
+      "outcome": "PASS",
+      "reason": "CPython 3.12 full local test bundle: pytest --collect-only tests collects 10,508 tests with no errors."
+    },
+    {
+      "gate": "site-mirror-check",
+      "outcome": "PASS",
+      "reason": "site_mirror.py --check PASS against site-v268-guides-counted-circles-overlay-20261120.json; review acceptance NOT_EVALUATED."
+    },
+    {
+      "gate": "hosted-main-workflows",
+      "outcome": "PASS",
+      "reason": "Latest main runs of water-pilot and policy-test succeeded at main@62d0a8b0db; latest completed run of each listed workflow on main is success or skipped except one superseded, cancelled python-dependency-lock run."
+    },
+    {
+      "gate": "markdown-metadata-and-links",
+      "outcome": "PASS",
+      "reason": "check_meta_blocks.py: 0 failing findings; check_links.py: every local target resolves once this receipt exists."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; this receipt does not supply approval."
+    }
+  ]
+}
