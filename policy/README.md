@@ -2,18 +2,18 @@
 doc_id: kfm://doc/policy-readme
 title: policy/ — Canonical Admissibility Root
 type: readme
-version: v0.4.7
+version: v0.4.8
 status: draft; repository-grounded; current-state-reconciled; mixed-maturity; direct-child-coverage-audited; bounded-Rego-evaluation; general-evaluator-unbound; active-bundle-unaccepted; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ to @bartytime4life; accepted policy stewardship and independent approval controls were not established
 created: 2026-07-23
-updated: 2026-08-28
+updated: 2026-11-20
 current_path: policy/README.md
 owning_root: policy/
 policy_label: public; policy; root-contract; mixed-maturity; non-release; non-publication
 responsibility: Define the canonical policy-source root, direct-child boundaries, maturity evidence, validation posture, and trust membrane without becoming semantic, schema, evidence, runtime, release, or publication authority.
 base_commit: 010de13f1604264b15376ae50dd8b16d8c9c86d6
 prior_blob: 8bdf0f47bb3bc23c458328ac5426deb30247fe09
-directory_governance: ADR-0029 accepted Directory Rules v2 for placement; ADR-0003 remains proposed for the policy/policies compatibility decision
+directory_governance: ADR-0029 accepted Directory Rules v2 for placement; ADR-0003 is accepted (2026-11-20) for the policy/policies compatibility and migration decision
 truth_posture: CONFIRMED canonical singular policy root, accepted Directory Rules placement, active Root Registry projection, exact 40-directory direct-child map, 524-entry recursive policy tree, 74 README files, 40 substantive direct-child READMEs, zero one-byte direct-child README placeholders, zero direct children without a README, documented singular policy-test and fixture compatibility holds, documented match-scoring routing and sensitive-people holds, 173 Rego files with exactly one native Rego test, one bounded PROPOSED_INACTIVE release-gate profile with checksum-pinned OPA 1.19.0 CI, multiple inactive fixture-first profiles and validators, 18-test structural boundary suite, placeholder policy-runtime package, corrected post-merge documentation rollback guidance, and broad readiness holds / PROPOSED root contract, active-evaluator sequence, threshold values and bindings, policy/test workflow containment, and future consumer binding / CONFLICTED or unresolved source-vs-sources and test-vs-tests naming, compatibility-lane placement, schema homes, and inactive native-to-outward outcome binding / UNKNOWN repository-wide bundle selector, accepted evaluator, required-check configuration, production consumers, decision receipts, replay, promotion integration, deployment enforcement, and independent release approval
 [/KFM_META_BLOCK_V2] -->
 
@@ -55,7 +55,7 @@ Policy decisions should be operation-specific, evidence-aware, reason-coded, obl
 
 **Canonical responsibility root for admissibility and policy source; non-semantic, non-schema, non-evidence, non-runtime, non-release, and non-publication authority.**
 
-Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes Directory Rules v2 effective for placement and names singular `policy/` as the policy-source root. [ADR-0003](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) remains **proposed** for the narrower compatibility and migration decision; its status does not undo the adopted Directory Rules placement.
+Accepted [ADR-0029](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes Directory Rules v2 effective for placement and names singular `policy/` as the policy-source root. [ADR-0003](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) was accepted by the repository owner on 2026-11-20 for the narrower compatibility and migration decision. It builds on, and does not replace, the adopted Directory Rules placement; policy-path migrations are recorded under `migrations/policy/`.
 
 The [`Root Registry`](../control_plane/root_registry.yaml) projects this accepted placement as `root.policy`: canonical, durable, internally exposed, versioned, limited to `policy_rule`, and explicitly prohibited from containing `data_instance`, `release_decision`, or `schema` artifacts. That machine projection is a consistency surface, not authority to create roots, activate rules, migrate paths, or publish.
 
@@ -385,7 +385,7 @@ Substantive direct-child indexes:
 | ADR or authority | Status | Relevance |
 |---|---:|---|
 | [`ADR-0029 — adopt Directory Governance Standard v2`](../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Makes Directory Rules v2 effective for placement, root classes, and README contracts. |
-| [`ADR-0003 — policy/ singular is canonical`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **PROPOSED** | Compatibility-root and migration decision; not needed to deny a second active policy authority under adopted Directory Rules. |
+| [`ADR-0003 — policy/ singular is canonical`](../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | **ACCEPTED** (2026-11-20) | Compatibility-root and migration decision; not needed to deny a second active policy authority under adopted Directory Rules. Migrations are recorded under `migrations/policy/`. |
 | [`ADR-0001 — schema home`](../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | **PROPOSED** | Policy schema placement remains configured but not accepted by this ADR. |
 | [`ADR-0002 — contracts vs schemas`](../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | **DRAFT source / PROPOSED effective status** | Reconciles meaning, shape, admissibility, fixtures, tests, and validator coupling without accepting the decision. |
 | [`ADR-0020 — abstain is first class`](../docs/adr/ADR-0020-abstain-is-a-first-class-decision.md) | **PROPOSED** | Closed outward outcome model. |
@@ -532,7 +532,7 @@ This v0.4.7 README changes no policy, test, fixture payload, or workflow behavio
 
 | ID | Question | Status |
 |---|---|---:|
-| POL-001 | Is ADR-0003 still proposed in the governing ADR index? | **CONFIRMED proposed at this snapshot** |
+| POL-001 | Is ADR-0003 still proposed in the governing ADR index? | **RESOLVED**: accepted on 2026-11-20 (`docs/adr/INDEX.md` v1.22) |
 | POL-002 | What is the complete recursive policy inventory and per-lane maturity classification? | **PARTIAL — 524 entries, 40 direct lanes, README coverage, and Rego/native-test counts are confirmed; semantic maturity still requires per-lane review** |
 | POL-003 | Which repository-wide evaluator, bundle format, manifest, selector, and activation contract are accepted? | **UNKNOWN** |
 | POL-004 | Does the bounded Pass 12 native-test pattern become the general Rego test convention? | **NEEDS DECISION** |

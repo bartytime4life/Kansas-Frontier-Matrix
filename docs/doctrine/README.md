@@ -3,12 +3,12 @@ doc_id: kfm://doc/doctrine/readme
 title: docs/doctrine/ — Doctrine Landing Page
 type: readme
 subtype: directory-landing-page
-version: v0.9
+version: v0.9.1
 prior_version: v0.8
 status: active; repository-grounded; documentation-only; non-authoritative
 owner: "NEEDS VERIFICATION — CODEOWNERS routes /docs/doctrine/ to @bartytime4life; no accepted doctrine-steward assignment, required independent review rule, or release authority was verified"
 created: 2026-05-18
-updated: 2026-09-21
+updated: 2026-11-20
 policy_label: public
 current_path: docs/doctrine/README.md
 owning_root: docs/
@@ -366,7 +366,7 @@ Repository-native hosted checks remain **PENDING** until the draft pull request 
 | ADR or index | Subject | Effective status at the evidence snapshot |
 |---|---|---|
 | [`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | `schemas/contracts/v1/` as default schema home | `proposed` |
-| [`ADR-0003`](<../adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | `policy/` singular as canonical | `proposed` |
+| [`ADR-0003`](<../adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | `policy/` singular as canonical | `accepted` (2026-11-20) |
 | [`ADR-0006`](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Only `MapLibreAdapter` imports MapLibre | `accepted` |
 | [`ADR-0007`](<../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | MapLibre GL JS as sole browser-side renderer | `accepted` |
 | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Exact Directory Governance Standard v2 adoption and controlled compatibility migration | `accepted` |
