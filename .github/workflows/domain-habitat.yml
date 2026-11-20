@@ -87,6 +87,10 @@ jobs:
             --start-directory tests/domains/habitat \
             --pattern 'test_habitat_smoke.py' \
             --verbose
+          python -m unittest discover \
+            --start-directory tests/domains/habitat \
+            --pattern 'test_catalog_closure.py' \
+            --verbose
 
       - name: Record bounded Habitat validation scope
         if: always()

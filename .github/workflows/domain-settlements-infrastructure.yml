@@ -226,6 +226,10 @@ jobs:
           accepted_tests = {
               Path(
                   "tests/domains/settlements-infrastructure/"
+                  "test_catalog_release_closure.py"
+              ),
+              Path(
+                  "tests/domains/settlements-infrastructure/"
                   "test_settlements_infrastructure_smoke.py"
               ),
           }
@@ -280,7 +284,8 @@ jobs:
             tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py \
             tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_schema_validator.py \
             tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_source_descriptor_validator_entrypoint.py \
-            tests/domains/settlements-infrastructure/test_settlements_infrastructure_smoke.py
+            tests/domains/settlements-infrastructure/test_settlements_infrastructure_smoke.py \
+            tests/domains/settlements-infrastructure/test_catalog_release_closure.py
 
           python tools/validators/domains/settlements-infrastructure/validate_catalog_matrix.py --fixtures
           python tools/validators/domains/settlements-infrastructure/validate_evidence_bundle.py --fixtures

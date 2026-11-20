@@ -144,6 +144,7 @@ jobs:
               raise SystemExit("Agriculture test inventory contains no Python modules.")
           expected_dedicated_tests = {
               "test_agriculture_smoke.py",
+              "test_catalog_closure.py",
               "test_ndvi_delta_computation.py",
               "test_public_safe_agricultural_economy_observation.py",
               "test_public_safe_conservation_practice_context.py",
@@ -292,6 +293,7 @@ jobs:
           set -euo pipefail
           python tools/validators/domains/agriculture/validate_public_safe_map_feature.py --fixtures
           python -m pytest -q tests/domains/agriculture/test_public_safe*.py
+          python -m pytest -q tests/domains/agriculture/test_catalog_closure.py
 
           python tools/validators/domains/agriculture/validate_source_descriptor.py --fixtures
           python -m pytest -q tests/validators/domains/agriculture/test_agriculture_source_descriptor_validator_entrypoint.py

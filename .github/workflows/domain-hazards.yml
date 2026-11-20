@@ -93,6 +93,7 @@ jobs:
           fi
 
           python -m unittest -v tests.domains.hazards.test_hazards_smoke
+          python -m unittest -v tests.domains.hazards.test_catalog_closure
           make hazards-validate
           echo "HAZARDS_VALIDATION_PASS: drought-fixture-polarity usdm-materiality"
 

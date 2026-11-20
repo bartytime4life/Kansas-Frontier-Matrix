@@ -88,6 +88,7 @@ jobs:
           python tests/domains/soil/test_soil_moisture_qc.py --verbose
           python tests/domains/soil/test_smap_l4_anti_collapse.py --verbose
           python tests/domains/soil/test_release_readiness_hold.py --verbose
+          python tests/domains/soil/test_catalog_closure_evidence_drawer.py --verbose
 
       - name: Run bounded SSURGO package-drift fixture proof
         shell: bash
