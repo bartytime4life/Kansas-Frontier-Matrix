@@ -70,6 +70,37 @@ def _pointer(parts: Iterable[object]) -> str:
     return "/" + "/".join(values) if values else "/"
 
 
+# Checked before parsing: CPython 3.15 sizes its recursion guard from the real
+# C stack, so json can parse 100,000+ levels without RecursionError.
+MAX_JSON_DEPTH = 256
+
+
+def _json_depth_exceeded(text: str | bytes) -> bool:
+    if isinstance(text, bytes):
+        text = text.decode("latin-1")  # ASCII structure bytes keep their positions
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+            continue
+        if character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > MAX_JSON_DEPTH:
+                return True
+        elif character in "]}":
+            depth -= 1
+    return False
+
+
 def read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
         if path.is_symlink():
@@ -78,7 +109,10 @@ def read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
             return None, [Finding("INPUT_NOT_FILE", "/")]
         if path.stat().st_size > MAX_BYTES:
             return None, [Finding("INPUT_TOO_LARGE", "/")]
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique, parse_constant=_reject_nonfinite, parse_float=_finite_float)
+        text = path.read_text(encoding="utf-8")
+        if _json_depth_exceeded(text):
+            raise ValueError("JSON_NESTING_LIMIT")
+        value = json.loads(text, object_pairs_hook=_unique, parse_constant=_reject_nonfinite, parse_float=_finite_float)
     except UnicodeError:
         return None, [Finding("JSON_NOT_UTF8", "/")]
     except DuplicateKeyError:

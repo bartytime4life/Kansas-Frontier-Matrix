@@ -37,7 +37,40 @@ def _reject_constant(_):
     raise ValueError("METADATA_NONFINITE")
 
 
+# Checked before parsing: CPython 3.15 sizes its recursion guard from the real
+# C stack, so json can parse 100,000+ levels without RecursionError.
+MAX_JSON_DEPTH = 256
+
+
+def _json_depth_exceeded(text: str | bytes) -> bool:
+    if isinstance(text, bytes):
+        text = text.decode("latin-1")  # ASCII structure bytes keep their positions
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+            continue
+        if character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > MAX_JSON_DEPTH:
+                return True
+        elif character in "]}":
+            depth -= 1
+    return False
+
+
 def load_page(raw):
+    if _json_depth_exceeded(raw):
+        raise ValueError("METADATA_JSON_INVALID")
     try:
         value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=_reject_constant,
                            parse_float=_finite_float)
