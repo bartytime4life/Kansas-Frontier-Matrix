@@ -225,6 +225,84 @@ class BrowserTests(unittest.TestCase):
                             server.server_close()
                             thread.join(timeout=5)
 
+    def test_large_file_uploads_in_verified_parts_and_resumes(self):
+        from playwright.sync_api import expect, sync_playwright
+
+        from tools.local_data.intake_studio import intake_backend
+
+        chunk = 4096
+        body = b"\x89PNG\r\n\x1a\n" + bytes(range(256)) * 60  # 15,368 bytes: four parts
+        with (
+            patch.multiple(intake_backend, SINGLE_UPLOAD_BYTES=1024, UPLOAD_CHUNK_BYTES=chunk),
+            sync_playwright() as playwright,
+        ):
+            executable = os.environ.get("KFM_INTAKE_TEST_CHROMIUM")
+            with playwright.chromium.launch(
+                **({"executable_path": executable} if executable else {})
+            ) as browser, tempfile.TemporaryDirectory() as root:
+                store = Store(root, Path(root) / "missing-runtime")
+                server = Server(0, store)
+                thread = threading.Thread(target=server.serve_forever, daemon=True)
+                thread.start()
+                context = browser.new_context()
+                add_session_cookie(
+                    context, server.origin, signed_in_headers(self, server.accounts)
+                )
+                page = context.new_page()
+                parts = []
+                page.on(
+                    "request",
+                    lambda request: parts.append(request.url)
+                    if "/chunk?offset=" in request.url
+                    else None,
+                )
+                try:
+                    # A half-finished upload of the same file, remembered by the
+                    # browser, resumes from the server's stored byte count.
+                    upload = store.uploads.create("large-synthetic.png", len(body))
+                    first = body[:chunk]
+                    store.uploads.append(
+                        upload["id"], 0, first, hashlib.sha256(first).hexdigest()
+                    )
+                    page.goto(server.origin)
+                    expect(page.locator("#file-list")).to_contain_text("No files yet")
+                    with patch(
+                        "tools.local_data.intake_studio.intake_server.subprocess.run",
+                        side_effect=fake_extract,
+                    ):
+                        page.locator("#files-input").evaluate(
+                            """(input, [id, bytes]) => {
+                                const file = new File([new Uint8Array(bytes)], 'large-synthetic.png',
+                                                      {type: 'image/png', lastModified: 1700000000000});
+                                localStorage.setItem(`kfm-upload:${file.name}:${file.size}:${file.lastModified}`, id);
+                                const transfer = new DataTransfer();
+                                transfer.items.add(file);
+                                input.files = transfer.files;
+                                input.dispatchEvent(new Event('change', {bubbles: true}));
+                            }""",
+                            [upload["id"], list(body)],
+                        )
+                        expect(page.locator("#review-form")).to_be_visible()
+                    records = store.list()
+                    self.assertEqual(len(records), 1)
+                    self.assertEqual(records[0]["size"], len(body))
+                    self.assertEqual(records[0]["sha256"], hashlib.sha256(body).hexdigest())
+                    self.assertEqual(store.original_bytes(records[0]), body)
+                    # Only the three parts after the stored first part were sent.
+                    self.assertEqual(
+                        [url.rsplit("=", 1)[1] for url in parts],
+                        [str(chunk), str(2 * chunk), str(3 * chunk)],
+                    )
+                    self.assertEqual(
+                        page.evaluate("Object.keys(localStorage).filter(k => k.startsWith('kfm-upload:'))"),
+                        [],
+                    )
+                finally:
+                    context.close()
+                    server.shutdown()
+                    server.server_close()
+                    thread.join(timeout=5)
+
 
 if __name__ == "__main__":
     unittest.main()

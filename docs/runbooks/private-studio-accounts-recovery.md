@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks-private-studio-accounts-recovery
 title: KFM Private Studio accounts and recovery evidence
 type: runbook
-version: v1
+version: v1.1
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-15
-updated: 2026-11-17
+updated: 2026-11-20
 policy_label: public
 owning_root: docs/
 responsibility: Describe local identities, the protected workspace, recovery evidence, validation limits and rollback.
@@ -25,9 +25,11 @@ changed, synchronized, or authenticated by these local accounts.
 
 Supported entrypoints are `intake_server.py`, `private_server.py` and the existing
 `start-local.sh` launcher. They require application-local accounts. The previous
-backend is retained byte-for-byte as internal `intake_backend.py` to keep intake,
-extraction and sensitivity behavior separate from authentication. It is not a
-supported server entrypoint; do not start it directly. An operating-system owner
+backend lives on as internal `intake_backend.py`, which keeps intake, extraction
+and sensitivity behavior separate from authentication. It was retained
+byte-for-byte until large-file uploads (2026-11-20) added streamed storage and
+resumable upload routes to it; every route still passes this gateway first. It
+is not a supported server entrypoint; do not start it directly. An operating-system owner
 who can execute arbitrary Python or edit the database is outside this access
 boundary and can bypass application controls. Local accounts are not Linux users.
 

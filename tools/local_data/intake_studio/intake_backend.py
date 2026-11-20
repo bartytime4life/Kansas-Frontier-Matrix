@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 from contextlib import contextmanager
-import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3, stat, subprocess, sys, tempfile, threading, uuid, zipfile
+import argparse, hashlib, io, json, mimetypes, os, re, secrets, shutil, sqlite3, stat, subprocess, sys, tempfile, threading, time, uuid, zipfile
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -13,7 +13,13 @@ APP = Path(__file__).resolve().parent
 sys.path.insert(0, str(APP.parents[2]))
 from tools.local_data.intake_studio import handoff  # noqa: E402
 from tools.local_data.file_io import hash_regular, read_regular  # noqa: E402
-MAX_BYTES = 25 * 1024 * 1024
+from tools.local_data.intake_studio.large_upload import UploadSessions  # noqa: E402
+# Largest evidence file the Studio stores. Files above SINGLE_UPLOAD_BYTES use
+# resumable, chunk-verified upload sessions instead of one request body.
+MAX_BYTES = 2 * 1024 ** 3
+SINGLE_UPLOAD_BYTES = 25 * 1024 * 1024
+UPLOAD_CHUNK_BYTES = 8 * 1024 * 1024
+STREAM_BLOCK_BYTES = 1024 * 1024
 DOMAINS = {
     "hydrology": (
         "water",
@@ -234,6 +240,8 @@ class Store:
         self.qwen_model, self.qwen_digest = qwen_model, qwen_digest
         self.lock = threading.RLock()
         self.extract_lock = threading.Lock()
+        self.uploads = UploadSessions(self.root, max_bytes=MAX_BYTES, chunk_bytes=UPLOAD_CHUNK_BYTES,
+                                      check_head=signature)
         with self.db() as db:
             db.execute(
                 "CREATE TABLE IF NOT EXISTS files(id TEXT PRIMARY KEY, data TEXT NOT NULL)"
@@ -273,27 +281,48 @@ class Store:
                 (record["id"], json.dumps(record, ensure_ascii=False)),
             )
 
-    def original_bytes(self, record):
-        """Return the exact bytes verified for this record; never silently repair."""
+    @contextmanager
+    def open_original(self, record):
+        """Yield the original, verified in full and rewound; never silently repair.
+
+        The same descriptor is hashed and then read, so callers stream exactly
+        the bytes that passed the check without holding them in memory.
+        """
         path = self.objects / record["sha256"] / "original"
         try:
             fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
-            with os.fdopen(fd, "rb") as stream:
-                if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
-                    raise ValueError("Original integrity check failed. Read refused.")
-                original = stream.read(MAX_BYTES + 1)
         except OSError as error:
-            raise ValueError(
-                "Original integrity check failed. Read refused."
-            ) from error
-        if (
-            len(original) != record["size"]
-            or hashlib.sha256(original).hexdigest() != record["sha256"]
-        ):
-            raise ValueError(
-                "Original integrity check failed. Read refused; preserve the inbox for recovery."
-            )
-        return original
+            raise ValueError("Original integrity check failed. Read refused.") from error
+        with os.fdopen(fd, "rb") as stream:
+            info = os.fstat(stream.fileno())
+            if not stat.S_ISREG(info.st_mode):
+                raise ValueError("Original integrity check failed. Read refused.")
+            digest = hashlib.sha256()
+            count = 0
+            try:
+                while count <= MAX_BYTES:
+                    block = stream.read(STREAM_BLOCK_BYTES)
+                    if not block:
+                        break
+                    count += len(block)
+                    digest.update(block)
+            except OSError as error:
+                raise ValueError("Original integrity check failed. Read refused.") from error
+            if count != record["size"] or digest.hexdigest() != record["sha256"]:
+                raise ValueError(
+                    "Original integrity check failed. Read refused; preserve the inbox for recovery."
+                )
+            stream.seek(0)
+            yield stream
+
+    def verify_original(self, record):
+        with self.open_original(record):
+            pass
+
+    def original_bytes(self, record):
+        """Return the exact bytes verified for this record; never silently repair."""
+        with self.open_original(record) as stream:
+            return stream.read(record["size"])
 
     def capabilities(self):
         sandbox = all(Path(p).is_file() for p in ("/usr/bin/bwrap", "/usr/bin/prlimit"))
@@ -322,18 +351,40 @@ class Store:
 
     def ingest(self, name, body):
         if not 0 < len(body) <= MAX_BYTES:
-            raise ValueError("File must contain 1 byte to 25 MiB.")
-        mime = signature(body[:20])
-        digest = hashlib.sha256(body).hexdigest()
+            raise ValueError("File must contain 1 byte to 2 GiB.")
+        signature(body[:20])
+        fd, staged = tempfile.mkstemp(prefix="upload-", dir=self.root)
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(body)
+        return self.ingest_file(name, Path(staged))
+
+    def ingest_upload(self, upload_id):
+        staged, name = self.uploads.take(upload_id)
+        return self.ingest_file(name, staged)
+
+    def ingest_file(self, name, staged):
+        """Ingest a staged regular file inside this Store's root; the file is consumed."""
+        try:
+            with open(staged, "rb") as stream:
+                mime = signature(stream.read(20))
+            digest, size = hash_regular(staged, MAX_BYTES)
+            if size < 1:
+                raise ValueError("File must contain 1 byte to 2 GiB.")
+            return self._ingest_staged(name, staged, mime, digest, size)
+        finally:
+            if os.path.lexists(staged):
+                os.unlink(staged)
+
+    def _ingest_staged(self, name, staged, mime, digest, size):
         dest = self.objects / digest
         with self.extract_lock:
             duplicate = dest.exists()
             if duplicate:
-                self.original_bytes({"sha256": digest, "size": len(body)})
+                self.verify_original({"sha256": digest, "size": size})
             if not duplicate:
                 work = Path(tempfile.mkdtemp(prefix="extract-", dir=self.root))
                 try:
-                    (work / "original").write_bytes(body)
+                    os.replace(staged, work / "original")
                     cmd = [
                         "/usr/bin/prlimit",
                         "--as=1610612736",
@@ -447,7 +498,7 @@ class Store:
             "version": 1,
             "name": name,
             "mime": mime,
-            "size": len(body),
+            "size": size,
             "sha256": digest,
             "uploadedAt": at,
             "analysis": analysis,
@@ -624,9 +675,14 @@ class Store:
         return None
 
     def export(self, id):
+        out = io.BytesIO()
+        self.export_to(id, out)
+        return out.getvalue()
+
+    def export_to(self, id, out):
+        """Write the held review package as a ZIP to a binary file object."""
         record = self.get(id)
         obj = self.objects / record["sha256"]
-        original = self.original_bytes(record)
         content = {
             "kind": "KFM_LOCAL_INTAKE_REVIEW_PROPOSAL",
             "schemaVersion": 1,
@@ -639,28 +695,34 @@ class Store:
             "record": record,
             "nextStep": "Review this package with the existing tools/local_data intake workflow. No source admission or release has occurred.",
         }
-        out = io.BytesIO()
-        with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        original_name = "original/" + record["name"]
+        with self.open_original(record) as original, zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
             items = {
                 "review-proposal.json": json.dumps(
                     content, indent=2, ensure_ascii=False
                 ).encode(),
                 "extracted-text.txt": record["analysis"]["text"].encode(),
-                "original/" + record["name"]: original,
+                original_name: None,
                 "README.txt": b"PRIVATE HELD REVIEW PACKAGE. Original preserved. OCR is derivative, not root truth. No admission, promotion, publication or public website change. Use existing KFM local-data review and capture workflow.",
             }
             if (obj / "preview.png").exists():
                 items["preview.png"] = (obj / "preview.png").read_bytes()
+            checksums = {}
             for name, b in items.items():
-                z.writestr(name, b)
-            z.writestr(
-                "checksums.json",
-                json.dumps(
-                    {name: hashlib.sha256(b).hexdigest() for name, b in items.items()},
-                    indent=2,
-                ),
-            )
-        return out.getvalue()
+                if b is not None:
+                    z.writestr(name, b)
+                    checksums[name] = hashlib.sha256(b).hexdigest()
+                    continue
+                # The original is streamed from the verified descriptor. Large
+                # originals are stored, not recompressed; file_size selects zip64.
+                info = zipfile.ZipInfo(name, date_time=time.gmtime()[:6])
+                info.compress_type = (zipfile.ZIP_DEFLATED if record["size"] <= SINGLE_UPLOAD_BYTES
+                                      else zipfile.ZIP_STORED)
+                info.file_size = record["size"]
+                with z.open(info, "w") as target:
+                    shutil.copyfileobj(original, target, STREAM_BLOCK_BYTES)
+                checksums[name] = record["sha256"]
+            z.writestr("checksums.json", json.dumps(checksums, indent=2))
 
 
 class Server(ThreadingHTTPServer):
@@ -693,9 +755,31 @@ class Handler(BaseHTTPRequestHandler):
         kind = kind.replace("\r", "").replace("\n", "").replace("\x00", "").strip()
         if not kind:
             kind = "application/octet-stream"
+        self._send_headers(code, kind, len(body), attachment)
+        self.wfile.write(body)
+
+    def respond_stream(self, code, reader, length, kind, attachment=None):
+        """Send exactly `length` bytes from a binary reader without buffering them."""
+        self._send_headers(code, kind, length, attachment)
+        remaining = length
+        try:
+            while remaining:
+                block = reader.read(min(STREAM_BLOCK_BYTES, remaining))
+                if not block:
+                    break
+                self.wfile.write(block)
+                remaining -= len(block)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        if remaining:
+            # Headers are already sent: end the connection so the client sees
+            # a short body instead of a second response.
+            self.close_connection = True
+
+    def _send_headers(self, code, kind, length, attachment):
         self.send_response(code)
         self.send_header("Content-Type", kind)
-        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Content-Length", str(length))
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "no-referrer")
@@ -724,7 +808,6 @@ class Handler(BaseHTTPRequestHandler):
             content_disposition = re.sub(r"[^\x20-\x7e]+", "", content_disposition).strip()
             self.send_header("Content-Disposition", content_disposition)
         self.end_headers()
-        self.wfile.write(body)
 
     def guard(self, token=True, header="X-KFM-Token"):
         if self.headers.get("Host") != self.server.origin[7:]:
@@ -763,6 +846,8 @@ class Handler(BaseHTTPRequestHandler):
                         "sendToKfmAvailable": self.server.store.kfm_root is not None,
                         "workspaceViews": list(self.server.workspace.desks),
                         "maxBytes": MAX_BYTES,
+                        "singleUploadBytes": SINGLE_UPLOAD_BYTES,
+                        "uploadChunkBytes": UPLOAD_CHUNK_BYTES,
                         "capabilities": self.server.store.capabilities(),
                         "authority": {
                             "publication": False,
@@ -775,6 +860,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self.respond(200, {"files": self.server.store.list()})
             if path == "/api/working-data":
                 return self.respond(200, {"url": self.server.store.working_url()})
+            m = re.fullmatch(r"/api/uploads/([a-f0-9]{32})", path)
+            if m:
+                return self.respond(200, {"upload": self.server.store.uploads.status(m[1])})
             if path in ("/working-data", "/library"):
                 from tools.local_data.intake_studio.workspace import page
                 return self.respond(200, page("working" if path == "/working-data" else "library"), "text/html")
@@ -792,12 +880,14 @@ class Handler(BaseHTTPRequestHandler):
                     return self.respond(200, {"file": record})
                 if m[2] == "export":
                     safe_id = m[1] if re.fullmatch(r"[a-f0-9]{32}", m[1]) else "00000000000000000000000000000000"
-                    return self.respond(
-                        200,
-                        self.server.store.export(safe_id),
-                        "application/zip",
-                        "kfm-held-review-" + safe_id[:8] + ".zip",
-                    )
+                    with tempfile.TemporaryFile(dir=self.server.store.root) as package:
+                        self.server.store.export_to(safe_id, package)
+                        length = package.tell()
+                        package.seek(0)
+                        return self.respond_stream(
+                            200, package, length, "application/zip",
+                            "kfm-held-review-" + safe_id[:8] + ".zip",
+                        )
                 if m[2] == "preview":
                     return self.respond(
                         200, (obj / "preview.png").read_bytes(), "image/png"
@@ -809,12 +899,11 @@ class Handler(BaseHTTPRequestHandler):
                     "image/webp": "webp",
                     "image/tiff": "tiff",
                 }[record["mime"]]
-                return self.respond(
-                    200,
-                    self.server.store.original_bytes(record),
-                    "application/octet-stream",
-                    "original-" + m[1][:8] + "." + ext,
-                )
+                with self.server.store.open_original(record) as original:
+                    return self.respond_stream(
+                        200, original, record["size"], "application/octet-stream",
+                        "original-" + m[1][:8] + "." + ext,
+                    )
             # Static assets are explicit; user-supplied files are never served as executable content.
             if path in ("/", "/index.html", "/app.js", "/style.css"):
                 file = APP / "local-web" / ("index.html" if path == "/" else path[1:])
@@ -841,12 +930,14 @@ class Handler(BaseHTTPRequestHandler):
         try:
             length = int(self.headers.get("Content-Length", "0"))
             path = urlsplit(self.path)
-            maximum = MAX_BYTES if path.path == "/api/upload" else 150000
+            chunk = re.fullmatch(r"/api/uploads/([a-f0-9]{32})/chunk", path.path)
+            maximum = (SINGLE_UPLOAD_BYTES if path.path == "/api/upload"
+                       else UPLOAD_CHUNK_BYTES if chunk else 150000)
             if not 0 < length <= maximum:
                 return self.respond(
                     413,
                     {
-                        "error": "File is empty or exceeds the allowed size (25 MB per upload)."
+                        "error": "Request is empty or too large. Files over 25 MB upload in parts."
                     },
                 )
             self.connection.settimeout(30)
@@ -857,6 +948,25 @@ class Handler(BaseHTTPRequestHandler):
                 name = parse_qs(path.query).get("name", ["uploaded-file"])[0]
                 record, duplicate = self.server.store.ingest(name, body)
                 return self.respond(201, {"file": record, "duplicate": duplicate})
+            uploads = self.server.store.uploads
+            if path.path == "/api/uploads":
+                value = json.loads(body)
+                if not isinstance(value, dict) or set(value) != {"name", "size"}:
+                    raise ValueError("Start an upload with its name and size.")
+                return self.respond(201, {"upload": uploads.create(value["name"], value["size"])})
+            if chunk:
+                offset = parse_qs(path.query).get("offset", [""])
+                if len(offset) != 1 or not re.fullmatch(r"[0-9]{1,10}", offset[0]):
+                    raise ValueError("Upload part needs one numeric offset.")
+                return self.respond(200, {"upload": uploads.append(
+                    chunk[1], int(offset[0]), body, self.headers.get("X-KFM-Chunk-SHA256", ""))})
+            m = re.fullmatch(r"/api/uploads/([a-f0-9]{32})/(complete|cancel)", path.path)
+            if m and m[2] == "complete":
+                record, duplicate = self.server.store.ingest_upload(m[1])
+                return self.respond(201, {"file": record, "duplicate": duplicate})
+            if m:
+                uploads.cancel(m[1])
+                return self.respond(200, {"cancelled": True})
             m = re.fullmatch(r"/api/files/([a-f0-9]{32})/send", path.path)
             if m:
                 record, already = self.server.store.send(m[1], json.loads(body))

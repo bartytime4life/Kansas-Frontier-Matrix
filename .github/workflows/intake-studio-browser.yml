@@ -1,8 +1,9 @@
 # KFM Studio browser acceptance.
 #
-# Runs the opt-in Chromium check in tests/local_data/test_intake_studio_browser.py,
-# which the full suite skips. Files and extraction are synthetic, the Studio
-# listens on loopback only, and the test fails on any non-loopback request.
+# Runs the opt-in Chromium checks in tests/local_data/test_intake_studio_browser.py
+# and the Studio's loopback HTTP tests, both of which the full suite skips. Files
+# and extraction are synthetic, the Studio listens on loopback only, and the
+# browser test fails on any non-loopback request.
 # Playwright's Python driver comes from a hash-locked, binary-only profile; the
 # browser is the runner's preinstalled Chrome, so nothing is downloaded at run
 # time. It is test evidence only; it grants no readiness, release, or
@@ -73,6 +74,14 @@ jobs:
           python tools/ci/install_python_ci.py project-test
           python tools/ci/install_python_ci.py intake-browser
           python -m pip check
+
+      # The full suite sets KFM_NO_NETWORK, which skips these loopback HTTP
+      # checks of the Studio's upload, download and access routes.
+      - name: Run the Studio loopback HTTP tests
+        run: |
+          python -m pytest -q -p no:cacheprovider \
+            tests/local_data/test_intake_studio.py \
+            tests/local_data/test_intake_studio_large_upload.py
 
       - name: Run the Studio browser acceptance test
         env:

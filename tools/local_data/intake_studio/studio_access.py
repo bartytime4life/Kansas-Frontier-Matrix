@@ -195,7 +195,8 @@ class AccessMixin:
                 value['actor']=self.principal['username']
                 raw=json.dumps(value,ensure_ascii=False).encode()
                 self.rfile=io.BytesIO(raw);self.headers.replace_header('Content-Length',str(len(raw)))
-            elif path=='/api/upload' or path=='/api/workspace/acceptance/import':
+            elif (path in {'/api/upload','/api/uploads','/api/workspace/acceptance/import'}
+                  or re.fullmatch(r'/api/uploads/[a-f0-9]{32}/(chunk|complete|cancel)',path)):
                 pass  # Existing byte/type/volume bounds remain authoritative.
             elif re.fullmatch(r'/api/files/[a-f0-9]{32}/review',path):
                 if self.principal['role']!='admin':raise AccessError('ADMIN_REQUIRED',403)
