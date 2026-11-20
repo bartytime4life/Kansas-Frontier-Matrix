@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-tiger-roads-ingest-20261119",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/tiger-roads-pipeline.yml",
+    "contracts/domains/roads-rail-trade/tiger_roads_ingest_candidate.md",
+    "contracts/pipeline_spec_declaration.md",
+    "docs/runbooks/tiger-roads-fixture-ingest.md",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/README.md",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/clean.json",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/duplicate-identity.json",
+    "pipeline_specs/README.md",
+    "pipeline_specs/roads-rail-trade/README.md",
+    "pipeline_specs/roads-rail-trade/tiger_roads.yaml",
+    "pipelines/domains/roads-rail-trade/README.md",
+    "pipelines/domains/roads-rail-trade/ingest_tiger_roads.py",
+    "schemas/contracts/v1/domains/roads-rail-trade/tiger_roads_ingest_candidate.schema.json",
+    "tests/pipelines/domains/roads_rail_trade/test_tiger_roads_ingest.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/tiger-roads-pipeline.yml": "sha256:7ca936f3f9641d62474908fed09ac78d2dc905de937a9a87041171b93ea9b191",
+    "contracts/domains/roads-rail-trade/tiger_roads_ingest_candidate.md": "sha256:119a88db603458bf9f9b402dd458be51eaaf550994b2767cf539e2f699a253df",
+    "contracts/pipeline_spec_declaration.md": "sha256:84f300eecd4a8b63d7c2f61f1e722fe45fa02122209e46a6b9fed2b431a54b1f",
+    "docs/runbooks/tiger-roads-fixture-ingest.md": "sha256:4d0943be66a4581355bbbc178bb5b2cd509f39b65593a9f15a954c59dff00fc0",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/README.md": "sha256:6fe42d7f360f3e71869e247a6b388a60b44a80520e0660157120d16a24de541a",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/clean.json": "sha256:a7e1f555d558156042ce18354520d4efdc4fe3ddf14aaa71e7ee540daa7f33f0",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/duplicate-identity.json": "sha256:0fdcd231a504350d0f7ae20eb9643d9d30238795a03374b165b227aa81944455",
+    "pipeline_specs/README.md": "sha256:b16bf3a3c0f8bb8cf5285c9c3bd6630fb422d1af90d5fe0f47efb7f2300631d6",
+    "pipeline_specs/roads-rail-trade/README.md": "sha256:f84936ecb1760b4a6af6dfef7460bcb6c4b0336138673f74ec6f257aabdf271b",
+    "pipeline_specs/roads-rail-trade/tiger_roads.yaml": "sha256:d71e524dc7455c5fcfc9a4c5231fa631720f1d12a5a68785cea7075b54e0a5d9",
+    "pipelines/domains/roads-rail-trade/README.md": "sha256:2b547ac446b8551e174d980c3c388a20dafbcde9d82300b0adeaa21c624d27f8",
+    "pipelines/domains/roads-rail-trade/ingest_tiger_roads.py": "sha256:e9c18b65646dbffe3a1f02bf5ede0219f5099ed4509688474b1cdfdcaf98f7b2",
+    "schemas/contracts/v1/domains/roads-rail-trade/tiger_roads_ingest_candidate.schema.json": "sha256:a69298e7c26686f50988ce3b7fff01da4f0b5d4c7e19d63be2fa53695f063523",
+    "tests/pipelines/domains/roads_rail_trade/test_tiger_roads_ingest.py": "sha256:71dd1090c39deb65fd4c27c749d35c312836cae891491916bcaebc7a426dac27",
+    "tools/qa/scaffold_baseline.json": "sha256:9783e58b92f8733a16aabf2ec919dec97ef78cb0af8ada25dcd9dcd3d1e0b46c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "unspecified by runtime"
+  },
+  "prompt_or_contract": "sha256:ca883c6d34d4d022a3df89f2e8941b3ab068c36834a283ebf55703407b040436",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "Code Review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3618a710b6bcc997288554f501f6ec5d995e8ce5",
+      "contracts/domains/roads-rail-trade/road_segment.md@3618a710b6bcc997288554f501f6ec5d995e8ce5",
+      "data/registry/roads-rail-trade/sources/census_tiger_roads.yaml@3618a710b6bcc997288554f501f6ec5d995e8ce5",
+      "connectors/census/src/census/tiger_package.py@3618a710b6bcc997288554f501f6ec5d995e8ce5",
+      "connectors/census/tiger-line-2025-kansas-core.source-reference.json@3618a710b6bcc997288554f501f6ec5d995e8ce5"
+    ],
+    "evidence_hashes": [
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:8d411ba4dd0cb4cc01460200875ff59b7e69b824979c370d0ccc6799193c2836",
+      "sha256:938dfd44172ce45563d5b3da1b9e496aa6eedcb9fe4ec9a5c3fdada81138465b",
+      "sha256:a289f27adaa6f68d7a9a27dfe1e47b8c08a0df9036037a89dfd120fe27b9400c",
+      "sha256:040820aaf62a48f07fe02c0b7a2096f48236d0c73989b1bb5231b6b58b308161"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/tiger-roads-pipeline.yml": "PROPOSED",
+    "contracts/domains/roads-rail-trade/tiger_roads_ingest_candidate.md": "PROPOSED",
+    "contracts/pipeline_spec_declaration.md": "PROPOSED",
+    "docs/runbooks/tiger-roads-fixture-ingest.md": "PROPOSED",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/README.md": "PROPOSED",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/clean.json": "PROPOSED",
+    "fixtures/domains/roads-rail-trade/tiger_roads_ingest/duplicate-identity.json": "PROPOSED",
+    "pipeline_specs/README.md": "PROPOSED",
+    "pipeline_specs/roads-rail-trade/README.md": "PROPOSED",
+    "pipeline_specs/roads-rail-trade/tiger_roads.yaml": "PROPOSED",
+    "pipelines/domains/roads-rail-trade/README.md": "PROPOSED",
+    "pipelines/domains/roads-rail-trade/ingest_tiger_roads.py": "PROPOSED",
+    "schemas/contracts/v1/domains/roads-rail-trade/tiger_roads_ingest_candidate.schema.json": "PROPOSED",
+    "tests/pipelines/domains/roads_rail_trade/test_tiger_roads_ingest.py": "PROPOSED",
+    "tools/qa/scaffold_baseline.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "tiger-source-edge-and-transportation-regressions",
+      "outcome": "PASS",
+      "reason": "112 passed and 86 subtests: two sealed golden packages, full-member CRC, archive bounds, malformed inputs, current reference binding, UTC identity, strict authority and schema, aggregate CLI, existing inspector/declaration/transportation/source checks."
+    },
+    {
+      "gate": "qualified-general-pipeline-core-lane",
+      "outcome": "PASS",
+      "reason": "341 passed, two separately qualified raster modules skipped, 24 subtests. Hash-locked project-test/connectors-core/geo-transforms environment; Python guard denies network."
+    },
+    {
+      "gate": "qa-and-installer-regressions",
+      "outcome": "PASS",
+      "reason": "385 passed and 74 subtests. Restricted run had seven socket or temporary-workflow permission failures; qualified rerun with local loopback and task-worktree writes passes, no source change used to conceal the failures."
+    },
+    {
+      "gate": "supported-full-local-collection",
+      "outcome": "PASS",
+      "reason": "10353 tests collect in the supported full-local bundle when scoped to tests as CI specifies. A preliminary unscoped repository-root experiment collected 10628 but failed on nine inherited connector import/name collisions and one missing imagery-only PIL dependency; it is outside this bundle scope and not claimed qualified."
+    },
+    {
+      "gate": "declarations-docs-workflow-and-ratchets",
+      "outcome": "PASS",
+      "reason": "110 repository declarations and four fixture declarations pass. Seven docs have zero structural failures and 72 resolving local link targets; 17 inherited nested-metadata warnings remain in the common declaration contract. Dedicated workflow has zero security findings; topology zero new drift and 89 inherited warnings. Scaffold shrinks exactly two entries, 858 to 856."
+    },
+    {
+      "gate": "hosted-ci-human-review-source-and-main-delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head hosted CI, human review and main merge. Even exact provider-byte equality remains HOLD. No source admission, geometry decoding or qualification, rights/sensitivity decision, lifecycle write, release or public use."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3618a710b6bcc997288554f501f6ec5d995e8ce5"
+    },
+    {
+      "id": "contracts/domains/roads-rail-trade/road_segment.md",
+      "validated": true,
+      "evidence_ref": "contracts/domains/roads-rail-trade/road_segment.md@3618a710b6bcc997288554f501f6ec5d995e8ce5"
+    },
+    {
+      "id": "data/registry/roads-rail-trade/sources/census_tiger_roads.yaml",
+      "validated": true,
+      "evidence_ref": "data/registry/roads-rail-trade/sources/census_tiger_roads.yaml@3618a710b6bcc997288554f501f6ec5d995e8ce5"
+    },
+    {
+      "id": "connectors/census/src/census/tiger_package.py",
+      "validated": true,
+      "evidence_ref": "connectors/census/src/census/tiger_package.py@3618a710b6bcc997288554f501f6ec5d995e8ce5"
+    },
+    {
+      "id": "connectors/census/tiger-line-2025-kansas-core.source-reference.json",
+      "validated": true,
+      "evidence_ref": "connectors/census/tiger-line-2025-kansas-core.source-reference.json@3618a710b6bcc997288554f501f6ec5d995e8ce5"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-20T00:23:29.419831Z",
+  "emitter": "codex/tiger-roads-ingest",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Seven of 39 YAML candidates now bind fixture-first implementations; 32 remain unimplemented. This is a new bounded projection of the existing Census PackageCandidate at INGEST, not RoadSegment geometry normalization or resolution of the documented broader transport/roads-rail-trade naming conflict. Source ZIPs are capped at 2 MiB, each member at 2 MiB, total expansion 8 MiB, 16 members; the full provider inventory is not covered. Synthetic packages intentionally mismatch unchanged Census reference bytes and all results remain held. Geometry records, SHX offsets, CRS transformations, coverage and operational/legal status are unverified. The accepted ADR-0029 reference supports repository placement and authority boundaries only, not source/rights/sensitivity/data-policy or release approval. Historical receipts are preserved. Prior GBIF and NLCD PRs 5964/5965 were verified merged to main, final main tree matches prior tested source; their hosted reads had no failures but full-local collection canceled. Original dirty checkout is preserved. Git CLI publication auth remains unavailable; use verified-blob connected-app publication and main-targeted PR."
+}

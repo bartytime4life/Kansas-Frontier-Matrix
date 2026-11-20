@@ -63,6 +63,9 @@ notes:
   - "Schema and contract homes use the transport segment while pipelines and most lifecycle/release lanes use roads-rail-trade; do not create a third slug or parallel authority without ADR/path-map/migration/rollback notes."
   - "Operational closure/restriction context, critical-infrastructure exposure, archaeology/cultural-route joins, private-property joins, and unsupported generated route narratives fail closed by default."
   - "Concrete executable behavior, source activation, schedules, CI coverage, schema paths, release wiring, and public API/map behavior remain NEEDS VERIFICATION until implemented and tested."
+owning_root: pipelines/
+responsibility: define executable transportation pipeline placement and report bounded TIGER intake implementation
+truth_posture: CONFIRMED bounded TIGER fixture path; PROPOSED candidate semantics; historical broader review retained; NEEDS VERIFICATION source admission and release
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -87,6 +90,22 @@ notes:
 **Public posture:** no direct publication; public output requires lifecycle, EvidenceBundle, source-role, rights, sensitivity, policy, catalog/triplet, release, correction, and rollback closure
 
 ---
+
+## Current bounded implementation (2026-11-19)
+
+`ingest_tiger_roads.py` now composes the existing Census inspector into a
+fixture-first held-ingest candidate, with complete synthetic goldens, strict
+candidate validation and guarded CI. It does not decode road geometry or build
+RoadSegment, graph, route, access, closure or public products. The domain source
+descriptor remains unresolved; all output stays on HOLD and all authority flags
+are false. See the [runbook](../../../docs/runbooks/tiger-roads-fixture-ingest.md)
+and [candidate contract](../../../contracts/domains/roads-rail-trade/tiger_roads_ingest_candidate.md).
+The other executable scaffolds and broader slug/ownership questions remain open.
+
+## Historical boundary review
+
+The earlier inspection and future-work requirements below are retained as
+historical evidence; they do not negate the bounded implementation above.
 
 ## Quick jump
 

@@ -121,9 +121,9 @@ life-safety authority. A pipeline declaration must not imply otherwise.
 | Boundary READMEs | 23 | One root boundary and 22 lane or sub-lane boundaries; each local contract owns its profile |
 | `.gitkeep` markers | 8 | Retained as topology-compatible zero-byte markers; they create no declaration or execution authority |
 
-Six YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
-USGS water observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, and bounded NLCD land cover. Each remains
-`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 33 pipeline
+Seven YAML candidates are `IMPLEMENTED_FIXTURE_FIRST`: Hydrology WBD HUC12,
+USGS water observations, USGS earthquakes, NOAA Storm Events, GBIF Flora intake, bounded NLCD land cover, and held TIGER roads intake. Each remains
+`FIXTURE_ONLY`, no-network, non-writing, and inactive. The other 32 pipeline
 candidates still need bounded implementations and bindings. The 65 stage boundaries
 and six compatibility aliases retain `NOT_IMPLEMENTED` by contract; they are not
 71 runnable pipelines awaiting activation.
@@ -136,6 +136,9 @@ Darwin Core normalizer and intake classifier with schema checks; its CLI exposes
 aggregate status only and does not resolve the proposed source descriptor.
 The [NLCD runbook](../docs/runbooks/nlcd-fixture-ingest.md) binds strict candidate
 schemas and native categorical-raster processing without habitat inference.
+
+The [TIGER roads runbook](../docs/runbooks/tiger-roads-fixture-ingest.md) binds supplied
+package inspection at INGEST; geometry normalization remains a later stage.
 
 Compatibility YAML is limited to the five Archaeology `*.spec.yaml` aliases and
 `hydrology/ingest_wbd.yaml`. The documentation-only compatibility lanes `air/`,
@@ -229,6 +232,6 @@ Open verification items:
 - assign and verify human owners and CODEOWNERS coverage;
 - decide the flora/shared-watcher and Hydrology NHDPlus placement holds;
 - define a separate activation registry only through an accepted authority decision;
-- implement and bind the remaining 33 pipeline candidates with source, contract,
+- implement and bind the remaining 32 pipeline candidates with source, contract,
   fixture, test, and workflow evidence; keep activation and release review separate;
 - retain the contract-required inactive posture of stage boundaries and aliases.

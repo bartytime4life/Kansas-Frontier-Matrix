@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/roads-rail-trade/tiger_roads_ingest_candidate.schema.json",
+  "title": "TigerRoadsIngestCandidate",
+  "description": "Proposed no-write ingest projection of the existing Census PackageCandidate, always held; never a RoadSegment or operational road object.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "candidate_id",
+    "created_at",
+    "file_name",
+    "vintage",
+    "county_fips",
+    "source_descriptor_ref",
+    "source_role",
+    "artifact",
+    "reference",
+    "inspection",
+    "route",
+    "reason_codes",
+    "limitations",
+    "authority",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "TigerRoadsIngestCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^tiger-roads-ingest:sha256:[a-f0-9]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "file_name": {
+      "type": "string",
+      "pattern": "^tl_2025_20[0-9]{3}_roads\\.zip$"
+    },
+    "vintage": {
+      "const": 2025
+    },
+    "county_fips": {
+      "type": "string",
+      "pattern": "^20[0-9]{3}$"
+    },
+    "source_descriptor_ref": {
+      "const": "data/registry/roads-rail-trade/sources/census_tiger_roads.yaml"
+    },
+    "source_role": {
+      "const": "REFERENCE_GEOMETRY_CANDIDATE"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "byte_length"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2097152
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "expected_sha256",
+        "expected_byte_length",
+        "exact_bytes_match"
+      ],
+      "properties": {
+        "path": {
+          "const": "connectors/census/tiger-line-2025-kansas-core.source-reference.json"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "expected_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "expected_byte_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exact_bytes_match": {
+          "type": "boolean"
+        }
+      }
+    },
+    "inspection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shape_type",
+        "feature_count",
+        "deleted_count",
+        "bbox",
+        "crs",
+        "fields",
+        "identity_field",
+        "identity_digest",
+        "kansas_feature_count",
+        "members",
+        "provisional_route",
+        "reason_codes"
+      ],
+      "properties": {
+        "shape_type": {
+          "type": "integer"
+        },
+        "feature_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2097152
+        },
+        "deleted_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2097152
+        },
+        "bbox": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number"
+          }
+        },
+        "crs": {
+          "enum": [
+            "NAD83_GEOGRAPHIC",
+            "UNRECOGNIZED"
+          ]
+        },
+        "fields": {
+          "type": "array",
+          "maxItems": 2047,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "kind",
+              "length",
+              "decimals"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 11
+              },
+              "kind": {
+                "type": "string",
+                "maxLength": 1
+              },
+              "length": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "decimals": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            }
+          }
+        },
+        "identity_field": {
+          "enum": [
+            "LINEARID",
+            null
+          ]
+        },
+        "identity_digest": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kansas_feature_count": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2097152
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "members": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "provisional_route": {
+          "enum": [
+            "RAW_CANDIDATE",
+            "QUARANTINE_CANDIDATE"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "UNEXPECTED_MEMBER",
+              "ENCODING_NOT_UTF8",
+              "DELETED_RECORDS_PRESENT",
+              "SHAPE_TYPE_UNEXPECTED",
+              "BBOX_NOT_GEOGRAPHIC",
+              "CRS_UNRECOGNIZED",
+              "IDENTITY_FIELD_ABSENT",
+              "IDENTITY_EMPTY",
+              "IDENTITY_DUPLICATE",
+              "STATE_OUTSIDE_KANSAS_SCOPE",
+              "STATE_SCOPE_MISMATCH",
+              "COUNTY_SCOPE_MISMATCH",
+              "BBOX_OUTSIDE_KANSAS_CONTEXT"
+            ]
+          }
+        }
+      }
+    },
+    "route": {
+      "const": "HOLD"
+    },
+    "reason_codes": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "SOURCE_ADMISSION_UNVERIFIED",
+          "DOMAIN_DESCRIPTOR_UNRESOLVED",
+          "RIGHTS_UNVERIFIED",
+          "SENSITIVITY_NOT_EVALUATED",
+          "REFERENCE_BYTES_NOT_MATCHED",
+          "UNEXPECTED_MEMBER",
+          "ENCODING_NOT_UTF8",
+          "DELETED_RECORDS_PRESENT",
+          "SHAPE_TYPE_UNEXPECTED",
+          "BBOX_NOT_GEOGRAPHIC",
+          "CRS_UNRECOGNIZED",
+          "IDENTITY_FIELD_ABSENT",
+          "IDENTITY_EMPTY",
+          "IDENTITY_DUPLICATE",
+          "STATE_OUTSIDE_KANSAS_SCOPE",
+          "STATE_SCOPE_MISMATCH",
+          "COUNTY_SCOPE_MISMATCH",
+          "BBOX_OUTSIDE_KANSAS_CONTEXT"
+        ]
+      }
+    },
+    "limitations": {
+      "const": [
+        "GEOMETRY_NOT_DECODED",
+        "HEADER_CRS_NOT_TRANSFORM_VERIFIED",
+        "COUNTY_SCOPE_FROM_FILE_NAME",
+        "COVERAGE_NOT_ESTABLISHED",
+        "NOT_ROAD_ACCESS_OR_ROUTING_AUTHORITY"
+      ]
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_admitted",
+        "review_completed",
+        "evidence_closed",
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "source_admitted": {
+          "const": false
+        },
+        "review_completed": {
+          "const": false
+        },
+        "evidence_closed": {
+          "const": false
+        },
+        "lifecycle_write": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_allowed": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  }
+}
