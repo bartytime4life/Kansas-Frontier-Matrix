@@ -25,7 +25,7 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     intro: [
       "Kansas sat on the main overland routes west. The Santa Fe Trail carried trade between Missouri and Santa Fe from 1821 until the railroad replaced it around 1880. Emigrants on the Oregon and California trails crossed northeast Kansas from the 1840s, and Pony Express riders followed much of the same corridor in 1860–1861.",
       "After the Civil War, cattle were driven north from Texas to Kansas railheads such as Abilene and Ellsworth on the Chisholm Trail, and later to Dodge City on the Western Trail.",
-      "This map draws the National Park Service's mapped alignments where they cross Kansas, with public trail sites you can click for their story.",
+      "This map draws the National Park Service's mapped alignments where they cross Kansas, with about a hundred public trail sites. Zoomed out, numbered circles count nearby sites and split apart as you zoom in; select a single site for its story.",
     ],
     layers: ["nps-historic-trails", "nps-trail-places"],
     center: [-97.4, 38.6], zoom: 6.2,
@@ -43,13 +43,13 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     kicker: "HISTORY · PLACES",
     intro: [
       "The National Register of Historic Places is the federal list of buildings, districts, sites, structures and objects judged worth preserving. Kansas has well over a thousand listings, from courthouses and schoolhouses to bridges and ranches.",
-      "This map shows the public point locations the National Park Service publishes for Kansas listings, with the frontier trails for context. Click a point for its type, place and listing date.",
+      "This map shows the public point locations the National Park Service publishes for Kansas listings, with the frontier trails for context. Zoomed out, numbered circles count nearby markers and split apart as you zoom in; select a single marker for its type, place and listing date.",
     ],
     layers: ["nps-nrhp-places", "nps-historic-trails"],
     center: [-98.2, 38.5], zoom: 6.4,
     ideas: [
       "Zoom into a county seat to see its listed downtown buildings and districts.",
-      "Look for National Historic Landmarks, shown with an outer ring.",
+      "Look for National Historic Landmarks, shown with an outer ring. A numbered circle with a light ring holds at least one.",
       "Find listed places that sit along the old trail corridors.",
     ],
     caution: "Points are representative locations, not property boundaries. Sensitive and restricted sites are withheld by the National Park Service, and listing does not mean a place is open to visitors.",
@@ -62,14 +62,14 @@ export const LANDING_GUIDES: readonly LandingGuide[] = Object.freeze([
     kicker: "OUTDOORS · ACCESS",
     intro: [
       "Most of Kansas is privately owned. The Kansas Department of Wildlife and Parks manages public wildlife areas and runs the Walk-In Hunting Access program, which opens enrolled private land to public hunting during set seasons.",
-      "This map shows KDWP's public wildlife areas and current Walk-In Hunting Access tracts, with the national inventory of public and protected lands for context. Click an area or tract for its name, acres and species.",
+      "This map shows KDWP's public wildlife areas and about 3,600 current Walk-In Hunting Access tracts, with the national inventory of public and protected lands for context. Zoomed out, numbered circles count the walk-in tracts in an area and total their recorded acres; closer in, select an area or tract for its name, acres and species.",
     ],
     layers: ["kdwp-wildlife-areas", "kdwp-wiha-access", "usgs-padus-lands"],
     center: [-98.3, 38.5], zoom: 6.4,
     ideas: [
       "Find wildlife areas and walk-in tracts near you before checking KDWP's current atlas.",
       "Compare walk-in tracts with public and protected lands nearby.",
-      "Click a tract to see its acres and listed species.",
+      "Select a numbered circle to zoom toward its tracts, then select a tract to see its acres and listed species.",
     ],
     caution: "Boundaries are simplified for display. Seasons, closures and rules change; check KDWP's current atlas and regulations before entering or hunting. Walk-in tracts are private land open only under program rules.",
   },
