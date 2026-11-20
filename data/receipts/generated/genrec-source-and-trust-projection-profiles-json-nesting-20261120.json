@@ -1,0 +1,89 @@
+{
+  "receipt_id": "genrec-source-and-trust-projection-profiles-json-nesting-20261120",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-and-trust-projection-profiles.yml",
+    "tools/validators/release/validate_trust_projection_manifest.py",
+    "tests/release/test_trust_projection_manifest.py",
+    "tools/validators/source_probe/validate_source_probe_envelope.py",
+    "tests/source/test_source_probe_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:9d47a17265c8d5ebfedf9a6a87d8f361b07dd55e457bca9ecd425653eb672a8d",
+    "tools/validators/release/validate_trust_projection_manifest.py": "sha256:79b4d09a1167311a6aa3ffb0e98d100a205239fda7aeabf871633b853606d12c",
+    "tests/release/test_trust_projection_manifest.py": "sha256:38828c0b911d6ad7acb4ea2866d980680c17471325a5026ea6fcea769eddc70c",
+    "tools/validators/source_probe/validate_source_probe_envelope.py": "sha256:23790cbf24c141bbf604d381d04b707585687004964705aa9669bfe2ddcd0bc2",
+    "tests/source/test_source_probe_envelope.py": "sha256:b2c473d997d6cd19d5453cc01278115196e9e9f3b58c48076f7ab363081dd41d"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/086a44d0489abc65da3d3dacbb96185ecc4bc716",
+      "repo:.github/workflows/source-and-trust-projection-profiles.yml@086a44d0489abc65da3d3dacbb96185ecc4bc716",
+      "repo:tools/validators/release/validate_trust_projection_manifest.py@086a44d0489abc65da3d3dacbb96185ecc4bc716",
+      "repo:tests/release/test_trust_projection_manifest.py@086a44d0489abc65da3d3dacbb96185ecc4bc716",
+      "repo:tools/validators/source_probe/validate_source_probe_envelope.py@086a44d0489abc65da3d3dacbb96185ecc4bc716",
+      "repo:tests/source/test_source_probe_envelope.py@086a44d0489abc65da3d3dacbb96185ecc4bc716"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "CONFIRMED",
+    "tools/validators/release/validate_trust_projection_manifest.py": "CONFIRMED",
+    "tests/release/test_trust_projection_manifest.py": "CONFIRMED",
+    "tools/validators/source_probe/validate_source_probe_envelope.py": "CONFIRMED",
+    "tests/source/test_source_probe_envelope.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "Both validators relied on json raising RecursionError to reject deep input. On the hosted CPython 3.15 runner, and locally with ulimit -s unlimited, json parses the tests' 100,000-level arrays, so the deep-input cases returned SCHEMA_INVALID instead of JSON_INVALID."
+    },
+    {
+      "gate": "Explicit nesting bound",
+      "outcome": "PASS",
+      "reason": "Each read() now rejects nesting above MAX_JSON_DEPTH = 256 before parsing, through the ValueError path that already maps to JSON_INVALID. Finding codes are unchanged."
+    },
+    {
+      "gate": "Profile tests",
+      "outcome": "PASS",
+      "reason": "tests/source/test_source_probe_envelope.py and tests/release/test_trust_projection_manifest.py: 25 passed on CPython 3.12 and on 3.15 with 8 MB and unlimited stacks; both --fixtures matrices unchanged."
+    },
+    {
+      "gate": "Receipt succession",
+      "outcome": "PASS",
+      "reason": "genrec-source-and-trust-projection-profiles-review-packet-time-20261019.json validates at ed32227dcb3d233b02cf40a65247c6b2127600f2, the last commit whose bytes it records, and the workflow now pins it there."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/086a44d0489abc65da3d3dacbb96185ecc4bc716"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-11-20T21:35:00Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Fixture-only validators; no source access, activation, approval, release or publication. The source-probe validator's earlier receipts remain pinned to their own commits."
+}

@@ -43,6 +43,9 @@ RECEIPT_SCHEMA = (
 FIXTURES_ROOT = REPO_ROOT / "fixtures/generated_receipt"
 CONTRACT_VERSION = "3.0.0"
 MAX_JSON_BYTES = 5 * 1024 * 1024
+# Checked before parsing. Interpreters disagree on when json raises
+# RecursionError (CPython 3.15 parses 20,000 levels), so the limit is explicit.
+MAX_JSON_DEPTH = 64
 MAX_SCHEMA_FINDINGS = 100
 MAX_ARTIFACTS = 1_000
 MAX_ARTIFACT_BYTES = 64 * 1024 * 1024
@@ -122,6 +125,37 @@ def _load_schema_validator() -> Draft202012Validator:
     )
 
 
+def _json_depth_exceeded(value: str) -> bool:
+    depth = 0
+    in_string = False
+    escaped = False
+    for character in value:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == '"':
+                in_string = False
+            continue
+        if character == '"':
+            in_string = True
+        elif character in "[{":
+            depth += 1
+            if depth > MAX_JSON_DEPTH:
+                return True
+        elif character in "]}":
+            depth -= 1
+    return False
+
+
+_COMPLEXITY_FINDING = Finding(
+    "JSON_COMPLEXITY_LIMIT",
+    "/receipt",
+    "JSON input exceeds parser complexity limits",
+)
+
+
 def _load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Finding]]:
     try:
         if path.is_symlink():
@@ -136,8 +170,11 @@ def _load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Findin
             return None, [
                 Finding("INPUT_TOO_LARGE", "/receipt", "JSON input exceeds 5 MiB")
             ]
+        text = path.read_text(encoding="utf-8")
+        if _json_depth_exceeded(text):
+            return None, [_COMPLEXITY_FINDING]
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            text,
             object_pairs_hook=_reject_duplicate_keys,
             parse_constant=_reject_nonfinite_number,
             parse_float=_parse_finite_float,
@@ -165,13 +202,7 @@ def _load_json_object(path: Path) -> tuple[dict[str, object] | None, list[Findin
             )
         ]
     except (RecursionError, ValueError):
-        return None, [
-            Finding(
-                "JSON_COMPLEXITY_LIMIT",
-                "/receipt",
-                "JSON input exceeds parser complexity limits",
-            )
-        ]
+        return None, [_COMPLEXITY_FINDING]
 
     if not isinstance(value, dict):
         return None, [

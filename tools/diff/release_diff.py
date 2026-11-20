@@ -25,6 +25,9 @@ from tools.diff import stable_diff as diff  # noqa: E402
 TOOL_NAME = "release-manifest-diff"
 MAX_INPUT_BYTES = 8 * 1024 * 1024
 MAX_ARTIFACTS = 10_000
+# Checked before parsing. Interpreters disagree on when json raises
+# RecursionError (CPython 3.15 parses 20,000 levels), so the limit is explicit.
+MAX_JSON_DEPTH = 64
 
 
 def _artifacts(value: dict[str, Any], label: str) -> dict[str, Any]:
@@ -65,12 +68,43 @@ def _artifacts(value: dict[str, Any], label: str) -> dict[str, Any]:
     return indexed
 
 
+def _json_depth_exceeded(raw: bytes) -> bool:
+    # UTF-8 continuation bytes never equal these ASCII bytes, so scanning the
+    # undecoded input is exact and leaves UTF-8 errors to the strict parser.
+    depth = 0
+    in_string = False
+    escaped = False
+    for byte in raw:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif byte == 0x5C:  # backslash
+                escaped = True
+            elif byte == 0x22:  # quote
+                in_string = False
+            continue
+        if byte == 0x22:
+            in_string = True
+        elif byte in (0x5B, 0x7B):  # [ {
+            depth += 1
+            if depth > MAX_JSON_DEPTH:
+                return True
+        elif byte in (0x5D, 0x7D):  # ] }
+            depth -= 1
+    return False
+
+
 def _load(path: Path, label: str) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         if path.is_file() and path.stat().st_size > MAX_INPUT_BYTES:
             raise diff.InputError(
                 f"{label.upper()}_TOO_LARGE",
                 f"{label} input exceeds {MAX_INPUT_BYTES} bytes.",
+            )
+        if path.is_file() and _json_depth_exceeded(path.read_bytes()):
+            raise diff.InputError(
+                f"{label.upper()}_NESTING_LIMIT",
+                f"{label} input is nested deeper than {MAX_JSON_DEPTH} levels.",
             )
     except OSError as exc:
         raise diff.InputError(

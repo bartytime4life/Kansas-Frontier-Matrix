@@ -5,7 +5,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.experiments.geoparquet.generate_pyarrow_25_carriers import generate
+try:
+    from tools.experiments.geoparquet.generate_pyarrow_25_carriers import generate
+except ModuleNotFoundError as exc:
+    if exc.name != "pyarrow":
+        raise
+    # The PyArrow 25 lock is CPython 3.12-only. Its dedicated workflows assert
+    # the install before running this module; other interpreters skip it.
+    raise unittest.SkipTest(
+        "PyArrow 25 carriers run with the CPython 3.12 geoparquet-pyarrow-25 lock"
+    ) from exc
 from tools.validators.release.validate_geoparquet_2_rc_pyarrow_carriers import (
     EXPECTED_REASONS,
     validate,

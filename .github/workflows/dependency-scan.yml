@@ -74,6 +74,27 @@ jobs:
           --desc off
           --format columns
 
+      # pip-audit evaluates environment markers against its own interpreter, so
+      # pins gated to other Pythons (pyproj 3.8.0 and numpy 2.5.4 for CPython
+      # 3.15) would be skipped above. Audit them again with markers removed.
+      # pip-audit 2.10.1 cannot run on 3.15 itself (pip-api imports sre_constants).
+      - name: Audit lock pins gated to other interpreters
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t gated < <(python tools/ci/marker_gated_pins.py \
+            --output-dir "$RUNNER_TEMP/marker-gated-pins" tools/ci/*.lock)
+          if [ "${#gated[@]}" -eq 0 ]; then
+            echo "no marker-gated pins"
+            exit 0
+          fi
+          args=()
+          for lock in "${gated[@]}"; do
+            args+=(--requirement "$lock")
+          done
+          python -m pip_audit "${args[@]}" --require-hashes --disable-pip --strict \
+            --progress-spinner off --desc off --format columns
+
       - name: Record Python audit boundary
         if: always()
         shell: bash

@@ -55,7 +55,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.11", "3.12", "3.13"]
+        # Binary-only installs: CPython 3.15 is not listed because PyYAML 6.0.3
+        # publishes no cp315 wheel. The full-suite job covers 3.15.
+        python: ["3.11", "3.12", "3.13", "3.14"]
     steps:
       - name: Check out the tested revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

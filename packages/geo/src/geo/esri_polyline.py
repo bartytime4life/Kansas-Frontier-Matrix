@@ -69,8 +69,12 @@ def polyline_to_geojson(geometry: dict[str, Any], spatial_reference: dict[str, A
         from pyproj import CRS, Transformer, __version__, network
         require(not network.is_network_enabled(), "PROJ_NETWORK_MUST_BE_OFF")
         source = CRS.from_epsg(3857 if wkid == 102100 else wkid)
+        # Best available operation, not only_best: with PROJ_NETWORK=OFF the HPGN
+        # grid shifts are absent, and PROJ 9.8.1 (pyproj 3.8.0) enforces only_best
+        # by failing where PROJ 9.5.1 warned and fell back.
+        # The receipt records the chosen operation and its stated accuracy.
         transformer = Transformer.from_crs(source, CRS.from_epsg(4326), always_xy=True,
-                                            allow_ballpark=False, only_best=True)
+                                            allow_ballpark=False)
         converted = []
         for path in paths:
             coords = []

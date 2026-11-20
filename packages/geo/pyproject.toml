@@ -5,4 +5,7 @@ version = "0.0.0"
 requires-python = ">=3.11"
 
 [project.optional-dependencies]
-transforms = ["pyproj==3.7.2"]
+transforms = [
+    "pyproj==3.7.2; python_version < \"3.15\"",
+    "pyproj==3.8.0; python_version >= \"3.15\"",
+]
