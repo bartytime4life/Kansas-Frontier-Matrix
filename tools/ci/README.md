@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tools-ci-readme
 title: CI Tools README
 type: tool-readme
-version: v0.4.4
+version: v0.4.5
 status: draft; ci-tooling-lane; verified-dependency-bootstrap; bounded-python-no-network-startup-guard; mixed-implementation-status
 owners:
   - OWNER_TBD - Tooling steward
@@ -212,6 +212,19 @@ first release with cp315 wheels; 3.11 through 3.14 keep `numpy==2.3.3`. The loca
 NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
 change root runtime dependencies.
 
+`python-build.lock` pins hash-locked, binary-only build tools: setuptools 84.2.1
+and Cython 3.3.1, with every published wheel. They're used where a locked package
+has no wheel and pip builds it from its hashed source:
+
+- **CLI installs:** `install_kfm_cli.py` always installs the build tools first,
+  because `antlr4-python3-runtime` 4.9.3 is source-only.
+- **Test profiles:** profiles on `python-test.lock` install them first from CPython
+  3.15 (`SOURCE_BUILD_FROM` in `install_python_ci.py`), because PyYAML 6.0.3 has no
+  cp315 wheel. 3.11–3.14 test installs are unchanged.
+
+Either way, the package then installs with `--no-build-isolation`, so pip doesn't
+download unhashed build requirements into an isolated environment.
+
 The optional `intake-browser` profile uses `python-browser.lock`: binary-only,
 hash-pinned Playwright 1.64.1 and its dependencies for CPython 3.11, 3.12 and 3.13.
 It installs Playwright's Python driver only, never a browser. The
@@ -228,7 +241,7 @@ distributions. Its synthetic tests still reject tampered inputs; no source
 acquisition, lifecycle promotion or publication is authorized by this profile.
 
 The `dependency-scan / pip-audit` job audits every `tools/ci/*.lock` (the
-PyArrow, audit-tool, browser, CLI, geo, NWM and test profiles) in one run with the same
+PyArrow, audit-tool, browser, build-tools, CLI, geo, NWM and test profiles) in one run with the same
 `--require-hashes --disable-pip --strict` options, so it reads the exact pins
 without installing them. pip-audit evaluates environment markers against its own
 Python 3.11, so a second step audits the pins gated to other interpreters: it runs
