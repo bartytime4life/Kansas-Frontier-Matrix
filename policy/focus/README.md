@@ -2,11 +2,11 @@
 doc_id: kfm://policy/focus
 title: Focus Mode Runtime Policy Boundary
 type: readme
-version: v0.3
+version: v0.3.1
 status: draft; BOUNDARY_COMPACT; repository-grounded; scaffold-only; focus-policy-inactive; finite-envelope-shape-proved; evaluator-unbound; fail-closed; non-release; non-publication
 owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted Focus policy stewardship, independent approval controls, and a local scope ID were not established
 created: 2026-07-22
-updated: 2026-08-13
+updated: 2026-11-20
 current_path: policy/focus/README.md
 owning_root: policy/
 policy_label: public; policy; focus-mode; request-admission; response-admission; citation-closure; finite-envelope; trust-membrane; fail-closed; non-release; non-publication
@@ -522,7 +522,7 @@ No later step may be used to pretend an earlier dependency is complete.
 | [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **accepted** | Adopts Directory Rules v2 and singular policy-root placement; does not activate Focus policy. |
 | [ADR-0001](../../docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) | proposed/draft | Schema-home design context. |
 | [ADR-0002](../../docs/adr/ADR-0002-contracts-vs-schemas-split.md) | proposed/draft | Contract versus schema separation. |
-| [ADR-0003](../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | proposed/draft | Narrow policy/policies compatibility question; policy-root placement is already adopted by ADR-0029. |
+| [ADR-0003](../../docs/adr/ADR-0003-policy-singular-is-canonical-%28policies-is-compatibility%29.md) | accepted (2026-11-20) | Narrow policy/policies compatibility question; policy-root placement is already adopted by ADR-0029. |
 | [ADR-0004](../../docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) | proposed/draft | Governed API trust-membrane design. |
 | [ADR-0008](../../docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md) | proposed/draft | Model runtime subordination. |
 | [ADR-0010](../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | proposed/draft | Sensitive-domain default-deny design. |

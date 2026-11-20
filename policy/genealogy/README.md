@@ -2,11 +2,11 @@
 doc_id: kfm://policy/genealogy
 title: policy/genealogy/ — Genealogy Publication Policy Compatibility Boundary
 type: readme
-version: v0.2
+version: v0.2.1
 status: draft; BOUNDARY_COMPACT; repository-grounded; placement-conflicted; scaffold-only; evaluator-unbound; non-release; non-publication
 owner: NEEDS VERIFICATION — .github/CODEOWNERS routes /policy/ to @bartytime4life; accepted genealogy, living-person privacy, consent, policy, release, and independent approval roles remain unproved
 created: 2026-07-22
-updated: 2026-08-13
+updated: 2026-11-20
 current_path: policy/genealogy/README.md
 owning_root: policy/
 responsibility: Document the local compatibility boundary for the existing genealogy publication-rule scaffold, its inherited policy authority, safe inputs and outputs, placement conflict, validation limits, sensitive-data exclusions, and migration or rollback handoffs without creating genealogy truth, activating policy, approving release, or authorizing publication.
@@ -460,7 +460,7 @@ Every substantive rule or placement change requires:
 | Decision | Current status | Relevance |
 |---|---:|---|
 | [ADR-0029 — adopt Directory Governance Standard v2](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **ACCEPTED** | Makes Directory Rules v2 effective for policy-root placement, domain-lane patterns, and README profiles. |
-| [ADR-0003 — singular policy root](<../../docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | **PROPOSED** | Narrow root-compatibility decision; accepted Directory Rules already establish the singular root. |
+| [ADR-0003 — singular policy root](<../../docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md>) | **ACCEPTED** (2026-11-20) | Narrow root-compatibility decision; accepted Directory Rules already establish the singular root. |
 | [ADR-0010 — deny by default for sensitive classes](../../docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md) | **DRAFT / effective PROPOSED** | Useful candidate posture for DNA and other protected classes; not accepted enforcement proof. |
 | [ADR-0020 — abstain is first class](../../docs/adr/ADR-0020-abstain-is-a-first-class-decision.md) | **PROPOSED** | Defines candidate separation of evidence insufficiency from categorical denial and process failure. |
 | Genealogy placement, package normalization, and policy-family mapping | **NOT FOUND / NEEDS DECISION** | This README does not create or accept the missing decision. |
