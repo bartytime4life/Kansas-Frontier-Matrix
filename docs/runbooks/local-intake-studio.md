@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-runbooks-local-intake-studio
 title: Local photo and PDF intake review
 type: runbook
-version: v1.3
+version: v1.4
 status: implementation-candidate
 owners: ["@bartytime4life"]
 created: 2026-11-06
@@ -119,6 +119,9 @@ Files up to 25 MiB upload in one request. Larger files upload in 8 MiB parts:
 - **Resume:** the stored byte count is the resume point. If the connection drops,
   the browser retries, then resumes from that count. After a page reload, choose
   the same file again to continue where it stopped.
+- **Ownership:** an unfinished upload belongs to the account that started it.
+  Another signed-in account sees it as not found. It cannot check, continue,
+  complete or cancel it.
 - **Limits:** at most four unfinished uploads are kept, under `uploads/` in the
   private inbox. One untouched for 24 hours is removed. Each upload and part needs
   its own size plus 256 MiB of free disk space, or it is refused.
