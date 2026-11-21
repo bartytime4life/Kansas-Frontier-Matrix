@@ -96,6 +96,8 @@ import Link from "next/link";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
 import { officialClusterSummary } from "./context-clusters";
+import { isCountedLayer } from "./view-tally";
+import { ViewTallyLine } from "./view-tally-line";
 import { BlmPlssInspector } from "./blm-plss-inspector";
 import { isBlmPlssLayer } from "./blm-plss-records";
 import { HmsSmokePlayback } from "./hms-smoke-playback-control";
@@ -12057,6 +12059,7 @@ export default function Home() {
                   {needsFlatMap && <button type="button" onClick={() => activateMapRepresentation("2d")}>Use flat map</button>}
                   {needsCloserView && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const center = map.getCenter(); const inKansasView = center.lng >= -102.06 && center.lng <= -94.58 && center.lat >= 36.99 && center.lat <= 40.01; map.easeTo({ zoom: minimumZoom + 0.5, ...(inKansasView ? {} : { center: [-98.3, 38.5] as [number, number] }), duration: reducedMotion ? 0 : 600 }); announce(`Zooming to ${source.shortTitle}; provider coverage may still contain gaps`); }}>Zoom to layer</button>}
                 </div>}
+                {isCountedLayer(source.id) && effectiveOfficialVisibility[source.id] && projection !== "globe" && styleReady && <ViewTallyLine contextId={source.id} data={officialPayloads[source.id as OfficialContextFeedId]?.data} mapRef={mapRef} reducedMotion={reducedMotion} />}
                 {officialVisibility[source.id] && source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
                 <details className="official-context-options"><summary>Details &amp; controls</summary><div className="official-context-option-body">                {source.id === "nws-radar" && <div className="noaa-radar-launch" aria-label="NOAA radar playback">
                   <strong>Watch radar over time</strong>

@@ -1,0 +1,76 @@
+import type { FeatureCollection } from "geojson";
+import { accessOverviewPoints, officialClusterSummary } from "./context-clusters";
+import { isBridgeFeed } from "./kdot-bridges";
+
+/** The map's current extent in degrees. */
+export type ViewBounds = Readonly<{ west: number; south: number; east: number; north: number }>;
+/** What a counted layer holds inside the current view, in the words its numbered circles use. */
+export type ViewTally = Readonly<{ count: number; total: number; title: string; detail: string; nearest: readonly [number, number] | null }>;
+
+const NOUNS: Readonly<Record<string, string>> = Object.freeze({
+  "nps-nrhp-places": "National Register markers", "nps-trail-places": "trail sites", "kdwp-wiha-access": "walk-in hunting tracts",
+});
+const TRAILS = [["Santa Fe", "santaFe"], ["Oregon", "oregon"], ["California", "california"], ["Pony Express", "ponyExpress"]] as const;
+const RESOURCE_TYPES: Readonly<Record<string, string>> = Object.freeze({ building: "buildings", district: "districts", site: "sites", structure: "structures", object: "objects" });
+const COMPASS = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"] as const;
+const MILES_PER_DEGREE = 69.05;
+
+/** Layers drawn as numbered circles that split as the visitor zooms in. */
+export const isCountedLayer = (contextId: string): boolean => isBridgeFeed(contextId) || Object.hasOwn(NOUNS, contextId);
+
+const number = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
+
+/** Adds one record to the totals a numbered circle keeps for its layer, so a view reads the same way a circle does. */
+function addRecord(contextId: string, totals: Record<string, number>, p: Record<string, unknown>) {
+  const add = (key: string, by = 1) => { totals[key] = (totals[key] ?? 0) + by; };
+  if (isBridgeFeed(contextId)) {
+    const built = number(p.built), length = number(p.lengthFt);
+    totals.earliest = Math.min(totals.earliest ?? 9999, built ?? 9999);
+    totals.longestFt = Math.max(totals.longestFt ?? 0, length ?? 0);
+    if (p.statusClass === "closed") add("closed"); else if (p.statusClass === "posted") add("posted");
+  } else if (contextId === "nps-nrhp-places") {
+    if (p.landmark === true) add("landmarks");
+    const key = typeof p.resourceType === "string" ? RESOURCE_TYPES[p.resourceType] : undefined;
+    if (key) add(key);
+  } else if (contextId === "nps-trail-places") {
+    if (p.certified === "NPS-certified trail site") add("certified");
+    const trails = typeof p.trails === "string" ? p.trails : "";
+    for (const [name, key] of TRAILS) if (trails.includes(name)) add(key);
+  } else {
+    add("acres", number(p.acres) ?? 0); add("archeryOnly", number(p.archeryOnly) ?? 0);
+  }
+}
+
+/** Counts a counted layer's records inside the view and describes them. A hunting tract counts where the
+ * middle of its outline falls. Returns null for other layers and for a layer with no located records. */
+export function viewTally(contextId: string, data: FeatureCollection | null | undefined, bounds: ViewBounds): ViewTally | null {
+  if (!isCountedLayer(contextId) || !data || ![bounds.west, bounds.south, bounds.east, bounds.north].every(Number.isFinite)) return null;
+  const points = contextId === "kdwp-wiha-access" ? accessOverviewPoints(data) : data;
+  const wraps = bounds.west > bounds.east, middleX = wraps ? bounds.west : (bounds.west + bounds.east) / 2, middleY = (bounds.south + bounds.north) / 2;
+  const shrink = Math.cos(middleY * Math.PI / 180), totals: Record<string, number> = {};
+  let count = 0, total = 0, nearest: readonly [number, number] | null = null, nearestMiles = Infinity;
+  for (const feature of points.features) {
+    if (feature.geometry?.type !== "Point") continue;
+    const [x, y] = feature.geometry.coordinates;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    total++;
+    if (y >= bounds.south && y <= bounds.north && (wraps ? x >= bounds.west || x <= bounds.east : x >= bounds.west && x <= bounds.east)) {
+      count++; addRecord(contextId, totals, feature.properties ?? {});
+    } else if (count === 0) {
+      const miles = Math.hypot((x - middleX) * shrink, y - middleY) * MILES_PER_DEGREE;
+      if (miles < nearestMiles) { nearestMiles = miles; nearest = [x, y]; }
+    }
+  }
+  if (total === 0) return null;
+  const noun = isBridgeFeed(contextId) ? "bridges" : NOUNS[contextId], all = total.toLocaleString("en-US");
+  if (count === 0) {
+    const [x, y] = nearest!, bearing = (Math.atan2((x - middleX) * shrink, y - middleY) * 180 / Math.PI + 360) % 360;
+    const distance = nearestMiles < 10 ? `about ${Math.max(1, Math.round(nearestMiles))} mi` : `about ${(Math.round(nearestMiles / 5) * 5).toLocaleString("en-US")} mi`;
+    return { count, total, title: `No ${noun} in this view`, detail: `The nearest of ${all} is ${distance} ${COMPASS[Math.round(bearing / 45) % 8]} of the middle of the map.`, nearest };
+  }
+  // The circles' own wording, fed this view's totals; it needs at least two records to speak of a group.
+  const facts = count > 1 ? officialClusterSummary(contextId, { cluster: true, point_count: count, ...totals })?.detail : undefined;
+  return { count, total, nearest: null,
+    title: count === total ? `All ${all} ${noun} are in this view` : `${count.toLocaleString("en-US")} of ${all} ${noun} in this view`,
+    detail: facts && facts !== "Select to zoom in" ? facts : "" };
+}
