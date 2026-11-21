@@ -3179,4 +3179,14 @@ def test_view_tally_status_successor_preserves_view_tally_inventory_and_all_hold
         {"app/map-layers.css", "app/page.tsx", "app/view-tally-line.tsx", "app/view-tally.ts", "docs/kdot-bridge-clusters-20261115.md", "tests/view-tally.test.mjs"},
         "25f6f6b541d7eca0966cc6ca78e27091f205633a",
     )
-    assert TOOL.RECEIPT.name == "site-v268-view-tally-status-overlay-20261121.json"
+
+
+def test_view_highlights_successor_preserves_view_tally_status_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-view-highlights-overlay-20261121.json",
+        "site-v268-view-tally-status-overlay-20261121.json",
+        "ba320613f47b77c9c465f1ab7843e87f46bc0d25b57cbd00290273773e73ae84",
+        {"app/map-layers.css", "app/view-tally-line.tsx", "app/view-tally.ts", "docs/kdot-bridge-clusters-20261115.md", "tests/view-tally.test.mjs"},
+        "dd52826484401adfabd9e24b1a2a20d5b6ce869a",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-view-highlights-overlay-20261121.json"

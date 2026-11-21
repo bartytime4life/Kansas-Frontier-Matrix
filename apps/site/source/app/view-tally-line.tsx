@@ -27,6 +27,11 @@ export function ViewTallyLine({ contextId, data, mapRef, reducedMotion }: {
     <strong>{tally.title}</strong>
     {tally.detail && <span>{tally.detail}</span>}
     {nearest && <button type="button" onClick={() => mapRef.current?.easeTo({ center: [nearest[0], nearest[1]], duration: reducedMotion ? 0 : 600 })}>Go to the nearest</button>}
+    {tally.highlights.length > 0 && <span className="view-tally-actions">{tally.highlights.map(highlight => <button type="button" key={highlight.label} onClick={() => {
+      const map = mapRef.current;
+      // Never zooms out: a visitor already closer than the record needs stays where they are.
+      if (map) map.easeTo({ center: [highlight.center[0], highlight.center[1]], zoom: Math.max(map.getZoom(), highlight.zoom), duration: reducedMotion ? 0 : 900 });
+    }}>{highlight.label}</button>)}</span>}
   </p>;
 }
 

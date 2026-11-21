@@ -134,3 +134,44 @@ test("the status bar shows the line on the flat map, after the map's name, and d
   assert.match(line, /<output className="status-view-tally" aria-live="off">/);
   assert.match(css, /@media \(max-width: 760px\) \{ \.status-view-tally \{ display: none; \} \}/);
 });
+
+test("a view picks out its oldest and longest bridge, and says so only when it is true", () => {
+  const bridges = collection([
+    point(-95.7, 39.05, { built: 1931, lengthFt: 120 }), point(-95.6, 39.0, { built: 1978, lengthFt: 1450 }),
+    point(-95.5, 39.1, { built: 1931, lengthFt: 60 }), point(-95.55, 39.0, { built: 1700, lengthFt: 90 }), point(-100.9, 37.9, { built: 1899, lengthFt: 2100 }),
+  ]);
+  const tied = viewTally("kdot-bridges-local", bridges, TOPEKA);
+  // Two bridges share the earliest believable year, so neither is called "the oldest"; 1700 is outside the range the circles accept.
+  assert.deepEqual(tied.highlights, [
+    { label: "Show one of 2 from 1931", center: [-95.7, 39.05], zoom: 14.5 },
+    { label: "Show the longest (1,450 ft)", center: [-95.6, 39.0], zoom: 14.5 },
+  ]);
+  const all = viewTally("kdot-bridges-local", bridges, KANSAS);
+  assert.deepEqual(all.highlights.map(h => [h.label, h.center]), [["Show the oldest (1899)", [-100.9, 37.9]], ["Show the longest (2,100 ft)", [-100.9, 37.9]]]);
+  // Records outside the view are never offered, and one record alone has nothing to pick out.
+  assert.ok(tied.highlights.every(h => h.center[0] > TOPEKA.west && h.center[0] < TOPEKA.east));
+  assert.deepEqual(viewTally("kdot-bridges-state", collection([point(-95.7, 39.05, { built: 1931, lengthFt: 120 }), point(-100.9, 37.9)]), TOPEKA).highlights, []);
+  assert.deepEqual(viewTally("kdot-bridges-state", collection([point(-95.7, 39.05), point(-95.6, 39.0)]), TOPEKA).highlights, [], "no recorded year or length, no button");
+});
+
+test("landmarks and the largest hunting tract are offered; trail sites and empty views offer nothing", () => {
+  const places = collection([point(-95.7, 39, { resourceType: "building" }), point(-95.6, 39.1, { resourceType: "building", landmark: true }), point(-95.5, 39.0, { resourceType: "district", landmark: true })]);
+  assert.deepEqual(viewTally("nps-nrhp-places", places, TOPEKA).highlights, [{ label: "Show one of 2 National Historic Landmarks", center: [-95.6, 39.1], zoom: 13.5 }]);
+  const one = collection([point(-95.7, 39, { resourceType: "building" }), point(-95.6, 39.1, { resourceType: "building", landmark: true })]);
+  assert.equal(viewTally("nps-nrhp-places", one, TOPEKA).highlights[0].label, "Show the National Historic Landmark");
+  assert.deepEqual(viewTally("nps-nrhp-places", collection([point(-95.7, 39), point(-95.6, 39.1)]), TOPEKA).highlights, []);
+  const tracts = collection([square(-95.7, 39, { featureId: "a", acres: 320 }), square(-95.6, 39.1, { featureId: "b", acres: 1122.4 }), square(-100.9, 37.9, { featureId: "c", acres: 6400 })]);
+  const [largest] = viewTally("kdwp-wiha-access", tracts, TOPEKA).highlights;
+  assert.equal(largest.label, "Show the largest tract (1,122 acres)"); assert.equal(largest.zoom, 12);
+  assert.ok(Math.abs(largest.center[0] + 95.6) < 1e-9 && Math.abs(largest.center[1] - 39.1) < 1e-9);
+  const sites = collection([point(-95.7, 39, { trails: "Santa Fe", certified: "NPS-certified trail site" }), point(-95.6, 39.1, { trails: "Oregon" })]);
+  assert.deepEqual(viewTally("nps-trail-places", sites, TOPEKA).highlights, []);
+  assert.deepEqual(viewTally("nps-trail-places", sites, { west: -99, south: 38.9, east: -98, north: 39.2 }).highlights, []);
+});
+
+test("a highlight button moves to the record without ever zooming out", async () => {
+  const line = await readFile("app/view-tally-line.tsx", "utf8");
+  assert.match(line, /zoom: Math\.max\(map\.getZoom\(\), highlight\.zoom\)/);
+  assert.match(line, /duration: reducedMotion \? 0 : 900/);
+  assert.match(line, /tally\.highlights\.length > 0 &&/);
+});

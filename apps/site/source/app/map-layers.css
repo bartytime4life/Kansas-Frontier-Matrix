@@ -267,6 +267,7 @@
 .view-tally strong { color: #eef7f2; font-weight: 600; font-variant-numeric: tabular-nums; }
 .view-tally[data-empty="true"] { border-left-color: #547873; }
 .view-tally button { justify-self: start; min-height: 36px; margin-top: 4px; border: 1px solid #547873; border-radius: 6px; background: #183a3e; color: #a8e3db; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+.view-tally-actions { display: flex; flex-wrap: wrap; gap: 0 6px; }
 .view-tally button:focus-visible { outline: 2px solid #8cddd7; outline-offset: 2px; }
 @media (max-width: 980px) { .view-tally button { min-height: 44px; } }
 /* The same counts in the status bar, after the map's name; dropped where the bar has no room. */
