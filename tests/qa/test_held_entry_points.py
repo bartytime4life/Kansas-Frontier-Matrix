@@ -31,6 +31,36 @@ HELD_ENTRY_POINTS = {
         "reason_code": "CATALOG_NOT_IMPLEMENTED", "catalog_emission_authorized": False},
     "pipelines/domains/roads-rail-trade/emit_catalog_records.py": {
         "reason_code": "CATALOG_NOT_IMPLEMENTED", "catalog_emission_authorized": False},
+    "pipelines/domains/roads-rail-trade/build_corridor_route.py": {
+        "reason_code": "CORRIDOR_ROUTE_BUILD_NOT_IMPLEMENTED", "processed_write_authorized": False},
+    "pipelines/domains/roads-rail-trade/build_historic_route_claim.py": {
+        "reason_code": "HISTORIC_ROUTE_CLAIM_BUILD_NOT_IMPLEMENTED", "processed_write_authorized": False},
+    "pipelines/domains/roads-rail-trade/emit_pmtiles_layers.py": {
+        "reason_code": "PMTILES_EMISSION_NOT_IMPLEMENTED", "tile_build_authorized": False},
+    "pipelines/domains/roads-rail-trade/generalize_for_public.py": {
+        "reason_code": "PUBLIC_GENERALIZATION_NOT_IMPLEMENTED", "public_release_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_fhwa_hpms.py": {
+        "reason_code": "FHWA_HPMS_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_fhwa_nhfn.py": {
+        "reason_code": "FHWA_NHFN_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_fra_form57.py": {
+        "reason_code": "FRA_FORM57_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_fra_gcis.py": {
+        "reason_code": "FRA_GCIS_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_hifld_ntad.py": {
+        "reason_code": "HIFLD_NTAD_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_kdot_kanplan_kandrive.py": {
+        "reason_code": "KDOT_KANPLAN_KANDRIVE_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_stb_class1.py": {
+        "reason_code": "STB_CLASS1_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/ingest_wzdx_v4.py": {
+        "reason_code": "WZDX_INGEST_NOT_IMPLEMENTED", "source_admission_authorized": False},
+    "pipelines/domains/roads-rail-trade/normalize_to_rail_segment.py": {
+        "reason_code": "RAIL_SEGMENT_NORMALIZATION_NOT_IMPLEMENTED", "processed_write_authorized": False},
+    "pipelines/domains/roads-rail-trade/normalize_to_road_segment.py": {
+        "reason_code": "ROAD_SEGMENT_NORMALIZATION_NOT_IMPLEMENTED", "processed_write_authorized": False},
+    "pipelines/domains/roads-rail-trade/project_to_graph.py": {
+        "reason_code": "GRAPH_PROJECTION_NOT_IMPLEMENTED", "graph_projection_authorized": False},
     "tools/ingest/hydrology/usgs_streamflow_gate.py": {
         "reason_code": "USGS_STREAMFLOW_GATE_NOT_IMPLEMENTED", "source_admission_authorized": False},
     "tools/validators/validate_catalog_matrix.py": {

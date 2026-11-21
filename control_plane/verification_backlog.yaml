@@ -310,7 +310,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/generalize_for_public.py
   path_sha256: sha256:fa4eeb309325c506ef3aa82c3140a588f36ea2994f5eea09c17e2c93873dc0b1
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -321,13 +321,14 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason PUBLIC_GENERALIZATION_NOT_IMPLEMENTED, exits 2, and reads or writes
+    nothing.","user_consequence":"Do not advertise this artifact as an operational capability until its consumer and behavior
+    pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement only after
+    the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python -m
+    pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code and
+    leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-0507f781146905e88cd84594
   subject_id: kfm://artifact/schemas/contracts/v1/domains/hazards/source_descriptor.schema.json
   kind: scaffold_gap
@@ -1635,7 +1636,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/build_corridor_route.py
   path_sha256: sha256:f33f24e215ad19aeadc501b960a07b22ff35f701832ccc593f116c38f731b890
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -1646,20 +1647,21 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason CORRIDOR_ROUTE_BUILD_NOT_IMPLEMENTED, exits 2, and reads or writes
+    nothing.","user_consequence":"Do not advertise this artifact as an operational capability until its consumer and behavior
+    pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement only after
+    the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python -m
+    pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code and
+    leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-19349d2dc633bea748e217cb
   subject_id: kfm://artifact/pipelines/domains/roads-rail-trade/ingest_fhwa_hpms.py
   kind: scaffold_gap
   path: pipelines/domains/roads-rail-trade/ingest_fhwa_hpms.py
   path_sha256: sha256:b50e5eb8ad7682754c2d976f847e3d3369ba6e5279ec0c1c85650e142cac9532
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -1670,13 +1672,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason FHWA_HPMS_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-19954c2f0465841786ae2fbb
   subject_id: kfm://artifact/policy/domains/flora/flora_taxonomy_resolution.rego
   kind: scaffold_gap
@@ -2172,7 +2174,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_fra_gcis.py
   path_sha256: sha256:588283f06f0339c045a7490b6fc2fbe73278db571e42c8e4c4d729aa00313c3b
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -2183,13 +2185,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason FRA_GCIS_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-2076c274231d0c9f72120537
   subject_id: kfm://artifact/connectors/ahgp/src/ahgp/fetch.py
   kind: scaffold_gap
@@ -2453,7 +2455,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_fra_form57.py
   path_sha256: sha256:c5ed6696ebbcb97df08320b43f99a1c5132e86f00fda6e44dcfe9e34c1865b16
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -2464,13 +2466,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason FRA_FORM57_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-23d40c974f943d63c12f909b
   subject_id: kfm://artifact/schemas/contracts/v1/domains/fauna/richness_indicator.schema.json
   kind: scaffold_gap
@@ -4431,7 +4433,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_kdot_kanplan_kandrive.py
   path_sha256: sha256:f96f9e076d2524b2da4632294de6b321f58d7f6b4037350a4d4ff569203f56af
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -4442,13 +4444,14 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason KDOT_KANPLAN_KANDRIVE_INGEST_NOT_IMPLEMENTED, exits 2, and reads or
+    writes nothing.","user_consequence":"Do not advertise this artifact as an operational capability until its consumer and
+    behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-3fd517c663304c1bea9178bd
   subject_id: kfm://artifact/schemas/contracts/v1/domains/fauna/domain_layer_descriptor.schema.json
   kind: scaffold_gap
@@ -4735,7 +4738,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/build_historic_route_claim.py
   path_sha256: sha256:97eb5d63b030604ab56a6e43011df1382ee75ef5e777a3ec0b626261426dbb9e
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -4746,13 +4749,14 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason HISTORIC_ROUTE_CLAIM_BUILD_NOT_IMPLEMENTED, exits 2, and reads or writes
+    nothing.","user_consequence":"Do not advertise this artifact as an operational capability until its consumer and behavior
+    pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement only after
+    the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python -m
+    pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code and
+    leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-45770491d1c7ca155e1cda82
   subject_id: kfm://artifact/schemas/contracts/v1/domains/flora/rollback_card.schema.json
   kind: scaffold_gap
@@ -5756,7 +5760,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_stb_class1.py
   path_sha256: sha256:89ddddf4423fe9d4a14738c46452eed6f629c6f0668921d0c0894d1d63f90e0f
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -5767,13 +5771,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason STB_CLASS1_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-556e576baa8e444120742893
   subject_id: kfm://artifact/schemas/contracts/v1/domains/hydrology/watershed.schema.json
   kind: scaffold_gap
@@ -5896,7 +5900,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/normalize_to_road_segment.py
   path_sha256: sha256:983bd2302dd3fa87fa5da2d673425bb7ca7ee0ceb23f8445da9ffc0fb54c7fe2
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -5907,13 +5911,14 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason ROAD_SEGMENT_NORMALIZATION_NOT_IMPLEMENTED, exits 2, and reads or writes
+    nothing.","user_consequence":"Do not advertise this artifact as an operational capability until its consumer and behavior
+    pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement only after
+    the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python -m
+    pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code and
+    leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-55d13daceec0c37c1e0eb52c
   subject_id: kfm://artifact/schemas/contracts/v1/domains/people-dna-land/layer_manifest.schema.json
   kind: scaffold_gap
@@ -7993,7 +7998,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_wzdx_v4.py
   path_sha256: sha256:9ce2b0001a04b9430de358250de050e299c3b6f70300d33830d56106192645e4
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -8004,13 +8009,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason WZDX_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-72909dd7c9c39b3fbe8cd982
   subject_id: kfm://artifact/schemas/contracts/v1/domains/archaeology/domain_observation.schema.json
   kind: scaffold_gap
@@ -10085,7 +10090,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_hifld_ntad.py
   path_sha256: sha256:2321961424f17547cbec0fe46d4412033c0571fe52de9a42797ec74804098114
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -10096,13 +10101,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason HIFLD_NTAD_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-9473d44e80bff5a4f64487b2
   subject_id: kfm://artifact/pipelines/triplets/main.py
   kind: scaffold_gap
@@ -11341,7 +11346,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/ingest_fhwa_nhfn.py
   path_sha256: sha256:eeb36d3210fee8d783aaac594ad9d878d959983dc8e3670998058591c4139e34
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -11352,13 +11357,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason FHWA_NHFN_INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-a94d969c52c0d6332cae9b02
   subject_id: kfm://artifact/tools/validators/validate_catalog_matrix.py
   kind: scaffold_gap
@@ -11852,7 +11857,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/project_to_graph.py
   path_sha256: sha256:7fae32ca2e628450b06f89b6d82ed6d3289acb9211e00c5532c6356cc3e069ae
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -11863,13 +11868,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason GRAPH_PROJECTION_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-b49c8b77067617e09cd10a7a
   subject_id: kfm://artifact/policy/domains/hazards/drawer.rego
   kind: scaffold_gap
@@ -11994,7 +11999,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/emit_pmtiles_layers.py
   path_sha256: sha256:50601ec2c63bc57ededbb4a7a5a088fc69b2d6d6dc67c12e5e586bd362382a1c
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -12005,13 +12010,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason PMTILES_EMISSION_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code
+    and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-b6d9a2ddf880ad71cab012d6
   subject_id: kfm://artifact/policy/domains/flora/rights.rego
   kind: scaffold_gap
@@ -14483,7 +14488,7 @@ entries:
   path: pipelines/domains/roads-rail-trade/normalize_to_rail_segment.py
   path_sha256: sha256:7f43de126fcbd5da07b19ecbf743d88f28f0bda0c56a76de26562c2a81f2dec4
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -14494,13 +14499,14 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P3","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P3","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason RAIL_SEGMENT_NORMALIZATION_NOT_IMPLEMENTED, exits 2, and reads or writes
+    nothing.","user_consequence":"Do not advertise this artifact as an operational capability until its consumer and behavior
+    pass review.","dependencies":["water-pilot-acceptance","owning-root-consumer-review"],"next_change":"Implement only after
+    the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python -m
+    pytest -q tests/qa/test_held_entry_points.py","expected_result":"Each held stage exits 2 with its HOLD reason code and
+    leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery patch; preserve
+    historical receipts and source bytes."}'
 - entry_id: gap-dc21bb58a2aa549ac8250dae
   subject_id: kfm://artifact/tests/domains/atmosphere/test_aqi_as_concentration_denied.py
   kind: scaffold_gap

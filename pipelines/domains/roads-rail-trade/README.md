@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-roads-rail-trade-readme
 title: Roads Rail Trade Domain Pipeline README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <roads-rail-trade-pipeline-owner>
@@ -14,7 +14,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-11-21
 policy_label: public
 path: pipelines/domains/roads-rail-trade/README.md
 related:
@@ -100,7 +100,27 @@ RoadSegment, graph, route, access, closure or public products. The domain source
 descriptor remains unresolved; all output stays on HOLD and all authority flags
 are false. See the [runbook](../../../docs/runbooks/tiger-roads-fixture-ingest.md)
 and [candidate contract](../../../contracts/domains/roads-rail-trade/tiger_roads_ingest_candidate.md).
-The other executable scaffolds and broader slug/ownership questions remain open.
+The broader slug and ownership questions remain open.
+
+### Held stages (2026-11-21)
+
+The other 15 planned stage entry points are explicit holds. They were
+placeholders until now. Each one prints a `HOLD` envelope with a named reason
+code and a false authority flag, exits 2, and reads, writes and fetches nothing.
+
+| Stages | Reason codes | Authority flag |
+|---|---|---|
+| `ingest_fhwa_hpms`, `ingest_fhwa_nhfn`, `ingest_wzdx_v4`, `ingest_kdot_kanplan_kandrive`, `ingest_fra_gcis`, `ingest_fra_form57`, `ingest_stb_class1`, `ingest_hifld_ntad` | `*_INGEST_NOT_IMPLEMENTED` | `source_admission_authorized` |
+| `normalize_to_road_segment`, `normalize_to_rail_segment`, `build_corridor_route`, `build_historic_route_claim` | `*_NOT_IMPLEMENTED` | `processed_write_authorized` |
+| `project_to_graph` | `GRAPH_PROJECTION_NOT_IMPLEMENTED` | `graph_projection_authorized` |
+| `emit_pmtiles_layers` | `PMTILES_EMISSION_NOT_IMPLEMENTED` | `tile_build_authorized` |
+| `generalize_for_public` | `PUBLIC_GENERALIZATION_NOT_IMPLEMENTED` | `public_release_authorized` |
+| `emit_catalog_records`, already held | `CATALOG_NOT_IMPLEMENTED` | `catalog_emission_authorized` |
+
+`tests/qa/test_held_entry_points.py` runs each hold from an isolated copy. The
+test fails if a stage stops holding, writes a file, or gains file, network or
+socket calls. Implementing a stage means replacing its hold deliberately,
+together with its contract, fixtures and tests.
 
 ## Historical boundary review
 
