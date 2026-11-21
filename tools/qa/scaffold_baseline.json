@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 642,
-   "STUB_MODULE": 82,
+   "PLACEHOLDER_MARKER": 632,
+   "STUB_MODULE": 72,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 383,
    "scripts": 1,
-   "tests": 110,
+   "tests": 90,
    "tools": 24
   },
-  "files": 643,
-  "total": 736
+  "files": 633,
+  "total": 716
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
