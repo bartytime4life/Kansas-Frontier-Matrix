@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 662,
-   "STUB_MODULE": 102,
+   "PLACEHOLDER_MARKER": 652,
+   "STUB_MODULE": 92,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 383,
    "scripts": 1,
-   "tests": 150,
+   "tests": 130,
    "tools": 24
   },
-  "files": 663,
-  "total": 776
+  "files": 653,
+  "total": 756
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -733,26 +733,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/hazards/test_ui_no_direct_source.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hydrology/test_evidence_bundle_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_evidence_bundle_closure.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_evidence_bundle_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_evidence_bundle_closure.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_historic_overprecision_deny.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_historic_overprecision_deny.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_operator_status_temporal.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_operator_status_temporal.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_osm_gnis_legal_status_deny.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_osm_gnis_legal_status_deny.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_public_generalization_receipt.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_public_generalization_receipt.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_release_manifest_present.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_release_manifest_present.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_route_designation_separation.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_route_designation_separation.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_stb_snapshot_dedup.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_stb_snapshot_dedup.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_transport_graph_rollback.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_transport_graph_rollback.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_wzdx_v4_validator.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_wzdx_v4_validator.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_census_vintage.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_census_vintage.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_census_vs_municipality.py"},

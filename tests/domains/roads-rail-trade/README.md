@@ -2,7 +2,7 @@
 doc_id: kfm://doc/tests-domains-roads-rail-trade-readme
 title: Roads Rail Trade Domain Tests README
 type: test-domain-readme
-version: v0.1
+version: v0.2
 status: draft; greenfield-stub-replaced; domain-test-parent-index; PROPOSED / NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD - Roads/Rail/Trade Routes domain steward
@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD - Release steward
   - OWNER_TBD - Source steward
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-11-21
 policy_label: public-doc; tests; roads-rail-trade; domain-test-parent-index; no-network; source-role-aware; temporal-scope-aware; evidence-bound; policy-gated; release-gated; rollback-aware
 tags: [kfm, tests, roads-rail-trade, domain-tests, contracts, evidence, policy, release, source-role, temporal, redaction, legal-status-denial, historic-precision, rollback, EvidenceBundle, EvidenceRef, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice, ABSTAIN, DENY, ERROR]
 related:
@@ -136,6 +136,22 @@ Core checks that all child lanes should preserve:
 | [`evidence/`](evidence/README.md) | CONFIRMED README / executable tests NEEDS VERIFICATION | `redaction_receipt_test/` | Tests evidence and receipt guardrails; does not become evidence, proof, or receipt storage. |
 | [`policy/`](policy/README.md) | CONFIRMED README / executable tests NEEDS VERIFICATION | `historic_precision_test/`, `legal_status_denial_test/` | Tests fail-closed policy behavior; does not define binding policy. |
 | [`release/`](release/README.md) | CONFIRMED README / executable tests NEEDS VERIFICATION | `rollback_test/` | Tests release and rollback guardrails; does not approve publication or rollback. |
+
+### Held top-level tests (2026-11-21)
+
+Ten planned top-level test modules were placeholders until now. Each is now an
+executable hold, bound to the subject it will eventually test. It passes while
+that subject is absent or held, and it fails with a named
+`*_NOT_IMPLEMENTED` reason as soon as the subject appears. That makes the real
+tests land with the subject.
+
+| Tests | Held until |
+|---|---|
+| `test_historic_overprecision_deny`, `test_osm_gnis_legal_status_deny`, `test_operator_status_temporal`, `test_route_designation_separation` | their `policy/domains/roads-rail-trade/*.rego` scaffold gains rules beyond `default allow := false` |
+| `test_public_generalization_receipt`, `test_transport_graph_rollback` | `generalize_for_public.py` or `project_to_graph.py` stops holding, or its policy scaffold gains rules |
+| `test_wzdx_v4_validator`, `test_stb_snapshot_dedup` | `ingest_wzdx_v4.py` or `ingest_stb_class1.py` stops holding; for WZDx, also when a validator appears under `tools/validators/` |
+| `test_evidence_bundle_closure` | a record appears in `data/proofs/roads-rail-trade/` |
+| `test_release_manifest_present` | a record appears in `release/candidates/roads-rail-trade/` |
 
 ---
 
