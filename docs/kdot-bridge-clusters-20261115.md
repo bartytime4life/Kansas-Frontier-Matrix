@@ -103,3 +103,25 @@ themselves are drawn, as before.
 - The tract outlines stay on the map at every zoom, so a single tract can still be selected
   anywhere. The circles follow the layer's opacity slider and read more strongly than the tract
   fill at the same setting.
+
+## What is in this view (2026-11-21)
+
+Every layer drawn as numbered circles — the five bridge layers, National Register places, trail
+sites and walk-in hunting access — now says what the map holds right now. With the layer on, its
+row under Map layers → On map reads, for example:
+
+> **307 of 19,291 bridges in this view**
+> Earliest recorded build year 1900 · longest 3,376 ft · 60 posted with a restriction
+
+- The count is exact. It is taken from the layer's own records inside the map's extent, not from
+  the circles, so it does not depend on how the circles happen to group at that zoom.
+- The second line uses the same facts and wording as a numbered circle, for everything in view.
+- It recounts when the map stops moving. It is not announced to screen readers on every pan.
+- When nothing is in view it says how far and in which direction the nearest record is from the
+  middle of the map, with a **Go to the nearest** button that moves the map there at the same zoom.
+- A hunting tract counts where the middle of its outline falls, as the overview circles do.
+- The extent is the whole map, including any part under an open panel, and on a tilted map it is
+  the box around what is visible. It is not shown on the globe.
+
+Code: `app/view-tally.ts` (counting and wording), `app/view-tally-line.tsx` (the line), mounted in
+`app/page.tsx`. Tests: `tests/view-tally.test.mjs`.
