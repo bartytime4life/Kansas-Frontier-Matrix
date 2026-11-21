@@ -39,8 +39,8 @@ import { localAtlasHit } from "./local-atlas-map";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
 import { officialClusterSummary } from "./context-clusters";
-import { isCountedLayer } from "./view-tally";
-import { ViewTallyLine } from "./view-tally-line";
+import { COUNTED_LAYER_IDS, isCountedLayer } from "./view-tally";
+import { ViewTallyLine, ViewTallyStatus } from "./view-tally-line";
 import { BlmPlssInspector } from "./blm-plss-inspector";
 import { isBlmPlssLayer } from "./blm-plss-records";
 import { HmsSmokePlayback } from "./hms-smoke-playback-control";
@@ -2164,6 +2164,9 @@ export default function Home() {
       temporalSupport: OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id],
     };
   }), [effectiveOfficialVisibility, lightningManifest?.retrievedAt, noaaSatelliteManifest, officialPayloads, officialStates, officialVisibility, windArrowFrame?.retrievedAtUtc]);
+  // Counted layers drawn now, with their records, for the status bar's in-view line.
+  const viewTallyLayers = useMemo(() => COUNTED_LAYER_IDS.filter(id => effectiveOfficialVisibility[id as OfficialContextFeedId])
+    .map(id => ({ contextId: id, data: officialPayloads[id as OfficialContextFeedId]?.data })), [effectiveOfficialVisibility, officialPayloads]);
   const researchWellInventoryReady = styleReady && effectiveOfficialVisibility["kgs-monitoring-wells"] && officialStates["kgs-monitoring-wells"] === "ready";
   useEffect(() => {
     setResearchSnapshotPoints(null);
@@ -10711,7 +10714,7 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" role="group" data-terrain={scenePreset === "elevation-3d"} aria-label="Map status">
-          <span><b>{activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}</span>
+          <span><b>{activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}{projection !== "globe" && styleReady && <ViewTallyStatus layers={viewTallyLayers} mapRef={mapRef} />}</span>
           {scenePreset === "elevation-3d" ? <output className="status-terrain-readout" data-state={terrainState === "ERROR" ? "error" : terrainState !== "READY" ? "loading" : terrainElevationUnavailable ? "unavailable" : terrainElevationReading ? "sample" : "idle"} aria-live="off">
             <em>DEM · {(terrainElevationReading?.provider ?? terrainProvider) === "usgs-3dep" ? "USGS 3DEP" : "MAPZEN"}</em>
             <strong>{terrainState === "ERROR" ? "Unavailable" : terrainState !== "READY" ? "Loading elevation" : terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : terrainElevationUnavailable ? "No sample here" : "Hover for height"}</strong>
