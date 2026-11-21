@@ -167,7 +167,16 @@ jobs:
           PYTHONPATH: tools/ci/kfm_no_network
         run: |
           set -euo pipefail
-          # DIAGNOSTIC (not for merge): dump every thread's stack if collection hangs.
-          timeout --signal=ABRT --kill-after=30 480 \
+          # DIAGNOSTIC (not for merge): bound memory so a runaway raises MemoryError
+          # with a traceback instead of taking the runner down, and sample memory.
+          ( while sleep 15; do echo "MONITOR $(date -u +%T) $(free -m | awk 'NR==2{print "used="$3"MiB avail="$7"MiB"}') $(ps -eo rss=,etimes=,args= --sort=-rss | head -n 1 | cut -c1-160)"; done ) &
+          monitor=$!
+          ulimit -v 4194304
+          set +e
+          timeout --signal=ABRT --kill-after=30 420 \
             "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -X faulthandler -m pytest \
-            --collect-only -q -p no:cacheprovider -v tests
+            --collect-only -q -p no:cacheprovider tests
+          rc=$?
+          kill "$monitor"
+          echo "COLLECT_EXIT=$rc"
+          exit "$rc"
