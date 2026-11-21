@@ -3159,4 +3159,14 @@ def test_guides_counted_circles_successor_preserves_connections_inventory_and_al
         {"app/landing-guides.ts", "tests/landing-guides.test.mjs"},
         "c47f52e185bd1c6540801af8551c75cf12e6cbb6",
     )
-    assert TOOL.RECEIPT.name == "site-v268-guides-counted-circles-overlay-20261120.json"
+
+
+def test_view_tally_successor_preserves_guides_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-view-tally-overlay-20261121.json",
+        "site-v268-guides-counted-circles-overlay-20261120.json",
+        "d43a616be8458d22bc707b9d3b5824844f94146ed53f09a958a15049dafaffa4",
+        {"app/map-layers.css", "app/page.tsx", "app/view-tally-line.tsx", "app/view-tally.ts", "docs/kdot-bridge-clusters-20261115.md", "tests/view-tally.test.mjs"},
+        "12e71c04b659903ee9e60d740bfa576e38994c41",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-view-tally-overlay-20261121.json"
