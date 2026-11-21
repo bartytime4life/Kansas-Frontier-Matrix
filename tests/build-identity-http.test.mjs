@@ -14,8 +14,14 @@ test('built public identity matches current inputs and About exposes usable proj
   const response = await fetch(origin + '/api/build');
   assert.equal(response.status, 200); assert.equal(response.headers.get('cache-control'), 'no-store');
   const actual = await response.json();
-  assert.deepEqual(Object.keys(actual).sort(), ['application', 'commitState', 'profile', 'scope', 'sourceCommit', 'sourceDigest', 'sourceFileCount'].sort());
   const expected = await applicationIdentity();
+  // worktreeChanges is present only when Git reports changed checkout entries.
+  assert.deepEqual(Object.keys(actual).filter(key => key !== 'worktreeChanges').sort(), ['application', 'commitState', 'profile', 'scope', 'sourceCommit', 'sourceDigest', 'sourceFileCount'].sort());
+  if ('worktreeChanges' in actual) {
+    assert.equal(actual.commitState, 'WORKTREE_MODIFIED');
+    assert.deepEqual(Object.keys(actual.worktreeChanges).sort(), ['trackedInputs', 'trackedOther', 'untrackedInputs', 'untrackedOther']);
+    for (const count of Object.values(actual.worktreeChanges)) assert.ok(Number.isSafeInteger(count) && count >= 0);
+  }
   assert.equal(actual.sourceCommit, expected.sourceCommit);
   assert.equal(actual.commitState, expected.commitState);
   assert.equal((await verifyHostedIdentity(expected, origin)).outcome, 'APPLICATION_INPUTS_MATCH');

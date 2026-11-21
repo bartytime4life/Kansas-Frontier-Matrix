@@ -20,6 +20,23 @@ function isApplicationFile(path) {
     ![...excluded].some(entry => path === entry || path.startsWith(entry + '/'));
 }
 
+// Counts only. /api/build is public, so no path or file name from the host's
+// checkout is published; the counts say which kind of entry Git reports.
+function worktreeChangeCounts(status) {
+  const counts = { trackedInputs: 0, trackedOther: 0, untrackedInputs: 0, untrackedOther: 0 };
+  const records = status.split('\0');
+  for (let index = 0; index < records.length; index += 1) {
+    const record = records[index];
+    if (record.length < 4) continue;
+    const state = record.slice(0, 2);
+    // A rename or copy is followed by its original path as a separate record.
+    if (/[RC]/.test(state)) index += 1;
+    const kind = state === '??' ? 'untracked' : 'tracked';
+    counts[kind + (isApplicationFile(record.slice(3).replace(/\/$/, '')) ? 'Inputs' : 'Other')] += 1;
+  }
+  return counts;
+}
+
 export async function applicationIdentity(root = process.cwd()) {
   const entries = [];
   const blobHashes = new Map();
@@ -49,11 +66,12 @@ export async function applicationIdentity(root = process.cwd()) {
   const sourceDigest = 'sha256:' + createHash('sha256').update(JSON.stringify(entries)).digest('hex');
   let sourceCommit = null;
   let commitState = 'GIT_UNAVAILABLE';
+  let worktreeChanges = null;
   try {
     const options = { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 5000 };
     if (resolve(execFileSync('git', ['rev-parse', '--show-toplevel'], options).trim()) !== resolve(root)) throw new Error('NOT_THIS_CHECKOUT');
     const commit = execFileSync('git', ['rev-parse', 'HEAD'], options).trim();
-    const status = execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], options).trim();
+    const status = execFileSync('git', ['status', '--porcelain', '-z', '--untracked-files=normal'], options);
     if (/^[a-f0-9]{40}$/.test(commit) && status === '') {
       // One immutable tree read verifies paths and bytes against the commit,
       // including edits/deletions hidden by assume-unchanged or skip-worktree.
@@ -68,10 +86,14 @@ export async function applicationIdentity(root = process.cwd()) {
       if (entries.some(([path]) => !committed.has(path))) commitState = 'UNTRACKED_APPLICATION_INPUTS';
       else if ([...committed].some(([path, hash]) => !hash || blobHashes.get(path) !== hash)) commitState = 'WORKTREE_MODIFIED';
       else { sourceCommit = commit; commitState = 'CLEAN_CHECKOUT'; }
-    } else commitState = 'WORKTREE_MODIFIED';
+    } else {
+      commitState = 'WORKTREE_MODIFIED';
+      if (status !== '') worktreeChanges = worktreeChangeCounts(status);
+    }
   } catch { /* Archive builds still have an independently comparable digest. */ }
   return { profile: BUILD_PROFILE, application: BUILD_APPLICATION, sourceDigest,
     sourceFileCount: entries.length, sourceCommit, commitState,
+    ...(worktreeChanges ? { worktreeChanges } : {}),
     scope: 'Application source inputs only; excludes build bytes, live data, settings, models, and release authority.' };
 }
 
@@ -120,6 +142,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
     else if (process.argv.length === 2) {
       await writeFile('app/build-info.generated.json', JSON.stringify(identity, null, 2) + '\n');
       console.log('Application identity: ' + identity.sourceDigest + ' (' + identity.commitState + ')');
+      if (identity.worktreeChanges) console.log('Checkout entries Git reports as changed: ' + JSON.stringify(identity.worktreeChanges));
     } else throw new Error('USAGE: node scripts/build-identity.mjs [--print | --verify ORIGIN]');
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }
