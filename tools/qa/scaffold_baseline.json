@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 634,
-   "STUB_MODULE": 74,
+   "PLACEHOLDER_MARKER": 624,
+   "STUB_MODULE": 64,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 383,
    "scripts": 1,
-   "tests": 94,
+   "tests": 74,
    "tools": 24
   },
-  "files": 635,
-  "total": 720
+  "files": 625,
+  "total": 700
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -633,26 +633,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_soil_moisture_units_depths.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_vegetation_index_mask_time.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_vegetation_index_mask_time.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_ai_exact_location_denial.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_ai_exact_location_denial.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_evidence_bundle_required.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_evidence_bundle_required.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_exact_sensitive_geometry_denial.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_exact_sensitive_geometry_denial.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_public_no_leak.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_public_no_leak.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_release_manifest_validation.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_release_manifest_validation.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_rights_and_cultural_review.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_rights_and_cultural_review.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_rollback_drill.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_rollback_drill.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_schema_validation.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_schema_validation.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_source_descriptor.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_source_descriptor.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_temporal_logic.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_temporal_logic.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_ai_no_leak.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_ai_no_leak.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_publication_gate.py"},
