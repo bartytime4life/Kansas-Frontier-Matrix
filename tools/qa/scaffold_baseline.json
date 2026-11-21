@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 632,
-   "STUB_MODULE": 72,
+   "PLACEHOLDER_MARKER": 624,
+   "STUB_MODULE": 64,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 383,
    "scripts": 1,
-   "tests": 90,
+   "tests": 74,
    "tools": 24
   },
-  "files": 633,
-  "total": 716
+  "files": 625,
+  "total": 700
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -633,22 +633,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_soil_moisture_units_depths.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_vegetation_index_mask_time.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_vegetation_index_mask_time.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_advisory_no_life_safety.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_advisory_no_life_safety.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_aod_as_pm25_denied.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_aod_as_pm25_denied.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_aqi_as_concentration_denied.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_aqi_as_concentration_denied.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_decision_envelope_finite_outcomes.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_decision_envelope_finite_outcomes.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_dryrun_no_live_fetch.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_dryrun_no_live_fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_model_as_observed_denied.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_model_as_observed_denied.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_temporal_fields_distinct.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_temporal_fields_distinct.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/atmosphere/test_unit_normalization.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_unit_normalization.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_ai_no_leak.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_ai_no_leak.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_publication_gate.py"},

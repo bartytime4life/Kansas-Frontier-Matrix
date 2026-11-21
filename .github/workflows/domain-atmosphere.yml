@@ -165,6 +165,14 @@ jobs:
               ),
               Path("tests/domains/atmosphere/ghcnd_daily_fixtures.py"),
               Path("tests/domains/atmosphere/test_ghcnd_daily_candidate.py"),
+              Path("tests/domains/atmosphere/test_advisory_no_life_safety.py"),
+              Path("tests/domains/atmosphere/test_aod_as_pm25_denied.py"),
+              Path("tests/domains/atmosphere/test_aqi_as_concentration_denied.py"),
+              Path("tests/domains/atmosphere/test_decision_envelope_finite_outcomes.py"),
+              Path("tests/domains/atmosphere/test_dryrun_no_live_fetch.py"),
+              Path("tests/domains/atmosphere/test_model_as_observed_denied.py"),
+              Path("tests/domains/atmosphere/test_temporal_fields_distinct.py"),
+              Path("tests/domains/atmosphere/test_unit_normalization.py"),
           }
           accepted_validators = {
               Path(
@@ -371,6 +379,17 @@ jobs:
             tests/validators/domains/atmosphere/test_atmosphere_source_descriptor_validator_entrypoint.py \
             tests/validators/domains/atmosphere/test_domain_evidence_bundle_validator_entrypoint.py \
             tests/validators/domains/atmosphere/test_evidence_bundle_schema_convergence.py
+          # Held placeholders fail with *_NOT_IMPLEMENTED once their subject gains content;
+          # the no-live-fetch check reruns this test directory with the network refused.
+          python -m pytest -q \
+            tests/domains/atmosphere/test_advisory_no_life_safety.py \
+            tests/domains/atmosphere/test_aod_as_pm25_denied.py \
+            tests/domains/atmosphere/test_aqi_as_concentration_denied.py \
+            tests/domains/atmosphere/test_decision_envelope_finite_outcomes.py \
+            tests/domains/atmosphere/test_dryrun_no_live_fetch.py \
+            tests/domains/atmosphere/test_model_as_observed_denied.py \
+            tests/domains/atmosphere/test_temporal_fields_distinct.py \
+            tests/domains/atmosphere/test_unit_normalization.py
 
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-air-observation-entrypoint"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-public-safe-precipitation-fixture"
@@ -381,6 +400,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-prescribed-burn-quality-flag"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-exact-option-adapters"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-ghcnd-daily-pilot-candidate"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-placeholder-holds-and-no-live-fetch"
 
       - name: Record Atmosphere validation result and broader hold
         if: always()
