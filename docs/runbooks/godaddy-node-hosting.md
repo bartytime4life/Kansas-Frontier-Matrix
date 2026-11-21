@@ -383,6 +383,40 @@ two seconds and the FEMA declarations feed in 5.9 seconds. Chat reported ready o
 
 **Mirror.** [#5976](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5976) carried #5975 into `apps/site/source`.
 
+<a id="public-readback-2026-11-21-later"></a>
+
+### Later publication verified on 2026-11-21: what is in view, and what the host's checkout holds
+
+At about 22:07 UTC on 2026-11-21 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `f08ae04f`, the head of the connected branch,
+with 1,386 inputs.
+
+| Change | Live readback |
+|---|---|
+| [#6010](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6010) what is in this view | A headless browser read the new line in each counted layer's row under Map layers. Statewide: "All 1,344 National Register markers are in this view" and "All 5,580 bridges are in this view". Topeka at zoom 12: "82 of 1,344 National Register markers in this view". Western Kansas: "837 of 3,591 walk-in hunting tracts in this view" with 240,275 recorded acres. An empty view near Bird City read "No trail sites in this view" and "about 120 mi south"; **Go to the nearest** moved the map to "3 of 96 trail sites in this view". On a phone layout the line was visible with no horizontal overflow, the button was 44 px high and worked. No page errors |
+| [#6007](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6007) checkout change counts | `/api/build` carried the new field; see below |
+
+**Build identity: the open question is narrowed.** `/api/build` still returned
+`sourceCommit: null` and `commitState: WORKTREE_MODIFIED`, and now also:
+
+```json
+"worktreeChanges": { "trackedInputs": 0, "trackedOther": 0, "untrackedInputs": 0, "untrackedOther": 1 }
+```
+
+The host's checkout holds exactly one new entry (a file or a directory) outside
+the application inputs. Git reports no committed file as changed.
+The application inputs match `f08ae04f` exactly, so the published code is the
+merged code. The field publishes no name; naming the entry needs `git status`
+on the host, which this check cannot run.
+
+**Feeds and chat.** DeFlock returned its outage answer in 0.3 seconds; its
+provider was still down. The other 14 feeds answered 200, each in under two
+seconds. Chat read `KFM home compute (connecting)` just after the publish and
+reported ready on `qwen3.5:9b-q4_K_M` about three minutes later.
+
+**Mirror.** [#6011](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6011) carried #6010 into `apps/site/source`.
+The build identity script lives only on the connected branch.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
@@ -547,6 +581,13 @@ On 2026-10-19 the hosted build reported `sourceCommit: null` and
 `commitState: WORKTREE_MODIFIED`; its digest matched a clean checkout of
 `70af1b5225`. Compare a fresh response with the selected candidate rather than
 reusing that result. A missing commit must not be inferred from a branch label.
+
+Since [#6007](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6007), a build whose `git status` is not empty also
+reports `worktreeChanges`: four counts of the entries Git sees as changed
+(tracked or untracked, inside or outside the application inputs) and no names.
+On 2026-11-21 the hosted build reported one untracked entry outside the inputs
+and nothing else ([readback](#public-readback-2026-11-21-later)). The digest
+comparison, not this field, is what binds the application inputs.
 
 ## Preview, publication and acceptance
 
