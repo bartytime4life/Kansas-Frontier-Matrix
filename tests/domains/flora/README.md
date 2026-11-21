@@ -1,6 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tests-domains-flora-readme
 title: Tests — Flora Domain
+type: test-domain-readme
 class: test-readme
 version: v0.3.0
 status: repository-grounded draft; one bounded executable slice established
