@@ -417,6 +417,29 @@ reported ready on `qwen3.5:9b-q4_K_M` about three minutes later.
 **Mirror.** [#6011](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6011) carried #6010 into `apps/site/source`.
 The build identity script lives only on the connected branch.
 
+<a id="public-readback-2026-11-21-third"></a>
+
+### Third publication verified on 2026-11-21: in-view counts in the status bar
+
+At about 23:49 UTC on 2026-11-21 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `ed9f8b27`, the head of the connected branch,
+with 1,386 inputs.
+
+| Change | Live readback |
+|---|---|
+| [#6013](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6013) in-view counts in the status bar | A headless browser read the status bar. With no counted layer on, the bar was unchanged. With local bridges and National Register places on over Topeka it read "In view: 305 local bridges · 90 Register markers", then 133 and 61 bridges after two zoom-ins. Walk-in hunting access read "In view: 2,611 hunting tracts". The line showed at 900 px wide and was hidden on a phone layout, where the bar's other cells were as before. No horizontal overflow and no page errors |
+
+**Build identity.** Unchanged from the reading earlier the same day:
+`WORKTREE_MODIFIED` with `untrackedOther: 1` and zeros elsewhere. The
+application inputs match `ed9f8b27` exactly.
+
+**Feeds and chat.** DeFlock returned its outage answer in 0.1 seconds; its
+provider was still down. The other 14 feeds answered 200, each in under two
+seconds. Chat read `KFM home compute (connecting)` at 23:51 UTC and reported
+ready on `qwen3.5:9b-q4_K_M` within the same minute.
+
+**Mirror.** [#6014](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6014) carried #6013 into `apps/site/source`.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
