@@ -167,5 +167,7 @@ jobs:
           PYTHONPATH: tools/ci/kfm_no_network
         run: |
           set -euo pipefail
-          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -m pytest \
-            --collect-only -q -p no:cacheprovider tests
+          # DIAGNOSTIC (not for merge): dump every thread's stack if collection hangs.
+          timeout --signal=ABRT --kill-after=30 480 \
+            "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -X faulthandler -m pytest \
+            --collect-only -q -p no:cacheprovider -v tests
