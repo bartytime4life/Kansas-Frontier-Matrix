@@ -76,6 +76,38 @@ test('a dirty checkout cannot advertise its parent commit as the source of its c
   assert.notEqual(dirty.sourceDigest, clean.sourceDigest);
 });
 
+test('a changed checkout reports what kind of entries Git sees, by count and never by name', async t => {
+  const root = await fixture(t);
+  const git = args => execFileSync('git', args, { cwd: root, stdio: 'ignore' });
+  await writeFile(join(root, 'README.md'), 'about');
+  await writeFile(join(root, 'NOTICE.md'), 'notice');
+  git(['init']); git(['add', '.']); git(['-c', 'user.name=KFM Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture']);
+  const clean = await applicationIdentity(root);
+  assert.equal(clean.commitState, 'CLEAN_CHECKOUT');
+  assert.ok(!('worktreeChanges' in clean), 'a clean checkout has nothing to count');
+
+  // The case seen on the host: the application inputs are byte-identical to
+  // the commit, and something outside them is new in the checkout.
+  await writeFile(join(root, 'host-left-this-here.log'), 'not application source');
+  const outside = await applicationIdentity(root);
+  assert.equal(outside.sourceDigest, clean.sourceDigest);
+  assert.equal(outside.sourceFileCount, clean.sourceFileCount);
+  assert.equal(outside.sourceCommit, null); assert.equal(outside.commitState, 'WORKTREE_MODIFIED');
+  assert.deepEqual(outside.worktreeChanges, { trackedInputs: 0, trackedOther: 0, untrackedInputs: 0, untrackedOther: 1 });
+
+  await writeFile(join(root, 'README.md'), 'edited about');
+  git(['mv', 'NOTICE.md', 'RENAMED-NOTICE.md']);
+  await writeFile(join(root, 'app/page.tsx'), 'edited map');
+  await mkdir(join(root, 'app/extra'));
+  await writeFile(join(root, 'app/extra/one.ts'), '1'); await writeFile(join(root, 'app/extra/two.ts'), '2');
+  const mixed = await applicationIdentity(root);
+  assert.equal(mixed.commitState, 'WORKTREE_MODIFIED');
+  // Git reports a wholly new directory as one entry, and a rename as one entry.
+  assert.deepEqual(mixed.worktreeChanges, { trackedInputs: 1, trackedOther: 2, untrackedInputs: 1, untrackedOther: 1 });
+  const published = JSON.stringify(mixed);
+  for (const name of ['host-left-this-here', 'README', 'NOTICE', 'page.tsx', 'extra']) assert.ok(!published.includes(name), name);
+});
+
 test('ignored runtime inputs cannot claim the clean Git commit as their source', async t => {
   const root = await fixture(t);
   const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
