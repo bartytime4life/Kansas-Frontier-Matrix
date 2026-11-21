@@ -161,22 +161,22 @@ jobs:
           "$RUNNER_TEMP/kfm-full-local-venv/bin/python" tools/ci/install_full_local_test.py
 
       - name: Collect the Python suite without running its tests
+        timeout-minutes: 6
         env:
           KFM_NO_NETWORK: "1"
           PROJ_NETWORK: "OFF"
           PYTHONPATH: tools/ci/kfm_no_network
         run: |
-          set -euo pipefail
-          # DIAGNOSTIC (not for merge): bound memory so a runaway raises MemoryError
-          # with a traceback instead of taking the runner down, and sample memory.
-          ( while sleep 15; do echo "MONITOR $(date -u +%T) $(free -m | awk 'NR==2{print "used="$3"MiB avail="$7"MiB"}') $(ps -eo rss=,etimes=,args= --sort=-rss | head -n 1 | cut -c1-160)"; done ) &
-          monitor=$!
-          ulimit -v 4194304
-          set +e
-          timeout --signal=ABRT --kill-after=30 420 \
-            "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -X faulthandler -m pytest \
-            --collect-only -q -p no:cacheprovider tests
-          rc=$?
-          kill "$monitor"
-          echo "COLLECT_EXIT=$rc"
-          exit "$rc"
+          # DIAGNOSTIC (not for merge): stream import timings to a file.
+          "$RUNNER_TEMP/kfm-full-local-venv/bin/python" -X importtime -m pytest \
+            --collect-only -q -p no:cacheprovider tests \
+            > "$RUNNER_TEMP/collect.out" 2> "$RUNNER_TEMP/collect.err"
+          echo "COLLECT_EXIT=$?"
+
+      - name: DIAGNOSTIC show collection progress
+        if: always()
+        run: |
+          echo "== stdout tail"; tail -n 15 "$RUNNER_TEMP/collect.out" || true
+          echo "== stderr (importtime) tail"; tail -n 40 "$RUNNER_TEMP/collect.err" || true
+          echo "== non-importtime stderr"; grep -v '^import time:' "$RUNNER_TEMP/collect.err" | tail -n 40 || true
+          echo "== processes"; ps -eo pid,ppid,etimes,rss,stat,args --sort=etimes | tail -n 25
