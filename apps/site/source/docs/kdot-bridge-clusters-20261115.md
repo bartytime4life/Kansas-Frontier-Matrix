@@ -123,5 +123,20 @@ row under Map layers → On map reads, for example:
 - The extent is the whole map, including any part under an open panel, and on a tilted map it is
   the box around what is visible. It is not shown on the globe.
 
-Code: `app/view-tally.ts` (counting and wording), `app/view-tally-line.tsx` (the line), mounted in
-`app/page.tsx`. Tests: `tests/view-tally.test.mjs`.
+### In the status bar too
+
+The same counts also sit in the status bar at the bottom of the map, after the map's name, so they
+stay in sight while panning with the Layers panel closed:
+
+> Kansas Overview · Kansas statewide · In view: 305 local bridges · 90 Register markers
+
+- One short phrase per counted layer that is on, in a fixed order, up to three; beyond that it
+  says how many more layers there are.
+- Layers are never added together. Three of the bridge layers (historic, pre-1950, closed) are
+  parts of the local list, so each keeps its own name and count.
+- It follows the same rules as the row line: exact counts, recounted when the map stops, not
+  announced on every pan, not shown on the globe. It is dropped below 760 px, where the bar has
+  room only for the map's name.
+
+Code: `app/view-tally.ts` (counting and wording), `app/view-tally-line.tsx` (the row line and the
+status-bar line), mounted in `app/page.tsx`. Tests: `tests/view-tally.test.mjs`.

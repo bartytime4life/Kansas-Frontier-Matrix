@@ -1,6 +1,6 @@
 import type { FeatureCollection } from "geojson";
 import { accessOverviewPoints, officialClusterSummary } from "./context-clusters";
-import { isBridgeFeed } from "./kdot-bridges";
+import { BRIDGE_FEED_IDS, isBridgeFeed } from "./kdot-bridges";
 
 /** The map's current extent in degrees. */
 export type ViewBounds = Readonly<{ west: number; south: number; east: number; north: number }>;
@@ -17,6 +17,16 @@ const MILES_PER_DEGREE = 69.05;
 
 /** Layers drawn as numbered circles that split as the visitor zooms in. */
 export const isCountedLayer = (contextId: string): boolean => isBridgeFeed(contextId) || Object.hasOwn(NOUNS, contextId);
+/** Every counted layer, in the order the status bar lists them. */
+export const COUNTED_LAYER_IDS: readonly string[] = Object.freeze([...BRIDGE_FEED_IDS, ...Object.keys(NOUNS)]);
+/** Short names for the status bar, where several layers share one line. Three of the bridge layers are parts of the local list, so each is named. */
+const SHORT_NOUNS: Readonly<Record<string, readonly [one: string, many: string]>> = Object.freeze({
+  "kdot-bridges-state": ["state highway bridge", "state highway bridges"], "kdot-bridges-local": ["local bridge", "local bridges"],
+  "kdot-bridges-historic": ["historic local bridge", "historic local bridges"], "kdot-bridges-old": ["pre-1950 local bridge", "pre-1950 local bridges"],
+  "kdot-bridges-closed": ["closed local bridge", "closed local bridges"], "nps-nrhp-places": ["Register marker", "Register markers"],
+  "nps-trail-places": ["trail site", "trail sites"], "kdwp-wiha-access": ["hunting tract", "hunting tracts"],
+});
+const BRIEF_LIMIT = 3;
 
 const number = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
 
@@ -73,4 +83,16 @@ export function viewTally(contextId: string, data: FeatureCollection | null | un
   return { count, total, nearest: null,
     title: count === total ? `All ${all} ${noun} are in this view` : `${count.toLocaleString("en-US")} of ${all} ${noun} in this view`,
     detail: facts && facts !== "Select to zoom in" ? facts : "" };
+}
+
+/** One short line for the status bar: what each counted layer on the map holds in view. Empty when none is on. */
+export function viewTallyBrief(counts: readonly Readonly<{ contextId: string; count: number }>[]): string {
+  const known = counts.filter(entry => Object.hasOwn(SHORT_NOUNS, entry.contextId) && Number.isSafeInteger(entry.count) && entry.count >= 0);
+  if (!known.length) return "";
+  const parts = known.slice(0, BRIEF_LIMIT).map(({ contextId, count }) => {
+    const [one, many] = SHORT_NOUNS[contextId];
+    return count === 0 ? `no ${many}` : `${count.toLocaleString("en-US")} ${count === 1 ? one : many}`;
+  });
+  const more = known.length - BRIEF_LIMIT;
+  return `In view: ${parts.join(" · ")}${more > 0 ? ` · +${more} more ${more === 1 ? "layer" : "layers"}` : ""}`;
 }
