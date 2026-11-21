@@ -16,6 +16,7 @@ created: 2026-07-06
 updated: 2026-11-21
 owning_root: tests/
 responsibility: Index the Roads/Rail/Trade domain tests and their held placeholders; tests are evidence of behavior, not policy or release authority.
+truth_posture: CONFIRMED smoke test and executable holds; PROPOSED test families; NEEDS VERIFICATION domain behavior tests
 policy_label: public-doc; tests; roads-rail-trade; domain-test-parent-index; no-network; source-role-aware; temporal-scope-aware; evidence-bound; policy-gated; release-gated; rollback-aware
 tags: [kfm, tests, roads-rail-trade, domain-tests, contracts, evidence, policy, release, source-role, temporal, redaction, legal-status-denial, historic-precision, rollback, EvidenceBundle, EvidenceRef, PolicyDecision, ReviewRecord, ReleaseManifest, RollbackCard, CorrectionNotice, WithdrawalNotice, ABSTAIN, DENY, ERROR]
 related:
