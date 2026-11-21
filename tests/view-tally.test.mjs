@@ -16,7 +16,7 @@ async function moduleUrl(file) {
   const url = `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
   modules.set(file, url); return url;
 }
-const { viewTally, isCountedLayer } = await import(await moduleUrl("app/view-tally.ts"));
+const { viewTally, viewTallyBrief, isCountedLayer, COUNTED_LAYER_IDS } = await import(await moduleUrl("app/view-tally.ts"));
 const clusters = await import(await moduleUrl("app/context-clusters.ts"));
 
 const point = (x, y, properties = {}) => ({ type: "Feature", geometry: { type: "Point", coordinates: [x, y] }, properties });
@@ -104,7 +104,33 @@ test("the Layers panel shows the tally only for a counted layer that is drawn on
   assert.ok(page.indexOf("<ViewTallyLine") < page.indexOf('<details className="official-context-options">'), "above the collapsed details, so it shows without opening them");
   // It recounts when the map stops, not on every frame of a move, and is not announced on every pan.
   assert.match(line, /map\.on\("moveend", read\)/); assert.match(line, /map\.off\("moveend", read\)/);
-  assert.ok(!/aria-live|role="status"/.test(line));
+  assert.ok(!/aria-live="(polite|assertive)"|role="(status|alert)"/.test(line));
   assert.match(line, /duration: reducedMotion \? 0 : 600/);
   assert.match(css, /@media \(max-width: 980px\) \{ \.view-tally button \{ min-height: 44px; \} \}/);
+});
+
+test("the status bar line names each counted layer briefly and stays short", () => {
+  assert.equal(COUNTED_LAYER_IDS.length, 8);
+  for (const id of COUNTED_LAYER_IDS) assert.equal(isCountedLayer(id), true, id);
+  assert.equal(viewTallyBrief([]), "");
+  assert.equal(viewTallyBrief([{ contextId: "usgs-earthquakes", count: 4 }]), "", "other layers are not counted");
+  assert.equal(viewTallyBrief([{ contextId: "kdot-bridges-local", count: 265 }]), "In view: 265 local bridges");
+  assert.equal(viewTallyBrief([{ contextId: "nps-trail-places", count: 0 }, { contextId: "nps-nrhp-places", count: 1 }]), "In view: no trail sites · 1 Register marker");
+  // Three bridge layers are parts of the local list, so the line never adds layers together.
+  assert.equal(viewTallyBrief([{ contextId: "kdot-bridges-state", count: 5580 }, { contextId: "kdot-bridges-local", count: 19291 }, { contextId: "kdot-bridges-closed", count: 91 },
+    { contextId: "kdwp-wiha-access", count: 3591 }, { contextId: "nps-trail-places", count: 96 }]),
+    "In view: 5,580 state highway bridges · 19,291 local bridges · 91 closed local bridges · +2 more layers");
+  assert.match(viewTallyBrief(COUNTED_LAYER_IDS.slice(0, 4).map(contextId => ({ contextId, count: 2 }))), / · \+1 more layer$/);
+  assert.equal(viewTallyBrief([{ contextId: "nps-trail-places", count: -1 }, { contextId: "nps-trail-places", count: 1.5 }]), "");
+});
+
+test("the status bar shows the line on the flat map, after the map's name, and drops it on narrow screens", async () => {
+  const page = await readFile("app/page.tsx", "utf8"), line = await readFile("app/view-tally-line.tsx", "utf8"), css = await readFile("app/map-layers.css", "utf8");
+  const bar = page.slice(page.indexOf('<footer className="status-bar"'), page.indexOf("</footer>", page.indexOf('<footer className="status-bar"')));
+  assert.match(bar, /projection !== "globe" && styleReady && <ViewTallyStatus layers=\{viewTallyLayers\} mapRef=\{mapRef\} \/>\}<\/span>/);
+  // It sits inside the first cell, so the bar's cell order and its narrow-screen rules are unchanged.
+  assert.equal(bar.match(/<span/g).length, (bar.match(/<span>\{mapRepresentationLabel\}/) ? 3 : 2));
+  assert.match(page, /COUNTED_LAYER_IDS\.filter\(id => effectiveOfficialVisibility\[id as OfficialContextFeedId\]\)/);
+  assert.match(line, /<output className="status-view-tally" aria-live="off">/);
+  assert.match(css, /@media \(max-width: 760px\) \{ \.status-view-tally \{ display: none; \} \}/);
 });
