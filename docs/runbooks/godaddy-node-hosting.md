@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-20
+updated: 2026-11-21
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -359,6 +359,29 @@ once. The layer still shows no cameras while its provider is down.
 **Other feeds.** The other 14 feeds answered 200 in about two seconds or less.
 Chat reported ready on `qwen3.5:9b-q4_K_M` about 40 seconds after the first
 request.
+
+<a id="public-readback-2026-11-21"></a>
+
+### Publication verified on 2026-11-21: guide text for the counted circles
+
+At about 05:35 UTC on 2026-11-21 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `804132d1`, the head of the connected branch.
+
+| Change | Live readback |
+|---|---|
+| [#5975](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5975) guide text for the counted circles | `/explore/historic-places`, `/explore/frontier-trails` and `/explore/hunting-and-wildlife-areas` returned 200 and each carried its new sentence about numbered circles. The historic places page carried the light-ring tip, and the hunting page the "about 3,600" tract count and the reworded last tip. `/explore/kansas-bridges` was unchanged |
+| [#5967](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5967) water-quality metadata | From other work; covered only by the identity match |
+
+**Build identity.** `/api/build` still returned `sourceCommit: null` and
+`commitState: WORKTREE_MODIFIED`, as on 2026-11-19 and 2026-11-20. The
+application inputs match `804132d1` exactly.
+
+**Feeds and chat.** DeFlock returned its outage answer in 0.2 seconds; its
+provider was still down. Thirteen of the other 14 feeds answered 200 in under
+two seconds and the FEMA declarations feed in 5.9 seconds. Chat reported ready on
+`qwen3.5:9b-q4_K_M`.
+
+**Mirror.** [#5976](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5976) carried #5975 into `apps/site/source`.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
