@@ -404,7 +404,7 @@ with 1,386 inputs.
 ```
 
 The host's checkout holds exactly one new entry (a file or a directory) outside
-the application inputs. No committed file is edited, and no file mode differs.
+the application inputs. Git reports no committed file as changed.
 The application inputs match `f08ae04f` exactly, so the published code is the
 merged code. The field publishes no name; naming the entry needs `git status`
 on the host, which this check cannot run.
