@@ -461,7 +461,7 @@ still down. Twelve other feeds answered 200 in under two seconds. Two did not at
 first:
 
 - The county outlines feed returned 503 "This operation was aborted" after about
-  18 seconds on four of nine requests between 03:15 and 03:20 UTC, and 200 in
+  18 seconds on five of nine requests between 03:15 and 03:20 UTC, and 200 in
   about 0.6 seconds on the others, including the last three. The Census
   TIGERweb county query it reads hung for 40 seconds on one of three direct
   requests made from outside the host in the same minutes and answered the other
