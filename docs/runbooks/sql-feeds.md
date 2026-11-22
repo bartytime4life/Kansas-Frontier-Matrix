@@ -480,9 +480,6 @@ scheduled run resumes from the retained checkpoints. Common reasons:
   hourly analysis began taking just over 15).
 - `HTTP_431` from Wikidata: the query URL was too long. On 2026-11-22 WDQS refused a
   7,571-character GET; detail batches now also stop at 6,000 characters.
-- `GEOFABRIK_LISTING_SHAPE`: Geofabrik's listing no longer shows a monthly Kansas file where the
-  feed looks. By 2026-11-14 Kansas had moved to `north-america/us/kansas/`, listed with absolute
-  links; the feed reads that folder.
 
 Partial runs recover without stalling or skipping:
 
