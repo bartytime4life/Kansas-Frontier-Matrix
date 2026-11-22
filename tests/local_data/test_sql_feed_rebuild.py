@@ -130,6 +130,31 @@ class RevisionTests(FeedCase):
 
 
 class GridRecoveryTests(FeedCase):
+    def test_wikidata_non_entity_relationship_survives_a_complete_range_load(self):
+        group = next(g for g in grid.GROUPS if g.name == 'people')
+        bindings = [
+            {'item': {'type': 'uri', 'value': grid.ENTITY + 'Q42'}, 'prop': {'value': 'P19'},
+             'value': {'type': 'bnode', 'value': 'unknown-provider-node'}},
+            {'item': {'type': 'uri', 'value': grid.ENTITY + 'Q42'}, 'prop': {'value': 'P69'},
+             'value': {'type': 'uri', 'value': grid.ENTITY + 'Q2'}},
+        ]
+        self.ctx.fetch = lambda url, **options: core.Fetched(url, json.dumps({'results': {'bindings': bindings}}).encode())
+        db = core.open_db(self.ctx)
+        db.executescript(grid.WIKIDATA_DDL)
+        result = grid._fill_range(self.ctx, db, grid._Budget(3, 0), group, 0, 100, {42: {'P69'}}, {'Q2'}, [], '2026-11-22')
+        record = json.loads(db.execute('SELECT record_json FROM kfm_wikidata_people WHERE qid=?', ('Q42',)).fetchone()[0])
+        self.assertEqual(result['rows'], 1)
+        self.assertEqual(record['claims']['P19'], ['unknown-provider-node'])
+        self.assertEqual(record['kansas'], [{'id': 'Q2', 'label': None, 'property': 'P69'}])
+        db.close()
+
+    def test_wikidata_non_entity_relationship_does_not_invent_a_kansas_link(self):
+        group = next(g for g in grid.GROUPS if g.name == 'people')
+        record = grid._record('Q42', [{'prop': {'value': 'P19'}, 'value': {'type': 'bnode', 'value': 'unknown'}}],
+                              group, {'P19'}, {'Q1'}, [])
+        self.assertEqual(record['claims']['P19'], ['unknown'])
+        self.assertEqual(record['kansas'], [])
+
     def test_wikidata_long_query_uses_a_form_body_with_the_native_fetcher(self):
         query = 'SELECT ?item WHERE { VALUES ?item { ' + ' '.join(f'wd:Q{i}' for i in range(375)) + ' } } # café'
         answer = b'{"results":{"bindings":[{"item":{"type":"uri","value":"http://www.wikidata.org/entity/Q42"}}]}}'

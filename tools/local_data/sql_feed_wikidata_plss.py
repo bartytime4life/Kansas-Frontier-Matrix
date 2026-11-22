@@ -385,7 +385,11 @@ def _record(qid: str, bindings: list, group: Group, whys: set, places: set, coun
         out["enwiki"] = enwiki
     if population:
         out["population"] = sorted([{"amount": a, "rank": r, **({"date": d} if d is not None else {})} for a, d, r in population], key=core.canonical)
-    links = [{"id": e["id"], "label": e["label"], "property": p} for p in group.links for e in out["claims"].get(p, []) if e["id"] in places]
+    # Unknown/some-value relationships can be blank nodes rather than entity
+    # URIs. Keep their provider values in claims, but only entities can link a
+    # record to the independently discovered Kansas places.
+    links = [{"id": e["id"], "label": e["label"], "property": p} for p in group.links
+             for e in out["claims"].get(p, []) if isinstance(e, dict) and e["id"] in places]
     if group.box:
         links += [{"county_geoid": g, "property": "P625"} for lon, lat in out["claims"].get("P625", []) if (g := county_at(counties, lon, lat))]
     out["kansas"] = sorted({core.canonical(l): l for l in links}.values(), key=core.canonical)
