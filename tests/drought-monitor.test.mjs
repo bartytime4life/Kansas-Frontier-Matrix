@@ -187,6 +187,36 @@ test('the Kansas series asks by state code, falls back to the postal code on an 
  }finally{Date.now=realNow;}
 });
 
+test('a week is read once for everyone who asks, two weeks at a time, with a short line behind them',async()=>{
+ const started=[];const release=new Map();let inFlight=0,most=0;
+ const upstream={boundedFetch:url=>{const date=/usdm_(\d{8})/.exec(url)[1];started.push(date);inFlight++;most=Math.max(most,inFlight);
+  return new Promise(resolve=>release.set(date,()=>{inFlight--;resolve({text:()=>JSON.stringify(national)});}));}};
+ const route=await compile('app/api/drought-monitor/route.ts',{'../event-atlas/upstream':upstream,'../../drought-monitor':dm});
+ const weeks=[];for(let date='20260106';weeks.length<16;date=dm.previousUsdmDate(date))weeks.push(date);
+ const ask=date=>route.GET(new Request(`http://x/api/drought-monitor?date=${date}`));
+ const settle=async()=>{for(let i=0;i<20;i++)await Promise.resolve();};
+ // Three visitors ask for the same week: one read.
+ const same=[ask(weeks[0]),ask(weeks[0]),ask(weeks[0])];
+ await settle();assert.deepEqual(started,[weeks[0]]);
+ // Fourteen more weeks: one more is read now, twelve wait, and the one after that is told to try again.
+ const others=weeks.slice(1,14).map(ask);
+ await settle();assert.deepEqual(started,[weeks[0],weeks[1]],'two weeks are read at once');
+ const refused=await ask(weeks[14]);
+ assert.equal(refused.status,503);assert.equal(refused.headers.get('retry-after'),'3');assert.equal(refused.headers.get('cache-control'),'no-store');
+ assert.match((await refused.json()).message,/reading other weeks/);
+ assert.equal(started.length,2,'a refused week is not read');
+ // As each read finishes the next in line starts; the count never passes two.
+ for(let i=0;i<14;i++){release.get(weeks[i])();await settle();}
+ const answers=await Promise.all([...same,...others]);
+ assert.deepEqual(answers.map(r=>r.status),Array(16).fill(200));
+ assert.deepEqual(started,weeks.slice(0,14),'the line is served in order');
+ assert.equal(most,2);
+ assert.equal((await answers[0].json()).date,weeks[0]);
+ // A read that fails gives its place up, and the week can be asked for again.
+ const failing=await compile('app/api/drought-monitor/route.ts',{'../event-atlas/upstream':{boundedFetch:async()=>{throw new Error('HTTP 503');}},'../../drought-monitor':dm});
+ for(let i=0;i<5;i++)assert.equal((await failing.GET(new Request(`http://x/api/drought-monitor?date=${weeks[i]}`))).status,502);
+});
+
 test('the Field view dock shows the Drought Monitor with its Kansas chart, a week slider and week steps',async()=>{
  const look=maps.CATEGORY_MAPS.agriculture;
  assert.ok(look.tools.includes('drought'));
