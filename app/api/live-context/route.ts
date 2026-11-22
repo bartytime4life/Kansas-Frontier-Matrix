@@ -953,26 +953,32 @@ const pendingAnswers = new Map<Feed, Promise<unknown>>();
 // Bridges and county outlines keep their own answers; feeds declared no-store are read every time.
 // Setting KFM_LIVE_CONTEXT_KEEP=off returns every feed to one provider read per request without a code change.
 const keepsAnswerHere = (feed: Feed) => cacheSeconds[feed] > 0 && feed !== "census-counties" && !isBridgeFeed(feed)
-  && (env as { KFM_LIVE_CONTEXT_KEEP?: unknown }).KFM_LIVE_CONTEXT_KEEP !== "off";
-async function keptFeed<T>(feed: Feed, read: () => Promise<T>): Promise<T> {
+  && (env as { KFM_LIVE_CONTEXT_KEEP?: unknown } | undefined)?.KFM_LIVE_CONTEXT_KEEP !== "off";
+// `read` may return any one of several readers' promises; the caller gets that same promise type back.
+function keptFeed<P extends Promise<unknown>>(feed: Feed, read: () => P): Promise<Awaited<P>> {
+  type T = Awaited<P>;
   const windowMs = cacheSeconds[feed] * 1000, held = keptAnswers.get(feed);
-  if (held && Date.now() - held.at < held.freshMs) return held.answer as T;
+  if (held && Date.now() - held.at < held.freshMs) return Promise.resolve(held.answer as T);
   let request = pendingAnswers.get(feed) as Promise<T> | undefined;
   if (!request) {
-    request = read().then(answer => {
+    const reading = read() as unknown as Promise<T>;
+    request = reading;
+    pendingAnswers.set(feed, reading);
+    const done = () => { if (pendingAnswers.get(feed) === reading) pendingAnswers.delete(feed); };
+    reading.then(answer => {
       // A partial answer may be missing something only for the moment (one trail layer down), so it is
       // read again within five minutes instead of standing for a day.
       const partial = (answer as { state?: unknown } | null)?.state === "partial";
       keptAnswers.set(feed, { answer, at: Date.now(), freshMs: partial ? Math.min(windowMs, PARTIAL_KEEP_SECONDS * 1000) : windowMs });
-      return answer;
-    }).finally(() => pendingAnswers.delete(feed));
-    pendingAnswers.set(feed, request);
+      done();
+    }, done);
   }
-  try { return await request; }
-  catch (error) {
-    if (held && Date.now() - held.at < held.freshMs + windowMs) return held.answer as T;
+  // With nothing kept to fall back on the caller gets the read itself, so a timeout reaches it exactly as it did before.
+  if (!held) return request;
+  return request.catch(error => {
+    if (Date.now() - held.at < held.freshMs + windowMs) return held.answer as T;
     throw error;
-  }
+  });
 }
 
 // The site's host replaces the body of a 502 or 504 with its own "error code" page, which hid the
