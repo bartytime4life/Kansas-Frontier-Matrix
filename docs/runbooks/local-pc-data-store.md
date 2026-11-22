@@ -6,7 +6,7 @@ version: v0.4
 status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-11-01
+updated: 2026-11-22
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
@@ -39,8 +39,9 @@ Open **KFM Working Data** for new bounded USGS/NWS captures and ordinary local
 intake analysis. Use `kfm-data status`, `kfm-data refresh` or `kfm-data backup` in a
 new terminal. `kfm-data library` and `kfm-data intake` print current private
 connection links if a browser needs reconnecting after a service restart.
-The command also exists at
-`/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/kfm-data`.
+The command is installed at `~/.local/bin/kfm-data` and also exists at
+`/home/user/Documents/ChatGPT/Kansas-Frontier-Matrix/kfm-data` (the PC's host
+name is `dev`; its account is `user`, read back on 2026-11-22).
 
 Local user timers check hourly source slots every five minutes, analyze new
 captures hourly, back up the working store nightly, and perform a monthly restore
