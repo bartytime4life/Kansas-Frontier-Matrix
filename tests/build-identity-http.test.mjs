@@ -16,12 +16,19 @@ test('built public identity matches current inputs and About exposes usable proj
   const actual = await response.json();
   const expected = await applicationIdentity();
   // worktreeChanges is present only when Git reports changed checkout entries.
-  assert.deepEqual(Object.keys(actual).filter(key => key !== 'worktreeChanges').sort(), ['application', 'commitState', 'profile', 'scope', 'sourceCommit', 'sourceDigest', 'sourceFileCount'].sort());
+  assert.deepEqual(Object.keys(actual).filter(key => key !== 'worktreeChanges' && key !== 'retainedClientAssets').sort(), ['application', 'commitState', 'profile', 'scope', 'sourceCommit', 'sourceDigest', 'sourceFileCount'].sort());
   if ('worktreeChanges' in actual) {
     assert.equal(actual.commitState, 'WORKTREE_MODIFIED');
     assert.deepEqual(Object.keys(actual.worktreeChanges).sort(), ['trackedInputs', 'trackedOther', 'untrackedInputs', 'untrackedOther']);
     for (const count of Object.values(actual.worktreeChanges)) assert.ok(Number.isSafeInteger(count) && count >= 0);
   }
+  // retainedClientAssets is present only when the build started with browser files kept from earlier builds.
+  if ('retainedClientAssets' in actual) {
+    assert.deepEqual(Object.keys(actual.retainedClientAssets).sort(), ['byteLimit', 'bytes', 'entries', 'entryLimit']);
+    for (const count of Object.values(actual.retainedClientAssets)) assert.ok(Number.isSafeInteger(count) && count > 0);
+    assert.deepEqual([actual.retainedClientAssets.entryLimit, actual.retainedClientAssets.byteLimit], [4096, 256 * 1024 * 1024]);
+  }
+  assert.ok(!('retainedClientAssets' in expected), 'the comparable identity carries application inputs only');
   assert.equal(actual.sourceCommit, expected.sourceCommit);
   assert.equal(actual.commitState, expected.commitState);
   assert.equal((await verifyHostedIdentity(expected, origin)).outcome, 'APPLICATION_INPUTS_MATCH');

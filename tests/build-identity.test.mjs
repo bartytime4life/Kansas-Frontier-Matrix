@@ -4,7 +4,9 @@ import { mkdtemp, mkdir, readFile, writeFile, rm, symlink } from 'node:fs/promis
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { applicationIdentity, verifyHostedIdentity } from '../scripts/build-identity.mjs';
+import { applicationIdentity, verifyHostedIdentity, retainedClientAssets } from '../scripts/build-identity.mjs';
+import { CLIENT_ASSET_ENTRY_LIMIT, CLIENT_ASSET_BYTE_LIMIT } from '../scripts/stage-public-client-assets.mjs';
+import { fileURLToPath } from 'node:url';
 
 test('the normal hot-reload command creates identity before Vite on a fresh source tree', async t => {
   const root = await fixture(t);
@@ -178,4 +180,32 @@ test('hosted comparison requires actual matching application bytes and validates
   await assert.rejects(verifyHostedIdentity(expected, 'https://kansasfrontiermatrix.com', async () => new Response('x'.repeat(4097), {headers:{'content-type':'application/json'}})), /HOSTED_IDENTITY_INVALID/);
   await assert.rejects(verifyHostedIdentity(expected, 'https://user:secret@example.test'), /INVALID_VERIFICATION_ORIGIN/);
   await assert.rejects(verifyHostedIdentity(expected, 'http://example.test'), /INVALID_VERIFICATION_ORIGIN/);
+});
+
+test('a build records how much of the kept browser files limit it started with, by count only', async t => {
+  const root = await fixture(t);
+  assert.equal(await retainedClientAssets(root), null, 'no folder yet: nothing to report');
+  await mkdir(join(root, 'public/assets'));
+  assert.equal(await retainedClientAssets(root), null, 'an empty folder: nothing to report');
+  await writeFile(join(root, 'public/assets/page-AbCdEf123456.js'), 'x'.repeat(2000));
+  await writeFile(join(root, 'public/assets/page-AbCdEf123456.js.br'), 'y'.repeat(300));
+  await writeFile(join(root, 'public/assets/page-ZyXwVu987654.js'), 'z'.repeat(1700));
+  const kept = await retainedClientAssets(root);
+  assert.deepEqual(kept, { entries: 3, bytes: 4000, entryLimit: 4096, byteLimit: 256 * 1024 * 1024 });
+  assert.deepEqual([kept.entryLimit, kept.byteLimit], [CLIENT_ASSET_ENTRY_LIMIT, CLIENT_ASSET_BYTE_LIMIT], 'the limits are the ones the staging step enforces');
+  const staging = await readFile('scripts/stage-public-client-assets.mjs', 'utf8');
+  assert.equal(staging.match(/CLIENT_ASSET_ENTRY_LIMIT\)fail\('CLIENT_ASSET_COUNT_LIMIT'\)/g).length, 2);
+  assert.equal(staging.match(/CLIENT_ASSET_BYTE_LIMIT\)fail\('CLIENT_ASSET_BYTE_LIMIT'\)/g).length, 2);
+
+  // The comparable identity is unchanged by kept files; only the file written for this build carries the counts.
+  const before = await applicationIdentity(root);
+  assert.ok(!('retainedClientAssets' in before));
+  const script = fileURLToPath(new URL('../scripts/build-identity.mjs', import.meta.url));
+  const log = execFileSync('node', [script], { cwd: root, encoding: 'utf8', timeout: 20000 });
+  assert.match(log, /Browser files kept from earlier builds: 3 of 4096 entries, 0 of 256 MB/);
+  const written = JSON.parse(await readFile(join(root, 'app/build-info.generated.json'), 'utf8'));
+  assert.deepEqual(written.retainedClientAssets, kept);
+  assert.equal(written.sourceDigest, before.sourceDigest);
+  assert.ok(!JSON.stringify(written).includes('AbCdEf') && !JSON.stringify(written).includes('page-'), 'no file name is published');
+  assert.deepEqual(JSON.parse(execFileSync('node', [script, '--print'], { cwd: root, encoding: 'utf8', timeout: 20000 })), before, '--print stays the comparable identity');
 });
