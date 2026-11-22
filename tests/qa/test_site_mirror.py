@@ -3233,4 +3233,17 @@ def test_kept_feeds_parity_successor_preserves_kept_feed_answers_inventory_and_a
         {"docs/live-context-kept-answers-20261122.md", "tests/live-context-kept-feeds.test.mjs"},
         "169d32c4d2258f2cd600174b8c5f0b26c5652b20",
     )
-    assert TOOL.RECEIPT.name == "site-v268-kept-feeds-parity-overlay-20261122.json"
+
+
+def test_topo_catalog_address_successor_preserves_kept_feeds_parity_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-topo-catalog-address-overlay-20261122.json",
+        "site-v268-kept-feeds-parity-overlay-20261122.json",
+        "a9b6a0915d7bc6fa65293276239d6c3b2bd524f47f31a4183f68906b3818fa4b",
+        {
+            "app/api/event-atlas/upstream.ts", "app/historical-topo.ts",
+            "tests/historical-topo-quota.test.mjs", "tests/historical-topo.test.mjs",
+        },
+        "9890000f2e9f337c689817fdfc63910eaa383026",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-topo-catalog-address-overlay-20261122.json"
