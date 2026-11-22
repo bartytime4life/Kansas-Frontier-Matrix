@@ -9,7 +9,10 @@ export const browserHeaders = Object.freeze({
   // Preserve the owner's public contact text and React hydration through CDN
   // HTML rewriting. API routes keep their stricter private/no-store overrides.
   'Cache-Control': 'no-transform',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; font-src 'self' https: data:; connect-src 'self' https:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self'; media-src 'self' https: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://host.godaddy.com",
+  // connect-src includes blob: because the map library fetches images it is handed as blob URLs. Without it
+  // the Event Observatory's radar frames were refused and every frame was withheld. A blob URL can only
+  // name data this page already holds, so this opens no outside destination.
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; font-src 'self' https: data:; connect-src 'self' https: blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self'; media-src 'self' https: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://host.godaddy.com",
 });
 
 export function applyBrowserHeaders(_request, response) {
