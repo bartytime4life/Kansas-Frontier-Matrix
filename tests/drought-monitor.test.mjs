@@ -30,7 +30,9 @@ test('map weeks are Tuesdays from January 2000; the newest is the one released b
  assert.equal(dm.usdmMapProviderUrl('20261020'),'https://droughtmonitor.unl.edu/data/json/usdm_20261020.json');
  const series=new URL(dm.usdmSeriesProviderUrl(new Date('2026-10-29T05:00:00Z')));
  assert.equal(series.origin+series.pathname,'https://usdmdataservices.unl.edu/api/StateStatistics/GetDroughtSeverityStatisticsByAreaPercent');
- assert.deepEqual(Object.fromEntries(series.searchParams),{aoi:'KS',startdate:'1/1/2000',enddate:'10/29/2026',statisticsType:'1'});
+ assert.deepEqual(Object.fromEntries(series.searchParams),{aoi:'20',startdate:'1/1/2000',enddate:'10/29/2026',statisticsType:'1'},'Kansas by its state FIPS code');
+ assert.deepEqual(plain(dm.USDM_SERIES_AREAS),['20','KS']);
+ assert.equal(new URL(dm.usdmSeriesProviderUrl(new Date('2026-10-29T05:00:00Z'),'KS')).searchParams.get('aoi'),'KS');
 });
 
 test('rings are cut to the region around Kansas; rings outside it are dropped',()=>{
@@ -142,6 +144,47 @@ test('the route answers a chosen week, falls back a week when the newest is late
  assert.deepEqual(answer.weeks,[{date:'20261020',shares:[76.6,50.1,20.3,3.2,0]}]);
  const upstreamSource=await readFile('app/api/event-atlas/upstream.ts','utf8');
  assert.match(upstreamSource,/"https:\/\/droughtmonitor\.unl\.edu", "https:\/\/usdmdataservices\.unl\.edu"/,'both origins are on the bounded fetch allowlist');
+});
+
+test('the Kansas series asks by state code, falls back to the postal code on an empty answer, and keeps a series through a failed read',async()=>{
+ // What the USDM data services sent on 2026-11-22: CSV for the state code, and an empty answer for the postal code.
+ const csv='MapDate,StateAbbreviation,None,D0,D1,D2,D3,D4,ValidStart,ValidEnd,StatisticFormatID\n20261117,KS,62.90,37.10,11.92,1.66,0.00,0.00,2026-11-17,2026-11-23,1\n20261110,KS,64.50,35.50,11.49,1.75,0.00,0.00,2026-11-10,2026-11-16,1\n';
+ const asked=[];let answer=url=>new URL(url).searchParams.get('aoi')==='20'?csv:'';
+ const realNow=Date.now;let clock=realNow();Date.now=()=>clock;
+ try{
+  const load=()=>compile('app/api/drought-series/route.ts',{'../event-atlas/upstream':{boundedFetch:async url=>{asked.push(new URL(url).searchParams.get('aoi'));const text=answer(url);if(text===null)throw new Error('Source unavailable (HTTP 503).');return {text:()=>text};}},'../../drought-monitor':dm});
+  let route=await load();
+  let response=await route.GET();
+  assert.equal(response.status,200);
+  assert.deepEqual((await response.json()).weeks,[{date:'20261110',shares:[35.5,11.49,1.75,0,0]},{date:'20261117',shares:[37.1,11.92,1.66,0,0]}]);
+  assert.deepEqual(asked,['20'],'the state code answers, so the postal code is not asked');
+  // Within six hours the series in hand is served without asking.
+  clock+=5*3600_000;await route.GET();assert.deepEqual(asked,['20']);
+  // Past six hours the provider fails: the series in hand is served, briefly cacheable, and the provider is left alone for five minutes.
+  clock+=2*3600_000;answer=()=>null;
+  response=await route.GET();
+  assert.equal(response.status,200);assert.equal((await response.json()).weeks.length,2);
+  assert.equal(response.headers.get('cache-control'),'public, max-age=300');
+  assert.deepEqual(asked,['20','20'],'a provider that does not answer is not asked under the other name');
+  clock+=4*60_000;await route.GET();assert.deepEqual(asked,['20','20'],'not asked again inside five minutes');
+  clock+=2*60_000;answer=url=>new URL(url).searchParams.get('aoi')==='KS'?csv:'[]';
+  response=await route.GET();
+  assert.deepEqual(asked,['20','20','20','KS'],'an empty answer for one name is asked again under the other');
+  assert.match(response.headers.get('cache-control'),/s-maxage=21600/);
+  assert.match((await response.json()).source,/aoi=KS/,'the source says which request was answered');
+  // With nothing in hand a failure is a 503 whose message survives the host, and it is not kept.
+  route=await load();asked.length=0;answer=()=>'[]';
+  response=await route.GET();
+  assert.equal(response.status,503);assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.match((await response.json()).message,/Drought Monitor statistics are unavailable/);
+  assert.deepEqual(asked,['20','KS']);
+  clock+=6*60_000;answer=url=>new URL(url).searchParams.get('aoi')==='20'?csv:'';
+  assert.equal((await route.GET()).status,200,'a later read recovers');
+  // Requests that arrive together share one read.
+  route=await load();asked.length=0;
+  const both=await Promise.all([route.GET(),route.GET()]);
+  assert.deepEqual(both.map(r=>r.status),[200,200]);assert.deepEqual(asked,['20']);
+ }finally{Date.now=realNow;}
 });
 
 test('the Field view dock shows the Drought Monitor with its Kansas chart, a week slider and week steps',async()=>{
