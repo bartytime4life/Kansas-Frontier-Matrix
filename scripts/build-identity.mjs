@@ -97,6 +97,25 @@ export async function applicationIdentity(root = process.cwd()) {
     scope: 'Application source inputs only; excludes build bytes, live data, settings, models, and release authority.' };
 }
 
+// Every browser file a build has staged stays in public/assets, so that a page opened before a publish can
+// still load its scripts after it, and the build refuses to finish once that folder passes a fixed number
+// of entries or bytes. Nothing outside the host can list the folder, so the build records how much of each
+// limit was used when it started. Counts only: no file name is published.
+// This file runs on its own in a fresh tree, so it states the two limits itself; a test holds them equal to
+// the ones scripts/stage-public-client-assets.mjs enforces.
+const CLIENT_ASSET_ENTRY_LIMIT = 4096, CLIENT_ASSET_BYTE_LIMIT = 256 * 1024 * 1024;
+export async function retainedClientAssets(root = process.cwd()) {
+  let entries = 0, bytes = 0;
+  try {
+    const folder = resolve(root, 'public/assets');
+    for (const entry of await readdir(folder, { withFileTypes: true })) {
+      entries += 1;
+      if (entry.isFile()) bytes += (await lstat(resolve(folder, entry.name))).size;
+    }
+  } catch { return null; }
+  return entries ? { entries, bytes, entryLimit: CLIENT_ASSET_ENTRY_LIMIT, byteLimit: CLIENT_ASSET_BYTE_LIMIT } : null;
+}
+
 export async function verifyHostedIdentity(expected, origin, fetcher = fetch) {
   const url = new URL(origin);
   if (url.username || url.password || url.search || url.hash || url.pathname !== '/' ||
@@ -140,9 +159,12 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
       if (result.outcome !== 'APPLICATION_INPUTS_MATCH') process.exitCode = 1;
     } else if (process.argv[2] === '--print' && process.argv.length === 3) console.log(JSON.stringify(identity));
     else if (process.argv.length === 2) {
-      await writeFile('app/build-info.generated.json', JSON.stringify(identity, null, 2) + '\n');
+      // Recorded for this build only; --print and --verify compare application inputs and leave it out.
+      const retained = await retainedClientAssets();
+      await writeFile('app/build-info.generated.json', JSON.stringify({ ...identity, ...(retained ? { retainedClientAssets: retained } : {}) }, null, 2) + '\n');
       console.log('Application identity: ' + identity.sourceDigest + ' (' + identity.commitState + ')');
       if (identity.worktreeChanges) console.log('Checkout entries Git reports as changed: ' + JSON.stringify(identity.worktreeChanges));
+      if (retained) console.log('Browser files kept from earlier builds: ' + retained.entries + ' of ' + retained.entryLimit + ' entries, ' + Math.round(retained.bytes / 1048576) + ' of ' + Math.round(retained.byteLimit / 1048576) + ' MB');
     } else throw new Error('USAGE: node scripts/build-identity.mjs [--print | --verify ORIGIN]');
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }

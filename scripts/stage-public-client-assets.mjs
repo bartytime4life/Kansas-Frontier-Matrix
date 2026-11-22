@@ -8,6 +8,9 @@ import {gzip,brotliCompress,constants} from 'node:zlib';
 import {promisify} from 'node:util';
 const gzipBytes=promisify(gzip),brotliBytes=promisify(brotliCompress);
 const fail=code=>{throw new Error(code);};
+// The build stops, and so does a publish, once the staged folder passes either limit. Nothing is pruned,
+// so scripts/build-identity.mjs reports how much of each is used (see docs/retained-client-assets-20261122.md).
+export const CLIENT_ASSET_ENTRY_LIMIT=4096,CLIENT_ASSET_BYTE_LIMIT=256*1024*1024;
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const allowed=/^[A-Za-z0-9][A-Za-z0-9_.-]{0,180}-[A-Za-z0-9_-]{8,}\.(?:js|css|woff2?|ttf|svg|png|jpe?g|webp|avif|wasm)(?:\.(?:br|gz|zst))?$/;
 async function directory(path){const info=await lstat(path);if(!info.isDirectory()||info.isSymbolicLink())fail('CLIENT_ASSET_DIRECTORY_UNSAFE');}
@@ -19,14 +22,14 @@ export async function stagePublicClientAssets(root=process.cwd(),{ifBuilt=false,
  const source=join(root,'dist/client/assets'),destination=join(root,'public/assets');
  await mkdir(destination,{recursive:true});await directory(destination);
  const entries=await readdir(source,{withFileTypes:true});
- if(entries.length>4096)fail('CLIENT_ASSET_COUNT_LIMIT');
+ if(entries.length>CLIENT_ASSET_ENTRY_LIMIT)fail('CLIENT_ASSET_COUNT_LIMIT');
  const items=[];let totalBytes=0;
  for(const entry of entries){
   if(entry.name.endsWith('.map'))continue;
   if(!entry.isFile()||!allowed.test(entry.name))fail('CLIENT_ASSET_NAME_UNSAFE');
   const info=await lstat(join(source,entry.name));
   if(!info.isFile()||info.isSymbolicLink()||info.size>64*1024*1024)fail('CLIENT_ASSET_FILE_UNSAFE');
-  totalBytes+=info.size;if(totalBytes>256*1024*1024)fail('CLIENT_ASSET_BYTE_LIMIT');
+  totalBytes+=info.size;if(totalBytes>CLIENT_ASSET_BYTE_LIMIT)fail('CLIENT_ASSET_BYTE_LIMIT');
   items.push({name:entry.name,size:info.size});
  }
  if(!items.length)fail('CLIENT_ASSET_BUILD_MISSING');
@@ -58,8 +61,8 @@ export async function stagePublicClientAssets(root=process.cwd(),{ifBuilt=false,
     }finally{await unlink(temporary).catch(()=>{});}
     if(!byName.has(name)){const added={name,size:variant.length};byName.set(name,added);items.push(added);totalBytes+=variant.length;}
     byName.get(name).digest=hash(variant);
-    if(totalBytes>256*1024*1024)fail('CLIENT_ASSET_BYTE_LIMIT');
-    if(items.length>4096)fail('CLIENT_ASSET_COUNT_LIMIT');
+    if(totalBytes>CLIENT_ASSET_BYTE_LIMIT)fail('CLIENT_ASSET_BYTE_LIMIT');
+    if(items.length>CLIENT_ASSET_ENTRY_LIMIT)fail('CLIENT_ASSET_COUNT_LIMIT');
     compression[suffix==='br'?'brotliBytes':'gzipBytes']+=variant.length;
    }
   }
