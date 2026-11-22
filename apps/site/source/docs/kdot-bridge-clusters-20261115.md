@@ -140,8 +140,16 @@ Under the row line, up to two buttons take the map to a record the facts mention
 - The map moves to the record and zooms in only as far as needed for it to stand apart from its
   neighbours (14.5 for a bridge, 13.5 for a Register marker, 12 for a tract). It never zooms out.
 - Trail sites have no such button, and neither does a view holding a single record or none.
-- The button does not select the record or open its details. The record is at the middle of the
-  map, and selecting it works as before.
+- Since 2026-11-22 the button also selects the record: when the map stops there, the record is
+  marked on the map and its details open, exactly as if the visitor had selected it. This uses the
+  same path as a click on the record, so nothing new is shown about it.
+  - It selects only if the map is still where the button sent it. A visitor who pans away during
+    the move, presses another button, or closes the panel is not handed a record they left behind.
+  - If the record is not drawn the moment the map stops, it looks once more when the map has
+    settled. If nothing is drawn there at all (a tract whose outline does not cover the middle of
+    its own extent), the map stays centred and nothing is selected.
+  - Keyboard focus stays put: a button whose wording changes for the new view keeps focus, and if
+    the button is gone (one record left in view) focus moves to the line itself.
 
 ### In the status bar too
 
