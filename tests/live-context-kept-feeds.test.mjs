@@ -155,3 +155,19 @@ test("the headers a kept answer goes out with are the ones the feed always decla
     assert.equal(kept.headers.get("Cache-Control"), "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400");
   } finally { globalThis.fetch = original; }
 });
+
+test("with nothing kept, the caller is handed the provider read itself", async () => {
+  // main's deadline test gives the route twelve microtask steps to report a provider timeout. Wrapping the
+  // read in further promises spent some of them; with no kept answer to fall back on there is nothing to wrap.
+  const source = await readFile("app/api/live-context/route.ts", "utf8");
+  const keeper = source.slice(source.indexOf("function keptFeed<"), source.indexOf("\n}\n", source.indexOf("function keptFeed<")));
+  assert.match(keeper, /if \(!held\) return request;/);
+  assert.match(keeper, /reading\.then\(answer => \{[\s\S]*?done\(\);\s*\}, done\);/, "keeping the answer is a side branch, not a step the caller waits behind");
+  assert.ok(!/async function keptFeed/.test(source) && !/\.finally\(/.test(keeper));
+  // The switch is read safely where a harness supplies no environment object at all.
+  assert.match(source, /\(env as \{ KFM_LIVE_CONTEXT_KEEP\?: unknown \} \| undefined\)\?\.KFM_LIVE_CONTEXT_KEEP !== "off"/);
+  // A provider failure with nothing kept still reaches the visitor as the same 503.
+  clock += 10 * DAY;
+  const failed = await call("feed=nps-trail-places", 503);
+  assert.equal(failed.status, 503); assert.equal(failed.body.state, "error");
+});
