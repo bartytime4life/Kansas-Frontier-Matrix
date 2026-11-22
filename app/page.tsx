@@ -96,7 +96,7 @@ import Link from "next/link";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
 import { officialClusterSummary } from "./context-clusters";
-import { COUNTED_LAYER_IDS, isCountedLayer } from "./view-tally";
+import { COUNTED_LAYER_IDS, isCountedLayer, recordAt } from "./view-tally";
 import { ViewTallyLine, ViewTallyStatus } from "./view-tally-line";
 import { BlmPlssInspector } from "./blm-plss-inspector";
 import { isBlmPlssLayer } from "./blm-plss-records";
@@ -6064,6 +6064,20 @@ export default function Home() {
     }
   }, [isCompact, surfaceInspectionOpen, setRightOpen]);
   useEffect(() => { openSelectionRef.current = openSelection; }, [openSelection]);
+  // A button under a counted layer's in-view line has brought the map to a record: select it as a click on it would.
+  const showCountedRecord = useCallback((contextId: string, center: readonly [number, number], opener: HTMLElement | null) => {
+    const map = mapRef.current, source = OFFICIAL_CONTEXT_BY_ID[contextId as OfficialContextId];
+    if (!map || !source) return false;
+    const layers = source.interactiveLayerIds.filter(id => map.getLayer(id));
+    if (!layers.length) return false;
+    const spot = map.project([center[0], center[1]]);
+    const record = recordAt(map.queryRenderedFeatures([[spot.x - 8, spot.y - 8], [spot.x + 8, spot.y + 8]], { layers }), center);
+    const context = record ? buildBasemapContext(record, center[0], center[1]) : null;
+    if (!context) return false;
+    openSelectionRef.current(context, opener);
+    updateSelectionSource(map, context.geometry);
+    return true;
+  }, []);
 
   useEffect(() => {
     // Discovery hides its focused result when it opens Evidence. Move into the
@@ -12062,7 +12076,7 @@ export default function Home() {
                   {needsFlatMap && <button type="button" onClick={() => activateMapRepresentation("2d")}>Use flat map</button>}
                   {needsCloserView && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const center = map.getCenter(); const inKansasView = center.lng >= -102.06 && center.lng <= -94.58 && center.lat >= 36.99 && center.lat <= 40.01; map.easeTo({ zoom: minimumZoom + 0.5, ...(inKansasView ? {} : { center: [-98.3, 38.5] as [number, number] }), duration: reducedMotion ? 0 : 600 }); announce(`Zooming to ${source.shortTitle}; provider coverage may still contain gaps`); }}>Zoom to layer</button>}
                 </div>}
-                {isCountedLayer(source.id) && effectiveOfficialVisibility[source.id] && projection !== "globe" && styleReady && <ViewTallyLine contextId={source.id} data={officialPayloads[source.id as OfficialContextFeedId]?.data} mapRef={mapRef} reducedMotion={reducedMotion} />}
+                {isCountedLayer(source.id) && effectiveOfficialVisibility[source.id] && projection !== "globe" && styleReady && <ViewTallyLine contextId={source.id} data={officialPayloads[source.id as OfficialContextFeedId]?.data} mapRef={mapRef} reducedMotion={reducedMotion} onShowRecord={(center, opener) => showCountedRecord(source.id, center, opener)} />}
                 {officialVisibility[source.id] && source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
                 <details className="official-context-options"><summary>Details &amp; controls</summary><div className="official-context-option-body">                {source.id === "nws-radar" && <div className="noaa-radar-launch" aria-label="NOAA radar playback">
                   <strong>Watch radar over time</strong>

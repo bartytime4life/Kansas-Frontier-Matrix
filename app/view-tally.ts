@@ -135,3 +135,20 @@ export function viewTallyBrief(counts: readonly Readonly<{ contextId: string; co
   const more = known.length - BRIEF_LIMIT;
   return `In view: ${parts.join(" · ")}${more > 0 ? ` · +${more} more ${more === 1 ? "layer" : "layers"}` : ""}`;
 }
+
+/** Of the features drawn at a spot, the one a highlight button meant: a record, never a numbered circle,
+ * and the nearest point when several sit close together. An outline (a hunting tract) is taken as drawn. */
+export function recordAt<T extends { geometry?: { type: string; coordinates?: unknown } | null; properties?: Record<string, unknown> | null }>(
+  features: readonly T[], center: readonly [number, number],
+): T | null {
+  let best: T | null = null, bestDistance = Infinity;
+  for (const feature of features) {
+    if (!feature.geometry || !feature.properties || feature.properties.cluster) continue;
+    if (feature.geometry.type !== "Point") { if (!best) { best = feature; bestDistance = Number.MAX_VALUE; } continue; }
+    const coordinates = feature.geometry.coordinates;
+    if (!Array.isArray(coordinates) || !Number.isFinite(coordinates[0]) || !Number.isFinite(coordinates[1])) continue;
+    const distance = Math.hypot(Number(coordinates[0]) - center[0], Number(coordinates[1]) - center[1]);
+    if (distance < bestDistance) { best = feature; bestDistance = distance; }
+  }
+  return best;
+}

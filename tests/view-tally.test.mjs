@@ -16,7 +16,7 @@ async function moduleUrl(file) {
   const url = `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
   modules.set(file, url); return url;
 }
-const { viewTally, viewTallyBrief, isCountedLayer, COUNTED_LAYER_IDS } = await import(await moduleUrl("app/view-tally.ts"));
+const { viewTally, viewTallyBrief, isCountedLayer, COUNTED_LAYER_IDS, recordAt } = await import(await moduleUrl("app/view-tally.ts"));
 const clusters = await import(await moduleUrl("app/context-clusters.ts"));
 
 const point = (x, y, properties = {}) => ({ type: "Feature", geometry: { type: "Point", coordinates: [x, y] }, properties });
@@ -174,4 +174,47 @@ test("a highlight button moves to the record without ever zooming out", async ()
   assert.match(line, /zoom: Math\.max\(map\.getZoom\(\), highlight\.zoom\)/);
   assert.match(line, /duration: reducedMotion \? 0 : 900/);
   assert.match(line, /tally\.highlights\.length > 0 &&/);
+});
+
+test("the record a highlight button selects is the nearest point drawn there, never a numbered circle", () => {
+  const circle = point(-95.7, 39.05, { cluster: true, point_count: 4 });
+  const near = point(-95.70001, 39.05001, { name: "near" }), far = point(-95.7004, 39.0504, { name: "far" });
+  assert.equal(recordAt([circle, far, near], [-95.7, 39.05]), near);
+  assert.equal(recordAt([circle], [-95.7, 39.05]), null, "only a circle is drawn there: nothing to select yet");
+  assert.equal(recordAt([], [-95.7, 39.05]), null);
+  // A hunting tract is an outline: it is taken as drawn, but a point record at the same spot is preferred.
+  const tract = square(-95.7, 39.05, { name: "tract" }), other = square(-95.7, 39.05, { name: "other" });
+  assert.equal(recordAt([tract, other], [-95.7, 39.05]), tract);
+  assert.equal(recordAt([tract, far], [-95.7, 39.05]), far);
+  // Features without properties or a usable location are skipped.
+  assert.equal(recordAt([{ geometry: null, properties: {} }, { geometry: { type: "Point", coordinates: [NaN, 1] }, properties: {} }, { geometry: { type: "Point", coordinates: [1, 1] }, properties: null }], [1, 1]), null);
+});
+
+test("a highlight button selects the record only where it sent the map, and a second press or leaving cancels the first", async () => {
+  const line = await readFile("app/view-tally-line.tsx", "utf8"), page = await readFile("app/page.tsx", "utf8");
+  // The same path as a click on the record: build its context, open it, mark it on the map.
+  const show = page.slice(page.indexOf("const showCountedRecord = useCallback"), page.indexOf("}, []);", page.indexOf("const showCountedRecord = useCallback")));
+  assert.match(show, /source\.interactiveLayerIds\.filter\(id => map\.getLayer\(id\)\)/);
+  assert.match(show, /recordAt\(map\.queryRenderedFeatures\(/);
+  assert.match(show, /buildBasemapContext\(record, center\[0\], center\[1\]\)/);
+  assert.match(show, /openSelectionRef\.current\(context, opener\);\s*updateSelectionSource\(map, context\.geometry\);/);
+  assert.match(page, /onShowRecord=\{\(center, opener\) => showCountedRecord\(source\.id, center, opener\)\}/);
+  // It waits for the map to stop, checks the map is still where the button sent it, and looks once more when settled.
+  assert.match(line, /map\.once\("moveend", stopped\);/);
+  assert.match(line, /if \(!arrived\(\)\) \{ pendingShow\.current = null; return; \}/);
+  assert.match(line, /map\.once\("idle", settled\);/);
+  assert.match(line, /pendingShow\.current\?\.\(\);\s*keepFocus\.current = true;\s*if \(onShowRecord\)/, "a second press cancels the first");
+  assert.match(line, /useEffect\(\(\) => \(\) => \{ pendingShow\.current\?\.\(\); \}, \[\]\);/, "leaving the panel cancels it");
+  assert.ok(line.indexOf('map.once("moveend", stopped)') < line.indexOf("map.easeTo({ center: [highlight.center[0], highlight.center[1]]"), "the listener is in place before the map starts moving");
+});
+
+test("keyboard focus stays with the line when a pressed button is replaced or removed", async () => {
+  const line = await readFile("app/view-tally-line.tsx", "utf8"), css = await readFile("app/map-layers.css", "utf8");
+  // Keyed by position, so a button whose wording changes for the new view is the same button and keeps focus.
+  assert.match(line, /tally\.highlights\.map\(\(highlight, index\) => <button type="button" key=\{index\}/);
+  // When the button is gone, focus moves to the line rather than falling to the page body.
+  assert.match(line, /<p className="view-tally" data-empty=\{tally\.count === 0\} ref=\{lineRef\} tabIndex=\{-1\}>/);
+  assert.match(line, /if \(document\.activeElement === document\.body\) lineRef\.current\?\.focus\(\{ preventScroll: true \}\);/);
+  assert.match(line, /keepFocus\.current = true;/);
+  assert.match(css, /\.view-tally:focus-visible \{ outline: 2px solid #8cddd7; outline-offset: 2px; \}/);
 });
