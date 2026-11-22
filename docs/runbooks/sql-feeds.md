@@ -627,3 +627,39 @@ No successful live rate-limit recovery was established by this installation.
 Require observed throttling and positive waiting followed by `feed_done` and a
 successful terminal result. A successful `throttled=0` or peaks `not_due` run does
 not prove that behavior.
+
+<a id="installed-release-2026-11-22"></a>
+
+## Installed release, November 22, 2026
+
+**CONFIRMED, operator-local readback:** after
+[#6038](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6038) (Wikidata form POST,
+Geofabrik's `north-america/us/kansas/` folder) and
+[#6036](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6036) (30-minute pipeline-lock
+wait) merged, the launcher was moved from `sql-feeds-6658e30b5e…` (the #6038 head, installed earlier
+that day) to `sql-feeds-34b987649627a4146d1118af2a9e1d3dd43f39aa`, the `main` merge commit of #6036.
+
+- **Release:** `git archive` of `tools/local_data` at that commit from a blob-filtered clone at
+  `~/Projects/kfm-release-src`. 116 files; the sorted `sha256sum` list hashes to
+  `ecfbd60652b46d108fb07b0241ef8f41783debacc261025c1efe3cd704c09b52`, matching the same
+  computation on the commit. `release.json` keeps the existing `sourceCommit` and `files` shape.
+- **Tests:** with `~/.local/share/kfm/venvs/nwm/bin/python` and the commit's
+  `tests/local_data`, `test_sql_feeds` and `test_sql_feed_rebuild` ran 63 tests, OK, importing
+  from the release directory (`PIPELINE_LOCK_WAIT` 1800, `GEOFABRIK` the Kansas folder).
+- **Launcher:** SHA256 `c5788def…4fe200` before, checked again immediately before replacement;
+  only the release `cd` line changed; mode 700; SHA256 `2767895e…5bd0fd` after. The prior launcher
+  is kept as `runtime/sql-feed.sh.before-34b98764`, and the prior release directory is unchanged.
+  Rollback: `cp -p sql-feed.sh.before-34b98764 sql-feed.sh` in `runtime/`.
+- **Status:** `sql-feed.sh status` read both databases through the new release.
+
+The failures this release addresses, from the PC journal on 2026-11-21 and 2026-11-22:
+`wikidata-kansas` `HTTP_431`; `osm-kansas` `GEOFABRIK_LISTING_SHAPE` (Nov 14 and 21); and
+`archive-texts`, `prism` and `obstacles` `PIPELINE_LOCK_BUSY`, each 26–30 seconds before the
+hourly `kfm-intake-analyze` run, which took 15 min 18 s and 15 min 34 s, released the lock.
+Geofabrik's "MB" was read back as 2^20 bytes (`kansas-261101.osm.pbf`: listed 112 MB,
+`Content-Length` 117,513,941).
+
+**NEEDS VERIFICATION:** the first scheduled runs on the new release (America/Chicago):
+`wikidata-kansas` 22:10 and `osm-kansas` 23:00 on November 22; `archive-texts` 23:45;
+`prism` 13:05 and `obstacles` 18:10 on November 23. The hourly analysis is lengthening; if it
+approaches 30 minutes the feeds that start beside it will wait longer or fail again.
