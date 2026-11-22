@@ -77,6 +77,7 @@ import csv
 from datetime import datetime, timezone
 import gzip
 import hashlib
+import html as htmllib
 import io
 from itertools import accumulate
 import json
@@ -528,8 +529,10 @@ def epa_facilities(ctx) -> dict:
 
 # --- OSM: Geofabrik's monthly Kansas extract, the PBF and the free shapefile layers ----------------
 
-GEOFABRIK = "https://download.geofabrik.de/north-america/us/"
-OSM_TERMS = GEOFABRIK + "kansas.html"
+# By 2026-11-14 Geofabrik had moved Kansas into its own folder, listed as a multi-line table with absolute links,
+# <time datetime="..."> stamps and sizes such as "112&nbsp;MB"; the us/ page lists only kansas/kansas-latest.*.
+GEOFABRIK = "https://download.geofabrik.de/north-america/us/kansas/"
+OSM_TERMS = "https://download.geofabrik.de/north-america/us/kansas.html"
 OSM_SOURCE_PBF, OSM_KEY_PBF = "osm-elements", "kansas-osm-pbf"
 OSM_RECHECK_DAYS = 6
 OSM_LIMIT = 2_000_000_000
@@ -537,7 +540,7 @@ OSM_LICENSE = {"license": "ODbL-1.0", "license_name": "Open Database License 1.0
                "attribution": "© OpenStreetMap contributors", "copyright": "https://www.openstreetmap.org/copyright",
                "provider": "Geofabrik GmbH (download.geofabrik.de), from OpenStreetMap", "terms": OSM_TERMS,
                "share_alike": "A derived database used publicly must be offered under the ODbL; produced works must carry the attribution."}
-OSM_FILE = re.compile(r'href="(kansas-(\d{4}01)(-free\.shp\.zip|\.osm\.pbf)(\.md5)?)"')
+OSM_FILE = re.compile(r'href="(?:https://download\.geofabrik\.de/north-america/us/kansas/)?(kansas-(\d{4}01)(-free\.shp\.zip|\.osm\.pbf)(\.md5)?)"')
 OSM_LISTED = re.compile(r"(\d{4})-(\w{3}|\d{2})-(\d{2})[ T](\d{2}:\d{2})")
 OSM_SIZE = re.compile(r">\s*(\d+(?:\.\d+)?)\s*([KMG]?)B?\s*<")
 OSM_MONTHS = {m: i for i, m in enumerate(("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), 1)}
@@ -980,8 +983,9 @@ def layer_features(z: zipfile.ZipFile, members: dict, layer: str):
 
 def _geofabrik_index(html: str) -> dict:
     """{file name: {"size": bytes or None, "listed": "YYYY-MM-DD HH:MM"}} for the Kansas monthly files and their .md5."""
-    files = {}
-    for row in re.split(r"(?i)<tr[ >]|\n", html):
+    files, html = {}, htmllib.unescape(html)
+    # One table row per file, spread over several lines; a listing without a table has one file per line.
+    for row in re.split(r"(?i)<tr[ >]", html) if re.search(r"(?i)<tr[ >]", html) else html.split("\n"):
         found = OSM_FILE.search(row)
         if not found:
             continue
@@ -994,16 +998,28 @@ def _geofabrik_index(html: str) -> dict:
             listed = f"{year}-{int(month):02d}-{day} {clock}"
         size = OSM_SIZE.search(rest)
         exact = bool(size and size.group(2) == "" and "." not in size.group(1))
-        size = round(float(size.group(1)) * {"": 1, "K": 1 << 10, "M": 1 << 20, "G": 1 << 30}[size.group(2)]) if size else None
-        files[found.group(1)] = {"size": size, "exact": exact, "listed": listed, "stamp": found.group(2)}
+        number, unit = (float(size.group(1)), size.group(2)) if size else (None, "")
+        size, decimal = (round(number * {"": 1, "K": 1 << 10, "M": 1 << 20, "G": 1 << 30}[unit]),
+                         round(number * {"": 1, "K": 10 ** 3, "M": 10 ** 6, "G": 10 ** 9}[unit])) if size else (None, None)
+        files[found.group(1)] = {"size": size, "size_decimal": decimal, "exact": exact, "listed": listed, "stamp": found.group(2)}
     return files
+
+
+def _osm_size_matches(size: int, entry: dict) -> bool:
+    """Whether a downloaded size agrees with the listing: exactly for a byte count, else within 3%. A rounded size such
+    as "112 MB" does not say whether a megabyte is 2^20 or 10^6 bytes, so either reading may match."""
+    if not entry["size"]:
+        return True
+    if entry["exact"]:
+        return size == entry["size"]
+    return any(abs(size - n) <= n * 0.03 for n in (entry["size"], entry.get("size_decimal") or entry["size"]))
 
 
 def _osm_download(ctx, index: dict, name: str, dest: Path) -> dict:
     """Fetch one Geofabrik file to dest, checked against the listing's size and, where listed, its .md5."""
     fetched = core.download(ctx, GEOFABRIK + name, dest, limit=OSM_LIMIT, timeout=3600)
     size, entry = dest.stat().st_size, index[name]
-    if entry["size"] and (size != entry["size"] if entry["exact"] else abs(size - entry["size"]) > entry["size"] * 0.03):
+    if not _osm_size_matches(size, entry):
         raise FeedError(f"GEOFABRIK_SIZE_MISMATCH {name} {size} listed {entry['size']}")
     md5_listed, md5 = name + ".md5" in index, None
     if md5_listed:
