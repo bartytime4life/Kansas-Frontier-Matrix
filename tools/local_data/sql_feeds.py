@@ -174,14 +174,19 @@ def _http_error(error: urllib.error.HTTPError, url: str) -> FeedError:
     return failure
 
 
-def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: int):
-    """GET url and pass the response to read. A 404 is None when missing_ok; other failures retry, then raise.
+def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: int, data: bytes | None = None):
+    """Fetch url and pass the response to read; supplied data is a form POST.
+
+    A 404 is None when missing_ok; other failures retry, then raise.
 
     A 4xx raises at once; the FeedError of a 429 (or any refused answer) carries the provider's Retry-After
     as ``retry_after`` seconds, for feeds that wait it out with a Throttle."""
     for attempt in range(attempts):
         try:
-            request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            headers = {"User-Agent": USER_AGENT}
+            if data is not None:
+                headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
+            request = urllib.request.Request(url, data=data, headers=headers)
             with urllib.request.urlopen(request, timeout=timeout) as response:
                 return read(response)
         except urllib.error.HTTPError as error:
@@ -198,14 +203,15 @@ def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: 
     raise FeedError(f"FETCH_FAILED {url}")
 
 
-def http_fetch(url: str, *, limit: int, timeout: int = 120, missing_ok: bool = False, attempts: int = 3) -> Fetched | None:
-    """GET url into memory with a byte ceiling."""
+def http_fetch(url: str, *, limit: int, timeout: int = 120, missing_ok: bool = False, attempts: int = 3,
+               data: bytes | None = None) -> Fetched | None:
+    """Fetch into memory with a byte ceiling; supplied data is a form POST."""
     def read(response):
         body = response.read(limit + 1)
         if len(body) > limit:
             raise FeedError(f"RESPONSE_TOO_LARGE {url}")
         return Fetched(url, body, response.headers.get("Last-Modified"), response.headers.get("ETag"))
-    return _get(url, read, timeout=timeout, missing_ok=missing_ok, attempts=attempts)
+    return _get(url, read, timeout=timeout, missing_ok=missing_ok, attempts=attempts, data=data)
 
 
 def http_download(url: str, dest: Path, *, limit: int, timeout: int = 600, missing_ok: bool = False, attempts: int = 3) -> Fetched | None:

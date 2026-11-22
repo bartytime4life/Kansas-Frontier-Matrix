@@ -9,6 +9,7 @@ from pathlib import Path
 import sqlite3
 import unittest
 from unittest.mock import patch
+import urllib.parse
 
 from tests.local_data.test_sql_feeds import FeedCase
 from tools.local_data import sql_feeds as core
@@ -129,6 +130,43 @@ class RevisionTests(FeedCase):
 
 
 class GridRecoveryTests(FeedCase):
+    def test_wikidata_long_query_uses_a_form_body_with_the_native_fetcher(self):
+        query = 'SELECT ?item WHERE { VALUES ?item { ' + ' '.join(f'wd:Q{i}' for i in range(375)) + ' } } # café'
+        answer = b'{"results":{"bindings":[{"item":{"type":"uri","value":"http://www.wikidata.org/entity/Q42"}}]}}'
+        response = io.BytesIO(answer)
+        response.headers = {}
+        self.ctx.fetch = core.http_fetch
+        with patch('urllib.request.urlopen', return_value=response) as opened:
+            body, bindings = grid._sparql(self.ctx, grid._Budget(2, 0), query)
+        request = opened.call_args.args[0]
+        self.assertEqual((request.get_method(), request.full_url), ('POST', grid.SPARQL))
+        self.assertEqual(urllib.parse.parse_qs(request.data.decode()), {'format': ['json'], 'query': [query]})
+        self.assertEqual(request.get_header('Content-type'), 'application/x-www-form-urlencoded; charset=utf-8')
+        self.assertEqual(body, answer)
+        self.assertEqual(bindings[0]['item']['value'], grid.ENTITY + 'Q42')
+
+    def test_form_post_retains_the_native_response_byte_ceiling(self):
+        response = io.BytesIO(b'oversized')
+        response.headers = {}
+        with patch('urllib.request.urlopen', return_value=response), self.assertRaisesRegex(core.FeedError, '^RESPONSE_TOO_LARGE '):
+            core.http_fetch(grid.SPARQL, data=b'query=SELECT', limit=4)
+
+    def test_wikidata_people_index_unions_all_kansas_links_before_loading(self):
+        people = next(group for group in grid.GROUPS if group.name == 'people')
+        answers = [
+            (b'', [{'item': {'type': 'uri', 'value': grid.ENTITY + 'Q42'}, 'why': {'value': prop}}])
+            for prop in grid.PEOPLE_LINKS
+        ]
+        with patch.object(grid, '_sparql', side_effect=answers) as fetch:
+            self.assertEqual(grid._index(self.ctx, object(), people), {42: set(grid.PEOPLE_LINKS)})
+        self.assertEqual([call.args[2] for call in fetch.call_args_list], list(people.index_queries))
+
+    def test_wikidata_index_does_not_return_partial_links_when_a_query_fails(self):
+        people = next(group for group in grid.GROUPS if group.name == 'people')
+        with patch.object(grid, '_sparql', side_effect=[(b'', []), core.FeedError('QUERY_BUDGET')]):
+            with self.assertRaisesRegex(core.FeedError, '^QUERY_BUDGET$'):
+                grid._index(self.ctx, object(), people)
+
     def test_wikidata_scalar_dates_and_coordinates_preserve_the_existing_conventions(self):
         record = {'claims': {'P625': [[-102.5, 39], [-98, 38]]},
                   'dates': {'P571': [{'time': '1861-01-29T00:00:00Z', 'precision': 11}]}}
@@ -249,6 +287,43 @@ class GridRecoveryTests(FeedCase):
 
 
 class PreservedRecordTests(FeedCase):
+    def test_geofabrik_regional_listing_reads_absolute_links_across_multiline_rows(self):
+        listing = '''<table><tr>
+          <td><a href="https://download.geofabrik.de/north-america/us/kansas/kansas-261101.osm.pbf">PBF</a></td>
+          <td><time datetime="2026-11-02T09:37:48+00:00">2 weeks ago</time></td>
+          <td>112&nbsp;MB</td></tr><tr>
+          <td><a href="https://download.geofabrik.de/north-america/us/kansas/kansas-261101.osm.pbf.md5">MD5</a></td>
+          <td><time datetime="2026-11-02T09:37:48+00:00">2 weeks ago</time></td><td>56.0&nbsp;B</td></tr>
+          <tr><td><a href="https://other.test/kansas-261201.osm.pbf">foreign</a></td></tr>
+          <tr><td><a href="kansas-261119.osm.pbf">daily</a></td></tr></table>'''
+        index = bulk._geofabrik_index(listing)
+        self.assertEqual(set(index), {'kansas-261101.osm.pbf', 'kansas-261101.osm.pbf.md5'})
+        self.assertEqual(index['kansas-261101.osm.pbf'], {
+            'size': 112 * (1 << 20), 'exact': False, 'listed': '2026-11-02 09:37', 'stamp': '261101'})
+
+    def test_geofabrik_retains_legacy_monthly_index_metadata(self):
+        index = bulk._geofabrik_index('<a href="kansas-261001.osm.pbf">PBF</a> 2026-Oct-02 01:20 <span>123456</span>\n'
+                                      '<a href="kansas-261001.osm.pbf.md5">MD5</a> 2026-10-02 01:20 <span>56</span>')
+        self.assertEqual(index['kansas-261001.osm.pbf'], {
+            'size': 123456, 'exact': True, 'listed': '2026-10-02 01:20', 'stamp': '261001'})
+        self.assertIn('kansas-261001.osm.pbf.md5', index)
+
+    def test_geofabrik_download_and_checksum_use_the_regional_directory(self):
+        name, payload = 'kansas-261101.osm.pbf', b'fixture PBF'
+        import hashlib
+        calls = []
+        def fetch(url, **options):
+            calls.append(url)
+            body = (hashlib.md5(payload).hexdigest() + '  ' + name).encode() if url.endswith('.md5') else payload
+            return core.Fetched(url, body)
+        self.ctx.fetch = fetch
+        index = {name: {'size': len(payload), 'exact': True, 'listed': None}, name + '.md5': {}}
+        result = bulk._osm_download(self.ctx, index, name, self.root / 'download.pbf')
+        expected = 'https://download.geofabrik.de/north-america/us/kansas/' + name
+        self.assertEqual(calls, [expected, expected + '.md5'])
+        self.assertTrue(result['md5_checked'])
+        self.assertEqual(result['sha256'], hashlib.sha256(payload).hexdigest())
+
     def test_osm_line_selection_checks_segments_instead_of_only_their_envelope(self):
         box = (0, 0, 10, 10)
         self.assertFalse(bulk._line_intersects_box([[-5, 9], [1, 15]], box))
