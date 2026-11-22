@@ -18,7 +18,7 @@ const record = { attributes: { OBJECTID: 4628, map_scale: 125000, map_name: "Top
 test("historical sheet search binds the official catalog to a bounded place, edition range, and scale", () => {
   const search = topo.parseTopoSearch(request);
   const url = new URL(topo.topoProviderUrl(search));
-  assert.equal(url.origin, "https://ngmdb.usgs.gov");
+  assert.equal(url.origin + url.pathname, "https://energy.usgs.gov/arcgis/rest/services/ustOverlay/MapServer/0/query", "where the USGS serves the topoView sheet catalog since it moved");
   assert.equal(url.searchParams.get("resultRecordCount"), "24");
   assert.equal(url.searchParams.get("returnGeometry"), "true");
   assert.match(url.searchParams.get("where"), /^primary_state = 'KS' AND date_on_map >= 1880 AND date_on_map <= 1960 AND map_scale = 125000 AND map_name LIKE '%Topeka%'$/);

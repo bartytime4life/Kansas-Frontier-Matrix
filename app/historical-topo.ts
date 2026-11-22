@@ -1,6 +1,9 @@
 import type { Feature, Polygon } from "geojson";
 
-export const TOPO_CATALOG_URL = "https://ngmdb.usgs.gov/arcgis/rest/services/topoview/ustOverlay/MapServer/0/query";
+// The USGS moved topoView's sheet catalog. On 2026-11-22 the former address
+// (ngmdb.usgs.gov/arcgis/rest/services/topoview/ustOverlay) answered "Service not found", and topoView's own
+// page read the same layer, with the same fields, from energy.usgs.gov.
+export const TOPO_CATALOG_URL = "https://energy.usgs.gov/arcgis/rest/services/ustOverlay/MapServer/0/query";
 export const TOPO_PAGE_SIZE = 24;
 export type TopoSearch = { lng: number; lat: number; from: number; through: number; scale: "all" | "24000" | "62500" | "125000" | "250000"; name: string; offset: number };
 export type TopoSheet = { id: number; scanId: number; name: string; state: string; year: number; imprintYear: number | null; scale: number; series: string; datum: string; footprint: Feature<Polygon>; viewerHref: string };

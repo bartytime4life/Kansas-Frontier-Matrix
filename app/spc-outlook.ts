@@ -161,6 +161,15 @@ export function parseSpcOutlook(raw: unknown, day: OutlookDay, retrievedAt: stri
   const kept: Feature<Polygon | MultiPolygon, { category: string }>[] = [];
   let issuedAt: string | null = null, validFrom: string | null = null, validUntil: string | null = null;
   let kansas: SpcBand | null = null, intensity: SpcBand | null = null;
+  // An outlook with no risk area arrives as one placeholder feature with no polygon ("Less Than 2% All
+  // Areas"). It is not drawn, but it still says when the outlook was issued and for how long it is valid.
+  for (const candidate of features) {
+    const properties = record(record(candidate)?.properties);
+    if (!properties) continue;
+    issuedAt ??= spcTime(properties.ISSUE_ISO) ?? spcTime(properties.ISSUE);
+    validFrom ??= spcTime(properties.VALID_ISO) ?? spcTime(properties.VALID);
+    validUntil ??= spcTime(properties.EXPIRE_ISO) ?? spcTime(properties.EXPIRE);
+  }
   for (const candidate of [...features, ...extra]) {
     const feature = record(candidate), properties = record(feature?.properties), geometry = record(feature?.geometry);
     const level = product === "cat" ? undefined : intensityOf(properties, product);

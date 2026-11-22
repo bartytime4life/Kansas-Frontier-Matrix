@@ -320,3 +320,15 @@ test('high-wind additions preserve tornado and hail ladders and reject their uns
   assert.equal(spc.validSpcOutlook({...outlook,kansas:'90'}),false);
  }
 });
+
+test('an outlook with no risk area still says when it was issued and how long it is valid',()=>{
+ // The shape SPC sent for the day 1 tornado outlook on 2026-11-22: one placeholder feature with no polygon.
+ const placeholder={type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'GeometryCollection',geometries:[]},
+  properties:{DN:0,VALID:'202611221630',EXPIRE:'202611231200',ISSUE:'202611221632',VALID_ISO:'2026-11-22T16:30:00+00:00',EXPIRE_ISO:'2026-11-23T12:00:00+00:00',ISSUE_ISO:'2026-11-22T16:32:00+00:00',LABEL:'Less Than 2% All Areas',LABEL2:'',stroke:'',fill:''}}]};
+ const outlook=spc.parseSpcOutlook(placeholder,1,'2026-11-22T19:00:00.000Z','src','torn');
+ assert.equal(outlook.data.features.length,0,'nothing is drawn for it');
+ assert.equal(outlook.issuedAt,'2026-11-22T16:32:00.000Z');
+ assert.equal(outlook.validFrom,'2026-11-22T16:30:00.000Z');
+ assert.equal(outlook.validUntil,'2026-11-23T12:00:00.000Z');
+ assert.equal(outlook.kansas,null,'and no Kansas risk is claimed');
+});
