@@ -7,6 +7,9 @@ const denyFetch = async input => { blockedRequests.push(String(input)); throw ne
 // Import and first-request initialization must never replace a fixture with
 // a transport capable of reaching a real provider.
 globalThis.fetch = denyFetch;
+// These tests hand the route a different stand-in provider answer on every call, so they run with answer
+// keeping off. tests/live-context-kept-feeds.test.mjs covers the keeping itself.
+(globalThis.__KFM_TEST_BINDINGS ??= {}).KFM_LIVE_CONTEXT_KEEP = "off";
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `fire-context-${process.pid}`);
 const { default: worker } = await import(workerUrl.href);

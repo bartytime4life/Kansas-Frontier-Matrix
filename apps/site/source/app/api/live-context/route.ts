@@ -1114,6 +1114,46 @@ const trailPlaces = async () => {
 
 const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600, "nps-nrhp-places": 86_400, "nws-storm-reports": 300, "kdwp-wildlife-areas": 86_400, "kdwp-wiha-access": 86_400, "nps-historic-trails": 86_400, "nps-trail-places": 86_400, "kdot-bridges-state": 3600, "kdot-bridges-local": 3600, "kdot-bridges-historic": 3600, "kdot-bridges-old": 3600, "kdot-bridges-closed": 3600 };
 
+// The host's CDN does not cache these answers (it reports them as DYNAMIC), so every visitor request went
+// back to the provider and any provider hiccup became a visible failure. One good answer per feed is kept
+// for the lifetime the feed already declares in Cache-Control, requests that arrive together share one
+// read, and if the provider cannot be reached when that lifetime is up the kept answer serves for the
+// declared stale-while-revalidate window. A failure is never kept, and nothing is substituted: a feed
+// that has had no answer since the server started fails as before.
+const PARTIAL_KEEP_SECONDS = 300;
+const keptAnswers = new Map<Feed, { answer: unknown; at: number; freshMs: number }>();
+const pendingAnswers = new Map<Feed, Promise<unknown>>();
+// Bridges and county outlines keep their own answers; feeds declared no-store are read every time.
+// Setting KFM_LIVE_CONTEXT_KEEP=off returns every feed to one provider read per request without a code change.
+const keepsAnswerHere = (feed: Feed) => cacheSeconds[feed] > 0 && feed !== "census-counties" && !isBridgeFeed(feed)
+  && (env as { KFM_LIVE_CONTEXT_KEEP?: unknown } | undefined)?.KFM_LIVE_CONTEXT_KEEP !== "off";
+// `read` may return any one of several readers' promises; the caller gets that same promise type back.
+function keptFeed<P extends Promise<unknown>>(feed: Feed, read: () => P): Promise<Awaited<P>> {
+  type T = Awaited<P>;
+  const windowMs = cacheSeconds[feed] * 1000, held = keptAnswers.get(feed);
+  if (held && Date.now() - held.at < held.freshMs) return Promise.resolve(held.answer as T);
+  let request = pendingAnswers.get(feed) as Promise<T> | undefined;
+  if (!request) {
+    const reading = read() as unknown as Promise<T>;
+    request = reading;
+    pendingAnswers.set(feed, reading);
+    const done = () => { if (pendingAnswers.get(feed) === reading) pendingAnswers.delete(feed); };
+    reading.then(answer => {
+      // A partial answer may be missing something only for the moment (one trail layer down), so it is
+      // read again within five minutes instead of standing for a day.
+      const partial = (answer as { state?: unknown } | null)?.state === "partial";
+      keptAnswers.set(feed, { answer, at: Date.now(), freshMs: partial ? Math.min(windowMs, PARTIAL_KEEP_SECONDS * 1000) : windowMs });
+      done();
+    }, done);
+  }
+  // With nothing kept to fall back on the caller gets the read itself, so a timeout reaches it exactly as it did before.
+  if (!held) return request;
+  return request.catch(error => {
+    if (Date.now() - held.at < held.freshMs + windowMs) return held.answer as T;
+    throw error;
+  });
+}
+
 // A hosting proxy can replace the body of a 502 or 504 with its own "error code" page, which hides the
 // reason and the next-check time from visitors. 503 keeps this JSON body; the header keeps the cause.
 const FEED_UNAVAILABLE_STATUS = 503;
@@ -1125,7 +1165,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = isBridgeFeed(feed) ? await kdotBridges.feed(feed) : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "nws-storm-reports" ? await recentStormReports() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : feed === "nps-historic-trails" ? await historicTrails() : feed === "nps-trail-places" ? await trailPlaces() : await raspberryShakeStations(day);
+    // A dated request reads an archive day and is not kept. A kept read is shared, so it does not end when one visitor leaves.
+    const kept = !day && keepsAnswerHere(feed);
+    const read = async () => isBridgeFeed(feed) ? await kdotBridges.feed(feed) : feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, kept ? undefined : request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : feed === "nps-nrhp-places" ? await nationalRegisterPlaces() : feed === "nws-storm-reports" ? await recentStormReports() : feed === "kdwp-wildlife-areas" ? await kdwpAreas(KDWP_WILDLIFE_AREAS) : feed === "kdwp-wiha-access" ? await kdwpAreas(KDWP_WIHA) : feed === "nps-historic-trails" ? await historicTrails() : feed === "nps-trail-places" ? await trailPlaces() : await raspberryShakeStations(day);
+    const result = kept ? await keptFeed(feed, read) : await read();
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

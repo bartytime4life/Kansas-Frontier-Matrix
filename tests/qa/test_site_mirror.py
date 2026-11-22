@@ -3209,4 +3209,18 @@ def test_highlight_select_successor_preserves_county_baseline_inventory_and_all_
         {"app/map-layers.css", "app/page.tsx", "app/view-tally-line.tsx", "app/view-tally.ts", "docs/kdot-bridge-clusters-20261115.md", "tests/view-tally.test.mjs"},
         "37715cf20e8de11519ffc3c7d5ac0ef11d283f67",
     )
-    assert TOOL.RECEIPT.name == "site-v268-highlight-select-overlay-20261122.json"
+
+
+def test_kept_feed_answers_successor_preserves_highlight_select_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-kept-feed-answers-overlay-20261122.json",
+        "site-v268-highlight-select-overlay-20261122.json",
+        "f43978f90bb8e34a9fc9db97adf7bfff86bb5d5339eed3c66009460f39096547",
+        {
+            "app/api/live-context/route.ts", "docs/README.md", "docs/live-context-kept-answers-20261122.md",
+            "tests/kansas-discovery-layers.test.mjs", "tests/live-alert-context.test.mjs", "tests/live-context-kept-feeds.test.mjs",
+            "tests/live-fire-context.test.mjs", "tests/live-streamflow-context.test.mjs",
+        },
+        "088b2e129995a5f561422d8c1b1fa55e9665e840",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-kept-feed-answers-overlay-20261122.json"
