@@ -286,6 +286,10 @@ and released that Thursday.
   The newest map is the one released by Thursday 8:30 a.m. Eastern; when a
   release is late (a holiday), the week before is answered. A past week is
   kept as published, and the newest is read again hourly.
+  Each national map is 9 to 15 MB, so visitors who ask for the same week share
+  one read, at most two weeks are read at once and up to twelve wait in line;
+  a request beyond that is answered 503 with `Retry-After: 3` and reads
+  nothing.
 - **Symbols.** The USDM's own colours, nearly opaque, as the USDM draws its
   map: D0 abnormally dry (yellow), D1 moderate, D2 severe, D3 extreme and D4
   exceptional drought (dark red), worse categories over milder ones, with thin
