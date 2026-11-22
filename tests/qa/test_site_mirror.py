@@ -3223,4 +3223,14 @@ def test_kept_feed_answers_successor_preserves_highlight_select_inventory_and_al
         },
         "088b2e129995a5f561422d8c1b1fa55e9665e840",
     )
-    assert TOOL.RECEIPT.name == "site-v268-kept-feed-answers-overlay-20261122.json"
+
+
+def test_kept_feeds_parity_successor_preserves_kept_feed_answers_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-kept-feeds-parity-overlay-20261122.json",
+        "site-v268-kept-feed-answers-overlay-20261122.json",
+        "68b7908aad2d732d4e8c1707965fcaddc577a597c94de8ae8ac14a4fa471fe7e",
+        {"docs/live-context-kept-answers-20261122.md", "tests/live-context-kept-feeds.test.mjs"},
+        "169d32c4d2258f2cd600174b8c5f0b26c5652b20",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-kept-feeds-parity-overlay-20261122.json"

@@ -31,6 +31,10 @@ failure. The county outlines showed this the same day (see `county-baseline-resi
   rather than their declared day or hour. That is still one provider read per five minutes
   instead of one per request. Telling the two kinds of partial apart would let them keep longer.
 
+When there is no kept answer to fall back on, the caller is handed the provider read itself rather
+than a wrapper around it, so a provider timeout is reported in as many steps as it was before this
+change. (`tests/live-context-deadline.test.mjs` counts them.)
+
 ## What did not change
 
 - **No substitute data.** Everything served is an answer the provider gave to this exact request.
