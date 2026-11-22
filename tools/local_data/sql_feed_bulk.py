@@ -77,6 +77,7 @@ import csv
 from datetime import datetime, timezone
 import gzip
 import hashlib
+import html
 import io
 from itertools import accumulate
 import json
@@ -528,8 +529,8 @@ def epa_facilities(ctx) -> dict:
 
 # --- OSM: Geofabrik's monthly Kansas extract, the PBF and the free shapefile layers ----------------
 
-GEOFABRIK = "https://download.geofabrik.de/north-america/us/"
-OSM_TERMS = GEOFABRIK + "kansas.html"
+GEOFABRIK = "https://download.geofabrik.de/north-america/us/kansas/"
+OSM_TERMS = GEOFABRIK
 OSM_SOURCE_PBF, OSM_KEY_PBF = "osm-elements", "kansas-osm-pbf"
 OSM_RECHECK_DAYS = 6
 OSM_LIMIT = 2_000_000_000
@@ -537,7 +538,8 @@ OSM_LICENSE = {"license": "ODbL-1.0", "license_name": "Open Database License 1.0
                "attribution": "© OpenStreetMap contributors", "copyright": "https://www.openstreetmap.org/copyright",
                "provider": "Geofabrik GmbH (download.geofabrik.de), from OpenStreetMap", "terms": OSM_TERMS,
                "share_alike": "A derived database used publicly must be offered under the ODbL; produced works must carry the attribution."}
-OSM_FILE = re.compile(r'href="(kansas-(\d{4}01)(-free\.shp\.zip|\.osm\.pbf)(\.md5)?)"')
+OSM_FILE = re.compile(r'href="(?:https://download\.geofabrik\.de/north-america/us/)?(?:kansas/)?'
+                      r'(kansas-(\d{4}01)(-free\.shp\.zip|\.osm\.pbf)(\.md5)?)"')
 OSM_LISTED = re.compile(r"(\d{4})-(\w{3}|\d{2})-(\d{2})[ T](\d{2}:\d{2})")
 OSM_SIZE = re.compile(r">\s*(\d+(?:\.\d+)?)\s*([KMG]?)B?\s*<")
 OSM_MONTHS = {m: i for i, m in enumerate(("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), 1)}
@@ -978,10 +980,14 @@ def layer_features(z: zipfile.ZipFile, members: dict, layer: str):
     return fields, len(records), rows
 
 
-def _geofabrik_index(html: str) -> dict:
+def _geofabrik_index(text: str) -> dict:
     """{file name: {"size": bytes or None, "listed": "YYYY-MM-DD HH:MM"}} for the Kansas monthly files and their .md5."""
     files = {}
-    for row in re.split(r"(?i)<tr[ >]|\n", html):
+    # Regional pages now use absolute links and multiline table rows, with ISO
+    # datetimes in <time> attributes. Retain the older raw-index line format.
+    rows = re.findall(r"(?is)<tr\b[^>]*>(.*?)</tr>", text) or text.splitlines()
+    for row in rows:
+        row = html.unescape(row)
         found = OSM_FILE.search(row)
         if not found:
             continue

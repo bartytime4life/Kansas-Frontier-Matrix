@@ -12,7 +12,9 @@ https://www.wikidata.org/wiki/Wikidata:Licensing). Four groups: ``places`` (item
 or Kansas Territory, Q1723905; 15,648 on 2026-11-03), ``places-box`` (items with coordinates in the Kansas box
 that the first group does not have, kept only when a coordinate falls in a 2025 TIGER Kansas county; 344 of
 1,706), ``people`` (humans born, died, resident, working or educated at a Kansas place; 13,242) and ``events``
-(dated items located in Kansas; 1,599). A cycle starts with one index query per group; each group's item ids
+(dated items located in Kansas; 1,599). A cycle discovers each group's item IDs before fetching details.
+People's location properties and the two event location paths use separate index queries, merged by ID.
+Each group's item IDs
 are then cut into ranges of the id space [0, 2^28), halved until a range holds at most 1,000 items, and each
 range with items is one ``load_version`` key ``<group>/Q<lo>-Q<hi>`` (source ``wikidata-<group>``). A range is
 filled by detail queries of at most 375 items each (``VALUES ?item``: labels, description, enwiki title, the
@@ -23,7 +25,8 @@ the index and detail query texts (the item list elided as ``wd:Q…``), ``cycle`
 ``items``, ``missing``, ``outside_kansas`` and ``queries``. The feed state keeps ``cycle`` (``started``,
 ``complete``, ``done`` keys), ``items`` per group and ``ranges`` per group, so a run that stops on WDQS's
 per-IP throttling (HTTP 429, ``WIKIDATA_RATE_LIMITED``) or on its query budget resumes from the next pending
-range; up to 200 query attempts run at least 60 seconds apart, including transient retries. A 429 is first waited out (``core.Throttle``: the Retry-After when given,
+range; queries use form POST bodies so detail batches cannot exceed the endpoint's URL/header limit.
+Up to 200 query attempts run at least 60 seconds apart, including transient retries. A 429 is first waited out (``core.Throttle``: the Retry-After when given,
 else minutes of backoff) and the query sent again, within the run's waiting budget; the run stops only when
 that budget is spent. When every range is done the cycle is complete and keys the cycle did
 not produce are retired; a new cycle starts seven days after the last began. Needs ``ctx.tiger`` for county
@@ -106,7 +109,7 @@ class Group:
     name: str
     source_id: str
     table: str
-    index: str                 # the index query: SELECT DISTINCT ?item ?why
+    index_queries: tuple[str, ...]   # SELECT DISTINCT ?item ?why, unioned locally
     direct: tuple              # direct properties fetched with labels
     dates: tuple               # statement properties fetched as time, precision and rank
     population: bool
@@ -207,24 +210,32 @@ EVENT_COLUMNS = ("qid", "label", "description", "classes_json", "point_in_time",
                  "end_time", "end_precision", "locations_json", "located_in_json", "longitude", "latitude", "geometry_geojson", "county_geoid",
                  "enwiki_title", "kansas_links_json", "record_json")
 PLACE_PROPS = (("P31", "P131", "P625", "P590", "P649", "P856"), ("P571", "P576"), True)
+PEOPLE_LINKS = ("P19", "P20", "P551", "P937", "P69")
+EVENT_DATES = "?item wdt:P585|wdt:P580 ?when ."
+
+
+def _linked_index(prop: str, condition: str) -> str:
+    # Start from the two roots, then join one indexed property at a time. A
+    # combined UNION lets WDQS choose a global scan of the human class.
+    return ('SELECT DISTINCT ?item ?why WHERE { hint:Query hint:optimizer "None" . '
+            f'{ROOTS} ?root ^wdt:P131* ?place . ?item wdt:{prop} ?place . {condition} '
+            f'BIND("{prop}" AS ?why) }}')
+
+
 GROUPS = (
     Group("places", "wikidata-places", "kfm_wikidata_places",
-          f'SELECT DISTINCT ?item ?why WHERE {{ {ROOTS} ?item wdt:P131* ?root . BIND("P131" AS ?why) }}',
+          (f'SELECT DISTINCT ?item ?why WHERE {{ {ROOTS} ?item wdt:P131* ?root . BIND("P131" AS ?why) }}',),
           *PLACE_PROPS, ("P131",), False, PLACE_COLUMNS, _place_row),
     Group("places-box", "wikidata-places-box", "kfm_wikidata_places",
-          f'SELECT DISTINCT ?item ?why WHERE {{ {BOX} BIND("P625" AS ?why) }}',
+          (f'SELECT DISTINCT ?item ?why WHERE {{ {BOX} BIND("P625" AS ?why) }}',),
           *PLACE_PROPS, ("P131",), True, PLACE_COLUMNS, _place_row),
     Group("people", "wikidata-people", "kfm_wikidata_people",
-          'SELECT DISTINCT ?item ?why WHERE { '
-          f'{{ SELECT DISTINCT ?place WHERE {{ {ROOTS} ?place wdt:P131* ?root . }} }} '
-          '{ ' + ' UNION '.join('{ ?item wdt:' + p + ' ?place . BIND("' + p + '" AS ?why) }'
-                                for p in ("P19", "P20", "P551", "P937", "P69"))
-          + ' } ?item wdt:P31 wd:Q5 . }',
-          ("P19", "P20", "P551", "P937", "P69", "P106", "P39"), ("P569", "P570"), False, ("P19", "P20", "P551", "P937", "P69"), False,
+          tuple(_linked_index(prop, "?item wdt:P31 wd:Q5 .") for prop in PEOPLE_LINKS),
+          (*PEOPLE_LINKS, "P106", "P39"), ("P569", "P570"), False, PEOPLE_LINKS, False,
           PEOPLE_COLUMNS, _person_row),
     Group("events", "wikidata-events", "kfm_wikidata_events",
-          f'SELECT DISTINCT ?item ?why WHERE {{ {{ {ROOTS} ?place wdt:P131* ?root . ?item wdt:P276 ?place . BIND("P276" AS ?why) }} '
-          f'UNION {{ {BOX} BIND("P625" AS ?why) }} ?item wdt:P585|wdt:P580 ?when . }}',
+          (_linked_index("P276", EVENT_DATES),
+           f'SELECT DISTINCT ?item ?why WHERE {{ {BOX} {EVENT_DATES} BIND("P625" AS ?why) }}'),
           ("P31", "P276", "P131", "P625"), ("P585", "P580", "P582"), False, ("P276", "P131"), True, EVENT_COLUMNS, _event_row),
 )
 WIKIDATA_TYPES = {"qid": "TEXT NOT NULL", "record_json": "TEXT NOT NULL", "longitude": "REAL", "latitude": "REAL", "population": "NUMERIC",
@@ -271,13 +282,13 @@ class _Budget:
 
 
 def _sparql(ctx, budget: _Budget, query: str) -> tuple[bytes, list]:
-    url = SPARQL + "?format=json&query=" + urllib.parse.quote(query, safe="")
+    data = urllib.parse.urlencode({"format": "json", "query": query}).encode("utf-8")
     failures = 0
     while True:
         budget.take()
         try:
             # Own every attempt here so the query cap and pause cover retries too.
-            fetched = ctx.fetch(url, limit=WIKIDATA_LIMIT, timeout=120, attempts=1)
+            fetched = ctx.fetch(SPARQL, data=data, limit=WIKIDATA_LIMIT, timeout=120, attempts=1)
             if budget.throttle is not None:
                 budget.throttle.consecutive = 0
             break
@@ -315,13 +326,14 @@ def _rank(binding) -> str:
 
 def _index(ctx, budget: _Budget, group: Group) -> dict:
     """{numeric id: {why, ...}} of the group's items."""
-    _, bindings = _sparql(ctx, budget, group.index)
     items = defaultdict(set)
-    for binding in bindings:
-        qid = _entity(binding.get("item"))
-        if qid is None or not qid[1:].isdigit():
-            raise FeedError(f"WIKIDATA_RESPONSE_SHAPE {group.name} index")
-        items[int(qid[1:])].add(binding.get("why", {}).get("value", group.links[0] if group.links else "P625"))
+    for query in group.index_queries:
+        _, bindings = _sparql(ctx, budget, query)
+        for binding in bindings:
+            qid = _entity(binding.get("item"))
+            if qid is None or not qid.startswith("Q") or not qid[1:].isdigit():
+                raise FeedError(f"WIKIDATA_RESPONSE_SHAPE {group.name} index")
+            items[int(qid[1:])].add(binding.get("why", {}).get("value", group.links[0] if group.links else "P625"))
     return items
 
 
@@ -373,7 +385,11 @@ def _record(qid: str, bindings: list, group: Group, whys: set, places: set, coun
         out["enwiki"] = enwiki
     if population:
         out["population"] = sorted([{"amount": a, "rank": r, **({"date": d} if d is not None else {})} for a, d, r in population], key=core.canonical)
-    links = [{"id": e["id"], "label": e["label"], "property": p} for p in group.links for e in out["claims"].get(p, []) if e["id"] in places]
+    # Unknown/some-value relationships can be blank nodes rather than entity
+    # URIs. Keep their provider values in claims, but only entities can link a
+    # record to the independently discovered Kansas places.
+    links = [{"id": e["id"], "label": e["label"], "property": p} for p in group.links
+             for e in out["claims"].get(p, []) if isinstance(e, dict) and e["id"] in places]
     if group.box:
         links += [{"county_geoid": g, "property": "P625"} for lon, lat in out["claims"].get("P625", []) if (g := county_at(counties, lon, lat))]
     out["kansas"] = sorted({core.canonical(l): l for l in links}.values(), key=core.canonical)
@@ -410,7 +426,9 @@ def _fill_range(ctx, db, budget: _Budget, group: Group, lo: int, hi: int, items:
                 seen.add(i)
                 records.append(_record(qid, grouped[qid], group, items[i], places, counties))
     kept = [r for r in records if r["kansas"] or r["kansas_link"] != "P625"]
-    extra = {**WIKIDATA_EXTRA, "cycle": cycle, "group": group.name, "index_query": group.index, "detail_query": template, "requested": len(ids),
+    index_receipt = ({"index_query": group.index_queries[0]} if len(group.index_queries) == 1
+                     else {"index_queries": list(group.index_queries)})
+    extra = {**WIKIDATA_EXTRA, **index_receipt, "cycle": cycle, "group": group.name, "detail_query": template, "requested": len(ids),
              "items": len(kept), "missing": len(ids) - len(seen), "outside_kansas": len(records) - len(kept), "queries": queries}
     if not kept:
         with core.pipeline_lock(ctx):
