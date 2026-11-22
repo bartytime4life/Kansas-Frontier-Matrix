@@ -527,8 +527,13 @@ def load_version(db: sqlite3.Connection, ctx: Context, *, source_id: str, key: s
     return {"state": "loaded", "rows": count, "superseded": len(previous)}
 
 
+# The hourly working-data analysis holds the lock while it runs; on the dev PC it took 15 min 18 s and 15 min 34 s
+# on 2026-11-22, and feeds that waited the former 15 minutes gave up just before it finished (PIPELINE_LOCK_BUSY).
+PIPELINE_LOCK_WAIT = 1800
+
+
 @contextmanager
-def pipeline_lock(ctx: Context, wait_seconds: int = 900):
+def pipeline_lock(ctx: Context, wait_seconds: int | None = None):
     """The PC pipeline's exclusive lock (captures, analysis, backups). No-op when not configured.
 
     Re-entrant within one run: flock is held per open file, so a nested take would wait on itself.
@@ -541,7 +546,7 @@ def pipeline_lock(ctx: Context, wait_seconds: int = 900):
             ctx.lock_depth -= 1
         return
     with open(ctx.lock, "a") as handle:
-        deadline = time.monotonic() + wait_seconds
+        deadline = time.monotonic() + (PIPELINE_LOCK_WAIT if wait_seconds is None else wait_seconds)
         while True:
             try:
                 fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)

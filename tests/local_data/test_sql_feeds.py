@@ -2,6 +2,7 @@
 from datetime import date, datetime, timedelta, timezone
 import email.message
 import email.utils
+import fcntl
 import gzip
 import hashlib
 import http.client
@@ -300,6 +301,27 @@ class CoreTests(FeedCase):
             with core.pipeline_lock(self.ctx):
                 self.assertEqual(self.ctx.lock_depth, 2)
         self.assertEqual(self.ctx.lock_depth, 0)
+
+    def test_a_feed_waits_out_a_lock_held_for_longer_than_fifteen_minutes(self):
+        # The hourly analysis held the lock 15 min 34 s on 2026-11-22; feeds must outwait it, then give up.
+        clock, release_at = [0.0], [25 * 60]
+        with open(self.ctx.lock, "a") as other:
+            fcntl.flock(other, fcntl.LOCK_EX)
+
+            def sleep(seconds):
+                clock[0] += seconds
+                if clock[0] >= release_at[0]:
+                    fcntl.flock(other, fcntl.LOCK_UN)
+            with patch.object(core.time, "monotonic", lambda: clock[0]), patch.object(core.time, "sleep", sleep):
+                with core.pipeline_lock(self.ctx):
+                    self.assertEqual(self.ctx.lock_depth, 1)
+                self.assertGreaterEqual(clock[0], 25 * 60)
+                fcntl.flock(other, fcntl.LOCK_EX)
+                clock[0], release_at[0] = 0.0, float("inf")
+                with self.assertRaisesRegex(core.FeedError, "^PIPELINE_LOCK_BUSY$"):
+                    with core.pipeline_lock(self.ctx):
+                        pass
+                self.assertGreater(clock[0], core.PIPELINE_LOCK_WAIT)
 
     def test_status_reports_feed_state(self):
         db = core.open_db(self.ctx)
