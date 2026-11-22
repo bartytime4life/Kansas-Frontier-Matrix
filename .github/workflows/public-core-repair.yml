@@ -50,7 +50,10 @@ jobs:
     # Fast, independent feedback for welcome composition, credits, scroll and drafts.
     # These journeys isolate providers and use a disposable browser profile.
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Thirty-two browser tests, then the render diagnostics. Over ten recent commits this job took 372-515 s,
+    # and on 2026-11-22 a slow runner cut it off at 600 s with every test passing. Fifteen minutes leaves
+    # room for a slow runner without hiding a real hang for long.
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
