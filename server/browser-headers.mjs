@@ -45,6 +45,24 @@ function welcomeVideoHeaders(request, response) {
   };
 }
 
+// The hosting proxy replaces the body of a 502 or 504 with its own "error code: 502" page, so a route's
+// own explanation ("The exact historical radar frame is unavailable...") never reached the visitor and the
+// page's JSON reader failed instead. A public read that ends in 502 or 504 therefore leaves as 503, which
+// the proxy passes through with its body. The route's status stays readable in X-KFM-Upstream-Status.
+// Only GET and HEAD under /api/ are touched; writes and the worker relays keep their exact statuses.
+function keepUpstreamFailureBody(request, response) {
+  if (!['GET', 'HEAD'].includes(request.method) || !(request.url ?? '').startsWith('/api/')) return;
+  const writeHead = response.writeHead;
+  response.writeHead = function (statusCode, ...args) {
+    if (statusCode !== 502 && statusCode !== 504) return writeHead.call(this, statusCode, ...args);
+    response.setHeader('X-KFM-Upstream-Status', String(statusCode));
+    // A reason phrase written for the old status would contradict the new one.
+    if (typeof args[0] === 'string') args[0] = 'Service Unavailable';
+    response.statusMessage = 'Service Unavailable';
+    return writeHead.call(this, 503, ...args);
+  };
+}
+
 export function installPublicDelivery(server) {
   const handlers=server.listeners('request');
   server.removeAllListeners('request');
@@ -63,6 +81,7 @@ export function installPublicDelivery(server) {
       response.end();request.resume();return;
     }
     welcomeVideoHeaders(request,response);
+    keepUpstreamFailureBody(request,response);
     for(const handler of handlers)handler.call(server,request,response);
   });
 }
