@@ -531,6 +531,39 @@ sweep answered 200, each first request in under 1.5 seconds. Chat read
 **Mirror.** [#6027](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6027) carried #6025 and [#6029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6029) carried #6028 into
 `apps/site/source`. #6026 changes a file only the connected branch carries.
 
+<a id="public-readback-2026-11-22-fourth"></a>
+
+### Fourth publication verified on 2026-11-22: the Kansas drought series answers again
+
+At about 20:33 UTC on 2026-11-22 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `86ece22f`, the head of the connected branch,
+with 1,386 inputs.
+
+**What had been wrong.** A sweep of every public data route earlier the same
+day found `/api/drought-series` answering 502 on every request, so the Field
+view's "Kansas over time" chart did not appear. The USDM data services had
+begun answering `aoi=KS` with an empty list; the same request with the state
+FIPS code, `aoi=20`, returned every week.
+
+| Change | Live readback |
+|---|---|
+| [#6031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6031) the Kansas series asks by state code and is kept through a failed read | `/api/drought-series` returned 200 with 1,403 weeks, from 2000-01-04 to 2026-11-17, and a `source` naming `aoi=20`. A second request returned the same `retrievedAt` (20:32:53 UTC) in 0.3 seconds. A headless browser opened the Agriculture view with the Drought Monitor on: the page requested the series and received 200, and the week's map drew over Kansas. The dock that holds the chart was not opened in that check, so the chart itself was not seen |
+
+**Still as before this publish.** Four related changes were open and not yet
+merged: `/api/event-atlas/radar-frame` still answered `error code: 502`
+([#6032](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6032)), `/api/historical-topo` still answered 502
+([#6035](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6035)), and `/api/build` did not yet report the kept browser files
+([#6033](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6033)).
+
+**Build identity.** Unchanged: `WORKTREE_MODIFIED` with `untrackedOther: 1` and
+zeros elsewhere. The application inputs match `86ece22f` exactly.
+
+**Feeds and chat.** DeFlock returned its outage answer in 0.2 seconds. Chat
+read `KFM home compute (connecting)` at 20:33 UTC, within a minute of the
+restart.
+
+**Mirror.** None needed: `apps/site/source` does not carry the Drought Monitor.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
