@@ -476,7 +476,8 @@ scheduled run resumes from the retained checkpoints. Common reasons:
 - `RAW_OBJECT_CHANGED`: a provider's bytes changed under a name already kept.
 - `CACHED_RAW_PATH_INVALID`: a migrated water capture's receipt path cannot safely
   resolve inside the current raw tree.
-- `PIPELINE_LOCK_BUSY`: the lock was held for more than 15 minutes.
+- `PIPELINE_LOCK_BUSY`: the lock was held for more than 30 minutes (15 before 2026-11-22, when the
+  hourly analysis began taking just over 15).
 
 Partial runs recover without stalling or skipping:
 
