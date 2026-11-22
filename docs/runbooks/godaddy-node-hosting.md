@@ -564,6 +564,40 @@ restart.
 
 **Mirror.** None needed: `apps/site/source` does not carry the Drought Monitor.
 
+<a id="public-readback-2026-11-22-fifth"></a>
+
+### Fifth publication verified on 2026-11-22: error messages kept, historical maps, kept browser files counted
+
+At about 21:12 UTC on 2026-11-22 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `0bfffe2f`, the head of the connected branch,
+with 1,386 inputs.
+
+| Change | Live readback |
+|---|---|
+| [#6032](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6032) a public read that ends in 502 or 504 leaves as 503 with its body | `/api/event-atlas/radar-frame` with no frame named returned `503`, `x-kfm-upstream-status: 502`, `content-type: application/json` and the route's own sentence, "The exact historical radar frame is unavailable. No latest-image fallback was used." Before this publish the same request returned the proxy's text, `error code: 502` |
+| [#6033](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6033) the build records the kept browser files it started with | `/api/build` carries `retainedClientAssets`: **970 entries and 38,848,175 bytes (37 MB)**, against limits of 4,096 entries and 256 MB. That is 24% of the entry limit and 15% of the byte limit, measured before this build added its own files |
+| [#6034](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6034) one read per Drought Monitor week, two weeks at a time | `/api/drought-monitor?date=20120807` returned 200 in 1.2 seconds and `/api/drought-series` 200. The waiting line and the refusal past it were not exercised against the public site; they are covered by the unit test |
+| [#6035](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6035) historical map catalog address; empty outlook times | `/api/historical-topo?lng=-95.69&lat=39.05` returned 200, `available`, with 24 sheets in 0.9 seconds (it returned 502 before). `/api/spc-outlook?day=1&product=torn` returned no risk areas with `issuedAt` 19:47 UTC and a valid period of 20:00 UTC to 12:00 UTC the next day (all three were null before) |
+
+**Kept browser files: what the number means.** The count is the first real
+reading of the host's folder. The estimate made from outside earlier the same
+day was "at least 845 entries and 34 MB". At the growth seen in development
+builds (about 26 entries a publish) the entry limit is on the order of a
+hundred publishes away. The next publish's reading will give the host's own
+growth per publish. Nothing is pruned yet; that decision is open.
+
+**Build identity.** Otherwise unchanged: `WORKTREE_MODIFIED` with
+`untrackedOther: 1` and zeros elsewhere. The application inputs match
+`0bfffe2f` exactly.
+
+**Chat.** Read `KFM home compute (connecting)` at 21:12 UTC, shortly after the
+restart.
+
+**Mirror.** The historical map catalog address is carried into
+`apps/site/source` by the same change that adds this section. #6032, #6033,
+#6034 and the outlook part of #6035 touch files only the connected branch
+carries.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
