@@ -123,6 +123,26 @@ row under Map layers → On map reads, for example:
 - The extent is the whole map, including any part under an open panel, and on a tilted map it is
   the box around what is visible. It is not shown on the globe.
 
+### Go to what stands out
+
+Under the row line, up to two buttons take the map to a record the facts mention:
+
+| Layer | Button |
+| --- | --- |
+| Bridges | **Show the oldest (1938)** and **Show the longest (3,376 ft)** |
+| National Register places | **Show the National Historic Landmark**, or **Show one of 9 National Historic Landmarks** |
+| Walk-in hunting access | **Show the largest tract (8,166 acres)** |
+
+- Only records inside the current view are offered, so each press narrows toward something the
+  visitor was already looking at. The line then recounts for the new view.
+- A tie is called a tie: when several bridges share the earliest recorded year the button reads
+  "Show one of 8 from 1955", not "the oldest". Years outside 1800-9998 are ignored, as on the circles.
+- The map moves to the record and zooms in only as far as needed for it to stand apart from its
+  neighbours (14.5 for a bridge, 13.5 for a Register marker, 12 for a tract). It never zooms out.
+- Trail sites have no such button, and neither does a view holding a single record or none.
+- The button does not select the record or open its details. The record is at the middle of the
+  map, and selecting it works as before.
+
 ### In the status bar too
 
 The same counts also sit in the status bar at the bottom of the map, after the map's name, so they
