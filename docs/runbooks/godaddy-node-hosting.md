@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-21
+updated: 2026-11-22
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -439,6 +439,40 @@ seconds. Chat read `KFM home compute (connecting)` at 23:51 UTC and reported
 ready on `qwen3.5:9b-q4_K_M` within the same minute.
 
 **Mirror.** [#6014](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6014) carried #6013 into `apps/site/source`.
+
+<a id="public-readback-2026-11-22"></a>
+
+### Publication verified on 2026-11-22: go to what stands out in view
+
+At about 03:15 UTC on 2026-11-22 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `cf1c5f19`, the head of the connected branch,
+with 1,386 inputs. A read at 03:12 UTC still showed the previous build; the new
+one appeared at about 03:14 UTC.
+
+| Change | Live readback |
+|---|---|
+| [#6015](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6015) buttons to the records that stand out | A headless browser pressed the buttons under the in-view line. Local bridges over Topeka offered "Show the oldest (1900)" and "Show the longest (3,376 ft)"; the second moved the map to a view of 3 bridges that still held the 3,376 ft one. National Register places statewide offered "Show one of 9 National Historic Landmarks" and moved to a view with one landmark. Walk-in hunting access offered "Show the largest tract (8,166 acres)" and moved to that tract. On a phone layout state highway bridges offered "Show one of 8 from 1955" and "Show the longest (5,535 ft)", with buttons 44 px high and no horizontal overflow. No page errors |
+
+**Build identity.** Unchanged: `WORKTREE_MODIFIED` with `untrackedOther: 1` and
+zeros elsewhere. The application inputs match `cf1c5f19` exactly.
+
+**Feeds.** DeFlock returned its outage answer in 0.4 seconds; its provider was
+still down. Twelve other feeds answered 200 in under two seconds. Two did not at
+first:
+
+- The county outlines feed returned 503 "This operation was aborted" after about
+  18 seconds on four of nine requests between 03:15 and 03:20 UTC, and 200 in
+  about 0.6 seconds on the others, including the last three. The Census
+  TIGERweb county query it reads hung for 40 seconds on one of three direct
+  requests made from outside the host in the same minutes and answered the other
+  two in about half a second. The provider was intermittently slow; this publish
+  does not touch the feed.
+- The FEMA declarations feed, which reads the same county outlines, returned 503
+  after 18 seconds once and 200 in one second on the next request.
+
+**Chat.** Ready on `qwen3.5:9b-q4_K_M` at 03:17 UTC.
+
+**Mirror.** [#6017](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6017) carried #6015 into `apps/site/source`.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
