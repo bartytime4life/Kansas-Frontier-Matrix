@@ -474,6 +474,32 @@ first:
 
 **Mirror.** [#6017](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6017) carried #6015 into `apps/site/source`.
 
+<a id="public-readback-2026-11-22-later"></a>
+
+### Later publication verified on 2026-11-22: county outlines kept, highlight buttons select
+
+At about 17:26 UTC on 2026-11-22 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `578caf26`, the head of the connected branch,
+with 1,386 inputs. At 17:25 UTC `/api/build` briefly answered "Service
+Unavailable" while the application restarted.
+
+| Change | Live readback |
+|---|---|
+| [#6019](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6019) county outlines keep one good Census answer and retry once | Eight requests in a row for the county outlines feed, made within a few seconds shortly after the restart, all returned 200 with 105 counties and the same `retrievedAt` (17:25:58 UTC). The first took 1.2 seconds and the rest 0.2 to 0.6 seconds. The FEMA declarations feed returned 200 twice in under a second. One further county request two minutes later returned 200 in 0.2 seconds. The failure seen after the earlier publish the same day did not recur; whether Census hung during these minutes is not known |
+| [#6021](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6021) highlight buttons select the record | A headless browser pressed the buttons under the in-view line. "Show the longest (3,376 ft)" on local bridges opened the details of **Kaw River**. "Show one of 9 National Historic Landmarks" opened **Constitution Hall**. "Show the largest tract (8,166 acres)" opened that tract's record, and keyboard focus moved to the line because the button was gone. On a phone layout "Show the longest (5,535 ft)" opened the bridge's details. No page errors |
+| [#6022](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6022) CI job time limit | Workflow file only; nothing to read on the site |
+
+**Build identity.** Unchanged: `WORKTREE_MODIFIED` with `untrackedOther: 1` and
+zeros elsewhere. The application inputs match `578caf26` exactly.
+
+**Feeds and chat.** DeFlock returned its outage answer in 0.3 seconds; its
+provider was still down. The other 14 feeds answered 200, each in under two
+seconds. Chat read `KFM home compute (connecting)` at 17:28 UTC and reported
+ready on `qwen3.5:9b-q4_K_M` within the same minute.
+
+**Mirror.** [#6020](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6020) carried #6019 and [#6023](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6023) carried #6021 into
+`apps/site/source`. #6022 changes only the connected branch's workflow.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
