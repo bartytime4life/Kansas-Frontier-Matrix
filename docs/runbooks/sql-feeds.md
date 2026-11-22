@@ -478,8 +478,6 @@ scheduled run resumes from the retained checkpoints. Common reasons:
   resolve inside the current raw tree.
 - `PIPELINE_LOCK_BUSY`: the lock was held for more than 30 minutes (15 before 2026-11-22, when the
   hourly analysis began taking just over 15).
-- `HTTP_431` from Wikidata: the query URL was too long. On 2026-11-22 WDQS refused a
-  7,571-character GET; detail batches now also stop at 6,000 characters.
 
 Partial runs recover without stalling or skipping:
 

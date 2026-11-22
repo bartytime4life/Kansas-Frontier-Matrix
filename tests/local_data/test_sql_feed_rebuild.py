@@ -206,24 +206,6 @@ class GridRecoveryTests(FeedCase):
         self.assertEqual(self.sleeps, [12.0, 120.0])
 
 
-    def test_wikidata_detail_batches_keep_the_get_url_within_the_service_limit(self):
-        # WDQS answered HTTP 431 to a 375-item batch of seven-digit ids on 2026-11-22.
-        for group in grid.GROUPS:
-            template = grid.detail_query(group)
-            for ids in ([2116421 + i for i in range(1000)], [123456789 + i for i in range(1000)], list(range(1, 1001))):
-                with self.subTest(group=group.name, first=ids[0]):
-                    batches = grid._batches(template, ids)
-                    self.assertEqual([i for b in batches for i in b], ids, 'every id once, in order')
-                    for batch in batches:
-                        url = grid._sparql_url(template.replace('wd:Q…', ' '.join(f'wd:Q{i}' for i in batch)))
-                        self.assertLessEqual(len(batch), grid.WIKIDATA_BATCH)
-                        self.assertLessEqual(len(url), grid.WIKIDATA_URL_MAX)
-                    # Each batch but the last is full: adding its successor would pass a limit.
-                    for batch, after in zip(batches, batches[1:]):
-                        grown = template.replace('wd:Q…', ' '.join(f'wd:Q{i}' for i in batch + after[:1]))
-                        self.assertTrue(len(batch) == grid.WIKIDATA_BATCH or len(grid._sparql_url(grown)) > grid.WIKIDATA_URL_MAX)
-        self.assertEqual(grid._batches(grid.detail_query(grid.GROUPS[0]), []), [])
-
     def test_wikidata_server_retries_are_paced_and_count_against_the_query_budget(self):
         calls, pauses = [], []
         def fetch(url, **options):

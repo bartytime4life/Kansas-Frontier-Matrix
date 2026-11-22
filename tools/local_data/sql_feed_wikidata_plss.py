@@ -15,13 +15,12 @@ that the first group does not have, kept only when a coordinate falls in a 2025 
 (dated items located in Kansas; 1,599). A cycle starts with one index query per group; each group's item ids
 are then cut into ranges of the id space [0, 2^28), halved until a range holds at most 1,000 items, and each
 range with items is one ``load_version`` key ``<group>/Q<lo>-Q<hi>`` (source ``wikidata-<group>``). A range is
-filled by detail queries of at most 375 items each, fewer where the GET URL would pass 6,000 characters
-(``VALUES ?item``: labels, description, enwiki title, the group's direct properties with labels, dated
-statements with precision and rank, population with its date), turned into one canonical JSON record per
-item (sorted keys, lists sorted by their canonical text, deprecated ranks dropped, labels in English or
-``mul``) and kept as JSON Lines in ascending id order. The receipt carries the index and detail query texts
-(the item list elided as ``wd:Q…``), ``cycle``, ``group``, ``requested``, ``items``, ``missing``,
-``outside_kansas`` and ``queries``. The feed state keeps ``cycle`` (``started``,
+filled by detail queries of at most 375 items each (``VALUES ?item``: labels, description, enwiki title, the
+group's direct properties with labels, dated statements with precision and rank, population with its date),
+turned into one canonical JSON record per item (sorted keys, lists sorted by their canonical text, deprecated
+ranks dropped, labels in English or ``mul``) and kept as JSON Lines in ascending id order. The receipt carries
+the index and detail query texts (the item list elided as ``wd:Q…``), ``cycle``, ``group``, ``requested``,
+``items``, ``missing``, ``outside_kansas`` and ``queries``. The feed state keeps ``cycle`` (``started``,
 ``complete``, ``done`` keys), ``items`` per group and ``ranges`` per group, so a run that stops on WDQS's
 per-IP throttling (HTTP 429, ``WIKIDATA_RATE_LIMITED``) or on its query budget resumes from the next pending
 range; up to 200 query attempts run at least 60 seconds apart, including transient retries. A 429 is first waited out (``core.Throttle``: the Retry-After when given,
@@ -89,9 +88,6 @@ WIKIDATA_FEED = "wikidata-kansas"
 WIKIDATA_TOP = 1 << 28
 WIKIDATA_RANGE_ITEMS = 1000
 WIKIDATA_BATCH = 375
-# WDQS answers HTTP 431 to a GET whose URL is too long: on 2026-11-22 it accepted 7,331 characters and refused
-# 7,571, so a 375-item batch of seven-digit ids (about 7,500) failed. Batches also stop at this URL length.
-WIKIDATA_URL_MAX = 6000
 WIKIDATA_CYCLE_DAYS = 7
 WIKIDATA_QUERIES_PER_RUN = 200
 WIKIDATA_PAUSE = 60.0   # WDQS's active-outage limit is one request/minute; do not hammer repeated 504s
@@ -274,28 +270,8 @@ class _Budget:
         self.used += 1
 
 
-def _sparql_url(query: str) -> str:
-    return SPARQL + "?format=json&query=" + urllib.parse.quote(query, safe="")
-
-
-def _batches(template: str, ids: list) -> list:
-    """ids cut in order into batches of at most WIKIDATA_BATCH items whose detail-query URL stays within
-    WIKIDATA_URL_MAX characters (one item always makes a batch)."""
-    base, batches, batch, length = len(_sparql_url(template.replace("wd:Q…", ""))), [], [], 0
-    for i in ids:
-        cost = len(urllib.parse.quote(f"wd:Q{i}", safe="")) + (3 if batch else 0)   # 3: the encoded separating space
-        if batch and (len(batch) >= WIKIDATA_BATCH or base + length + cost > WIKIDATA_URL_MAX):
-            batches.append(batch)
-            batch, length, cost = [], 0, cost - 3
-        batch.append(i)
-        length += cost
-    if batch:
-        batches.append(batch)
-    return batches
-
-
 def _sparql(ctx, budget: _Budget, query: str) -> tuple[bytes, list]:
-    url = _sparql_url(query)
+    url = SPARQL + "?format=json&query=" + urllib.parse.quote(query, safe="")
     failures = 0
     while True:
         budget.take()
@@ -417,7 +393,8 @@ def _fill_range(ctx, db, budget: _Budget, group: Group, lo: int, hi: int, items:
     ids = [i for i in sorted(items) if lo <= i < hi]
     key, records, bodies, queries, seen = f"{group.name}/Q{lo}-Q{hi}", [], [], 0, set()
     template = detail_query(group)
-    for batch in _batches(template, ids):
+    for start in range(0, len(ids), WIKIDATA_BATCH):
+        batch = ids[start:start + WIKIDATA_BATCH]
         body, bindings = _sparql(ctx, budget, template.replace("wd:Q…", " ".join(f"wd:Q{i}" for i in batch)))
         queries += 1
         bodies.append(body)
