@@ -500,6 +500,37 @@ ready on `qwen3.5:9b-q4_K_M` within the same minute.
 **Mirror.** [#6020](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6020) carried #6019 and [#6023](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6023) carried #6021 into
 `apps/site/source`. #6022 changes only the connected branch's workflow.
 
+<a id="public-readback-2026-11-22-third"></a>
+
+### Third publication verified on 2026-11-22: kept feed answers, Observatory radar
+
+At about 19:03 UTC on 2026-11-22 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `a4902425`, the head of the connected branch,
+with 1,386 inputs.
+
+| Change | Live readback |
+|---|---|
+| [#6025](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6025) and [#6028](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6028) live feeds keep one good answer for their declared lifetime | Each of the thirteen kept feeds was requested twice, two seconds apart, between 19:04 and 19:07 UTC. Both requests returned 200 with the same `retrievedAt` for every feed; the second took 0.15 to 0.46 seconds. Requested again 30 to 70 seconds later, the earthquakes feed (five-minute lifetime), the National Register feed (a partial answer, kept five minutes) and the walk-in hunting feed (one day) still returned the same `retrievedAt`, while the weather alerts feed (30 seconds) returned a new one. The `Cache-Control` each feed sends is unchanged |
+| [#6026](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6026) Event Observatory radar loads again | The `/observatory` response carries `connect-src 'self' https: blob:`. A headless browser loaded the page and waited 15 seconds: radar returns were drawn over Kansas, the page recorded no content security policy violation, showed no alert and received no failed response |
+
+**Not kept by this change, as designed.** The county outlines keep their own
+answer (see [the earlier readback](#public-readback-2026-11-22-later)) and the
+bridge feeds have their own store; the state and local bridge feeds answered 200
+in 6.4 and 3.0 seconds. The congressional districts and DeFlock feeds declare no
+lifetime and are not kept.
+
+**Build identity.** Unchanged: `WORKTREE_MODIFIED` with `untrackedOther: 1` and
+zeros elsewhere. The application inputs match `a4902425` exactly.
+
+**Feeds and chat.** DeFlock returned its outage answer in 0.3 seconds, twice;
+its provider was still down and no failure is kept. The other 14 feeds in the
+sweep answered 200, each first request in under 1.5 seconds. Chat read
+`KFM home compute (connecting)` at 19:05 UTC and reported ready on
+`qwen3.5:9b-q4_K_M` within the same minute.
+
+**Mirror.** [#6027](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6027) carried #6025 and [#6029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6029) carried #6028 into
+`apps/site/source`. #6026 changes a file only the connected branch carries.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
