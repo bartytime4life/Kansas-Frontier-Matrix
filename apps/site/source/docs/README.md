@@ -102,6 +102,7 @@ checks or establish current deployment, browser acceptance or source admission.
 - [Frontier trails layer — November 14, 2026](explorer-frontier-trails-2026-11-14.md)
 - [KDOT bridge and National Register clusters — November 15–16, 2026](kdot-bridge-clusters-20261115.md)
 - [Older and newer layers together: starters, guides, Science lab links and reliability — November 18, 2026](explorer-old-and-new-data-2026-11-18.md)
+- [County outlines: one good Census answer kept, one retry — November 22, 2026](county-baseline-resilience-20261122.md)
 - [Explorer local-port reconciliation](explorer-local-port-20261017.md)
 - [Reading context and keyboard ownership](explorer-reading-context-integrity-2026-11-09.md)
 - [Explorer reliability review — 2026-10-06](explorer-reliability-review-2026-10-06.md)

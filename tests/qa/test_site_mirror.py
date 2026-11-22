@@ -3189,4 +3189,14 @@ def test_view_highlights_successor_preserves_view_tally_status_inventory_and_all
         {"app/map-layers.css", "app/view-tally-line.tsx", "app/view-tally.ts", "docs/kdot-bridge-clusters-20261115.md", "tests/view-tally.test.mjs"},
         "dd52826484401adfabd9e24b1a2a20d5b6ce869a",
     )
-    assert TOOL.RECEIPT.name == "site-v268-view-highlights-overlay-20261121.json"
+
+
+def test_county_baseline_resilience_successor_preserves_view_highlights_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-county-baseline-resilience-overlay-20261122.json",
+        "site-v268-view-highlights-overlay-20261121.json",
+        "bdf999b5491b38a5d06352ea4008778a5c3e19bc782ded46ae1b0c1a4e25a561",
+        {"app/county-baseline.ts", "docs/README.md", "docs/county-baseline-resilience-20261122.md", "tests/county-baseline.test.mjs"},
+        "93435e62dc1b47dbc79b3415d088d5094d54a97a",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-county-baseline-resilience-overlay-20261122.json"
