@@ -303,6 +303,13 @@ and released that Thursday.
   not answer, and choosing a week by hand pauses it. With reduced motion set,
   Play is off and the weeks are stepped by hand; the reading is not announced
   every week while it plays.
+  The series asks for Kansas by its state FIPS code (`aoi=20`). On 2026-11-22
+  the data services answered the postal code (`aoi=KS`) with an empty list, so
+  the chart had stopped appearing; the postal code is now asked only when the
+  FIPS answer holds no Kansas weeks. A series already read is served, with its
+  own retrieval time, when a later read fails, and the provider is asked again
+  after five minutes. With no series in hand the answer is a 503 whose message
+  the host passes through.
 - **Counties.** With the map shown, the site reads the Census 2020 Kansas
   counties it already uses for search and People, and draws their lines over
   the categories, under the state line, as the USDM's state maps do. Each

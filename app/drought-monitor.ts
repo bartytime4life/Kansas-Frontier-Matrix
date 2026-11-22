@@ -81,8 +81,14 @@ export const usdmDateLabel = (date: string): string => { const ms = compactMs(da
 
 export const usdmMapProviderUrl = (date: string): string => `https://droughtmonitor.unl.edu/data/json/usdm_${date}.json`;
 /** Kansas's weekly share of area in each category since the first map, from the USDM data services. */
-export const usdmSeriesProviderUrl = (now: Date): string =>
-  `https://usdmdataservices.unl.edu/api/StateStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=KS&startdate=1/1/2000&enddate=${now.getUTCMonth() + 1}/${now.getUTCDate()}/${now.getUTCFullYear()}&statisticsType=1`;
+/**
+ * Kansas as the USDM data services name it: the state FIPS code, then the postal code. On 2026-11-22 the
+ * service answered the postal code with an empty list and the FIPS code with every week, so the read asks
+ * for the FIPS code first and the postal code only when that answer holds no Kansas weeks.
+ */
+export const USDM_SERIES_AREAS = Object.freeze(["20", "KS"] as const);
+export const usdmSeriesProviderUrl = (now: Date, area: string = USDM_SERIES_AREAS[0]): string =>
+  `https://usdmdataservices.unl.edu/api/StateStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=${area}&startdate=1/1/2000&enddate=${now.getUTCMonth() + 1}/${now.getUTCDate()}/${now.getUTCFullYear()}&statisticsType=1`;
 
 /** Kansas with a degree or so around it: the national map is cut to this before it is sent. */
 export const DROUGHT_REGION = Object.freeze([-103.2, 36.2, -93.6, 40.8] as const);
