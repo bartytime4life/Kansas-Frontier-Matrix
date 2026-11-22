@@ -194,6 +194,9 @@ test("official circle sizes stay valid zoom curves after globe overview scaling"
   }
 });
 
+// The route tests below hand the route a different stand-in provider answer on every call, so they run
+// with answer keeping off. tests/live-context-kept-feeds.test.mjs covers the keeping itself.
+(globalThis.__KFM_TEST_BINDINGS ??= {}).KFM_LIVE_CONTEXT_KEEP = "off";
 const route = await import(await moduleUrl("app/api/live-context/route.ts"));
 const { NextRequest } = await import(NEXT_SERVER);
 async function callFeed(feed, upstream) {

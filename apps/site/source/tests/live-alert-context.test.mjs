@@ -7,6 +7,9 @@ import test, { after } from "node:test";
 const blockedRequests = [];
 const denyFetch = async input => { blockedRequests.push(String(input)); throw new Error("Unexpected transport outside an alert fixture."); };
 globalThis.fetch = denyFetch;
+// These tests hand the route a different stand-in provider answer on every call, so they run with answer
+// keeping off. tests/live-context-kept-feeds.test.mjs covers the keeping itself.
+(globalThis.__KFM_TEST_BINDINGS ??= {}).KFM_LIVE_CONTEXT_KEEP = "off";
 const workerUrl = new URL("../dist/server/index.js", import.meta.url);
 workerUrl.searchParams.set("test", `alert-context-${process.pid}`);
 const { default: worker } = await import(workerUrl.href);
