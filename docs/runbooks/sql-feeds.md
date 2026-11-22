@@ -477,6 +477,8 @@ scheduled run resumes from the retained checkpoints. Common reasons:
 - `CACHED_RAW_PATH_INVALID`: a migrated water capture's receipt path cannot safely
   resolve inside the current raw tree.
 - `PIPELINE_LOCK_BUSY`: the lock was held for more than 15 minutes.
+- `HTTP_431` from Wikidata: the query URL was too long. On 2026-11-22 WDQS refused a
+  7,571-character GET; detail batches now also stop at 6,000 characters.
 
 Partial runs recover without stalling or skipping:
 
