@@ -48,7 +48,7 @@ before(async () => {
   state.fetch = async url => {
     state.calls++;
     const provider = new URL(url);
-    assert.equal(provider.origin, "https://ngmdb.usgs.gov");
+    assert.equal(provider.origin, "https://energy.usgs.gov");
     const id = Number(/^OBJECTID = (\d+)/.exec(provider.searchParams.get("where"))[1]);
     if (state.gate) await state.gate;
     if (state.providerStatus !== 200) return Response.json({}, { status: state.providerStatus });
