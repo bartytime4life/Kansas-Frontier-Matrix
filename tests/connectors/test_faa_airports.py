@@ -43,9 +43,12 @@ def payload(rows=None, headers=HEADERS, extra=None):
     writer.writerows(rows or [row()])
     output = io.BytesIO()
     with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("APT_BASE.csv", text.getvalue())
+        # Fixed entry times: a bare name takes the current time, so two payloads built across a
+        # two-second boundary had different archive hashes (failed CI on 2026-11-22).
+        stamp = (2026, 10, 1, 0, 0, 0)
+        z.writestr(zipfile.ZipInfo("APT_BASE.csv", stamp), text.getvalue(), zipfile.ZIP_DEFLATED)
         if extra:
-            z.writestr(*extra)
+            z.writestr(zipfile.ZipInfo(extra[0], stamp), *extra[1:], zipfile.ZIP_DEFLATED)
     data = output.getvalue()
     return data, {"edition": "2026-10-01", "source_id": "faa-nasr-apt", "url": capture.PRODUCTS["2026-10-01"],
                   "retrieved_at": "2026-10-21T19:00:00Z", "sha256": hashlib.sha256(data).hexdigest()}
