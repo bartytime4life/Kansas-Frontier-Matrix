@@ -794,8 +794,8 @@ class Handler(BaseHTTPRequestHandler):
             raw_attachment = re.sub(r"[\r\n\x00-\x1f\x7f]+", "", str(attachment)).strip()
             if not raw_attachment:
                 raw_attachment = "download"
-            # Safe ASCII fallback for legacy filename parameter.
-            fallback_attachment = re.sub(r"[^A-Za-z0-9._-]+", "_", raw_attachment).strip("._-")
+            # Safe ASCII fallback for legacy filename parameter (quoted-string safe).
+            fallback_attachment = re.sub(r'[^A-Za-z0-9._-]+', "_", raw_attachment).strip("._-")
             if not fallback_attachment:
                 fallback_attachment = "download"
             # RFC 5987 encoding for full-fidelity UTF-8 filename.
