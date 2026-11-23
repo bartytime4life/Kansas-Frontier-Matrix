@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { acquisitionJobLabels, parseAcquisitionInventory, formatAcquisitionBytes as size, type AcquisitionInventory } from "../acquisition-inventory";
 import { createAcquisitionSession, readAcquisitionLocalJson } from "../acquisition-client";
 import { TerrainProvenancePanel } from "../terrain-provenance";
+import { NeonLidarPanel } from "../neon-lidar-panel";
 import { parseAcquisitionTerrain, type AcquisitionTerrain } from "../acquisition-terrain";
 import styles from "./workspace.module.css";
 
@@ -65,6 +66,7 @@ export default function AcquisitionWorkspace() {
     </section>
     <section className={styles.panel} aria-label="Terrain metadata import"><div className={styles.controls}><label>Import terrain discovery JSON (1 MiB maximum)<input type="file" accept="application/json,.json" onChange={event => void importTerrain(event.target.files?.[0])} /></label></div><p role="status">{terrainNotice}</p>{terrainDiscovery && <p>Local preview · not uploaded · Candidate metadata only</p>}</section>
     <TerrainProvenancePanel discovery={terrainDiscovery ?? undefined} />
+    <NeonLidarPanel />
     <section className={styles.panel}><h2>Choosing Kansas and global volumes</h2><p>The ordinary worker requires an exact source, selected period, expected byte size or selected maximum, and expected checksum for each file. A separately recorded Earth Engine capture may have only a local readback hash; it remains a protected candidate with no provider-checksum or review claim. Compressed and expanded sizes, resolution, processing needs, destination and free capacity must be recorded before a bulk selection. Unknown values remain unresolved; there is no automatic global-size cutoff.</p><p>The receipt contains selected transfer bytes and the destination recorded when it was captured. Historical provider-hosted selections remain unchanged; new Kansas selections target the local PC. This is not an estimate of every provider archive or a claim that full-history Kansas coverage has been enumerated.</p><Link href="/earth-engine">Explore source history and prepare recipes →</Link></section>
   </main>;
 }

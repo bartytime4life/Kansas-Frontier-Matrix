@@ -138,7 +138,7 @@ test("receipt inspector imports local files without hosted reads or save control
  let requests=0;
  const h=await componentHarness(new URL('../app/acquisition/workspace.tsx',import.meta.url),{
   './storage-panel':{default:()=>null},'next/link':{default:'a'},'../acquisition-inventory':schema,'../acquisition-client':client,
-  '../terrain-provenance':{TerrainProvenancePanel:()=>null},'../acquisition-terrain':terrain,'./workspace.module.css':{default:{}}
+  '../terrain-provenance':{TerrainProvenancePanel:()=>null},'../neon-lidar-panel':{NeonLidarPanel:()=>null},'../acquisition-terrain':terrain,'./workspace.module.css':{default:{}}
  },{fetch:()=>{requests++;throw new Error('No hosted request is expected');},AbortController});
  try{
   let tree=h.render(h.exports.default);h.commit();await settle();
