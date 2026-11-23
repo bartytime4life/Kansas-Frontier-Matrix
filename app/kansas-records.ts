@@ -3,5 +3,12 @@
 import records from "./kansas-records.generated.json";
 
 export type RecordItem = { label: string; value: string; where: string; href?: string; note?: string };
-export type RecordSection = { id: string; title: string; source: string; caution: string; items: RecordItem[] };
+export type RecordSection = {
+  id: string;
+  title: string;
+  source: string;
+  caution: string;
+  snapshot: { path: string; bytes: number; sha256: string };
+  items: RecordItem[];
+};
 export const KANSAS_RECORDS = records.sections as unknown as readonly RecordSection[];

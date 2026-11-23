@@ -1,0 +1,4 @@
+.snapshot { margin: 8px 0 18px; }
+.snapshot summary { padding-block: 10px; cursor: pointer; color: #a3d8df; }
+.snapshot p { margin: 4px 0; }
+.snapshot code { overflow-wrap: anywhere; }
