@@ -89,14 +89,16 @@ test('page dispatch respects dedicated pick modes, aircraft hits and ordinary-co
   visit(ast);assert.ok(callback,'actual map dispatcher includes aircraft ownership');
   for(const mode of ['aviation','underground','measure','aircraft','miss']){
     let picks=0;
-    const scope={aviationPickingRef:{current:mode==='aviation'},undergroundOpenRef:{current:mode==='underground'},measureModeRef:{current:mode==='measure'?'point':null},
+    const scope={neonClaimedMapClicksRef:{current:new WeakSet()},aviationPickingRef:{current:mode==='aviation'},undergroundOpenRef:{current:mode==='underground'},measureModeRef:{current:mode==='measure'?'point':null},
       measureCoordinatesRef:{set current(_value){throw Error('measurement owns click');}},
       pickKansasSkyAircraft:()=>{picks++;return mode==='aircraft';},GEOLOGY_POINT_LAYER_IDS:[],map:{queryRenderedFeatures(){throw Error('ordinary context owns click');}}};
     const output=ts.transpileModule(`return ${callback};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
     const click=new Function(...Object.keys(scope),output)(...Object.values(scope));
-    if(mode==='measure')assert.throws(()=>click({point:{x:50,y:50},lngLat:{lng:-90,lat:0}}),/measurement owns click/);
-    else if(mode==='miss')assert.throws(()=>click({point:{x:0,y:0}}),/ordinary context owns click/);
-    else click({point:{x:50,y:50}});
+    const event={point:mode==='miss'?{x:0,y:0}:{x:50,y:50},lngLat:{lng:-90,lat:0}};
+    if(mode==='measure')assert.throws(()=>click(event),/measurement owns click/);
+    else if(mode==='miss')assert.throws(()=>click(event),/ordinary context owns click/);
+    else click(event);
+    assert.equal(scope.neonClaimedMapClicksRef.current.has(event),mode!=='miss','priority tools claim the event before later local probes');
     assert.equal(picks,mode==='aircraft'||mode==='miss'?1:0,'higher-priority tools prevent aircraft inspection');
   }
 });
