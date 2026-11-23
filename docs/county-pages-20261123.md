@@ -1,7 +1,9 @@
 # County pages (2026-11-23)
 
 Each of the 105 Kansas counties now has a plain page at `/counties/<name>` (for example
-`/counties/sedgwick`), with an index at `/counties`. The guides index links to it.
+`/counties/sedgwick`), with an index at `/counties`. Map guides links to the directory above
+the guide cards. The directory can filter by county name after the page loads. Its initial
+HTML contains links to all 105 profiles.
 
 ## What a county page shows
 

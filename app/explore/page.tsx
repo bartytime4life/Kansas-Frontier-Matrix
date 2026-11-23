@@ -17,13 +17,13 @@ export default function ExploreIndex() {
       <p className={styles.kicker}>KANSAS FRONTIER MATRIX</p>
       <h1>Map guides</h1>
       <p>Each guide opens the Kansas map with a few public layers already turned on, and explains what you are looking at.</p>
+      <p className={styles.countyEntry}><Link className={styles.cta} href="/counties">Find a Kansas county →</Link></p>
       <ul className={styles.cards}>{LANDING_GUIDES.map(guide => <li key={guide.slug}>
         <p className={styles.kicker}>{guide.kicker}</p>
         <h2><Link href={`/explore/${guide.slug}`}>{guide.title}</Link></h2>
         <p>{guide.description}</p>
         <a href={guideMapHref(guide)}>Open the map →</a>
       </li>)}</ul>
-      <p><Link href="/counties">Kansas counties: Census estimates and a map for each of the 105 →</Link></p>
       <p><Link href="/records">Kansas records: the extremes in the data behind the map →</Link></p>
     </section>
   </main>;

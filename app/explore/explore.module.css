@@ -9,6 +9,7 @@
 .article p, .article li, .index p { line-height: 1.65; color: #c8d4df; font-size: 16px; }
 .article > p { margin: 0 0 16px; }
 .cta { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #e5c887; color: #101923 !important; font-weight: 700; text-decoration: none; }
+.countyEntry { margin: 16px 0; }
 .layers { list-style: none; padding: 0; display: grid; gap: 12px; }
 .layers li { border: 1px solid #344151; border-radius: 12px; background: #172330; padding: 16px; }
 .layers strong { display: block; color: #e6edf5; }

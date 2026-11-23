@@ -3,7 +3,20 @@
 .facts span { display: block; font-size: 0.82rem; opacity: 0.78; }
 .facts strong { display: block; font-size: 1.15rem; margin: 2px 0; }
 .facts em { display: block; font-style: normal; font-size: 0.82rem; opacity: 0.78; }
+.finder { max-width: 420px; margin: 20px 0 10px; }
+.finder label { display: block; margin-bottom: 6px; font-weight: 600; }
+.searchRow { display: flex; align-items: stretch; gap: 8px; }
+.searchRow input, .searchRow button {
+  min-height: 44px; padding: 8px 12px; border: 1px solid #67798c;
+  border-radius: 8px; background: #172330; color: #e6edf5; font: inherit;
+}
+.searchRow input { flex: 1; min-width: 0; }
+.searchRow input::placeholder { color: #a9bac9; opacity: 1; }
+.searchRow input::-webkit-search-cancel-button { appearance: none; }
+.searchRow button { cursor: pointer; }
+.resultCount { margin: 0; }
 .index { columns: 4 160px; column-gap: 24px; padding: 0; list-style: none; }
-.index li { padding: 3px 0; break-inside: avoid; }
+.index li { break-inside: avoid; }
+.index a { display: block; padding: 5px 0; }
 .neighbors { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 0; list-style: none; }
 .source { font-size: 0.9rem; opacity: 0.85; }
