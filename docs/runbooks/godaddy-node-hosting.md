@@ -632,6 +632,48 @@ known from outside; a third reading will show whether it is fixed.
 **Mirror.** None: `apps/site/source` carries neither the county bundle nor the
 sitemap module.
 
+<a id="public-readback-2026-11-23-later"></a>
+
+### Later publications verified on 2026-11-23: county population and bridges; a clean host checkout
+
+At about 05:20 UTC on 2026-11-23 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `1bb85d15`, the head of the connected branch,
+with 1,393 inputs. That head also carries two county-page changes merged by
+other work (#6048, #6050); this section reads back #6049 and the build record.
+
+| Change | Live readback |
+|---|---|
+| [#6049](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6049) county population and bridges | `/counties/allen` reads "The Census Bureau estimates that 12,302 people lived in Allen County on July 1, 2025. That is 231 fewer than its estimate of 12,533 for July 1, 2020" and "bridge inventory lists 226 bridge records in Allen County: 43 on state highways and 183 on local roads. The oldest recorded built year is 1910. The longest structure is 1,204 feet", with "Inventory as of 2026-11-16". `/counties/greeley` carries the link that opens the map with both bridge layers on |
+
+**The host's checkout was clean for the first time on record.** `/api/build`
+reports `commitState: CLEAN_CHECKOUT` with `sourceCommit` set to `1bb85d15`,
+no `worktreeChanges` and no `retainedClientAssets`. Every earlier reading in
+this runbook was `WORKTREE_MODIFIED` with one untracked entry outside the
+inputs. So this build started from a fresh checkout whose `public/assets` was
+absent or empty.
+
+**Kept browser files: what three readings and this one show.**
+
+| Publish | Entries | Bytes |
+|---|---|---|
+| `0bfffe2f` (2026-11-22, about 21:12 UTC) | 970 | 38,848,175 |
+| `f3a44dca` (2026-11-23, about 01:57 UTC) | 970 | 38,848,175 |
+| one publish between 03:25 and 05:20 UTC, digest `sha256:c346bcc8…` | 1,107 | 45,176,966 |
+| `1bb85d15` (2026-11-23, about 05:20 UTC) | none reported | clean checkout |
+
+- The folder a build starts with does grow on the host (137 entries in one
+  step), but not at every publish, and it was reset when the checkout was
+  replaced.
+- Script files from earlier builds were still served by the origin after the
+  clean build (60 of 60 older files tried). So the files visitors' open pages
+  need are kept somewhere other than the build's own folder.
+- The limit of 4,096 entries applies to the build's folder. While the host
+  replaces its checkout from time to time, that folder starts again from
+  nothing. How often that happens is not known from outside, so the limit
+  remains worth watching on `/api/build` rather than a settled question.
+
+**Mirror.** None: `apps/site/source` does not carry the county bundles.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
