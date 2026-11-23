@@ -1164,6 +1164,54 @@ for (const [width,height,touch] of [[1440,900,false],[1366,500,false],[393,852,t
   });
 }
 
+test('drought comparison survives reopening and the shared view restores it in a fresh phone tab', { timeout:120000 }, async t => {
+  const fixtures=droughtBrowserFixtures(origin), recipient=droughtBrowserFixtures(origin);
+  t.after(()=>{fixtures.assertDrained();recipient.assertDrained();});
+  const b=await browser(t),p=await pageSession(b,1440,900,fixtures);
+  await openDroughtWorkbench(p);
+  await droughtLoaded(p,fixtures.newest);
+  const summary='.category-map-dock-drought-compare > summary';
+  const result='.category-map-dock-drought-compare [data-comparison-result]';
+  const severity='.category-map-dock-drought-compare select';
+  const dates=`[...document.querySelectorAll('.category-map-dock-drought-compare input[type=date]')].map(input=>input.value.replaceAll('-',''))`;
+  const expected=[fixtures.weeks[1].date, fixtures.weeks.at(-2).date];
+  const expectedResult='Both weeks cover the same share of Kansas.';
+  const hasSelections=`JSON.stringify(${dates})===${JSON.stringify(JSON.stringify(expected))} && document.querySelector(${JSON.stringify(severity)})?.value==='4' && document.querySelector(${JSON.stringify(result)})?.textContent===${JSON.stringify(expectedResult)}`;
+  const mapRequests=[...fixtures.hits.maps], historyRequests=fixtures.hits.history;
+
+  await droughtEnter(p,summary);
+  await p.wait(`!!document.querySelector(${JSON.stringify(result)})`, 'comparison controls open');
+  await droughtEnter(p,'[aria-label="Next recorded week for A"]');
+  await droughtEnter(p,'[aria-label="Previous recorded week for B"]');
+  await droughtPoint(p,severity);
+  await p.evaluate(`document.querySelector(${JSON.stringify(severity)}).focus()`);
+  await p.key('End','End',35);
+  await p.wait(hasSelections,'both dates, severity and computed result update');
+  await droughtEnter(p,'.category-map-dock-close');
+  await p.wait(`!document.querySelector('.category-map-dock')`, 'closing removes the dock');
+  await openCategoryTool(p,'Drought history & change');
+  await p.wait(hasSelections,'a remounted dock reopens the selected comparison');
+  assert.deepEqual(fixtures.hits.maps,mapRequests,'reopening never changes the map week');
+  assert.equal(fixtures.hits.history,historyRequests,'reopening reuses the loaded history');
+
+  await droughtEnter(p,'summary[aria-label="More site actions"]');
+  await p.wait(`document.querySelector('.header-overflow-menu').open`,'More opens the share action');
+  await droughtEnter(p,'.share-action');
+  await p.wait(`document.querySelector('#map-share-dialog')?.open`,'Share current view presents its link');
+  const share=new URL(await p.evaluate(`document.querySelector('#map-share-dialog textarea').value`));
+  assert.equal(share.searchParams.get('drought'),'newest');
+  assert.equal(share.searchParams.get('droughtCompare'),`${expected.join(',')},4,1`);
+
+  const phone=await pageSession(b,393,852,recipient);
+  await phone.call('Emulation.setDeviceMetricsOverride',{width:393,height:852,deviceScaleFactor:1,mobile:true});
+  await phone.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  await phone.open(share.pathname+share.search);
+  await phone.wait(hasSelections,'a fresh phone-sized tab opens the exact shared comparison');
+  await droughtPoint(phone,result);
+  await droughtLoaded(phone,recipient.newest);
+  assert.deepEqual(recipient.hits.maps,[recipient.newest.date],'receiving the link reads just the original map week');
+});
+
 test('drought statistics failure preserves a usable weekly reading and public source', { timeout:90000 }, async t => {
   const fixtures=droughtBrowserFixtures(origin,{history:'failed'});
   t.after(()=>fixtures.assertDrained());

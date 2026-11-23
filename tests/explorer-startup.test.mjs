@@ -99,9 +99,10 @@ test('restoring a map clears source status and does not serialize that panel int
  const page = await readFile('app/page.tsx', 'utf8');
  const start=page.indexOf('      const restoredMapUtilityView = params.get("maptab");',page.indexOf('  const restoreExplorerFromUrl'));
  const source=page.slice(start,page.indexOf('      const nextMapUtilityView:',start));
- const run=(query,topic='government',topics=['government'])=>{
+ const run=(query,topic='government',topics=['government'],comparisonOpen=false)=>{
   const state={status:true,left:true,mode:'layers'};
   vm.runInNewContext(ts.transpile(source),{params:new URLSearchParams(query),restoredTopic:topic,restoredTopics:topics,
+   restoredDroughtComparison:{open:comparisonOpen},
    setSourceStatusOpen:v=>state.status=v,setLeftOpen:v=>state.left=v,setLeftPanelMode:v=>state.mode=v});
   return state;
  };
@@ -109,6 +110,9 @@ test('restoring a map clears source status and does not serialize that panel int
  assert.deepEqual(run('topics=government&layers=sources'),{status:true,left:true,mode:'layers'});
  assert.deepEqual(run('topic=government','government',[]),{status:false,left:true,mode:'layers'},'direct topic links still open the catalog');
  assert.deepEqual(run('maptab=localAtlas'),{status:true,left:true,mode:'layers'},'legacy source-status navigation remains supported');
+ assert.deepEqual(run('topic=agriculture','agriculture',[],true),{status:false,left:false,mode:'layers'},'the shared comparison takes precedence over the default Layers opening');
+ assert.deepEqual(run('topic=agriculture&layers=sources','agriculture',[],true),{status:true,left:true,mode:'layers'},'explicit source status still opens');
+ assert.deepEqual(run('topic=agriculture&panel=layers','agriculture',[],true),{status:false,left:true,mode:'layers'},'explicit Layers still opens');
 });
 
 
@@ -122,7 +126,7 @@ test('library return opens editable Layers without source status or a saved welc
  for (const [query, expected] of [['panel=layers', true], ['panel=unknown', false], ['', false]]) {
   const state = {status: true, left: false, mode: 'search'};
   vm.runInNewContext(ts.transpile(source), {
-   params: new URLSearchParams(query), restoredTopic: 'all', restoredTopics: [],
+   params: new URLSearchParams(query), restoredTopic: 'all', restoredTopics: [], restoredDroughtComparison: {open:false},
    setSourceStatusOpen: value => state.status = value,
    setLeftOpen: value => state.left = value,
    setLeftPanelMode: value => state.mode = value,
