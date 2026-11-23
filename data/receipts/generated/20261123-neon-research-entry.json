@@ -1,0 +1,104 @@
+{
+  "receipt_id": "kfm-neon-research-entry-20261123",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/neon-lidar-panel.tsx",
+    "app/research/research.module.css",
+    "app/research/workspace.tsx",
+    "docs/neon-lidar-pilot.md",
+    "tests/research-discovery-http.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/neon-lidar-panel.tsx": "sha256:d8a43cee0107d1e795d1e54197caa1572f02647747d72c353f224ffa59c0430e",
+    "app/research/research.module.css": "sha256:63ae7b11c1f53297feb903c4dca2c5eeabb2b2f3ce005b1e8535041a73542f5c",
+    "app/research/workspace.tsx": "sha256:a23618e618e992cccec6f04be9be4fcfdce1005872be8ec4b0953398ca116c72",
+    "docs/neon-lidar-pilot.md": "sha256:0ab3d801baa605d25982cc19d15dd970f73b5172321503acb9921c56f6960d6c",
+    "tests/research-discovery-http.test.mjs": "sha256:a498e33f93054b5845b050899ce5133201795fe30e85ba184e9da94ef2070d2e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:227567f50538e42b40d2d0376dd8826fabaf986e1b23649961badbba74214c21",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "cua_repl",
+      "GitHub",
+      "TinyFish"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:7997771ef6fa1be6416ee3184ef83a3f3ef7bb86:app/neon-lidar-panel.tsx",
+      "repo:7997771ef6fa1be6416ee3184ef83a3f3ef7bb86:app/research/research.module.css",
+      "repo:7997771ef6fa1be6416ee3184ef83a3f3ef7bb86:app/research/workspace.tsx",
+      "repo:7997771ef6fa1be6416ee3184ef83a3f3ef7bb86:docs/neon-lidar-pilot.md",
+      "repo:7997771ef6fa1be6416ee3184ef83a3f3ef7bb86:tests/research-discovery-http.test.mjs",
+      "https://kansasfrontiermatrix.com/acquisition",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6073"
+    ],
+    "evidence_hashes": [
+      "sha256:adc445c61e6fb9b7651b9bf74595247f2d245d2f5bc307894a213dde3f6d700b",
+      "sha256:f46d8022adcb8c211393a685ea47e01404e0885635128c264568d8210ddc111d",
+      "sha256:3af7d94f75e3da143740f951dcd898e6ea7e3c2f7c68add0703d44eeaf23506b",
+      "sha256:921cd7f22b90340f1ee69d017fdc31172f72d00f2d5a04147d3566bc157caf76",
+      "sha256:a7ceb019ef92ee7d59b13920ac42f5aa8ade8c6f83e666ca6273d4debb58aa2a"
+    ]
+  },
+  "truth_labels": {
+    "app/neon-lidar-panel.tsx": "CONFIRMED",
+    "app/research/research.module.css": "CONFIRMED",
+    "app/research/workspace.tsx": "CONFIRMED",
+    "docs/neon-lidar-pilot.md": "CONFIRMED",
+    "tests/research-discovery-http.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Node 22.23.3 full local suite: 3372 passed, 25 skipped, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "42 focused research/NEON checks and two production HTTP journeys",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, focused lint and whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Rendered desktop 1280x720, phone 390x844 and narrow 320x568; discovery link focuses and scrolls to lab on desktop and phone",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Existing public pilot loads and row/column probe returns ground, surface, provider canopy and separate DSM minus DTM",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Chrome and provider dashboard revision readback",
+      "outcome": "SKIPPED",
+      "reason": "Chrome attachment requires a desktop network policy; in-app browser used for rendered checks."
+    },
+    {
+      "gate": "New entry-point publication, hosted CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring; prior pilot delivery is separate from this entry-point change."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "url": "https://www.neonscience.org/data-collection/lidar",
+      "role": "Official product and methods reference; does not establish this tile accuracy."
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T23:20:07.929329+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor coverage for changed Research artifacts. Existing receipts remain intact. The pilot is not added to registered source counts. No NEON acquisition, credential, relay, settings, source admission or provider publication action."
+}

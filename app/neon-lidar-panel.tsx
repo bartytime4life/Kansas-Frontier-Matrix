@@ -119,7 +119,7 @@ export function NeonLidarPanel() {
       return next;
     });
   }
-  return <section className={styles.panel} aria-labelledby={`${id}-heading`}>
+  return <section id="neon-lidar-lab" tabIndex={-1} className={styles.panel} aria-labelledby={`${id}-heading`}>
     <div className={styles.heading}>
       <div><p className={styles.eyebrow}>NEON / LOCAL RASTER LAB</p><h2 id={`${id}-heading`}>Terrain &amp; vegetation, one shared ground</h2></div>
       <span className={styles.badge}>Local preview · not admitted</span>
