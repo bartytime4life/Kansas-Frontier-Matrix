@@ -2,6 +2,8 @@
    It uses the Explorer's dark glass panel language and 44px touch targets. */
 .category-map-dock{position:absolute;left:82px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:6;width:min(300px,calc(100% - 28px));display:grid;gap:10px;padding:12px 12px 12px 14px;border:1px solid #d8c58f55;border-radius:12px;background:#07171ae8;box-shadow:0 14px 34px #0007;color:#e6eff2;backdrop-filter:blur(6px)}
 .category-map-dock{max-height:calc(100% - 28px);overflow-y:auto;overscroll-behavior:contain}
+/* Keep source instruments above the unsupported-map notice without changing normal map stacking. */
+.map-stage:has(.runtime-overlay.unsupported) .category-map-dock{z-index:12}
 .category-map-dock header{display:flex;align-items:center;gap:10px;min-width:0}
 .category-map-dock header>div{display:grid;gap:1px;min-width:0;flex:1}
 .category-map-dock strong{font-family:Georgia,"Times New Roman",serif;font-size:15px;color:#f1e6c2}

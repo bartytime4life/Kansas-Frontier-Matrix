@@ -902,6 +902,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       <button type="button" data-category-tool="drought" className="category-map-dock-tool" aria-pressed={drought.on} onClick={() => onDrought(!drought.on)}
         title="The weekly U.S. Drought Monitor over Kansas, D0 abnormally dry to D4 exceptional drought, with Kansas's share in each since 2000">{drought.on ? "Hide the Drought Monitor" : "Show the Drought Monitor"}</button>
       {drought.on && <div className="category-map-dock-drought">
+        {!drought.weeks && !drought.seriesFailed && <p className="category-map-dock-scale-note" role="status">Loading Kansas drought history…</p>}
         {drought.weeks && drought.weeks.length > 1 && <DroughtChart weeks={drought.weeks} date={drought.date} categories={drought.categories} onWeek={onDroughtWeek} />}
         {drought.weeks && drought.weeks.length > 1 && (() => {
           const weeks = drought.weeks, index = drought.date ? weeks.findIndex(week => week.date === drought.date) : weeks.length - 1;
@@ -917,9 +918,10 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           {onDroughtPlay && <button type="button" aria-pressed={Boolean(drought.playing && drought.motionAllowed)} disabled={drought.motionAllowed === false} onClick={() => onDroughtPlay(!drought.playing)}
             title={drought.motionAllowed === false ? "Reduced motion is on; step the weeks by hand" : drought.newest ? "Play the past year, a week at a time" : "Play forward a week at a time to the newest"}>{drought.playing && drought.motionAllowed !== false ? "Pause" : "Play"}</button>}
         </div>
-        <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.failed ? <>The Drought Monitor did not answer for this week. <a href={drought.url} target="_blank" rel="noreferrer">USDM ↗</a></>
+        <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.failed ? "The Drought Monitor did not answer for this week."
           : drought.loading ? `Reading the Drought Monitor${drought.label ? ` for ${drought.label}` : ""}…` : drought.reading}</p>
         {drought.seriesFailed && <p className="category-map-dock-scale-note">The USDM statistics did not answer; the shares are measured on the map.</p>}
+        <p className="category-map-dock-reading"><a href={drought.url} target="_blank" rel="noreferrer">U.S. Drought Monitor source ↗</a></p>
         {onDroughtChange && drought.change && <>
           <div className="category-map-dock-modes" role="group" aria-label="Drought map view">
             {([[0, "Categories", "The USDM categories, D0 to D4"], [4, "4-week change", "Each county's change in drought over the 4 weeks before the week shown"], [12, "12-week change", "Each county's change in drought over the 12 weeks before the week shown"]] as const).map(([weeks, label, title]) =>
