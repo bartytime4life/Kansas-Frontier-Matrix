@@ -11,6 +11,7 @@ import {createHomeRelay,RELAY_LIMITS} from './home-relay.mjs';
 import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
 import {LOCAL_DATA_GATEWAY,LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS,LOCAL_DATA_DATA_PREFIX} from '../scripts/local-data/protocol.mjs';
 import {DATASETS,datasetCatalog} from '../scripts/local-data/datasets.mjs';
+import {RECOVERED_COLLECTIONS} from '../scripts/local-data/recovered.mjs';
 
 export const LOCAL_DATA_WORKER_PREFIX='/api/local-data-worker/v1';
 // workerSeenMs: the worker re-polls at least every leaseWaitMs (20 s) and pings /status while relaying,
@@ -25,6 +26,7 @@ export const LOCAL_DATA_RELAY_LIMITS=Object.freeze({...RELAY_LIMITS,queue:16,req
  leasedMs:Object.freeze(Object.fromEntries([...LOCAL_DATA_ROUTES.keys()].map(path=>[path,LOCAL_DATA_LIMITS.gatewayMs+5000])))});
 const error=code=>Object.assign(new Error(code),{code});
 const json=(value,status=200,cache='no-store')=>Response.json(value,{status,headers:{'Cache-Control':cache,'X-Content-Type-Options':'nosniff'}});
+const publicCollectionIds=new Set(RECOVERED_COLLECTIONS.map(collection=>collection.id));
 
 export function localDataConfig(env=process.env){
  if(env.KFM_LOCAL_DATA!=='1')throw error('LOCAL_DATA_OFF');
@@ -135,7 +137,11 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   const byId=new Map((status?.value?.datasets??[]).map(d=>[d.id,d]));
   const datasets=datasetCatalog().map(d=>{const s=byId.get(d.id);return s?{...d,ready:s.ready,...(s.reason?{reason:s.reason}:{}),freshness:s.freshness??null}:d;});
   const body={format:'kfm-local-data-catalog-v1',online:workerOnline(),datasets};
-  if(status)body.status={state:status.state,at:new Date(status.at).toISOString(),generatedAt:status.value.generatedAt??null,collections:status.value.collections??{}};
+  if(status){
+   // Older gateway versions may still report collections outside this build's public catalogue.
+   const collections=Object.fromEntries(Object.entries(status.value.collections??{}).filter(([id])=>publicCollectionIds.has(id)));
+   body.status={state:status.state,at:new Date(status.at).toISOString(),generatedAt:status.value.generatedAt??null,collections};
+  }
   return json(body,200,'public, max-age=60');
  };
  return {query,catalog,health,workerHandler:relay.handler,relay};

@@ -12,7 +12,7 @@ const answer=(rows,patch={})=>({format:'kfm-local-data-v1',dataset:'recovered-ob
 const snapshot=(rows,patch={})=>({rows,answers:[answer(rows,patch)],pages:1,hasMore:false});
 
 test('every collection has rich metadata, valid record/lab links and honest unknowns',()=>{
- assert.equal(catalog.RECOVERED_COLLECTIONS.length,189);
+ assert.equal(catalog.RECOVERED_COLLECTIONS.length,183);
  for(const c of catalog.RECOVERED_COLLECTIONS){
   const m=metadata.collectionMetadata(c);assert.equal(m.id,c.id);assert.ok(m.description.length>80);assert.ok(m.topics.length);assert.equal(m.fields.length,c.columns.length);
   assert.equal(m.temporal.observationPeriod,null);assert.equal(m.spatial.crs,null);assert.equal(m.provenance.reviewCredit,null);
@@ -210,7 +210,7 @@ test('cancelled reads, repeated pages and collection mismatches fail without sub
  await assert.rejects(lab.loadLabSample(collection,new AbortController().signal,async()=>answer([],{collection:'wrong'})),/selected collection/);
 });
 test('metadata API is bounded to the catalog, with no raw store or arbitrary SQL access',async()=>{
- const all=await api.GET(new Request('https://example.org/api/collection-metadata')).json();assert.equal(all.collections.length,189);assert.ok(all.researchPacks.length);
+ const all=await api.GET(new Request('https://example.org/api/collection-metadata')).json();assert.equal(all.collections.length,183);assert.ok(all.researchPacks.length);
  assert.equal(Object.keys(all.datasetUses).length,22);assert.ok(all.mapLayers.length>=90);assert.match(all.datasetUses['nwm-streamflow'],/hold/);
  const id=catalog.RECOVERED_COLLECTIONS[0].id;
  assert.equal((await api.GET(new Request(`https://example.org/api/collection-metadata?collection=${id}`)).json()).collections.length,1);

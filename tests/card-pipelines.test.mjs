@@ -150,7 +150,7 @@ test('diagnostic report requires the qualified mount and atomically replaces onl
 
 test('each SQL archive display has a topic entry and does not create a capture job', () => {
   const archive = model.PIPELINE_DEFINITIONS.filter(p => p.id.startsWith('archive-'));
-  assert.equal(archive.length, 98);
+  assert.equal(archive.length, 97);
   for (const layer of archive) {
     assert.equal(layer.mode, 'display');
     assert.ok(model.CARD_PIPELINE_BINDINGS.some(card => card.kind === 'topic' && card.optional.includes(layer.id)), layer.id);

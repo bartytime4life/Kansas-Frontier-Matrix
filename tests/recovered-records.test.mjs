@@ -1,13 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {RECOVERED_COLLECTIONS,recoveredObservations,recoveredBulk} from '../scripts/local-data/recovered.mjs';
+import {nearObservations} from '../scripts/local-data/near.mjs';
 import {c,fixture} from './recovered-fixtures.mjs';
-test('all recovered domain tables are represented without publishing operational schemas',()=>{
- assert.equal(RECOVERED_COLLECTIONS.length,189);assert.equal(new Set(RECOVERED_COLLECTIONS.map(c=>c.id)).size,189);
- assert.equal(RECOVERED_COLLECTIONS.filter(c=>c.geometry).length,56);
+test('public recovered domain tables exclude operational and held schemas',()=>{
+ assert.equal(RECOVERED_COLLECTIONS.length,183);assert.equal(new Set(RECOVERED_COLLECTIONS.map(c=>c.id)).size,183);
+ assert.equal(RECOVERED_COLLECTIONS.filter(c=>c.geometry).length,55);
  for(const c of RECOVERED_COLLECTIONS){assert.ok(c.keys.length);assert.ok(c.keys.every(k=>c.columns.includes(k)));assert.ok(!/kfm_sql_|kfm_feed_state|_fts/.test(c.table));assert.ok(!c.columns.includes('source_path'));}
  assert.ok(RECOVERED_COLLECTIONS.some(c=>c.table==='kfm_storm_event_fatalities'));
  assert.ok(RECOVERED_COLLECTIONS.some(c=>c.table==='kfm_newspaper_pages'));
+});
+test('ASR is held for record pages, fields and map queries',()=>{
+ for(const kind of ['entities','history','locations','registrations','remarks','special-conditions']){
+  const collection='observations-asr-'+kind;
+  assert.ok(!RECOVERED_COLLECTIONS.some(c=>c.id===collection));
+  assert.throws(()=>recoveredObservations.parse({collection}),{code:'QUERY_INVALID'});
+ }
+ assert.throws(()=>recoveredObservations.parse({collection:'observations-asr-entities',record:'[1,1]',field:'phone'}),{code:'QUERY_INVALID'});
+ assert.throws(()=>nearObservations.parse({collection:'observations-asr-locations',bbox:'-98,38,-97,39'}),{code:'QUERY_INVALID'});
 });
 test('primary-key pages cover large keys without overlap, offsets, truncation or fabricated totals',t=>{
  const db=fixture(t),a=recoveredObservations.run(db,recoveredObservations.parse({collection:c.id,limit:'2'}));

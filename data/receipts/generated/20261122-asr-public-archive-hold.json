@@ -1,0 +1,96 @@
+{
+  "receipt_id": "kfm-asr-public-archive-hold-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/archive-map-layers.md",
+    "docs/explorer-card-pipeline-map.md",
+    "docs/local-data-relay.md",
+    "scripts/local-data/build-recovered-catalog.py",
+    "scripts/local-data/recovered-catalog.json",
+    "server/local-data.mjs",
+    "tests/card-pipelines.test.mjs",
+    "tests/collection-integration.test.mjs",
+    "tests/living-welcome.test.mjs",
+    "tests/local-data-catalog.test.mjs",
+    "tests/recovered-records.test.mjs"
+  ],
+  "artifact_hashes": {
+    "docs/archive-map-layers.md": "sha256:5b8754ebb02b92ea02bf4159d0b920f45e20834a977bf6b26b6c8f1bc65ca43b",
+    "docs/explorer-card-pipeline-map.md": "sha256:cbd5d2826989550b021a43def0fc357f4413b50b3dc90f782ed1a322d619b8d4",
+    "docs/local-data-relay.md": "sha256:09aad50ace607766e631c3538883d46128f63b88036cf940d519b056053dd6d6",
+    "scripts/local-data/build-recovered-catalog.py": "sha256:b50a6d0192bea73e4a820dea800b184f0cac74fccdd5338f22aa46ac0e0fd9a4",
+    "scripts/local-data/recovered-catalog.json": "sha256:cf318ac08de548ff6dc8ef09618ab44350a0a43cfed60bbac0a351d959aaa4f5",
+    "server/local-data.mjs": "sha256:27d854f71252dffb264ea991e7c232a631d441c0547a2bf774b062ce3f2c1891",
+    "tests/card-pipelines.test.mjs": "sha256:a355e0760c190de1c7131249c13f1801d694b0307c63f85dcdf7835c88cfa29b",
+    "tests/collection-integration.test.mjs": "sha256:6df6004a08ea927566a12f1b77bdf93d8577142db346b40b74469e16c46dc171",
+    "tests/living-welcome.test.mjs": "sha256:da9dc575adda867e9d66a903fb7c011a04cce2036ab08f58afecde1b5e11e711",
+    "tests/local-data-catalog.test.mjs": "sha256:5e094c86ea481fa575929f32619a93bc37c13b8bcae11145a8600ca02f157519",
+    "tests/recovered-records.test.mjs": "sha256:5567208d857916b4fb9c67cc5e54f5535fa415ab4fd8a6c7902a5c7a46b26faa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2fcd75bb819dd2edfb2939a4088ff05f004a4394bb6573faf040fb1196e8a80f",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:scripts/local-data/build-recovered-catalog.py",
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:scripts/local-data/recovered-catalog.json",
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:server/local-data.mjs"
+    ],
+    "evidence_hashes": [
+      "sha256:511b3c0258bca563c01391304663c394524a8e658d93d7b064a53645dc369a33",
+      "sha256:c25c2654eed453e0f6e18a9249c259ef1aeacd4932015f8247277d4806efabb5",
+      "sha256:2809779804a270bd443502ef46ecfda9a903d1541cb4ae4ebcd21f37740545d3"
+    ]
+  },
+  "truth_labels": {
+    "docs/archive-map-layers.md": "CONFIRMED",
+    "docs/explorer-card-pipeline-map.md": "CONFIRMED",
+    "docs/local-data-relay.md": "CONFIRMED",
+    "scripts/local-data/build-recovered-catalog.py": "CONFIRMED",
+    "scripts/local-data/recovered-catalog.json": "CONFIRMED",
+    "server/local-data.mjs": "CONFIRMED",
+    "tests/card-pipelines.test.mjs": "CONFIRMED",
+    "tests/collection-integration.test.mjs": "CONFIRMED",
+    "tests/living-welcome.test.mjs": "CONFIRMED",
+    "tests/local-data-catalog.test.mjs": "CONFIRMED",
+    "tests/recovered-records.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and Node suite: 3303 passed, 25 skipped, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript, scoped lint and diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Synthetic regeneration retains ordinary catalogues and excludes the ASR family. Fixture tests cover record, field, map and older gateway health responses.",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review and hosted validation",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting draft review and exact-head check results."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T01:46:37.389394+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Apply the FCC ASR field-review hold to the shared public catalogue. Validation uses synthetic fixtures or read-only schema introspection."
+}

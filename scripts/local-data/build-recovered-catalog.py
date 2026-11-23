@@ -13,6 +13,10 @@ for database in ('observations', 'bulk'):
         name = table['name']
         if name in excluded or '_fts' in name or not name.startswith('kfm_'):
             continue
+        # Keep the FCC ASR family out of the public projection pending a field review.
+        # The intake schema includes contact and signature fields.
+        if name.startswith('kfm_asr_'):
+            continue
         columns = [c['name'] for c in table['columns'] if c['name'] not in ('source_path', 'manifest_json')]
         keys = [c['name'] for c in sorted(table['columns'], key=lambda c: c['pk']) if c['pk']]
         assert keys and set(keys) <= set(columns), name
