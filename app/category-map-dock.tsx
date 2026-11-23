@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
@@ -922,6 +922,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           : drought.loading ? `Reading the Drought Monitor${drought.label ? ` for ${drought.label}` : ""}…` : drought.reading}</p>
         {drought.seriesFailed && <p className="category-map-dock-scale-note">The USDM statistics did not answer; the shares are measured on the map.</p>}
         <p className="category-map-dock-reading"><a href={drought.url} target="_blank" rel="noreferrer">U.S. Drought Monitor source ↗</a></p>
+        {drought.weeks && drought.weeks.length > 1 && <DroughtWeekComparison weeks={drought.weeks} />}
         {onDroughtChange && drought.change && <>
           <div className="category-map-dock-modes" role="group" aria-label="Drought map view">
             {([[0, "Categories", "The USDM categories, D0 to D4"], [4, "4-week change", "Each county's change in drought over the 4 weeks before the week shown"], [12, "12-week change", "Each county's change in drought over the 12 weeks before the week shown"]] as const).map(([weeks, label, title]) =>
@@ -1019,12 +1020,96 @@ export function quakeReading(quakes: Pick<QuakeDockState, "loading" | "failed" |
   return `${quakes.total.toLocaleString("en-US")} earthquakes M${quakes.minMagnitude}+ inside Kansas, ${quakes.startYear}–${quakes.endYear}${peak.count ? ` · most in ${peak.year} (${peak.count})` : ""}${cut}`;
 }
 
-/**
- * Events per year as bars in each year's map colour, so the chart is also the
- * colour key. A bar selects its year; the select beside it does the same from
- * the keyboard.
- */
 export type DroughtChartWeek = Readonly<{ date: string; label: string; /** Percent of Kansas in D0 or worse … D4. */ shares: readonly number[] }>;
+
+const DROUGHT_COMPARISON_THRESHOLDS = [
+  "D0+ · Abnormally dry or worse",
+  "D1+ · Moderate drought or worse",
+  "D2+ · Severe drought or worse",
+  "D3+ · Extreme drought or worse",
+  "D4 · Exceptional drought",
+] as const;
+const DROUGHT_COMPARISON_BASELINE = "20120807";
+
+type DroughtComparisonChoice = Readonly<{ date?: string; invalidInput?: string }>;
+type DroughtComparisonSlot = "a" | "b";
+
+function droughtDateInput(date: string): string {
+  return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
+}
+
+/** Compare published statewide statistics independently of the week on the map. */
+export function DroughtWeekComparison({ weeks }: Readonly<{ weeks: readonly DroughtChartWeek[] }>) {
+  const id = useId();
+  const [open, setOpen] = useState(false);
+  const [severity, setSeverity] = useState(2);
+  const [choices, setChoices] = useState<Record<DroughtComparisonSlot, DroughtComparisonChoice>>({ a: {}, b: {} });
+
+  if (weeks.length < 2) return null;
+  const first = weeks[0], latest = weeks[weeks.length - 1];
+  const baseline = weeks.find(week => week.date === DROUGHT_COMPARISON_BASELINE) ?? first;
+  const slots = (["a", "b"] as const).map(slot => {
+    const choice = choices[slot];
+    const date = choice.date ?? (slot === "a" ? baseline.date : latest.date);
+    const index = weeks.findIndex(week => week.date === date);
+    const week = weeks[index];
+    return { slot, date, index, week, invalidInput: choice.invalidInput, share: week?.shares[severity] };
+  });
+  const [a, b] = slots;
+  const difference = a.share === undefined || b.share === undefined ? null : Math.round((b.share - a.share) * 100) / 100;
+  const result = difference === null ? "Choose two recorded weeks to calculate the difference."
+    : difference === 0 ? "Both weeks cover the same share of Kansas."
+    : `Week B is ${Math.abs(difference).toFixed(2)} percentage points ${difference > 0 ? "higher" : "lower"} than week A.`;
+
+  function setChoice(slot: DroughtComparisonSlot, choice: DroughtComparisonChoice) {
+    setChoices(current => ({ ...current, [slot]: choice }));
+  }
+
+  return <details className="category-map-dock-drought-compare" onToggle={event => setOpen(event.currentTarget.open)}>
+    <summary>Compare two weeks</summary>
+    {open && <div className="category-map-dock-drought-compare-body">
+      <p>Kansas area in the selected category or worse. D0 means abnormally dry. The map has its own week control.</p>
+      <label className="category-map-dock-drought-threshold">
+        Severity threshold
+        <select value={severity} onChange={event => setSeverity(Number(event.target.value))}>
+          {DROUGHT_COMPARISON_THRESHOLDS.map((label, index) => <option key={label} value={index}>{label}</option>)}
+        </select>
+      </label>
+      {slots.map(({ slot, date, index, week, share, invalidInput }) => {
+        const label = slot.toUpperCase();
+        const error = invalidInput !== undefined || !week;
+        const previous = index > 0 ? weeks[index - 1] : undefined;
+        const next = index >= 0 ? weeks[index + 1] : undefined;
+        const inputId = `${id}-${slot}`;
+        const errorId = `${inputId}-error`;
+        return <div key={slot} className="category-map-dock-drought-compare-week" data-comparison-week={slot}>
+          <label htmlFor={inputId}>Week {label}</label>
+          <div className="category-map-dock-drought-compare-controls">
+            <input id={inputId} type="date" min={droughtDateInput(first.date)} max={droughtDateInput(latest.date)} step={7}
+              value={invalidInput ?? droughtDateInput(date)} aria-invalid={error || undefined}
+              aria-describedby={error ? errorId : undefined}
+              onChange={event => {
+                const input = event.target.value;
+                const candidate = input.replaceAll("-", "");
+                setChoice(slot, weeks.some(entry => entry.date === candidate) ? { date: candidate } : { date, invalidInput: input });
+              }} />
+            <button type="button" aria-label={`Previous recorded week for ${label}`} aria-disabled={!previous}
+              onClick={() => { if (previous) setChoice(slot, { date: previous.date }); }}>←</button>
+            <button type="button" aria-label={`Next recorded week for ${label}`} aria-disabled={!next}
+              onClick={() => { if (next) setChoice(slot, { date: next.date }); }}>→</button>
+          </div>
+          {error && <p id={errorId} aria-live="polite">Choose a recorded Tuesday.{week ? ` Showing ${week.label}.` : ""}</p>}
+          {share !== undefined && <div className="category-map-dock-drought-compare-share">
+            <b>{share.toFixed(2)}%</b>
+            <span aria-hidden="true"><i style={{ width: `${share}%` }} /></span>
+          </div>}
+        </div>;
+      })}
+      <p data-comparison-result role="status">{result}</p>
+      <p><a href="/api/drought-series">Kansas weekly statistics</a> · <a href="https://droughtmonitor.unl.edu/About/AbouttheData/StatisticsExplanation.aspx" target="_blank" rel="noreferrer">USDM methods ↗</a></p>
+    </div>}
+  </details>;
+}
 /**
  * Kansas's weekly share of area in each Drought Monitor category or worse,
  * drawn as the USDM draws its time series: each category's area over the

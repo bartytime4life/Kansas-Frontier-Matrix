@@ -285,6 +285,7 @@ test('history loading is separate from the weekly map and its source remains ava
    assert.equal(Boolean(status),historyPending,name);
    if(status)assert.equal(status.props.children,'Loading Kansas drought history…',name);
    assert.equal(Boolean(findNode(panel,n=>n.type===h.exports.DroughtChart)),chartVisible,name);
+   assert.equal(Boolean(findNode(panel,n=>n.type===h.exports.DroughtWeekComparison)),chartVisible,name);
    const reading=findNode(panel,n=>n.type==='p'&&n.props.className==='category-map-dock-reading');
    assert.equal(reading.props.children,state.failed?'The Drought Monitor did not answer for this week.':state.loading?'Reading the Drought Monitor for Oct 20, 2026…':drought.reading,name);
    const links=[];
@@ -298,6 +299,78 @@ test('history loading is separate from the weekly map and its source remains ava
   const closed=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,on:false}});
   assert.ok(!findNode(closed,n=>n.props?.className==='category-map-dock-drought'),'a hidden tool announces no history load');
  }finally{h.dispose();}
+});
+
+test('statewide comparison uses exact recorded weeks and cumulative severity shares', async () => {
+ const h = await componentHarness('app/category-map-dock.tsx', {});
+ const weeks = [
+  { date: '20000104', label: 'Jan 4, 2000', shares: [55.99, 7.84, 0, 0, 0] },
+  { date: '20120807', label: 'Aug 7, 2012', shares: [100, 100, 100, 89.74, 38.58] },
+  { date: '20120821', label: 'Aug 21, 2012', shares: [100, 100, 100, 90, 65] },
+  { date: '20261117', label: 'Nov 17, 2026', shares: [37.10, 11.92, 1.66, 0, 0] },
+ ];
+ const render = (records = weeks) => h.render(h.exports.DroughtWeekComparison, { weeks: records });
+ let tree = render();
+ const result = () => findNode(tree, node => Object.hasOwn(node.props, 'data-comparison-result'))?.props.children;
+ const row = slot => findNode(tree, node => node.props['data-comparison-week'] === slot);
+ const input = slot => findNode(row(slot), node => node.type === 'input').props;
+ const step = label => findNode(tree, node => node.props['aria-label'] === label).props;
+ const change = (slot, value) => input(slot).onChange({ target: { value } });
+ assert.equal(result(), undefined, 'the comparison is collapsed initially');
+ tree.props.onToggle({ currentTarget: { open: true } });
+ tree = render();
+ assert.equal(input('a').value, '2012-08-07');
+ assert.equal(input('b').value, '2026-11-17');
+ assert.equal(step('Next recorded week for B')['aria-disabled'], true);
+ step('Next recorded week for B').onClick();
+ tree = render();
+ assert.equal(input('b').value, '2026-11-17', 'a boundary button leaves the week and keyboard focus in place');
+ assert.equal(result(), 'Week B is 98.34 percentage points lower than week A.');
+
+ change('a', '2012-08-14'); // A Tuesday absent from this archive fixture.
+ tree = render();
+ assert.equal(input('a')['aria-invalid'], true);
+ assert.match(JSON.stringify(row('a')), /Showing Aug 7, 2012/);
+ assert.equal(result(), 'Week B is 98.34 percentage points lower than week A.');
+ step('Next recorded week for A').onClick();
+ tree = render();
+ assert.equal(input('a').value, '2012-08-21', 'stepping follows records across gaps');
+ assert.equal(input('a')['aria-invalid'], undefined);
+ findNode(tree, node => node.type === 'select').props.onChange({ target: { value: '4' } });
+ tree = render();
+ assert.equal(result(), 'Week B is 65.00 percentage points lower than week A.');
+ assert.equal(findNode(row('b'), node => node.type === 'b').props.children.join(''), '0.00%', 'a measured zero is presented');
+ change('a', '2026-11-17');
+ tree = render();
+ assert.equal(result(), 'Both weeks cover the same share of Kansas.');
+ change('b', '2012-08-07');
+ tree = render();
+ assert.equal(result(), 'Week B is 38.58 percentage points higher than week A.');
+
+ tree = render(weeks.filter(week => week.date !== '20120807'));
+ assert.equal(input('b').value, '2012-08-07', 'a removed choice is not silently replaced');
+ assert.equal(input('b')['aria-invalid'], true);
+ assert.equal(result(), 'Choose two recorded weeks to calculate the difference.');
+ h.dispose();
+});
+
+test('comparison defaults use dates actually available in a short archive', async () => {
+ const h = await componentHarness('app/category-map-dock.tsx', {});
+ const weeks = [
+  { date: '20261006', label: 'Oct 6, 2026', shares: [70, 41, 20, 3, 0] },
+  { date: '20261013', label: 'Oct 13, 2026', shares: [72, 40, 19, 3, 0] },
+  { date: '20261020', label: 'Oct 20, 2026', shares: [73, 39, 18, 3, 0] },
+ ];
+ const render = records => h.render(h.exports.DroughtWeekComparison, { weeks: records });
+ assert.equal(render([weeks[0]]), null);
+ render(weeks.slice(0, 2)).props.onToggle({ currentTarget: { open: true } });
+ let tree = render(weeks.slice(0, 2));
+ const input = id => findNode(findNode(tree, node => node.props['data-comparison-week'] === id), node => node.type === 'input').props;
+ assert.equal(input('a').value, '2026-10-06');
+ assert.equal(input('b').value, '2026-10-13');
+ tree = render(weeks);
+ assert.equal(input('b').value, '2026-10-20', 'the untouched latest choice follows a new record');
+ h.dispose();
 });
 
 test('the page reads the week shown, keeps the last map drawn while the next loads, and closes it with its map',()=>{
