@@ -1,5 +1,66 @@
 # Explorer welcome and explicit navigation — 2026-10-19
 
+## Source Status keyboard return — November 23, 2026
+
+A visitor inspecting a layer's source and limitations can press Escape or use
+**Back to layers** to return to the visible control that opened Status. A second
+Escape closes Layers. The map keeps its selected layers, and Layers keeps its
+search and expanded catalogue entry. This follows the source navigation and focus work in
+[#5859](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5859),
+[#5867](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5867),
+[#5869](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5869), and
+[#5870](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5870).
+
+The hosted application base was `514139cac4395558b518c9cd3547ffc8c39b3de1`.
+On November 23 at 07:21–07:22 UTC, public Chrome 158.0.8127.36 returned to
+the KDOT roads source action at 1280 × 800. At 681 × 468 and 390 × 844,
+the first Escape hid Layers while Status stayed mounted and focus moved to
+the map. The public build reported 1,401 application inputs and digest
+`sha256:3ac153141afd5cae593c3f5e7eb01e9045e1299966194f86b9326e24d485ac69`,
+matching the clean local base build. Its served commit was unreported. The
+isolated 390 × 844 KDOT browser case also failed on the base at the assertion
+that Layers stays open. Both observations are retained in the workspace's
+`recovery/explorer-source-status-escape-20261123/` directory.
+
+The compact panel's native keyboard handler now gives the open Status view
+the first Escape and uses the existing focus return after the catalogue becomes
+visible. Foreground map tools and the evidence drawer keep their keyboard
+priority. The same source IDs and provider links support inspection throughout.
+
+The first candidate, `19cc1cf88f0aa95c0dd941bccc01b377a0fe738d`, passed four
+of six browser cases. Both failures were at 681 × 468, where the sticky Layers
+heading covered the focused opener. An independent browser check also reproduced
+the obstruction by pressing Tab to **Provider & methodology**, Shift+Tab to
+the source summary, and then Escape. Source Status return now uses the scroll
+padding that the panel reserves for its heading. The browser regression repeats
+the provider-link sequence and checks that the returned focus is visible and
+that the control can be hit-tested.
+
+Start the production preview locally.
+
+```sh
+npm run build
+NODE_ENV=production PORT=5182 node server/start.mjs
+```
+
+Run the focused browser matrix in a second terminal.
+
+```sh
+KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test \
+  --test-name-pattern='source status releases the previous map entry: source-details return' \
+  tests/explorer-startup.browser.mjs
+```
+
+The matrix uses the KDOT roads (`kdot-roads`) and NASA thermal detections
+(`nasa-gibs-fire-points`) catalogue entries at 1280 × 800, 681 × 468, and
+390 × 844. It exercises native keyboard input, wheel scrolling with simulated
+provider failures, and focus visibility after dismissal. Phone-sized Chrome
+emulation covers the compact layout. Physical devices, provider data, and
+deployment of the candidate require separate verification. Roll back through
+a reviewed revert of the keyboard handler, the scroll-padding change, and their
+tests. The change is confined to browser navigation and requires no stored-data
+migration.
+
 ## Short-window Status scrolling follow-up — November 15, 2026 candidate
 
 This follow-up is based on merged source

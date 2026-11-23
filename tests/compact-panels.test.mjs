@@ -103,14 +103,24 @@ test('compact focus keeps the current control and keeps the nonmodal layer sheet
 test('revealing a clipped control scrolls only inside the retained panel',()=>{
  const previous=globalThis.window;
  try{
-  globalThis.window={getComputedStyle:node=>({overflowY:node.overflow})};
-  for(const initialTop of [5,40,140]){
+  globalThis.window={getComputedStyle:node=>({overflowY:node.overflow,scrollPaddingTop:node.padding?.[0],scrollPaddingBottom:node.padding?.[1]})};
+  const cases=[
+   {initialTop:5,expectedTop:28},
+   {initialTop:40,padding:['45px','16px'],expectedTop:40},
+   {initialTop:140,expectedTop:82},
+   {initialTop:40,padding:['45px','16px'],respectScrollPadding:true,expectedTop:65},
+   {initialTop:5,padding:['20%','16px'],respectScrollPadding:true,expectedTop:40},
+   {initialTop:140,padding:['20%','16px'],respectScrollPadding:true,expectedTop:74},
+   {initialTop:5,padding:['auto','auto'],respectScrollPadding:true,expectedTop:28},
+  ];
+  for(const {initialTop,padding,respectScrollPadding,expectedTop} of cases){
    const page=new Node(),panel=new Node(page),scroller=new Node(panel),field=new Node(scroller);let top=initialTop,pageScrolls=0,scrolls=0;
    page.overflow='auto';page.clientHeight=100;page.scrollHeight=900;page.scrollBy=()=>pageScrolls++;
    panel.overflow='hidden';scroller.overflow='auto';scroller.clientTop=0;scroller.clientHeight=100;scroller.scrollHeight=400;
+   scroller.padding=padding;
    scroller.getBoundingClientRect=()=>({top:20,bottom:120});scroller.scrollBy=({top:delta})=>{top-=delta;scrolls++;};
-   field.getBoundingClientRect=()=>({top,bottom:top+30,height:30});policy.revealPanelControl(panel,field);
-   assert.ok(top>=20&&top+30<=120);assert.equal(pageScrolls,0);if(initialTop===40)assert.equal(scrolls,0);
+   field.getBoundingClientRect=()=>({top,bottom:top+30,height:30});policy.revealPanelControl(panel,field,{respectScrollPadding});
+   assert.equal(top,expectedTop);assert.equal(pageScrolls,0);assert.equal(scrolls,initialTop===expectedTop?0:1);
   }
  }finally{if(previous===undefined)delete globalThis.window;else globalThis.window=previous;}
 });

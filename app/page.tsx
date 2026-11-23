@@ -5833,7 +5833,7 @@ export default function Home() {
     // Measure the catalog after React removes its hidden state.
     const target = modalReturnTarget(returnTarget, mapContainerRef.current);
     const panel = leftPanelRef.current;
-    if (target && panel?.contains(target)) revealPanelControl(panel, target);
+    if (target && panel?.contains(target)) revealPanelControl(panel, target, { respectScrollPadding: true });
     target?.focus({ preventScroll: true });
   }, [sourceStatusOpen, primaryWorkspace, guideOpen, leftOpen, leftPanelMode]);
 
@@ -8946,7 +8946,11 @@ export default function Home() {
         // conversation that evidence returns to as it bubbles to document.
         event.preventDefault();
         event.stopPropagation();
-        if (mapUtilityOpen) closeMapUtility(); else if (rightOpen) closeRightPanel(); else if (leftOpen) closeLeftPanel(); else closeTimelinePanel();
+        if (mapUtilityOpen) closeMapUtility();
+        else if (rightOpen) closeRightPanel();
+        else if (nonmodalLayers && sourceStatusOpen) closeSourceStatus();
+        else if (leftOpen) closeLeftPanel();
+        else closeTimelinePanel();
         return;
       }
       if (event.key !== "Tab" || (openPanel === leftPanelRef.current && !layerPanelIsModal)) return;
@@ -8959,7 +8963,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, layerPanelIsModal, mapUtilityOpen, mapUtilityView, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, layerPanelIsModal, mapUtilityOpen, mapUtilityView, rightOpen, sourceStatusOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeSourceStatus, closeTimelinePanel]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;

@@ -386,7 +386,7 @@ test('source status reveals its committed return control inside Layers before fo
       mapContainerRef:{current:fallback}, leftPanelRef:{current:panel},
       setSourceStatusOpen:value => {scope.sourceStatusOpen=value;},
       modalReturnTarget:(requested, map) => {assert.equal(requested,trigger);assert.equal(map,fallback);return target;},
-      revealPanelControl:(owner, control) => {assert.equal(owner,panel);assert.equal(control,target);events.push(['reveal']);},
+      revealPanelControl:(owner, control, options) => {assert.equal(owner,panel);assert.equal(control,target);assert.deepEqual(options,{respectScrollPadding:true});events.push(['reveal']);},
       window:{setTimeout:() => {throw Error('source return must wait for the React commit, not a timer');}},
     };
     execute('closeSourceStatus', scope)();
