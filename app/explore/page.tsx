@@ -24,6 +24,7 @@ export default function ExploreIndex() {
         <a href={guideMapHref(guide)}>Open the map →</a>
       </li>)}</ul>
       <p><Link href="/counties">Kansas counties: Census estimates and a map for each of the 105 →</Link></p>
+      <p><Link href="/records">Kansas records: the extremes in the data behind the map →</Link></p>
     </section>
   </main>;
 }
