@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
-import { KANSAS_RECORDS } from "../kansas-records";
+import { KANSAS_RECORDS, RECORD_EXPLORERS } from "../kansas-records";
 import { formatDownloadBytes } from "../local-download-client";
 import explore from "../explore/explore.module.css";
 import styles from "../counties/counties.module.css";
@@ -22,14 +22,22 @@ export default function Page() {
       <p className={explore.kicker}>The extremes in the data</p>
       <h1>Kansas records</h1>
       <p>Each entry is the largest or smallest value in one public dataset this site already uses. It is a record of that dataset, for the years it covers, and nothing more: the source and its limits are under each group.</p>
+      <nav className={provenance.groups} aria-label="Record groups">
+        <ul>{KANSAS_RECORDS.map(section => <li key={section.id}>
+          <a href={`#records-${section.id}`}>{section.title}</a>
+        </li>)}</ul>
+      </nav>
       {KANSAS_RECORDS.map(section => <section key={section.id} aria-labelledby={`records-${section.id}`}>
-        <h2 id={`records-${section.id}`}>{section.title}</h2>
+        <h2 id={`records-${section.id}`} className={provenance.groupHeading} tabIndex={-1}>{section.title}</h2>
         <ul className={styles.facts}>{section.items.map(item => <li key={item.label}>
           <span>{item.label}</span><strong>{item.value}</strong>
           <em>{item.href ? (item.href.startsWith("/?") ? <a href={item.href}>{item.where}</a> : <Link href={item.href}>{item.where}</Link>) : item.where}</em>
           {item.note && <em>{item.note}</em>}
         </li>)}</ul>
         <p className={styles.source}>Source: {section.source}. {section.caution}</p>
+        <p className={provenance.explore}><Link href={RECORD_EXPLORERS[section.id].href} prefetch={false}>
+          {RECORD_EXPLORERS[section.id].label} <span aria-hidden="true">→</span>
+        </Link></p>
         <details className={provenance.snapshot}>
           <summary aria-label={`Source data for ${section.title}`}>Source data</summary>
           <p><a href={section.snapshot.path} download>Download source snapshot (JSON, {formatDownloadBytes(section.snapshot.bytes)})</a></p>

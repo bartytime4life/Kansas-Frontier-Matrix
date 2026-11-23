@@ -2,6 +2,8 @@
 
 `/records` lists the extremes in four public datasets the site already ships: 22 entries in four
 groups. It is linked from the county index and the guides index, and is in the sitemap.
+The group links near the page title jump to each section. Each section also opens its
+interactive data view in County Pulse, County Observatory, Built Kansas or Tornado Tracks.
 
 | Group | Dataset | Examples |
 |---|---|---|

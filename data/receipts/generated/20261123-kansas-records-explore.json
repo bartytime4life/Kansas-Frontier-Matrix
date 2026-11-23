@@ -1,0 +1,86 @@
+{
+  "receipt_id": "kfm-kansas-records-explore-20261123",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/kansas-records.ts",
+    "app/records/page.tsx",
+    "app/records/records.module.css",
+    "docs/kansas-records-20261123.md",
+    "tests/kansas-records-http.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/kansas-records.ts": "sha256:795f28fd695e340dcf9439591bd6190d36c06f027a66d3d843c6589a4591678d",
+    "app/records/page.tsx": "sha256:1e0cdf72a811c9639f29dae3dc78b250b30a778a7766e990b582875c29d41f5e",
+    "app/records/records.module.css": "sha256:bc14d7b1e5907b069652fff353da7c7027fdf6d4b26c742868e150e2a8632c66",
+    "docs/kansas-records-20261123.md": "sha256:ca41fb83f605e0cf313f67e94e2e8a59ac805f787197b31957e73b1323f2dfb2",
+    "tests/kansas-records-http.test.mjs": "sha256:c2696fdb290d022b07347ebe3d6ab2d7486b3d990b577acc251cc89e4e79a12c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:dd8ff67dda8fa37b68f00e2af9398b75bd818731:app/records/page.tsx",
+      "repo:dd8ff67dda8fa37b68f00e2af9398b75bd818731:app/kansas-records.generated.json",
+      "repo:dd8ff67dda8fa37b68f00e2af9398b75bd818731:app/labs/atlas-model.mjs",
+      "repo:dd8ff67dda8fa37b68f00e2af9398b75bd818731:app/living-welcome/stories/registry.mjs",
+      "repo:dd8ff67dda8fa37b68f00e2af9398b75bd818731:app/labs/observatory/CountyObservatory.jsx"
+    ],
+    "evidence_hashes": [
+      "sha256:96e1c5ee60253e03ce8e17adfa115904077137ec8a829232f6138ea3581f7a0c",
+      "sha256:2899edb9300c695930411ebb0ec3ba34d2e66fe127966daaeb8ed310b71f53ef",
+      "sha256:3531180307be3edc8bb4f354da951b417b36d92d8980e372d9ebe4684317d28d",
+      "sha256:f9bd46401c0d70ce95b84759ac31456d798f3c7021a8425b84f84fccb1554b90",
+      "sha256:5de827a8d0846be04002daf589505b83ef78e63ee600e0a5ccfa44abd560c31c"
+    ]
+  },
+  "truth_labels": {
+    "app/kansas-records.ts": "CONFIRMED",
+    "app/records/page.tsx": "CONFIRMED",
+    "app/records/records.module.css": "CONFIRMED",
+    "docs/kansas-records-20261123.md": "CONFIRMED",
+    "tests/kansas-records-http.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and Node suite with 3318 passes, 25 skips and zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript and Git whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop and phone browser verified all four heading jumps, four loaded interactive views and preserved downloads",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production HTTP verified sections, destination links and exact download bytes",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Exact-head hosted run and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at draft creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T06:17:05.544178+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Add native Kansas Records group jump links and direct links to existing interactive views."
+}
