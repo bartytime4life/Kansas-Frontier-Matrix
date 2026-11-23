@@ -3275,6 +3275,8 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
       const summary=`${statusRow} details > summary`;
       const back='[aria-label="Back to layers"]';
       const status='.layer-source-switch > button:last-child';
+      const layersOpen=`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`;
+      const statusOpen=`!!document.querySelector('#map-source-status')`;
       const selection=`[...document.querySelectorAll('.official-context-row .visibility-switch input')].map(e=>[e.getAttribute('aria-label'),e.checked])`;
       // The viewport alone is insufficient: compact layouts can scroll the
       // outer Layers panel while desktop layouts scroll an inner container.
@@ -3303,7 +3305,7 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
       };
       const evidence=[];
       const capture=async label=>{
-        const entry={label,viewport:await p.evaluate(`({width:innerWidth,height:innerHeight,devicePixelRatio,mobile:${width<600}})`),returnControl:await p.evaluate(geometry(action)),sourceSummary:await p.evaluate(geometry(summary)),selection:await p.evaluate(selection)};
+        const entry={label,viewport:await p.evaluate(`({width:innerWidth,height:innerHeight,devicePixelRatio,mobile:${width<600}})`),panels:await p.evaluate(`({layersOpen:${layersOpen},statusOpen:${statusOpen}})`),returnControl:await p.evaluate(geometry(action)),sourceSummary:await p.evaluate(geometry(summary)),selection:await p.evaluate(selection)};
         evidence.push(entry);
         if(!process.env.KFM_WORKSPACE_SCREENSHOTS)return;
         await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
@@ -3324,29 +3326,42 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
         await focusControl(details+' > summary');await p.key('Enter','Enter',13);
         await p.wait(`document.querySelector(${JSON.stringify(details)}).open`,'source controls expanded by keyboard');
         await focusControl(action);
-        for(let cycle=0;cycle<2;cycle++){
+        for(const dismissal of ['back','escape']){
           // The second opening uses the focus returned by the application.
           await p.key('Enter','Enter',13);
           await p.wait(`document.querySelector(${JSON.stringify(statusRow+' details')})?.open && (${geometry(summary)}).focused && (${geometry(summary)}).visible`,'requested source details are open, scrolled into view and focused');
           assert.equal(await p.evaluate(`document.querySelector('.source-status-scope > button:last-child')?.getAttribute('aria-pressed')`),'true','source navigation selects All sources');
           assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(statusRow+' input[type="checkbox"]')}).checked`),false,'inspection does not enable the source');
           assert.deepEqual(await p.evaluate(selection),before,'opening leaves all layer selections unchanged');
-          await capture(`opened-${cycle}`);
+          await capture(`opened-${dismissal}`);
           const beforeWheel=await p.evaluate(geometry(summary));
           const scrollOffsets=JSON.stringify(beforeWheel.ancestors.map(a=>a.scrollTop));
           await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x:beforeWheel.rect.x+beforeWheel.rect.width/2,y:beforeWheel.rect.y+beforeWheel.rect.height/2,deltaX:0,deltaY:160});
           await p.wait(`JSON.stringify((${geometry(summary)}).ancestors.map(a=>a.scrollTop))!==${JSON.stringify(scrollOffsets)}`,'wheel input scrolls the actual Status ancestor');
-          await focusControl(back);await p.key('Enter','Enter',13);
-          // Do not scroll or focus the return control in the test after Back.
-          await p.wait(`!document.querySelector('#map-source-status') && (${geometry(action)}).focused && (${geometry(action)}).visible`,'Back returns visible keyboard focus inside every clipping ancestor');
+          if(dismissal==='back'){
+            await focusControl(back);await p.key('Enter','Enter',13);
+          }else{
+            assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(summary)})`),true,'keyboard focus remains inside Status after scrolling');
+            await p.key('Escape','Escape',27);
+          }
+          await p.wait(`!(${statusOpen}) || !(${layersOpen})`, 'dismissal changes the open panels');
+          assert.equal(await p.evaluate(layersOpen),true,`${dismissal} keeps Layers open`);
+          assert.equal(await p.evaluate(statusOpen),false,`${dismissal} closes Status`);
+          // Do not scroll or focus the return control after dismissal.
+          await p.wait(`(${geometry(action)}).focused && (${geometry(action)}).visible`,`${dismissal} returns visible keyboard focus inside the open Layers panel`);
           assert.deepEqual(await p.evaluate(selection),before,'returning leaves all layer selections unchanged');
-          await capture(`returned-${cycle}`);
+          await capture(`returned-${dismissal}`);
         }
-        await focusControl(status);await p.key('Enter','Enter',13);
-        await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(back)})`,'generic Status retains its Back focus destination');
-        await focusControl(back);await p.key('Enter','Enter',13);
-        await p.wait(`!document.querySelector('#map-source-status') && (${geometry(status)}).focused && (${geometry(status)}).visible`,'generic Back returns to the visible Status control');
-        assert.deepEqual(await p.evaluate(selection),before,'generic Status also preserves layer selections');
+        await focusControl(status);
+        for(const [key,keyCode] of [['Enter',13],['Escape',27]]){
+          await p.key('Enter','Enter',13);
+          await p.wait(`document.activeElement===document.querySelector(${JSON.stringify(back)})`,'generic Status retains its Back focus destination');
+          await focusControl(back);await p.key(key,key,keyCode);
+          await p.wait(`!(${statusOpen}) && (${geometry(status)}).focused && (${geometry(status)}).visible`,`${key} from generic Status returns to its visible control`);
+          assert.deepEqual(await p.evaluate(selection),before,'generic Status also preserves layer selections');
+        }
+        await p.key('Escape','Escape',27);
+        await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true'`,'a second Escape closes Layers');
       } catch(error) {
         await capture('failure').catch(captureError=>t.diagnostic(`Evidence capture failed: ${captureError}`));
         t.diagnostic(JSON.stringify(evidence.at(-1)));
