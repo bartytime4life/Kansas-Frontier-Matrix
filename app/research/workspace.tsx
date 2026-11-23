@@ -35,9 +35,9 @@ export default function ResearchDiscovery({ sources, instruments, initialState }
   }
   function investigate(ids: readonly string[]) { filter({ query: "", domain: "", kind: "", compare: ids.filter(id => sources.some(source => source.id === id)).slice(0, 3) }); setMessage("Investigation sources selected. Compare their clocks and limitations below."); }
 
-  return <main className={styles.page} id="research-top">
+  return <main className={styles.page}>
     <a className={styles.skip} href="#source-catalog">Skip to source catalogue</a>
-    <nav className={styles.nav} aria-label="Research navigation">
+    <nav className={styles.nav} id="research-top" aria-label="Research navigation">
       <Link className={styles.brand} href="/"><span className={styles.mark} aria-hidden="true">K</span><span>KANSAS FRONTIER MATRIX<small>Place. Time. Evidence.</small></span></Link>
       <div><Link href="/observatory">Event Observatory</Link><Link href="/observatory/sources">Source guide</Link><Link className={styles.mapLink} href="/">Open Explorer <span aria-hidden="true">↗</span></Link></div>
     </nav>

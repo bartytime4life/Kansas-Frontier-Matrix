@@ -1,0 +1,73 @@
+{
+  "receipt_id": "kfm-research-discovery-browser-20261123",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/research/workspace.tsx",
+    "docs/research-discovery-20261123.md"
+  ],
+  "artifact_hashes": {
+    "app/research/workspace.tsx": "sha256:3af7d94f75e3da143740f951dcd898e6ea7e3c2f7c68add0703d44eeaf23506b",
+    "docs/research-discovery-20261123.md": "sha256:ec7e12f481789610f2c106e4bf7bf1446dbbb8633e21ee10332db218281698ad"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:a3c4f09707270e9de7b597d6a11c62e0b028988c095ec165fd6b1e5d91a88b6a",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "cua_repl",
+      "GitHub"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:2a5303c3734b5c93a201f7903e94ca5757516a40:app/research/workspace.tsx",
+      "data/receipts/generated/20261123-research-discovery-hosted.json"
+    ],
+    "evidence_hashes": [
+      "sha256:8705a7ac033ca6b883ac3b77b8461ce68ee8bedc5e04752e2d64c5fdc3d86698",
+      "sha256:4c99aa51163ad204325cce3c48b4b553238f75109677f9a7b564d0dee1c39d89"
+    ]
+  },
+  "truth_labels": {
+    "app/research/workspace.tsx": "CONFIRMED",
+    "docs/research-discovery-20261123.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production rebuild, nine research unit/HTTP tests, TypeScript and workspace ESLint after footer fix",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Local in-app browser: desktop and phone layouts, search, recovery, filters, progressive results and exact three-layer Explorer handoff",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Footer jump restored scroll position to zero after rebuild and reload",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Exact final-head hosted CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring."
+    },
+    {
+      "gate": "Chrome GoDaddy Preview/Published readback",
+      "outcome": "SKIPPED",
+      "reason": "Chrome page-read connection error remains; no pull or publication performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T19:46:44.645737+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor to kfm-research-discovery-hosted-20261123. Initial receipt preserved. No source admission, data, model, provider setting or publication change."
+}

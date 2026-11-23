@@ -40,3 +40,11 @@ Public HTTP observation on 2026-11-23 found `/research` returning 404. `/api/bui
 Chrome lists the signed-in dashboard for GoDaddy app `urdng3v1vk`, but page reads fail with `Cannot read properties of undefined (reading 'timeoutMs')`, including after the user reconnected Chrome. No dashboard settings, Preview pull or Publish was performed. Verify the connected branch, exact Preview revision and build identity before publishing; read back `/research`, its assets and `/api/build` afterward. Preserve environment settings, models, relay, storage and DNS. The original private Sites project remains separate.
 
 The application, tests, guide and receipt stay in their established roots under the standalone composition's existing placement/ADR-0029 boundary. No authority, source admission or publication semantics change. Rollback is a focused revert of this feature and redeployment of a verified prior application revision; no data migration is required.
+
+## Browser follow-up — 2026-11-23
+
+Local in-app-browser verification of the reconciled hosted version passed at 1440×1000, 390×844 and 320×844. Page width remained bounded at each size; the comparison table scrolls within its own region on phones. Search for `USGS streamflow` returned River Pulse; incompatible filters produced the recovery state; Show all restored the catalog. Progressive results changed from 9 to 18, and groundwater + dated snapshot filters returned four sources.
+
+The guided groundwater comparison retained its three distinct source periods and handed exactly those three layers to Explorer's On map view. Research-page browser errors were empty. A footer jump initially targeted the outer scroll container; the fix moves its anchor to the inner navigation. A fresh production build and reload confirmed that Back to top returns the scroll position to zero. The nine research unit/HTTP tests, TypeScript and edited workspace ESLint passed after this fix.
+
+Desktop, comparison and phone screenshots are saved on the owner's computer under the chat's visualization directory. These are local rendered checks, separate from Chrome, CI and Published acceptance. Chrome dashboard reads remain unavailable. The initial generation receipt is retained; the successor browser receipt records the final workspace and guide hashes without rewriting that history.
