@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Home
 title: Kansas Frontier Matrix — place, time, evidence
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-11-11
+updated: 2026-11-23
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Home.md
 evidence_checkpoint: main@d4d84171653a2f2582b48ece511dc010857fde15; historical-hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
@@ -11,6 +11,27 @@ publication_effect: none until reviewed source is separately synchronized
 -->
 
 # Kansas Frontier Matrix
+
+## New on the public site — November 23, 2026
+
+The public site gained six things this month, each read back against its source in the
+[hosting runbook](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/runbooks/godaddy-node-hosting.md#public-readback-2026-11-23-third):
+
+- **[A page for every county](https://kansasfrontiermatrix.com/counties).** Population, income, age, homes and bridges for
+  each of the 105 Kansas counties, every figure with its source.
+- **[Kansas records](https://kansasfrontiermatrix.com/records).** The extremes in the datasets behind the map.
+- **Counted circles on the map.** Bridges, National Register places, trail sites and walk-in
+  hunting tracts draw as numbered circles that split as you zoom, and the status bar counts what
+  is in view.
+- **[Frontier trails](https://kansasfrontiermatrix.com/explore/frontier-trails)** and the other plain-language map guides.
+- **A repaired drought history.** The Kansas week-by-week Drought Monitor chart reads again after
+  its provider changed how it is asked.
+- **Clearer failures.** When a provider is down, the page now shows the reason instead of a bare
+  error code.
+
+The [root README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/README.md#new-on-the-public-site--november-2026) shows each one, and the
+[changelog](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/CHANGELOG.md) lists every change. This source update does not synchronize the
+native wiki.
 
 ## Repository update — November 11, 2026
 

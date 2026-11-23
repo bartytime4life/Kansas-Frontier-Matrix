@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Project-Status
 title: Project Status
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-11-11
+updated: 2026-11-23
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Project-Status.md
 evidence_checkpoint: main@d4d84171653a2f2582b48ece511dc010857fde15; historical-hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
@@ -13,6 +13,37 @@ publication_effect: none until reviewed source is separately synchronized
 # Project Status
 
 **November 11, 2026: source identity first, then the claim.**
+
+## Public site — November 23, 2026
+
+The public site at [kansasfrontiermatrix.com](https://kansasfrontiermatrix.com/) was last read back against its source at
+commit `9c8e5447` on November 23, 2026
+([record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/runbooks/godaddy-node-hosting.md#public-readback-2026-11-23-third)).
+
+**Working and verified on the public site**
+
+| Area | State on November 23 |
+|---|---|
+| County pages and Kansas records | 105 county pages and 22 records, generated from shipped datasets; 130 addresses in the sitemap |
+| Counted map layers | Bridges, National Register places, trail sites and walk-in hunting tracts draw as numbered circles, with in-view counts |
+| Live feeds | Thirteen feeds keep one good provider answer for the lifetime they declare, so a second visitor does not trigger a second provider read |
+| Drought Monitor | The Kansas week-by-week series answers again (1,403 weeks from January 2000) |
+| Event Observatory | Radar frames load |
+| Failed reads | A provider failure reaches the visitor as the route's own explanation, not a bare error code |
+
+**Known gaps, stated plainly**
+
+| Gap | What a visitor sees | What it waits on |
+|---|---|---|
+| DeFlock camera layer | Its outage message | The provider; no substitute locations are used |
+| Knowledge search | A storage-unavailable answer | Provisioning its store, or hiding the entry points |
+| Chat | By code review, its job limit is site-wide (30 an hour), so one script could use it up for everyone. Not observed happening | A decision on a per-visitor limit |
+| Station streamflow | Not cached; one "too many requests" answer from USGS pauses it for all visitors | A cache for station reads |
+| Crop lookup by point | Unavailable | The provider's point service, which was answering 503 |
+| River direction lookup | The path appears first; the elevation estimate can take 13 to 35 seconds | A slow elevation service |
+
+None of this is production readiness, security certification or scientific validation. It is
+what was checked, and what was found, on the dates shown.
 
 ## Current repository checkpoint
 
