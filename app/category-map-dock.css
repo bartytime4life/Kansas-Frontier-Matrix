@@ -150,6 +150,29 @@
 .category-map-dock-drought-chart figcaption{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums;color:#cfe2ea}
 .category-map-dock-drought-steps{grid-template-columns:repeat(4,1fr)}
 .category-map-dock-drought-steps button:disabled{opacity:.45;cursor:default}
+/* The two records use distinct labels and bars inside the same scrollable dock. */
+.category-map-dock-drought-compare{min-width:0;border:1px solid #749bac80;border-radius:8px;background:#0d2a35}
+.category-map-dock-drought-compare>summary{min-height:44px;padding:12px 9px;box-sizing:border-box;color:#f1e6c2;font-size:13px;font-weight:700;cursor:pointer}
+.category-map-dock-drought-compare-body{display:grid;gap:10px;min-width:0;padding:0 8px 10px;color:#cfe2ea;font-size:12px;line-height:1.4}
+.category-map-dock-drought-compare-body p{margin:0}
+.category-map-dock-drought-threshold,.category-map-dock-drought-compare-week{display:grid;gap:4px;min-width:0}
+.category-map-dock-drought-compare-week{--week-color:#ffbb80}
+.category-map-dock-drought-compare-week[data-comparison-week=b]{--week-color:#88e2ce}
+.category-map-dock-drought-compare-week>label{color:var(--week-color);font-weight:700}
+.category-map-dock-drought-compare-controls{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px;min-width:0}
+.category-map-dock-drought-compare :is(input,select,button){min-height:44px;min-width:0;width:100%;box-sizing:border-box;border:1px solid #749bac80;border-radius:6px;background:#0a2533;color:#e6eff2;color-scheme:dark;font:inherit}
+.category-map-dock-drought-compare :is(input,select){padding:0 4px;font-size:16px}
+@media(max-width:360px){
+  .category-map-dock-drought-compare-controls{grid-template-columns:1fr 1fr}
+  .category-map-dock-drought-compare-controls input{grid-column:1/-1}
+}
+.category-map-dock-drought-compare button{cursor:pointer}
+.category-map-dock-drought-compare button[aria-disabled=true]{opacity:.45;cursor:default}
+.category-map-dock-drought-compare-share{display:grid;grid-template-columns:6ch minmax(0,1fr);gap:8px;align-items:center;color:var(--week-color);font-variant-numeric:tabular-nums}
+.category-map-dock-drought-compare-share>span{height:7px;border-radius:4px;background:#203c46;overflow:hidden}
+.category-map-dock-drought-compare-share i{display:block;height:100%;background:var(--week-color)}
+.category-map-dock-drought-compare [data-comparison-result]{color:#f1e6c2;font-weight:650}
+.category-map-dock-drought-compare a{color:#a9d9ef;text-underline-offset:2px}
 .category-map-dock-section{margin:0;display:grid;gap:2px}
 .category-map-dock-section svg{display:block;width:100%;height:auto;background:#0d2a35;border-radius:6px}
 .category-map-dock-section circle{cursor:pointer}

@@ -1094,6 +1094,52 @@ for (const [width,height,touch] of [[1440,900,false],[1366,500,false],[393,852,t
       const shot=await p.call('Page.captureScreenshot',{format:'png'});
       await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`drought-chart-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
     }
+    const comparison='.category-map-dock-drought-compare';
+    const comparisonSummary=comparison+' > summary';
+    const comparisonResult=comparison+' [data-comparison-result]';
+    const comparisonSeverity=comparison+' select';
+    const comparisonA=comparison+' [data-comparison-week="a"] input[type=date]';
+    const comparisonB=comparison+' [data-comparison-week="b"] input[type=date]';
+    const comparisonNext=comparison+' [aria-label="Next recorded week for A"]';
+    const mapRequests=[...fixtures.hits.maps], historyRequests=fixtures.hits.history;
+    const isoDate=week=>week.date.replace(/^(\d{4})(\d{2})(\d{2})$/,'$1-$2-$3');
+    const assertComparison=async (index, severity) => {
+      const change=fixtures.newest.shares[severity]-fixtures.weeks[index].shares[severity];
+      const message=await p.evaluate(`document.querySelector(${JSON.stringify(comparisonResult)})?.textContent`);
+      assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(comparisonA)})?.value`),isoDate(fixtures.weeks[index]));
+      assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(comparisonB)})?.value`),isoDate(fixtures.newest));
+      assert.equal(message,`Week B is ${change.toFixed(2)} percentage points higher than week A.`);
+    };
+    assert.match(await p.evaluate(`document.querySelector(${JSON.stringify(comparisonSummary)})?.textContent`),/Compare two weeks/);
+    assert.equal(await p.evaluate(`!!document.querySelector(${JSON.stringify(comparisonResult)})`),false,'collapsed comparison has no status to announce');
+    await droughtEnter(p,comparisonSummary);
+    await p.wait(`document.querySelector(${JSON.stringify(comparison)})?.open && document.querySelector(${JSON.stringify(comparisonResult)})?.getAttribute('role')==='status'`, 'keyboard opens the drought comparison and exposes the result');
+    await assertComparison(0,2);
+    if (!touch) {
+      const previous=comparison+' [aria-label="Previous recorded week for A"]';
+      await droughtEnter(p,previous);
+      assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(previous)}) && document.activeElement.getAttribute('aria-disabled')==='true'`),true,'the first-week boundary preserves keyboard focus');
+      await assertComparison(0,2);
+    }
+
+    if(touch){
+      const {x,y}=await droughtPoint(p,comparisonNext);
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1,radiusX:2,radiusY:2,force:1}]});
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    }else await droughtEnter(p,comparisonNext);
+    await p.wait(`document.querySelector(${JSON.stringify(comparisonA)})?.value===${JSON.stringify(isoDate(fixtures.weeks[1]))}`, 'native input advances only comparison week A');
+    await assertComparison(1,2);
+    await droughtPoint(p,comparisonSeverity);
+    await p.evaluate(`document.querySelector(${JSON.stringify(comparisonSeverity)}).focus()`);
+    await p.key('Home','Home',36);
+    await p.wait(`document.querySelector(${JSON.stringify(comparisonSeverity)})?.value==='0'`, 'native keyboard changes the severity threshold');
+    await assertComparison(1,0);
+    await droughtPoint(p,comparisonResult);
+    assert.equal(await p.evaluate(`document.documentElement.scrollWidth>innerWidth+1 || document.querySelector('.category-map-dock').scrollWidth>document.querySelector('.category-map-dock').clientWidth+1`),false,'the expanded comparison fits the viewport and the dock');
+    await droughtLoaded(p,fixtures.newest);
+    assert.deepEqual(fixtures.hits.maps,mapRequests,'comparison controls do not request a different map');
+    assert.equal(fixtures.hits.history,historyRequests,'comparison reuses the loaded statewide history');
+
     await droughtEnter(p,'.category-map-dock-close');
     const opener=width<=1100?'.map-dock-map-menu > summary':'.map-dock-actions > button:nth-child(2)';
     await p.wait(`!document.querySelector('.category-map-dock') && document.activeElement===document.querySelector(${JSON.stringify(opener)})`, 'close returns focus to the visible Layers opener or its closed-menu summary');
