@@ -1,0 +1,5364 @@
+{
+ "source": {
+  "path": "/labs-data-observatory/county-conditions-63b3f2578632390e.json",
+  "sha256": "63b3f2578632390e6322fc7cff37d1b02d90f0ccb575db24b1a6d797c786f6fb",
+  "retrievedAt": "2026-11-17T00:48:16+00:00"
+ },
+ "counties": [
+  {
+   "fips": "20001",
+   "name": "Allen County",
+   "slug": "allen",
+   "center": [
+    -95.301,
+    37.885
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     60689,
+     4364
+    ],
+    "medianAge": [
+     41.2,
+     0.6
+    ],
+    "medianHomeValue": [
+     107600,
+     9605
+    ],
+    "medianRent": [
+     720,
+     62
+    ],
+    "educationPct": [
+     22.4,
+     2.9
+    ],
+    "povertyPct": [
+     9.9,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     75.4,
+     3.2
+    ],
+    "housingUnits": [
+     6077,
+     42
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.3,
+    "educationPct": 16.1,
+    "povertyPct": 18,
+    "housingUnits": 6249
+   }
+  },
+  {
+   "fips": "20003",
+   "name": "Anderson County",
+   "slug": "anderson",
+   "center": [
+    -95.292,
+    38.214
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     70614,
+     7469
+    ],
+    "medianAge": [
+     40,
+     1.8
+    ],
+    "medianHomeValue": [
+     171400,
+     21801
+    ],
+    "medianRent": [
+     853,
+     171
+    ],
+    "educationPct": [
+     14,
+     3.3
+    ],
+    "povertyPct": [
+     11,
+     4.2
+    ],
+    "ownerOccupiedPct": [
+     78.9,
+     3.7
+    ],
+    "housingUnits": [
+     3586,
+     22
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 42.3,
+    "educationPct": 17.5,
+    "povertyPct": 14.8,
+    "housingUnits": 3718
+   }
+  },
+  {
+   "fips": "20005",
+   "name": "Atchison County",
+   "slug": "atchison",
+   "center": [
+    -95.269,
+    39.536
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     61112,
+     7953
+    ],
+    "medianAge": [
+     36.1,
+     0.9
+    ],
+    "medianHomeValue": [
+     145700,
+     14278
+    ],
+    "medianRent": [
+     765,
+     131
+    ],
+    "educationPct": [
+     21.8,
+     3.3
+    ],
+    "povertyPct": [
+     13,
+     3.5
+    ],
+    "ownerOccupiedPct": [
+     71.9,
+     4
+    ],
+    "housingUnits": [
+     6817,
+     24
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 36.5,
+    "educationPct": 19,
+    "povertyPct": 18.3,
+    "housingUnits": 6971
+   }
+  },
+  {
+   "fips": "20007",
+   "name": "Barber County",
+   "slug": "barber",
+   "center": [
+    -98.68,
+    37.235
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     61926,
+     6033
+    ],
+    "medianAge": [
+     42.5,
+     2.4
+    ],
+    "medianHomeValue": [
+     97000,
+     17578
+    ],
+    "medianRent": [
+     830,
+     27
+    ],
+    "educationPct": [
+     27.3,
+     4.1
+    ],
+    "povertyPct": [
+     11.8,
+     5
+    ],
+    "ownerOccupiedPct": [
+     81,
+     3.4
+    ],
+    "housingUnits": [
+     2480,
+     82
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45.4,
+    "educationPct": 18.1,
+    "povertyPct": 11.7,
+    "housingUnits": 2837
+   }
+  },
+  {
+   "fips": "20009",
+   "name": "Barton County",
+   "slug": "barton",
+   "center": [
+    -98.756,
+    38.479
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     58851,
+     3181
+    ],
+    "medianAge": [
+     38.8,
+     0.5
+    ],
+    "medianHomeValue": [
+     126400,
+     11964
+    ],
+    "medianRent": [
+     761,
+     45
+    ],
+    "educationPct": [
+     21.7,
+     2.2
+    ],
+    "povertyPct": [
+     15.4,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     65.2,
+     2.3
+    ],
+    "housingUnits": [
+     12383,
+     62
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 39.8,
+    "educationPct": 17.3,
+    "povertyPct": 16,
+    "housingUnits": 12644
+   }
+  },
+  {
+   "fips": "20011",
+   "name": "Bourbon County",
+   "slug": "bourbon",
+   "center": [
+    -94.851,
+    37.856
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59238,
+     7304
+    ],
+    "medianAge": [
+     39.1,
+     1.3
+    ],
+    "medianHomeValue": [
+     113800,
+     7418
+    ],
+    "medianRent": [
+     752,
+     47
+    ],
+    "educationPct": [
+     23.9,
+     3.5
+    ],
+    "povertyPct": [
+     13.6,
+     2.8
+    ],
+    "ownerOccupiedPct": [
+     74,
+     2.4
+    ],
+    "housingUnits": [
+     6756,
+     29
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 37.8,
+    "educationPct": 21.4,
+    "povertyPct": 17.6,
+    "housingUnits": 7128
+   }
+  },
+  {
+   "fips": "20013",
+   "name": "Brown County",
+   "slug": "brown",
+   "center": [
+    -95.565,
+    39.826
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     62233,
+     7582
+    ],
+    "medianAge": [
+     41.7,
+     0.4
+    ],
+    "medianHomeValue": [
+     118100,
+     8559
+    ],
+    "medianRent": [
+     646,
+     98
+    ],
+    "educationPct": [
+     19.6,
+     2.5
+    ],
+    "povertyPct": [
+     13.8,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     76.3,
+     2.7
+    ],
+    "housingUnits": [
+     4478,
+     37
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 42.2,
+    "educationPct": 19.6,
+    "povertyPct": 19.3,
+    "housingUnits": 4754
+   }
+  },
+  {
+   "fips": "20015",
+   "name": "Butler County",
+   "slug": "butler",
+   "center": [
+    -96.838,
+    37.782
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     81610,
+     3426
+    ],
+    "medianAge": [
+     38.4,
+     0.4
+    ],
+    "medianHomeValue": [
+     217600,
+     6849
+    ],
+    "medianRent": [
+     956,
+     44
+    ],
+    "educationPct": [
+     32.4,
+     1.5
+    ],
+    "povertyPct": [
+     8.5,
+     1.2
+    ],
+    "ownerOccupiedPct": [
+     77.6,
+     1.7
+    ],
+    "housingUnits": [
+     27485,
+     123
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 37.6,
+    "educationPct": 27.5,
+    "povertyPct": 9.3,
+    "housingUnits": 26239
+   }
+  },
+  {
+   "fips": "20017",
+   "name": "Chase County",
+   "slug": "chase",
+   "center": [
+    -96.597,
+    38.304
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     56484,
+     3845
+    ],
+    "medianAge": [
+     45.5,
+     1.4
+    ],
+    "medianHomeValue": [
+     109700,
+     14608
+    ],
+    "medianRent": [
+     825,
+     123
+    ],
+    "educationPct": [
+     30.2,
+     4.5
+    ],
+    "povertyPct": [
+     8.4,
+     3.4
+    ],
+    "ownerOccupiedPct": [
+     73.3,
+     6.5
+    ],
+    "housingUnits": [
+     1388,
+     29
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45.4,
+    "educationPct": 24.7,
+    "povertyPct": 11.4,
+    "housingUnits": 1499
+   }
+  },
+  {
+   "fips": "20019",
+   "name": "Chautauqua County",
+   "slug": "chautauqua",
+   "center": [
+    -96.245,
+    37.151
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     56438,
+     4556
+    ],
+    "medianAge": [
+     45.2,
+     1.1
+    ],
+    "medianHomeValue": [
+     65500,
+     7791
+    ],
+    "medianRent": [
+     708,
+     76
+    ],
+    "educationPct": [
+     18.6,
+     3.2
+    ],
+    "povertyPct": [
+     14.9,
+     3.6
+    ],
+    "ownerOccupiedPct": [
+     82,
+     8.1
+    ],
+    "housingUnits": [
+     1975,
+     16
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 49.1,
+    "educationPct": 17.7,
+    "povertyPct": 16,
+    "housingUnits": 2134
+   }
+  },
+  {
+   "fips": "20021",
+   "name": "Cherokee County",
+   "slug": "cherokee",
+   "center": [
+    -94.846,
+    37.17
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     57668,
+     6110
+    ],
+    "medianAge": [
+     42.2,
+     0.8
+    ],
+    "medianHomeValue": [
+     100100,
+     8948
+    ],
+    "medianRent": [
+     799,
+     55
+    ],
+    "educationPct": [
+     19.4,
+     2.7
+    ],
+    "povertyPct": [
+     14.1,
+     2.6
+    ],
+    "ownerOccupiedPct": [
+     75.5,
+     3.3
+    ],
+    "housingUnits": [
+     9129,
+     26
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.6,
+    "educationPct": 16.1,
+    "povertyPct": 17.9,
+    "housingUnits": 9851
+   }
+  },
+  {
+   "fips": "20023",
+   "name": "Cheyenne County",
+   "slug": "cheyenne",
+   "center": [
+    -101.732,
+    39.786
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     55429,
+     4259
+    ],
+    "medianAge": [
+     40.6,
+     2.1
+    ],
+    "medianHomeValue": [
+     125900,
+     22222
+    ],
+    "medianRent": [
+     656,
+     95
+    ],
+    "educationPct": [
+     22,
+     4.2
+    ],
+    "povertyPct": [
+     17,
+     4.9
+    ],
+    "ownerOccupiedPct": [
+     77.9,
+     4.9
+    ],
+    "housingUnits": [
+     1455,
+     21
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 49.5,
+    "educationPct": 18.7,
+    "povertyPct": 8.8,
+    "housingUnits": 1513
+   }
+  },
+  {
+   "fips": "20025",
+   "name": "Clark County",
+   "slug": "clark",
+   "center": [
+    -99.824,
+    37.238
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63043,
+     7046
+    ],
+    "medianAge": [
+     43.7,
+     2.4
+    ],
+    "medianHomeValue": [
+     87600,
+     7697
+    ],
+    "medianRent": [
+     789,
+     76
+    ],
+    "educationPct": [
+     31.1,
+     5.2
+    ],
+    "povertyPct": [
+     9.9,
+     3.6
+    ],
+    "ownerOccupiedPct": [
+     73.6,
+     5.6
+    ],
+    "housingUnits": [
+     1039,
+     68
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45,
+    "educationPct": 30.7,
+    "povertyPct": 13.7,
+    "housingUnits": 1198
+   }
+  },
+  {
+   "fips": "20027",
+   "name": "Clay County",
+   "slug": "clay",
+   "center": [
+    -97.165,
+    39.35
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     66176,
+     5320
+    ],
+    "medianAge": [
+     43.7,
+     0.6
+    ],
+    "medianHomeValue": [
+     155900,
+     9749
+    ],
+    "medianRent": [
+     937,
+     87
+    ],
+    "educationPct": [
+     25.5,
+     3.9
+    ],
+    "povertyPct": [
+     13.4,
+     3.2
+    ],
+    "ownerOccupiedPct": [
+     78,
+     4.3
+    ],
+    "housingUnits": [
+     3944,
+     23
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.1,
+    "educationPct": 22.3,
+    "povertyPct": 11.1,
+    "housingUnits": 4048
+   }
+  },
+  {
+   "fips": "20029",
+   "name": "Cloud County",
+   "slug": "cloud",
+   "center": [
+    -97.65,
+    39.48
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     58770,
+     4865
+    ],
+    "medianAge": [
+     40.2,
+     1.3
+    ],
+    "medianHomeValue": [
+     100000,
+     8142
+    ],
+    "medianRent": [
+     769,
+     64
+    ],
+    "educationPct": [
+     20.8,
+     3.3
+    ],
+    "povertyPct": [
+     10,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     74,
+     3.4
+    ],
+    "housingUnits": [
+     4467,
+     56
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.8,
+    "educationPct": 17.2,
+    "povertyPct": 17.3,
+    "housingUnits": 4633
+   }
+  },
+  {
+   "fips": "20031",
+   "name": "Coffey County",
+   "slug": "coffey",
+   "center": [
+    -95.733,
+    38.236
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     70346,
+     8841
+    ],
+    "medianAge": [
+     44,
+     0.5
+    ],
+    "medianHomeValue": [
+     157400,
+     16736
+    ],
+    "medianRent": [
+     836,
+     87
+    ],
+    "educationPct": [
+     19.7,
+     2.8
+    ],
+    "povertyPct": [
+     10.7,
+     2.5
+    ],
+    "ownerOccupiedPct": [
+     75.9,
+     3
+    ],
+    "housingUnits": [
+     3998,
+     42
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.1,
+    "educationPct": 19.7,
+    "povertyPct": 8.6,
+    "housingUnits": 3992
+   }
+  },
+  {
+   "fips": "20033",
+   "name": "Comanche County",
+   "slug": "comanche",
+   "center": [
+    -99.271,
+    37.192
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     54545,
+     6643
+    ],
+    "medianAge": [
+     49.6,
+     2.9
+    ],
+    "medianHomeValue": [
+     69600,
+     16457
+    ],
+    "medianRent": [
+     692,
+     96
+    ],
+    "educationPct": [
+     20.1,
+     4.2
+    ],
+    "povertyPct": [
+     9.2,
+     4.3
+    ],
+    "ownerOccupiedPct": [
+     73.4,
+     3.4
+    ],
+    "housingUnits": [
+     1016,
+     81
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45,
+    "educationPct": 26,
+    "povertyPct": 5.2,
+    "housingUnits": 959
+   }
+  },
+  {
+   "fips": "20035",
+   "name": "Cowley County",
+   "slug": "cowley",
+   "center": [
+    -96.839,
+    37.238
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     57878,
+     3114
+    ],
+    "medianAge": [
+     39.2,
+     0.7
+    ],
+    "medianHomeValue": [
+     120900,
+     7871
+    ],
+    "medianRent": [
+     809,
+     47
+    ],
+    "educationPct": [
+     24.5,
+     1.8
+    ],
+    "povertyPct": [
+     14.3,
+     2.1
+    ],
+    "ownerOccupiedPct": [
+     68.1,
+     2.1
+    ],
+    "housingUnits": [
+     15682,
+     42
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.2,
+    "educationPct": 19.4,
+    "povertyPct": 17.6,
+    "housingUnits": 15995
+   }
+  },
+  {
+   "fips": "20037",
+   "name": "Crawford County",
+   "slug": "crawford",
+   "center": [
+    -94.852,
+    37.507
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     52844,
+     2608
+    ],
+    "medianAge": [
+     33.6,
+     0.8
+    ],
+    "medianHomeValue": [
+     132600,
+     12050
+    ],
+    "medianRent": [
+     849,
+     34
+    ],
+    "educationPct": [
+     32.2,
+     2.3
+    ],
+    "povertyPct": [
+     20.6,
+     2.1
+    ],
+    "ownerOccupiedPct": [
+     60.8,
+     2.1
+    ],
+    "housingUnits": [
+     18126,
+     45
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 32.7,
+    "educationPct": 28.9,
+    "povertyPct": 21.7,
+    "housingUnits": 17843
+   }
+  },
+  {
+   "fips": "20039",
+   "name": "Decatur County",
+   "slug": "decatur",
+   "center": [
+    -100.459,
+    39.785
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     53870,
+     3964
+    ],
+    "medianAge": [
+     50.1,
+     3.4
+    ],
+    "medianHomeValue": [
+     89500,
+     12973
+    ],
+    "medianRent": [
+     676,
+     93
+    ],
+    "educationPct": [
+     27,
+     6
+    ],
+    "povertyPct": [
+     12.7,
+     6.2
+    ],
+    "ownerOccupiedPct": [
+     77.7,
+     5.2
+    ],
+    "housingUnits": [
+     1634,
+     15
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 51.8,
+    "educationPct": 23.3,
+    "povertyPct": 14.9,
+    "housingUnits": 1811
+   }
+  },
+  {
+   "fips": "20041",
+   "name": "Dickinson County",
+   "slug": "dickinson",
+   "center": [
+    -97.131,
+    38.871
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     68417,
+     4436
+    ],
+    "medianAge": [
+     42.8,
+     1.2
+    ],
+    "medianHomeValue": [
+     146800,
+     10781
+    ],
+    "medianRent": [
+     901,
+     103
+    ],
+    "educationPct": [
+     23.7,
+     3
+    ],
+    "povertyPct": [
+     8.1,
+     2.1
+    ],
+    "ownerOccupiedPct": [
+     78.6,
+     2.3
+    ],
+    "housingUnits": [
+     8789,
+     30
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.7,
+    "educationPct": 18.7,
+    "povertyPct": 11.4,
+    "housingUnits": 9036
+   }
+  },
+  {
+   "fips": "20043",
+   "name": "Doniphan County",
+   "slug": "doniphan",
+   "center": [
+    -95.101,
+    39.808
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     74028,
+     5768
+    ],
+    "medianAge": [
+     41.1,
+     1.4
+    ],
+    "medianHomeValue": [
+     135200,
+     20627
+    ],
+    "medianRent": [
+     776,
+     53
+    ],
+    "educationPct": [
+     21.7,
+     2.9
+    ],
+    "povertyPct": [
+     9.6,
+     2.5
+    ],
+    "ownerOccupiedPct": [
+     81.1,
+     3.3
+    ],
+    "housingUnits": [
+     3373,
+     36
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.7,
+    "educationPct": 17.6,
+    "povertyPct": 12.8,
+    "housingUnits": 3565
+   }
+  },
+  {
+   "fips": "20045",
+   "name": "Douglas County",
+   "slug": "douglas",
+   "center": [
+    -95.279,
+    38.904
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     69746,
+     2954
+    ],
+    "medianAge": [
+     31.6,
+     0.2
+    ],
+    "medianHomeValue": [
+     309400,
+     10713
+    ],
+    "medianRent": [
+     1099,
+     33
+    ],
+    "educationPct": [
+     53.2,
+     2.2
+    ],
+    "povertyPct": [
+     14.7,
+     1.3
+    ],
+    "ownerOccupiedPct": [
+     50.1,
+     1.1
+    ],
+    "housingUnits": [
+     53675,
+     67
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 28.7,
+    "educationPct": 49.4,
+    "povertyPct": 18.5,
+    "housingUnits": 47444
+   }
+  },
+  {
+   "fips": "20047",
+   "name": "Edwards County",
+   "slug": "edwards",
+   "center": [
+    -99.292,
+    37.911
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     52692,
+     5812
+    ],
+    "medianAge": [
+     44.2,
+     1.9
+    ],
+    "medianHomeValue": [
+     70900,
+     7531
+    ],
+    "medianRent": [
+     740,
+     96
+    ],
+    "educationPct": [
+     20.5,
+     3.7
+    ],
+    "povertyPct": [
+     18.9,
+     4.3
+    ],
+    "ownerOccupiedPct": [
+     79.2,
+     4.8
+    ],
+    "housingUnits": [
+     1549,
+     20
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.3,
+    "educationPct": 21.7,
+    "povertyPct": 12.1,
+    "housingUnits": 1632
+   }
+  },
+  {
+   "fips": "20049",
+   "name": "Elk County",
+   "slug": "elk",
+   "center": [
+    -96.243,
+    37.453
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     64609,
+     9001
+    ],
+    "medianAge": [
+     48.8,
+     2
+    ],
+    "medianHomeValue": [
+     68500,
+     12218
+    ],
+    "medianRent": [
+     552,
+     38
+    ],
+    "educationPct": [
+     21.5,
+     3.5
+    ],
+    "povertyPct": [
+     10.4,
+     2.9
+    ],
+    "ownerOccupiedPct": [
+     78.8,
+     3.5
+    ],
+    "housingUnits": [
+     1491,
+     16
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 49.7,
+    "educationPct": 18.9,
+    "povertyPct": 15.5,
+    "housingUnits": 1750
+   }
+  },
+  {
+   "fips": "20051",
+   "name": "Ellis County",
+   "slug": "ellis",
+   "center": [
+    -99.317,
+    38.915
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63084,
+     5107
+    ],
+    "medianAge": [
+     33.2,
+     0.6
+    ],
+    "medianHomeValue": [
+     216300,
+     12126
+    ],
+    "medianRent": [
+     943,
+     68
+    ],
+    "educationPct": [
+     38.9,
+     3
+    ],
+    "povertyPct": [
+     18.3,
+     2.4
+    ],
+    "ownerOccupiedPct": [
+     63.2,
+     2.4
+    ],
+    "housingUnits": [
+     13287,
+     31
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 32.2,
+    "educationPct": 32.3,
+    "povertyPct": 16.6,
+    "housingUnits": 12962
+   }
+  },
+  {
+   "fips": "20053",
+   "name": "Ellsworth County",
+   "slug": "ellsworth",
+   "center": [
+    -98.204,
+    38.697
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     65560,
+     4418
+    ],
+    "medianAge": [
+     43.5,
+     0.7
+    ],
+    "medianHomeValue": [
+     114900,
+     12072
+    ],
+    "medianRent": [
+     708,
+     44
+    ],
+    "educationPct": [
+     22.7,
+     2.9
+    ],
+    "povertyPct": [
+     10.4,
+     2.4
+    ],
+    "ownerOccupiedPct": [
+     80.2,
+     2.6
+    ],
+    "housingUnits": [
+     3127,
+     19
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.9,
+    "educationPct": 21.1,
+    "povertyPct": 8.9,
+    "housingUnits": 3218
+   }
+  },
+  {
+   "fips": "20055",
+   "name": "Finney County",
+   "slug": "finney",
+   "center": [
+    -100.665,
+    38.001
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     73009,
+     4668
+    ],
+    "medianAge": [
+     31.9,
+     0.4
+    ],
+    "medianHomeValue": [
+     201400,
+     11156
+    ],
+    "medianRent": [
+     1048,
+     44
+    ],
+    "educationPct": [
+     19,
+     2.1
+    ],
+    "povertyPct": [
+     11.1,
+     2.2
+    ],
+    "ownerOccupiedPct": [
+     64.9,
+     2.9
+    ],
+    "housingUnits": [
+     14355,
+     39
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 30.5,
+    "educationPct": 18.6,
+    "povertyPct": 17.2,
+    "housingUnits": 13276
+   }
+  },
+  {
+   "fips": "20057",
+   "name": "Ford County",
+   "slug": "ford",
+   "center": [
+    -99.892,
+    37.691
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     70781,
+     6473
+    ],
+    "medianAge": [
+     32.3,
+     0.4
+    ],
+    "medianHomeValue": [
+     151100,
+     13824
+    ],
+    "medianRent": [
+     1010,
+     63
+    ],
+    "educationPct": [
+     20.7,
+     2.1
+    ],
+    "povertyPct": [
+     14,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     62.5,
+     2.9
+    ],
+    "housingUnits": [
+     12743,
+     29
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 30.7,
+    "educationPct": 17,
+    "povertyPct": 18.5,
+    "housingUnits": 12055
+   }
+  },
+  {
+   "fips": "20059",
+   "name": "Franklin County",
+   "slug": "franklin",
+   "center": [
+    -95.282,
+    38.564
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     77207,
+     6413
+    ],
+    "medianAge": [
+     39.7,
+     0.8
+    ],
+    "medianHomeValue": [
+     198700,
+     14900
+    ],
+    "medianRent": [
+     1042,
+     41
+    ],
+    "educationPct": [
+     24.6,
+     2.9
+    ],
+    "povertyPct": [
+     8.7,
+     1.7
+    ],
+    "ownerOccupiedPct": [
+     72.2,
+     2.6
+    ],
+    "housingUnits": [
+     11310,
+     31
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.8,
+    "educationPct": 21,
+    "povertyPct": 13.7,
+    "housingUnits": 11136
+   }
+  },
+  {
+   "fips": "20061",
+   "name": "Geary County",
+   "slug": "geary",
+   "center": [
+    -96.732,
+    39.045
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59317,
+     2523
+    ],
+    "medianAge": [
+     27.1,
+     0.3
+    ],
+    "medianHomeValue": [
+     172700,
+     13229
+    ],
+    "medianRent": [
+     1104,
+     30
+    ],
+    "educationPct": [
+     26.2,
+     2.6
+    ],
+    "povertyPct": [
+     18,
+     2.1
+    ],
+    "ownerOccupiedPct": [
+     43.5,
+     2.7
+    ],
+    "housingUnits": [
+     15939,
+     47
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 26.4,
+    "educationPct": 19.7,
+    "povertyPct": 13,
+    "housingUnits": 14893
+   }
+  },
+  {
+   "fips": "20063",
+   "name": "Gove County",
+   "slug": "gove",
+   "center": [
+    -100.483,
+    38.915
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     66029,
+     7922
+    ],
+    "medianAge": [
+     40.8,
+     2.9
+    ],
+    "medianHomeValue": [
+     118400,
+     7971
+    ],
+    "medianRent": [
+     705,
+     130
+    ],
+    "educationPct": [
+     24.2,
+     3.4
+    ],
+    "povertyPct": [
+     5.1,
+     1.5
+    ],
+    "ownerOccupiedPct": [
+     79.4,
+     8.9
+    ],
+    "housingUnits": [
+     1331,
+     78
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 46.4,
+    "educationPct": 21.7,
+    "povertyPct": 7.4,
+    "housingUnits": 1394
+   }
+  },
+  {
+   "fips": "20065",
+   "name": "Graham County",
+   "slug": "graham",
+   "center": [
+    -99.883,
+    39.35
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     50650,
+     4237
+    ],
+    "medianAge": [
+     46,
+     1.9
+    ],
+    "medianHomeValue": [
+     89900,
+     13357
+    ],
+    "medianRent": [
+     734,
+     26
+    ],
+    "educationPct": [
+     26.9,
+     5
+    ],
+    "povertyPct": [
+     14.8,
+     3.4
+    ],
+    "ownerOccupiedPct": [
+     78.8,
+     3.3
+    ],
+    "housingUnits": [
+     1415,
+     30
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 49.4,
+    "educationPct": 25.6,
+    "povertyPct": 12.7,
+    "housingUnits": 1488
+   }
+  },
+  {
+   "fips": "20067",
+   "name": "Grant County",
+   "slug": "grant",
+   "center": [
+    -101.309,
+    37.562
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     66476,
+     16560
+    ],
+    "medianAge": [
+     33.4,
+     0.6
+    ],
+    "medianHomeValue": [
+     110300,
+     26730
+    ],
+    "medianRent": [
+     718,
+     14
+    ],
+    "educationPct": [
+     25.1,
+     6.7
+    ],
+    "povertyPct": [
+     9.3,
+     4.6
+    ],
+    "ownerOccupiedPct": [
+     76.7,
+     6.3
+    ],
+    "housingUnits": [
+     2933,
+     13
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 33.1,
+    "educationPct": 18.5,
+    "povertyPct": 14,
+    "housingUnits": 2933
+   }
+  },
+  {
+   "fips": "20069",
+   "name": "Gray County",
+   "slug": "gray",
+   "center": [
+    -100.44,
+    37.739
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     79122,
+     4267
+    ],
+    "medianAge": [
+     37.9,
+     2.3
+    ],
+    "medianHomeValue": [
+     206000,
+     26376
+    ],
+    "medianRent": [
+     808,
+     93
+    ],
+    "educationPct": [
+     25.9,
+     4.4
+    ],
+    "povertyPct": [
+     8.5,
+     4.1
+    ],
+    "ownerOccupiedPct": [
+     77.1,
+     3.4
+    ],
+    "housingUnits": [
+     2354,
+     18
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 35.8,
+    "educationPct": 20.2,
+    "povertyPct": 9.5,
+    "housingUnits": 2381
+   }
+  },
+  {
+   "fips": "20071",
+   "name": "Greeley County",
+   "slug": "greeley",
+   "center": [
+    -101.806,
+    38.481
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     80565,
+     8227
+    ],
+    "medianAge": [
+     37.1,
+     3.7
+    ],
+    "medianHomeValue": [
+     115200,
+     23487
+    ],
+    "medianRent": [
+     794,
+     423
+    ],
+    "educationPct": [
+     29.8,
+     5.8
+    ],
+    "povertyPct": [
+     7.1,
+     4.1
+    ],
+    "ownerOccupiedPct": [
+     75,
+     4.3
+    ],
+    "housingUnits": [
+     659,
+     53
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 48.5,
+    "educationPct": 20,
+    "povertyPct": 13.6,
+    "housingUnits": 590
+   }
+  },
+  {
+   "fips": "20073",
+   "name": "Greenwood County",
+   "slug": "greenwood",
+   "center": [
+    -96.242,
+    37.889
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     60042,
+     4368
+    ],
+    "medianAge": [
+     47.8,
+     0.8
+    ],
+    "medianHomeValue": [
+     88700,
+     10025
+    ],
+    "medianRent": [
+     715,
+     116
+    ],
+    "educationPct": [
+     21.6,
+     2.8
+    ],
+    "povertyPct": [
+     13.9,
+     3.3
+    ],
+    "ownerOccupiedPct": [
+     80.5,
+     2.5
+    ],
+    "housingUnits": [
+     3666,
+     22
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 47.6,
+    "educationPct": 15.4,
+    "povertyPct": 15,
+    "housingUnits": 4043
+   }
+  },
+  {
+   "fips": "20075",
+   "name": "Hamilton County",
+   "slug": "hamilton",
+   "center": [
+    -101.786,
+    38
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     70250,
+     13794
+    ],
+    "medianAge": [
+     32.1,
+     4.4
+    ],
+    "medianHomeValue": [
+     115800,
+     14362
+    ],
+    "medianRent": [
+     909,
+     454
+    ],
+    "educationPct": [
+     20.5,
+     5.8
+    ],
+    "povertyPct": [
+     7,
+     3.7
+    ],
+    "ownerOccupiedPct": [
+     77.1,
+     6.8
+    ],
+    "housingUnits": [
+     1014,
+     121
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 35.8,
+    "educationPct": 13.1,
+    "povertyPct": 15.9,
+    "housingUnits": 1207
+   }
+  },
+  {
+   "fips": "20077",
+   "name": "Harper County",
+   "slug": "harper",
+   "center": [
+    -98.076,
+    37.192
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     53488,
+     2991
+    ],
+    "medianAge": [
+     40.6,
+     1.1
+    ],
+    "medianHomeValue": [
+     83800,
+     13537
+    ],
+    "medianRent": [
+     690,
+     46
+    ],
+    "educationPct": [
+     22.8,
+     3.5
+    ],
+    "povertyPct": [
+     17.3,
+     4.3
+    ],
+    "ownerOccupiedPct": [
+     75.1,
+     3.3
+    ],
+    "housingUnits": [
+     3020,
+     24
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 43.6,
+    "educationPct": 19.1,
+    "povertyPct": 15.6,
+    "housingUnits": 3124
+   }
+  },
+  {
+   "fips": "20079",
+   "name": "Harvey County",
+   "slug": "harvey",
+   "center": [
+    -97.427,
+    38.043
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     74368,
+     3934
+    ],
+    "medianAge": [
+     40.5,
+     0.5
+    ],
+    "medianHomeValue": [
+     180300,
+     11188
+    ],
+    "medianRent": [
+     900,
+     51
+    ],
+    "educationPct": [
+     30.1,
+     2.5
+    ],
+    "povertyPct": [
+     8.2,
+     1.9
+    ],
+    "ownerOccupiedPct": [
+     69.8,
+     2.7
+    ],
+    "housingUnits": [
+     14656,
+     39
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.7,
+    "educationPct": 25.8,
+    "povertyPct": 13.8,
+    "housingUnits": 14571
+   }
+  },
+  {
+   "fips": "20081",
+   "name": "Haskell County",
+   "slug": "haskell",
+   "center": [
+    -100.871,
+    37.562
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     66162,
+     5528
+    ],
+    "medianAge": [
+     37,
+     1.3
+    ],
+    "medianHomeValue": [
+     165100,
+     21567
+    ],
+    "medianRent": [
+     830,
+     186
+    ],
+    "educationPct": [
+     19.9,
+     4.5
+    ],
+    "povertyPct": [
+     11.2,
+     4.8
+    ],
+    "ownerOccupiedPct": [
+     76.3,
+     5.4
+    ],
+    "housingUnits": [
+     1546,
+     12
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 34.8,
+    "educationPct": 17.6,
+    "povertyPct": 11.4,
+    "housingUnits": 1659
+   }
+  },
+  {
+   "fips": "20083",
+   "name": "Hodgeman County",
+   "slug": "hodgeman",
+   "center": [
+    -99.898,
+    38.088
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59955,
+     6884
+    ],
+    "medianAge": [
+     48.6,
+     6.1
+    ],
+    "medianHomeValue": [
+     101600,
+     23695
+    ],
+    "medianRent": [
+     941,
+     101
+    ],
+    "educationPct": [
+     30.2,
+     8.7
+    ],
+    "povertyPct": [
+     6.3,
+     2.4
+    ],
+    "ownerOccupiedPct": [
+     79.1,
+     4.8
+    ],
+    "housingUnits": [
+     823,
+     68
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 46.8,
+    "educationPct": 21,
+    "povertyPct": 5.6,
+    "housingUnits": 1018
+   }
+  },
+  {
+   "fips": "20085",
+   "name": "Jackson County",
+   "slug": "jackson",
+   "center": [
+    -95.8,
+    39.435
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     75215,
+     5075
+    ],
+    "medianAge": [
+     41.2,
+     1.2
+    ],
+    "medianHomeValue": [
+     207300,
+     10743
+    ],
+    "medianRent": [
+     814,
+     85
+    ],
+    "educationPct": [
+     22.6,
+     3.2
+    ],
+    "povertyPct": [
+     6.1,
+     1.5
+    ],
+    "ownerOccupiedPct": [
+     77.1,
+     2.4
+    ],
+    "housingUnits": [
+     5638,
+     25
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.4,
+    "educationPct": 18.1,
+    "povertyPct": 9.6,
+    "housingUnits": 5770
+   }
+  },
+  {
+   "fips": "20087",
+   "name": "Jefferson County",
+   "slug": "jefferson",
+   "center": [
+    -95.388,
+    39.226
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     81278,
+     4961
+    ],
+    "medianAge": [
+     44.2,
+     0.3
+    ],
+    "medianHomeValue": [
+     216900,
+     9772
+    ],
+    "medianRent": [
+     835,
+     64
+    ],
+    "educationPct": [
+     24.6,
+     2.3
+    ],
+    "povertyPct": [
+     5.6,
+     1.4
+    ],
+    "ownerOccupiedPct": [
+     85.7,
+     2.6
+    ],
+    "housingUnits": [
+     8038,
+     31
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 43.5,
+    "educationPct": 21,
+    "povertyPct": 7.8,
+    "housingUnits": 8172
+   }
+  },
+  {
+   "fips": "20089",
+   "name": "Jewell County",
+   "slug": "jewell",
+   "center": [
+    -98.218,
+    39.785
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     52634,
+     8655
+    ],
+    "medianAge": [
+     51.2,
+     0.7
+    ],
+    "medianHomeValue": [
+     64600,
+     20930
+    ],
+    "medianRent": [
+     608,
+     27
+    ],
+    "educationPct": [
+     18.2,
+     4
+    ],
+    "povertyPct": [
+     10.6,
+     3.3
+    ],
+    "ownerOccupiedPct": [
+     74.1,
+     5.2
+    ],
+    "housingUnits": [
+     1761,
+     14
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 52.1,
+    "educationPct": 14.1,
+    "povertyPct": 13.9,
+    "housingUnits": 2033
+   }
+  },
+  {
+   "fips": "20091",
+   "name": "Johnson County",
+   "slug": "johnson",
+   "center": [
+    -94.831,
+    38.899
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     109208,
+     1170
+    ],
+    "medianAge": [
+     38.6,
+     0.2
+    ],
+    "medianHomeValue": [
+     391200,
+     3069
+    ],
+    "medianRent": [
+     1434,
+     16
+    ],
+    "educationPct": [
+     57.6,
+     0.8
+    ],
+    "povertyPct": [
+     5.4,
+     0.3
+    ],
+    "ownerOccupiedPct": [
+     68.5,
+     0.6
+    ],
+    "housingUnits": [
+     259655,
+     181
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 36.6,
+    "educationPct": 52.1,
+    "povertyPct": 6.5,
+    "housingUnits": 229347
+   }
+  },
+  {
+   "fips": "20093",
+   "name": "Kearny County",
+   "slug": "kearny",
+   "center": [
+    -101.316,
+    38.001
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     89135,
+     17102
+    ],
+    "medianAge": [
+     37.1,
+     1.6
+    ],
+    "medianHomeValue": [
+     200900,
+     32570
+    ],
+    "medianRent": [
+     1056,
+     98
+    ],
+    "educationPct": [
+     19.4,
+     4.4
+    ],
+    "povertyPct": [
+     4.5,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     71.7,
+     6.2
+    ],
+    "housingUnits": [
+     1578,
+     32
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 35.8,
+    "educationPct": 17.8,
+    "povertyPct": 8.2,
+    "housingUnits": 1560
+   }
+  },
+  {
+   "fips": "20095",
+   "name": "Kingman County",
+   "slug": "kingman",
+   "center": [
+    -98.136,
+    37.559
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59842,
+     5588
+    ],
+    "medianAge": [
+     42.1,
+     2.3
+    ],
+    "medianHomeValue": [
+     111100,
+     18062
+    ],
+    "medianRent": [
+     846,
+     60
+    ],
+    "educationPct": [
+     25.3,
+     3.5
+    ],
+    "povertyPct": [
+     10.3,
+     3.2
+    ],
+    "ownerOccupiedPct": [
+     66.3,
+     4.2
+    ],
+    "housingUnits": [
+     3685,
+     26
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45.4,
+    "educationPct": 18.9,
+    "povertyPct": 12.9,
+    "housingUnits": 3819
+   }
+  },
+  {
+   "fips": "20097",
+   "name": "Kiowa County",
+   "slug": "kiowa",
+   "center": [
+    -99.285,
+    37.557
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     75539,
+     7278
+    ],
+    "medianAge": [
+     41.1,
+     1.2
+    ],
+    "medianHomeValue": [
+     155300,
+     13823
+    ],
+    "medianRent": [
+     762,
+     36
+    ],
+    "educationPct": [
+     28.3,
+     4.6
+    ],
+    "povertyPct": [
+     5.9,
+     1.7
+    ],
+    "ownerOccupiedPct": [
+     73,
+     2.9
+    ],
+    "housingUnits": [
+     1153,
+     17
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41,
+    "educationPct": 22.6,
+    "povertyPct": 16,
+    "housingUnits": 1225
+   }
+  },
+  {
+   "fips": "20099",
+   "name": "Labette County",
+   "slug": "labette",
+   "center": [
+    -95.298,
+    37.192
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     56325,
+     2355
+    ],
+    "medianAge": [
+     41,
+     0.8
+    ],
+    "medianHomeValue": [
+     94600,
+     7153
+    ],
+    "medianRent": [
+     746,
+     38
+    ],
+    "educationPct": [
+     20.2,
+     2.4
+    ],
+    "povertyPct": [
+     16,
+     2.7
+    ],
+    "ownerOccupiedPct": [
+     74,
+     2.7
+    ],
+    "housingUnits": [
+     9510,
+     30
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 40.6,
+    "educationPct": 20.1,
+    "povertyPct": 16.3,
+    "housingUnits": 10068
+   }
+  },
+  {
+   "fips": "20101",
+   "name": "Lane County",
+   "slug": "lane",
+   "center": [
+    -100.466,
+    38.481
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     54526,
+     11989
+    ],
+    "medianAge": [
+     50.3,
+     2.5
+    ],
+    "medianHomeValue": [
+     127100,
+     66624
+    ],
+    "medianRent": [
+     590,
+     470
+    ],
+    "educationPct": [
+     24.4,
+     5.2
+    ],
+    "povertyPct": [
+     7,
+     5
+    ],
+    "ownerOccupiedPct": [
+     88.9,
+     6.4
+    ],
+    "housingUnits": [
+     878,
+     72
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45.8,
+    "educationPct": 24,
+    "povertyPct": 10,
+    "housingUnits": 967
+   }
+  },
+  {
+   "fips": "20103",
+   "name": "Leavenworth County",
+   "slug": "leavenworth",
+   "center": [
+    -94.981,
+    39.186
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     89218,
+     5420
+    ],
+    "medianAge": [
+     38,
+     0.5
+    ],
+    "medianHomeValue": [
+     282900,
+     9484
+    ],
+    "medianRent": [
+     1219,
+     61
+    ],
+    "educationPct": [
+     36.1,
+     2.1
+    ],
+    "povertyPct": [
+     8.8,
+     1.3
+    ],
+    "ownerOccupiedPct": [
+     69.3,
+     1.7
+    ],
+    "housingUnits": [
+     31865,
+     121
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 37.2,
+    "educationPct": 29.8,
+    "povertyPct": 10.8,
+    "housingUnits": 28868
+   }
+  },
+  {
+   "fips": "20105",
+   "name": "Lincoln County",
+   "slug": "lincoln",
+   "center": [
+    -98.209,
+    39.046
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     57500,
+     6111
+    ],
+    "medianAge": [
+     42.9,
+     1.4
+    ],
+    "medianHomeValue": [
+     96900,
+     8588
+    ],
+    "medianRent": [
+     634,
+     26
+    ],
+    "educationPct": [
+     25.9,
+     3.9
+    ],
+    "povertyPct": [
+     11.3,
+     3.4
+    ],
+    "ownerOccupiedPct": [
+     80.4,
+     2.1
+    ],
+    "housingUnits": [
+     1668,
+     11
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 46.5,
+    "educationPct": 21.1,
+    "povertyPct": 13,
+    "housingUnits": 1863
+   }
+  },
+  {
+   "fips": "20107",
+   "name": "Linn County",
+   "slug": "linn",
+   "center": [
+    -94.845,
+    38.213
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59069,
+     3266
+    ],
+    "medianAge": [
+     45.7,
+     0.6
+    ],
+    "medianHomeValue": [
+     173600,
+     14994
+    ],
+    "medianRent": [
+     691,
+     48
+    ],
+    "educationPct": [
+     22.7,
+     3.1
+    ],
+    "povertyPct": [
+     8.4,
+     1.8
+    ],
+    "ownerOccupiedPct": [
+     81.1,
+     2.2
+    ],
+    "housingUnits": [
+     5222,
+     51
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.7,
+    "educationPct": 14.3,
+    "povertyPct": 14.5,
+    "housingUnits": 5438
+   }
+  },
+  {
+   "fips": "20109",
+   "name": "Logan County",
+   "slug": "logan",
+   "center": [
+    -101.148,
+    38.918
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     75662,
+     6498
+    ],
+    "medianAge": [
+     41.9,
+     1.6
+    ],
+    "medianHomeValue": [
+     117900,
+     9594
+    ],
+    "medianRent": [
+     840,
+     69
+    ],
+    "educationPct": [
+     25.7,
+     5.3
+    ],
+    "povertyPct": [
+     15,
+     5.1
+    ],
+    "ownerOccupiedPct": [
+     64.9,
+     4.5
+    ],
+    "housingUnits": [
+     1369,
+     14
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 43.9,
+    "educationPct": 18.5,
+    "povertyPct": 9.1,
+    "housingUnits": 1442
+   }
+  },
+  {
+   "fips": "20111",
+   "name": "Lyon County",
+   "slug": "lyon",
+   "center": [
+    -96.151,
+    38.455
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59912,
+     4163
+    ],
+    "medianAge": [
+     33.1,
+     0.6
+    ],
+    "medianHomeValue": [
+     150600,
+     7373
+    ],
+    "medianRent": [
+     817,
+     34
+    ],
+    "educationPct": [
+     26.3,
+     2.4
+    ],
+    "povertyPct": [
+     14.6,
+     2
+    ],
+    "ownerOccupiedPct": [
+     57.9,
+     2.6
+    ],
+    "housingUnits": [
+     15027,
+     76
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 32.3,
+    "educationPct": 25,
+    "povertyPct": 22.1,
+    "housingUnits": 15221
+   }
+  },
+  {
+   "fips": "20113",
+   "name": "McPherson County",
+   "slug": "mcpherson",
+   "center": [
+    -97.648,
+    38.392
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     78851,
+     5212
+    ],
+    "medianAge": [
+     39.4,
+     0.9
+    ],
+    "medianHomeValue": [
+     211200,
+     7894
+    ],
+    "medianRent": [
+     916,
+     62
+    ],
+    "educationPct": [
+     34.3,
+     3.1
+    ],
+    "povertyPct": [
+     9.5,
+     1.9
+    ],
+    "ownerOccupiedPct": [
+     75.5,
+     1.8
+    ],
+    "housingUnits": [
+     13176,
+     41
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.6,
+    "educationPct": 26.7,
+    "povertyPct": 8.1,
+    "housingUnits": 12777
+   }
+  },
+  {
+   "fips": "20115",
+   "name": "Marion County",
+   "slug": "marion",
+   "center": [
+    -97.096,
+    38.348
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     64695,
+     4593
+    ],
+    "medianAge": [
+     43.5,
+     0.4
+    ],
+    "medianHomeValue": [
+     124200,
+     10682
+    ],
+    "medianRent": [
+     727,
+     23
+    ],
+    "educationPct": [
+     30.4,
+     3.1
+    ],
+    "povertyPct": [
+     9.2,
+     1.4
+    ],
+    "ownerOccupiedPct": [
+     81.3,
+     1.5
+    ],
+    "housingUnits": [
+     5693,
+     29
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.7,
+    "educationPct": 22.6,
+    "povertyPct": 12.2,
+    "housingUnits": 5939
+   }
+  },
+  {
+   "fips": "20117",
+   "name": "Marshall County",
+   "slug": "marshall",
+   "center": [
+    -96.523,
+    39.784
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     68419,
+     6081
+    ],
+    "medianAge": [
+     43.2,
+     0.8
+    ],
+    "medianHomeValue": [
+     127700,
+     14326
+    ],
+    "medianRent": [
+     690,
+     37
+    ],
+    "educationPct": [
+     19.1,
+     2.7
+    ],
+    "povertyPct": [
+     11.3,
+     2.5
+    ],
+    "ownerOccupiedPct": [
+     80,
+     2.4
+    ],
+    "housingUnits": [
+     4751,
+     30
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45,
+    "educationPct": 15.7,
+    "povertyPct": 12.9,
+    "housingUnits": 4867
+   }
+  },
+  {
+   "fips": "20119",
+   "name": "Meade County",
+   "slug": "meade",
+   "center": [
+    -100.371,
+    37.238
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     71852,
+     6233
+    ],
+    "medianAge": [
+     38.8,
+     3.4
+    ],
+    "medianHomeValue": [
+     148900,
+     17630
+    ],
+    "medianRent": [
+     790,
+     46
+    ],
+    "educationPct": [
+     26.5,
+     4.4
+    ],
+    "povertyPct": [
+     11,
+     3.6
+    ],
+    "ownerOccupiedPct": [
+     74,
+     5.7
+    ],
+    "housingUnits": [
+     1898,
+     69
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 39,
+    "educationPct": 22,
+    "povertyPct": 11.7,
+    "housingUnits": 1927
+   }
+  },
+  {
+   "fips": "20121",
+   "name": "Miami County",
+   "slug": "miami",
+   "center": [
+    -94.837,
+    38.564
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     89000,
+     5837
+    ],
+    "medianAge": [
+     41.7,
+     0.7
+    ],
+    "medianHomeValue": [
+     287700,
+     15386
+    ],
+    "medianRent": [
+     1107,
+     67
+    ],
+    "educationPct": [
+     31,
+     2.5
+    ],
+    "povertyPct": [
+     7.9,
+     1.6
+    ],
+    "ownerOccupiedPct": [
+     78.2,
+     3
+    ],
+    "housingUnits": [
+     14262,
+     31
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 40.3,
+    "educationPct": 23.2,
+    "povertyPct": 9.3,
+    "housingUnits": 13233
+   }
+  },
+  {
+   "fips": "20123",
+   "name": "Mitchell County",
+   "slug": "mitchell",
+   "center": [
+    -98.209,
+    39.393
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     64246,
+     9366
+    ],
+    "medianAge": [
+     43.1,
+     0.9
+    ],
+    "medianHomeValue": [
+     133800,
+     32609
+    ],
+    "medianRent": [
+     604,
+     114
+    ],
+    "educationPct": [
+     26.2,
+     4.3
+    ],
+    "povertyPct": [
+     12.2,
+     4.4
+    ],
+    "ownerOccupiedPct": [
+     69,
+     5.1
+    ],
+    "housingUnits": [
+     3116,
+     21
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.2,
+    "educationPct": 22.1,
+    "povertyPct": 10.4,
+    "housingUnits": 3294
+   }
+  },
+  {
+   "fips": "20125",
+   "name": "Montgomery County",
+   "slug": "montgomery",
+   "center": [
+    -95.743,
+    37.193
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     55697,
+     4353
+    ],
+    "medianAge": [
+     41.2,
+     0.9
+    ],
+    "medianHomeValue": [
+     101700,
+     8675
+    ],
+    "medianRent": [
+     761,
+     38
+    ],
+    "educationPct": [
+     22.6,
+     2.1
+    ],
+    "povertyPct": [
+     15.9,
+     1.8
+    ],
+    "ownerOccupiedPct": [
+     72.9,
+     2.4
+    ],
+    "housingUnits": [
+     15538,
+     31
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 39.7,
+    "educationPct": 16.4,
+    "povertyPct": 18.2,
+    "housingUnits": 16507
+   }
+  },
+  {
+   "fips": "20127",
+   "name": "Morris County",
+   "slug": "morris",
+   "center": [
+    -96.642,
+    38.696
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     58686,
+     4604
+    ],
+    "medianAge": [
+     46.4,
+     1.1
+    ],
+    "medianHomeValue": [
+     129600,
+     19676
+    ],
+    "medianRent": [
+     724,
+     32
+    ],
+    "educationPct": [
+     29.9,
+     4.8
+    ],
+    "povertyPct": [
+     12.1,
+     3.7
+    ],
+    "ownerOccupiedPct": [
+     80.1,
+     3.5
+    ],
+    "housingUnits": [
+     2995,
+     18
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 47.9,
+    "educationPct": 16.9,
+    "povertyPct": 8.4,
+    "housingUnits": 3205
+   }
+  },
+  {
+   "fips": "20129",
+   "name": "Morton County",
+   "slug": "morton",
+   "center": [
+    -101.798,
+    37.191
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     66447,
+     11073
+    ],
+    "medianAge": [
+     46.1,
+     1.7
+    ],
+    "medianHomeValue": [
+     96100,
+     7109
+    ],
+    "medianRent": [
+     632,
+     221
+    ],
+    "educationPct": [
+     17.1,
+     5.9
+    ],
+    "povertyPct": [
+     14.8,
+     4.8
+    ],
+    "ownerOccupiedPct": [
+     85.4,
+     7
+    ],
+    "housingUnits": [
+     1310,
+     12
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.5,
+    "educationPct": 17,
+    "povertyPct": 10.4,
+    "housingUnits": 1458
+   }
+  },
+  {
+   "fips": "20131",
+   "name": "Nemaha County",
+   "slug": "nemaha",
+   "center": [
+    -96.013,
+    39.784
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     77348,
+     5680
+    ],
+    "medianAge": [
+     40.1,
+     0.7
+    ],
+    "medianHomeValue": [
+     217200,
+     14110
+    ],
+    "medianRent": [
+     774,
+     131
+    ],
+    "educationPct": [
+     29.9,
+     3.4
+    ],
+    "povertyPct": [
+     9.3,
+     2.2
+    ],
+    "ownerOccupiedPct": [
+     78,
+     3.5
+    ],
+    "housingUnits": [
+     4512,
+     21
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.8,
+    "educationPct": 21.9,
+    "povertyPct": 11.7,
+    "housingUnits": 4565
+   }
+  },
+  {
+   "fips": "20133",
+   "name": "Neosho County",
+   "slug": "neosho",
+   "center": [
+    -95.307,
+    37.558
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     56618,
+     5385
+    ],
+    "medianAge": [
+     39.2,
+     1.9
+    ],
+    "medianHomeValue": [
+     111300,
+     10087
+    ],
+    "medianRent": [
+     681,
+     32
+    ],
+    "educationPct": [
+     23.3,
+     3.2
+    ],
+    "povertyPct": [
+     13.1,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     77.2,
+     2.8
+    ],
+    "housingUnits": [
+     7219,
+     26
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 40,
+    "educationPct": 18.4,
+    "povertyPct": 16.6,
+    "housingUnits": 7617
+   }
+  },
+  {
+   "fips": "20135",
+   "name": "Ness County",
+   "slug": "ness",
+   "center": [
+    -99.916,
+    38.48
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     68616,
+     8501
+    ],
+    "medianAge": [
+     45.1,
+     3.7
+    ],
+    "medianHomeValue": [
+     89700,
+     15095
+    ],
+    "medianRent": [
+     538,
+     63
+    ],
+    "educationPct": [
+     25,
+     3.7
+    ],
+    "povertyPct": [
+     11.2,
+     3.8
+    ],
+    "ownerOccupiedPct": [
+     81.6,
+     3.8
+    ],
+    "housingUnits": [
+     1440,
+     66
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 50.7,
+    "educationPct": 19.1,
+    "povertyPct": 10.5,
+    "housingUnits": 1781
+   }
+  },
+  {
+   "fips": "20137",
+   "name": "Norton County",
+   "slug": "norton",
+   "center": [
+    -99.902,
+    39.785
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     54050,
+     5415
+    ],
+    "medianAge": [
+     41.3,
+     1.5
+    ],
+    "medianHomeValue": [
+     101500,
+     20642
+    ],
+    "medianRent": [
+     609,
+     92
+    ],
+    "educationPct": [
+     22.5,
+     5.4
+    ],
+    "povertyPct": [
+     7.2,
+     2.7
+    ],
+    "ownerOccupiedPct": [
+     76.2,
+     4.4
+    ],
+    "housingUnits": [
+     2450,
+     19
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.1,
+    "educationPct": 16,
+    "povertyPct": 9.2,
+    "housingUnits": 2527
+   }
+  },
+  {
+   "fips": "20139",
+   "name": "Osage County",
+   "slug": "osage",
+   "center": [
+    -95.726,
+    38.652
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     74467,
+     3932
+    ],
+    "medianAge": [
+     42.9,
+     0.6
+    ],
+    "medianHomeValue": [
+     156800,
+     8090
+    ],
+    "medianRent": [
+     785,
+     22
+    ],
+    "educationPct": [
+     21.6,
+     2.2
+    ],
+    "povertyPct": [
+     9.7,
+     1.6
+    ],
+    "ownerOccupiedPct": [
+     82.4,
+     2.1
+    ],
+    "housingUnits": [
+     7337,
+     39
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 42.7,
+    "educationPct": 20.7,
+    "povertyPct": 12.1,
+    "housingUnits": 7510
+   }
+  },
+  {
+   "fips": "20141",
+   "name": "Osborne County",
+   "slug": "osborne",
+   "center": [
+    -98.767,
+    39.351
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63011,
+     7354
+    ],
+    "medianAge": [
+     46.4,
+     0.8
+    ],
+    "medianHomeValue": [
+     86400,
+     5654
+    ],
+    "medianRent": [
+     595,
+     44
+    ],
+    "educationPct": [
+     23.8,
+     3.4
+    ],
+    "povertyPct": [
+     8.4,
+     2.4
+    ],
+    "ownerOccupiedPct": [
+     77.2,
+     2.9
+    ],
+    "housingUnits": [
+     2031,
+     25
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 48.5,
+    "educationPct": 19.7,
+    "povertyPct": 17.1,
+    "housingUnits": 2196
+   }
+  },
+  {
+   "fips": "20143",
+   "name": "Ottawa County",
+   "slug": "ottawa",
+   "center": [
+    -97.649,
+    39.132
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     74018,
+     12077
+    ],
+    "medianAge": [
+     42.4,
+     0.5
+    ],
+    "medianHomeValue": [
+     166000,
+     8615
+    ],
+    "medianRent": [
+     809,
+     96
+    ],
+    "educationPct": [
+     27.7,
+     3.9
+    ],
+    "povertyPct": [
+     10.4,
+     2.6
+    ],
+    "ownerOccupiedPct": [
+     77.2,
+     2.3
+    ],
+    "housingUnits": [
+     2693,
+     25
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 42.5,
+    "educationPct": 19.9,
+    "povertyPct": 9.1,
+    "housingUnits": 2770
+   }
+  },
+  {
+   "fips": "20145",
+   "name": "Pawnee County",
+   "slug": "pawnee",
+   "center": [
+    -99.249,
+    38.174
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63517,
+     7910
+    ],
+    "medianAge": [
+     46.1,
+     0.7
+    ],
+    "medianHomeValue": [
+     93000,
+     15501
+    ],
+    "medianRent": [
+     795,
+     86
+    ],
+    "educationPct": [
+     18,
+     3.3
+    ],
+    "povertyPct": [
+     11.5,
+     3.2
+    ],
+    "ownerOccupiedPct": [
+     66.2,
+     6
+    ],
+    "housingUnits": [
+     3057,
+     26
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 43.1,
+    "educationPct": 22.4,
+    "povertyPct": 7.2,
+    "housingUnits": 3146
+   }
+  },
+  {
+   "fips": "20147",
+   "name": "Phillips County",
+   "slug": "phillips",
+   "center": [
+    -99.347,
+    39.785
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     62123,
+     6276
+    ],
+    "medianAge": [
+     45.7,
+     1.1
+    ],
+    "medianHomeValue": [
+     96500,
+     6175
+    ],
+    "medianRent": [
+     672,
+     87
+    ],
+    "educationPct": [
+     22.5,
+     2.9
+    ],
+    "povertyPct": [
+     15.4,
+     3.8
+    ],
+    "ownerOccupiedPct": [
+     78,
+     3.7
+    ],
+    "housingUnits": [
+     2790,
+     20
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45.5,
+    "educationPct": 20.4,
+    "povertyPct": 9.6,
+    "housingUnits": 3041
+   }
+  },
+  {
+   "fips": "20149",
+   "name": "Pottawatomie County",
+   "slug": "pottawatomie",
+   "center": [
+    -96.382,
+    39.347
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     92325,
+     5521
+    ],
+    "medianAge": [
+     36.4,
+     0.4
+    ],
+    "medianHomeValue": [
+     245900,
+     11263
+    ],
+    "medianRent": [
+     924,
+     105
+    ],
+    "educationPct": [
+     38.2,
+     3.3
+    ],
+    "povertyPct": [
+     6.7,
+     1.2
+    ],
+    "ownerOccupiedPct": [
+     82.2,
+     1.6
+    ],
+    "housingUnits": [
+     10214,
+     44
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 34.5,
+    "educationPct": 32.2,
+    "povertyPct": 9.6,
+    "housingUnits": 8842
+   }
+  },
+  {
+   "fips": "20151",
+   "name": "Pratt County",
+   "slug": "pratt",
+   "center": [
+    -98.739,
+    37.648
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     66022,
+     5927
+    ],
+    "medianAge": [
+     38.8,
+     1.2
+    ],
+    "medianHomeValue": [
+     114600,
+     7151
+    ],
+    "medianRent": [
+     802,
+     61
+    ],
+    "educationPct": [
+     25.8,
+     3.6
+    ],
+    "povertyPct": [
+     12.3,
+     3
+    ],
+    "ownerOccupiedPct": [
+     73.2,
+     3.9
+    ],
+    "housingUnits": [
+     4364,
+     32
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 39,
+    "educationPct": 24.4,
+    "povertyPct": 11.7,
+    "housingUnits": 4507
+   }
+  },
+  {
+   "fips": "20153",
+   "name": "Rawlins County",
+   "slug": "rawlins",
+   "center": [
+    -101.077,
+    39.786
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     67742,
+     12440
+    ],
+    "medianAge": [
+     46.5,
+     1.5
+    ],
+    "medianHomeValue": [
+     103800,
+     13665
+    ],
+    "medianRent": [
+     817,
+     274
+    ],
+    "educationPct": [
+     20,
+     3.6
+    ],
+    "povertyPct": [
+     6.8,
+     2.3
+    ],
+    "ownerOccupiedPct": [
+     70.7,
+     4.9
+    ],
+    "housingUnits": [
+     1370,
+     15
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 50.8,
+    "educationPct": 23.8,
+    "povertyPct": 11.9,
+    "housingUnits": 1452
+   }
+  },
+  {
+   "fips": "20155",
+   "name": "Reno County",
+   "slug": "reno",
+   "center": [
+    -98.086,
+    37.954
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     60645,
+     2574
+    ],
+    "medianAge": [
+     40.9,
+     0.5
+    ],
+    "medianHomeValue": [
+     132500,
+     11485
+    ],
+    "medianRent": [
+     863,
+     27
+    ],
+    "educationPct": [
+     20.4,
+     1.4
+    ],
+    "povertyPct": [
+     12.5,
+     2
+    ],
+    "ownerOccupiedPct": [
+     69.2,
+     1.7
+    ],
+    "housingUnits": [
+     28274,
+     120
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 39.7,
+    "educationPct": 19.7,
+    "povertyPct": 12.6,
+    "housingUnits": 28299
+   }
+  },
+  {
+   "fips": "20157",
+   "name": "Republic County",
+   "slug": "republic",
+   "center": [
+    -97.65,
+    39.828
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     56833,
+     3472
+    ],
+    "medianAge": [
+     44.9,
+     1.5
+    ],
+    "medianHomeValue": [
+     75600,
+     10790
+    ],
+    "medianRent": [
+     664,
+     41
+    ],
+    "educationPct": [
+     21.5,
+     3.4
+    ],
+    "povertyPct": [
+     10.6,
+     3.1
+    ],
+    "ownerOccupiedPct": [
+     78.2,
+     2.7
+    ],
+    "housingUnits": [
+     2661,
+     28
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 50.9,
+    "educationPct": 21,
+    "povertyPct": 13.7,
+    "housingUnits": 2868
+   }
+  },
+  {
+   "fips": "20159",
+   "name": "Rice County",
+   "slug": "rice",
+   "center": [
+    -98.201,
+    38.348
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63925,
+     4435
+    ],
+    "medianAge": [
+     38.6,
+     1.6
+    ],
+    "medianHomeValue": [
+     104600,
+     7916
+    ],
+    "medianRent": [
+     753,
+     74
+    ],
+    "educationPct": [
+     25.9,
+     3.7
+    ],
+    "povertyPct": [
+     7.7,
+     2.6
+    ],
+    "ownerOccupiedPct": [
+     77.4,
+     2.7
+    ],
+    "housingUnits": [
+     4384,
+     41
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.6,
+    "educationPct": 21.4,
+    "povertyPct": 16.5,
+    "housingUnits": 4547
+   }
+  },
+  {
+   "fips": "20161",
+   "name": "Riley County",
+   "slug": "riley",
+   "center": [
+    -96.676,
+    39.305
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     61098,
+     1445
+    ],
+    "medianAge": [
+     25.5,
+     0.1
+    ],
+    "medianHomeValue": [
+     237100,
+     11412
+    ],
+    "medianRent": [
+     1046,
+     38
+    ],
+    "educationPct": [
+     48.9,
+     2.8
+    ],
+    "povertyPct": [
+     19.9,
+     1.7
+    ],
+    "ownerOccupiedPct": [
+     46.1,
+     1.5
+    ],
+    "housingUnits": [
+     30755,
+     82
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 24.6,
+    "educationPct": 45.5,
+    "povertyPct": 22.3,
+    "housingUnits": 29083
+   }
+  },
+  {
+   "fips": "20163",
+   "name": "Rooks County",
+   "slug": "rooks",
+   "center": [
+    -99.324,
+    39.35
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     62500,
+     2158
+    ],
+    "medianAge": [
+     45.7,
+     0.8
+    ],
+    "medianHomeValue": [
+     89000,
+     20079
+    ],
+    "medianRent": [
+     676,
+     117
+    ],
+    "educationPct": [
+     23.2,
+     4.2
+    ],
+    "povertyPct": [
+     5.5,
+     1.6
+    ],
+    "ownerOccupiedPct": [
+     74.3,
+     3.9
+    ],
+    "housingUnits": [
+     2635,
+     23
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 44.9,
+    "educationPct": 21.6,
+    "povertyPct": 16.2,
+    "housingUnits": 2761
+   }
+  },
+  {
+   "fips": "20165",
+   "name": "Rush County",
+   "slug": "rush",
+   "center": [
+    -99.308,
+    38.523
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59970,
+     4386
+    ],
+    "medianAge": [
+     45.2,
+     2.3
+    ],
+    "medianHomeValue": [
+     83600,
+     7015
+    ],
+    "medianRent": [
+     711,
+     127
+    ],
+    "educationPct": [
+     21.2,
+     4
+    ],
+    "povertyPct": [
+     11.1,
+     2.9
+    ],
+    "ownerOccupiedPct": [
+     77.6,
+     4.4
+    ],
+    "housingUnits": [
+     1679,
+     63
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 49.1,
+    "educationPct": 20.8,
+    "povertyPct": 10.3,
+    "housingUnits": 1825
+   }
+  },
+  {
+   "fips": "20167",
+   "name": "Russell County",
+   "slug": "russell",
+   "center": [
+    -98.763,
+    38.915
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     62392,
+     10596
+    ],
+    "medianAge": [
+     44.4,
+     0.7
+    ],
+    "medianHomeValue": [
+     119000,
+     16621
+    ],
+    "medianRent": [
+     805,
+     97
+    ],
+    "educationPct": [
+     19.7,
+     3.4
+    ],
+    "povertyPct": [
+     14.7,
+     4.4
+    ],
+    "ownerOccupiedPct": [
+     75.1,
+     3.3
+    ],
+    "housingUnits": [
+     3674,
+     14
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 47,
+    "educationPct": 23.9,
+    "povertyPct": 15.2,
+    "housingUnits": 3893
+   }
+  },
+  {
+   "fips": "20169",
+   "name": "Saline County",
+   "slug": "saline",
+   "center": [
+    -97.65,
+    38.784
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     65422,
+     3557
+    ],
+    "medianAge": [
+     39.9,
+     0.7
+    ],
+    "medianHomeValue": [
+     179600,
+     6264
+    ],
+    "medianRent": [
+     961,
+     32
+    ],
+    "educationPct": [
+     29.1,
+     2.3
+    ],
+    "povertyPct": [
+     11.9,
+     1.7
+    ],
+    "ownerOccupiedPct": [
+     67.1,
+     2.2
+    ],
+    "housingUnits": [
+     24157,
+     41
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 37.7,
+    "educationPct": 24.5,
+    "povertyPct": 17.6,
+    "housingUnits": 24218
+   }
+  },
+  {
+   "fips": "20171",
+   "name": "Scott County",
+   "slug": "scott",
+   "center": [
+    -100.906,
+    38.483
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     68839,
+     10706
+    ],
+    "medianAge": [
+     38.2,
+     1.8
+    ],
+    "medianHomeValue": [
+     160000,
+     15001
+    ],
+    "medianRent": [
+     685,
+     319
+    ],
+    "educationPct": [
+     28.7,
+     7
+    ],
+    "povertyPct": [
+     6.5,
+     4.6
+    ],
+    "ownerOccupiedPct": [
+     67.2,
+     7.3
+    ],
+    "housingUnits": [
+     2334,
+     83
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.2,
+    "educationPct": 20,
+    "povertyPct": 6.2,
+    "housingUnits": 2276
+   }
+  },
+  {
+   "fips": "20173",
+   "name": "Sedgwick County",
+   "slug": "sedgwick",
+   "center": [
+    -97.48,
+    37.694
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     69365,
+     1409
+    ],
+    "medianAge": [
+     36,
+     0.2
+    ],
+    "medianHomeValue": [
+     203300,
+     3353
+    ],
+    "medianRent": [
+     998,
+     16
+    ],
+    "educationPct": [
+     32.1,
+     0.7
+    ],
+    "povertyPct": [
+     13.9,
+     0.8
+    ],
+    "ownerOccupiedPct": [
+     63.1,
+     0.7
+    ],
+    "housingUnits": [
+     227638,
+     171
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 34.5,
+    "educationPct": 29.4,
+    "povertyPct": 15.1,
+    "housingUnits": 213087
+   }
+  },
+  {
+   "fips": "20175",
+   "name": "Seward County",
+   "slug": "seward",
+   "center": [
+    -100.85,
+    37.193
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63827,
+     8322
+    ],
+    "medianAge": [
+     31,
+     0.7
+    ],
+    "medianHomeValue": [
+     136500,
+     21591
+    ],
+    "medianRent": [
+     905,
+     62
+    ],
+    "educationPct": [
+     11.4,
+     2.3
+    ],
+    "povertyPct": [
+     12.2,
+     3.6
+    ],
+    "ownerOccupiedPct": [
+     61.8,
+     5.5
+    ],
+    "housingUnits": [
+     8308,
+     33
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 29.2,
+    "educationPct": 12.6,
+    "povertyPct": 18.3,
+    "housingUnits": 8096
+   }
+  },
+  {
+   "fips": "20177",
+   "name": "Shawnee County",
+   "slug": "shawnee",
+   "center": [
+    -95.769,
+    39.043
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     67104,
+     2304
+    ],
+    "medianAge": [
+     39.4,
+     0.3
+    ],
+    "medianHomeValue": [
+     180900,
+     4873
+    ],
+    "medianRent": [
+     1000,
+     30
+    ],
+    "educationPct": [
+     32.2,
+     1.2
+    ],
+    "povertyPct": [
+     12.7,
+     0.9
+    ],
+    "ownerOccupiedPct": [
+     66.8,
+     1.2
+    ],
+    "housingUnits": [
+     81075,
+     125
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.6,
+    "educationPct": 28.9,
+    "povertyPct": 16.3,
+    "housingUnits": 79379
+   }
+  },
+  {
+   "fips": "20179",
+   "name": "Sheridan County",
+   "slug": "sheridan",
+   "center": [
+    -100.441,
+    39.35
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     73750,
+     8183
+    ],
+    "medianAge": [
+     42.7,
+     1.8
+    ],
+    "medianHomeValue": [
+     167200,
+     24762
+    ],
+    "medianRent": [
+     689,
+     45
+    ],
+    "educationPct": [
+     24.3,
+     5
+    ],
+    "povertyPct": [
+     8.9,
+     3.3
+    ],
+    "ownerOccupiedPct": [
+     76.8,
+     4.3
+    ],
+    "housingUnits": [
+     1155,
+     18
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 46.6,
+    "educationPct": 21.4,
+    "povertyPct": 8.5,
+    "housingUnits": 1264
+   }
+  },
+  {
+   "fips": "20181",
+   "name": "Sherman County",
+   "slug": "sherman",
+   "center": [
+    -101.719,
+    39.351
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     61750,
+     11307
+    ],
+    "medianAge": [
+     38.5,
+     2.1
+    ],
+    "medianHomeValue": [
+     136700,
+     25431
+    ],
+    "medianRent": [
+     913,
+     82
+    ],
+    "educationPct": [
+     24.1,
+     5.5
+    ],
+    "povertyPct": [
+     10.2,
+     4.2
+    ],
+    "ownerOccupiedPct": [
+     65.5,
+     6
+    ],
+    "housingUnits": [
+     2936,
+     32
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 38.2,
+    "educationPct": 15.2,
+    "povertyPct": 18.5,
+    "housingUnits": 3132
+   }
+  },
+  {
+   "fips": "20183",
+   "name": "Smith County",
+   "slug": "smith",
+   "center": [
+    -98.785,
+    39.785
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     59135,
+     5249
+    ],
+    "medianAge": [
+     49.1,
+     1
+    ],
+    "medianHomeValue": [
+     94100,
+     9616
+    ],
+    "medianRent": [
+     635,
+     75
+    ],
+    "educationPct": [
+     25.6,
+     3.9
+    ],
+    "povertyPct": [
+     7.3,
+     1.7
+    ],
+    "ownerOccupiedPct": [
+     84.8,
+     2.9
+    ],
+    "housingUnits": [
+     2024,
+     21
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 50.4,
+    "educationPct": 18.9,
+    "povertyPct": 18.4,
+    "housingUnits": 2245
+   }
+  },
+  {
+   "fips": "20185",
+   "name": "Stafford County",
+   "slug": "stafford",
+   "center": [
+    -98.747,
+    38.043
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     64226,
+     8416
+    ],
+    "medianAge": [
+     42.3,
+     1
+    ],
+    "medianHomeValue": [
+     97600,
+     12281
+    ],
+    "medianRent": [
+     710,
+     47
+    ],
+    "educationPct": [
+     27.1,
+     3.6
+    ],
+    "povertyPct": [
+     10.5,
+     2.5
+    ],
+    "ownerOccupiedPct": [
+     82.3,
+     1.8
+    ],
+    "housingUnits": [
+     2093,
+     16
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 45.2,
+    "educationPct": 20.3,
+    "povertyPct": 15,
+    "housingUnits": 2310
+   }
+  },
+  {
+   "fips": "20187",
+   "name": "Stanton County",
+   "slug": "stanton",
+   "center": [
+    -101.784,
+    37.564
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     71700,
+     3230
+    ],
+    "medianAge": [
+     39.1,
+     4.4
+    ],
+    "medianHomeValue": [
+     67800,
+     22772
+    ],
+    "medianRent": [
+     705,
+     71
+    ],
+    "educationPct": [
+     24.2,
+     9.5
+    ],
+    "povertyPct": [
+     1.5,
+     2
+    ],
+    "ownerOccupiedPct": [
+     76.5,
+     10.8
+    ],
+    "housingUnits": [
+     1029,
+     122
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 36.9,
+    "educationPct": 17.9,
+    "povertyPct": 7.1,
+    "housingUnits": 998
+   }
+  },
+  {
+   "fips": "20189",
+   "name": "Stevens County",
+   "slug": "stevens",
+   "center": [
+    -101.311,
+    37.192
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     64178,
+     6799
+    ],
+    "medianAge": [
+     39.1,
+     1.6
+    ],
+    "medianHomeValue": [
+     129300,
+     28373
+    ],
+    "medianRent": [
+     927,
+     81
+    ],
+    "educationPct": [
+     20.3,
+     3.9
+    ],
+    "povertyPct": [
+     14.2,
+     5.7
+    ],
+    "ownerOccupiedPct": [
+     74.5,
+     4.8
+    ],
+    "housingUnits": [
+     2265,
+     25
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 35.4,
+    "educationPct": 16.3,
+    "povertyPct": 13,
+    "housingUnits": 2296
+   }
+  },
+  {
+   "fips": "20191",
+   "name": "Sumner County",
+   "slug": "sumner",
+   "center": [
+    -97.478,
+    37.238
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63951,
+     4642
+    ],
+    "medianAge": [
+     41.3,
+     0.6
+    ],
+    "medianHomeValue": [
+     135100,
+     14398
+    ],
+    "medianRent": [
+     825,
+     129
+    ],
+    "educationPct": [
+     25.9,
+     2.6
+    ],
+    "povertyPct": [
+     10.6,
+     1.8
+    ],
+    "ownerOccupiedPct": [
+     75.1,
+     3.2
+    ],
+    "housingUnits": [
+     10414,
+     47
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 40.5,
+    "educationPct": 18.4,
+    "povertyPct": 12.8,
+    "housingUnits": 10847
+   }
+  },
+  {
+   "fips": "20193",
+   "name": "Thomas County",
+   "slug": "thomas",
+   "center": [
+    -101.056,
+    39.351
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     71325,
+     9792
+    ],
+    "medianAge": [
+     35.3,
+     2.1
+    ],
+    "medianHomeValue": [
+     172700,
+     16455
+    ],
+    "medianRent": [
+     752,
+     90
+    ],
+    "educationPct": [
+     34.6,
+     5.7
+    ],
+    "povertyPct": [
+     6.5,
+     2.9
+    ],
+    "ownerOccupiedPct": [
+     75.2,
+     3
+    ],
+    "housingUnits": [
+     3575,
+     33
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 35.6,
+    "educationPct": 30.5,
+    "povertyPct": 8.6,
+    "housingUnits": 3535
+   }
+  },
+  {
+   "fips": "20195",
+   "name": "Trego County",
+   "slug": "trego",
+   "center": [
+    -99.873,
+    38.914
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     81528,
+     19948
+    ],
+    "medianAge": [
+     48,
+     4.7
+    ],
+    "medianHomeValue": [
+     120900,
+     9894
+    ],
+    "medianRent": [
+     720,
+     90
+    ],
+    "educationPct": [
+     30.1,
+     6.6
+    ],
+    "povertyPct": [
+     5.5,
+     3
+    ],
+    "ownerOccupiedPct": [
+     82.2,
+     5.6
+    ],
+    "housingUnits": [
+     1709,
+     62
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 46.8,
+    "educationPct": 23.2,
+    "povertyPct": 6.5,
+    "housingUnits": 1640
+   }
+  },
+  {
+   "fips": "20197",
+   "name": "Wabaunsee County",
+   "slug": "wabaunsee",
+   "center": [
+    -96.223,
+    38.976
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     76908,
+     7700
+    ],
+    "medianAge": [
+     43.3,
+     0.7
+    ],
+    "medianHomeValue": [
+     177300,
+     14601
+    ],
+    "medianRent": [
+     780,
+     124
+    ],
+    "educationPct": [
+     25,
+     3
+    ],
+    "povertyPct": [
+     8.5,
+     1.8
+    ],
+    "ownerOccupiedPct": [
+     81.1,
+     4.4
+    ],
+    "housingUnits": [
+     3136,
+     40
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.8,
+    "educationPct": 22.3,
+    "povertyPct": 6.3,
+    "housingUnits": 3237
+   }
+  },
+  {
+   "fips": "20199",
+   "name": "Wallace County",
+   "slug": "wallace",
+   "center": [
+    -101.762,
+    38.917
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63207,
+     8829
+    ],
+    "medianAge": [
+     47.2,
+     10
+    ],
+    "medianHomeValue": [
+     105000,
+     20562
+    ],
+    "medianRent": [
+     601,
+     59
+    ],
+    "educationPct": [
+     24.5,
+     4.8
+    ],
+    "povertyPct": [
+     12.3,
+     5.6
+    ],
+    "ownerOccupiedPct": [
+     74.8,
+     5.8
+    ],
+    "housingUnits": [
+     717,
+     50
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 43.4,
+    "educationPct": 21.2,
+    "povertyPct": 9.7,
+    "housingUnits": 823
+   }
+  },
+  {
+   "fips": "20201",
+   "name": "Washington County",
+   "slug": "washington",
+   "center": [
+    -97.087,
+    39.784
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     65482,
+     3563
+    ],
+    "medianAge": [
+     43.4,
+     0.6
+    ],
+    "medianHomeValue": [
+     117100,
+     6751
+    ],
+    "medianRent": [
+     562,
+     30
+    ],
+    "educationPct": [
+     25.8,
+     2.9
+    ],
+    "povertyPct": [
+     9.3,
+     1.7
+    ],
+    "ownerOccupiedPct": [
+     78.5,
+     2.7
+    ],
+    "housingUnits": [
+     2714,
+     23
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 46.4,
+    "educationPct": 15.5,
+    "povertyPct": 11.1,
+    "housingUnits": 2944
+   }
+  },
+  {
+   "fips": "20203",
+   "name": "Wichita County",
+   "slug": "wichita",
+   "center": [
+    -101.346,
+    38.482
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     79063,
+     15494
+    ],
+    "medianAge": [
+     38.8,
+     6.1
+    ],
+    "medianHomeValue": [
+     99300,
+     37852
+    ],
+    "medianRent": [
+     942,
+     127
+    ],
+    "educationPct": [
+     20.1,
+     5.9
+    ],
+    "povertyPct": [
+     16.5,
+     6.7
+    ],
+    "ownerOccupiedPct": [
+     78,
+     9.2
+    ],
+    "housingUnits": [
+     920,
+     79
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 41.1,
+    "educationPct": 18.9,
+    "povertyPct": 10.2,
+    "housingUnits": 965
+   }
+  },
+  {
+   "fips": "20205",
+   "name": "Wilson County",
+   "slug": "wilson",
+   "center": [
+    -95.744,
+    37.559
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     60677,
+     6601
+    ],
+    "medianAge": [
+     42.7,
+     1.2
+    ],
+    "medianHomeValue": [
+     93500,
+     6580
+    ],
+    "medianRent": [
+     736,
+     74
+    ],
+    "educationPct": [
+     19.9,
+     3.4
+    ],
+    "povertyPct": [
+     15.5,
+     2.8
+    ],
+    "ownerOccupiedPct": [
+     77.7,
+     1.4
+    ],
+    "housingUnits": [
+     4493,
+     29
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 43.8,
+    "educationPct": 12.5,
+    "povertyPct": 18.8,
+    "housingUnits": 4670
+   }
+  },
+  {
+   "fips": "20207",
+   "name": "Woodson County",
+   "slug": "woodson",
+   "center": [
+    -95.74,
+    37.887
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     50326,
+     7733
+    ],
+    "medianAge": [
+     45.9,
+     1.7
+    ],
+    "medianHomeValue": [
+     81200,
+     16442
+    ],
+    "medianRent": [
+     618,
+     20
+    ],
+    "educationPct": [
+     23.1,
+     4.9
+    ],
+    "povertyPct": [
+     12.4,
+     3.8
+    ],
+    "ownerOccupiedPct": [
+     84.6,
+     3.5
+    ],
+    "housingUnits": [
+     1845,
+     16
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 48.2,
+    "educationPct": 18.4,
+    "povertyPct": 18.8,
+    "housingUnits": 2015
+   }
+  },
+  {
+   "fips": "20209",
+   "name": "Wyandotte County",
+   "slug": "wyandotte",
+   "center": [
+    -94.75,
+    39.097
+   ],
+   "latest": {
+    "period": "2020–2024",
+    "medianIncome": [
+     63631,
+     1779
+    ],
+    "medianAge": [
+     34.3,
+     0.2
+    ],
+    "medianHomeValue": [
+     172300,
+     4446
+    ],
+    "medianRent": [
+     1122,
+     23
+    ],
+    "educationPct": [
+     21.2,
+     1.1
+    ],
+    "povertyPct": [
+     15.8,
+     1.2
+    ],
+    "ownerOccupiedPct": [
+     62,
+     1.5
+    ],
+    "housingUnits": [
+     68803,
+     140
+    ]
+   },
+   "earlier": {
+    "period": "2010–2014",
+    "medianAge": 33.2,
+    "educationPct": 15.8,
+    "povertyPct": 24.3,
+    "housingUnits": 66931
+   }
+  }
+ ]
+}

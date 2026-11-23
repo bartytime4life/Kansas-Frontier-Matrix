@@ -1,0 +1,59 @@
+# County pages (2026-11-23)
+
+Each of the 105 Kansas counties now has a plain page at `/counties/<name>` (for example
+`/counties/sedgwick`), with an index at `/counties`. The guides index links to it.
+
+## What a county page shows
+
+Eight Census Bureau estimates for 2020–2024, each with its 90% margin of error: median
+household income, median age, median home value, median gross rent, the share of adults 25 and
+over with a bachelor's degree or higher, the share of people below the poverty line, the share
+of occupied homes lived in by their owner, and housing units. Four of them are set beside the
+2010–2014 estimate.
+
+A button opens the map centred on the county with county outlines on
+(`/?ctx=census-counties&c=<lon>,<lat>&z=8.5`). The centre is the middle of the county's bounding
+box, used only to aim the map.
+
+## Where the numbers come from
+
+Nothing is fetched when a page is read. The pages read `app/county-facts.generated.json`, which
+`scripts/prepare-county-pages.mjs` writes from the county bundle the County Conditions lab
+already ships (`public/labs-data-observatory/county-conditions-*.json`: American Community
+Survey 5-year estimates for all 105 counties, with source URLs and response hashes inside it).
+After that bundle changes, run:
+
+```bash
+node scripts/prepare-county-pages.mjs
+```
+
+A test regenerates the table from the bundle and fails if the committed file differs.
+
+## What the pages will not say
+
+- **Dollars are not compared across periods.** The bundle keeps each period's own dollars,
+  without an inflation adjustment, so income, home value and rent are shown for 2020–2024 only.
+  The earlier dollar amounts are not carried into the generated table at all.
+- **A change is named only when it is larger than the newer estimate's margin of error.**
+  Otherwise the page says "about the same as". The earlier estimate has its own margin, so this
+  is a plain-language guard, not a significance test.
+- The page calls the figures survey estimates for a five-year period, not a count for a year,
+  and says they are public context from the Census Bureau, not Kansas Frontier Matrix evidence.
+
+## Routes and the sitemap
+
+- `app/counties/[slug]/page.tsx` is the application's first dynamic page route. It lists its
+  105 addresses with `generateStaticParams`; any other address answers 404.
+- `/sitemap.xml` grows from 9 addresses to 129: `/counties`, the 105 county pages, and 14 public
+  reading pages that were reachable from the site but never listed (`/topics`, `/civic`,
+  `/curated`, `/data-library`, `/observatory`, `/observatory/sources`, `/labs` and five lab
+  pages, and the two history pages). Pages `robots.txt` disallows, status pages and the
+  Knowledge search (whose store is not provisioned) are left out.
+
+## Checks
+
+`tests/county-pages.test.mjs`: the generated table matches the bundle; 105 unique addresses with
+centres inside Kansas and complete estimates; the margin and change wording; the source and
+inflation statements; the sitemap contents against `robots.txt` and the page files.
+In a browser at desktop and phone widths the county page and the index had no accessibility
+violations (WCAG 2.2 A and AA rules) and no sideways scrolling.
