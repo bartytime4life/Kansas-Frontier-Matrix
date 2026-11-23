@@ -1,0 +1,95 @@
+{
+  "receipt_id": "kfm-county-directory-search-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/counties/counties.module.css",
+    "app/counties/county-directory.tsx",
+    "app/counties/page.tsx",
+    "app/explore/explore.module.css",
+    "app/explore/page.tsx",
+    "docs/county-pages-20261123.md",
+    "tests/county-pages-http.test.mjs",
+    "tests/county-pages.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/counties/counties.module.css": "sha256:89bddf9783740e38f15920819aa8e022f78d5f75f76c883fc343e36c783c25c6",
+    "app/counties/county-directory.tsx": "sha256:7a2b3b652cc5c43c85095b7208f0bbeb330bbe6d22c50687f0b13edff15dbd72",
+    "app/counties/page.tsx": "sha256:8b4ffcc28db2bd0cc58607ab8e70bcaa0e9d394319fa14583797ca9d2d705948",
+    "app/explore/explore.module.css": "sha256:0a6da3dc996d5a72509f2243ad4d6945d6a53d9cb4be851e29c4d4f808df7054",
+    "app/explore/page.tsx": "sha256:6e1989aa369d4b6663f972ab8bff07a49c21e9ef12ce893328032241ed6107e4",
+    "docs/county-pages-20261123.md": "sha256:3aa57a2d3f6dd81834eb7b685fd2db3981f05c99847fb510fe298af6d03fb981",
+    "tests/county-pages-http.test.mjs": "sha256:3ed7fe1c7b747f73eb08bfc368848f6bd9ac359b07e33cb3200cf41975930c66",
+    "tests/county-pages.test.mjs": "sha256:c98f0f1852ba17d95a0c3f0bac43eb6fd4539822b3c6020691117dc24d3af087"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bbc94c8919d19c600c0ab267c55ecd4ec723e410:app/counties/page.tsx",
+      "repo:bbc94c8919d19c600c0ab267c55ecd4ec723e410:app/explore/page.tsx",
+      "repo:bbc94c8919d19c600c0ab267c55ecd4ec723e410:app/county-facts.generated.json",
+      "repo:bbc94c8919d19c600c0ab267c55ecd4ec723e410:tests/county-pages-http.test.mjs",
+      "repo:bbc94c8919d19c600c0ab267c55ecd4ec723e410:app/records/page.tsx"
+    ],
+    "evidence_hashes": [
+      "sha256:a8d968050cc36ef2f56ecadd50ef4e4662e6ed4be4fd05e63fdf11a8bcac81c0",
+      "sha256:a3352b669f64abc1891caad9380470a8b37bbe1c844ac1cdf7fb14bc3b275d61",
+      "sha256:169eb3933c1a504307fe4b5331e1f3d20f412c03111870d7ac0f414460dc2e1f",
+      "sha256:69689e8b57bb06f5a0d9f50e86b0a807651cf5b03d14b72fd41c7adfdc329ea1",
+      "sha256:7b142fa8c30b6012aaf439c2c80a50564546ad9762463d904379bff9615628de"
+    ]
+  },
+  "truth_labels": {
+    "app/counties/counties.module.css": "CONFIRMED",
+    "app/counties/county-directory.tsx": "CONFIRMED",
+    "app/counties/page.tsx": "CONFIRMED",
+    "app/explore/explore.module.css": "CONFIRMED",
+    "app/explore/page.tsx": "CONFIRMED",
+    "docs/county-pages-20261123.md": "CONFIRMED",
+    "tests/county-pages-http.test.mjs": "CONFIRMED",
+    "tests/county-pages.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Combined production build and full Node suite: 3316 passes, 25 skipped, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript after build and Git whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production HTTP verification of complete directory, all 105 county profiles, both Kansas records links, and the records route",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Chrome keyboard, search, empty and clear workflow at 1280 and 390 CSS pixels",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted exact-head checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at draft creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T05:37:11.419975+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Bring the existing county directory ahead of map guide cards and add local filtering of public county names."
+}

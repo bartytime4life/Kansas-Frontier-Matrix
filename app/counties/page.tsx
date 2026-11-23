@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
 import { COUNTY_PAGES, countyPath } from "../county-pages";
 import explore from "../explore/explore.module.css";
-import styles from "./counties.module.css";
+import { CountyDirectory } from "./county-directory";
 
 const title = "Kansas counties", description = "All 105 Kansas counties: income, age, housing, education and poverty from the Census Bureau, each with a map of the county.";
 export const metadata: Metadata = {
@@ -15,10 +15,9 @@ export default function Page() {
   return <main className={explore.page}>
     <header className={explore.header}><Link href="/">← Kansas map</Link><Link href="/explore">Map guides</Link></header>
     <article className={explore.article}>
-      <p className={explore.kicker}>105 counties</p>
       <h1>Kansas counties</h1>
       <p>Pick a county for its Census Bureau estimates of income, age, housing, education and poverty, and a map that opens on it.</p>
-      <ul className={styles.index}>{COUNTY_PAGES.map(county => <li key={county.fips}><Link href={countyPath(county)}>{county.name}</Link></li>)}</ul>
+      <CountyDirectory counties={COUNTY_PAGES.map(county => ({ name: county.name, href: countyPath(county) }))} />
       <p><Link href="/labs/observatory">Compare all 105 counties in the County Observatory →</Link> · <Link href="/records">Kansas records →</Link></p>
     </article>
   </main>;
