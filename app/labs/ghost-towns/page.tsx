@@ -2,7 +2,7 @@ import GhostTowns from './GhostTowns.jsx';
 import { postalTimeline, readPostalView } from './post-office-model.mjs';
 import snapshot from './post-office-snapshot.json';
 
-export const metadata = {
+export const metadata = { alternates: { canonical: "https://kansasfrontiermatrix.com/labs/ghost-towns" },
   title: 'Boom & Ghost Towns | Kansas Frontier Matrix',
   description: 'Explore recorded post-office dates and approximate locations in Douglas County, Kansas.',
 };
