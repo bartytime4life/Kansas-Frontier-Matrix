@@ -26,7 +26,7 @@ const refs = [
 ];
 const Cite = ({ n }: { n: number }) => <a href={refs[n-1][2]} target="_blank" rel="noreferrer">[{n}]</a>;
 
-export const metadata = { title: "Temporal Sources & Coverage · KFM Event Observatory" };
+export const metadata = { alternates: { canonical: "https://kansasfrontiermatrix.com/observatory/sources" }, title: "Temporal Sources & Coverage · KFM Event Observatory" };
 export default function SourcesPage() {
   return <main className="event-research">
     <Link href="/observatory">← Event Observatory</Link>

@@ -6,7 +6,7 @@ import { EARTH_ENGINE_CONTEXT_LAYERS } from "../earth-engine-context";
 import { FEATURE_CATALOG, featureMaturityLabel } from "../feature-catalog";
 import styles from "./topics.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = { alternates: { canonical: "https://kansasfrontiermatrix.com/topics" },
   title: "Topics · Kansas Frontier Matrix",
   description: "Explore Kansas layers, research and feature families by subject, with source coverage and limitations.",
 };
