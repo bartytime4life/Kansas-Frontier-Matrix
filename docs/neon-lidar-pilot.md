@@ -48,3 +48,19 @@ NEON account/data access and the local open-source processing path add no paid A
 The candidate passed 31 NEON UI tests, 17 acquisition/terrain regressions, four signed-artifact tests, 11 existing relay tests, TypeScript, focused lint and a production build. All six existing SQL dataset cases passed on dev's Node 22.23.4 runtime; the workstation's older Node build lacks SQLite R-tree. All 27 scientific/capture/credential tests passed inside dev's pinned Python 3.12 / NumPy 2.2.6 / Rasterio 1.4.3 environment.
 
 The actual derived package passed both the gateway and browser-client parsers, and the locally built production app returned it through an in-process signed test bridge. This is local HTTP evidence using dummy relay keys, not a live PC-to-GoDaddy exchange. Fresh Chrome desktop/mobile acceptance, current provider Published identity, dev-service activation and public deployment remain separate checks. Roll back application and PC module release together; retain original rasters and receipts.
+
+## Research Discovery entry point (2026-11-23)
+
+Research Discovery links directly to `/acquisition#neon-lidar-lab` from a dedicated
+terrain/canopy introduction. The fragment targets the existing lab; readers still
+choose **Load Konza Prairie pilot** explicitly. The introduction preserves the
+one-tile scope, September 2024 catalog month, RELEASE-2026, nearest-sample display
+and pending scientific review. It does not add the pilot to the registered map
+source count or treat provider canopy as DSM minus DTM.
+
+Fresh public readback on 2026-11-23 loaded the pilot through the public API and
+rendered its acquisition identity, fresh cache timestamp, native 83.41 m maximum
+and five native canopy values above 50 m. This is public-delivery observation,
+not independent accuracy review or source admission. Chrome attachment remained
+blocked by its desktop network-policy requirement; rendered acceptance used the
+in-app browser. Provider dashboard revision history was not read.
