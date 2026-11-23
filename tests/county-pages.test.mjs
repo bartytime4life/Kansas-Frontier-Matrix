@@ -74,7 +74,7 @@ test('the pages say where the numbers come from and never compare dollars across
   assert.match(route, /export function generateStaticParams\(\) \{ return COUNTY_PAGES\.map\(county => \(\{ slug: county\.slug \}\)\); \}/);
   assert.match(route, /countyMetadata\(\(await params\)\.slug\)/);
   const index = await readFile('app/counties/page.tsx', 'utf8');
-  assert.match(index, /canonical: `\$\{PUBLIC_SITE_ORIGIN\}\/counties`/); assert.match(index, /COUNTY_PAGES\.map\(county => <li key=\{county\.fips\}><Link href=\{countyPath\(county\)\}>/);
+  assert.match(index, /canonical: `\$\{PUBLIC_SITE_ORIGIN\}\/counties`/);
 });
 
 test('the sitemap lists every county and the public reading pages that were missing, and nothing robots.txt disallows', async () => {

@@ -1,0 +1,93 @@
+{
+  "receipt_id": "kfm-county-directory-search-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/counties/counties.module.css",
+    "app/counties/county-directory.tsx",
+    "app/counties/page.tsx",
+    "app/explore/explore.module.css",
+    "app/explore/page.tsx",
+    "docs/county-pages-20261123.md",
+    "tests/county-pages-http.test.mjs",
+    "tests/county-pages.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/counties/counties.module.css": "sha256:a4f7e019af53aeef866d97bc2f4a27c96f52f597780a7e466f3151860daa3366",
+    "app/counties/county-directory.tsx": "sha256:7a2b3b652cc5c43c85095b7208f0bbeb330bbe6d22c50687f0b13edff15dbd72",
+    "app/counties/page.tsx": "sha256:7e8a41fe2243a64f270e373a351a55eef94b22090198f2099e9cc504fb53cc25",
+    "app/explore/explore.module.css": "sha256:0a6da3dc996d5a72509f2243ad4d6945d6a53d9cb4be851e29c4d4f808df7054",
+    "app/explore/page.tsx": "sha256:39f6d7d7958ab7210c9d3253196ee2ced7a407129211666d246f097469c6acf2",
+    "docs/county-pages-20261123.md": "sha256:3aa57a2d3f6dd81834eb7b685fd2db3981f05c99847fb510fe298af6d03fb981",
+    "tests/county-pages-http.test.mjs": "sha256:f94365fe4c42a97320ea6d6388ee229afff183531610bcb0715154a47889a62e",
+    "tests/county-pages.test.mjs": "sha256:c98f0f1852ba17d95a0c3f0bac43eb6fd4539822b3c6020691117dc24d3af087"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:1bb85d1579a935626806e4bc32f415ee27dc696c:app/counties/page.tsx",
+      "repo:1bb85d1579a935626806e4bc32f415ee27dc696c:app/explore/page.tsx",
+      "repo:1bb85d1579a935626806e4bc32f415ee27dc696c:app/county-facts.generated.json",
+      "repo:1bb85d1579a935626806e4bc32f415ee27dc696c:tests/county-pages-http.test.mjs"
+    ],
+    "evidence_hashes": [
+      "sha256:505a278a7938cbbf539d8a1b92094a2edfb02594de53b03b22b6785c79fade30",
+      "sha256:a3a19d6609f16ae5aebd639501b085c07bcd6b11c03f11e4949e5f011d0c069e",
+      "sha256:169eb3933c1a504307fe4b5331e1f3d20f412c03111870d7ac0f414460dc2e1f",
+      "sha256:69689e8b57bb06f5a0d9f50e86b0a807651cf5b03d14b72fd41c7adfdc329ea1"
+    ]
+  },
+  "truth_labels": {
+    "app/counties/counties.module.css": "CONFIRMED",
+    "app/counties/county-directory.tsx": "CONFIRMED",
+    "app/counties/page.tsx": "CONFIRMED",
+    "app/explore/explore.module.css": "CONFIRMED",
+    "app/explore/page.tsx": "CONFIRMED",
+    "docs/county-pages-20261123.md": "CONFIRMED",
+    "tests/county-pages-http.test.mjs": "CONFIRMED",
+    "tests/county-pages.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and full Node suite: 3312 passes, 25 skipped, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript after build and Git whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production HTTP verification of guide entry and all 105 county links and profiles",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Chrome keyboard, search, empty and clear workflow at 1280 and 390 CSS pixels",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted exact-head checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at draft creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T05:31:42.709568+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Bring the existing county directory ahead of map guide cards and add local filtering of public county names."
+}
