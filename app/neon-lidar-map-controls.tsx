@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useId, useMemo, useState, type RefObject } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import { createAcquisitionSession } from "./acquisition-client";
 import { neonElevationDomain, neonLidarProbe, parseNeonLidarPreview, readNeonLidarLocalJson, type NeonLidarMode, type NeonLidarPreview } from "./neon-lidar-preview";
@@ -34,6 +34,9 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
   const [busy, setBusy] = useState(false);
   const [fileError, setFileError] = useState("");
   const [mapError, setMapError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const sceneRef = useRef({ styleReady, flatMap, atPresent, reducedMotion });
+  useEffect(() => { sceneRef.current = { styleReady, flatMap, atPresent, reducedMotion }; }, [styleReady, flatMap, atPresent, reducedMotion]);
   const [applied, setApplied] = useState(false);
   const [coordinateDraft, setCoordinateDraft] = useState(emptyDraft);
   const [session] = useState(createAcquisitionSession);
@@ -93,7 +96,7 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
   async function importFile(file: File | undefined) {
     if (!file) return;
     const request = session.begin();
-    removeOverlay(); setPreview(null); setPilotReceipt(null); setLoadKind("file"); setRepresentation("flat"); setVerticalExaggeration(1); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(true); setFileError(""); setMapError("");
+    removeOverlay(); setPreview(null); setPilotReceipt(null); setLoadKind("file"); setRepresentation("flat"); setVerticalExaggeration(1); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(true); setFileError(""); setMapError(""); setActionError("");
     try {
       const parsed = parseNeonLidarPreview(await readNeonLidarLocalJson(file, request.signal));
       if (!parsed) throw new Error("Preview validation failed. Choose a matching terrain/surface/canopy JSON from the local NEON preparer.");
@@ -101,17 +104,23 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
     } catch (error: unknown) { if (request.current()) setFileError(error instanceof Error ? error.message : "The local preview could not be read."); }
     finally { if (request.current()) setBusy(false); }
   }
-  async function loadPilot() {
-    const request = session.begin();
-    removeOverlay(); setPreview(null); setPilotReceipt(null); setLoadKind("pilot"); setRepresentation("flat"); setVerticalExaggeration(1); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(true); setFileError(""); setMapError("");
+  async function loadPilot(explore = false) {
+    const request = session.begin(), requestedMap = mapRef.current;
+    removeOverlay(); setPreview(null); setPilotReceipt(null); setLoadKind("pilot"); setRepresentation("flat"); setVerticalExaggeration(1); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(true); setFileError(""); setMapError(""); setActionError("");
     try {
       const receipt = await readNeonLidarPilot(request.signal);
-      if (request.current()) { setPreview(receipt.preview); setPilotReceipt(receipt); }
+      if (request.current()) {
+        setPreview(receipt.preview); setPilotReceipt(receipt);
+        if (explore) {
+          if (mapRef.current !== requestedMap) setActionError("The map changed while the preview loaded. Explore again to frame the current map.");
+          else activate3D(receipt.preview, "chm", 3);
+        }
+      }
     } catch (error: unknown) { if (request.current()) setFileError(error instanceof Error ? error.message : "The Konza Prairie preview is unavailable. Import a prepared file or try again later."); }
     finally { if (request.current()) setBusy(false); }
   }
   function clear() {
-    session.cancel(); removeOverlay(); setRepresentation("flat"); setVerticalExaggeration(1); setPreview(null); setPilotReceipt(null); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(false); setFileError(""); setMapError("");
+    session.cancel(); removeOverlay(); setRepresentation("flat"); setVerticalExaggeration(1); setPreview(null); setPilotReceipt(null); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(false); setFileError(""); setMapError(""); setActionError("");
   }
   function selectAxis(axis: keyof CoordinateDraft, input: string) {
     if (!preview) return;
@@ -123,6 +132,51 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
     });
   }
   const canShow = Boolean(preview && data && bounds && styleReady && flatMap && atPresent);
+  const sceneBlock = !flatMap ? "Use local sample view first. Statewide Terrain 3D uses a different elevation source."
+    : !atPresent ? "Choose Present first. This acquisition cannot represent historical atlas frames."
+      : !styleReady ? "Waiting for the map style before 3D can open." : "";
+  const canExplore3D = !busy && !sceneBlock && (!preview || Boolean(data && bounds));
+  function runtime3DBlock() {
+    const current = sceneRef.current, map = mapRef.current;
+    if (!map || !current.styleReady) return "The map is not ready for local sample 3D yet.";
+    if (!current.flatMap) return "Use local sample view first; globe and statewide Terrain 3D hold this tile.";
+    if (!current.atPresent) return "Choose Present first. This acquisition cannot represent a historical frame.";
+    try {
+      // The host styleReady gate owns safe style generations. isStyleLoaded also waits
+      // for unrelated source tiles, which must not block this local dataset.
+      if (map.getProjection?.()?.type !== "mercator") return "Local sample 3D requires the Mercator map camera.";
+      if (map.getTerrain?.()) return "Turn off the external elevation terrain before exploring local sample 3D.";
+    } catch { return "The map's projection and terrain state could not be verified."; }
+    return "";
+  }
+  function activate3D(input: NeonLidarPreview, surface: NeonLidarMode, scale: number) {
+    const block = runtime3DBlock();
+    if (block) { setActionError(block); return; }
+    const map = mapRef.current, localData = buildNeonMapData(input), localBounds = neonMapBounds(input);
+    if (!map || !localData || !localBounds) { setActionError("This preview has no supported map georeferencing. Its raster values remain available in Science."); return; }
+    try {
+      const metadata = buildNeon3DMapData(localData, surface, scale).metadata;
+      if (!metadata.eligible_cells) { setActionError("No valid columns are available for this surface. Choose another surface or inspect the source samples."); return; }
+      const size = map.getCanvas().getBoundingClientRect(), compact = size.width < 760;
+      const padding = compact ? { top: 50, left: 22, right: 22, bottom: Math.round(size.height * 0.55) }
+        : { top: 75, left: 60, right: Math.min(500, Math.round(size.width * 0.45)), bottom: 80 };
+      if (size.width - padding.left - padding.right < 64 || size.height - padding.top - padding.bottom < 64) {
+        setActionError("The map viewport is too small to frame 3D. Enlarge the map and try again."); return;
+      }
+      // Fit and pitch in one transition: a second camera action could cancel the first.
+      map.fitBounds(localBounds, { maxZoom: 16, pitch: 60, bearing: -25, linear: true,
+        duration: sceneRef.current.reducedMotion ? 0 : 850, padding });
+      setMode(surface); setRepresentation("columns"); setVerticalExaggeration(scale);
+      setOpacity(previous => previous > 0 ? previous : 80); setEnabled(true); setActionError("");
+    } catch { setActionError("The 3D view could not open. Source samples are retained; try the flat view or reload the map."); }
+  }
+  async function explore3D() {
+    if (busy) return;
+    const block = runtime3DBlock();
+    if (block) { setActionError(block); return; }
+    if (!preview) { await loadPilot(true); return; }
+    activate3D(preview, mode, representation === "columns" ? verticalExaggeration : 3);
+  }
   function toggle() { if (enabled) { removeOverlay(); setEnabled(false); setApplied(false); } else if (canShow) setEnabled(true); }
   function fit() {
     const map = mapRef.current;
@@ -132,18 +186,18 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
       const compact = size.width < 760;
       map.fitBounds(bounds, { maxZoom: 15, duration: reducedMotion ? 0 : 550,
         padding: compact ? { top: 50, left: 22, right: 22, bottom: Math.round(size.height * 0.55) } : { top: 75, left: 60, right: Math.min(500, Math.round(size.width * 0.45)), bottom: 80 } });
-    } catch { setMapError("The map could not fit this tile. The local file is retained."); }
+    } catch { setActionError("The map could not fit this tile. The local file is retained."); }
   }
   function pitch() {
     if (!canShow || !enabled) return;
     try { mapRef.current?.easeTo({ pitch: 55, bearing: -20, duration: reducedMotion ? 0 : 550 }); }
-    catch { setMapError("The camera could not pitch this tile. Your source samples are retained."); }
+    catch { setActionError("The camera could not pitch this tile. Your source samples are retained."); }
   }
   function plan() {
-    setRepresentation("flat");
+    setActionError(""); setRepresentation("flat");
     if (!canShow) return;
     try { mapRef.current?.easeTo({ pitch: 0, bearing: 0, duration: reducedMotion ? 0 : 550 }); }
-    catch { setMapError("The camera could not return to plan view."); }
+    catch { setActionError("The camera could not return to plan view."); }
   }
   function focusStop(id: string) {
     const stop = storyStops.find(item => item.id === id), map = mapRef.current;
@@ -151,17 +205,22 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
     setMode(stop.mode); setCoordinateDraft({ row: String(stop.row + 1), column: String(stop.column + 1) });
     if (!stop.display_center) return;
     try { map.easeTo({ center: stop.display_center, zoom: 16, pitch: representation === "columns" ? 55 : 0, bearing: representation === "columns" ? -20 : 0, duration: reducedMotion ? 0 : 650 }); }
-    catch { setMapError("The sampled location is selected, but the camera could not focus it."); }
+    catch { setActionError("The sampled location is selected, but the camera could not focus it."); }
   }
-  const status = busy ? loadKind === "pilot" ? "Loading the dev-processed Konza Prairie preview…" : "Reading the selected file locally…" : fileError || mapError || !preview ? fileError || mapError || "No NEON preview loaded. Load Konza Prairie to begin."
+  const displayError = actionError || mapError;
+  const explore3DStatus = displayError || sceneBlock || (busy ? "Loading a preview for the map…" : !preview ? "Loads the Konza pilot, shows columns at 3×, frames the tile and tilts the camera."
+    : !data || !bounds ? "This preview needs map georeferencing before 3D can open."
+      : representation === "columns" && enabled ? `3D sample columns · ${verticalExaggeration}× relative heights. Explore again to reframe and tilt.`
+        : "Shows this tile at 3× relative height, frames it and tilts the camera. Source readings stay unscaled.");
+  const status = busy ? loadKind === "pilot" ? "Loading the dev-processed Konza Prairie preview…" : "Reading the selected file locally…" : fileError || displayError || !preview ? fileError || displayError || "No NEON preview loaded. Explore in 3D to load and display Konza Prairie, or load the preview only."
     : !data || !bounds ? "This preview has no supported offline georeferencing. Re-prepare it to show it on the map; the acquisition lab can still inspect its numeric grid."
       : !flatMap ? "Local overlay held in globe or Terrain 3D. Return to 2D to display this tile."
         : !atPresent ? "Local overlay held outside Present. This dated acquisition is not a source for historical atlas frames."
           : !styleReady ? "Local preview ready; waiting for the map style."
-            : !enabled ? pilotReceipt ? "Dev-processed provider pilot ready. Choose Show on map when you want to display it." : "Tile ready locally. Choose Show on map when you want to display it."
+            : !enabled ? pilotReceipt ? "Dev-processed provider pilot ready. Explore in 3D, or use Show on map without moving the camera." : "Tile ready locally. Explore in 3D, or use Show on map without moving the camera."
               : opacity === 0 ? "Local overlay hidden at 0% opacity. Increase opacity to show its cells."
                 : applied ? "Sampled cells enabled at Present. This is dated context, not live vegetation or KFM evidence." : "Applying local preview to the map…";
-  return { preview, pilotReceipt, mode, opacity, enabled, busy, fileError, mapError, status, canShow, applied, flatMap, atPresent, coordinateDraft, probe, elevationDomain,
+  return { preview, pilotReceipt, mode, opacity, enabled, busy, fileError, mapError: displayError, status, canShow, canExplore3D, explore3DStatus, explore3D, applied, flatMap, atPresent, coordinateDraft, probe, elevationDomain,
     importFile, loadPilot, clear, toggle, fit, selectAxis, onFlatMap, representation, setRepresentation, verticalExaggeration, columns, storyStops, pitch, plan, focusStop,
     setVerticalExaggeration: (value: number) => { if (Number.isFinite(value)) setVerticalExaggeration(Math.max(1, Math.min(5, value))); },
     setMode, setOpacity: (value: number) => { if (Number.isFinite(value)) setOpacity(Math.max(0, Math.min(100, value))); } };
@@ -185,19 +244,23 @@ export function NeonLidarMapControls({ controller: c }: { controller: NeonLidarM
   return <section className={styles.control} aria-labelledby={`${id}-title`}>
     <div className={styles.heading}><span>LOCAL NEON / TERRAIN + VEGETATION</span><h4 id={`${id}-title`}>Read the landscape together</h4></div>
     <p>One historical 1 km tile. Free, with no subscription.</p>
-    <Link className={styles.scienceLink} href="/labs/terrain">Explore Terrain Science →</Link>
-    <button type="button" className={styles.return} disabled={c.busy} onClick={() => void c.loadPilot()}>Load Konza Prairie pilot</button>
+    <div className={styles.explore3D} aria-busy={c.busy}>
+      <button type="button" className={styles.exploreButton} aria-describedby={`${id}-3d-status`} disabled={!c.canExplore3D} onClick={() => void c.explore3D()}>Explore in 3D</button>
+      <p id={`${id}-3d-status`} className={c.mapError ? styles.warning : styles.hint} role="status" aria-live="polite">{c.explore3DStatus}</p>
+      <div className={styles.quickActions}>{c.preview && <button type="button" disabled={c.busy || !c.canShow} onClick={c.plan}>Return to flat view</button>}{c.busy && <button type="button" onClick={c.clear}>Cancel</button>}</div>
+    </div>
+    {!c.flatMap && c.onFlatMap && <><button type="button" className={styles.return} onClick={c.onFlatMap}>Use local sample view</button><p className={styles.hint}>Local sample 3D uses the map camera. Statewide Terrain 3D uses a different elevation source and holds this tile.</p></>}
+    <div className={styles.sourceActions}><button type="button" disabled={c.busy} onClick={() => void c.loadPilot()}>Load Konza Prairie pilot</button><Link href="/labs/terrain">Terrain Science →</Link></div>
     <p className={c.fileError || c.mapError ? styles.error : styles.status} role="status" aria-live="polite" aria-busy={c.busy}>{c.status}</p>
-    {(!preview && !c.busy && !c.fileError) && <p className={styles.hint}>Load the available Konza Prairie pilot above, then choose Show on map and Fit tile. Use <Link href="/labs/terrain">Terrain Science</Link> for distributions, relationships and exports. The pilot covers one tile, not all Kansas.</p>}
+    {(!preview && !c.busy && !c.fileError) && <p className={styles.hint}>Explore in 3D loads and displays the available Konza Prairie tile in one action. Load the preview only if you want to begin with flat samples. Use <Link href="/labs/terrain">Terrain Science</Link> for distributions, relationships and exports. The pilot covers one tile, not all Kansas.</p>}
     {preview && <>
       {c.pilotReceipt && <div className={styles.pilotReview}><p><strong>Provider preview.</strong> Scientific review pending; independent accuracy and vertical reference are unverified.</p><p className={c.pilotReceipt.cache.state === "stale" ? styles.warning : styles.hint}>Cache {c.pilotReceipt.cache.state} · <time dateTime={c.pilotReceipt.cache.at}>{c.pilotReceipt.cache.at}</time>{c.pilotReceipt.cache.state === "stale" ? ". This cached preview is stale; it is not a new observation." : ". Acquisition dates remain separate from cache time."}</p><p className={styles.warning}>Native CHM maximum {c.pilotReceipt.review.canopy_native_max_m.toFixed(2)} m; {c.pilotReceipt.review.canopy_native_cells_above_50m} native cells above 50 m. Outliers retained for review, not identified as trees.</p></div>}
       {preview.data_kind === "synthetic-test" && <p className={styles.synthetic}><strong>Synthetic test · not observed terrain.</strong> These values do not describe this NEON site.</p>}
       <div className={styles.identity}><strong>{preview.source.site}</strong><span>Catalog {preview.source.month}</span><span>Run {preview.source.acquisition_run}</span><span>{preview.source.release}</span><code>{preview.source.tile}</code></div>
-      {!c.flatMap && c.onFlatMap && <button type="button" className={styles.return} onClick={c.onFlatMap}>Return to 2D for local tile</button>}
       <div className={styles.modes} role="group" aria-label="Local NEON surface">{modes.map(item => <button type="button" key={item.kind} aria-pressed={c.mode === item.kind} onClick={() => c.setMode(item.kind)}><small>{item.kind.toUpperCase()}</small>{item.label}</button>)}</div>
       <label className={styles.opacity} htmlFor={`${id}-opacity`}>Overlay opacity <output>{c.opacity}%</output><input id={`${id}-opacity`} type="range" min={0} max={100} step={5} value={c.opacity} aria-valuetext={`${c.opacity} percent`} onChange={event => c.setOpacity(Number(event.target.value))} /></label>
       <div className={styles.actions}><button type="button" disabled={!c.enabled && !c.canShow} aria-pressed={c.enabled} onClick={c.toggle}>{c.enabled ? "Hide" : "Show on map"}</button><button type="button" disabled={!c.canShow} onClick={c.fit}>Fit tile</button><button type="button" onClick={c.clear}>Clear</button></div>
-      <div className={styles.representation} role="group" aria-label="Sample representation"><button type="button" aria-pressed={c.representation === "flat"} onClick={c.plan}>Flat samples</button><button type="button" aria-pressed={c.representation === "columns"} onClick={() => c.setRepresentation("columns")}>3D sample columns</button></div>
+      <div className={styles.representation} role="group" aria-label="Sample representation"><button type="button" aria-pressed={c.representation === "flat"} onClick={c.plan}>Flat samples</button><button type="button" aria-pressed={c.representation === "columns"} disabled={!c.canExplore3D} onClick={() => void c.explore3D()}>3D sample columns</button></div>
       {c.representation === "columns" && <div className={styles.columnControls}>
         <label>Vertical exaggeration <output>{c.verticalExaggeration}×</output><input type="range" min={1} max={5} step={0.5} value={c.verticalExaggeration} aria-valuetext={`${c.verticalExaggeration} times; source readings remain unscaled`} onChange={event => c.setVerticalExaggeration(Number(event.target.value))}/></label>
         <button type="button" disabled={!c.canShow || !c.enabled} onClick={c.pitch}>Pitch camera to inspect 3D</button>

@@ -63,9 +63,15 @@ size, vegetation area, species, biomass, carbon, growth, change or field accurac
 
 ## Relative 3D display
 
-The map can display a bounded, explicitly selected column representation of the
-sample grid. Its shared local height baseline and any vertical exaggeration are
-visualization settings. Source readings and science exports remain unscaled.
+In Appearance, **Explore in 3D** loads the Konza pilot if needed, enables the
+column representation, fits its tile and tilts the camera in one action. It uses
+the currently loaded preview when one is already present. The first 3D entry
+uses a labelled 3× scale; the control remains adjustable from 1× to 5×. Return to
+Flat samples for an overhead view. The separate statewide Terrain 3D preset uses
+an external elevation source and does not display these local NEON samples.
+
+The map displays a bounded column representation of the sample grid. Its shared
+local height baseline and any vertical exaggeration are visualization settings. Source readings and science exports remain unscaled.
 Ground/surface columns represent sampled elevations relative to that baseline;
 canopy columns use valid DTM as their base and the independent provider CHM as
 their height. Missing ground cannot support a placed canopy column. The

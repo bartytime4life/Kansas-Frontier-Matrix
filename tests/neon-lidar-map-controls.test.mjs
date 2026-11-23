@@ -29,7 +29,10 @@ function fixture(georeferenced = true) {
 const file = input => ({ size: 10000, text: async () => JSON.stringify(input) });
 async function setup(overrides = {}, pilotOverrides = {}) {
   const handlers = new Map(), calls = [], map = {
-    overlay: null, hits: [], fail: false,
+    overlay: null, hits: [], fail: false, terrain: null, projection: "mercator", loaded: true,
+    getProjection() { return { type: this.projection }; },
+    getTerrain() { return this.terrain; },
+    isStyleLoaded() { return this.loaded; },
     on(event, callback) { if (!handlers.has(event)) handlers.set(event, new Set()); handlers.get(event).add(callback); },
     off(event, callback) { handlers.get(event)?.delete(callback); },
     emit(event, payload) { for (const callback of [...handlers.get(event) ?? []]) callback(payload); },
@@ -255,4 +258,52 @@ test("sample columns are opt-in, bounded, source readings stay unscaled and came
   c.plan(); c = s.render(); assert.equal(c.representation, "flat"); assert.equal(s.calls.filter(call => call.kind === "camera").at(-1).options.pitch, 0);
   s.options.flatMap = false; c = s.render(); const count = s.calls.length; c.pitch(); c.focusStop("high-ground"); assert.equal(s.calls.length, count);
   s.harness.dispose();
+});
+
+
+test("Explore in 3D enables the exact loaded samples, restores visibility and fits/pitches in one transition", async () => {
+  const s = await setup(); let c = s.render(); const input = fixture(); input.grid.dtm[0] = 309.65; input.grid.dsm[0] = 321.65;
+  await c.importFile(file(input)); c = s.render(); c.selectAxis("row", "1"); c.setOpacity(0); c = s.render();
+  s.map.loaded = false; // Unrelated source tiles may be loading while the host style generation is ready.
+  await c.explore3D(); c = s.render();
+  assert.equal(c.preview.grid.dtm[0], 309.65); assert.equal(c.probe.surfaceAboveGround, 12); assert.equal(c.enabled, true); assert.equal(c.representation, "columns"); assert.equal(c.verticalExaggeration, 3); assert.equal(c.opacity, 80);
+  const fits = s.calls.filter(call => call.kind === "fit"); assert.equal(fits.length, 1); assert.equal(fits[0].options.pitch, 60); assert.equal(fits[0].options.bearing, -25); assert.equal(fits[0].options.linear, true); assert.equal(fits[0].options.duration, 0); assert.equal(s.calls.filter(call => call.kind === "camera").length, 0);
+  assert.ok(JSON.stringify(s.harness.exports.NeonLidarMapBadge({ controller: c })).includes('relative sampled heights'));
+  c.setVerticalExaggeration(1.5); c = s.render(); s.options.reducedMotion = false; c = s.render(); await c.explore3D(); c = s.render(); assert.equal(c.verticalExaggeration, 1.5); assert.equal(s.calls.filter(call => call.kind === "fit").at(-1).options.duration, 850);
+  c.plan(); c = s.render(); assert.equal(c.representation, "flat"); assert.equal(s.calls.filter(call => call.kind === "camera").at(-1).options.pitch, 0); s.harness.dispose();
+});
+
+test("Explore in 3D explicitly loads the pilot once from empty and canceled or replaced loads never move the camera", async () => {
+  let finish, reads = 0;
+  const s = await setup({}, { readNeonLidarPilot: () => { reads++; return new Promise(resolve => { finish = resolve; }); } }); let c = s.render();
+  const first = c.explore3D(); c = s.render(); assert.equal(c.busy, true); assert.equal(reads, 1); finish(relayReceipt()); await first; c = s.render();
+  assert.equal(c.preview.data_kind, "provider-files"); assert.equal(c.pilotReceipt.cache.state, "stale"); assert.equal(c.enabled, true); assert.equal(c.representation, "columns"); assert.equal(c.verticalExaggeration, 3); assert.equal(s.calls.filter(call => call.kind === "fit").length, 1);
+  c.clear(); c = s.render(); const canceled = c.explore3D(); c.clear(); finish(relayReceipt()); await canceled; c = s.render(); assert.equal(c.preview, null); assert.equal(c.enabled, false); assert.equal(s.calls.filter(call => call.kind === "fit").length, 1);
+  const replaced = c.explore3D(); await c.importFile(file(fixture())); finish(relayReceipt()); await replaced; c = s.render(); assert.equal(c.preview.data_kind, "synthetic-test"); assert.equal(c.enabled, false); assert.equal(c.representation, "flat"); assert.equal(s.calls.filter(call => call.kind === "fit").length, 1);
+  s.harness.dispose();
+});
+
+test("3D scene guards prevent loads or camera mutations and recheck delayed scene/map changes", async () => {
+  let reads = 0, finish;
+  const s = await setup({}, { readNeonLidarPilot: () => { reads++; return new Promise(resolve => { finish = resolve; }); } }); let c = s.render();
+  for (const field of ["flatMap", "atPresent", "styleReady"]) {
+    s.options[field] = false; c = s.render(); assert.equal(c.canExplore3D, false); await c.explore3D(); assert.equal(reads, 0); s.options[field] = true; c = s.render();
+  }
+  s.map.terrain = { source: 'external-dem' }; await c.explore3D(); c = s.render(); assert.match(c.mapError, /external elevation terrain/); assert.equal(reads, 0); s.map.terrain = null;
+  s.map.projection = 'globe'; await c.explore3D(); c = s.render(); assert.match(c.mapError, /Mercator/); assert.equal(reads, 0); s.map.projection = 'mercator';
+  const delayed = c.explore3D(); s.options.atPresent = false; c = s.render(); finish(relayReceipt()); await delayed; c = s.render(); assert.equal(c.enabled, false); assert.equal(s.calls.filter(call => call.kind === 'fit').length, 0);
+  s.options.atPresent = true; c = s.render(); c.clear(); c = s.render(); const changedMap = c.explore3D(); s.options.mapRef.current = { ...s.map }; finish(relayReceipt()); await changedMap; c = s.render(); assert.equal(c.enabled, false); assert.match(c.mapError, /map changed/); assert.equal(s.calls.filter(call => call.kind === 'fit').length, 0);
+  s.options.mapRef.current.getCanvas = () => ({ getBoundingClientRect: () => ({ width: 120, height: 100 }) });
+  await c.explore3D(); c = s.render(); assert.equal(c.enabled, false); assert.match(c.mapError, /viewport is too small/); assert.equal(s.calls.filter(call => call.kind === 'fit').length, 0);
+  s.harness.dispose();
+});
+
+test("the early 3D action invokes the full workflow and exposes the active scale and flat return", async () => {
+  const s = await setup({}, { readNeonLidarPilot: async () => relayReceipt() }); let c = s.render();
+  const controls = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": pilotClient, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": {}, "./neon-lidar-story": story, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
+  let tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c }); const launch = findNode(tree, node => node.type === "button" && node.props.children === "Explore in 3D"); assert.equal(launch.props.disabled, false); launch.props.onClick(); await settle(); c = s.render();
+  assert.equal(c.enabled, true); assert.equal(c.representation, "columns"); tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c });
+  assert.ok(findNode(tree, node => node.type === "button" && node.props.children === "Return to flat view")); assert.ok(JSON.stringify(tree).includes('3× relative heights'));
+  s.options.flatMap = false; c = s.render(); tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c }); assert.equal(findNode(tree, node => node.type === "button" && node.props.children === "Explore in 3D").props.disabled, true);
+  s.harness.dispose(); controls.dispose();
 });
