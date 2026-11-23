@@ -31,7 +31,12 @@ test('all 105 counties have a page address, a place on the map and complete esti
       const [value, margin] = county.latest[key];
       assert.ok(Number.isFinite(value) && value > 0 && Number.isFinite(margin) && margin >= 0, `${county.name} ${key}`);
     }
+    for (const key of ['medianAge', 'educationPct', 'povertyPct', 'housingUnits']) {
+      const [value, margin] = county.earlier[key];
+      assert.ok(Number.isFinite(value) && value > 0 && Number.isFinite(margin) && margin >= 0, `${county.name} earlier ${key}`);
+    }
     assert.equal(pages.countyPage(county.slug), county);
+    assert.equal(new URL(pages.countyObservatoryHref(county), 'https://example.test').searchParams.get('county'), county.fips);
   }
   assert.equal(pages.countyPage('nowhere'), undefined); assert.equal(pages.countyPage('Allen'), undefined);
   const sedgwick = pages.countyPage('sedgwick');
@@ -39,22 +44,29 @@ test('all 105 counties have a page address, a place on the map and complete esti
   assert.match(pages.countyMapHref(sedgwick), /^\/\?ctx=census-counties&c=-97\.\d+,37\.\d+&z=8\.5$/);
 });
 
-test('figures carry their margin of error, and a change is named only when it is larger than that margin', () => {
+test('county change labels use both margins at 90% confidence and retain the input precision', () => {
   assert.equal(pages.dollars([69365, 1409]), '$69,365 (±$1,409)');
   assert.equal(pages.percent([13.9, 0.8]), '13.9% (±0.8)');
   assert.equal(pages.years([36, 0.2]), '36.0 years (±0.2)');
   assert.equal(pages.count([227638, 171]), '227,638 (±171)');
-  assert.equal(pages.comparedWith([13.9, 0.8], 15.1, '%'), 'down from 15.1%');
-  assert.equal(pages.comparedWith([32.1, 0.7], 29.4, '%'), 'up from 29.4%');
-  assert.equal(pages.comparedWith([41.2, 0.6], 41.3, ' years'), 'about the same as 41.3 years');
-  assert.equal(pages.comparedWith([9.9, 2.3], 12.2, '%'), 'about the same as 12.2%', 'a difference equal to the margin is not a change');
+  const period = '2020–2024';
+  assert.equal(pages.comparedWith([13.9, 0.8], [15.1, 0.7], period), 'Lower in 2020–2024');
+  assert.equal(pages.comparedWith([32.1, 0.7], [29.4, 1.8], period), 'Higher in 2020–2024');
+  assert.equal(pages.comparedWith([32.1, 0.7], [29.4, 3.0], period), 'Difference uncertain');
+  assert.equal(pages.comparedWith([12, 3], [7, 4], period), 'Difference uncertain', 'exactly the combined margin');
+  assert.equal(pages.comparedWith([12.001, 3], [7, 4], period), 'Higher in 2020–2024');
+
+  const anderson = pages.countyPage('anderson');
+  assert.equal(pages.comparedWith(anderson.latest.educationPct, anderson.earlier.educationPct, period), 'Difference uncertain');
+  assert.equal(pages.percent(anderson.earlier.educationPct), '17.5% (±3.3)');
 });
 
 test('the pages say where the numbers come from and never compare dollars across periods', async () => {
   const page = await readFile('app/counties/county-page.tsx', 'utf8');
   assert.match(page, /alternates: \{ canonical: url \}/);
-  assert.match(page, /American Community Survey 5-year estimates/); assert.match(page, /90% margins of error/);
-  assert.match(page, /not adjusted for inflation, so this page does not compare them across periods/);
+  assert.match(page, /American Community Survey 5-year estimates/); assert.match(page, /90% margin of error/);
+  assert.match(page, /Dollar amounts use each period/);
+  assert.match(page, /countyObservatoryHref\(county\)/);
   for (const dollarsField of ['medianIncome', 'medianHomeValue', 'medianRent']) assert.ok(!new RegExp(`comparedWith\\(latest\\.${dollarsField}`).test(page), dollarsField);
   assert.ok(!facts.counties.some(county => 'medianIncome' in county.earlier || 'medianHomeValue' in county.earlier || 'medianRent' in county.earlier), 'earlier dollar amounts are not even carried');
   assert.match(page, /not Kansas Frontier Matrix evidence/);

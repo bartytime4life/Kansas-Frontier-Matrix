@@ -8,8 +8,8 @@ Each of the 105 Kansas counties now has a plain page at `/counties/<name>` (for 
 Eight Census Bureau estimates for 2020–2024, each with its 90% margin of error: median
 household income, median age, median home value, median gross rent, the share of adults 25 and
 over with a bachelor's degree or higher, the share of people below the poverty line, the share
-of occupied homes lived in by their owner, and housing units. Four of them are set beside the
-2010–2014 estimate.
+of occupied homes lived in by their owner, and housing units. Four also show their 2010–2014
+estimate and margin of error. The County Observatory link selects the page's county.
 
 A button opens the map centred on the county with county outlines on
 (`/?ctx=census-counties&c=<lon>,<lat>&z=8.5`). The centre is the middle of the county's bounding
@@ -51,9 +51,11 @@ A test regenerates the table from the bundle and fails if the committed file dif
 - **Dollars are not compared across periods.** The bundle keeps each period's own dollars,
   without an inflation adjustment, so income, home value and rent are shown for 2020–2024 only.
   The earlier dollar amounts are not carried into the generated table at all.
-- **A change is named only when it is larger than the newer estimate's margin of error.**
-  Otherwise the page says "about the same as". The earlier estimate has its own margin, so this
-  is a plain-language guard, not a significance test.
+- **Change labels use both periods' margins of error.** For median age, education and poverty,
+  the page uses the [Census Bureau comparison method](https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2025_Instructions_for_Stat_Testing_ACS.pdf)
+  at 90% confidence. The absolute difference must exceed the square root of the sum of the
+  squared margins. The page says “Difference uncertain” when it falls within that threshold.
+  Education and poverty use margins derived by the shipped County Conditions bundle.
 - The page calls the figures survey estimates for a five-year period, not a count for a year,
   and says they are public context from the Census Bureau, not Kansas Frontier Matrix evidence.
 
@@ -70,7 +72,8 @@ A test regenerates the table from the bundle and fails if the committed file dif
 ## Checks
 
 `tests/county-pages.test.mjs`: the generated table matches the bundle; 105 unique addresses with
-centres inside Kansas and complete estimates; the margin and change wording; the source and
-inflation statements; the sitemap contents against `robots.txt` and the page files.
+centres inside Kansas, complete estimates and county handoff links; the two-margin comparison
+and threshold; the source and dollar-period statements; the sitemap contents against
+`robots.txt` and the page files.
 In a browser at desktop and phone widths the county page and the index had no accessibility
 violations (WCAG 2.2 A and AA rules) and no sideways scrolling.

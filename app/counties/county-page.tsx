@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
-import { COUNTY_FACTS_SOURCES, COUNTY_PAGES, comparedWith, count, countyBridgesHref, countyMapHref, countyPage, countyPath, dollars, number, percent, populationChange, years } from "../county-pages";
 import { LANDING_GUIDES } from "../landing-guides";
 import explore from "../explore/explore.module.css";
 import styles from "./counties.module.css";
@@ -34,19 +33,17 @@ export function CountyPage({ slug }: { slug: string }) {
     <article className={explore.article}>
       <p className={explore.kicker}>Kansas county · FIPS {county.fips}</p>
       <h1>{county.name}, Kansas</h1>
-      <p>The Census Bureau estimates that <strong>{number(population.value)}</strong> people lived in {county.name} on July 1, {population.year}. That is {relation} its estimate of {number(population.baseValue)} for July 1, {population.baseYear}{share && ` (${share})`}.</p>
-      <p>The figures below are the Census Bureau&rsquo;s {latest.period} American Community Survey estimates for {county.name}. Each figure is followed by its margin of error: the survey asks a sample of households, so the true value is likely within that range.</p>
       <p><a className={explore.cta} href={href}>Open the map on {county.name} →</a></p>
       <h2>At a glance, {latest.period}</h2>
       <ul className={styles.facts}>
         <li><span>Median household income</span><strong>{dollars(latest.medianIncome)}</strong><em>in {latest.period.slice(-4)} dollars</em></li>
-        <li><span>Median age</span><strong>{years(latest.medianAge)}</strong><em>{comparedWith(latest.medianAge, earlier.medianAge, " years")} in {earlier.period}</em></li>
+        <li><span>Median age</span><strong>{years(latest.medianAge)}</strong><em>{earlier.period} estimate {years(earlier.medianAge)}<br />{comparedWith(latest.medianAge, earlier.medianAge, latest.period)}</em></li>
         <li><span>Median home value</span><strong>{dollars(latest.medianHomeValue)}</strong><em>owner-occupied homes</em></li>
         <li><span>Median rent</span><strong>{dollars(latest.medianRent)}</strong><em>per month, with utilities</em></li>
-        <li><span>Adults 25 and over with a bachelor&rsquo;s degree or higher</span><strong>{percent(latest.educationPct)}</strong><em>{comparedWith(latest.educationPct, earlier.educationPct, "%")} in {earlier.period}</em></li>
-        <li><span>People below the poverty line</span><strong>{percent(latest.povertyPct)}</strong><em>{comparedWith(latest.povertyPct, earlier.povertyPct, "%")} in {earlier.period}</em></li>
+        <li><span>Adults 25 and over with a bachelor&rsquo;s degree or higher</span><strong>{percent(latest.educationPct)}</strong><em>{earlier.period} estimate {percent(earlier.educationPct)}<br />{comparedWith(latest.educationPct, earlier.educationPct, latest.period)}</em></li>
+        <li><span>People below the poverty line</span><strong>{percent(latest.povertyPct)}</strong><em>{earlier.period} estimate {percent(earlier.povertyPct)}<br />{comparedWith(latest.povertyPct, earlier.povertyPct, latest.period)}</em></li>
         <li><span>Homes lived in by their owner</span><strong>{percent(latest.ownerOccupiedPct)}</strong><em>of occupied homes</em></li>
-        <li><span>Housing units</span><strong>{count(latest.housingUnits)}</strong><em>{new Intl.NumberFormat("en-US").format(earlier.housingUnits)} in {earlier.period}</em></li>
+        <li><span>Housing units</span><strong>{count(latest.housingUnits)}</strong><em>{earlier.period} estimate {count(earlier.housingUnits)}</em></li>
       </ul>
       <h2>Bridges</h2>
       <p>The Kansas Department of Transportation&rsquo;s bridge inventory lists <strong>{number(bridges.records)}</strong> bridge records in {county.name}: {number(bridges.state)} on state highways and {number(bridges.local)} on local roads.{bridges.oldestYear !== null && <> The oldest recorded built year is {bridges.oldestYear}.</>}{bridges.longestFt !== null && <> The longest structure is {number(bridges.longestFt)} feet.</>}</p>
@@ -56,11 +53,8 @@ export function CountyPage({ slug }: { slug: string }) {
       <h2>On the map</h2>
       <p>The map opens centred on {county.name} with county outlines on. Switch on any layer from the Layers panel to see it for this county. These guides explain the main ones:</p>
       <ul>{LANDING_GUIDES.map(guide => <li key={guide.slug}><Link href={`/explore/${guide.slug}`}>{guide.title}</Link></li>)}</ul>
-      <p><Link href="/labs/observatory">Compare all 105 counties in the County Observatory →</Link></p>
+      <p><Link href={countyObservatoryHref(county)}>Compare {county.name} in the County Observatory →</Link></p>
       <h2>About these numbers</h2>
-      <p className={styles.source}>Population: U.S. Census Bureau July 1 population estimates for {population.baseYear} and {population.year}. A later release can revise earlier years, and the page gives the two estimates without saying why they differ.</p>
-      <p className={styles.source}>Survey figures: U.S. Census Bureau, American Community Survey 5-year estimates for {earlier.period} and {latest.period}, with the published 90% margins of error. These are survey estimates for a five-year period, not a count for a single year. Dollar amounts are in the dollars of each period&rsquo;s last year and are not adjusted for inflation, so this page does not compare them across periods. A figure is described as up or down only when the difference is larger than the newer estimate&rsquo;s margin of error.</p>
-      <p className={explore.caution}>Census estimates and the KDOT inventory are public context from their providers, not Kansas Frontier Matrix evidence.</p>
     </article>
     <nav className={explore.related} aria-label="Other counties"><h2>More counties</h2>
       <ul className={styles.neighbors}>
