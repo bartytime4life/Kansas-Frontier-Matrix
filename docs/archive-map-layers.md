@@ -23,6 +23,16 @@ Reads use the existing same-origin public allowlist, with a 1 MB response limit 
 
 Shared links store the applied archive dates, climate measure and search area. Unsubmitted form edits do not replace a displayed query. Reopening queries the first page again, so revisions may change results. Browser-location-derived search areas are redacted along with the main camera. Selected records and extra loaded pages are not frozen snapshots or exported evidence.
 
+## Public collection hold — 2026-11-22
+
+The GoDaddy catalogue excludes the six FCC Antenna Structure Registration
+collections pending field-level review of contact, signature, and free-text
+fields. These tables were empty in the observations database at the review.
+The shared catalogue applies the hold to Data Library, record and field reads,
+map queries, and collection health. The local intake schema remains available
+for stewardship. The public catalogue has 183 collections, including 55 with
+stored geometry.
+
 ## Recovered-data accounting and owner clarification — 2026-11-03
 
 The owner confirmed that the recovered datasets are public and authorized using all of them. Earlier hypothetical sensitivity/publication holds are superseded by that instruction. Source attribution and factual geometry/time limitations remain; public availability alone is not an exclusion criterion.

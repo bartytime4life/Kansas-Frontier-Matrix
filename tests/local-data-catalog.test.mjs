@@ -4,7 +4,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {newSecret,decodeSecret,signRequest,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
+import {newSecret,decodeSecret,signRequest,signResponse,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
 import {createGateway} from '../scripts/local-data/gateway.mjs';
 import {SOURCES_INDEX} from '../scripts/local-data/freshness.mjs';
 import {createLocalDataService,LOCAL_DATA_CACHE} from '../server/local-data.mjs';
@@ -83,4 +83,19 @@ test('a catalog asked while the PC has never answered has no status and takes no
  const body=await (await service.catalog(new Request(SITE+'/api/local-data'))).json();
  assert.equal(body.online,false);assert.equal('status' in body,false);assert.equal(relay.calls,0);
  assert.equal(body.datasets.length,22);
+});
+
+test('the website filters a previously registered collection from an older gateway health reply',async()=>{
+ const clock=()=>1_700_000_000_000;
+ const freshness={file:14,sourceId:'test',retrievedAt:'2026-11-01T00:00:00.000Z',modifiedAt:null};
+ const relay=fakeRelay(({method,path,headers,body})=>{
+  const reply=Buffer.from(JSON.stringify({gateway:'kfm-local-data/1',datasets:[],collections:{
+   'observations-ahcb-changes':freshness,
+   'observations-asr-entities':freshness,
+  }}));
+  return {status:200,body:reply,signature:signResponse({secret:config.secret,requestHeaders:headers,method,path,requestBody:body,status:200,body:reply})};
+ },clock);
+ const service=createLocalDataService({config,relay,clock});
+ const body=await (await service.catalog(new Request(SITE+'/api/local-data'))).json();
+ assert.deepEqual(body.status.collections,{'observations-ahcb-changes':freshness});
 });

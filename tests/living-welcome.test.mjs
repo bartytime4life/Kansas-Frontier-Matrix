@@ -1146,7 +1146,7 @@ test('the record search routes a place to the map and words to the data library,
  assert.deepEqual(g.calls,[['search','Abilene'],['close',false]]);
  assert.equal(visited.length,1,'a place never leaves the Explorer');
  g.harness.dispose();
- assert.equal(recordLinks.RECORD_COUNTS.collections,189);assert.equal(recordLinks.RECORD_COUNTS.mapped,56);
+ assert.equal(recordLinks.RECORD_COUNTS.collections,183);assert.equal(recordLinks.RECORD_COUNTS.mapped,55);
  for(const topic of TOPIC_STRUCTURE.map(t=>t.id)){const links=recordLinks.recordLinksFor(topic);assert.ok(links.terms.length>=1,topic);assert.ok(links.collections.length<=4);}
  assert.equal(recordLinks.newspaperSearchUrl('"dust storm"','texts'),'/data-library?q=%22dust%20storm%22&source=texts');
 });
