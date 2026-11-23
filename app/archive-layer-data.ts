@@ -117,14 +117,16 @@ export async function fetchArchive(dataset: string, query: Record<string,string>
   try {
     signal.throwIfAborted();
     response = await fetcher(`/api/local-data/${dataset}?${new URLSearchParams(query)}`,{signal,credentials:'same-origin'});
-    value = await readBoundedJson(response,1_000_000,signal);
+    if(response.ok) value = await readBoundedJson(response,1_000_000,signal);
+    else void response.body?.cancel().catch(()=>undefined);
   } finally {release();}
   if (response.status === 413 && Number(query.limit)>1) return fetchArchive(dataset,{...query,limit:String(Math.max(1,Math.floor(Number(query.limit)/2)))},signal,fetcher);
-  if (!response.ok) throw new Error(response.status === 503 || response.status === 404 ? 'Archive service unavailable. No data has been added to the map.' : 'The archive request could not be completed.');
+  if (!response.ok) throw new Error(response.status === 503 || response.status === 404 ? 'Archive service unavailable. Try again in a moment.' : 'The archive request could not be completed.');
   if (!record(value) || value.dataset !== dataset || !['kfm-local-data-v1','kfm-local-data-storm-events-v1'].includes(String(value.format))) throw new Error('Unexpected archive response.');
   const rows = value.rows ?? value.events;
   const recovered=dataset==='recovered-observations'||dataset==='recovered-bulk';
   const spatial=dataset==='near-observations'||dataset==='near-bulk';
+  if((recovered||spatial)&&value.collection!==query.collection)throw new Error('Unexpected archive collection.');
   const validCap=typeof value.totalCapped==='boolean'||(!spatial&&value.totalCapped===undefined);
   const validTotal=recovered ? value.total===null && value.collection===query.collection && typeof value.hasMore==='boolean' && (value.hasMore?typeof value.nextCursor==='string'&&value.nextCursor.length<=2500:value.nextCursor===null) : Number.isSafeInteger(value.total)&&Number(value.total)>= (Array.isArray(rows)?rows.length:0);
   if(query.field && (!record(value.fieldChunk)||value.fieldChunk.field!==query.field||value.fieldChunk.start!==Number(query.start??0)||!Number.isSafeInteger(value.fieldChunk.characters)||(value.fieldChunk.nextStart!==null&&value.fieldChunk.nextStart!==Number(query.start??0)+32768)))throw new Error('Incomplete field response.');

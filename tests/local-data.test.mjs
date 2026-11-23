@@ -186,7 +186,7 @@ test('when the PC goes away the last answer is served marked stale, then a plain
  const {get,halt,advance}=await link(t,{dbPath:await fixtureDb(t)});
  assert.equal((await (await get('county=45')).json()).cache.state,'live');
  await halt();
- advance(LOCAL_DATA_CACHE.freshMs+1000);
+ advance(LOCAL_DATA_CACHE.workerSeenMs+1000);
  const started=Date.now(),stale=await get('county=45'),body=await stale.json();
  assert.ok(Date.now()-started<1000,'an absent worker is known at once, not after a relay timeout');
  assert.equal(stale.status,200);assert.equal(body.cache.state,'stale');assert.equal(stale.headers.get('cache-control'),'public, max-age=60');

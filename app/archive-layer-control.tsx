@@ -7,7 +7,8 @@ import { archiveArea, archiveDetails, archiveFeatures, archiveQuery, archiveTota
 import styles from './archive-layer-control.module.css';
 import { defaultArchiveView, type ArchiveView, type ArchiveViews } from './archive-layer-view';
 
-type Loaded = { answer: ArchiveAnswer; shapes: Map<string,Geometry>; scope: string; query: Record<string,string> };
+type PageReceipt = Pick<ArchiveAnswer,'generatedAt'|'count'|'cache'|'total'|'totalCapped'|'hasMore'>;
+type Loaded = { rows: ArchiveAnswer['rows']; shapes: Map<string,Geometry>; scope: string; query: Record<string,string>; received: PageReceipt[] };
 type Props = { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; selected: readonly string[]; shown: ReadonlySet<string>; onChange: (ids: string[]) => void; onInspect: (id: string) => void; pickingEnabled: () => boolean; views: ArchiveViews; onView: (id: string, view: ArchiveView) => void };
 const stamp = (value: unknown) => typeof value === 'string' && Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleString() : 'not supplied';
 
@@ -24,16 +25,22 @@ function ArchiveLayerRow({layer,mapRef,styleReady,selected,shown,onChange,onInsp
   const request=useRef<AbortController|null>(null),detailRequest=useRef<AbortController|null>(null);
   const sequence=useRef(0),enableRef=useRef(enabled),pickRef=useRef({onInspect,pickingEnabled});
   useLayoutEffect(()=>{enableRef.current=enabled;pickRef.current={onInspect,pickingEnabled};},[enabled,onInspect,pickingEnabled]);
-  const prepared=loaded?archiveFeatures(layer,loaded.answer.rows,loaded.shapes):null;
-  const pickedRow=loaded?.answer.rows.find((row,index)=>rowKey(row,index)===picked);
+  const prepared=loaded?archiveFeatures(layer,loaded.rows,loaded.shapes):null;
+  const pickedRow=loaded?.rows.find((row,index)=>rowKey(row,index)===picked);
   const sourceId=`kfm-${layer.id}`,layerIds=[`${sourceId}-fill`,`${sourceId}-line`,`${sourceId}-point`];
+
+  function clearDetail() {
+    const current=detailRequest.current;
+    detailRequest.current=null;
+    current?.abort();
+    setDetail(null);
+    setDetailStatus('');
+  }
 
   async function load(more=false, restored?: ArchiveView) {
     request.current?.abort(); const controller=new AbortController();request.current=controller;
-    const generation=++sequence.current;setLoading(true);if(!more)setRendered(false);setStatus('Loading archive…');setDetail(null);setDetailStatus('');
-    detailRequest.current?.abort();
+    const generation=++sequence.current;setLoading(true);setStatus('Loading archive…');
     const previous=more?loaded:null;
-    if (!more) {setLoaded(null);setPicked(null);}
     const timer=setTimeout(()=>controller.abort(),90000);
     try {
       const map=mapRef.current;if(!map)throw new Error('Wait for the map before loading a layer.');
@@ -41,39 +48,54 @@ function ArchiveLayerRow({layer,mapRef,styleReady,selected,shown,onChange,onInsp
       const local=['tiger','stations','reaches','recovered'].includes(layer.kind);
       const applied=restored??{month,variable,from,to,area:''};
       const area=local?(applied.area||archiveArea([center.lng,center.lat])):'';
-      const query=previous?{...previous.query,offset:String(previous.answer.rows.length)}:archiveQuery(layer,area,applied.month,applied.variable);
+      const query=previous?{...previous.query,offset:String(previous.rows.length)}:archiveQuery(layer,area,applied.month,applied.variable);
       if(layer.kind==='storms'&&!previous) {query.from=applied.from;query.to=applied.to;}
+      if(previous)query.limit=String(Math.min(Number(query.limit),1000-previous.rows.length));
       const answer=await fetchArchive(layer.dataset,query,controller.signal);
-      const shapes=layer.kind==='prism'&&answer.count?await countyShapes(controller.signal):new Map<string,Geometry>();
+      const shapes=previous?.shapes??(layer.kind==='prism'&&answer.count?await countyShapes(controller.signal):new Map<string,Geometry>());
       controller.signal.throwIfAborted();
       if(generation!==sequence.current||!enableRef.current)return;
-      const rows=previous?[...previous.answer.rows,...answer.rows]:answer.rows;
+      const rows=previous?[...previous.rows,...answer.rows]:answer.rows;
       if(rows.length>1000)throw new Error('The display limit is 1,000 records. Narrow the area or date range.');
+      if(!previous){setPicked(null);clearDetail();}
       setRendered(false);
-      setLoaded({answer:{...answer,rows,count:rows.length},shapes,query:previous?.query??query,
+      const {generatedAt,count,cache,total,totalCapped,hasMore}=answer;
+      setLoaded({rows,shapes,query:previous?.query??query,
+        received:[...(previous?.received??[]),{generatedAt,count,cache,total,totalCapped,hasMore}],
         scope:previous?.scope??(local?`1° square around ${(Number(area.split(',')[1])+.5).toFixed(2)}°N, ${Math.abs(Number(area.split(',')[0])+.5).toFixed(2)}°W. Pan and reload to explore another area.`:layer.kind==='prism'?`${applied.month} · ${applied.variable} · 4 km model grid, county summaries`:layer.kind==='storms'?`${applied.from} through ${applied.to} · reported local source times`:'Retained Kansas archive; each record keeps its own dates.')});
       if(!previous)onView(layer.id,{...applied,area});
-      setStatus(answer.count?'Data received': 'No records for this selection. Try another area or date.');
+      setStatus(answer.count?'Data received':previous?'No further records returned. Previously loaded records are still displayed.':'No records for this selection. Try another area or date.');
     } catch(error) {
       if(generation!==sequence.current||!enableRef.current)return;
-      if(!previous)setLoaded(null);setStatus(controller.signal.aborted?'Archive request timed out. Retry when the PC is available.':error instanceof Error?error.message:'Archive unavailable.');
-    } finally {clearTimeout(timer);if(generation===sequence.current)setLoading(false);}
+      const message=controller.signal.aborted?'Archive request timed out. Retry when the PC is available.':error instanceof Error?error.message:'Archive unavailable.';
+      setStatus(loaded?`${message} Previously loaded records are still displayed.`:message);
+    } finally {
+      clearTimeout(timer);
+      if(request.current===controller){request.current=null;setLoading(false);}
+    }
   }
   useEffect(()=>{
     const epoch=sequence;
     const timer=setTimeout(()=>{
-      if(enabled) {
-        setExpanded(true);
-        if(!loaded&&styleReady){
-          const saved=views[layer.id];
-          if(saved){setMonth(saved.month);setVariable(saved.variable);setFrom(saved.from);setTo(saved.to);}
-          void load(false,saved);
-        }
-      }
-      else {++epoch.current;request.current?.abort();detailRequest.current?.abort();setLoaded(null);setPicked(null);setDetail(null);setLoading(false);setRendered(false);setStatus('Not selected');}
+      if(enabled) setExpanded(true);
+      else {setLoaded(null);setPicked(null);clearDetail();setLoading(false);setRendered(false);setStatus('Not selected');}
     },0);
-    return ()=>{clearTimeout(timer);++epoch.current;request.current?.abort();detailRequest.current?.abort();};
-    // Selection owns acquisition. Initial acquisition waits for a ready map; style changes redraw retained data.
+    return ()=>{
+      clearTimeout(timer);++epoch.current;
+      const active=request.current,detail=detailRequest.current;
+      request.current=null;detailRequest.current=null;
+      active?.abort();detail?.abort();
+    };
+  },[enabled]);
+  useEffect(()=>{
+    if(!enabled||!styleReady||loaded||request.current)return;
+    const timer=setTimeout(()=>{
+      const saved=views[layer.id];
+      if(saved){setMonth(saved.month);setVariable(saved.variable);setFrom(saved.from);setTo(saved.to);}
+      void load(false,saved);
+    },0);
+    return ()=>clearTimeout(timer);
+    // Initial acquisition waits for a ready map. Style changes redraw retained data independently.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[enabled,styleReady]);
   useEffect(()=>{
@@ -90,7 +112,7 @@ function ArchiveLayerRow({layer,mapRef,styleReady,selected,shown,onChange,onInsp
       const top=map.queryRenderedFeatures(event.point)[0];
       if(top?.source!==sourceId||top.layer.id!==event.features?.[0]?.layer.id)return;
       const key=event.features?.[0]?.properties?.key;
-      if(typeof key==='string'){setPicked(key);setExpanded(true);setDetail(null);setDetailStatus('');pickRef.current.onInspect(layer.id);}
+      if(typeof key==='string'){setPicked(key);setExpanded(true);clearDetail();pickRef.current.onInspect(layer.id);}
     };
     try {
       cleanup();
@@ -113,28 +135,37 @@ function ArchiveLayerRow({layer,mapRef,styleReady,selected,shown,onChange,onInsp
   async function inspect(title:string,dataset:string,query:Record<string,string>){
     detailRequest.current?.abort();const controller=new AbortController();detailRequest.current=controller;setDetail(null);setDetailStatus('Loading records…');
     const timer=setTimeout(()=>controller.abort(),25000);
-    try{const answer=await fetchArchive(dataset,query,controller.signal);if(!controller.signal.aborted&&enableRef.current){if(loaded)onView(layer.id,{month,variable,from,to,area:loaded.query.bbox??''});setDetail({title,dataset,query,answer});setDetailStatus(answer.count?'':'No readings in this date range.');}}
-    catch{if(detailRequest.current===controller&&!controller.signal.aborted&&enableRef.current)setDetailStatus('Readings unavailable. Check the date range or retry.');}
-    finally{clearTimeout(timer);}
+    const current=()=>detailRequest.current===controller&&enableRef.current;
+    try{
+      const answer=await fetchArchive(dataset,query,controller.signal);
+      controller.signal.throwIfAborted();
+      if(current()){if(loaded)onView(layer.id,{month,variable,from,to,area:loaded.query.bbox??''});setDetail({title,dataset,query,answer});setDetailStatus(answer.count?'':'No readings in this date range.');}
+    }
+    catch{if(current())setDetailStatus(controller.signal.aborted?'Readings timed out. Retry when the PC is available.':'Readings unavailable. Check the date range or retry.');}
+    finally{clearTimeout(timer);if(detailRequest.current===controller)detailRequest.current=null;}
   }
-  const stale=loaded?.answer.cache?.state==='stale';
+  const lastPage=loaded?.received.at(-1);
+  const stale=loaded?.received.some(answer=>answer.cache?.state==='stale');
+  const totalChanged=lastPage&&loaded?.received.some(page=>page.total!==lastPage.total||page.totalCapped!==lastPage.totalCapped);
+  const hasMore=loaded&&lastPage?.count&&(lastPage.hasMore||lastPage.total!==null&&loaded.rows.length<lastPage.total)&&loaded.rows.length<1000&&layer.kind!=='prism';
   const valueFeatures=prepared?.collection.features.filter(f=>f.properties.value!==null)??[];
   return <article className={`official-context-row ${styles.row}`} hidden={!shown.has(layer.id)} data-archive-layer={layer.id}>
     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" aria-label={`${enabled?'Hide':'Show'} ${layer.title}`} checked={enabled} onChange={event=>onChange(event.target.checked?[...selected,layer.id]:selected.filter(id=>id!==layer.id))}/><span aria-hidden="true"/></label><i style={{'--swatch':layer.color} as React.CSSProperties}/><div><strong>{layer.title}</strong><small>{!enabled?'Not selected':loading?'Loading':loaded?`${!prepared?.collection.features.length?'No mappable features':rendered&&styleReady?'Displayed':'Preparing map'} · ${prepared?.collection.features.length??0} features${stale?' · cached, PC unavailable':''}`:status}</small></div></div>
     <details open={expanded} onToggle={event=>setExpanded(event.currentTarget.open)} className="specialty-layer-details"><summary>Archive data &amp; source details</summary><div className={`official-context-option-body ${styles.body}`}>
       <p>{layer.note}</p><small>Shared views restore the applied archive query and reload its first page. Source revisions may change the returned records.</small><a href={layer.sourceUrl} target="_blank" rel="noreferrer">{layer.provider} source documentation ↗</a>
       {layer.kind==='prism'&&<div className={styles.form}><label>Month<input type="month" value={month} onInput={event=>setMonth(event.currentTarget.value)}/></label><label>Climate measure<select value={variable} onChange={event=>setVariable(event.target.value)}>{[['ppt','Precipitation'],['tmax','Maximum temperature'],['tmin','Minimum temperature'],['tmean','Mean temperature'],['tdmean','Dew point'],['vpdmin','Minimum vapor-pressure deficit'],['vpdmax','Maximum vapor-pressure deficit'],['soltotal','Solar irradiance · horizontal'],['solslope','Solar irradiance · terrain slope']].map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label></div>}
-      {['storms','stations','wind','water'].includes(layer.kind)&&<div className={styles.form}><label>From<input type="date" value={from} onInput={event=>{detailRequest.current?.abort();setDetail(null);setDetailStatus('');setFrom(event.currentTarget.value);}}/></label><label>Through<input type="date" value={to} onInput={event=>{detailRequest.current?.abort();setDetail(null);setDetailStatus('');setTo(event.currentTarget.value);}}/></label></div>}
-      {enabled&&<button type="button" disabled={loading||!styleReady} onClick={()=>void load()}>{loading?'Loading…':['tiger','stations','reaches'].includes(layer.kind)?'Load around map centre':'Load selected data'}</button>}
+      {['storms','stations','wind','water'].includes(layer.kind)&&<div className={styles.form}><label>From<input type="date" value={from} onInput={event=>{clearDetail();setFrom(event.currentTarget.value);}}/></label><label>Through<input type="date" value={to} onInput={event=>{clearDetail();setTo(event.currentTarget.value);}}/></label></div>}
+      {enabled&&<button type="button" disabled={loading||!styleReady} onClick={()=>void load()}>{loading?'Loading…':['tiger','stations','reaches','recovered'].includes(layer.kind)?'Load around map centre':'Load selected data'}</button>}
       {enabled&&<p role="status">{status}</p>}
-      {loaded&&<>
-        <p><strong>{loaded.scope}</strong></p><p>{loaded.answer.rows.length}{loaded.answer.total===null?' records loaded; this is a page of the archive':` of ${archiveTotal(loaded.answer)} matching records loaded`}. {prepared?.unlocated||0} lack usable geometry; {prepared?.duplicate||0} duplicate identifiers omitted. {layer.kind==='prism'&&`${prepared?.missingValues||0} counties have no valid numeric fill.`}</p>
-        <small>Archive response: {stamp(loaded.answer.generatedAt)}. This is delivery time, not observation time. Cache: {loaded.answer.cache?.state??'not supplied'}.</small>
-        {stale&&<p className={styles.notice}>Cached response: the PC could not refresh this query. Treat the retained source dates as authoritative.</p>}
+      {loaded&&lastPage&&<>
+        <p><strong>{loaded.scope}</strong></p><p>{loaded.rows.length}{totalChanged?' records loaded. Matching counts changed between pages':lastPage.total===null?' records loaded; this is a page of the archive':` of ${archiveTotal(lastPage)} matching records loaded`}. {prepared?.unlocated||0} lack usable geometry; {prepared?.duplicate||0} duplicate identifiers omitted. {layer.kind==='prism'&&`${prepared?.missingValues||0} counties have no valid numeric fill.`}</p>
+        <small>Latest page delivered {stamp(lastPage.generatedAt)} · cache {lastPage.cache?.state??'not supplied'}. Source records keep their observation dates.</small>
+        {loaded.received.length>1&&<details><summary>Archive page delivery details</summary><ul>{loaded.received.map((page,index)=><li key={index}>Page {index+1} · {page.count} records · {stamp(page.generatedAt)} · cache {page.cache?.state??'not supplied'}</li>)}</ul></details>}
+        {stale&&<p className={styles.notice}>At least one page uses a retained cache response. Check the dates on each source record.</p>}
         {valueFeatures.length>0&&<p className={styles.legend}><span style={{background:'#b9dfe7'}}/>{Math.min(...valueFeatures.map(f=>f.properties.value!)).toFixed(2)} → <span style={{background:'#594d91'}}/>{Math.max(...valueFeatures.map(f=>f.properties.value!)).toFixed(2)} {valueFeatures[0].properties.unit} · county mean; unfilled means missing</p>}
-        {(loaded.answer.hasMore||loaded.answer.total!==null&&loaded.answer.rows.length<loaded.answer.total)&&loaded.answer.rows.length<1000&&layer.kind!=='prism'&&<button type="button" disabled={loading} onClick={()=>void load(true)}>Load next page</button>}
+        {!!hasMore&&<button type="button" disabled={loading} onClick={()=>void load(true)}>Load next page</button>}
         {layer.kind==='recovered'&&<a href={`/data-library?collection=${layer.reference}`}>Browse every record page in this collection →</a>}
-        <label>Inspect a loaded record<select value={picked??''} onChange={event=>{detailRequest.current?.abort();setPicked(event.target.value||null);setDetail(null);setDetailStatus('');}}><option value="">Choose a record…</option>{loaded.answer.rows.map((row,index)=><option key={`${rowKey(row,index)}-${index}`} value={rowKey(row,index)}>{rowLabel(row,index)}</option>)}</select></label>
+        <label>Inspect a loaded record<select value={picked??''} onChange={event=>{clearDetail();setPicked(event.target.value||null);}}><option value="">Choose a record…</option>{loaded.rows.map((row,index)=><option key={`${rowKey(row,index)}-${index}`} value={rowKey(row,index)}>{rowLabel(row,index)}</option>)}</select></label>
         {prepared?.unlocated? <details><summary>Records without map geometry</summary><p>These records remain available in the selector. No county centroid or inferred position is substituted.</p></details>:null}
       </>}
       {pickedRow&&<section className={styles.record}><h4>{rowLabel(pickedRow,0)}</h4><dl>{Object.entries(layer.kind==='recovered'?{...(pickedRow.values as Record<string,unknown>),provenance:pickedRow.provenance}:pickedRow).filter(([key])=>!['geometry','geometry_geojson'].includes(key)).map(([key,value])=><div key={key}><dt>{key}</dt><dd>{textValue(value)}</dd></div>)}</dl>
