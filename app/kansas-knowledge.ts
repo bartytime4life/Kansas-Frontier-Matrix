@@ -18,6 +18,7 @@ export type KnowledgeRecord = Omit<KnowledgeRow, "assertions_json"> & {
   assertions: { text: string; source_ref: string; evidence_ref: string; status: "documented" | "conflicting" | "narrative" }[];
 };
 export type KnowledgeQuery = { kind: "search"; term: string } | { kind: "record"; id: string };
+export type KnowledgeSearchScope = Readonly<{ place: string; start: string; end: string }>;
 
 export function knowledgeQuery(url: string): KnowledgeQuery {
   const parsed = new URL(url);
@@ -61,6 +62,24 @@ export function validKnowledgeRelease(row: Record<string, unknown> | null, now =
 }
 
 const text = (value: unknown, max: number) => typeof value === "string" && value.length > 0 && value.length <= max && !/[\u0000-\u001f\u007f]/.test(value);
+const knowledgeDay = (value: unknown): value is string => typeof value === "string" &&
+  /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value + "T00:00:00Z")) &&
+  new Date(value + "T00:00:00Z").toISOString().slice(0, 10) === value;
+export function validKnowledgeSearchScope(scope: KnowledgeSearchScope): boolean {
+  return (scope.place === "" || text(scope.place, 160)) &&
+    (scope.start === "" || knowledgeDay(scope.start)) && (scope.end === "" || knowledgeDay(scope.end)) &&
+    (!scope.start || !scope.end || scope.start <= scope.end);
+}
+
+export function knowledgeRecordIdsInScope(records: Iterable<KnowledgeRecord>, scope: KnowledgeSearchScope): string[] {
+  const place = scope.place.toLowerCase();
+  return Array.from(records).filter(record =>
+    (!place || record.location_label.toLowerCase().includes(place)) &&
+    (!scope.start || (record.time_end !== null && record.time_end >= scope.start)) &&
+    (!scope.end || (record.time_start !== null && record.time_start <= scope.end))
+  ).map(record => record.record_id);
+}
+
 export function publicKnowledgeRecord(row: KnowledgeRow): KnowledgeRecord {
   if (!row || Object.keys(row).sort().join(",") !== ROW_KEYS || !ID.test(row.record_id) || !DIGEST.test(row.release_id) || !KINDS.has(row.kind) ||
       !text(row.title, 200) || !text(row.summary, 2000) || !text(row.location_label, 160) ||
@@ -71,7 +90,7 @@ export function publicKnowledgeRecord(row: KnowledgeRow): KnowledgeRecord {
   try { source = new URL(row.source_url); } catch { throw new Error("SOURCE_LINK_INVALID"); }
   if (source.protocol !== "https:" || !SOURCE_HOSTS.has(source.hostname) || source.username || source.password || source.hash) throw new Error("SOURCE_LINK_INVALID");
   for (const day of [row.time_start, row.time_end]) if (day !== null) {
-    if (typeof day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(day) || !Number.isFinite(Date.parse(day + "T00:00:00Z")) || new Date(day + "T00:00:00Z").toISOString().slice(0, 10) !== day) throw new Error("TIME_INVALID");
+    if (!knowledgeDay(day)) throw new Error("TIME_INVALID");
   }
   if (row.time_start && row.time_end && row.time_start > row.time_end) throw new Error("TIME_INVALID");
   if (row.assertions_json.length > 12_000) throw new Error("ASSERTIONS_INVALID");

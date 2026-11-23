@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
+import { DatabaseSync } from "node:sqlite";
 import ts from "typescript";
+import { createPublicAiHandler } from "../server/public-ai-handler.mjs";
 
 const moduleUrl = source => "data:text/javascript;base64," + Buffer.from(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText).toString("base64");
 const pureUrl = moduleUrl(await readFile(new URL("../app/kansas-knowledge.ts", import.meta.url), "utf8"));
@@ -11,6 +13,12 @@ const serverSource = (await readFile(new URL("../app/kansas-knowledge-server.ts"
   .replace('import { getRawDb } from "../db";', "const getRawDb = () => null;")
   .replace('"./kansas-knowledge"', JSON.stringify(pureUrl));
 const { readKansasKnowledge } = await import(moduleUrl(serverSource));
+const readerUrl = moduleUrl((await readFile(new URL("../app/knowledge-read.ts", import.meta.url), "utf8"))
+  .replace('import { browserJsonRequest } from "./browser-json-request";', "")
+  .replace('"./kansas-knowledge"', JSON.stringify(pureUrl)));
+const evidenceSource = (await readFile(new URL("../app/hosted-ai-evidence.ts", import.meta.url), "utf8"))
+  .replace("import { kansasKnowledgeRead } from './kansas-knowledge-server';", "export let kansasKnowledgeRead; export const setReader = reader => { kansasKnowledgeRead = reader; };")
+  .replace("'./knowledge-read'", JSON.stringify(readerUrl));
 
 const now = "2026-09-30T18:00:00Z";
 const ref = value => `kfm://knowledge/${value}`;
@@ -91,4 +99,100 @@ test("unsafe links, private fields, and unbounded queries are refused", async ()
   assert.throws(() => pure.publicKnowledgeRecord({ ...record, release_id: releaseId, private_note: "secret" }), /RECORD_WITHHELD/);
   assert.equal((await read("?term=one&id=ks-place-1")).status, 400);
   assert.equal((await read("?term=" + "x".repeat(81))).status, 400);
+});
+
+test("Ask BARTA applies Unicode place and date scope before the real SQLite search limit", async t => {
+  const sqlite = new DatabaseSync(":memory:");
+  t.after(() => sqlite.close());
+  const candidates = Array.from({ length: 22 }, (_, index) => ({
+    ...record,
+    record_id: `drought-${index + 1}`,
+    title: `Drought ${String(index + 1).padStart(2, "0")}`,
+    location_label: index >= 20 || index < 10 ? "Éllsworth County, Kansas" : "Allen County, Kansas",
+    time_start: index === 21 ? null : index < 10 ? "2020-01-01" : "2026-08-18",
+    time_end: index === 21 ? null : index < 10 ? "2020-12-31" : "2026-08-25",
+  }));
+  const candidateBytes = new TextEncoder().encode(JSON.stringify({ profile: "kfm.kansas-knowledge/v1", records: candidates }));
+  const id = await pure.knowledgeDigest(candidateBytes);
+  const approved = { ...release, release_id: id, package_sha256: id, package_key: `kansas-knowledge/v1/objects/${id.slice(7)}.json` };
+  sqlite.exec("CREATE TABLE knowledge_active (singleton INTEGER, release_id TEXT)");
+  sqlite.exec("CREATE TABLE knowledge_releases (" + Object.keys(approved).map(key => key + " TEXT").join(",") + ")");
+  const approvedRows = candidates.map(candidate => ({ ...candidate, release_id: id }));
+  sqlite.exec("CREATE TABLE knowledge_public (" + Object.keys(approvedRows[0]).map(key => key + " TEXT").join(",") + ")");
+  sqlite.prepare("INSERT INTO knowledge_active VALUES (1, ?)").run(id);
+  sqlite.prepare("INSERT INTO knowledge_releases VALUES (" + Object.keys(approved).map(() => "?").join(",") + ")").run(...Object.values(approved));
+  const insert = sqlite.prepare("INSERT INTO knowledge_public VALUES (" + Object.keys(approvedRows[0]).map(() => "?").join(",") + ")");
+  for (const row of approvedRows) insert.run(...Object.values(row));
+  // These projections must stay outside the public reader, before verification.
+  insert.run(...Object.values({ ...approvedRows[20], record_id: "withheld", public_state: "WITHHELD" }));
+  insert.run(...Object.values({ ...approvedRows[20], record_id: "other-release", release_id: releaseId }));
+  insert.run(...Object.values({ ...approvedRows[20], record_id: "superseded", correction_state: "SUPERSEDED" }));
+  const actualDb = { prepare(sql) {
+    const prepared = sqlite.prepare(sql);
+    let parameters = [];
+    return {
+      bind(...args) { parameters = args; return this; },
+      async first() { return prepared.get(...parameters); },
+      async all() { return { results: prepared.all(...parameters) }; },
+    };
+  } };
+  let storageAvailable = true;
+  const actualBucket = { async get(key) {
+    assert.equal(key, approved.package_key);
+    if (!storageAvailable) return null;
+    return { size: candidateBytes.length, arrayBuffer: async () => Uint8Array.from(candidateBytes).buffer };
+  } };
+  const origin = "https://kansasfrontiermatrix.com";
+  const readFixture = (request, scope) => readKansasKnowledge(request, actualDb, actualBucket, now, scope);
+  const url = origin + "/api/governed/v1/knowledge?";
+  const http = await (await readFixture(new Request(url + "term=drought"))).json();
+  assert.equal(http.data.records.length, 20);
+  assert.equal(http.data.records.at(-1).record_id, "drought-20");
+  assert.equal(http.data.has_more, true);
+  assert.equal((await readFixture(new Request(url + "term=drought&place=Allen"))).status, 400);
+
+  const { researchEvidence, setReader } = await import(moduleUrl(evidenceSource));
+  setReader(readFixture);
+  const query = { term: "drought", place: "éLLsworth", start: "2026-08-25", end: "2026-09-01" };
+
+  let calls = 0;
+  const handle = createPublicAiHandler({ origin, resolveEvidence: value => researchEvidence(value, origin),
+    model: { ready: true, online: true, discuss: async () => { calls++; throw new Error("Evidence must not run inference"); } } });
+  const ask = async selection => {
+    const accepted = await handle(new Request(origin + "/api/ai/jobs", { method: "POST",
+      headers: { "content-type": "application/json", origin }, body: JSON.stringify({ ...selection, question: "Find dated drought records.", mode: "evidence" }) }));
+    assert.equal(accepted.status, 202);
+    const cookie = accepted.headers.get("set-cookie").split(";")[0];
+    const { id: jobId } = await accepted.json();
+    const check = async () => (await handle(new Request(origin + "/api/ai/jobs/" + jobId, { headers: { cookie } }))).json();
+    for (let i = 0; i < 30; i++) {
+      const job = await check();
+      if (job.state === "completed") return { result: job.result, check };
+      await new Promise(resolve => setImmediate(resolve));
+    }
+    throw new Error("Evidence job did not complete");
+  };
+  const found = await ask(query);
+  assert.equal(found.result.outcome, "ABSTAIN");
+  assert.equal(found.result.reasonCode, "EVIDENCE_MODEL_UNQUALIFIED");
+  assert.equal(found.result.answer, null);
+  assert.deepEqual(found.result.citations.map(citation => citation.url), [origin + "/knowledge/record?id=drought-21"]);
+  assert.equal((await ask({ ...query, place: "Saline County" })).result.reasonCode, "NO_RELEASED_EVIDENCE");
+
+  const scoped = await (await readFixture(new Request(url + "term=drought"), { place: query.place, start: query.start, end: query.end })).json();
+  assert.deepEqual(scoped.data.records.map(item => item.record_id), ["drought-21"]);
+  assert.equal(scoped.data.has_more, false);
+  assert.equal((await readFixture(new Request(url + "term=drought"), { place: "", start: "2026-02-30", end: "" })).status, 400);
+  const literal = await (await readFixture(new Request(url + "term=drought"), { place: "%_", start: "", end: "" })).json();
+  assert.equal(literal.envelope.reason_code, "RECORD_NOT_FOUND");
+
+  sqlite.prepare("UPDATE knowledge_releases SET state = 'WITHDRAWN' WHERE release_id = ?").run(id);
+  const withdrawn = (await found.check()).result;
+  assert.equal(withdrawn.reasonCode, "RELEASE_CHANGED");
+  assert.equal(withdrawn.citations, undefined);
+  assert.equal((await ask(query)).result.reasonCode, "EVIDENCE_WITHHELD");
+  sqlite.prepare("UPDATE knowledge_releases SET state = 'APPROVED' WHERE release_id = ?").run(id);
+  storageAvailable = false;
+  assert.equal((await ask(query)).result.reasonCode, "EVIDENCE_WITHHELD");
+  assert.equal(calls, 0);
 });

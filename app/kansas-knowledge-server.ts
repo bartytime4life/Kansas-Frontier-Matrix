@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers";
 import { getRawDb } from "../db";
-import { canonicalKnowledge, knowledgeDigest, knowledgeQuery, KNOWLEDGE_PACKAGE_LIMIT, parseKnowledgePackage, publicKnowledgeRecord, validKnowledgeRelease, type KnowledgeRow } from "./kansas-knowledge";
+import { canonicalKnowledge, knowledgeDigest, knowledgeQuery, knowledgeRecordIdsInScope, KNOWLEDGE_PACKAGE_LIMIT, parseKnowledgePackage, publicKnowledgeRecord, validKnowledgeRelease, validKnowledgeSearchScope, type KnowledgeRow, type KnowledgeSearchScope } from "./kansas-knowledge";
 
 type Statement = { bind(...values: unknown[]): Statement; first<T>(): Promise<T | null>; all<T>(): Promise<{ results: T[] }> };
 type Db = { prepare(sql: string): Statement };
@@ -22,13 +22,16 @@ async function envelope(reason: string, now: string, evidenceRefs: string[] = []
 function escapeLike(value: string) { return value.replace(/[\\%_]/g, "\\$&"); }
 
 /** Injected stores make negative authorization and tampering behavior testable. */
-export async function readKansasKnowledge(request: Request, db: Db, bucket: Bucket, now = new Date().toISOString()): Promise<Response> {
+export async function readKansasKnowledge(request: Request, db: Db, bucket: Bucket, now = new Date().toISOString(), scope?: KnowledgeSearchScope): Promise<Response> {
   const correlation = crypto.randomUUID(), start = Date.now();
   let result: { envelope: Awaited<ReturnType<typeof envelope>>; data?: unknown };
   let status = 200;
   try {
     let query;
-    try { query = knowledgeQuery(request.url); }
+    try {
+      query = knowledgeQuery(request.url);
+      if (scope && (query.kind !== "search" || !validKnowledgeSearchScope(scope))) throw new Error("INVALID_QUERY");
+    }
     catch { status = 400; result = { envelope: await envelope("INVALID_QUERY", now) }; return Response.json(result, { status, headers: HEADERS }); }
     const release = await db.prepare("SELECT r.* FROM knowledge_active a JOIN knowledge_releases r ON r.release_id = a.release_id WHERE a.singleton = 1").first<Release>();
     if (!release) result = { envelope: await envelope("NO_APPROVED_KNOWLEDGE", now) };
@@ -39,9 +42,13 @@ export async function readKansasKnowledge(request: Request, db: Db, bucket: Buck
       const bytes = new Uint8Array(await stored.arrayBuffer());
       if (bytes.length !== stored.size || await knowledgeDigest(bytes) !== release.package_sha256) throw new Error("PACKAGE_DIGEST_MISMATCH");
       const packageRecords = parseKnowledgePackage(bytes, release.release_id);
+      // Scope the SHA-verified records before D1's ordered limit. Use their IDs
+      // to preserve Unicode place matching and still check each D1 projection.
+      const scopedIds = scope && (scope.place || scope.start || scope.end)
+        ? [JSON.stringify(knowledgeRecordIdsInScope(packageRecords.values(), scope))] : [];
       const statement = query.kind === "record"
         ? db.prepare(`SELECT ${COLUMNS} FROM knowledge_public WHERE release_id = ? AND public_state = 'PUBLIC_SAFE' AND correction_state = 'ACTIVE' AND record_id = ? LIMIT 1`).bind(release.release_id, query.id)
-        : db.prepare(`SELECT ${COLUMNS} FROM knowledge_public WHERE release_id = ? AND public_state = 'PUBLIC_SAFE' AND correction_state = 'ACTIVE' AND (title LIKE ? ESCAPE '\\' OR summary LIKE ? ESCAPE '\\') ORDER BY title, record_id LIMIT 21`).bind(release.release_id, `%${escapeLike(query.term)}%`, `%${escapeLike(query.term)}%`);
+        : db.prepare(`SELECT ${COLUMNS} FROM knowledge_public WHERE release_id = ? AND public_state = 'PUBLIC_SAFE' AND correction_state = 'ACTIVE' AND (title LIKE ? ESCAPE '\\' OR summary LIKE ? ESCAPE '\\')${scopedIds.length ? " AND record_id IN (SELECT value FROM json_each(?))" : ""} ORDER BY title, record_id LIMIT 21`).bind(release.release_id, `%${escapeLike(query.term)}%`, `%${escapeLike(query.term)}%`, ...scopedIds);
       const rows = (await statement.all<KnowledgeRow>()).results;
       const selected = rows.slice(0, query.kind === "record" ? 1 : 20);
       const records = selected.map(row => {
@@ -63,11 +70,11 @@ export async function readKansasKnowledge(request: Request, db: Db, bucket: Buck
   return Response.json(result, { status, headers: { ...HEADERS, "X-KFM-Correlation-ID": correlation } });
 }
 
-export async function kansasKnowledgeRead(request: Request) {
+export async function kansasKnowledgeRead(request: Request, scope?: KnowledgeSearchScope) {
   try {
     const bucket = env.BUCKET as Bucket | undefined;
     if (!bucket) throw new Error("BUCKET_UNAVAILABLE");
-    return await readKansasKnowledge(request, getRawDb(), bucket);
+    return await readKansasKnowledge(request, getRawDb(), bucket, undefined, scope);
   } catch {
     return Response.json({ envelope: await envelope("STORAGE_UNAVAILABLE", new Date().toISOString()) }, { status: 503, headers: HEADERS });
   }
