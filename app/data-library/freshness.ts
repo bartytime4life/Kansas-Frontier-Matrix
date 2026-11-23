@@ -47,7 +47,12 @@ export function loadedThrough(f:Freshness|null|undefined):string|null{
 /** One line for a collection or dataset: what was loaded when, from the pipeline's own receipts. */
 export function freshnessLine(f:Freshness|null|undefined):string{
  if(!f)return 'Load date not reported.';
- if('reason' in f)return f.reason==='INDEX_MISSING'?'Load date not indexed on the PC yet.':f.reason==='NO_FILES'?'No file loaded yet.':'Load date not available.';
+ if('reason' in f){
+  if(f.reason==='COLLECTION_FILE_KEY_MISSING')return 'This collection has no file-level retrieval metadata.';
+  if(f.reason==='INDEX_MISSING')return 'Load date not indexed on the PC yet.';
+  if(f.reason==='NO_FILES')return 'No file loaded yet.';
+  return 'Load date not available.';
+ }
  const parts=[];
  if(f.retrievedAt)parts.push(`newest file retrieved ${f.retrievedAt.slice(0,10)}`);
  if(f.modifiedAt)parts.push(`provider's version of ${f.modifiedAt.slice(0,10)}`);

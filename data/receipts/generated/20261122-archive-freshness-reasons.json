@@ -1,0 +1,76 @@
+{
+  "receipt_id": "kfm-archive-freshness-reasons-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/data-library/freshness.ts",
+    "scripts/local-data/freshness.mjs",
+    "tests/data-library-freshness.test.mjs",
+    "tests/local-data-freshness.test.mjs",
+    "tests/local-data.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/data-library/freshness.ts": "sha256:d20c0e86bf52db73a4d8aefd5783f81a00c262b0173acac2b4bdbd9379aa444f",
+    "scripts/local-data/freshness.mjs": "sha256:e7d4b8e8db0dfc7a4f0c7a8e4c0475510716f7e9334a624c69c9bd2782ffa94c",
+    "tests/data-library-freshness.test.mjs": "sha256:9ae4dcb42ac39e745cece22fc0dd68cfb354a40f09c0cd07b39099e6eced0046",
+    "tests/local-data-freshness.test.mjs": "sha256:4cf48757009248858cf2a7140cf06e405feda139e38ccb1f645e39f617b71391",
+    "tests/local-data.test.mjs": "sha256:8aab22f0b31eb657dcc3943bad730c275826d795a51b8560fd7c74029a46ef7f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:9bbc319fb91874a4835d614c2217523d91c125362e8ae026ec39a31cdcba5919",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:scripts/local-data/freshness.mjs",
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:app/data-library/freshness.ts"
+    ],
+    "evidence_hashes": [
+      "sha256:7f2d07a2fc9a3e59d8b22504e8b6ebd2b3a2678e294386e95b6e967f5953cae5",
+      "sha256:69c06f424782cca3e5c0a58b9ba5e7bca2f02cb0c61d6dfed74b2713ddf73fee"
+    ]
+  },
+  "truth_labels": {
+    "app/data-library/freshness.ts": "CONFIRMED",
+    "scripts/local-data/freshness.mjs": "CONFIRMED",
+    "tests/data-library-freshness.test.mjs": "CONFIRMED",
+    "tests/local-data-freshness.test.mjs": "CONFIRMED",
+    "tests/local-data.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and Node suite: 3301 passed, 25 skipped, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript, scoped lint and diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Fifteen focused gateway and library tests passed. Read-only PC schema check returned ten missing file-level links and five missing indexes.",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review and hosted validation",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting draft review and exact-head check results."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T01:47:20.172207+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Explain missing collection dates using bounded SQLite schema checks. Validation uses synthetic fixtures or read-only schema introspection."
+}

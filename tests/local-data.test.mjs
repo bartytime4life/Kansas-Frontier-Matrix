@@ -73,7 +73,7 @@ test('the gateway answers signed questions read-only and signs every reply',asyn
  // A dataset whose database is not configured, or whose indexes are missing, is reported, not scanned.
  assert.deepEqual(status.datasets.find(d=>d.id==='tiger-features'),{id:'tiger-features',ready:false,reason:'DATABASE_NOT_CONFIGURED',freshness:{reason:'UNAVAILABLE'}});
  assert.deepEqual(status.datasets.find(d=>d.id==='ghcn-daily'),{id:'ghcn-daily',ready:false,reason:'INDEX_MISSING',freshness:{reason:'INDEX_MISSING',basis:'sources'}});
- assert.deepEqual(status.collections,{});
+ assert.deepEqual(status.collections,{'observations-storm-event-details':{reason:'COLLECTION_FILE_KEY_MISSING'}});
  assert.ok(typeof status.generatedAt==='string');
 
  const byFips=signed('/v1/data/storm-events',JSON.stringify({county:173})),fips=handle(byFips),fipsBody=parse(fips);

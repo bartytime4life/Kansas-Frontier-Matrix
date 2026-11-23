@@ -35,6 +35,7 @@ test('a table is file-led when file_id leads its primary key or an index; its ne
  db.exec(`CREATE TABLE led(file_id INTEGER, row_number INTEGER, v TEXT, PRIMARY KEY(file_id,row_number));
   CREATE TABLE indexed(id TEXT PRIMARY KEY, file_id INTEGER); CREATE INDEX indexed_file ON indexed(file_id, id);
   CREATE TABLE plain(id TEXT PRIMARY KEY, file_id INTEGER);
+  CREATE INDEX plain_partial_file ON plain(file_id) WHERE file_id > 100;
   CREATE TABLE nofile(id TEXT PRIMARY KEY);
   INSERT INTO led VALUES(10,1,'x'),(11,1,'y'); INSERT INTO indexed VALUES('a',13); INSERT INTO plain VALUES('a',14);`);
  const cache=new Map();
@@ -50,7 +51,15 @@ test('a table is file-led when file_id leads its primary key or an index; its ne
  // A file the sources table no longer describes still names its file.
  db.exec('CREATE TABLE orphan(file_id INTEGER PRIMARY KEY); INSERT INTO orphan VALUES(99)');
  assert.deepEqual(tableFreshness(db,'orphan',{cache}),{file:99,sourceId:null,retrievedAt:null,modifiedAt:null});
- assert.deepEqual(collectionsFreshness(db,[{id:'c-led',table:'led'},{id:'c-plain',table:'plain'},{id:'c-absent',table:'absent'}],{cache}),{'c-led':tableFreshness(db,'led',{cache})});
+ const collections=[{id:'c-led',table:'led'},{id:'c-plain',table:'plain'},{id:'c-nofile',table:'nofile'},{id:'c-empty',table:'empty'},{id:'c-absent',table:'absent'}];
+ assert.deepEqual(collectionsFreshness(db,collections,{cache}),{
+  'c-led':tableFreshness(db,'led',{cache}),
+  'c-plain':{reason:'INDEX_MISSING'},
+  'c-nofile':{reason:'COLLECTION_FILE_KEY_MISSING'},
+ });
+ db.exec('CREATE INDEX plain_file ON plain(file_id)');
+ assert.equal(fileLed(db,'plain',cache),true);
+ assert.equal(collectionsFreshness(db,collections,{cache})['c-plain'].file,14);
 });
 
 test('source families answer only through their index and respect the family boundary',()=>{
@@ -107,6 +116,7 @@ test('health reports freshness per dataset and per recovered collection',async t
  const path=join(dir,'bulk.sqlite'),db=new DatabaseSync(path);bookkeeping(db);
  db.exec('CREATE TABLE kfm_newspaper_pages(page_rowid INTEGER PRIMARY KEY, file_id INTEGER); CREATE INDEX kfm_newspaper_pages_file ON kfm_newspaper_pages(file_id); INSERT INTO kfm_newspaper_pages VALUES(1,11)');
  db.exec('CREATE TABLE kfm_ia_texts(text_rowid INTEGER PRIMARY KEY, file_id INTEGER); CREATE INDEX kfm_ia_texts_file ON kfm_ia_texts(file_id); INSERT INTO kfm_ia_texts VALUES(1,10)');
+ db.exec('CREATE TABLE kfm_census_decennial_geographies(id INTEGER PRIMARY KEY); INSERT INTO kfm_census_decennial_geographies VALUES (1)');
  db.close();
  const secret=newSecret(),handle=createGateway({keyId:'k',secret,databases:{bulk:path}});
  const path_='/v1/health',headers=signRequest({keyId:'k',secret,method:'GET',path:path_,body:''});
@@ -116,7 +126,7 @@ test('health reports freshness per dataset and per recovered collection',async t
  assert.deepEqual(search,{id:'archive-search',ready:true,freshness:{file:11,sourceId:'noaa-ghcnd-diff',retrievedAt:'2026-11-05T18:03:00.000Z',modifiedAt:'2026-11-05T04:01:12.000Z',basis:'tables'}});
  assert.deepEqual(body.collections['bulk-newspaper-pages'],{file:11,sourceId:'noaa-ghcnd-diff',retrievedAt:'2026-11-05T18:03:00.000Z',modifiedAt:'2026-11-05T04:01:12.000Z'});
  assert.equal('bulk-ia-texts' in body.collections,false,'only catalog collections are reported; the texts table is reached through archive-search');
- assert.equal('bulk-census-decennial-geographies' in body.collections,false,'an absent collection table is left out, not an error');
- assert.deepEqual(Object.keys(body.collections),['bulk-newspaper-pages']);
+ assert.deepEqual(body.collections['bulk-census-decennial-geographies'],{reason:'COLLECTION_FILE_KEY_MISSING'});
+ assert.deepEqual(Object.keys(body.collections).sort(),['bulk-census-decennial-geographies','bulk-newspaper-pages']);
  assert.equal(body.datasets.find(d=>d.id==='storm-events').freshness.reason,'UNAVAILABLE');
 });
