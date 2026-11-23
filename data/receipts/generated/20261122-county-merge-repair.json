@@ -1,0 +1,77 @@
+{
+  "receipt_id": "kfm-county-merge-repair-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/counties/county-page.tsx",
+    "tests/county-pages-http.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/counties/county-page.tsx": "sha256:00c485f19ad75c02ae602ab2e5ecd0ee1007b9026f57d085d7cf8a8dabdffc50",
+    "tests/county-pages-http.test.mjs": "sha256:69689e8b57bb06f5a0d9f50e86b0a807651cf5b03d14b72fd41c7adfdc329ea1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:0ba20dcc59650dce0e5588338991fed3bca499d7:app/counties/county-page.tsx",
+      "repo:bf4db133928d284ff47ceea6475dbdbb27565bff:app/counties/county-page.tsx",
+      "repo:5b1f38347f2b11d157419ea90de678d66abb4dae:app/counties/county-page.tsx"
+    ],
+    "evidence_hashes": [
+      "sha256:ccc700c5b8d534a088d689ca1f84ca9b7bb6f2a4b652300f14ae468a19584744",
+      "sha256:0668693b6e0352771c68836f986516ddc23b9ea497e4b8ac353f8b5c067212a7",
+      "sha256:b465516a5e9b4121b9e000871e3dc933145256f740bd212fd7f12d1962e28289"
+    ]
+  },
+  "truth_labels": {
+    "app/counties/county-page.tsx": "CONFIRMED",
+    "tests/county-pages-http.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and suite with 3312 passes and 25 skips",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Built production routes returned full content for all 105 counties",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Chrome desktop and phone width verified the survey language and keyboard Observatory link",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript after production build",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review and hosted verification",
+      "outcome": "SKIPPED",
+      "reason": "Pending at draft creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T04:08:01.601947+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Restore the integrated county page after a merge dropped its imports and population and methodology paragraphs."
+}
