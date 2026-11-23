@@ -1,0 +1,92 @@
+{
+  "receipt_id": "kfm-kansas-records-source-snapshots-20261123",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/kansas-records.generated.json",
+    "app/kansas-records.ts",
+    "app/records/page.tsx",
+    "app/records/records.module.css",
+    "docs/kansas-records-20261123.md",
+    "scripts/prepare-kansas-records.mjs",
+    "tests/kansas-records-http.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/kansas-records.generated.json": "sha256:2899edb9300c695930411ebb0ec3ba34d2e66fe127966daaeb8ed310b71f53ef",
+    "app/kansas-records.ts": "sha256:6f1bfdb5b8cdc2daf6d97a638d617c33a60a558ffab25b9d4ed4b142865f90b8",
+    "app/records/page.tsx": "sha256:96e1c5ee60253e03ce8e17adfa115904077137ec8a829232f6138ea3581f7a0c",
+    "app/records/records.module.css": "sha256:29a55b875e4c1e41ede8a99d9fd80962f4f32336d22e29cca6f2222fee73c832",
+    "docs/kansas-records-20261123.md": "sha256:60080a9a9a28ddc9fe83417efa5f3786ae23adcd4d8579d486609de76872384f",
+    "scripts/prepare-kansas-records.mjs": "sha256:f54b9c8d495ac16ff8a55c3beaa7fcccce15a417bcfa65f213ec625b63875d04",
+    "tests/kansas-records-http.test.mjs": "sha256:83b4cd3e8edfc7e53a51ebb0c5c15b02418923e843cd9c88ea886e88921abb40"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:0e9e3ef9f7eeef46dc90b0a04b1c4328578279f5:app/records/page.tsx",
+      "repo:0e9e3ef9f7eeef46dc90b0a04b1c4328578279f5:app/kansas-records.generated.json",
+      "repo:0e9e3ef9f7eeef46dc90b0a04b1c4328578279f5:app/labs/base-snapshots.mjs",
+      "repo:0e9e3ef9f7eeef46dc90b0a04b1c4328578279f5:app/labs/county-snapshots.mjs",
+      "repo:0e9e3ef9f7eeef46dc90b0a04b1c4328578279f5:app/labs/bridge-snapshots.mjs"
+    ],
+    "evidence_hashes": [
+      "sha256:7b142fa8c30b6012aaf439c2c80a50564546ad9762463d904379bff9615628de",
+      "sha256:1347321098645cfb3573b93292e148fe5462692ee076097cd3cc525e371ea260",
+      "sha256:9bf6426a1b676f763c3eb96c1b46363d4f236a2f9ad9b9b1d93ea42e1a53d00f",
+      "sha256:672ee818196041750c2bc56b6ccc7cbbb7ece18e90d0ab59e9edf645798dad22",
+      "sha256:7e3df090ef1ad4a94e4058011edd4a844856fec59559f307c65a2befd5fd640e"
+    ]
+  },
+  "truth_labels": {
+    "app/kansas-records.generated.json": "CONFIRMED",
+    "app/kansas-records.ts": "CONFIRMED",
+    "app/records/page.tsx": "CONFIRMED",
+    "app/records/records.module.css": "CONFIRMED",
+    "docs/kansas-records-20261123.md": "CONFIRMED",
+    "scripts/prepare-kansas-records.mjs": "CONFIRMED",
+    "tests/kansas-records-http.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and suite with 3318 passes, 25 skips and zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Final focused records and HTTP tests, TypeScript and Git whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Public and local production response bytes matched all four source snapshots",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop and phone keyboard disclosures and exact People JSON download",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted exact-head checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at draft creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T06:05:49.922163+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Connect each existing record group to its exact already-shipped public snapshot and verify bytes before generating records."
+}

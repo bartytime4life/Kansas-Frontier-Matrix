@@ -31,8 +31,9 @@ A tie is reported as a tie ("Shared by 2 counties; the first alphabetically is s
 ## How it is built
 
 Nothing is fetched when the page is read. `scripts/prepare-kansas-records.mjs` reads the four
-bundles in `public/` and writes `app/kansas-records.generated.json`; run it after a bundle
-changes:
+bundles in `public/`, verifies their recorded sizes and SHA-256 checksums, and writes
+`app/kansas-records.generated.json`. Each group's **Source data** disclosure links to the exact
+JSON snapshot and shows its checksum. Run the generator after a bundle changes.
 
 ```bash
 node scripts/prepare-kansas-records.mjs

@@ -2,12 +2,21 @@
 // already ship. Every entry is the largest or smallest value in one named dataset, never a claim beyond it.
 // No network. Run after a bundle changes: node scripts/prepare-kansas-records.mjs
 import { readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { COUNTY_LAB_SNAPSHOTS } from '../app/labs/county-snapshots.mjs';
 import { BASE_LAB_SNAPSHOTS } from '../app/labs/base-snapshots.mjs';
 import { BRIDGE_LAB_SNAPSHOTS } from '../app/labs/bridge-snapshots.mjs';
 import { countySlug } from './prepare-county-pages.mjs';
+
+const SNAPSHOTS = Object.freeze({
+  population: BASE_LAB_SNAPSHOTS['census-mosaic'],
+  conditions: COUNTY_LAB_SNAPSHOTS['county-conditions'],
+  bridges: BRIDGE_LAB_SNAPSHOTS['built-kansas'],
+  tornadoes: BASE_LAB_SNAPSHOTS['tornado-tracks'],
+});
+const snapshotReference = ({ path, bytes, sha256 }) => ({ path, bytes, sha256 });
 
 const whole = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 const one = value => (Math.round(value * 10) / 10).toFixed(1);
@@ -93,23 +102,25 @@ export function buildKansasRecords({ population, conditions, bridges, tornadoes 
 
   return {
     sections: [
-      { id: 'people', title: 'People', source: `U.S. Census Bureau July 1 population estimates, ${baseYear} and ${year}`, caution: 'A later release can revise earlier years.', items: people },
-      { id: 'survey', title: 'Income, age, education and homes', source: `U.S. Census Bureau American Community Survey 5-year estimates, ${survey[0].period}`, caution: 'These are survey estimates with 90% margins of error. Where margins overlap, the county shown may not truly rank first.', items: surveyItems },
-      { id: 'bridges', title: 'Bridges', source: `Kansas Department of Transportation bridge inventory as of ${bridges.data.inventoryAsOf}`, caution: 'Inventory records are not always one physical bridge each. Unknown built years are left out, not guessed.', items: bridgeItems },
-      { id: 'tornadoes', title: 'Tornadoes', source: `NOAA Storm Prediction Center tornado tracks that started in Kansas, ${Math.min(...byYear.keys())}–${Math.max(...byYear.keys())}`, caution: 'Earlier tornadoes are under-reported, so counts by year are not a trend. Tracks that began in another state are not included.', items: tornadoItems },
+      { id: 'people', title: 'People', source: `U.S. Census Bureau July 1 population estimates, ${baseYear} and ${year}`, caution: 'A later release can revise earlier years.', snapshot: snapshotReference(SNAPSHOTS.population), items: people },
+      { id: 'survey', title: 'Income, age, education and homes', source: `U.S. Census Bureau American Community Survey 5-year estimates, ${survey[0].period}`, caution: 'These are survey estimates with 90% margins of error. Where margins overlap, the county shown may not truly rank first.', snapshot: snapshotReference(SNAPSHOTS.conditions), items: surveyItems },
+      { id: 'bridges', title: 'Bridges', source: `Kansas Department of Transportation bridge inventory as of ${bridges.data.inventoryAsOf}`, caution: 'Inventory records are not always one physical bridge each. Unknown built years are left out, not guessed.', snapshot: snapshotReference(SNAPSHOTS.bridges), items: bridgeItems },
+      { id: 'tornadoes', title: 'Tornadoes', source: `NOAA Storm Prediction Center tornado tracks that started in Kansas, ${Math.min(...byYear.keys())}–${Math.max(...byYear.keys())}`, caution: 'Earlier tornadoes are under-reported, so counts by year are not a trend. Tracks that began in another state are not included.', snapshot: snapshotReference(SNAPSHOTS.tornadoes), items: tornadoItems },
     ].map(section => ({ ...section, items: section.items.map(item => Object.fromEntries(Object.entries(item).filter(([, v]) => v !== undefined))) })),
-    sources: {
-      population: BASE_LAB_SNAPSHOTS['census-mosaic'].sha256, conditions: COUNTY_LAB_SNAPSHOTS['county-conditions'].sha256,
-      bridges: BRIDGE_LAB_SNAPSHOTS['built-kansas'].sha256, tornadoes: BASE_LAB_SNAPSHOTS['tornado-tracks'].sha256,
-    },
+    sources: Object.fromEntries(Object.entries(SNAPSHOTS).map(([name, snapshot]) => [name, snapshot.sha256])),
   };
 }
 
-const bundle = async (root, path) => JSON.parse(await readFile(resolve(root, 'public', path.replace(/^\//, '')), 'utf8'));
-export const readRecordBundles = async (root = process.cwd()) => ({
-  population: await bundle(root, BASE_LAB_SNAPSHOTS['census-mosaic'].path), conditions: await bundle(root, COUNTY_LAB_SNAPSHOTS['county-conditions'].path),
-  bridges: await bundle(root, BRIDGE_LAB_SNAPSHOTS['built-kansas'].path), tornadoes: await bundle(root, BASE_LAB_SNAPSHOTS['tornado-tracks'].path),
-});
+export async function readRecordBundles(root = process.cwd()) {
+  const entries = await Promise.all(Object.entries(SNAPSHOTS).map(async ([name, snapshot]) => {
+    const bytes = await readFile(resolve(root, 'public', snapshot.path.replace(/^\//, '')));
+    if (bytes.length !== snapshot.bytes || createHash('sha256').update(bytes).digest('hex') !== snapshot.sha256) {
+      throw new Error(`KANSAS_RECORDS_SNAPSHOT_MISMATCH ${name}`);
+    }
+    return [name, JSON.parse(bytes.toString('utf8'))];
+  }));
+  return Object.fromEntries(entries);
+}
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const records = buildKansasRecords(await readRecordBundles());

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
 import { KANSAS_RECORDS } from "../kansas-records";
+import { formatDownloadBytes } from "../local-download-client";
 import explore from "../explore/explore.module.css";
 import styles from "../counties/counties.module.css";
+import provenance from "./records.module.css";
 
 const title = "Kansas records", url = `${PUBLIC_SITE_ORIGIN}/records`;
 const description = "The most and fewest people, the oldest and longest bridges, the widest and longest tornado paths: the extremes in the public datasets behind the Kansas map, each with its source and limits.";
@@ -28,6 +30,11 @@ export default function Page() {
           {item.note && <em>{item.note}</em>}
         </li>)}</ul>
         <p className={styles.source}>Source: {section.source}. {section.caution}</p>
+        <details className={provenance.snapshot}>
+          <summary aria-label={`Source data for ${section.title}`}>Source data</summary>
+          <p><a href={section.snapshot.path} download>Download source snapshot (JSON, {formatDownloadBytes(section.snapshot.bytes)})</a></p>
+          <p>SHA-256 <code>{section.snapshot.sha256}</code></p>
+        </details>
       </section>)}
       <p className={explore.caution}>These datasets are public context from their providers, not Kansas Frontier Matrix evidence. A record here can change when a provider revises its data.</p>
       <p><Link href="/counties">Look up any county →</Link> · <Link href="/explore">Map guides →</Link></p>

@@ -5,6 +5,11 @@
    "title": "People",
    "source": "U.S. Census Bureau July 1 population estimates, 2020 and 2025",
    "caution": "A later release can revise earlier years.",
+   "snapshot": {
+    "path": "/labs-data/census-mosaic-a3c82ebd5d89619c.json",
+    "bytes": 223032,
+    "sha256": "a3c82ebd5d89619c498db370861f1288eed6199c3ae8ec0407aea999410c7399"
+   },
    "items": [
     {
      "label": "Most people",
@@ -49,6 +54,11 @@
    "title": "Income, age, education and homes",
    "source": "U.S. Census Bureau American Community Survey 5-year estimates, 2020–2024",
    "caution": "These are survey estimates with 90% margins of error. Where margins overlap, the county shown may not truly rank first.",
+   "snapshot": {
+    "path": "/labs-data-observatory/county-conditions-63b3f2578632390e.json",
+    "bytes": 575019,
+    "sha256": "63b3f2578632390e6322fc7cff37d1b02d90f0ccb575db24b1a6d797c786f6fb"
+   },
    "items": [
     {
      "label": "Highest median household income",
@@ -93,6 +103,11 @@
    "title": "Bridges",
    "source": "Kansas Department of Transportation bridge inventory as of 2026-11-16",
    "caution": "Inventory records are not always one physical bridge each. Unknown built years are left out, not guessed.",
+   "snapshot": {
+    "path": "/labs-data-bridges/built-kansas-4d6df39613ba5219.json",
+    "bytes": 9517957,
+    "sha256": "4d6df39613ba521910c3ad144763db7c1eed3696d4db13744c67268a999931db"
+   },
    "items": [
     {
      "label": "Oldest recorded built year",
@@ -125,6 +140,11 @@
    "title": "Tornadoes",
    "source": "NOAA Storm Prediction Center tornado tracks that started in Kansas, 1950–2025",
    "caution": "Earlier tornadoes are under-reported, so counts by year are not a trend. Tracks that began in another state are not included.",
+   "snapshot": {
+    "path": "/labs-data/tornado-tracks-5ecb6c60d8652940.json",
+    "bytes": 1606048,
+    "sha256": "5ecb6c60d8652940fd559ba6a00ed61c389e92a5380fb66ddf8b0362242e2023"
+   },
    "items": [
     {
      "label": "Tornadoes in the record",
