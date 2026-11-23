@@ -1,0 +1,63 @@
+.panel { --line: #426052; --muted: #bbcec0; margin: 24px 0; padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-top: 3px solid #a4b99b; border-radius: 10px; background: #13271f; color: #edf2e9; font-family: Arial, sans-serif; overflow-wrap: anywhere; }
+.heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px 22px; }
+.panel .eyebrow { color: #c5d5bd; font-size: 11px; letter-spacing: .15em; margin: 0 0 10px; line-height: 1.4; }
+.panel h2 { font-size: clamp(22px, 2.4vw, 30px); line-height: 1.16; letter-spacing: -.025em; margin: 0; max-width: 570px; }
+.badge { display: inline-block; color: #d4e8cb; border: 1px solid #6c896d; padding: 7px 10px; font-size: 12px; line-height: 1.4; }
+.panel p { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.panel .intro { max-width: 820px; margin: 18px 0 10px; color: #d1ded1; }
+.panel a { color: #c3edd2; text-decoration: underline; text-underline-offset: 3px; }
+.sourceLinks { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-bottom: 22px; font-size: 13px; }
+.panel :is(input, button) { font: inherit; min-height: 44px; border: 1px solid #71896f; border-radius: 5px; background: #0c1c15; color: #eef5e9; box-sizing: border-box; }
+.panel button { padding: 10px 14px; cursor: pointer; }
+.panel button:hover:not(:disabled) { border-color: #d8c886; background: #253b2c; }
+.panel button:active:not(:disabled) { background: #314a36; }
+.panel button:disabled { opacity: .55; cursor: default; }
+.panel :focus-visible { outline: 3px solid #f1ce68; outline-offset: 3px; }
+.importControls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+.importControls label { display: grid; gap: 6px; font-size: 14px; min-width: 0; max-width: 100%; }
+.importControls label > span { color: var(--muted); font-size: 12px; }
+.importControls input { padding: 7px; width: 100%; max-width: 460px; font-size: 13px; }
+.importControls input::file-selector-button { min-height: 32px; border: 0; margin-right: 12px; border-radius: 3px; background: #c6d6b6; color: #142219; padding: 5px 10px; cursor: pointer; }
+.panel .notice, .panel .error, .panel .synthetic { margin: 16px 0 0; padding: 11px 14px; border-left: 3px solid #d4bd72; background: #22382b; color: #e6dfbe; }
+.panel .error { border-left-color: #f1a995; color: #ffd0c3; background: #3a2b25; }
+.panel .synthetic { border: 1px solid #dfba72; background: #3b3422; color: #f8e1af; }
+.empty { padding: 28px 0 2px; max-width: 740px; }
+.emptyMark { color: #94b793; font-size: 12px; letter-spacing: .2em; }
+.panel h3 { font-size: 20px; line-height: 1.3; margin: 10px 0 12px; color: #ecf3e5; }
+.empty code { color: #d8e7cc; }
+.identity { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; margin: 25px 0 18px; font-size: 13px; color: #d2dfcf; }
+.identity strong { font-size: 24px; color: #f0f4dc; }
+.identity code { width: 100%; font-size: 12px; color: #bcd0bd; }
+.modeControls { display: flex; gap: 9px; flex-wrap: wrap; margin: 0 0 22px; }
+.modeControls button { display: flex; align-items: center; gap: 10px; min-height: 48px; font-size: 13px; }
+.modeControls button span { color: #b8c8b7; font-size: 10px; letter-spacing: .08em; }
+.modeControls button[aria-pressed="true"] { background: #cad8b5; border-color: #cad8b5; color: #102218; box-shadow: inset 0 -3px #e9cc7c; }
+.modeControls button[aria-pressed="true"] span { color: #324b35; }
+.modeControls button[aria-pressed="true"]:hover { background: #dae5c5; border-color: #e9cc7c; color: #102218; }
+.modeControls button[aria-pressed="true"]:active { background: #bacba1; color: #102218; }
+.lab { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(230px, 1fr); gap: clamp(20px, 3vw, 36px); align-items: start; }
+.figure { margin: 0; min-width: 0; }
+.northBounds, .southBounds { display: flex; justify-content: space-between; gap: 16px; color: #c2d1bf; font-size: 11px; font-variant-numeric: tabular-nums; }
+.northBounds { margin-bottom: 8px; }.southBounds { margin-top: 8px; }
+.canvasFrame { position: relative; border: 1px solid #6e886e; background: repeating-linear-gradient(135deg, #14211b 0 5px, #334237 5px 7px, #14211b 7px 12px); }
+.canvasFrame canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; image-rendering: pixelated; cursor: crosshair; }
+.north { position: absolute; right: 10px; top: 10px; padding: 5px 7px; background: #0b1b15dd; color: #f3edcd; font-size: 12px; pointer-events: none; }
+.figure figcaption { font-size: 12px; line-height: 1.6; color: var(--muted); margin: 11px 0 15px; }
+.legendBar { height: 11px; background: linear-gradient(to right, rgb(27,59,68), rgb(79,132,115), rgb(205,205,122), rgb(248,235,195)); border: 1px solid #7d9175; }
+.legendLabels { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; margin-top: 6px; color: #d6e2c9; font-variant-numeric: tabular-nums; }
+.panel .legend p, .panel .coverage, .panel .noData { font-size: 12px; margin: 8px 0; }
+.noData { display: flex; gap: 8px; align-items: center; }
+.noData span { width: 18px; height: 13px; border: 1px solid #73866e; flex: 0 0 auto; background: repeating-linear-gradient(135deg, #14211b 0 3px, #71816e 3px 4px, #14211b 4px 7px); }
+.probe { border-left: 1px solid var(--line); padding: 4px 0 0 24px; min-width: 0; }
+.probe h3 { margin-top: 0; }
+.probeControls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+.probeControls label { display: grid; gap: 8px; color: #cad8c5; font-size: 12px; min-width: 0; }
+.probeControls input { width: 100%; min-width: 0; padding: 10px; }
+.panel .position { font-size: 12px; margin: 16px 0 20px; color: #bfd2ba; }.position strong { display: inline-block; color: #e4ebd1; margin-top: 4px; font-weight: 400; }
+.values { margin: 0; }.values > div { padding: 12px 0; border-top: 1px solid var(--line); }.values dt { color: #c6d5c2; font-size: 12px; line-height: 1.5; }.values dd { margin: 5px 0 0; font-size: clamp(22px, 2.2vw, 28px); font-variant-numeric: tabular-nums; color: #f2f2d5; letter-spacing: -.02em; }.values .difference { margin-top: 8px; border-top-color: #a09560; }.values .difference dd { color: #e5cf93; }
+.panel .probePrompt { padding: 20px 0; color: #d9e2cb; }.panel .precision { font-size: 12px; border-top: 1px solid var(--line); padding-top: 14px; }.panel .warning { font-size: 12px; color: #f2d79a; padding-left: 10px; border-left: 2px solid #d4bd72; }
+.provenance { margin-top: 28px; padding-top: 10px; border-top: 1px solid var(--line); }.provenance summary { cursor: pointer; min-height: 44px; padding: 12px 0; box-sizing: border-box; color: #d4e4c6; font-size: 14px; }.metadata { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px; }.metadata dt { color: #b3c8ae; margin-bottom: 5px; }.metadata dd { margin: 0; line-height: 1.6; }.files { list-style: none; margin: 20px 0; padding: 0; }.files li { display: grid; gap: 7px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 12px; }.files strong { color: #dce8cd; }.files span { color: #b8cbb1; }.panel code { font-size: 12px; overflow-wrap: anywhere; }.panel pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; line-height: 1.7; padding: 12px; color: #d2e1c6; border: 1px solid var(--line); background: #0d1f17; }.panel h4 { font-size: 13px; margin-bottom: 10px; }
+@media (max-width: 760px) { .lab { grid-template-columns: 1fr; }.probe { padding: 22px 0 0; border-left: none; border-top: 1px solid var(--line); }.probeControls { max-width: 420px; }.values { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }.values .difference { margin-top: 0; }.modeControls { gap: 8px; }.modeControls button { flex: 1 1 145px; }.metadata { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .panel { padding: 17px; }.importControls { display: grid; }.importControls input { font-size: 12px; }.modeControls button { flex-basis: 100%; justify-content: flex-start; }.modeControls button span { min-width: 32px; }.probeControls input { font-size: 16px; }.values dd { font-size: 22px; }.northBounds, .southBounds { font-size: 10px; }.badge { font-size: 11px; }.panel h2 { font-size: 24px; } }
+
+.pilotButton { margin: 4px 0 18px; }.pilotReview { padding: 10px 14px; margin: 20px 0; border: 1px solid #a18d58; background: #283221; }.pilotReview strong { color: #f0e3b8; }

@@ -105,6 +105,28 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }
  };
 
+ // A single hash-pinned derived pilot; the NEON download token remains on dev.
+ const neonPreview=async request=>{
+  if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
+  if(new URL(request.url).search)return json({reasonCode:'QUERY_INVALID'},400);
+  const key='\nneon-preview',hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return answer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60);
+  try{
+   let trip=pending.get(key);
+   if(!trip){
+    trip=call('GET','/v1/neon/preview').then(({value,bytes})=>{
+     if(value?.format!=='kfm-neon-relay-pilot-v1'||value.review?.scientific_accuracy_verified!==false||value.review?.source_admitted!==false)throw error('GATEWAY_RESPONSE_INVALID');
+     delete value.gateway;remember(key,value,bytes);return value;
+    }).finally(()=>pending.delete(key));
+    pending.set(key,trip);
+   }
+   return answer(await trip,'live',cache.get(key)?.at??clock(),300);
+  }catch{
+   if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);
+   return json({state:'local-data-offline',reasonCode:'NEON_PREVIEW_UNAVAILABLE'},503);
+  }
+ };
+
  /**
   * The gateway's health (readiness and freshness per dataset and recovered collection), asked at
   * most once per freshMs and served stale for up to staleMs when the PC is away, like answers.
@@ -144,7 +166,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }
   return json(body,200,'public, max-age=60');
  };
- return {query,catalog,health,workerHandler:relay.handler,relay};
+ return {query,catalog,health,neonPreview,workerHandler:relay.handler,relay};
 }
 
 // One service per process: the worker route and the public routes must share one relay.
@@ -173,4 +195,10 @@ export function localDataWorkerRuntime(env=process.env){
  if(!local)return async()=>json({reasonCode:'ROUTE_NOT_FOUND'},404);
  const origin=localDataConfig(env).origin;
  return async request=>new URL(request.url).origin===origin?local.workerHandler(request):json({reasonCode:'LOCAL_DATA_ORIGIN_HOLD'},503);
+}
+
+/** /api/neon/preview: public derived context through the existing signed dev relay. */
+export function localNeonPreviewRuntime(env=process.env){
+ const local=service(env);
+ return local?local.neonPreview:off;
 }

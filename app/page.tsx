@@ -1,4 +1,6 @@
 "use client";
+import { NeonLidarMapBadge, NeonLidarMapControls, useNeonLidarMap } from "./neon-lidar-map-controls";
+import { hasNeonLocalHit } from "./neon-lidar-map";
 import { withCivicKey } from "./map-keys";
 import { civicCongressForDay, civicCongressLabel, civicDayForFrame, civicFrameVisible, civicRecordMatchesDay, civicTermStart, civicSourceForRecord, CIVIC_HISTORY_LIMITATION } from "./civic-history";
 import { CIVIC_ID, CIVIC_LIMITATION, CIVIC_SOURCE } from "./civic-districts";
@@ -1324,6 +1326,7 @@ export default function Home() {
   const daylightEnabledRef = useRef(false);
   const daylightPlayingRef = useRef(false);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const neonClaimedMapClicksRef = useRef(new WeakSet<object>());
   const mapInformationHostRef = useRef<HTMLDivElement>(null);
   const welcomeAttributionHostRef = useRef<HTMLDivElement>(null);
   const localCapturePixelRatioRef = useRef<number | null>(null);
@@ -7144,6 +7147,14 @@ export default function Home() {
             clearHoverCandidate();
             return;
           }
+          // Local NEON cells own their numeric probe, never the Evidence Drawer.
+          if (hasNeonLocalHit(renderedHits)) {
+            showInspectionCursor();
+            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
+            hoveredRef.current = null;
+            clearHoverCandidate();
+            return;
+          }
           // Features whose selection the category dock owns change the cursor without opening a hover preview;
           // so do the monitoring wells while water levels at wells is on.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID || renderedHits[0]?.source === REVIEWED_SOURCE_ID
@@ -7232,6 +7243,8 @@ export default function Home() {
         });
 
         map.on("click", (event) => {
+          // Claim tools before point completion can clear its measurement mode.
+          if (aviationPickingRef.current || measureModeRef.current || undergroundOpenRef.current) neonClaimedMapClicksRef.current.add(event);
           if (aviationPickingRef.current) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
           if (measureModeRef.current) {
@@ -7254,16 +7267,17 @@ export default function Home() {
 
           // WebGL aircraft are absent from queryRenderedFeatures; let their
           // inspector own the click before inspecting ground context beneath it.
-          if (pickKansasSkyAircraft(map, event.point)) return;
+          if (pickKansasSkyAircraft(map, event.point)) { neonClaimedMapClicksRef.current.add(event); return; }
           const geologyLayers = GEOLOGY_POINT_LAYER_IDS.filter(id => map.getLayer(id));
-          if (geologyLayers.length && map.queryRenderedFeatures(event.point, { layers: geologyLayers }).length) return;
+          if (geologyLayers.length && map.queryRenderedFeatures(event.point, { layers: geologyLayers }).length) { neonClaimedMapClicksRef.current.add(event); return; }
           const renderedHits = map.queryRenderedFeatures(event.point).filter(feature => {
             const source = OFFICIAL_CONTEXT_BY_SOURCE_ID[feature.source];
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
           // The topmost archive feature owns this click.
-          if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) return;
+          if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) { neonClaimedMapClicksRef.current.add(event); return; }
+          if (hasNeonLocalHit(renderedHits)) return;
           // Local previews own their selection; never inspect official features beneath them.
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           // With land cover shown, every click also reads the NLCD class under it; whatever the click selects still selects.
@@ -9546,6 +9560,8 @@ export default function Home() {
     if (mode === "globe") { setLeftOpen(false); setRightOpen(false); setSourceStatusOpen(false); setMapUtilityOpen(false); }
     announce(`${mode === "terrain" ? "Terrain 3D display" : mode === "globe" ? "Globe display" : "2D evidence display"} applied · active time and selection preserved`);
   };
+
+  const neonLidarMap = useNeonLidarMap({ mapRef, styleReady, flatMap: projection === "mercator" && scenePreset !== "elevation-3d", atPresent: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, reducedMotion, onFlatMap: () => activateMapRepresentation("2d"), claimedClicksRef: neonClaimedMapClicksRef });
 
   const startTerrainInvestigation = () => {
     activateMapRepresentation("terrain");
@@ -12411,6 +12427,7 @@ export default function Home() {
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
+          <NeonLidarMapBadge controller={neonLidarMap} />
           {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
@@ -12836,6 +12853,7 @@ export default function Home() {
               {mapUtilityView === "scene" && <section id="map-utility-view-scene" role="region" aria-labelledby="map-utility-title" className="map-utility-section scene-lab-section">
                 <div className="map-utility-section-heading"><span>APPEARANCE</span><h3>Make the map your own</h3><p>Choose a map style, then shape its perspective and light.</p></div>
                 <div className="appearance-basemap"><label><span>Basemap</span><select aria-label="Appearance basemap" value={basemap} onChange={event => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map(key => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label></div>
+                <NeonLidarMapControls controller={neonLidarMap} />
 
                 <div className="appearance-quick-looks" role="group" aria-label="Terrain starting looks"><button type="button" onClick={() => applyTerrainLook("natural")}>Natural terrain</button><button type="button" onClick={() => applyTerrainLook("topographic")}>Topographic relief</button><button type="button" onClick={() => applyTerrainLook("buildings")}>3D buildings</button></div>
                 <section className="scene-preset-grid verified-representation-grid" aria-label="Verified map representations">

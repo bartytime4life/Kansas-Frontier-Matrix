@@ -121,10 +121,20 @@ test("both real generic hover/click fallbacks exclude scene display sources whil
 test("real map click completes the existing measurement path before any feature/probe selection", () => {
   const click = nodesMatching(pageTree, (node) => ts.isCallExpression(node) && node.expression.getText(pageTree) === "map.on" && node.arguments[0]?.getText(pageTree) === '"click"' && node.arguments[1]?.getText(pageTree).includes("measureCoordinatesRef.current"))[0];
   const updates = [], counts = [], labels = [];
-  const context = { aviationPickingRef: { current: false }, undergroundOpenRef: { current: false }, measureModeRef: { current: "distance" }, measureCoordinatesRef: { current: [[-98, 38]] }, measureUnitRef: { current: "metric" }, setMeasureCoordinateCount: (value) => counts.push(value), updateMeasurementSource: (_map, data) => updates.push(data), buildMeasurementData: (coordinates, mode) => ({ coordinates, mode }), setMeasurement: (label) => labels.push(label), measurementLabelFor: (mode, points) => `${mode}:${points.length}`, map: { queryRenderedFeatures() { throw new Error("measurement must not enter feature picking"); } } };
-  evaluate(click.arguments[1], context)({ lngLat: { lng: -97, lat: 39 }, point: [5, 6] });
+  const context = { neonClaimedMapClicksRef: { current: new WeakSet() }, aviationPickingRef: { current: false }, undergroundOpenRef: { current: false }, measureModeRef: { current: "distance" }, measureCoordinatesRef: { current: [[-98, 38]] }, measureUnitRef: { current: "metric" }, setMeasureCoordinateCount: (value) => counts.push(value), updateMeasurementSource: (_map, data) => updates.push(data), buildMeasurementData: (coordinates, mode) => ({ coordinates, mode }), setMeasurement: (label) => labels.push(label), measurementLabelFor: (mode, points) => `${mode}:${points.length}`, map: { queryRenderedFeatures() { throw new Error("measurement must not enter feature picking"); } } };
+  const event = { lngLat: { lng: -97, lat: 39 }, point: [5, 6] };
+  evaluate(click.arguments[1], context)(event);
   assert.deepEqual(updates, [{ coordinates: [[-98, 38], [-97, 39]], mode: "distance" }]);
   assert.deepEqual(counts, [2]); assert.deepEqual(labels, ["distance:2"]);
+  assert.equal(context.neonClaimedMapClicksRef.current.has(event), true, "measurement claims the event before later probe listeners");
+  const pointEvent = { lngLat: { lng: -96, lat: 38 }, point: [7, 8] };
+  context.measureModeRef.current = "point";
+  context.setMeasureMode = value => assert.equal(value, null);
+  context.map.doubleClickZoom = { enable() {} }; context.announce = () => {};
+  evaluate(click.arguments[1], context)(pointEvent);
+  assert.equal(context.measureModeRef.current, null);
+  assert.equal(context.neonClaimedMapClicksRef.current.has(pointEvent), true, "completed points stay claimed after their mode clears");
+  assert.deepEqual(updates.at(-1), { coordinates: [[-96, 38]], mode: "point" });
 });
 
 const drawingUrl = toUrl(transpile(await read("app/terrain-drawing.ts")));

@@ -1,0 +1,198 @@
+"use client";
+
+import Link from "next/link";
+import { useCallback, useEffect, useId, useMemo, useState, type RefObject } from "react";
+import type { Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
+import { createAcquisitionSession } from "./acquisition-client";
+import { neonElevationDomain, neonLidarProbe, parseNeonLidarPreview, readNeonLidarLocalJson, type NeonLidarMode, type NeonLidarPreview } from "./neon-lidar-preview";
+import { applyNeonMapOverlay, buildNeonMapData, clearNeonMapOverlay, neonMapBounds, NEON_LOCAL_FILL, NEON_LOCAL_SOURCE } from "./neon-lidar-map";
+import { readNeonLidarPilot, type NeonPilotReceipt } from "./neon-lidar-pilot-client";
+import styles from "./neon-lidar-map-controls.module.css";
+
+type Options = {
+  mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; flatMap: boolean;
+  atPresent: boolean; reducedMotion: boolean; onFlatMap?: () => void;
+  claimedClicksRef?: RefObject<WeakSet<object>>;
+};
+type CoordinateDraft = { row: string; column: string };
+const emptyDraft = (): CoordinateDraft => ({ row: "", column: "" });
+const coordinateIndex = (input: string, limit: number) => /^\d+$/.test(input) && Number.isInteger(Number(input)) && Number(input) >= 1 && Number(input) <= limit ? Number(input) - 1 : null;
+const meters = (value: number | null) => value === null ? "NoData" : `${value.toFixed(2)} m`;
+const modes: { kind: NeonLidarMode; label: string }[] = [{ kind: "dtm", label: "Ground" }, { kind: "dsm", label: "Surface" }, { kind: "chm", label: "Canopy" }];
+
+/** Lives with the map page, so closing Appearance does not remove the local selection. */
+export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reducedMotion, onFlatMap, claimedClicksRef }: Options) {
+  const [preview, setPreview] = useState<NeonLidarPreview | null>(null);
+  const [pilotReceipt, setPilotReceipt] = useState<NeonPilotReceipt | null>(null);
+  const [loadKind, setLoadKind] = useState<"file" | "pilot">("file");
+  const [mode, setMode] = useState<NeonLidarMode>("chm");
+  const [opacity, setOpacity] = useState(80);
+  const [enabled, setEnabled] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [fileError, setFileError] = useState("");
+  const [mapError, setMapError] = useState("");
+  const [applied, setApplied] = useState(false);
+  const [coordinateDraft, setCoordinateDraft] = useState(emptyDraft);
+  const [session] = useState(createAcquisitionSession);
+  const data = useMemo(() => preview ? buildNeonMapData(preview) : null, [preview]);
+  const bounds = useMemo(() => preview ? neonMapBounds(preview) : null, [preview]);
+  const elevationDomain = useMemo(() => preview ? neonElevationDomain(preview) : null, [preview]);
+  const probe = useMemo(() => {
+    if (!preview) return null;
+    const row = coordinateIndex(coordinateDraft.row, preview.grid.height), column = coordinateIndex(coordinateDraft.column, preview.grid.width);
+    return row === null || column === null ? null : neonLidarProbe(preview, row, column);
+  }, [preview, coordinateDraft]);
+  const removeOverlay = useCallback(() => {
+    const map = mapRef.current;
+    if (map) { try { clearNeonMapOverlay(map); } catch { /* The map may already have been disposed. */ } }
+  }, [mapRef]);
+  useEffect(() => () => { session.cancel(); removeOverlay(); }, [session, removeOverlay]);
+  useEffect(() => {
+    const map = mapRef.current;
+    return () => { if (map) { try { clearNeonMapOverlay(map); } catch { /* The captured renderer may already be disposed. */ } } };
+  }, [mapRef, styleReady]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    let disposed = false;
+    const sync = () => {
+      if (disposed) return;
+      try {
+        if (!preview || !data || !enabled || !styleReady || !flatMap || !atPresent) {
+          clearNeonMapOverlay(map); setApplied(false); setMapError(""); return;
+        }
+        applyNeonMapOverlay(map, data, mode, opacity / 100);
+        setApplied(opacity > 0); setMapError("");
+      } catch {
+        try { clearNeonMapOverlay(map); } catch { /* Preserve the mutation failure below. */ }
+        setApplied(false); setMapError("The map could not draw this local preview. Hide it or reload the map before trying again.");
+      }
+    };
+    const pick = (event: MapMouseEvent) => {
+      if (claimedClicksRef?.current.has(event)) return;
+      if (!enabled || !flatMap || !atPresent || !styleReady || !preview || !data || !map.getLayer(NEON_LOCAL_FILL)) return;
+      const feature = map.queryRenderedFeatures(event.point, { layers: [NEON_LOCAL_FILL] }).find(item => item.source === NEON_LOCAL_SOURCE);
+      const row = feature?.properties?.row, column = feature?.properties?.column;
+      if (typeof row !== "number" || typeof column !== "number" || !neonLidarProbe(preview, row, column)) return;
+      setCoordinateDraft({ row: String(row + 1), column: String(column + 1) });
+    };
+    // Synchronize this local renderer resource, including full basemap style replacements.
+    sync();
+    map.on("style.load", sync); map.on("click", pick);
+    return () => {
+      disposed = true; map.off("style.load", sync); map.off("click", pick);
+      // Settings reuse the owned source; the renderer-lifetime effect owns final removal.
+    };
+  }, [mapRef, styleReady, flatMap, atPresent, preview, data, enabled, mode, opacity, claimedClicksRef]);
+  async function importFile(file: File | undefined) {
+    if (!file) return;
+    const request = session.begin();
+    removeOverlay(); setPreview(null); setPilotReceipt(null); setLoadKind("file"); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(true); setFileError(""); setMapError("");
+    try {
+      const parsed = parseNeonLidarPreview(await readNeonLidarLocalJson(file, request.signal));
+      if (!parsed) throw new Error("Preview validation failed. Choose a matching terrain/surface/canopy JSON from the local NEON preparer.");
+      if (request.current()) setPreview(parsed);
+    } catch (error: unknown) { if (request.current()) setFileError(error instanceof Error ? error.message : "The local preview could not be read."); }
+    finally { if (request.current()) setBusy(false); }
+  }
+  async function loadPilot() {
+    const request = session.begin();
+    removeOverlay(); setPreview(null); setPilotReceipt(null); setLoadKind("pilot"); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(true); setFileError(""); setMapError("");
+    try {
+      const receipt = await readNeonLidarPilot(request.signal);
+      if (request.current()) { setPreview(receipt.preview); setPilotReceipt(receipt); }
+    } catch (error: unknown) { if (request.current()) setFileError(error instanceof Error ? error.message : "The Konza Prairie preview is unavailable. Import a prepared file or try again later."); }
+    finally { if (request.current()) setBusy(false); }
+  }
+  function clear() {
+    session.cancel(); removeOverlay(); setPreview(null); setPilotReceipt(null); setCoordinateDraft(emptyDraft()); setEnabled(false); setApplied(false); setBusy(false); setFileError(""); setMapError("");
+  }
+  function selectAxis(axis: keyof CoordinateDraft, input: string) {
+    if (!preview) return;
+    setCoordinateDraft(previous => {
+      const next = { ...previous, [axis]: input };
+      if (!previous.row && !previous.column && coordinateIndex(input, preview.grid.width) !== null) next[axis === "row" ? "column" : "row"] = "1";
+      return next;
+    });
+  }
+  const canShow = Boolean(preview && data && bounds && styleReady && flatMap && atPresent);
+  function toggle() { if (enabled) { removeOverlay(); setEnabled(false); setApplied(false); } else if (canShow) setEnabled(true); }
+  function fit() {
+    const map = mapRef.current;
+    if (!map || !bounds || !canShow) return;
+    try {
+      const size = map.getCanvas().getBoundingClientRect();
+      const compact = size.width < 760;
+      map.fitBounds(bounds, { maxZoom: 15, duration: reducedMotion ? 0 : 550,
+        padding: compact ? { top: 50, left: 22, right: 22, bottom: Math.round(size.height * 0.55) } : { top: 75, left: 60, right: Math.min(500, Math.round(size.width * 0.45)), bottom: 80 } });
+    } catch { setMapError("The map could not fit this tile. The local file is retained."); }
+  }
+  const status = busy ? loadKind === "pilot" ? "Loading the dev-processed Konza Prairie preview…" : "Reading the selected file locally…" : fileError || mapError || !preview ? fileError || mapError || "No local NEON tile imported. Nothing is shown on the map."
+    : !data || !bounds ? "This preview has no supported offline georeferencing. Re-prepare it to show it on the map; the acquisition lab can still inspect its numeric grid."
+      : !flatMap ? "Local overlay held in globe or Terrain 3D. Return to 2D to display this tile."
+        : !atPresent ? "Local overlay held outside Present. This dated acquisition is not a source for historical atlas frames."
+          : !styleReady ? "Local preview ready; waiting for the map style."
+            : !enabled ? pilotReceipt ? "Dev-processed provider pilot ready. Choose Show on map when you want to display it." : "Tile ready locally. Choose Show on map when you want to display it."
+              : opacity === 0 ? "Local overlay hidden at 0% opacity. Increase opacity to show its cells."
+                : applied ? "Local sampled cells enabled at Present. This is dated context, not live vegetation or KFM evidence." : "Applying local preview to the map…";
+  return { preview, pilotReceipt, mode, opacity, enabled, busy, fileError, mapError, status, canShow, applied, flatMap, atPresent, coordinateDraft, probe, elevationDomain,
+    importFile, loadPilot, clear, toggle, fit, selectAxis, onFlatMap,
+    setMode, setOpacity: (value: number) => { if (Number.isFinite(value)) setOpacity(Math.max(0, Math.min(100, value))); } };
+}
+export type NeonLidarMapController = ReturnType<typeof useNeonLidarMap>;
+
+export function NeonLidarMapBadge({ controller: c }: { controller: NeonLidarMapController }) {
+  if (!c.applied || !c.preview || !c.flatMap || !c.atPresent || c.opacity === 0) return null;
+  const synthetic = c.preview.data_kind === "synthetic-test";
+  return <div className={styles.mapBadge} data-synthetic={synthetic || undefined} role="status" aria-live="polite">
+    <strong>{synthetic ? "Synthetic local tile · not observed" : c.pilotReceipt ? "Dev-processed NEON pilot · review pending" : "Local NEON preview · not admitted"}</strong>
+    <span>{c.preview.source.site} · catalog {c.preview.source.month} · {c.mode.toUpperCase()} · dated context{c.pilotReceipt?.cache.state === "stale" ? " · stale cache" : ""}</span>
+  </div>;
+}
+
+export function NeonLidarMapControls({ controller: c }: { controller: NeonLidarMapController }) {
+  const id = useId(), preview = c.preview;
+  const present = preview?.grid[c.mode].filter(value => value !== null).length ?? 0;
+  const above = c.mode === "chm" ? preview?.grid.chm.filter(value => value !== null && value > 30).length ?? 0 : 0;
+  return <section className={styles.control} aria-labelledby={`${id}-title`}>
+    <div className={styles.heading}><span>LOCAL NEON / TERRAIN + VEGETATION</span><h4 id={`${id}-title`}>Read the landscape together</h4></div>
+    <p>Free, no subscription. Your imported preview stays in this browser; it is not uploaded or saved.</p>
+    <button type="button" className={styles.return} disabled={c.busy} onClick={() => void c.loadPilot()}>Load Konza Prairie pilot</button>
+    <label className={styles.file} htmlFor={`${id}-file`}>Choose prepared preview JSON <small>2 MiB maximum</small><input id={`${id}-file`} type="file" accept="application/json,.json" onChange={event => { void c.importFile(event.target.files?.[0]); event.target.value = ""; }} /></label>
+    <p className={c.fileError || c.mapError ? styles.error : styles.status} role="status" aria-live="polite" aria-busy={c.busy}>{c.status}</p>
+    {(!preview && !c.busy && !c.fileError) && <p className={styles.hint}>Prepare matching ground (DTM), surface (DSM) and canopy (CHM) grids in the <Link href="/acquisition">acquisition lab</Link>. Only the imported tile is covered.</p>}
+    {preview && <>
+      {c.pilotReceipt && <div className={styles.pilotReview}><p><strong>Provider preview · processed on the development computer.</strong> Scientific review pending; independent accuracy and vertical reference are unverified.</p><p className={c.pilotReceipt.cache.state === "stale" ? styles.warning : styles.hint}>Cache {c.pilotReceipt.cache.state} · <time dateTime={c.pilotReceipt.cache.at}>{c.pilotReceipt.cache.at}</time>{c.pilotReceipt.cache.state === "stale" ? ". This cached preview is stale; it is not a new observation." : ". Acquisition dates remain separate from cache time."}</p><p className={styles.warning}>Native CHM maximum {c.pilotReceipt.review.canopy_native_max_m.toFixed(2)} m; {c.pilotReceipt.review.canopy_native_cells_above_50m} native cells above 50 m. Outliers retained for review, not identified as trees.</p></div>}
+      {preview.data_kind === "synthetic-test" && <p className={styles.synthetic}><strong>Synthetic test · not observed terrain.</strong> These values do not describe this NEON site.</p>}
+      <div className={styles.identity}><strong>{preview.source.site}</strong><span>Catalog {preview.source.month}</span><span>Run {preview.source.acquisition_run}</span><span>{preview.source.release}</span><code>{preview.source.tile}</code></div>
+      {!c.flatMap && c.onFlatMap && <button type="button" className={styles.return} onClick={c.onFlatMap}>Return to 2D for local tile</button>}
+      <div className={styles.modes} role="group" aria-label="Local NEON surface">{modes.map(item => <button type="button" key={item.kind} aria-pressed={c.mode === item.kind} onClick={() => c.setMode(item.kind)}><small>{item.kind.toUpperCase()}</small>{item.label}</button>)}</div>
+      <label className={styles.opacity} htmlFor={`${id}-opacity`}>Overlay opacity <output>{c.opacity}%</output><input id={`${id}-opacity`} type="range" min={0} max={100} step={5} value={c.opacity} aria-valuetext={`${c.opacity} percent`} onChange={event => c.setOpacity(Number(event.target.value))} /></label>
+      <div className={styles.actions}><button type="button" disabled={!c.enabled && !c.canShow} aria-pressed={c.enabled} onClick={c.toggle}>{c.enabled ? "Hide" : "Show on map"}</button><button type="button" disabled={!c.canShow} onClick={c.fit}>Fit tile</button><button type="button" onClick={c.clear}>Clear</button></div>
+      <div className={styles.legend} aria-label={c.mode === "chm" ? "Fixed canopy scale, 0 to 30 meters" : "Shared DTM and DSM elevation scale"}><i /><div><span>{c.mode === "chm" ? "0 m" : c.elevationDomain ? meters(c.elevationDomain[0]) : "No elevation data"}</span><span>{c.mode === "chm" ? "30 m" : c.elevationDomain ? meters(c.elevationDomain[1]) : ""}</span></div></div>
+      <p className={styles.hint}>{c.mode === "chm" ? `Canopy scale is fixed; heights above 30 m saturate${above ? ` (${above} samples)` : ""}.` : "Ground and surface share one elevation scale."} NoData cells stay transparent; zero remains valid.</p>
+      <p className={styles.hint}>{present.toLocaleString("en-US")} / {preview.grid.width ** 2} samples present · {preview.grid.preview_resolution_m.toLocaleString("en-US", { maximumFractionDigits: 3 })} m display cells from 1 m source.</p>
+      <div className={styles.probe}>
+        <strong>Shared local sample</strong><p>Click a displayed cell, or enter a row and column.</p>
+        <div className={styles.coordinates}><label htmlFor={`${id}-row`}>Row · N → S<input id={`${id}-row`} type="number" min={1} max={preview.grid.height} step={1} placeholder={`1–${preview.grid.height}`} value={c.coordinateDraft.row} onChange={event => c.selectAxis("row", event.target.value)} /></label><label htmlFor={`${id}-column`}>Column · W → E<input id={`${id}-column`} type="number" min={1} max={preview.grid.width} step={1} placeholder={`1–${preview.grid.width}`} value={c.coordinateDraft.column} onChange={event => c.selectAxis("column", event.target.value)} /></label></div>
+        {c.probe && <>
+          <dl className={styles.values}><div><dt>Ground · DTM</dt><dd>{meters(c.probe.dtm)}</dd></div><div><dt>Surface · DSM</dt><dd>{meters(c.probe.dsm)}</dd></div><div><dt>Provider canopy · CHM</dt><dd>{meters(c.probe.chm)}</dd></div><div><dt>DSM − DTM</dt><dd>{meters(c.probe.surfaceAboveGround)}</dd></div></dl>
+          <p className={styles.hint}>Nearest source sample: {c.probe.easting.toFixed(1)} E / {c.probe.northing.toFixed(1)} N, native meters. DSM − DTM is surface above ground, including structures; it is not provider CHM.</p>
+          {c.probe.differenceIssue === "negative" && <p className={styles.warning}>Negative source difference retained for QA; not clamped.</p>}
+          {c.probe.differenceIssue === "nonfinite" && <p className={styles.warning}>Source difference exceeds numeric limits; needs QA.</p>}
+          {c.probe.chm === 0 && <p className={styles.warning}>Zero canopy does not establish bare earth; low vegetation can be suppressed.</p>}
+        </>}
+      </div>
+      <details className={styles.details}><summary>Source, alignment &amp; scientific limits</summary>
+        <p>{preview.source.attribution}. Catalog month, run and release are recorded locally; file hashes do not independently authenticate them.</p>
+        <p>Ground and surface: DP3.30024.001. Canopy: DP3.30015.001. Vertical reference: {preview.source.vertical_reference}. {preview.source.vertical_reference_basis}</p>
+        <p>{preview.georeferencing ? "Map corners are transformed offline by Rasterio/PROJ; height values stay unchanged. Horizontal transformation accuracy and coordinate epoch are unknown." : "No map georeferencing is recorded; re-prepare this file before display."} Polygons mark display-cell footprints; one nearest 1 m sample does not measure all vegetation in that cell. Source registration, map alignment, vertical datum accuracy and survey accuracy remain unverified. Two decimals show precision, not accuracy. 3D display is held.</p>
+        <p>This dated acquisition appears as local context at Present. It is excluded from reports, Evidence Drawer and governed source counts. No species, biomass, carbon, growth or change is inferred.</p>
+        {c.pilotReceipt && <><p>Native maximum DSM − DTM: {c.pilotReceipt.review.surface_minus_ground_native_max_m.toFixed(2)} m, distinct from provider CHM.</p><ul>{c.pilotReceipt.review.notes.map((note, index) => <li key={index}>{note}</li>)}</ul></>}
+        <div className={styles.links}><Link href="/acquisition">Full acquisition lab →</Link><a href="https://www.neonscience.org/resources/learning-hub/tutorials/lidar-uncertainty-r" target="_blank" rel="noreferrer">NEON uncertainty guide ↗</a></div>
+      </details>
+    </>}
+    {c.busy && <button type="button" onClick={c.clear}>Cancel local read</button>}
+    {!preview && !c.busy && c.fileError && <button type="button" onClick={c.clear}>Clear</button>}
+  </section>;
+}

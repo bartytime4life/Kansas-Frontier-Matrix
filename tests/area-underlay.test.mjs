@@ -25,11 +25,13 @@ function locator({pitch=0,extent=volume.bounds,reduced=false}={}){
 }
 // Execute the production page callback, including its unconditional 420 ms ease.
 async function productionFlatMap(map,reduced=false){
- const page=await readFile('app/page.tsx','utf8'),start=page.indexOf('  const activateMapRepresentation ='),end=page.indexOf('\n  const startTerrainInvestigation',start),exports={};
- assert.ok(start>0&&end>start);
+ const page=await readFile('app/page.tsx','utf8'),ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),exports={};
+ let representation;
+ function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='activateMapRepresentation')representation=node;ts.forEachChild(node,visit);}
+ visit(ast);assert.ok(representation,'extract only the production representation callback, without adjacent page hooks');
  const noop=()=>{},context={exports,compositionDefaults:studio.compositionDefaults,mapRef:{current:map},view:{pitch:map.pitch,bearing:0},projectionRef:{current:'mercator'},scenePresetRef:{current:'overview-2d'},verticalExaggerationRef:{current:1},atmospherePresetRef:{current:'night'},lightAzimuthRef:{current:210},fieldOfViewRef:{current:36},basemapRef:{current:'standard'},regionalViewRef:{current:{}},pendingViewRef:{current:null},motionDuration:n=>reduced?0:n};
  for(const name of ['setPrimaryWorkspace','stopSceneOrbit','stopFlyover','applyProjectionNavigationLimits','setProjection','setScenePreset','setVerticalExaggeration','setAtmospherePreset','setLightAzimuth','setFieldOfView','announce'])context[name]=noop;
- vm.runInNewContext(compile(page.slice(start,end)+'\nexports.activate=activateMapRepresentation;'),context);return()=>exports.activate('2d');
+ vm.runInNewContext(compile('const '+representation.getText(ast)+';\nexports.activate=activateMapRepresentation;'),context);return()=>exports.activate('2d');
 }
 async function harness({reduced=true,map=locator(),actualSession=false,failWorker=false,fakeDetail=false,onFlatMap=()=>{},onArea=()=>{}}={}){
  const moduleLoads=[],renders=[],renderers=[],controls=[],inspections=[],detailSessions=[],events=new Map(),tasks=new Map(),frames=new Map(),requests=[];let session,prepares=0,rayHits=[],timerId=0,frameId=0;const worker={terminate(){},postMessage:value=>requests.push(value)};

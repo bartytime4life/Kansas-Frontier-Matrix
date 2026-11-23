@@ -14,6 +14,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {decodeSecret,verifyRequest,signResponse,createNonceCache,RESPONSE_SIGNATURE_HEADER} from '../home-inference/signature.mjs';
 import {LOCAL_DATA_GATEWAY,LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS,LOCAL_DATA_DATA_PREFIX} from './protocol.mjs';
 import {DATASETS} from './datasets.mjs';
+import {NEON_PREVIEW_ROUTE,loadNeonPreview,neonPreviewConfig} from './neon-preview.mjs';
 import {datasetFreshness,collectionsFreshness} from './freshness.mjs';
 
 const fail=code=>Object.assign(new Error(code),{code});
@@ -43,7 +44,7 @@ export function missingIndexes(db,dataset){
  * databases: {observations, tiger, nwm, bulk} file paths (all but observations optional). dbPath is the
  * phase 1 name for databases.observations.
  */
-export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,open=path=>new DatabaseSync(path,{readOnly:true})}){
+export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,neonPreview=null,open=path=>new DatabaseSync(path,{readOnly:true})}){
  const secret=typeof rawSecret==='string'?decodeSecret(rawSecret):rawSecret;
  if(!Buffer.isBuffer(secret))throw fail('GATEWAY_KEY_INVALID');
  const keys=new Map([[keyId,{id:keyId,secret}]]),nonces=createNonceCache({clock});
@@ -69,6 +70,14 @@ export function createGateway({keyId,secret:rawSecret,dbPath,databases={observat
   if(LOCAL_DATA_ROUTES.get(path)!==method)return reply(404,{error:'ROUTE_NOT_FOUND'});
   // One answer for every authentication failure, so the gateway is not an oracle.
   if(!verifyRequest({headers,method,path,body,keys,nonces,now:clock()}).ok)return reply(401,{error:'UNAUTHORIZED'});
+
+  if(path===NEON_PREVIEW_ROUTE){
+   if(body!=='')return reply(400,{error:'QUERY_INVALID'});
+   try{
+    const answer=reply(200,loadNeonPreview(neonPreview));
+    return answer.body.length>LOCAL_DATA_LIMITS.replyBytes?reply(413,{error:'REPLY_TOO_LARGE'}):answer;
+   }catch{return reply(503,{error:'NEON_PREVIEW_NOT_READY'});}
+  }
 
   if(path==='/v1/health'){
    // Readiness and freshness per dataset, and freshness per recovered collection: bookkeeping
@@ -145,7 +154,7 @@ async function main(){
  let options;
  try{
   const {keyId,secret}=loadGatewayKey(process.env.KFM_LOCAL_DATA_KEY_FILE);
-  options={keyId,secret,databases:databasesFromEnv(),port:Number(process.env.KFM_LOCAL_DATA_PORT||8788)};
+  options={keyId,secret,databases:databasesFromEnv(),neonPreview:neonPreviewConfig(),port:Number(process.env.KFM_LOCAL_DATA_PORT||8788)};
  }catch(error){console.error(JSON.stringify({event:'config_refused',code:error.code??'CONFIG_INVALID'}));process.exitCode=1;return;}
  const server=await startGateway(options);
  console.log(JSON.stringify({at:new Date().toISOString(),event:'listening',gateway:LOCAL_DATA_GATEWAY,address:`127.0.0.1:${server.address().port}`,databases:Object.keys(options.databases).filter(k=>options.databases[k])}));
