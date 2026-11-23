@@ -10,8 +10,8 @@
   "artifact_hashes": {
     "docs/local-data-relay.md": "sha256:3e77fa9396ab8906c868ccb47d81f5068724490536fc9d84307e54a949552cce",
     "scripts/local-data/freshness.mjs": "sha256:f0bd981d4b423d9c3d9bc2a3462c8bfa15940db01e26daa6346682367b102cae",
-    "scripts/local-data/indexes.mjs": "sha256:beab51fa943f2ef7e31696c2b056a682211690500094c837f8f949fee5b415b4",
-    "tests/local-data-freshness.test.mjs": "sha256:c6eccce02e73282c0055e121a324500380022edcf51e2a81172f176bd9dbd82f"
+    "scripts/local-data/indexes.mjs": "sha256:c6eed26682ffb394b4e343393da6ba2ed8e7ea3f685853df0147a19bde3d5f56",
+    "tests/local-data-freshness.test.mjs": "sha256:6edd8c9ba6e2dd57094e28d3764ea166b8a28ca6e66f954270309f5059499e41"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -69,7 +69,7 @@
     "state": "pending"
   },
   "override_record": null,
-  "created_at": "2026-11-23T04:09:29.066723+00:00",
+  "created_at": "2026-11-23T04:13:02.962404+00:00",
   "emitter": "OpenAI Codex",
   "notes": "Provide three explicitly selected SQLite receipt indexes. Test DDL is limited to temporary SQLite fixtures."
 }

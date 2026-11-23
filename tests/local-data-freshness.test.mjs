@@ -137,7 +137,9 @@ test('named Storm Events indexes enable bounded receipt dates without changing t
  const cache=new Map();
  for(const {id,table} of collections){
   const name=table+'_file';
-  assert.deepEqual(plannedIndexes().get('observations').get(name).datasets,['freshness']);
+  assert.ok(!plannedIndexes().get('observations').has(name));
+  assert.deepEqual([...plannedIndexes(name).get('observations').keys()],[name]);
+  assert.deepEqual(plannedIndexes(name).get('observations').get(name).datasets,['freshness']);
   assert.ok([...DATASETS.values()].every(dataset=>!dataset.indexes.some(index=>index.name===name)));
   assert.deepEqual(collectionsFreshness(db,collections,{cache})[id],{reason:'INDEX_MISSING'});
   assert.equal(cli('check',name).code,1);
