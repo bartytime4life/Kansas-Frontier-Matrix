@@ -1,0 +1,75 @@
+{
+  "receipt_id": "kfm-storm-archive-receipt-indexes-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/local-data-relay.md",
+    "scripts/local-data/freshness.mjs",
+    "scripts/local-data/indexes.mjs",
+    "tests/local-data-freshness.test.mjs"
+  ],
+  "artifact_hashes": {
+    "docs/local-data-relay.md": "sha256:3e77fa9396ab8906c868ccb47d81f5068724490536fc9d84307e54a949552cce",
+    "scripts/local-data/freshness.mjs": "sha256:f0bd981d4b423d9c3d9bc2a3462c8bfa15940db01e26daa6346682367b102cae",
+    "scripts/local-data/indexes.mjs": "sha256:c6eed26682ffb394b4e343393da6ba2ed8e7ea3f685853df0147a19bde3d5f56",
+    "tests/local-data-freshness.test.mjs": "sha256:6edd8c9ba6e2dd57094e28d3764ea166b8a28ca6e66f954270309f5059499e41"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:0ba20dcc59650dce0e5588338991fed3bca499d7:scripts/local-data/freshness.mjs",
+      "repo:0ba20dcc59650dce0e5588338991fed3bca499d7:scripts/local-data/indexes.mjs",
+      "repo:0ba20dcc59650dce0e5588338991fed3bca499d7:scripts/local-data/recovered-catalog.json"
+    ],
+    "evidence_hashes": [
+      "sha256:e7d4b8e8db0dfc7a4f0c7a8e4c0475510716f7e9334a624c69c9bd2782ffa94c",
+      "sha256:703b8f4626d70e92b4ecaaa6e0d1d8a7f72c481bd17ba79927b98e523ce668fc",
+      "sha256:cf318ac08de548ff6dc8ef09618ab44350a0a43cfed60bbac0a351d959aaa4f5"
+    ]
+  },
+  "truth_labels": {
+    "docs/local-data-relay.md": "CONFIRMED",
+    "scripts/local-data/freshness.mjs": "CONFIRMED",
+    "scripts/local-data/indexes.mjs": "CONFIRMED",
+    "tests/local-data-freshness.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused gateway freshness, local data and library tests on copied fixtures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Existing latest Storm Events receipt coverage verified through a bounded PC read-only check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review and hosted verification",
+      "outcome": "SKIPPED",
+      "reason": "Pending at draft creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T04:13:02.962404+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Provide three explicitly selected SQLite receipt indexes. Test DDL is limited to temporary SQLite fixtures."
+}
