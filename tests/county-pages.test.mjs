@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { access, readFile } from 'node:fs/promises';
 import ts from 'typescript';
+import {componentHarness, findNode} from './component-harness.mjs';
 import { buildCountyFacts, countySlug, readBridgeBundle, readCountyBundle, readPopulationBundle } from '../scripts/prepare-county-pages.mjs';
 
 const compile = async (path, modules = {}) => { const exports = {}; new Function('exports', 'require', ts.transpileModule(await readFile(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText)(exports, name => { if (name in modules) return modules[name]; throw new Error(`Unexpected import: ${name}`); }); return exports; };
@@ -121,4 +122,24 @@ test('population is two Census estimates side by side, and every bridge inventor
   assert.match(page, /not a current safety assessment or permission to enter a structure/);
   assert.match(page, /A later release can revise earlier years, and the page gives the two estimates without saying why they differ\./);
   assert.match(page, /Inventory as of \{COUNTY_FACTS_SOURCES\.bridges\.inventoryAsOf\}/);
+});
+
+test('county directory accepts copied Kansas profile names', async () => {
+  const h = await componentHarness('app/counties/county-directory.tsx', {
+    'next/link': {default: 'a'}, './counties.module.css': {default: {}},
+  });
+  const counties = facts.counties.map(county => ({name: county.name, href: pages.countyPath(county)}));
+  const render = () => h.render(h.exports.CountyDirectory, {counties});
+  let tree = render();
+  const search = value => {
+    findNode(tree, node => node.type === 'input').props.onChange({target: {value}});
+    tree = render();
+    return findNode(tree, node => node.type === 'ul').props.children.map(item => item.props.children.props.href);
+  };
+  assert.deepEqual(search('Ellsworth'), ['/counties/ellsworth']);
+  assert.deepEqual(search('Ellsworth County, Kansas'), ['/counties/ellsworth']);
+  assert.deepEqual(search('  ELLSWORTH  COUNTY,ks  '), ['/counties/ellsworth']);
+  assert.deepEqual(search('Ellsworth County KS'), ['/counties/ellsworth']);
+  assert.equal(search('Ellsworth County, Nebraska').length, 0);
+  assert.equal(search('').length, 105);
 });

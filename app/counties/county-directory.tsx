@@ -9,7 +9,7 @@ type CountyEntry = { name: string; href: string };
 export function CountyDirectory({ counties }: { counties: readonly CountyEntry[] }) {
   const [search, setSearch] = useState("");
   const input = useRef<HTMLInputElement>(null);
-  const query = search.trim().toLowerCase().replace(/\s+/g, " ");
+  const query = search.trim().toLowerCase().replace(/\s+/g, " ").replace(/[, ]+(?:ks|kansas)$/, "");
   const matches = query ? counties.filter(county => county.name.toLowerCase().includes(query)) : counties;
   const resultLabel = matches.length === 0 ? "No counties found." :
     `${matches.length} ${matches.length === 1 ? "county" : "counties"}`;
