@@ -12,6 +12,7 @@ import { terrainBrowserFixtures } from './terrain-detail-browser-fixtures.mjs';
 import { welcomeScientificBrowserFixtures } from './welcome-scientific-browser-fixtures.mjs';
 import { renderPerformanceFixtures } from './render-performance-browser-fixtures.mjs';
 import { welcomeAttributionBrowserFixtures } from './welcome-attribution-browser-fixtures.mjs';
+import { droughtBrowserFixtures } from './drought-browser-fixtures.mjs';
 import ts from 'typescript';
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
 
@@ -947,6 +948,256 @@ for (const delayToolFocus of [false, true]) for (const width of [320, 390, 768, 
     await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Hide daylight through the year').focus()`);
     await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('[data-band="day"]')`, 'keyboard hides the chart');
+  });
+}
+
+// Unlike the static dock geometry fixture, these cases open the real Agriculture
+// workspace, load the chart through its API effects, and send native input.
+// Synthetic values establish UI behavior, not the public provider's history.
+const droughtWeekInput = 'input[aria-labelledby="category-map-dock-drought-week"]';
+const droughtPlayButton = '.category-map-dock-drought-steps button:last-child';
+const droughtSourceLink = '.category-map-dock-drought a[href="https://droughtmonitor.unl.edu/"]';
+
+async function droughtPoint(p, selector) {
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})`);
+  await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect();return r&&r.width>0&&r.height>0&&r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'uncovered drought/navigation target: '+selector);
+  return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,left:r.left,width:r.width};})()`);
+}
+
+async function droughtEnter(p, selector) {
+  await droughtPoint(p, selector);
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+  await p.key('Enter','Enter',13);
+}
+
+async function openDroughtWorkbench(p, { motion = false } = {}) {
+  await p.call('Emulation.setEmulatedMedia', { features: [{ name:'prefers-reduced-motion', value:motion?'no-preference':'reduce' }] });
+  await p.open('/?motion=off'); await readyWelcome(p);
+  await revealControl(p,'.topic-agriculture');
+  await p.evaluate(`document.querySelector('.topic-agriculture').focus()`); await p.key('Enter','Enter',13);
+  await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('[aria-label="Layer topic"]')?.value==='agriculture'`, 'actual Agriculture map entry');
+  await p.wait(`!!document.querySelector('.runtime-overlay.unsupported')`, 'the real unsupported-WebGL notice is present');
+  await openCategoryTool(p,'Drought history & change');
+  await droughtEnter(p,'[data-category-tool="drought"]');
+  await p.wait(`document.querySelector('[data-category-tool="drought"]')?.getAttribute('aria-pressed')==='true'`, 'Drought Monitor enabled through its visible control');
+}
+
+async function droughtSource(p) {
+  const source = await p.evaluate(`(()=>{const a=document.querySelector(${JSON.stringify(droughtSourceLink)});return a&&{text:a.textContent,href:a.href,target:a.target,rel:a.rel};})()`);
+  assert.deepEqual(source, { text:'U.S. Drought Monitor source ↗', href:'https://droughtmonitor.unl.edu/', target:'_blank', rel:'noreferrer' }, 'the loaded instrument identifies its public source');
+}
+
+async function droughtLoaded(p, week) {
+  await p.wait(`document.querySelector(${JSON.stringify(droughtWeekInput)})?.getAttribute('aria-valuetext')===${JSON.stringify(week.label)} && document.querySelector('.category-map-dock-drought .category-map-dock-reading')?.textContent.startsWith(${JSON.stringify('Valid '+week.label)})`, 'selected historical week loaded: '+week.date);
+}
+
+async function droughtScroll(p, selector, touch = false) {
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollTo({top:0,behavior:'instant'})`);
+  // Let the compositor commit the reset, then start on passive panel content.
+  // A native range input can consume a touch gesture intended for scrolling.
+  await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+  const before = await p.evaluate(`(()=>{
+    const node=document.querySelector(${JSON.stringify(selector)}),r=node.getBoundingClientRect();
+    const points=[.75,.6,.45].flatMap(fraction=>[{x:r.left+r.width/2,y:r.top+r.height*fraction},{x:r.left+8,y:r.top+r.height*fraction}]);
+    const point=points.find(point=>{const hit=document.elementFromPoint(point.x,point.y);return hit&&node.contains(hit)&&!hit.closest('button,input,select,a,summary,[role="slider"]');});
+    if(!point)throw new Error('No visible passive panel content for native scrolling');
+    const hit=document.elementFromPoint(point.x,point.y),ancestors=[];
+    for(let current=hit;current;current=current.parentElement)ancestors.push({tag:current.tagName,class:String(current.className),touchAction:getComputedStyle(current).touchAction});
+    const state={point,top:node.scrollTop,max:node.scrollHeight-node.clientHeight,height:r.height,target:{tag:hit.tagName,class:String(hit.className)},ancestors,page:[scrollX,scrollY],viewport:{width:innerWidth,height:innerHeight,outerWidth,outerHeight}};
+    window.__droughtScrollTrace={before:state,events:[]};
+    for(const type of ['touchstart','touchmove','touchcancel','scroll'])node.addEventListener(type,event=>{queueMicrotask(()=>window.__droughtScrollTrace.events.push({type:event.type,trusted:event.isTrusted,prevented:event.defaultPrevented,target:String(event.target?.className),top:node.scrollTop}));},{passive:true,once:true});
+    return state;
+  })()`);
+  assert.ok(before.max>2, 'the real panel content needs scrolling');
+  if (touch) {
+    const {x,y}=before.point,distance=Math.min(80,before.height*.3);
+    await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
+    for(let index=1;index<=8;index++){
+      await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-distance*index/8}]});
+      await pause(25);
+    }
+    await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  } else {
+    await p.call('Input.dispatchMouseEvent', { type:'mouseMoved', ...before.point });
+    await p.call('Input.dispatchMouseEvent', { type:'mouseWheel', ...before.point, deltaX:0, deltaY:240 });
+  }
+  try {
+    await p.wait(`document.querySelector(${JSON.stringify(selector)}).scrollTop>1`, 'native gesture scrolls the instrument itself');
+  } catch(error) {
+    throw new Error(error.message+'; drought native-scroll trace: '+JSON.stringify(await p.evaluate(`window.__droughtScrollTrace`)));
+  }
+  if(touch){
+    const events=await p.evaluate(`window.__droughtScrollTrace.events`);
+    assert.ok(['touchstart','touchmove'].every(type=>events.some(event=>event.type===type&&event.trusted)), 'the panel received trusted native touch input');
+  }
+  assert.deepEqual(await p.evaluate(`[scrollX,scrollY]`), before.page, 'the gesture does not displace the page');
+  assert.equal(await p.evaluate(`document.documentElement.scrollWidth>innerWidth+1`), false, 'no horizontal page overflow');
+}
+
+for (const [width,height,touch] of [[1440,900,false],[1366,500,false],[393,852,true],[844,393,true]]) {
+  test(`drought chart remains usable above unsupported WebGL at ${width}x${height}`, { timeout:120000 }, async t => {
+    const fixtures = droughtBrowserFixtures(origin,{history:'held'});
+    t.after(()=>fixtures.assertDrained());
+    const b=await browser(t),p=await pageSession(b,width,height,fixtures);
+    if(touch){
+      await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:true});
+      await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+    }
+    await openDroughtWorkbench(p);
+    await p.wait(`document.querySelector('.category-map-dock-drought [role="status"]')?.textContent==='Loading Kansas drought history…'`, 'independent history request announces loading');
+    await p.wait(`document.querySelector('.category-map-dock-drought .category-map-dock-reading')?.textContent.startsWith('Valid ')`, 'weekly map can finish while history is still pending');
+    await droughtSource(p);
+    assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock-drought-chart')`),false,'pending history is not presented as a loaded chart');
+    await fixtures.releaseHistory();
+    await p.wait(`document.querySelectorAll('.category-map-dock-drought-chart svg path').length===5 && !document.querySelector('.category-map-dock-drought [role="status"]')`, 'five hydrated drought bands replace the history loading state');
+    await droughtLoaded(p,fixtures.newest); await droughtSource(p);
+    const chart = await droughtPoint(p,'.category-map-dock-drought-chart svg');
+    assert.ok(chart.width>150,'chart has readable layout width');
+    assert.equal(await p.evaluate(`[...document.querySelectorAll('.category-map-dock-drought-chart svg path')].every(path=>{const box=path.getBBox();return box.width>0&&box.height>0&&getComputedStyle(path).fill!=='none';})`),true,'all five filled bands have rendered SVG geometry');
+    assert.equal(await p.evaluate(`!!document.querySelector('.living-welcome,.welcome-focus')`),false,'welcome and its chosen-map panel cannot cover the open chart');
+    await droughtScroll(p,'.category-map-dock',touch);
+
+    // Home/End and arrows must drive both the accessible date and the real
+    // dated API request. A held map separately exercises weekly loading.
+    if(width===1440)fixtures.holdMap(fixtures.weeks[0].date);
+    await droughtPoint(p,droughtWeekInput); await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).focus()`);
+    await p.key('Home','Home',36);
+    await p.wait(`document.querySelector(${JSON.stringify(droughtWeekInput)})?.value==='0'`, 'Home selects the first historical week');
+    if(width===1440){
+      await p.wait(`document.querySelector('.category-map-dock-drought .category-map-dock-reading')?.textContent.startsWith('Reading the Drought Monitor')`, 'weekly map loading remains distinct from history loading');
+      assert.equal(await p.evaluate(`document.querySelectorAll('.category-map-dock-drought-chart svg path').length`),5,'historical chart stays available while the selected map loads');
+      await droughtSource(p); await fixtures.releaseMap(fixtures.weeks[0].date);
+    }
+    await droughtLoaded(p,fixtures.weeks[0]);
+    assert.equal(await p.evaluate(`document.querySelector('[aria-label="Week before"]').disabled`),true,'the first USDM week is a real boundary');
+    await p.key('ArrowRight','ArrowRight',39); await droughtLoaded(p,fixtures.weeks[1]);
+    assert.ok(fixtures.hits.maps.includes(fixtures.weeks[1].date),'native keyboard selection requests its historical map');
+    await p.key('End','End',35); await droughtLoaded(p,fixtures.newest);
+    assert.equal(await p.evaluate(`document.querySelector('[aria-label="Week after"]').disabled`),true,'Newest is the final available week');
+    await p.key('ArrowLeft','ArrowLeft',37); await droughtLoaded(p,fixtures.weeks.at(-2));
+
+    const point=await droughtPoint(p,'.category-map-dock-drought-chart svg');
+    const at={x:point.left+point.width*20/(fixtures.weeks.length-1),y:point.y};
+    if(touch){
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...at,id:1,radiusX:2,radiusY:2,force:1}]});
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    }else for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...at,button:'left',clickCount:1});
+    await droughtLoaded(p,fixtures.weeks[20]);
+    assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).value`),'20','a native chart click/tap selects the plotted week');
+    await droughtEnter(p,'.category-map-dock-drought-steps button:nth-child(2)'); await droughtLoaded(p,fixtures.newest);
+    await p.key('Tab','Tab',9);
+    assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(droughtSourceLink)})`),true,'keyboard Tab reaches the always-present source link when disabled playback/next-week controls are skipped');
+    await droughtPoint(p,droughtSourceLink);
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+      await droughtPoint(p,'.category-map-dock-drought-chart svg');
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+      const shot=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`drought-chart-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+    }
+    await droughtEnter(p,'.category-map-dock-close');
+    const opener=width<=1100?'.map-dock-map-menu > summary':'.map-dock-actions > button:nth-child(2)';
+    await p.wait(`!document.querySelector('.category-map-dock') && document.activeElement===document.querySelector(${JSON.stringify(opener)})`, 'close returns focus to the visible Layers opener or its closed-menu summary');
+    await droughtPoint(p,opener);
+
+    // The panel previously called Inside this map lives in quick start. Its
+    // actual desktop disclosure must remain usable after the chart closes.
+    await droughtEnter(p,'.guide-trigger'); await readyWelcome(p);
+    assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock')`),false,'quick start excludes the chart dock');
+    if(width>1100){
+      await droughtEnter(p,'.welcome-focus-more > summary');
+      await p.wait(`document.querySelector('.welcome-focus-more')?.open`, 'About this map and its records expands');
+      const overflow=await p.evaluate(`document.querySelector('.welcome-focus').scrollHeight-document.querySelector('.welcome-focus').clientHeight`);
+      if(height<=500)assert.ok(overflow>2,'the short-height chosen-map panel has real overflow');
+      if(overflow>2)await droughtScroll(p,'.welcome-focus');
+      await droughtPoint(p,'.welcome-focus-actions .welcome-primary');
+    }else{
+      assert.equal(await p.evaluate(`!!document.querySelector('.welcome-focus')`),false,'compact layouts use the responsive chooser instead of the desktop aside');
+      await revealControl(p,'.topic-agriculture');
+    }
+    t.diagnostic(JSON.stringify({viewport:{width,height,touch},syntheticWeeks:fixtures.weeks.length,datedMapRequests:fixtures.hits.maps}));
+  });
+}
+
+test('drought statistics failure preserves a usable weekly reading and public source', { timeout:90000 }, async t => {
+  const fixtures=droughtBrowserFixtures(origin,{history:'failed'});
+  t.after(()=>fixtures.assertDrained());
+  const b=await browser(t),p=await pageSession(b,1440,900,fixtures);
+  await openDroughtWorkbench(p);
+  await p.wait(`document.querySelector('.category-map-dock-drought')?.textContent.includes('The USDM statistics did not answer; the shares are measured on the map.')`, 'history failure is explicit');
+  await p.wait(`document.querySelector('.category-map-dock-drought .category-map-dock-reading')?.textContent.startsWith('Valid ')`, 'the separate weekly response still renders');
+  assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock-drought [role="status"],.category-map-dock-drought-chart')`),false,'failed history neither spins forever nor invents a time series');
+  assert.match(await p.evaluate(`document.querySelector('.category-map-dock-drought .category-map-dock-reading').textContent`),/shares measured on the map/);
+  await droughtSource(p); await droughtPoint(p,droughtSourceLink);
+});
+
+test('drought playback pauses while quick start, Reports or Stories owns the screen', { timeout:120000 }, async t => {
+  const fixtures=droughtBrowserFixtures(origin);
+  t.after(()=>fixtures.assertDrained());
+  const b=await browser(t),p=await pageSession(b,1440,900,fixtures);
+  await openDroughtWorkbench(p,{motion:true}); await droughtLoaded(p,fixtures.newest);
+  await droughtPoint(p,droughtWeekInput); await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).focus()`); await p.key('Home','Home',36);
+  await droughtLoaded(p,fixtures.weeks[0]);
+  await droughtEnter(p,droughtPlayButton);
+  await p.wait(`Number(document.querySelector(${JSON.stringify(droughtWeekInput)})?.value)>=1`, 'playback advances a historical week');
+  await droughtEnter(p,droughtPlayButton);
+  const paused=await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).value`);
+  await pause(1700);
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).value`),paused,'explicit Pause keeps the selected date');
+
+  const workspaceButton=async(title,scope)=>{
+    await p.evaluate(`(()=>{const button=[...document.querySelectorAll(${JSON.stringify(scope+' button')})].find(node=>node.textContent.trim()===${JSON.stringify(title)});if(!button)throw new Error('Missing workspace action');button.scrollIntoView({block:'center',behavior:'instant'});button.focus();})()`);
+    await p.key('Enter','Enter',13);
+  };
+  for(const destination of ['quick start','Reports','Stories']){
+    const index=Number(await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).value`));
+    await droughtLoaded(p,fixtures.weeks[index]); // Arm Play only after its map is loaded.
+    const requests=fixtures.hits.maps.length;
+    await droughtEnter(p,droughtPlayButton);
+    await p.wait(`document.querySelector(${JSON.stringify(droughtPlayButton)})?.getAttribute('aria-pressed')==='true'`, 'loaded-week advance timer is armed');
+    if(destination==='quick start'){
+      await droughtEnter(p,'.guide-trigger'); await readyWelcome(p);
+    }else{
+      if(!await p.evaluate(`document.querySelector('.header-overflow-menu').open`))await droughtEnter(p,'summary[aria-label="More site actions"]');
+      await workspaceButton(destination,'.header-overflow-workspaces');
+      await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace===${JSON.stringify(destination.toLowerCase())}`, destination+' is visible');
+    }
+    assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock')`),false,'the covered instrument is not mounted');
+    await pause(1700); // Beyond the production 1200 ms advance interval.
+    assert.equal(fixtures.hits.maps.length,requests,destination+' cancels a pending advance before another map request');
+    if(destination==='quick start')await droughtEnter(p,'.welcome-skip');
+    else await workspaceButton('Return to map','[aria-label="Report and story workspaces"]');
+    await droughtLoaded(p,fixtures.weeks[index]);
+    assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(droughtWeekInput)}).value`),String(index),destination+' preserves the date');
+    assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(droughtPlayButton)}).getAttribute('aria-pressed')`),'false','returning to the map does not resume hidden playback');
+  }
+  await droughtEnter(p,droughtPlayButton);
+  await p.call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  await p.wait(`document.querySelector(${JSON.stringify(droughtPlayButton)})?.disabled && document.querySelector(${JSON.stringify(droughtPlayButton)})?.getAttribute('aria-pressed')==='false'`, 'reduced motion disables and stops playback');
+});
+
+for(const nextOwner of ['newer keyboard focus','reopened tool']){
+  test(`drought close handoff preserves ${nextOwner}`, { timeout:90000 }, async t => {
+    const fixtures=droughtBrowserFixtures(origin);
+    t.after(()=>fixtures.assertDrained());
+    const b=await browser(t),p=await pageSession(b,393,852,fixtures);
+    await openDroughtWorkbench(p); await droughtLoaded(p,fixtures.newest);
+    // Delay only the production close callback, as the existing Sky test delays
+    // its entry callback. All asserted outcomes are real focus/navigation state.
+    await p.evaluate(`(()=>{window.__droughtCloseFrames=[];window.__droughtNativeFrame=window.requestAnimationFrame;window.requestAnimationFrame=function(callback){if(callback.toString().includes('[data-category-dock-return]')){window.__droughtCloseFrames.push(callback);return -window.__droughtCloseFrames.length;}return window.__droughtNativeFrame.call(window,callback);};})()`);
+    await droughtEnter(p,'.category-map-dock-close');
+    await p.wait(`!document.querySelector('.category-map-dock') && window.__droughtCloseFrames.length===1`, 'actual close focus handoff is pending');
+    if(nextOwner==='newer keyboard focus'){
+      await p.evaluate(`document.querySelector('.guide-trigger').focus()`); await p.key('Tab','Tab',9);
+      await p.evaluate(`void(window.__droughtNextFocus=document.activeElement)`);
+      assert.equal(await p.evaluate(`document.activeElement===document.body || !!document.activeElement.closest('[inert]')`),false,'a newer native Tab choice owns visible focus');
+    }else{
+      await openCategoryTool(p,'Drought history & change');
+      await p.wait(`document.activeElement?.matches('[data-category-tool="drought"]')`, 'new tool entry completes its own focus handoff');
+      await p.evaluate(`void(window.__droughtNextFocus=document.activeElement)`);
+    }
+    await p.evaluate(`new Promise(resolve=>{window.requestAnimationFrame=window.__droughtNativeFrame;for(const callback of window.__droughtCloseFrames.splice(0))requestAnimationFrame(callback);requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));})`);
+    assert.equal(await p.evaluate(`document.activeElement===window.__droughtNextFocus`),true,'delayed close cannot steal the newer focus owner');
+    if(nextOwner==='reopened tool')assert.equal(await p.evaluate(`!!document.activeElement.closest('.category-map-dock')`),true,'the reopened dock keeps focus');
   });
 }
 

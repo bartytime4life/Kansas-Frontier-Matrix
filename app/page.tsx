@@ -1873,6 +1873,7 @@ export default function Home() {
   // The provider hillshade switched off on entering the photograph, restored on return.
   const photorealHidHillshadeRef = useRef(false);
   const [categoryDockHidden, setCategoryDockHidden] = useState(true);
+  const categoryDockReturnRef = useRef<HTMLElement | null>(null);
   const categoryToolFocusRequestRef = useRef(0);
   useEffect(() => () => { categoryToolFocusRequestRef.current += 1; }, []);
   const aviationPickingRef = useRef(false);
@@ -4552,8 +4553,9 @@ export default function Home() {
   const droughtDate = droughtWeek ?? droughtMaps.get("newest")?.date ?? null;
   const droughtChartWeeks = useMemo(() => droughtSeries?.weeks.map(week => ({ date: week.date, label: usdmDateLabel(week.date), shares: week.shares })) ?? null, [droughtSeries]);
   const chooseDroughtWeek = (date: string | null) => { setDroughtPlaying(false); setDroughtWeek(date && date !== droughtNewest ? date : null); setDroughtFailed(null); };
-  // Play steps forward a week at a time, each week once it is drawn, and stops at the newest, on a failed week, or when the map closes.
-  const droughtPlayStops = droughtPlaying && (!droughtOn || reducedMotion || droughtWeek === null || (droughtId !== null && droughtFailed === droughtId));
+  // Play stops at the newest or a failed week, and pauses when quick start or another workspace covers the map.
+  const droughtPlayStops = droughtPlaying && (!droughtOn || guideOpen !== false || primaryWorkspace !== "map"
+    || reducedMotion || droughtWeek === null || (droughtId !== null && droughtFailed === droughtId));
   if (droughtPlayStops) setDroughtPlaying(false);
   // In a change view, a step also waits for its earlier week (or that week's failure), so the change is drawn before Play moves on.
   const droughtSinceWaiting = droughtSinceDate !== null && !droughtSince && droughtSinceFailed !== droughtSinceDate;
@@ -11374,6 +11376,9 @@ export default function Home() {
     markExplorerNavigation();
     const focusOrigin = document.activeElement;
     const focusRequest = ++categoryToolFocusRequestRef.current;
+    const opener = focusOrigin instanceof HTMLElement && focusOrigin !== document.body ? focusOrigin : null;
+    // Layers closes for the tool, so retain its visible opener instead of its hidden capability button.
+    categoryDockReturnRef.current = opener && !leftPanelRef.current?.contains(opener) ? opener : leftPanelReturnRef.current;
     setCategoryToolsOnCurrentMap(true);
     setPrimaryWorkspace("map");
     setGuideOpen(false);
@@ -11393,6 +11398,26 @@ export default function Home() {
       target?.scrollIntoView({ block: "nearest" });
       target?.focus({ preventScroll: true });
     }));
+  };
+  const closeCategoryDock = () => {
+    const closedPanel = document.querySelector<HTMLElement>(".category-map-dock");
+    const focusedAtClose = document.activeElement;
+    const focusRequest = ++categoryToolFocusRequestRef.current;
+    const returnTarget = categoryDockReturnRef.current;
+    categoryDockReturnRef.current = null;
+    setCategoryDockHidden(true);
+    window.requestAnimationFrame(() => {
+      // A reopened tool, welcome screen, other workspace, or newer focus choice owns the next handoff.
+      if (focusRequest !== categoryToolFocusRequestRef.current
+        || document.querySelector(".category-map-dock, .living-welcome")
+        || document.querySelector<HTMLElement>(".explorer-shell")?.inert) return;
+      if (!focusReturnStillWanted(focusedAtClose, document.activeElement, closedPanel, document.body)) return;
+      // A visible Layers control also works when the WebGL map is unavailable.
+      const fallback = Array.from(document.querySelectorAll<HTMLElement>("[data-category-dock-return]"))
+        .map(element => modalReturnTarget(element, null))
+        .find((element): element is HTMLElement => element !== null) ?? null;
+      modalReturnTarget(returnTarget, fallback)?.focus({ preventScroll: true });
+    });
   };
   // The dock follows the catalogue's category while its map look is on screen,
   // including after a shared URL restores that basemap.
@@ -11507,7 +11532,7 @@ export default function Home() {
           <span className="map-dock-context sr-only" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
               <button className="map-dock-action" type="button" aria-pressed={timelineOpen} aria-controls="compact-time-settings" aria-expanded={primaryWorkspace === "map" && guideOpen === false && timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
-              <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
+              <button className="map-dock-action" type="button" data-category-dock-return onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
         {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunAt, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
@@ -11518,7 +11543,7 @@ export default function Home() {
                   </div>
                   <div className="map-dock-menu-quick" role="group" aria-label="Quick map controls">
                     <button type="button" aria-pressed={timelineOpen} aria-controls="compact-time-settings" aria-expanded={primaryWorkspace === "map" && guideOpen === false && timelineOpen} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); toggleTimelinePanel(); }}>Time · {formatTimelineStep(year)}</button>
-                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("layers", event.currentTarget); }}>Layers · {selectedMapLayerCount}</button>
+                    <button type="button" data-category-dock-return aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("layers", event.currentTarget); }}>Layers · {selectedMapLayerCount}</button>
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("places", event.currentTarget); }}>Places · {savedWorkspaces.length}</button>
                   </div>
                   <details className="map-menu-key">
@@ -12552,7 +12577,7 @@ export default function Home() {
               setQuakeRecordSelected(event);
               easeToPicked([event.longitude, event.latitude]);
             }}
-            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
+            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={closeCategoryDock} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>
@@ -13045,7 +13070,7 @@ export default function Home() {
 
           <nav className="map-mobile-actions" data-sky={welcomeTopics.includes("aviation")} aria-label="Mobile map actions">
             {welcomeTopics.includes("aviation")&&<button type="button" className="sky-mobile-launch" aria-label="Explore Kansas Sky" onClick={openKansasSky}>Aircraft</button>}
-            <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Map layers <b>{selectedMapLayerCount}</b></button>
+            <button type="button" data-category-dock-return onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Map layers <b>{selectedMapLayerCount}</b></button>
             <button type="button" className="map-topics-button" onClick={toggleExplorerGuide}>Topics{welcomeTopics.length > 0 && <b>{welcomeTopics.length}</b>}</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={openMapSettings}>Style</button>

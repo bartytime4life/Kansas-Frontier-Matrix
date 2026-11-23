@@ -4,11 +4,11 @@ import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
 import { componentHarness, findNode } from './component-harness.mjs';
 
-const load = async (file, imports = {}) => {
+const load = async (file, imports = {}, globals = {}) => {
   const exports = {};
-  new Function('exports', 'require', ts.transpileModule(await readFile(file, 'utf8'), {
+  new Function('exports', 'require', ...Object.keys(globals), ts.transpileModule(await readFile(file, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-  }).outputText)(exports, name => { assert.ok(name in imports, name); return imports[name]; });
+  }).outputText)(exports, name => { assert.ok(name in imports, name); return imports[name]; }, ...Object.values(globals));
   return exports;
 };
 const topics = await load('app/layer-workspaces.ts');
@@ -16,6 +16,61 @@ const maps = await load('app/category-maps.ts');
 const science = await load('app/science-events.ts');
 const capabilities = await load('app/category-capabilities.ts', { './category-maps': maps, './layer-workspaces': topics });
 const page = await readFile('app/page.tsx', 'utf8');
+
+class FocusElement {
+  parentElement = null; isConnected = true; hidden = false; inert = false; boxes = [{}];
+  constructor(document, calls, name) { Object.assign(this, { document, calls, name }); }
+  contains(node) { for (; node; node = node.parentElement) if (node === this) return true; return false; }
+  getClientRects() { return this.boxes; }
+  closest(selector) {
+    assert.equal(selector, '[hidden], [inert]');
+    for (let node = this; node; node = node.parentElement) if (node.hidden || node.inert) return node;
+    return null;
+  }
+  scrollIntoView(options) { this.calls.push(['scroll', this.name, options]); }
+  focus(options) { this.document.activeElement = this; this.calls.push(['focus', this.name, options]); }
+}
+class FocusDetails extends FocusElement {
+  open = false; summary = null;
+  querySelector(selector) { assert.equal(selector, ':scope > summary'); return this.summary; }
+}
+const focusHelpers = await load('app/modal-background.ts', {}, { HTMLElement: FocusElement, HTMLDetailsElement: FocusDetails });
+const dockActionBody = page.slice(page.indexOf('  const revealCategoryTool ='), page.indexOf('  // The dock follows'));
+const dockActionCode = ts.transpileModule(`${dockActionBody}; return { revealCategoryTool, closeCategoryDock };`, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022 },
+}).outputText;
+function dockActionHarness() {
+  const calls = [], frames = [], document = {};
+  const element = name => new FocusElement(document, calls, name);
+  const body = element('body'), tool = element('tool'), dock = element('dock'), layers = element('layers');
+  const opener = element('direct-opener'), layersOpener = element('layers-opener'), capability = element('capability');
+  capability.parentElement = layers; tool.parentElement = dock;
+  dock.querySelector = selector => { assert.match(selector, /^\[data-category-tool="[a-z-]+"\]:not\(:disabled\)$/); return tool; };
+  const dom = { dock, welcome: null, explorer: element('explorer'), fallback: [layersOpener] };
+  document.body = body; document.activeElement = opener;
+  document.querySelector = selector => {
+    if (selector === '.category-map-dock') return dom.dock;
+    if (selector === '.category-map-dock, .living-welcome') return dom.dock ?? dom.welcome;
+    assert.equal(selector, '.explorer-shell'); return dom.explorer;
+  };
+  document.querySelectorAll = selector => { assert.equal(selector, '[data-category-dock-return]'); return dom.fallback; };
+  const refs = {
+    categoryToolFocusRequestRef: { current: 0 }, categoryDockReturnRef: { current: null },
+    leftPanelRef: { current: layers }, leftPanelReturnRef: { current: layersOpener },
+  };
+  const names = ['markExplorerNavigation', 'setCategoryToolsOnCurrentMap', 'setPrimaryWorkspace', 'setGuideOpen', 'setUndergroundOpen', 'setOfficialWorkspace', 'setCategoryDockTopic', 'setCategoryDockHidden', 'setLeftOpen', 'setRightOpen', 'dismissMapUtilityWithoutFocus'];
+  const scope = {
+    categoryMap: maps.categoryMap, window: { requestAnimationFrame: fn => frames.push(fn) }, document,
+    HTMLElement: FocusElement, ...refs, ...focusHelpers,
+    ...Object.fromEntries(names.map(name => [name, (...args) => calls.push([name, ...args])])),
+  };
+  const actions = new Function(...Object.keys(scope), dockActionCode)(...Object.values(scope));
+  const flushFrames = () => {
+    let count = 0;
+    while (frames.length) { assert.ok(++count <= 3, 'focus handoff must finish in bounded frames'); frames.shift()(); }
+  };
+  return { ...actions, ...refs, calls, frames, document, dom, element, body, tool, dock, layers, opener, layersOpener, capability, flushFrames };
+}
 
 test('all 22 cards have real discoverable tools or workbenches and every dock tool is indexed', async () => {
   assert.equal(topics.TOPIC_STRUCTURE.length, 22);
@@ -72,26 +127,67 @@ test('tool shortcuts route to controls without executing a tool or leaving the c
 });
 
 test('reveal action preserves source, camera and stored state, validates the destination and focuses after commit', () => {
-  const body = page.slice(page.indexOf('  const revealCategoryTool ='), page.indexOf('  // The dock follows'));
-  const names = ['markExplorerNavigation', 'setCategoryToolsOnCurrentMap', 'setPrimaryWorkspace', 'setGuideOpen', 'setUndergroundOpen', 'setOfficialWorkspace', 'setCategoryDockTopic', 'setCategoryDockHidden', 'setLeftOpen', 'setRightOpen', 'dismissMapUtilityWithoutFocus'];
-  const calls = [], frames = [];
-  const target = { scrollIntoView: () => calls.push(['scroll']), focus: () => calls.push(['focus']) };
-  const js = ts.transpileModule(`${body}; return revealCategoryTool;`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
-  const action = new Function('categoryMap', 'window', 'document', 'categoryToolFocusRequestRef', ...names, js)(
-    maps.categoryMap, { requestAnimationFrame: fn => frames.push(fn) }, { querySelector: () => ({ querySelector: () => target }) },
-    { current: 0 },
-    ...names.map(name => (...args) => calls.push([name, ...args])),
-  );
-  action('agriculture', 'crops');
-  assert.ok(calls.some(([name, value]) => name === 'setCategoryToolsOnCurrentMap' && value === true), 'tool-only presentation does not depend on whether basemap names happen to match');
-  assert.ok(calls.some(([name, value]) => name === 'setCategoryDockTopic' && value === 'agriculture'));
-  assert.equal(calls.some(([name]) => name === 'focus'), false);
-  while (frames.length) frames.shift()();
-  assert.deepEqual(calls.slice(-2), [['scroll'], ['focus']]);
-  const before = calls.length;
-  action('agriculture', 'underground');
-  assert.equal(calls.length, before, 'cannot navigate to a tool the category does not own');
+  for (const origin of ['direct', 'layers']) {
+    const h = dockActionHarness();
+    h.document.activeElement = origin === 'direct' ? h.opener : h.capability;
+    h.revealCategoryTool('agriculture', 'crops');
+    assert.equal(h.categoryDockReturnRef.current, origin === 'direct' ? h.opener : h.layersOpener,
+      'a Layers capability retains the visible Layers opener; a direct shortcut retains itself');
+    assert.ok(h.calls.some(([name, value]) => name === 'setCategoryToolsOnCurrentMap' && value === true), 'tool-only presentation does not depend on whether basemap names happen to match');
+    assert.ok(h.calls.some(([name, value]) => name === 'setCategoryDockTopic' && value === 'agriculture'));
+    assert.equal(h.calls.some(([name]) => name === 'focus'), false);
+    if (origin === 'layers') h.document.activeElement = h.body; // The Layers capability unmounts on commit.
+    h.flushFrames();
+    assert.deepEqual(h.calls.slice(-2), [['scroll', 'tool', { block: 'nearest' }], ['focus', 'tool', { preventScroll: true }]]);
+    const before = h.calls.length, generation = h.categoryToolFocusRequestRef.current, returnTarget = h.categoryDockReturnRef.current;
+    h.revealCategoryTool('agriculture', 'underground');
+    assert.equal(h.calls.length, before, 'cannot navigate to a tool the category does not own');
+    assert.equal(h.categoryToolFocusRequestRef.current, generation);
+    assert.equal(h.categoryDockReturnRef.current, returnTarget);
+  }
   // No implicit globals are provided for fetching, resetting, changing visibility or moving the map.
+});
+
+test('closing a category dock restores its visible opener after unmount, with a usable Layers fallback', () => {
+  for (const origin of ['direct', 'layers', 'disconnected', 'hidden', 'closed-menu']) {
+    const h = dockActionHarness();
+    h.document.activeElement = origin === 'layers' ? h.capability : h.opener;
+    h.revealCategoryTool('agriculture', 'crops'); h.flushFrames(); h.calls.length = 0;
+    let expected = origin === 'layers' ? h.layersOpener : h.opener;
+    if (origin === 'disconnected') { h.opener.isConnected = false; expected = h.layersOpener; }
+    if (origin === 'hidden') { h.opener.hidden = true; expected = h.layersOpener; }
+    if (origin === 'closed-menu') {
+      const menu = new FocusDetails(h.document, h.calls, 'menu');
+      menu.summary = h.element('menu-summary'); menu.summary.parentElement = menu; h.opener.parentElement = menu;
+      expected = menu.summary;
+    }
+    const unavailableFallback = h.element('hidden-layers'); unavailableFallback.boxes = [];
+    h.dom.fallback.unshift(unavailableFallback);
+    h.closeCategoryDock();
+    assert.equal(h.categoryDockReturnRef.current, null, 'a closed dock releases its retained opener');
+    assert.deepEqual(h.calls, [['setCategoryDockHidden', true]], 'focus waits until the closing render commits');
+    h.dom.dock = null; h.document.activeElement = h.body;
+    h.flushFrames();
+    assert.equal(h.document.activeElement, expected, origin);
+    assert.deepEqual(h.calls.at(-1), ['focus', expected.name, { preventScroll: true }]);
+  }
+});
+
+test('delayed category dock close never reverses a newer focus choice or navigation owner', () => {
+  for (const owner of ['new-focus', 'new-generation', 'reopened-dock', 'welcome', 'other-workspace']) {
+    const h = dockActionHarness();
+    h.revealCategoryTool('agriculture', 'crops'); h.flushFrames(); h.calls.length = 0;
+    h.closeCategoryDock(); h.dom.dock = null; h.document.activeElement = h.body;
+    if (owner === 'new-focus') h.document.activeElement = h.element('new-control');
+    if (owner === 'new-generation') h.categoryToolFocusRequestRef.current += 1;
+    if (owner === 'reopened-dock') h.dom.dock = h.element('new-dock');
+    if (owner === 'welcome') h.dom.welcome = h.element('welcome');
+    if (owner === 'other-workspace') h.dom.explorer.inert = true;
+    const chosenFocus = h.document.activeElement;
+    h.flushFrames();
+    assert.deepEqual(h.calls, [['setCategoryDockHidden', true]], owner);
+    assert.equal(h.document.activeElement, chosenFocus, owner);
+  }
 });
 
 test('farm center action is explicit and only present when crops are enabled', async () => {

@@ -260,6 +260,46 @@ test('the Field view dock shows the Drought Monitor with its Kansas chart, a wee
  h.dispose?.();
 });
 
+test('history loading is separate from the weekly map and its source remains available through success and failure',async()=>{
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:1,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,
+  onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onDrought(){},onDroughtWeek(){}};
+ const weeks=['20261006','20261013','20261020'].map(date=>({date,label:dm.usdmDateLabel(date),shares:[70,40,20,3,0]}));
+ const drought={on:true,loading:false,failed:false,reading:'Valid Oct 20, 2026 · 40% of Kansas in drought (D1–D4)',url:dm.USDM_PAGE,
+  date:'20261020',label:'Oct 20, 2026',previous:'20261013',next:null,newest:true,categories:dm.USDM_CATEGORIES,weeks:null,seriesFailed:false};
+ try{
+  for(const [name,patch,historyPending,chartVisible] of [
+   ['both requests pending',{loading:true},true,false],
+   ['weekly map ready while history waits',{},true,false],
+   ['history ready while weekly map waits',{weeks,loading:true},false,true],
+   ['both requests ready',{weeks},false,true],
+   ['history retry pending',{},true,false],
+   ['history failed with a usable weekly map',{seriesFailed:true},false,false],
+   ['weekly map failed with usable history',{weeks,failed:true},false,true],
+   ['both requests failed',{seriesFailed:true,failed:true},false,false],
+  ]){
+   const state={...drought,...patch};
+   const tree=h.render(h.exports.CategoryMapDock,{...base,drought:state});
+   const panel=findNode(tree,n=>n.props?.className==='category-map-dock-drought');
+   const status=findNode(panel,n=>n.props?.role==='status');
+   assert.equal(Boolean(status),historyPending,name);
+   if(status)assert.equal(status.props.children,'Loading Kansas drought history…',name);
+   assert.equal(Boolean(findNode(panel,n=>n.type===h.exports.DroughtChart)),chartVisible,name);
+   const reading=findNode(panel,n=>n.type==='p'&&n.props.className==='category-map-dock-reading');
+   assert.equal(reading.props.children,state.failed?'The Drought Monitor did not answer for this week.':state.loading?'Reading the Drought Monitor for Oct 20, 2026…':drought.reading,name);
+   const links=[];
+   findNode(panel,n=>{if(n.type==='a'&&n.props.href===dm.USDM_PAGE)links.push(n);return false;});
+   assert.equal(links.length,1,`${name}: one source link, including failures`);
+   assert.equal(links[0].props.children,'U.S. Drought Monitor source ↗',name);
+   assert.equal(links[0].props.target,'_blank',name);
+   assert.equal(links[0].props.rel,'noreferrer',name);
+   assert.equal(JSON.stringify(panel).includes('The USDM statistics did not answer'),state.seriesFailed,name);
+  }
+  const closed=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,on:false}});
+  assert.ok(!findNode(closed,n=>n.props?.className==='category-map-dock-drought'),'a hidden tool announces no history load');
+ }finally{h.dispose();}
+});
+
 test('the page reads the week shown, keeps the last map drawn while the next loads, and closes it with its map',()=>{
  assert.match(page,/fetch\(`\/api\/drought-monitor\$\{droughtWeek \? `\?date=\$\{droughtWeek\}` : ""\}`, \{ signal: controller\.signal \}\)/);
  assert.match(page,/\}, droughtWeek \? 350 : 0\);/,'a dragged slider settles before a week is read');
@@ -408,7 +448,7 @@ test('Play steps the weeks forward to the newest, from a year back when the newe
  tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,motionAllowed:false,playing:true}});
  assert.equal(play(tree).props.disabled,true);assert.equal(play(tree).props.children,'Play');assert.match(play(tree).props.title,/Reduced motion is on/);
  h.dispose?.();
- assert.match(page,/const droughtPlayStops = droughtPlaying && \(!droughtOn \|\| reducedMotion \|\| droughtWeek === null \|\| \(droughtId !== null && droughtFailed === droughtId\)\);\s*if \(droughtPlayStops\) setDroughtPlaying\(false\);/,'stops at the newest, on a failed week, without motion, or when the map closes');
+ assert.match(page,/const droughtPlayStops = droughtPlaying && \(!droughtOn \|\| guideOpen !== false \|\| primaryWorkspace !== "map"\s*\|\| reducedMotion \|\| droughtWeek === null \|\| \(droughtId !== null && droughtFailed === droughtId\)\);\s*if \(droughtPlayStops\) setDroughtPlaying\(false\);/,'stops at the newest, on a failed week, without motion, when the map closes, or when quick start or another workspace covers it');
  assert.match(page,/const droughtSinceWaiting = droughtSinceDate !== null && !droughtSince && droughtSinceFailed !== droughtSinceDate;/,'in a change view a step waits for its earlier week, or that week\'s failure');
  assert.match(page,/if \(!droughtPlaying \|\| droughtPlayStops \|\| !droughtWeek \|\| !droughtLoaded \|\| droughtSinceWaiting\) return;\s*const timer = setTimeout\(\(\) => \{\s*const next = nextUsdmDate\(droughtWeek\);\s*setDroughtWeek\(droughtNewest && next >= droughtNewest \? null : next\);\s*\}, DROUGHT_PLAY_STEP_MS\);/,'each week is held once it is drawn');
  assert.match(page,/if \(on && droughtWeek === null\) \{\s*const from = droughtNewest \?\? droughtDate;\s*if \(!from\) return;\s*setDroughtWeek\(usdmWeeksBefore\(from, DROUGHT_PLAY_WEEKS\)\);/);

@@ -15,27 +15,34 @@ const officialIds=JSON.parse(`[${live.match(/export type OfficialContextId = ([^
 
 const focusPage=await readFile('app/page.tsx','utf8');
 const focusAst=ts.createSourceFile('page.tsx',focusPage,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
-let revealToolSource,disposeToolFocusSource;
+let revealToolSource,closeDockSource,disposeToolFocusSource;
 function findToolFocus(node){
  if(ts.isVariableDeclaration(node)&&node.name.getText(focusAst)==='revealCategoryTool')revealToolSource=node.initializer.getText(focusAst);
+ if(ts.isVariableDeclaration(node)&&node.name.getText(focusAst)==='closeCategoryDock')closeDockSource=node.initializer.getText(focusAst);
  if(ts.isCallExpression(node)&&node.expression.getText(focusAst)==='useEffect'&&node.arguments[0]?.getText(focusAst).includes('categoryToolFocusRequestRef.current'))disposeToolFocusSource=node.arguments[0].getText(focusAst);
  ts.forEachChild(node,findToolFocus);
 }
 findToolFocus(focusAst);
 assert.ok(revealToolSource,'exercise the actual category-tool handoff');
 function toolFocusHarness(){
- const body={},trigger={},input={},other={},frames=[],focused=[],scrolled=[];
+ class FocusElement{
+  parentElement=null;
+  contains(node){for(;node;node=node.parentElement)if(node===this)return true;return false;}
+ }
+ const body=new FocusElement(),trigger=new FocusElement(),input=new FocusElement(),other=new FocusElement(),layers=new FocusElement(),layersOpener=new FocusElement(),frames=[],focused=[],scrolled=[];
  const document={body,activeElement:trigger,querySelector:()=>dock};
  const buttons=Object.fromEntries(['sunyear','flow'].map(tool=>[tool,{scrollIntoView(){scrolled.push(tool);},focus(){focused.push(tool);document.activeElement=buttons[tool];}}]));
  let dock={querySelector(selector){return buttons[selector.match(/data-category-tool="([^"]+)"/)[1]];}};
- const context={document,window:{requestAnimationFrame(callback){frames.push(callback);return frames.length;}},categoryToolFocusRequestRef:{current:0},categoryMap:()=>({tools:['sunyear','flow']})};
+ const categoryDockReturnRef={current:null};
+ const context={document,HTMLElement:FocusElement,window:{requestAnimationFrame(callback){frames.push(callback);return frames.length;}},
+  categoryToolFocusRequestRef:{current:0},categoryDockReturnRef,leftPanelRef:{current:layers},leftPanelReturnRef:{current:layersOpener},categoryMap:()=>({tools:['sunyear','flow']})};
  for(const name of ['markExplorerNavigation','setCategoryToolsOnCurrentMap','setPrimaryWorkspace','setGuideOpen','setUndergroundOpen','setOfficialWorkspace','setCategoryDockTopic','setCategoryDockHidden','setLeftOpen','setRightOpen','dismissMapUtilityWithoutFocus'])context[name]=()=>{};
  const run=source=>new Function(...Object.keys(context),ts.transpileModule(`return (${source});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(context));
  const open=run(revealToolSource),dispose=disposeToolFocusSource?run(disposeToolFocusSource)():()=>{};
- return {body,trigger,input,other,document,focused,scrolled,open,dispose,removeDock(){dock=null;},flush(){while(frames.length)frames.shift()();}};
+ return {body,trigger,input,other,document,focused,scrolled,open,dispose,categoryDockReturnRef,removeDock(){dock=null;},flush(){while(frames.length)frames.shift()();}};
 }
 test('category tools receive initial focus from the trigger or an unfocused body',()=>{
- for(const fallback of [false,true]){const h=toolFocusHarness();h.open('sky','sunyear');if(fallback)h.document.activeElement=h.body;h.flush();assert.deepEqual(h.focused,['sunyear']);}
+ for(const fallback of [false,true]){const h=toolFocusHarness();h.open('sky','sunyear');assert.equal(h.categoryDockReturnRef.current,h.trigger,'the opener is retained before focus enters the tool');if(fallback)h.document.activeElement=h.body;h.flush();assert.deepEqual(h.focused,['sunyear']);}
 });
 test('delayed category-tool entry preserves a newer form or workspace focus choice',()=>{
  for(const owner of ['input','other']){const h=toolFocusHarness();h.open('sky','sunyear');h.document.activeElement=h[owner];h.flush();assert.equal(h.document.activeElement,h[owner]);assert.deepEqual(h.focused,[]);assert.deepEqual(h.scrolled,[]);}
@@ -415,7 +422,15 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(play,/if \(!sunPlaying \|\| !sunControlsShown \|\| !sceneEffects\.sunSync \|\| reducedMotion\) return;/,'playback only runs while its controls are shown, following the sun, with motion allowed');
  assert.match(play,/window\.setTimeout\([\s\S]*?if \(next === null\) setSunPlaying\(false\);\s*else setSunStudyAt\(instantAtIntervalFraction\(day, next\)\);[\s\S]*?SUN_PLAY_STEP_MS\);\s*return \(\) => window\.clearTimeout\(timer\);/,'one step per timer, cleared on every change, stopping at the last step');
  assert.match(page,/onSunTime=\{\(fraction\) => \{ setSunPlaying\(false\);/,'moving Time or pressing Now stops playback');
- assert.match(page,/onClose=\{\(\) => setCategoryDockHidden\(true\)\}/,'hiding the dock stops playback through sunControlsShown');
+ assert.match(page,/onClose=\{closeCategoryDock\}/,'the dock close uses the focus-restoring handler');
+ assert.ok(closeDockSource,'exercise the actual dock close handler');
+ const hidden=[],frames=[];
+ const closeContext={document:{querySelector:()=>null,activeElement:null},categoryToolFocusRequestRef:{current:0},categoryDockReturnRef:{current:null},
+  setCategoryDockHidden:value=>hidden.push(value),window:{requestAnimationFrame:callback=>frames.push(callback)}};
+ const close=new Function(...Object.keys(closeContext),ts.transpileModule(`return (${closeDockSource});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(closeContext));
+ close();
+ assert.deepEqual(hidden,[true],'closing still hides the dock, which stops sun playback through sunControlsShown');
+ assert.equal(frames.length,1,'focus restoration waits until the close commits');
  assert.match(page,/motionAllowed=\{!reducedMotion\}/);
  assert.equal((page.match(/setSceneEffects\(/g)||[]).length,3,'only explicit controls, stored restore and the narrow river-flow navigation reset write settings');
  assert.match(page,/sceneEffectsForTopic\(sceneEffectsRef.current, officialWorkspace\)/,'navigation uses the water-only preference reset, not category lighting');
