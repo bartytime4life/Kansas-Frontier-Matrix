@@ -10,9 +10,10 @@ import {DATASETS} from './datasets.mjs';
 import {databasesFromEnv,missingIndexes} from './gateway.mjs';
 import {FRESHNESS_INDEXES} from './freshness.mjs';
 
-export function plannedIndexes(){
+export function plannedIndexes(only){
  const byDatabase=new Map();
  const plan=(database,index,user)=>{
+  if(only?index.name!==only:index.namedOnly)return;
   if(!byDatabase.has(database))byDatabase.set(database,new Map());
   byDatabase.get(database).set(index.name,{...index,datasets:[...(byDatabase.get(database).get(index.name)?.datasets??[]),user]});
  };
@@ -24,17 +25,15 @@ export function plannedIndexes(){
 
 async function main(mode,only){
  if(mode!=='check'&&mode!=='apply'){console.error('Use: indexes.mjs check|apply [INDEX_NAME]');return 2;}
- const databases=databasesFromEnv(),planned=plannedIndexes();
- if(only&&![...planned.values()].some(m=>m.has(only))){console.error('Unknown index '+only);return 2;}
+ const databases=databasesFromEnv(),planned=plannedIndexes(only);
+ if(only&&!planned.size){console.error('Unknown index '+only);return 2;}
  let missingTotal=0;
  for(const [name,indexes] of planned){
-  const chosen=[...indexes.values()].filter(i=>!only||i.name===only);
-  if(!chosen.length)continue;
   const path=databases[name];
   if(!path){console.log(JSON.stringify({database:name,state:'not-configured'}));continue;}
   const db=new DatabaseSync(path,{readOnly:mode==='check'});
   try{
-   for(const index of chosen){
+   for(const index of indexes.values()){
     const missing=missingIndexes(db,{indexes:[index]}).length>0;
     if(!missing){console.log(JSON.stringify({database:name,index:index.name,state:'present'}));continue;}
     if(mode==='check'){missingTotal++;console.log(JSON.stringify({database:name,index:index.name,state:'missing',datasets:index.datasets}));continue;}
