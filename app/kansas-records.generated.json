@@ -1,0 +1,169 @@
+{
+ "sections": [
+  {
+   "id": "people",
+   "title": "People",
+   "source": "U.S. Census Bureau July 1 population estimates, 2020 and 2025",
+   "caution": "A later release can revise earlier years.",
+   "items": [
+    {
+     "label": "Most people",
+     "value": "636,906",
+     "where": "Johnson County, Kansas",
+     "href": "/counties/johnson"
+    },
+    {
+     "label": "Fewest people",
+     "value": "1,182",
+     "where": "Greeley County, Kansas",
+     "href": "/counties/greeley"
+    },
+    {
+     "label": "Largest gain since 2020",
+     "value": "25,777 more people",
+     "where": "Johnson County, Kansas",
+     "href": "/counties/johnson"
+    },
+    {
+     "label": "Largest loss since 2020",
+     "value": "1,224 fewer people",
+     "where": "Montgomery County, Kansas",
+     "href": "/counties/montgomery"
+    },
+    {
+     "label": "Fastest growth since 2020",
+     "value": "up 6.9%",
+     "where": "Pottawatomie County, Kansas",
+     "href": "/counties/pottawatomie"
+    },
+    {
+     "label": "Steepest decline since 2020",
+     "value": "down 8.6%",
+     "where": "Edwards County, Kansas",
+     "href": "/counties/edwards"
+    }
+   ]
+  },
+  {
+   "id": "survey",
+   "title": "Income, age, education and homes",
+   "source": "U.S. Census Bureau American Community Survey 5-year estimates, 2020–2024",
+   "caution": "These are survey estimates with 90% margins of error. Where margins overlap, the county shown may not truly rank first.",
+   "items": [
+    {
+     "label": "Highest median household income",
+     "value": "$109,208 (±$1,170)",
+     "where": "Johnson County, Kansas",
+     "href": "/counties/johnson"
+    },
+    {
+     "label": "Lowest median household income",
+     "value": "$50,326 (±$7,733)",
+     "where": "Woodson County, Kansas",
+     "href": "/counties/woodson"
+    },
+    {
+     "label": "Oldest median age",
+     "value": "51.2 years (±0.7 years)",
+     "where": "Jewell County, Kansas",
+     "href": "/counties/jewell"
+    },
+    {
+     "label": "Youngest median age",
+     "value": "25.5 years (±0.1 years)",
+     "where": "Riley County, Kansas",
+     "href": "/counties/riley"
+    },
+    {
+     "label": "Largest share of adults with a bachelor’s degree or higher",
+     "value": "57.6% (±0.8%)",
+     "where": "Johnson County, Kansas",
+     "href": "/counties/johnson"
+    },
+    {
+     "label": "Highest median home value",
+     "value": "$391,200 (±$3,069)",
+     "where": "Johnson County, Kansas",
+     "href": "/counties/johnson"
+    }
+   ]
+  },
+  {
+   "id": "bridges",
+   "title": "Bridges",
+   "source": "Kansas Department of Transportation bridge inventory as of 2026-11-16",
+   "caution": "Inventory records are not always one physical bridge each. Unknown built years are left out, not guessed.",
+   "items": [
+    {
+     "label": "Oldest recorded built year",
+     "value": "1870",
+     "where": "Recorded as “DAY ROAD” over “TRIB. VERMILLION RIVER”, Pottawatomie County",
+     "href": "/?ctx=kdot-bridges-state,kdot-bridges-local&c=-96.14631,39.41947&z=14"
+    },
+    {
+     "label": "Longest structure",
+     "value": "12,497 feet",
+     "where": "Recorded as “I135 HWY SB” over “RR , 12CITY ST& STRM”, Sedgwick County",
+     "href": "/?ctx=kdot-bridges-state,kdot-bridges-local&c=-97.3164,37.69612&z=14"
+    },
+    {
+     "label": "Most bridge records in a county",
+     "value": "1,346",
+     "where": "Sedgwick County, Kansas",
+     "href": "/counties/sedgwick"
+    },
+    {
+     "label": "Fewest bridge records in a county",
+     "value": "3",
+     "where": "Stevens County, Kansas",
+     "href": "/counties/stevens"
+    }
+   ]
+  },
+  {
+   "id": "tornadoes",
+   "title": "Tornadoes",
+   "source": "NOAA Storm Prediction Center tornado tracks that started in Kansas, 1950–2025",
+   "caution": "Earlier tornadoes are under-reported, so counts by year are not a trend. Tracks that began in another state are not included.",
+   "items": [
+    {
+     "label": "Tornadoes in the record",
+     "value": "4,582",
+     "where": "1950–2025"
+    },
+    {
+     "label": "Year with the most",
+     "value": "185 tornadoes",
+     "where": "2008"
+    },
+    {
+     "label": "Longest path",
+     "value": "169.7 miles",
+     "where": "September 25, 1973 · rated F/EF3"
+    },
+    {
+     "label": "Widest path",
+     "value": "3,872 yards",
+     "where": "May 4, 2007 · rated F/EF3"
+    },
+    {
+     "label": "Most reported deaths",
+     "value": "44 deaths",
+     "where": "May 20, 1957 · rated F/EF5",
+     "note": "Deaths are for the whole track, which can extend outside Kansas."
+    },
+    {
+     "label": "Rated F5 or EF5",
+     "value": "6 tornadoes",
+     "where": "most recently on May 4, 2007"
+    }
+   ]
+  }
+ ],
+ "sources": {
+  "population": "a3c82ebd5d89619c498db370861f1288eed6199c3ae8ec0407aea999410c7399",
+  "conditions": "63b3f2578632390e6322fc7cff37d1b02d90f0ccb575db24b1a6d797c786f6fb",
+  "bridges": "4d6df39613ba521910c3ad144763db7c1eed3696d4db13744c67268a999931db",
+  "tornadoes": "5ecb6c60d8652940fd559ba6a00ed61c389e92a5380fb66ddf8b0362242e2023"
+ }
+}

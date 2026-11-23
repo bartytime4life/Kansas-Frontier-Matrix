@@ -19,7 +19,7 @@ export default function Page() {
       <h1>Kansas counties</h1>
       <p>Pick a county for its Census Bureau estimates of income, age, housing, education and poverty, and a map that opens on it.</p>
       <ul className={styles.index}>{COUNTY_PAGES.map(county => <li key={county.fips}><Link href={countyPath(county)}>{county.name}</Link></li>)}</ul>
-      <p><Link href="/labs/observatory">Compare all 105 counties in the County Observatory →</Link></p>
+      <p><Link href="/labs/observatory">Compare all 105 counties in the County Observatory →</Link> · <Link href="/records">Kansas records →</Link></p>
     </article>
   </main>;
 }

@@ -17,7 +17,7 @@ Sitemap: ${PUBLIC_SITE_ORIGIN}/sitemap.xml
 
 // Public reading pages that were reachable from the site but missing from the sitemap. Pages robots.txt
 // disallows, sign-in and status pages, and the Knowledge search (whose store is not provisioned) are left out.
-export const PUBLIC_PAGES = Object.freeze(["/topics", "/civic", "/curated", "/data-library", "/observatory", "/observatory/sources",
+export const PUBLIC_PAGES = Object.freeze(["/records", "/topics", "/civic", "/curated", "/data-library", "/observatory", "/observatory/sources",
   "/labs", "/labs/observatory", "/labs/drought-replay", "/labs/ghost-towns", "/labs/newspaper-pulse", "/labs/water-chemistry",
   "/history/people-events", "/history/prentis-1909"]);
 
