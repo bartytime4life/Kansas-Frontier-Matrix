@@ -278,7 +278,9 @@ test('history loading is separate from the weekly map and its source remains ava
    ['weekly map failed with usable history',{weeks,failed:true},false,true],
    ['both requests failed',{seriesFailed:true,failed:true},false,false],
   ]){
-   const state={...drought,...patch};
+   const state={...drought,...patch,comparison:{
+    state:dm.DEFAULT_DROUGHT_COMPARISON, dates:dm.droughtComparisonDates(dm.DEFAULT_DROUGHT_COMPARISON, weeks), onChange(){},
+   }};
    const tree=h.render(h.exports.CategoryMapDock,{...base,drought:state});
    const panel=findNode(tree,n=>n.props?.className==='category-map-dock-drought');
    const status=findNode(panel,n=>n.props?.role==='status');
@@ -309,7 +311,10 @@ test('statewide comparison uses exact recorded weeks and cumulative severity sha
   { date: '20120821', label: 'Aug 21, 2012', shares: [100, 100, 100, 90, 65] },
   { date: '20261117', label: 'Nov 17, 2026', shares: [37.10, 11.92, 1.66, 0, 0] },
  ];
- const render = (records = weeks) => h.render(h.exports.DroughtWeekComparison, { weeks: records });
+ let state = dm.DEFAULT_DROUGHT_COMPARISON;
+ const render = (records = weeks) => h.render(h.exports.DroughtWeekComparison, {
+  weeks: records, state, dates: dm.droughtComparisonDates(state, records), onChange: next => { state = next; },
+ });
  let tree = render();
  const result = () => findNode(tree, node => Object.hasOwn(node.props, 'data-comparison-result'))?.props.children;
  const row = slot => findNode(tree, node => node.props['data-comparison-week'] === slot);
@@ -361,7 +366,10 @@ test('comparison defaults use dates actually available in a short archive', asyn
   { date: '20261013', label: 'Oct 13, 2026', shares: [72, 40, 19, 3, 0] },
   { date: '20261020', label: 'Oct 20, 2026', shares: [73, 39, 18, 3, 0] },
  ];
- const render = records => h.render(h.exports.DroughtWeekComparison, { weeks: records });
+ let state = dm.DEFAULT_DROUGHT_COMPARISON;
+ const render = records => h.render(h.exports.DroughtWeekComparison, {
+  weeks: records, state, dates: dm.droughtComparisonDates(state, records), onChange: next => { state = next; },
+ });
  assert.equal(render([weeks[0]]), null);
  render(weeks.slice(0, 2)).props.onToggle({ currentTarget: { open: true } });
  let tree = render(weeks.slice(0, 2));
@@ -371,6 +379,29 @@ test('comparison defaults use dates actually available in a short archive', asyn
  tree = render(weeks);
  assert.equal(input('b').value, '2026-10-20', 'the untouched latest choice follows a new record');
  h.dispose();
+});
+
+test('shared drought state pins both available dates, the threshold, and disclosure state', () => {
+ const weeks = [{date:'20261006'}, {date:'20261013'}, {date:'20261020'}];
+ const defaults = dm.DEFAULT_DROUGHT_COMPARISON;
+ const params = new URLSearchParams('drought=20261013');
+ dm.writeDroughtComparison(params, defaults, dm.droughtComparisonDates(defaults, weeks));
+ assert.equal(params.has('droughtCompare'), false, 'existing map-only links stay small');
+ const chosen = {...defaults, open:true, severity:4, choices:{a:{date:'20261013',invalidInput:'20261014'}, b:{}}};
+ dm.writeDroughtComparison(params, chosen, dm.droughtComparisonDates(chosen, weeks));
+ assert.equal(params.get('droughtCompare'), '20261013,20261020,4,1');
+ assert.equal(params.get('drought'), '20261013', 'comparison never replaces the map week');
+ const restored = dm.readDroughtComparison(params.get('droughtCompare'));
+ assert.deepEqual(plain(restored), {open:true,severity:4,choices:{a:{date:'20261013'},b:{date:'20261020'}}});
+ assert.deepEqual(plain(dm.droughtComparisonDates(restored, [...weeks, {date:'20261027'}])), {a:'20261013',b:'20261020'});
+ assert.deepEqual(plain(dm.droughtComparisonDates(restored, [])), {a:'20261013',b:'20261020'}, 'a missing or older series cannot substitute other records');
+ const closed = {...restored, open:false};
+ dm.writeDroughtComparison(params, closed, dm.droughtComparisonDates(closed, weeks));
+ assert.equal(params.get('droughtCompare'), '20261013,20261020,4,0');
+ assert.equal(dm.readDroughtComparison(params.get('droughtCompare')).open, false);
+ for(const invalid of [null,'20261014,20261020,4,1','20261306,20261020,4,1','20261013,,4,1','20261013,20261020,5,1','20261013,20261020,4e0,1','20261013,20261020,4,2','20261013,20261020,4,1,extra']) {
+  assert.equal(dm.readDroughtComparison(invalid), defaults, invalid);
+ }
 });
 
 test('the page reads the week shown, keeps the last map drawn while the next loads, and closes it with its map',()=>{
@@ -383,8 +414,9 @@ test('the page reads the week shown, keeps the last map drawn while the next loa
  assert.match(page,/if \(freshDroughtChange\) lastDroughtChangeRef\.current = freshDroughtChange;\s*else if \(!droughtOn \|\| droughtChange !== lastDroughtChangeRef\.current\?\.weeks \|\| droughtChangeTooEarly \|\| \(droughtId !== null && droughtFailed === droughtId\)\s*\|\| \(droughtSinceDate !== null && droughtSinceFailed === droughtSinceDate\)\) lastDroughtChangeRef\.current = null;/,'the change last drawn holds while the next loads, and goes with a failure or another view');
  assert.match(page,/if \(on && map && map\.getZoom\(\) > 7\.5\) map\.easeTo\(\{ center: \[-98\.38, 38\.5\], zoom: 6\.2, duration: motionDuration\(1200\), essential: false \}\);/,'a field-scale view pulls out to the state');
  assert.match(page,/setQuakeRecordSelected\(null\);\s*setDroughtOn\(false\);\s*setDroughtWeek\(null\);\s*setDroughtCounty\(null\);\s*setOutlookDay\(null\);[\s\S]{0,200}\/\/ Each map opens on its own subject/);
- assert.match(page,/if \(droughtOn\) params\.set\("drought", droughtWeek \?\? "newest"\);/);
- assert.match(page,/setDroughtOn\(droughtOffered && \(restoredDrought === "newest" \|\| isUsdmDate\(restoredDrought\)\)\);/);
+ assert.match(page,/if \(droughtOn\) \{\s+params\.set\("drought", droughtWeek \?\? "newest"\);\s+writeDroughtComparison\(params, droughtComparison, comparisonDates\);/);
+ assert.match(page,/const restoredDroughtOn = droughtOffered && \(restoredDrought === "newest" \|\| isUsdmDate\(restoredDrought\)\);/);
+ assert.match(page,/setDroughtOn\(restoredDroughtOn\);/);
  assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtPlaying\(false\); setDroughtWeek\(date && date !== droughtNewest \? date : null\); setDroughtFailed\(null\); \};/,'the newest week is followed, not pinned');
 });
 

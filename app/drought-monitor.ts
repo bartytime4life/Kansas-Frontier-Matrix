@@ -51,6 +51,35 @@ export function isUsdmDate(value: unknown): value is string {
   const ms = typeof value === "string" ? compactMs(value) : null;
   return ms !== null && new Date(ms).getUTCDay() === 2 && value as string >= USDM_FIRST_DATE;
 }
+export type DroughtComparisonSlot = "a" | "b";
+export type DroughtComparisonChoice = Readonly<{ date?: string; invalidInput?: string }>;
+export type DroughtComparison = Readonly<{
+  open: boolean;
+  severity: number;
+  choices: Readonly<Record<DroughtComparisonSlot, DroughtComparisonChoice>>;
+}>;
+
+export const DEFAULT_DROUGHT_COMPARISON: DroughtComparison = { open: false, severity: 2, choices: { a: {}, b: {} } };
+
+export function droughtComparisonDates(comparison: DroughtComparison, weeks: readonly { date: string }[]) {
+  return {
+    a: comparison.choices.a.date ?? weeks.find(week => week.date === "20120807")?.date ?? weeks[0]?.date,
+    b: comparison.choices.b.date ?? weeks.at(-1)?.date,
+  };
+}
+
+export function writeDroughtComparison(params: URLSearchParams, comparison: DroughtComparison, dates: ReturnType<typeof droughtComparisonDates>) {
+  const { open, severity, choices } = comparison;
+  if (!open && !choices.a.date && !choices.b.date && severity === DEFAULT_DROUGHT_COMPARISON.severity) return;
+  if (dates.a && dates.b) params.set("droughtCompare", `${dates.a},${dates.b},${severity},${open ? 1 : 0}`);
+}
+
+export function readDroughtComparison(value: string | null): DroughtComparison {
+  const match = /^(\d{8}),(\d{8}),([0-4]),([01])$/.exec(value ?? "");
+  if (!match || !isUsdmDate(match[1]) || !isUsdmDate(match[2])) return DEFAULT_DROUGHT_COMPARISON;
+  return { open: match[4] === "1", severity: Number(match[3]), choices: { a: { date: match[1] }, b: { date: match[2] } } };
+}
+
 /**
  * The newest map released by `now`: maps come out Thursdays at 8:30 a.m.
  * Eastern (13:30 UTC in winter, 12:30 in summer; the later is taken) and are

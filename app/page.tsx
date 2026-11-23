@@ -32,7 +32,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
-import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
+import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DEFAULT_DROUGHT_COMPARISON, droughtComparisonDates, readDroughtComparison, writeDroughtComparison, type DroughtComparison, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
@@ -1833,6 +1833,8 @@ export default function Home() {
   const [droughtMaps, setDroughtMaps] = useState<ReadonlyMap<string, DroughtMap>>(() => new Map());
   const [droughtFailed, setDroughtFailed] = useState<string | null>(null);
   const [droughtSeries, setDroughtSeries] = useState<DroughtSeries | null>(null);
+  const [droughtComparison, setDroughtComparison] = useState<DroughtComparison>(DEFAULT_DROUGHT_COMPARISON);
+  const comparisonDates = useMemo(() => droughtComparisonDates(droughtComparison, droughtSeries?.weeks ?? []), [droughtComparison, droughtSeries]);
   const [droughtSeriesFailed, setDroughtSeriesFailed] = useState(false);
   const lastDroughtRef = useRef<DroughtMap | null>(null);
   const lastDroughtChangeRef = useRef<Readonly<{ weeks: DroughtChangeWeeks; from: string; to: string; data: FeatureCollection }> | null>(null);
@@ -3047,7 +3049,10 @@ export default function Home() {
     if (outlookDay) params.set("outlook", String(outlookDay));
     if (outlookDay && outlookHazard !== "cat") params.set("outlookHazard", outlookHazard);
     if (reportsDay) params.set("reports", reportsDay);
-    if (droughtOn) params.set("drought", droughtWeek ?? "newest");
+    if (droughtOn) {
+      params.set("drought", droughtWeek ?? "newest");
+      writeDroughtComparison(params, droughtComparison, comparisonDates);
+    }
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -3109,7 +3114,7 @@ export default function Home() {
       }
     }
     return params;
-  }, [pendingCivicInspection, calendarSweep, welcomeTopics, archiveSelection, archiveViews, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [pendingCivicInspection, calendarSweep, welcomeTopics, archiveSelection, archiveViews, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, droughtComparison, comparisonDates, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -6519,8 +6524,15 @@ export default function Home() {
       setReportsDay((restoredReports === "today" || restoredReports === "yesterday") && restoredTopic !== "all" && categoryMap(restoredTopic)?.tools?.includes("reports") ? restoredReports : null);
       const restoredDrought = params.get("drought");
       const droughtOffered = restoredTopic !== "all" && Boolean(categoryMap(restoredTopic)?.tools?.includes("drought"));
-      setDroughtOn(droughtOffered && (restoredDrought === "newest" || isUsdmDate(restoredDrought)));
+      const restoredDroughtOn = droughtOffered && (restoredDrought === "newest" || isUsdmDate(restoredDrought));
+      const restoredDroughtComparison = restoredDroughtOn ? readDroughtComparison(params.get("droughtCompare")) : DEFAULT_DROUGHT_COMPARISON;
+      setDroughtOn(restoredDroughtOn);
       setDroughtWeek(droughtOffered && isUsdmDate(restoredDrought) ? restoredDrought : null);
+      setDroughtComparison(restoredDroughtComparison);
+      if (restoredDroughtComparison.open && restoredTopic !== "all") {
+        setCategoryDockTopic(restoredTopic);
+        setCategoryDockHidden(false);
+      }
       const restoredHazard = params.get("outlookHazard");
       setOutlookHazard(isOutlookProduct(restoredHazard) ? restoredHazard : "cat");
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
@@ -6638,7 +6650,7 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const restoredSourceStatus = params.get("layers") === "sources" || restoredMapUtilityView === "localAtlas";
       setSourceStatusOpen(restoredSourceStatus);
-      setLeftOpen(restoredSourceStatus || params.get("panel") === "layers" || (restoredTopic !== "all" && !restoredTopics.length));
+      setLeftOpen(restoredSourceStatus || params.get("panel") === "layers" || (restoredTopic !== "all" && !restoredTopics.length && !restoredDroughtComparison.open));
       if (restoredSourceStatus || params.get("panel") === "layers") setLeftPanelMode("layers");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
@@ -12525,6 +12537,7 @@ export default function Home() {
               previous: droughtDate && droughtDate > USDM_FIRST_DATE ? previousUsdmDate(droughtDate) : null,
               next: droughtWeek === null ? null : droughtNewest && nextUsdmDate(droughtWeek) >= droughtNewest ? droughtNewest : nextUsdmDate(droughtWeek),
               categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed, playing: droughtPlaying, motionAllowed: !reducedMotion,
+              comparison: { state: droughtComparison, dates: comparisonDates, onChange: setDroughtComparison },
               counties: countyDrought && countyDrought.length ? { summary: countyDroughtSummary(countyDrought), list: countyChange ? countyChangeList(countyChange) : countyDroughtItems, picked: droughtCounty,
                 reading: pickedCountyDrought && droughtLoaded ? [countyDroughtReading(pickedCountyDrought, droughtLoaded.date), pickedCountyChange && droughtChange ? countyChangeReading(pickedCountyChange, droughtChange) : null].filter(Boolean).join(" · ") : null } : null,
               change: { weeks: droughtChange, reading: droughtChangeText, start: droughtChangeTooEarly && droughtChangeFrom ? usdmDateLabel(droughtChangeFrom) : null, loading: Boolean(droughtSinceDate && !droughtSince && droughtSinceFailed !== droughtSinceDate),
