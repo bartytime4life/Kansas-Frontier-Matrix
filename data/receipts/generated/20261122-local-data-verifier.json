@@ -1,0 +1,65 @@
+{
+  "receipt_id": "kfm-local-data-verifier-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/verify-local-data.mjs",
+    "tests/verify-local-data.test.mjs"
+  ],
+  "artifact_hashes": {
+    "scripts/verify-local-data.mjs": "sha256:19dd4ebc62fab9db7cd4127edbe05021b9b7b26f444b73fb2297691801e8f57c",
+    "tests/verify-local-data.test.mjs": "sha256:1d3b587989fc6055b93492e9eb348894a3de4784ff93ceb7a1065af0495c6e76"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:a0005c1dd6aea6a5a736f2aa9542d7a0bc991f3752e853e617b6f8b49213c551",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:scripts/verify-local-data.mjs",
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:scripts/local-data/datasets.mjs",
+      "repo:8461aae711242474d54aa713e2ce1772f646cab1:scripts/local-data/protocol.mjs"
+    ],
+    "evidence_hashes": [
+      "sha256:093b12b663544522c079b8cea4b15cd4bf0e10d69e24282aaeb17bff2c70b439",
+      "sha256:50472d0110ecd31e09a65ffb58730bef7da818a31a8197c0730a7f2e1d48155c",
+      "sha256:e7927d5b0e2d7565e82ff22aa3e01a1ff12343c0e7306f587be76423efa251f5"
+    ]
+  },
+  "truth_labels": {
+    "scripts/verify-local-data.mjs": "CONFIRMED",
+    "tests/verify-local-data.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Two offline verifier regression tests, scoped ESLint and diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Live public verifier checked 22 of 22 routes and 37 sequential requests with zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review and hosted validation",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting draft review and exact-head check results."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T01:34:39.487882+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "CLI-only scope. Live acceptance reads existing public GET endpoints and records aggregate request diagnostics."
+}
