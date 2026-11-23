@@ -6,7 +6,7 @@ version: v2
 status: source-grounded operation guide; earlier deployment observations retained as dated history
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-11-22
+updated: 2026-11-23
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -597,6 +597,40 @@ restart.
 `apps/site/source` by the same change that adds this section. #6032, #6033,
 #6034 and the outlook part of #6035 touch files only the connected branch
 carries.
+
+<a id="public-readback-2026-11-23"></a>
+
+### Publication verified on 2026-11-23: county pages and a complete sitemap
+
+At about 01:57 UTC on 2026-11-23 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `f3a44dca`, the head of the connected branch.
+That head also carries three changes merged by other work the same hour
+(#6043, #6045, #6046); this section reads back only the county pages.
+
+| Change | Live readback |
+|---|---|
+| [#6044](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6044) a page for each of the 105 Kansas counties | `/counties` returned 200 with its canonical address. `/counties/sedgwick`, `/counties/allen` and `/counties/wyandotte` returned 200, each with its own title, canonical address and figures (median household income $69,365 ±$1,409, $60,689 ±$4,364 and $63,631 ±$1,779). `/counties/nowhere` returned 404. The guides index links to `/counties` |
+| [#6044](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6044) sitemap | `/sitemap.xml` lists 129 addresses, 105 of them county pages (it listed 9 before) |
+
+Not repeated on the public site: the browser checks made on the built
+application before merging (no accessibility violations at desktop and phone
+widths; the "Open the map" button landing on the county with outlines on).
+
+**Kept browser files: second reading.** `/api/build` again reports 970 entries
+and 38,848,175 bytes, exactly the figures of the
+[previous publish](#public-readback-2026-11-22-fifth). The folder the build
+starts with did not grow between these two publishes, although a script file
+from an earlier build was still served by the origin (not from the CDN's cache).
+So the growth of about 26 entries a publish seen in a development checkout is
+not what the host shows, and the earlier "about a hundred publishes" estimate
+should not be relied on. Why the host's starting folder is unchanged is not
+known from outside; a third reading will show whether it is fixed.
+
+**Build identity.** Otherwise unchanged: `WORKTREE_MODIFIED` with
+`untrackedOther: 1` and zeros elsewhere.
+
+**Mirror.** None: `apps/site/source` carries neither the county bundle nor the
+sitemap module.
 
 <a id="verified-starting-point-2026-10-19"></a>
 
