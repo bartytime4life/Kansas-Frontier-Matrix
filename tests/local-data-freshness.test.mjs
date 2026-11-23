@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
 import {DatabaseSync} from 'node:sqlite';
 import {mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -109,6 +110,45 @@ test('the sources index is planned for the pipeline but never required to answer
   assert.deepEqual(index.datasets,['freshness']);
  }
  for(const d of DATASETS.values())assert.ok(!d.indexes.some(i=>i.name===SOURCES_INDEX.name));
+});
+
+test('named Storm Events indexes enable bounded receipt dates without changing the default index plan',async t=>{
+ const dir=await mkdtemp(join(tmpdir(),'kfm-storm-file-indexes-'));
+ const path=join(dir,'observations.sqlite'),db=new DatabaseSync(path);
+ t.after(async()=>{db.close();await rm(dir,{recursive:true,force:true});});
+ bookkeeping(db);
+ const collections=DATASETS.get('recovered-observations').freshness.collections
+  .filter(collection=>/^observations-storm-event-(details|fatalities|locations)$/.test(collection.id));
+ assert.equal(collections.length,3);
+ for(const {table} of collections){
+  db.exec(`CREATE TABLE ${table}(id INTEGER PRIMARY KEY,file_id INTEGER); INSERT INTO ${table} VALUES (1,10),(2,14)`);
+ }
+ const cli=(...args)=>{
+  const result=spawnSync(process.execPath,['scripts/local-data/indexes.mjs',...args],{
+   encoding:'utf8',env:{KFM_LOCAL_DATA_DB:path},timeout:5000,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.signal,null,result.stderr);
+  return {code:result.status,rows:result.stdout.trim().split('\n').filter(Boolean).map(line=>JSON.parse(line))};
+ };
+ const defaultCheck=cli('check');
+ assert.ok(defaultCheck.rows.some(row=>row.index===SOURCES_INDEX.name&&row.state==='present'));
+ assert.ok(!defaultCheck.rows.some(row=>collections.some(({table})=>row.index===table+'_file')));
+ const cache=new Map();
+ for(const {id,table} of collections){
+  const name=table+'_file';
+  assert.deepEqual(plannedIndexes().get('observations').get(name).datasets,['freshness']);
+  assert.ok([...DATASETS.values()].every(dataset=>!dataset.indexes.some(index=>index.name===name)));
+  assert.deepEqual(collectionsFreshness(db,collections,{cache})[id],{reason:'INDEX_MISSING'});
+  assert.equal(cli('check',name).code,1);
+  const apply=cli('apply',name);
+  assert.equal(apply.code,0);
+  assert.deepEqual(apply.rows.map(row=>[row.index,row.state]),[[name,'created']]);
+  assert.equal(cli('check',name).code,0);
+  assert.equal(collectionsFreshness(db,collections,{cache})[id].retrievedAt,'2026-11-01T23:30:00.000Z');
+  const plan=db.prepare(`EXPLAIN QUERY PLAN SELECT MAX(file_id) FROM ${table}`).get();
+  assert.ok(plan.detail.includes(name),plan.detail);
+ }
 });
 
 test('health reports freshness per dataset and per recovered collection',async t=>{

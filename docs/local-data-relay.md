@@ -154,6 +154,26 @@ datasets name. They are additive, with no row changes.
 missing ones one at a time, each under `run/pipeline.lock`. Captures skip, as
 designed, while an index is being built.
 
+The Storm Events file indexes support bounded load-date lookups for the details,
+fatalities and locations collections. Check or apply each one by name with the
+same observations database configuration as the gateway. Unnamed runs retain
+their usual index list.
+
+| Collection | Index name |
+| --- | --- |
+| Storm Events details | `kfm_storm_event_details_file` |
+| Storm Events fatalities | `kfm_storm_event_fatalities_file` |
+| Storm Events locations | `kfm_storm_event_locations_file` |
+
+Use the pipeline lock for each approved index build. A gateway that caches
+index checks until restart needs a reload after a schema change. Gateways
+that monitor SQLite's schema version pick up the new indexes automatically.
+After the public catalog refreshes, verify the three collection load dates.
+They come from the newest referenced file's receipt. Historical receipts
+without dates remain undated. Record reads and dataset readiness are
+independent of the freshness lookup. Rollback can drop the named indexes
+under the same lock.
+
 ## Site settings
 
 Off unless all are set. `KFM_LOCAL_DATA_ORIGIN` must be one of the controlled

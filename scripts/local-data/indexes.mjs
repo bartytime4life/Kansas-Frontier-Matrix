@@ -28,7 +28,7 @@ async function main(mode,only){
  if(only&&![...planned.values()].some(m=>m.has(only))){console.error('Unknown index '+only);return 2;}
  let missingTotal=0;
  for(const [name,indexes] of planned){
-  const chosen=[...indexes.values()].filter(i=>!only||i.name===only);
+  const chosen=[...indexes.values()].filter(index=>only?index.name===only:!index.namedOnly);
   if(!chosen.length)continue;
   const path=databases[name];
   if(!path){console.log(JSON.stringify({database:name,state:'not-configured'}));continue;}
