@@ -2,11 +2,11 @@
 doc_id: kfm://doc/brand/readme-artwork
 title: docs/brand/readme — README artwork
 type: readme
-version: v1.5
+version: v1.6
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-08
-updated: 2026-10-27
+updated: 2026-11-23
 policy_label: public
 owning_root: docs/
 responsibility: "Human-facing inventory of illustrative SVG artwork and separately attributed recorded map-tour derivatives; not map product, evidence, policy, review, release, or publication authority."
@@ -73,6 +73,30 @@ The builder refuses a different checkout SHA, mismatched source hash or incomple
 capture. It reopens every output to check duration, finite playback, native dimensions
 and distinct decoded frames. Encoder/library versions are retained in the manifest;
 byte-identical output across different versions is not claimed.
+
+## Live site screenshots · November 23, 2026
+
+Six JPEG captures of the public site, used in the root README's
+"New on the public site" section. They live in [`live-20261123/`](live-20261123/).
+
+| File | Address captured | What it shows |
+|---|---|---|
+| `kfm-live-bridges.jpg` | `/?ctx=kdot-bridges-state,kdot-bridges-local&c=-97.34,37.69&z=9.2` | KDOT bridge circles around Wichita; status bar "In view: 643 state highway bridges · 1,829 local bridges" |
+| `kfm-live-trails.jpg` | the "Open this map" link on `/explore/frontier-trails` | NPS historic trail routes and trail sites; 96 trail sites in view |
+| `kfm-live-drought.jpg` | `/?topic=agriculture&drought=newest` | U.S. Drought Monitor categories over Kansas with county lines |
+| `kfm-live-observatory.jpg` | `/observatory` | Event Observatory with radar returns and the shared event clock |
+| `kfm-live-county.jpg` | `/counties/sedgwick` | The Sedgwick County page |
+| `kfm-live-records.jpg` | `/records` | The Kansas records page |
+
+- **How.** Headless Chromium, 1280 by 760 CSS pixels at 1.25 device pixels, JPEG quality 78,
+  after waiting 20 seconds on map pages and 3 seconds on text pages. No retouching.
+- **When.** 2026-11-23, about 06:18 UTC. `/api/build` reported application inputs
+  `sha256:c404670f…` at that time.
+- **What they are.** Display captures of provider context as the public site drew it at that
+  moment. They are not readbacks, live readings, acceptance evidence or released datasets.
+  Counts in a caption describe that view on that date; providers revise their data.
+- **What they are not checked by.** The artwork tests in `tests/docs/test_readme_artwork.py`
+  cover the SVG illustrations only.
 
 ## Gallery
 

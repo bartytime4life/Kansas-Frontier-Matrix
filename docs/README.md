@@ -3,13 +3,13 @@ doc_id: kfm://doc/docs-root-readme
 title: docs/ — Human-Readable Governance and Explanation Root
 type: readme/root-readme
 authority: documentation-boundary
-version: v1.2
+version: v1.3
 status: active
 owners:
   - "@bartytime4life"
 created: 2026-08-08
 created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
-updated: 2026-11-11
+updated: 2026-11-23
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the docs/ responsibility boundary, navigation contract, exposure posture, validation expectations, and relationships to KFM authority roots."
@@ -26,6 +26,16 @@ related:
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/` — Human-Readable Governance and Explanation Root
+
+## New on the public site — November 23, 2026
+
+| Want to | Go to |
+|---|---|
+| See what changed this month, with pictures | [Root README: New on the public site](../README.md#new-on-the-public-site--november-2026) |
+| Check that a change is really live | [Hosting runbook readbacks](runbooks/godaddy-node-hosting.md#public-readback-2026-11-23-third) |
+| Read every change in order | [Changelog](../CHANGELOG.md) |
+| Know what is still broken or undecided | [Project status](wiki/Project-Status.md#public-site--november-23-2026) |
+| Find how the screenshots were made | [README visuals: live site screenshots](brand/readme/README.md#live-site-screenshots--november-23-2026) |
 
 ## Current reading routes — November 11, 2026
 

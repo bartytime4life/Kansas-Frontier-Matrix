@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.7.0
+version: v3.8.0
 status: source-grounded documentation candidate; independent review pending
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-11-11
+updated: 2026-11-23
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -25,6 +25,7 @@ notes:
   - "Recorded display tours are derivatives, not real-time speed benchmarks, live observations, scientific validation or released datasets."
   - "Public Node composition, monorepo and preserved Sites source are different trees."
   - "A native wiki sync remains separate from review of this source packet."
+  - "The November 23 screenshots are display captures of the public site, not readbacks, live observations or released datasets."
 [/KFM_META_BLOCK_V2] -->
 
 
@@ -35,7 +36,14 @@ notes:
 Explore Kansas from river valleys to the ground beneath them. Move through maps,
 source dates and recorded observations. Keep the evidence close enough to inspect.
 
-[Open the Explorer](https://kansasfrontiermatrix.com/) · [Watch the visual tour](docs/wiki/visual-tour.md) · [Run the program](#try-it-yourself) · [Read the wiki](docs/wiki/Home.md) · [Inspect the checks](docs/reports/documentation-showcase-qualification-20261027.md)
+[Open the Explorer](https://kansasfrontiermatrix.com/) · [See what is new](#new-on-the-public-site--november-2026) · [Look up a county](https://kansasfrontiermatrix.com/counties) · [Watch the visual tour](docs/wiki/visual-tour.md) · [Run the program](#try-it-yourself) · [Read the wiki](docs/wiki/Home.md) · [Inspect the checks](docs/reports/documentation-showcase-qualification-20261027.md)
+
+**Public site verified — November 23, 2026.** The public site was read back
+against its source eight times on November 22 and 23; the latest record is in the
+[hosting runbook](docs/runbooks/godaddy-node-hosting.md#public-readback-2026-11-23-third),
+and every change is in the [changelog](CHANGELOG.md). County pages, Kansas records,
+counted map circles and a repaired drought history all arrived this month:
+[see them below](#new-on-the-public-site--november-2026).
 
 **Repository review — November 11, 2026.** The current monorepo includes the
 [Explorer recovery and replay fixes](apps/site/source/docs/README.md).
@@ -48,6 +56,59 @@ below. No fresh public deployment or live-provider acceptance is asserted.
 *Actual Explorer renderer output: Flint Hills terrain, captured October 20, 2026.
 Mixed-source elevation and imagery; 1.0× vertical display. This seven-second rendered
 tour is not a recording of real-time performance. [Still image](docs/brand/readme/kfm-tour-terrain.jpg) · [Source and attribution](docs/brand/readme/README.md#recorded-map-tours--october-27-2026).*
+
+## New on the public site — November 2026
+
+**Six things you can open right now.** Every picture below is the public site itself,
+captured on November 23, 2026. Select one to open that view.
+
+<table>
+<tr>
+<td width="50%" valign="top"><a href="https://kansasfrontiermatrix.com/?ctx=kdot-bridges-state,kdot-bridges-local&c=-97.34,37.69&z=9.2"><img src="docs/brand/readme/live-20261123/kfm-live-bridges.jpg" alt="Public Explorer around Wichita with numbered circles for KDOT bridges and an in-view count in the status bar." width="100%" /></a><br/><strong>Count what is in view</strong><br/>Every bridge in the KDOT inventory, drawn as numbered circles that split into exact bridges as you zoom. The status bar counts what the map shows: 643 state highway bridges and 1,829 local bridges in this view. Inventory records, not a safety assessment.</td>
+<td width="50%" valign="top"><a href="https://kansasfrontiermatrix.com/explore/frontier-trails"><img src="docs/brand/readme/live-20261123/kfm-live-trails.jpg" alt="Public Explorer showing National Park Service historic trail routes and trail sites across Kansas." width="100%" /></a><br/><strong>Follow the frontier trails</strong><br/>National Park Service historic trail routes across Kansas, with 96 trail sites in this view. The lines are the Park Service's mapped alignments, shown on a modern basemap.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="https://kansasfrontiermatrix.com/?topic=agriculture&drought=newest"><img src="docs/brand/readme/live-20261123/kfm-live-drought.jpg" alt="Public Explorer showing the U.S. Drought Monitor categories over Kansas with county lines." width="100%" /></a><br/><strong>Watch drought move</strong><br/>The weekly U.S. Drought Monitor over Kansas with county lines, and a week-by-week history back to January 2000. This map is valid for November 17, 2026; it is the authors' weekly assessment, not a forecast.</td>
+<td width="50%" valign="top"><a href="https://kansasfrontiermatrix.com/observatory"><img src="docs/brand/readme/live-20261123/kfm-live-observatory.jpg" alt="Event Observatory on the public site with radar returns over Kansas and a shared event clock." width="100%" /></a><br/><strong>Replay a day of weather</strong><br/>The Event Observatory puts radar, storm cells, rivers and more on one clock. A dated replay for study, not a live warning service.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><a href="https://kansasfrontiermatrix.com/counties/sedgwick"><img src="docs/brand/readme/live-20261123/kfm-live-county.jpg" alt="Sedgwick County page on the public site with Census estimates and margins of error." width="100%" /></a><br/><strong>Look up any county</strong><br/>A page for each of the 105 Kansas counties: population, income, age, homes and bridges. Survey figures carry their margin of error, and every number names its source.</td>
+<td width="50%" valign="top"><a href="https://kansasfrontiermatrix.com/records"><img src="docs/brand/readme/live-20261123/kfm-live-records.jpg" alt="Kansas records page on the public site listing extremes for people, income, bridges and tornadoes." width="100%" /></a><br/><strong>Find the Kansas records</strong><br/>The most and fewest people, the oldest and longest bridges, the longest and widest tornado paths. Each entry is the extreme of one named dataset for the years it covers, and nothing more.</td>
+</tr>
+</table>
+
+*Headless Chromium captures of the public site at 06:18 UTC. Display records, not live
+readings or acceptance evidence. [Capture method and limits](docs/brand/readme/README.md#live-site-screenshots--november-23-2026).*
+
+### Kansas by the numbers
+
+| | What it counts | Where it comes from |
+|---:|---|---|
+| **105** | county pages, one for every Kansas county | [kansasfrontiermatrix.com/counties](https://kansasfrontiermatrix.com/counties) |
+| **24,877** | bridge records on the map, as numbered circles | KDOT bridge inventory as of November 16, 2026 |
+| **4,582** | tornado tracks that started in Kansas, 1950–2025 | NOAA Storm Prediction Center |
+| **1,403** | weeks of drought history for Kansas since January 2000 | U.S. Drought Monitor, read November 22, 2026 |
+| **22** | Kansas records, each with its source and limits | [kansasfrontiermatrix.com/records](https://kansasfrontiermatrix.com/records) |
+| **130** | public pages listed for search engines | [sitemap](https://kansasfrontiermatrix.com/sitemap.xml), read November 23, 2026 |
+
+Counts describe the named dataset on the date shown. Providers revise their data.
+
+### From provider to your screen
+
+```mermaid
+flowchart LR
+    P["Public providers<br/>USGS · NOAA · Census · KDOT · NPS"] --> F["Live feeds<br/>one good answer kept per feed"]
+    P --> B["Shipped data bundles<br/>hashed, with source addresses"]
+    F --> M["The map<br/>counted circles and in-view tallies"]
+    B --> T["Generated tables<br/>rebuilt and compared by tests"]
+    T --> C["County pages and Kansas records"]
+    M --> V["You<br/>source, date and limits beside every view"]
+    C --> V
+```
+
+Provider context on the public map is not the governed release path described under
+[How KFM protects meaning](#how-kfm-protects-meaning). Both are real; they carry
+different authority.
 
 ## See it in action
 
@@ -103,6 +164,9 @@ repository counts are not a hosted-site readback.
 2. Open its map and inspect the available layers. Distinguish mapped channels from a station observation or a forecast.
 3. Explore **Aquifers & groundwater**. Read the regional class legend before drawing a local conclusion.
 4. Use **Time**, **Layers** and the research tools to keep the chosen place and source period explicit.
+5. Open [your county's page](https://kansasfrontiermatrix.com/counties), then press **Open the map** to land on it with county outlines on.
+6. Turn on the bridge layers and zoom: the numbered circles split until each one is a single bridge, and the status bar keeps count.
+7. Read [Kansas records](https://kansasfrontiermatrix.com/records), then check one against its source line.
 
 These are exploration prompts. Network availability and installed/admitted coverage
 still determine what a particular request can return.
@@ -312,9 +376,10 @@ not newly implemented analytical services.
 
 ## Current edges and non-goals
 
-This documentation refresh changes guidance, navigation and metadata. Existing
-SVG illustrations and October tour derivatives retain their own provenance; no
-new media was generated. Source admission, inference configuration, access,
+The November 23 refresh adds six screenshots of the public site, a numbers table
+and one diagram. The screenshots are display captures with their own
+[capture record](docs/brand/readme/README.md#live-site-screenshots--november-23-2026).
+Existing SVG illustrations and October tour derivatives retain their own provenance. Source admission, inference configuration, access,
 deployment, merge and release remain separate actions.
 
 ## Project references
@@ -323,6 +388,9 @@ deployment, merge and release remain separate actions.
 
 ## Last evidence review
 
+Public site readbacks through November 23, 2026 are recorded in the
+[hosting runbook](docs/runbooks/godaddy-node-hosting.md#public-readback-2026-11-23-third);
+the six screenshots were captured the same day from the public site.
 Repository documentation inspected at main
 `d4d84171653a2f2582b48ece511dc010857fde15` on November 11, 2026; see the
 [current review](docs/reports/documentation-currentness-review-20261111.md).
