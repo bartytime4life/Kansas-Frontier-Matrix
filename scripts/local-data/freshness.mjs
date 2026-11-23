@@ -36,23 +36,45 @@ function fromReceipt(row){
  return {file:row.file_id,sourceId:str(row.source_id),retrievedAt:pick(RETRIEVED),modifiedAt:pick(MODIFIED)};
 }
 
-/** Whether MAX(file_id) on this table is an index seek: file_id leads its primary key or one of its indexes. */
-export function fileLed(db,table,cache){
- return remembered(cache,'file-led:'+table,()=>{
-  if(!exists(db,'table',table))return false;
+function fileKeyCache(db,cache){
+ if(!cache)return new Map();
+ const version=db.prepare('PRAGMA schema_version').get().schema_version;
+ let snapshot=cache.get('file-keys');
+ if(!snapshot||snapshot.version!==version){
+  snapshot={version,keys:new Map()};
+  cache.set('file-keys',snapshot);
+ }
+ return snapshot.keys;
+}
+
+/** The schema requirement for a bounded MAX(file_id) lookup. */
+function fileKeyState(db,table,keys){
+ return remembered(keys,table,()=>{
+  if(!exists(db,'table',table))return 'TABLE_ABSENT';
   const columns=db.prepare('SELECT name,pk FROM pragma_table_info(?)').all(table);
-  if(columns.some(c=>c.name==='file_id'&&c.pk===1))return true;
-  return db.prepare('SELECT name FROM pragma_index_list(?)').all(table).some(i=>db.prepare('SELECT name FROM pragma_index_info(?) WHERE seqno=0').get(i.name)?.name==='file_id');
+  const column=columns.find(c=>c.name==='file_id');
+  if(!column)return 'COLLECTION_FILE_KEY_MISSING';
+  if(column.pk===1)return 'INDEXED';
+  const indexed=db.prepare('SELECT name,partial FROM pragma_index_list(?)').all(table)
+   .some(i=>!i.partial&&db.prepare('SELECT name FROM pragma_index_info(?) WHERE seqno=0').get(i.name)?.name==='file_id');
+  return indexed?'INDEXED':'INDEX_MISSING';
  });
 }
 
-/** The newest file behind one table, or null when the table is absent, empty or not file-led. */
-export function tableFreshness(db,table,{cache}={}){
- if(!fileLed(db,table,cache))return null;
+export function fileLed(db,table,cache){
+ return fileKeyState(db,table,fileKeyCache(db,cache))==='INDEXED';
+}
+
+function indexedTableFreshness(db,table){
  const newest=db.prepare(`SELECT MAX(file_id) AS m FROM ${quote(table)}`).get().m;
  if(newest===null||newest===undefined)return null;
  const row=db.prepare('SELECT file_id,source_id,receipt_json FROM kfm_sql_sources WHERE file_id=?').get(newest);
  return row?fromReceipt(row):{file:newest,sourceId:null,retrievedAt:null,modifiedAt:null};
+}
+
+/** The newest file behind one table, or null when its bounded lookup is unavailable or empty. */
+export function tableFreshness(db,table,{cache}={}){
+ return fileLed(db,table,cache)?indexedTableFreshness(db,table):null;
 }
 
 /**
@@ -87,13 +109,16 @@ export function geopackageFreshness(db){
  return row?.m?{file:null,sourceId:null,retrievedAt:null,modifiedAt:iso(row.m)}:{reason:'NO_FILES'};
 }
 
-/** Freshness of the catalog collections that have a newest file: {collectionId: freshness}; a collection without one is left out. */
+/** Registered collections may report an exact file receipt or the reason the lookup is unavailable. */
 export function collectionsFreshness(db,collections,{cache}={}){
- const out={};
+ const out={},keys=fileKeyCache(db,cache);
  for(const c of collections){
-  let value=null;
-  try{value=tableFreshness(db,c.table,{cache});}catch{}
-  if(value)out[c.id]=value;
+  try{
+   const state=fileKeyState(db,c.table,keys);
+   if(state==='TABLE_ABSENT')continue;
+   const value=state==='INDEXED'?indexedTableFreshness(db,c.table):{reason:state};
+   if(value)out[c.id]=value;
+  }catch{/* A collection's unavailable receipt must not hide its peers. */}
  }
  return out;
 }
@@ -114,7 +139,11 @@ export function datasetFreshness(db,dataset,{cache}={}){
   if(spec.sources)return {...sourcesFreshness(db,spec.sources,{cache}),basis:'sources'};
   const tables=spec.tables??(spec.collections??[]).map(c=>c.table);
   let best=null,seen=0;
-  for(const table of tables){const f=tableFreshness(db,table,{cache});if(f){seen++;best=newer(best,f);}}
+  const keys=fileKeyCache(db,cache);
+  for(const table of tables){
+   if(fileKeyState(db,table,keys)!=='INDEXED')continue;
+   const f=indexedTableFreshness(db,table);if(f){seen++;best=newer(best,f);}
+  }
   return best?{...best,basis:spec.tables?'tables':'collections'}:{reason:seen?'NO_DATES':'NO_FILES',basis:spec.tables?'tables':'collections'};
  }catch{return {reason:'UNAVAILABLE',basis:spec.geopackage?'geopackage':spec.feed?'feed':spec.sources?'sources':'tables'};}
 }

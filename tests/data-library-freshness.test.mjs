@@ -31,11 +31,13 @@ test('loadedThrough and freshnessLine say what was loaded when, and nothing when
  assert.equal(model.loadedThrough({...fresh,retrievedAt:null}),'2026-10-26');
  assert.equal(model.loadedThrough({...fresh,retrievedAt:null,modifiedAt:null}),null);
  assert.equal(model.loadedThrough({reason:'INDEX_MISSING'}),null);
+ assert.equal(model.loadedThrough({reason:'COLLECTION_FILE_KEY_MISSING'}),null);
  assert.equal(model.loadedThrough(null),null);
  assert.equal(model.freshnessLine(fresh),"newest file retrieved 2026-11-01, provider's version of 2026-10-26 (noaa-storm-events-details).");
  assert.equal(model.freshnessLine({...fresh,modifiedAt:null,sourceId:null}),'newest file retrieved 2026-11-01.');
  assert.equal(model.freshnessLine({...fresh,retrievedAt:null,modifiedAt:null}),'Loaded, date not recorded.');
  assert.equal(model.freshnessLine({reason:'INDEX_MISSING'}),'Load date not indexed on the PC yet.');
+ assert.equal(model.freshnessLine({reason:'COLLECTION_FILE_KEY_MISSING'}),'This collection has no file-level retrieval metadata.');
  assert.equal(model.freshnessLine({reason:'NO_FILES'}),'No file loaded yet.');
  assert.equal(model.freshnessLine(null),'Load date not reported.');
 });
