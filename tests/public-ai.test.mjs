@@ -272,6 +272,19 @@ test('unavailable-model evidence search keeps sensitive, missing and malformed e
  assert.equal(withheld.answer,null);assert.equal(withheld.citations,undefined);assert.equal(f.calls(),0);
 });
 
+test('a truncated empty evidence packet abstains without claiming that no released records match',async()=>{
+ const f=fixture();
+ f.setEvidence({...evidence,evidence:[],truncated:true});
+ const created=await f.request('jobs',{...question,mode:'evidence'});
+ const partial=(await f.settle(created.body.id,created.cookie)).body.result;
+ assert.equal(partial.outcome,'ABSTAIN');assert.equal(partial.reasonCode,'EVIDENCE_SEARCH_INCOMPLETE');
+ assert.equal(partial.answer,null);assert.equal(partial.citations,undefined);
+ f.setEvidence({...evidence,evidence:[],truncated:false});
+ const confirmed=await f.request('jobs',{...question,mode:'evidence'},created.cookie);
+ assert.equal((await f.settle(confirmed.body.id,created.cookie)).body.result.reasonCode,'NO_RELEASED_EVIDENCE');
+ assert.equal(f.calls(),0);
+});
+
 test('pending evidence rechecks return a job promptly and cannot restore cancelled or expired results',async()=>{
  for(const terminal of ['cancelled','expired']){
   let reads=0,release;

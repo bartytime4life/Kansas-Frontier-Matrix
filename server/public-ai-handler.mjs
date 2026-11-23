@@ -51,12 +51,13 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
  const packet=async query=>{
   let timer;const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('EVIDENCE_WITHHELD')),8000);});
   let value;try{value=await Promise.race([reads.run(()=>resolveEvidence(query)),timeout]);}finally{clearTimeout(timer);}
-  if(!value||!Array.isArray(value.evidence)||value.evidence.length>40||!/^sha256:[a-f0-9]{64}$/.test(value.releaseId??'')||Buffer.byteLength(JSON.stringify(value))>24000)return null;
+  if(!value)return null;
+  if(!Array.isArray(value.evidence)||value.evidence.length>40||!/^sha256:[a-f0-9]{64}$/.test(value.releaseId??'')||Buffer.byteLength(JSON.stringify(value))>24000)throw new Error('EVIDENCE_WITHHELD');
   for(const fact of value.evidence){
    if(!fact||Object.keys(fact).some(k=>!['evidenceRef','text','status','title','url'].includes(k))||!text(fact.evidenceRef,240)||!text(fact.text,800)||!text(fact.title,200)||fact.status!=='documented')throw new Error('EVIDENCE_WITHHELD');
    const url=new URL(fact.url,origin);if(url.origin!==origin||!url.pathname.startsWith('/knowledge/record')||url.username||url.password)throw new Error('EVIDENCE_WITHHELD');
   }
-  return value.evidence.length?{releaseId:value.releaseId,evidence:value.evidence,truncated:Boolean(value.truncated)}:null;
+  return value.evidence.length||value.truncated?{releaseId:value.releaseId,evidence:value.evidence,truncated:Boolean(value.truncated)}:null;
  };
  const contextFingerprint=value=>digest({key:value.key,prompt:value.prompt,sourceSummary:value.sourceSummary,releaseId:value.releaseId,references:value.references});
  const readContext=async selector=>{
@@ -206,7 +207,10 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       job.state='completed';job.finished=clock();job.result=job.context?.sourceSummary?{...envelope('ABSTAIN','SOURCE_CONTEXT_ONLY'),sourceSummary:job.context.sourceSummary,followUpQuestion:'Would you like to inspect the original source intervals or compare nearby wells and aquifer ranges?'}:envelope('ABSTAIN','CONTEXT_UNAVAILABLE');job.question='';job.query=null;
      }
      else if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
-     else if(!evidence){job.state='completed';job.finished=clock();job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
+     else if(!evidence?.evidence.length){
+      const reason=sensitive?'POLICY_WITHHELD':evidence?.truncated?'EVIDENCE_SEARCH_INCOMPLETE':'NO_RELEASED_EVIDENCE';
+      job.state='completed';job.finished=clock();job.result=envelope(sensitive?'DENY':'ABSTAIN',reason);job.question='';job.query=null;
+     }
      else{
       job.packet=evidence;job.evidenceDigest=digest(evidence);
       // Return the opaque job promptly; do not queue discovery behind inference.

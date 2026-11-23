@@ -1,7 +1,8 @@
 import { kansasKnowledgeRead } from './kansas-knowledge-server';
 import { parseKnowledgeRead } from './knowledge-read';
+import type { KnowledgeSearchScope } from './kansas-knowledge';
 
-export type ResearchQuery = {term:string;place:string;start:string;end:string};
+export type ResearchQuery = KnowledgeSearchScope & {term:string};
 /** Reuse the same reviewed reader for a selected record; no local-file fallback. */
 export async function recordContext({recordId}:{recordId:string}){
  const origin=process.env.KFM_HOSTED_AI_ORIGIN;
@@ -15,17 +16,13 @@ export async function recordContext({recordId}:{recordId:string}){
 }
 /** Uses the existing governed reader; source capture and local files confer no authority. */
 export async function researchEvidence(query:ResearchQuery, origin=process.env.KFM_HOSTED_AI_ORIGIN) {
-  if(!origin)return null;
-  const response=await kansasKnowledgeRead(new Request(`${origin}/api/governed/v1/knowledge?${new URLSearchParams({term:query.term})}`));
+  if(!origin)throw new Error('EVIDENCE_WITHHELD');
+  const {place,start,end}=query;
+  const response=await kansasKnowledgeRead(new Request(`${origin}/api/governed/v1/knowledge?${new URLSearchParams({term:query.term})}`),{place,start,end});
   const result=parseKnowledgeRead(await response.json(),{kind:'search',term:query.term});
-  if(result.envelope.outcome!=='ANSWER'||!result.data)return null;
-  const records=result.data.records.filter(record=>{
-    if(query.place&&!record.location_label.toLowerCase().includes(query.place.toLowerCase()))return false;
-    if(query.start&&(!record.time_end||record.time_end<query.start))return false;
-    if(query.end&&(!record.time_start||record.time_start>query.end))return false;
-    return true;
-  });
-  const evidence=records.flatMap(record=>record.assertions.filter(assertion=>assertion.status==='documented').map(assertion=>({
+  if(result.envelope.outcome==='ABSTAIN'&&['RECORD_NOT_FOUND','NO_APPROVED_KNOWLEDGE'].includes(result.envelope.reason_code)&&response.ok)return null;
+  if(!response.ok||result.envelope.outcome!=='ANSWER'||!result.data)throw new Error('EVIDENCE_WITHHELD');
+  const evidence=result.data.records.flatMap(record=>record.assertions.filter(assertion=>assertion.status==='documented').map(assertion=>({
     evidenceRef:assertion.evidence_ref,text:assertion.text,status:assertion.status,title:record.title,
     url:`${origin}/knowledge/record?${new URLSearchParams({id:record.record_id})}`,
   })));
