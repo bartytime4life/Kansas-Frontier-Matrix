@@ -1212,6 +1212,30 @@ test('drought comparison survives reopening and the shared view restores it in a
   assert.deepEqual(recipient.hits.maps,[recipient.newest.date],'receiving the link reads just the original map week');
 });
 
+test('drought retained history discloses the original retrieval and keeps comparison usable on a phone', { timeout:90000 }, async t => {
+  const retrievedAt='2026-11-22T12:00:00.000Z';
+  const fixtures=droughtBrowserFixtures(origin,{retained:'incomplete',retrievedAt});
+  t.after(()=>fixtures.assertDrained());
+  const b=await browser(t),p=await pageSession(b,393,852,fixtures);
+  await p.call('Emulation.setDeviceMetricsOverride',{width:393,height:852,deviceScaleFactor:1,mobile:true});
+  await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  await openDroughtWorkbench(p);
+  await droughtLoaded(p,fixtures.newest);
+  const notice='.category-map-dock-drought [role="status"]';
+  await p.wait(`document.querySelector(${JSON.stringify(notice)})?.textContent.includes('The USDM returned an incomplete Kansas history.')`, 'retained history visibly identifies the incomplete refresh');
+  assert.equal(await p.evaluate(`document.querySelector(${JSON.stringify(notice + ' time')})?.dateTime`),retrievedAt);
+  await droughtPoint(p,notice);
+  assert.equal(await p.evaluate(`document.querySelectorAll('.category-map-dock-drought-chart svg path').length`),5,'the retained series still draws');
+  await droughtEnter(p,'.category-map-dock-drought-compare > summary');
+  await p.wait(`document.querySelector('[data-comparison-result]')?.textContent==='Week B is 9.00 percentage points higher than week A.'`,'comparison uses the retained dates');
+  const next=await droughtPoint(p,'[aria-label="Next recorded week for A"]');
+  await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:next.x,y:next.y,id:1}]});
+  await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await p.wait(`document.querySelector('[data-comparison-result]')?.textContent==='Week B is 8.00 percentage points higher than week A.'`,'native touch steps a retained comparison week');
+  assert.equal(fixtures.hits.history,1,'comparison reuses the retained response');
+  assert.deepEqual(fixtures.hits.maps,[fixtures.newest.date],'comparison does not fetch another map');
+});
+
 test('drought statistics failure preserves a usable weekly reading and public source', { timeout:90000 }, async t => {
   const fixtures=droughtBrowserFixtures(origin,{history:'failed'});
   t.after(()=>fixtures.assertDrained());

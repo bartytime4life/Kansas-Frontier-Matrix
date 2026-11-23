@@ -32,7 +32,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
-import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DEFAULT_DROUGHT_COMPARISON, droughtComparisonDates, readDroughtComparison, writeDroughtComparison, type DroughtComparison, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
+import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DEFAULT_DROUGHT_COMPARISON, droughtComparisonDates, readDroughtComparison, writeDroughtComparison, type DroughtComparison, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, DROUGHT_SERIES_RETRY_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries, type DroughtSeriesFailure } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
@@ -1835,7 +1835,7 @@ export default function Home() {
   const [droughtSeries, setDroughtSeries] = useState<DroughtSeries | null>(null);
   const [droughtComparison, setDroughtComparison] = useState<DroughtComparison>(DEFAULT_DROUGHT_COMPARISON);
   const comparisonDates = useMemo(() => droughtComparisonDates(droughtComparison, droughtSeries?.weeks ?? []), [droughtComparison, droughtSeries]);
-  const [droughtSeriesFailed, setDroughtSeriesFailed] = useState(false);
+  const [droughtSeriesFailed, setDroughtSeriesFailed] = useState<false | DroughtSeriesFailure>(false);
   const lastDroughtRef = useRef<DroughtMap | null>(null);
   const lastDroughtChangeRef = useRef<Readonly<{ weeks: DroughtChangeWeeks; from: string; to: string; data: FeatureCollection }> | null>(null);
   const droughtReadAtRef = useRef(new Map<string, number>());
@@ -4426,13 +4426,22 @@ export default function Home() {
   useEffect(() => {
     if (!droughtOn || droughtSeriesFailed) return;
     const age = droughtSeries ? Date.now() - droughtSeriesReadAtRef.current : Infinity;
-    if (age < DROUGHT_SERIES_REFRESH_MS) {
-      const timer = setTimeout(() => setDroughtTick(tick => tick + 1), DROUGHT_SERIES_REFRESH_MS - age);
+    const refreshAfter = droughtSeries?.retained ? DROUGHT_SERIES_RETRY_MS : DROUGHT_SERIES_REFRESH_MS;
+    if (age < refreshAfter) {
+      const timer = setTimeout(() => setDroughtTick(tick => tick + 1), refreshAfter - age);
       return () => clearTimeout(timer);
     }
     const controller = new AbortController();
+    let failure: DroughtSeriesFailure = "unavailable";
     void fetch("/api/drought-series", { signal: controller.signal })
-      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(async response => {
+        if (response.ok) return response.json() as Promise<unknown>;
+        if (response.status === 503) {
+          const body: unknown = await response.json();
+          if (body && typeof body === "object" && "reason" in body && body.reason === "incomplete") failure = "incomplete";
+        }
+        throw new Error(`HTTP ${response.status}`);
+      })
       .then(value => {
         if (controller.signal.aborted) return;
         if (!validDroughtSeries(value)) throw new Error("Invalid Drought Monitor statistics.");
@@ -4441,9 +4450,10 @@ export default function Home() {
       })
       .catch(() => {
         if (controller.signal.aborted) return;
-        // A failed re-read keeps the series in hand and tries again after the same interval.
-        if (droughtSeries) { droughtSeriesReadAtRef.current = Date.now(); setDroughtTick(tick => tick + 1); }
-        else setDroughtSeriesFailed(true);
+        if (droughtSeries) {
+          droughtSeriesReadAtRef.current = Date.now();
+          setDroughtSeries({ ...droughtSeries, retained: failure });
+        } else setDroughtSeriesFailed(failure);
       });
     return () => controller.abort();
   }, [droughtOn, droughtSeries, droughtSeriesFailed, droughtTick]);
@@ -12536,7 +12546,8 @@ export default function Home() {
               date: droughtDate, label: droughtDate ? usdmDateLabel(droughtDate) : null, newest: droughtWeek === null,
               previous: droughtDate && droughtDate > USDM_FIRST_DATE ? previousUsdmDate(droughtDate) : null,
               next: droughtWeek === null ? null : droughtNewest && nextUsdmDate(droughtWeek) >= droughtNewest ? droughtNewest : nextUsdmDate(droughtWeek),
-              categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed, playing: droughtPlaying, motionAllowed: !reducedMotion,
+              categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed,
+              seriesRetained: droughtSeries?.retained ? { reason: droughtSeries.retained, retrievedAt: droughtSeries.retrievedAt } : undefined, playing: droughtPlaying, motionAllowed: !reducedMotion,
               comparison: { state: droughtComparison, dates: comparisonDates, onChange: setDroughtComparison },
               counties: countyDrought && countyDrought.length ? { summary: countyDroughtSummary(countyDrought), list: countyChange ? countyChangeList(countyChange) : countyDroughtItems, picked: droughtCounty,
                 reading: pickedCountyDrought && droughtLoaded ? [countyDroughtReading(pickedCountyDrought, droughtLoaded.date), pickedCountyChange && droughtChange ? countyChangeReading(pickedCountyChange, droughtChange) : null].filter(Boolean).join(" · ") : null } : null,

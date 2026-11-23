@@ -396,7 +396,10 @@ export function droughtChangeKey(weeks: number, fromDate: string, toDate: string
 }
 
 export type DroughtWeek = Readonly<{ date: string; /** Percent of Kansas in D0 or worse … D4. */ shares: readonly number[] }>;
-export type DroughtSeries = Readonly<{ weeks: readonly DroughtWeek[]; retrievedAt: string; source: string }>;
+export type DroughtSeriesFailure = "incomplete" | "unavailable";
+export type DroughtSeries = Readonly<{
+  weeks: readonly DroughtWeek[]; retrievedAt: string; source: string; retained?: DroughtSeriesFailure;
+}>;
 
 const toCompact = (value: unknown): string | null => {
   if (typeof value !== "string" && typeof value !== "number") return null;
@@ -460,12 +463,14 @@ export function validDroughtMap(value: unknown): value is DroughtMap {
 export function validDroughtSeries(value: unknown): value is DroughtSeries {
   const candidate = record(value);
   return Boolean(candidate) && typeof candidate!.retrievedAt === "string" && Array.isArray(candidate!.weeks) && candidate!.weeks.length > 0
+    && (candidate!.retained === undefined || candidate!.retained === "incomplete" || candidate!.retained === "unavailable")
     && candidate!.weeks.every(week => { const w = record(week); return isUsdmDate(w?.date) && shareList(w?.shares); });
 }
 
 /** While shown, the newest map is read again once it is an hour old, and the Kansas series once it is six hours old; past weeks are kept as published. */
 export const DROUGHT_NEWEST_REFRESH_MS = 60 * 60 * 1000;
 export const DROUGHT_SERIES_REFRESH_MS = 6 * 60 * 60 * 1000;
+export const DROUGHT_SERIES_RETRY_MS = 5 * 60 * 1000;
 /**
  * The maps kept in the page after `id` is read: the newest, and the `limit`
  * dated weeks read most recently, `id` among them. A Map keeps the order the

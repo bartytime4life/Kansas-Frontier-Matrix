@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, type CSSProperties } from "react";
-import type { DroughtComparison, DroughtComparisonChoice, DroughtComparisonSlot, droughtComparisonDates } from "./drought-monitor";
+import type { DroughtComparison, DroughtComparisonChoice, DroughtComparisonSlot, DroughtSeriesFailure, droughtComparisonDates } from "./drought-monitor";
 import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
@@ -369,7 +369,8 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     on: boolean; loading: boolean; failed: boolean; reading: string | null; url: string;
     date: string | null; label: string | null; previous: string | null; next: string | null; newest: boolean;
     categories: readonly Readonly<{ id: string; name: string; color: string }>[];
-    weeks: readonly DroughtChartWeek[] | null; seriesFailed: boolean;
+    weeks: readonly DroughtChartWeek[] | null; seriesFailed: boolean | DroughtSeriesFailure;
+    seriesRetained?: Readonly<{ reason: DroughtSeriesFailure; retrievedAt: string }>;
     comparison?: Readonly<{ state: DroughtComparison; dates: ReturnType<typeof droughtComparisonDates>; onChange: (state: DroughtComparison) => void }>;
     /** Whether Play is stepping through the weeks, and whether motion is allowed at all. */
     playing?: boolean; motionAllowed?: boolean;
@@ -922,7 +923,14 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         </div>
         <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.failed ? "The Drought Monitor did not answer for this week."
           : drought.loading ? `Reading the Drought Monitor${drought.label ? ` for ${drought.label}` : ""}…` : drought.reading}</p>
-        {drought.seriesFailed && <p className="category-map-dock-scale-note">The USDM statistics did not answer; the shares are measured on the map.</p>}
+        {drought.seriesFailed && <p className="category-map-dock-scale-note">{drought.seriesFailed === "incomplete"
+          ? "The USDM returned an incomplete Kansas history. The shares are measured on the map."
+          : "The USDM statistics did not answer; the shares are measured on the map."}</p>}
+        {drought.seriesRetained && <p className="category-map-dock-scale-note" role="status">{drought.seriesRetained.reason === "incomplete"
+          ? "The USDM returned an incomplete Kansas history. " : "The USDM history could not be refreshed. "}
+          Showing the archive retrieved <time dateTime={drought.seriesRetained.retrievedAt}>
+            {new Date(drought.seriesRetained.retrievedAt).toLocaleString("en-US", { timeZone: "UTC", timeZoneName: "short" })}
+          </time>.</p>}
         <p className="category-map-dock-reading"><a href={drought.url} target="_blank" rel="noreferrer">U.S. Drought Monitor source ↗</a></p>
         {drought.weeks && drought.weeks.length > 1 && drought.comparison && <DroughtWeekComparison weeks={drought.weeks} {...drought.comparison} />}
         {onDroughtChange && drought.change && <>

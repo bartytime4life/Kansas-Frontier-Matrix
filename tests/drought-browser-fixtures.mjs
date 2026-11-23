@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 
 // Synthetic transport for hydrated UI acceptance only. These values are not
 // provider observations, and every response is confined to the loopback app.
-export function droughtBrowserFixtures(origin, { history = 'ready', unsupported = true } = {}) {
+export function droughtBrowserFixtures(origin, { history = 'ready', unsupported = true, retained = null, retrievedAt = null } = {}) {
   const base = new URL(origin);
   assert.equal(base.protocol, 'http:');
   assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname));
@@ -40,7 +40,12 @@ export function droughtBrowserFixtures(origin, { history = 'ready', unsupported 
     responseHeaders: [{ name: 'Content-Type', value: 'application/json' }],
     body: Buffer.from(JSON.stringify(value)).toString('base64'),
   });
-  const series = () => ({ weeks: weeks.map(({ date, shares }) => ({ date, shares })), retrievedAt: new Date().toISOString(), source: 'synthetic browser fixture' });
+  const series = () => ({
+    weeks: weeks.map(({ date, shares }) => ({ date, shares })),
+    retrievedAt: retrievedAt ?? new Date().toISOString(),
+    source: 'synthetic browser fixture',
+    ...(retained ? { retained } : {}),
+  });
   const map = date => ({
     date, data: { type: 'FeatureCollection', features: [] },
     kansas: knownWeek(date).shares,
