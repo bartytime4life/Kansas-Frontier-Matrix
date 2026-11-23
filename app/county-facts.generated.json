@@ -4,6 +4,17 @@
   "sha256": "63b3f2578632390e6322fc7cff37d1b02d90f0ccb575db24b1a6d797c786f6fb",
   "retrievedAt": "2026-11-17T00:48:16+00:00"
  },
+ "sources": {
+  "population": {
+   "path": "/labs-data/census-mosaic-a3c82ebd5d89619c.json",
+   "sha256": "a3c82ebd5d89619c498db370861f1288eed6199c3ae8ec0407aea999410c7399"
+  },
+  "bridges": {
+   "path": "/labs-data-bridges/built-kansas-4d6df39613ba5219.json",
+   "sha256": "4d6df39613ba521910c3ad144763db7c1eed3696d4db13744c67268a999931db",
+   "inventoryAsOf": "2026-11-16"
+  }
+ },
  "counties": [
   {
    "fips": "20001",
@@ -13,6 +24,21 @@
     -95.301,
     37.885
    ],
+   "population": {
+    "year": 2025,
+    "value": 12302,
+    "baseYear": 2020,
+    "baseValue": 12533
+   },
+   "bridges": {
+    "records": 226,
+    "state": 43,
+    "local": 183,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1910,
+    "longestFt": 1204
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -64,6 +90,21 @@
     -95.292,
     38.214
    ],
+   "population": {
+    "year": 2025,
+    "value": 8018,
+    "baseYear": 2020,
+    "baseValue": 7841
+   },
+   "bridges": {
+    "records": 145,
+    "state": 24,
+    "local": 121,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 405
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -115,6 +156,21 @@
     -95.269,
     39.536
    ],
+   "population": {
+    "year": 2025,
+    "value": 16172,
+    "baseYear": 2020,
+    "baseValue": 16325
+   },
+   "bridges": {
+    "records": 199,
+    "state": 35,
+    "local": 164,
+    "closed": 3,
+    "register": 0,
+    "oldestYear": 1908,
+    "longestFt": 2546
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -166,6 +222,21 @@
     -98.68,
     37.235
    ],
+   "population": {
+    "year": 2025,
+    "value": 4083,
+    "baseYear": 2020,
+    "baseValue": 4204
+   },
+   "bridges": {
+    "records": 240,
+    "state": 40,
+    "local": 200,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 785
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -217,6 +288,21 @@
     -98.756,
     38.479
    ],
+   "population": {
+    "year": 2025,
+    "value": 24790,
+    "baseYear": 2020,
+    "baseValue": 25437
+   },
+   "bridges": {
+    "records": 449,
+    "state": 73,
+    "local": 376,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 818
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -268,6 +354,21 @@
     -94.851,
     37.856
    ],
+   "population": {
+    "year": 2025,
+    "value": 14319,
+    "baseYear": 2020,
+    "baseValue": 14339
+   },
+   "bridges": {
+    "records": 208,
+    "state": 72,
+    "local": 136,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 552
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -319,6 +420,21 @@
     -95.565,
     39.826
    ],
+   "population": {
+    "year": 2025,
+    "value": 9104,
+    "baseYear": 2020,
+    "baseValue": 9480
+   },
+   "bridges": {
+    "records": 243,
+    "state": 42,
+    "local": 201,
+    "closed": 1,
+    "register": 1,
+    "oldestYear": 1913,
+    "longestFt": 415
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -370,6 +486,21 @@
     -96.838,
     37.782
    ],
+   "population": {
+    "year": 2025,
+    "value": 69484,
+    "baseYear": 2020,
+    "baseValue": 67388
+   },
+   "bridges": {
+    "records": 597,
+    "state": 143,
+    "local": 454,
+    "closed": 4,
+    "register": 2,
+    "oldestYear": 1900,
+    "longestFt": 998
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -421,6 +552,21 @@
     -96.597,
     38.304
    ],
+   "population": {
+    "year": 2025,
+    "value": 2572,
+    "baseYear": 2020,
+    "baseValue": 2574
+   },
+   "bridges": {
+    "records": 191,
+    "state": 48,
+    "local": 143,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 422
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -472,6 +618,21 @@
     -96.245,
     37.151
    ],
+   "population": {
+    "year": 2025,
+    "value": 3321,
+    "baseYear": 2020,
+    "baseValue": 3385
+   },
+   "bridges": {
+    "records": 131,
+    "state": 22,
+    "local": 109,
+    "closed": 0,
+    "register": 2,
+    "oldestYear": 1900,
+    "longestFt": 387
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -523,6 +684,21 @@
     -94.846,
     37.17
    ],
+   "population": {
+    "year": 2025,
+    "value": 19105,
+    "baseYear": 2020,
+    "baseValue": 19303
+   },
+   "bridges": {
+    "records": 330,
+    "state": 84,
+    "local": 246,
+    "closed": 1,
+    "register": 1,
+    "oldestYear": 1916,
+    "longestFt": 1735
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -574,6 +750,21 @@
     -101.732,
     39.786
    ],
+   "population": {
+    "year": 2025,
+    "value": 2604,
+    "baseYear": 2020,
+    "baseValue": 2613
+   },
+   "bridges": {
+    "records": 99,
+    "state": 11,
+    "local": 88,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 778
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -625,6 +816,21 @@
     -99.824,
     37.238
    ],
+   "population": {
+    "year": 2025,
+    "value": 1900,
+    "baseYear": 2020,
+    "baseValue": 1976
+   },
+   "bridges": {
+    "records": 102,
+    "state": 33,
+    "local": 69,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 761
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -676,6 +882,21 @@
     -97.165,
     39.35
    ],
+   "population": {
+    "year": 2025,
+    "value": 7990,
+    "baseYear": 2020,
+    "baseValue": 8126
+   },
+   "bridges": {
+    "records": 230,
+    "state": 28,
+    "local": 202,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 1223
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -727,6 +948,21 @@
     -97.65,
     39.48
    ],
+   "population": {
+    "year": 2025,
+    "value": 8833,
+    "baseYear": 2020,
+    "baseValue": 9010
+   },
+   "bridges": {
+    "records": 313,
+    "state": 51,
+    "local": 262,
+    "closed": 1,
+    "register": 2,
+    "oldestYear": 1893,
+    "longestFt": 1348
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -778,6 +1014,21 @@
     -95.733,
     38.236
    ],
+   "population": {
+    "year": 2025,
+    "value": 8467,
+    "baseYear": 2020,
+    "baseValue": 8358
+   },
+   "bridges": {
+    "records": 301,
+    "state": 40,
+    "local": 261,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 881
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -829,6 +1080,21 @@
     -99.271,
     37.192
    ],
+   "population": {
+    "year": 2025,
+    "value": 1673,
+    "baseYear": 2020,
+    "baseValue": 1679
+   },
+   "bridges": {
+    "records": 110,
+    "state": 16,
+    "local": 94,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1926,
+    "longestFt": 574
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -880,6 +1146,21 @@
     -96.839,
     37.238
    ],
+   "population": {
+    "year": 2025,
+    "value": 34382,
+    "baseYear": 2020,
+    "baseValue": 34528
+   },
+   "bridges": {
+    "records": 343,
+    "state": 68,
+    "local": 275,
+    "closed": 1,
+    "register": 3,
+    "oldestYear": 1890,
+    "longestFt": 1189
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -931,6 +1212,21 @@
     -94.852,
     37.507
    ],
+   "population": {
+    "year": 2025,
+    "value": 39008,
+    "baseYear": 2020,
+    "baseValue": 38955
+   },
+   "bridges": {
+    "records": 298,
+    "state": 55,
+    "local": 243,
+    "closed": 0,
+    "register": 1,
+    "oldestYear": 1920,
+    "longestFt": 321
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -982,6 +1278,21 @@
     -100.459,
     39.785
    ],
+   "population": {
+    "year": 2025,
+    "value": 2716,
+    "baseYear": 2020,
+    "baseValue": 2762
+   },
+   "bridges": {
+    "records": 156,
+    "state": 24,
+    "local": 132,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 353
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1033,6 +1344,21 @@
     -97.131,
     38.871
    ],
+   "population": {
+    "year": 2025,
+    "value": 18637,
+    "baseYear": 2020,
+    "baseValue": 18383
+   },
+   "bridges": {
+    "records": 373,
+    "state": 77,
+    "local": 296,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1910,
+    "longestFt": 740
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1084,6 +1410,21 @@
     -95.101,
     39.808
    ],
+   "population": {
+    "year": 2025,
+    "value": 7594,
+    "baseYear": 2020,
+    "baseValue": 7471
+   },
+   "bridges": {
+    "records": 127,
+    "state": 31,
+    "local": 96,
+    "closed": 2,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 1718
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1135,6 +1476,21 @@
     -95.279,
     38.904
    ],
+   "population": {
+    "year": 2025,
+    "value": 120920,
+    "baseYear": 2020,
+    "baseValue": 118781
+   },
+   "bridges": {
+    "records": 319,
+    "state": 128,
+    "local": 191,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1921,
+    "longestFt": 2332
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1186,6 +1542,21 @@
     -99.292,
     37.911
    ],
+   "population": {
+    "year": 2025,
+    "value": 2640,
+    "baseYear": 2020,
+    "baseValue": 2889
+   },
+   "bridges": {
+    "records": 69,
+    "state": 9,
+    "local": 60,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 801
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1237,6 +1608,21 @@
     -96.243,
     37.453
    ],
+   "population": {
+    "year": 2025,
+    "value": 2458,
+    "baseYear": 2020,
+    "baseValue": 2480
+   },
+   "bridges": {
+    "records": 155,
+    "state": 23,
+    "local": 132,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 315
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1288,6 +1674,21 @@
     -99.317,
     38.915
    ],
+   "population": {
+    "year": 2025,
+    "value": 29075,
+    "baseYear": 2020,
+    "baseValue": 28951
+   },
+   "bridges": {
+    "records": 276,
+    "state": 58,
+    "local": 218,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1925,
+    "longestFt": 659
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1339,6 +1740,21 @@
     -98.204,
     38.697
    ],
+   "population": {
+    "year": 2025,
+    "value": 6257,
+    "baseYear": 2020,
+    "baseValue": 6367
+   },
+   "bridges": {
+    "records": 260,
+    "state": 58,
+    "local": 202,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 472
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1390,6 +1806,21 @@
     -100.665,
     38.001
    ],
+   "population": {
+    "year": 2025,
+    "value": 37505,
+    "baseYear": 2020,
+    "baseValue": 38307
+   },
+   "bridges": {
+    "records": 78,
+    "state": 28,
+    "local": 50,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1932,
+    "longestFt": 1503
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1441,6 +1872,21 @@
     -99.892,
     37.691
    ],
+   "population": {
+    "year": 2025,
+    "value": 33993,
+    "baseYear": 2020,
+    "baseValue": 34213
+   },
+   "bridges": {
+    "records": 223,
+    "state": 60,
+    "local": 163,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1925,
+    "longestFt": 1603
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1492,6 +1938,21 @@
     -95.282,
     38.564
    ],
+   "population": {
+    "year": 2025,
+    "value": 26299,
+    "baseYear": 2020,
+    "baseValue": 26014
+   },
+   "bridges": {
+    "records": 333,
+    "state": 82,
+    "local": 251,
+    "closed": 0,
+    "register": 2,
+    "oldestYear": 1905,
+    "longestFt": 1757
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1543,6 +2004,21 @@
     -96.732,
     39.045
    ],
+   "population": {
+    "year": 2025,
+    "value": 36338,
+    "baseYear": 2020,
+    "baseValue": 36768
+   },
+   "bridges": {
+    "records": 133,
+    "state": 63,
+    "local": 70,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1898,
+    "longestFt": 901
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1594,6 +2070,21 @@
     -100.483,
     38.915
    ],
+   "population": {
+    "year": 2025,
+    "value": 2631,
+    "baseYear": 2020,
+    "baseValue": 2712
+   },
+   "bridges": {
+    "records": 109,
+    "state": 33,
+    "local": 76,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1934,
+    "longestFt": 391
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1645,6 +2136,21 @@
     -99.883,
     39.35
    ],
+   "population": {
+    "year": 2025,
+    "value": 2371,
+    "baseYear": 2020,
+    "baseValue": 2406
+   },
+   "bridges": {
+    "records": 142,
+    "state": 34,
+    "local": 108,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1910,
+    "longestFt": 810
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1696,6 +2202,21 @@
     -101.309,
     37.562
    ],
+   "population": {
+    "year": 2025,
+    "value": 7028,
+    "baseYear": 2020,
+    "baseValue": 7325
+   },
+   "bridges": {
+    "records": 16,
+    "state": 7,
+    "local": 9,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1936,
+    "longestFt": 749
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1747,6 +2268,21 @@
     -100.44,
     37.739
    ],
+   "population": {
+    "year": 2025,
+    "value": 5652,
+    "baseYear": 2020,
+    "baseValue": 5644
+   },
+   "bridges": {
+    "records": 68,
+    "state": 26,
+    "local": 42,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 679
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1798,6 +2334,21 @@
     -101.806,
     38.481
    ],
+   "population": {
+    "year": 2025,
+    "value": 1182,
+    "baseYear": 2020,
+    "baseValue": 1276
+   },
+   "bridges": {
+    "records": 32,
+    "state": 8,
+    "local": 24,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1935,
+    "longestFt": 333
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1849,6 +2400,21 @@
     -96.242,
     37.889
    ],
+   "population": {
+    "year": 2025,
+    "value": 5826,
+    "baseYear": 2020,
+    "baseValue": 5961
+   },
+   "bridges": {
+    "records": 235,
+    "state": 42,
+    "local": 193,
+    "closed": 2,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 679
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1900,6 +2466,21 @@
     -101.786,
     38
    ],
+   "population": {
+    "year": 2025,
+    "value": 2500,
+    "baseYear": 2020,
+    "baseValue": 2489
+   },
+   "bridges": {
+    "records": 68,
+    "state": 44,
+    "local": 24,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1931,
+    "longestFt": 1136
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -1951,6 +2532,21 @@
     -98.076,
     37.192
    ],
+   "population": {
+    "year": 2025,
+    "value": 5370,
+    "baseYear": 2020,
+    "baseValue": 5471
+   },
+   "bridges": {
+    "records": 385,
+    "state": 46,
+    "local": 339,
+    "closed": 10,
+    "register": 0,
+    "oldestYear": 1912,
+    "longestFt": 683
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2002,6 +2598,21 @@
     -97.427,
     38.043
    ],
+   "population": {
+    "year": 2025,
+    "value": 33580,
+    "baseYear": 2020,
+    "baseValue": 33996
+   },
+   "bridges": {
+    "records": 375,
+    "state": 77,
+    "local": 298,
+    "closed": 2,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 1254
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2053,6 +2664,21 @@
     -100.871,
     37.562
    ],
+   "population": {
+    "year": 2025,
+    "value": 3599,
+    "baseYear": 2020,
+    "baseValue": 3758
+   },
+   "bridges": {
+    "records": 18,
+    "state": 11,
+    "local": 7,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 1399
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2104,6 +2730,21 @@
     -99.898,
     38.088
    ],
+   "population": {
+    "year": 2025,
+    "value": 1619,
+    "baseYear": 2020,
+    "baseValue": 1741
+   },
+   "bridges": {
+    "records": 109,
+    "state": 24,
+    "local": 85,
+    "closed": 1,
+    "register": 1,
+    "oldestYear": 1927,
+    "longestFt": 298
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2155,6 +2796,21 @@
     -95.8,
     39.435
    ],
+   "population": {
+    "year": 2025,
+    "value": 13438,
+    "baseYear": 2020,
+    "baseValue": 13237
+   },
+   "bridges": {
+    "records": 205,
+    "state": 20,
+    "local": 185,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1925,
+    "longestFt": 291
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2206,6 +2862,21 @@
     -95.388,
     39.226
    ],
+   "population": {
+    "year": 2025,
+    "value": 18296,
+    "baseYear": 2020,
+    "baseValue": 18330
+   },
+   "bridges": {
+    "records": 193,
+    "state": 41,
+    "local": 152,
+    "closed": 0,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 1403
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2257,6 +2928,21 @@
     -98.218,
     39.785
    ],
+   "population": {
+    "year": 2025,
+    "value": 2830,
+    "baseYear": 2020,
+    "baseValue": 2928
+   },
+   "bridges": {
+    "records": 305,
+    "state": 32,
+    "local": 273,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 550
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2308,6 +2994,21 @@
     -94.831,
     38.899
    ],
+   "population": {
+    "year": 2025,
+    "value": 636906,
+    "baseYear": 2020,
+    "baseValue": 611129
+   },
+   "bridges": {
+    "records": 795,
+    "state": 274,
+    "local": 521,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1910,
+    "longestFt": 1708
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2359,6 +3060,21 @@
     -101.316,
     38.001
    ],
+   "population": {
+    "year": 2025,
+    "value": 3888,
+    "baseYear": 2020,
+    "baseValue": 3968
+   },
+   "bridges": {
+    "records": 74,
+    "state": 13,
+    "local": 61,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 751
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2410,6 +3126,21 @@
     -98.136,
     37.559
    ],
+   "population": {
+    "year": 2025,
+    "value": 7029,
+    "baseYear": 2020,
+    "baseValue": 7427
+   },
+   "bridges": {
+    "records": 392,
+    "state": 78,
+    "local": 314,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 683
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2461,6 +3192,21 @@
     -99.285,
     37.557
    ],
+   "population": {
+    "year": 2025,
+    "value": 2432,
+    "baseYear": 2020,
+    "baseValue": 2457
+   },
+   "bridges": {
+    "records": 89,
+    "state": 17,
+    "local": 72,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1934,
+    "longestFt": 418
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2512,6 +3258,21 @@
     -95.298,
     37.192
    ],
+   "population": {
+    "year": 2025,
+    "value": 19685,
+    "baseYear": 2020,
+    "baseValue": 20169
+   },
+   "bridges": {
+    "records": 348,
+    "state": 54,
+    "local": 294,
+    "closed": 1,
+    "register": 3,
+    "oldestYear": 1900,
+    "longestFt": 814
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2563,6 +3324,21 @@
     -100.466,
     38.481
    ],
+   "population": {
+    "year": 2025,
+    "value": 1508,
+    "baseYear": 2020,
+    "baseValue": 1568
+   },
+   "bridges": {
+    "records": 25,
+    "state": 5,
+    "local": 20,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1933,
+    "longestFt": 163
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2614,6 +3390,21 @@
     -94.981,
     39.186
    ],
+   "population": {
+    "year": 2025,
+    "value": 84590,
+    "baseYear": 2020,
+    "baseValue": 81974
+   },
+   "bridges": {
+    "records": 239,
+    "state": 56,
+    "local": 183,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1916,
+    "longestFt": 2447
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2665,6 +3456,21 @@
     -98.209,
     39.046
    ],
+   "population": {
+    "year": 2025,
+    "value": 2861,
+    "baseYear": 2020,
+    "baseValue": 2950
+   },
+   "bridges": {
+    "records": 222,
+    "state": 35,
+    "local": 187,
+    "closed": 0,
+    "register": 2,
+    "oldestYear": 1900,
+    "longestFt": 363
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2716,6 +3522,21 @@
     -94.845,
     38.213
    ],
+   "population": {
+    "year": 2025,
+    "value": 9950,
+    "baseYear": 2020,
+    "baseValue": 9595
+   },
+   "bridges": {
+    "records": 256,
+    "state": 56,
+    "local": 200,
+    "closed": 0,
+    "register": 2,
+    "oldestYear": 1910,
+    "longestFt": 745
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2767,6 +3588,21 @@
     -101.148,
     38.918
    ],
+   "population": {
+    "year": 2025,
+    "value": 2661,
+    "baseYear": 2020,
+    "baseValue": 2742
+   },
+   "bridges": {
+    "records": 54,
+    "state": 22,
+    "local": 32,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1927,
+    "longestFt": 738
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2818,6 +3654,21 @@
     -96.151,
     38.455
    ],
+   "population": {
+    "year": 2025,
+    "value": 32266,
+    "baseYear": 2020,
+    "baseValue": 32110
+   },
+   "bridges": {
+    "records": 493,
+    "state": 123,
+    "local": 370,
+    "closed": 2,
+    "register": 1,
+    "oldestYear": 1904,
+    "longestFt": 1503
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2869,6 +3720,21 @@
     -97.648,
     38.392
    ],
+   "population": {
+    "year": 2025,
+    "value": 30064,
+    "baseYear": 2020,
+    "baseValue": 30195
+   },
+   "bridges": {
+    "records": 587,
+    "state": 102,
+    "local": 485,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1913,
+    "longestFt": 520
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2920,6 +3786,21 @@
     -97.096,
     38.348
    ],
+   "population": {
+    "year": 2025,
+    "value": 11634,
+    "baseYear": 2020,
+    "baseValue": 11788
+   },
+   "bridges": {
+    "records": 323,
+    "state": 44,
+    "local": 279,
+    "closed": 3,
+    "register": 0,
+    "oldestYear": 1887,
+    "longestFt": 632
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -2971,6 +3852,21 @@
     -96.523,
     39.784
    ],
+   "population": {
+    "year": 2025,
+    "value": 9852,
+    "baseYear": 2020,
+    "baseValue": 10020
+   },
+   "bridges": {
+    "records": 409,
+    "state": 45,
+    "local": 364,
+    "closed": 7,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 2143
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3022,6 +3918,21 @@
     -100.371,
     37.238
    ],
+   "population": {
+    "year": 2025,
+    "value": 3852,
+    "baseYear": 2020,
+    "baseValue": 4059
+   },
+   "bridges": {
+    "records": 84,
+    "state": 29,
+    "local": 55,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 1009
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3073,6 +3984,21 @@
     -94.837,
     38.564
    ],
+   "population": {
+    "year": 2025,
+    "value": 36240,
+    "baseYear": 2020,
+    "baseValue": 34224
+   },
+   "bridges": {
+    "records": 328,
+    "state": 90,
+    "local": 238,
+    "closed": 3,
+    "register": 3,
+    "oldestYear": 1900,
+    "longestFt": 831
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3124,6 +4050,21 @@
     -98.209,
     39.393
    ],
+   "population": {
+    "year": 2025,
+    "value": 5590,
+    "baseYear": 2020,
+    "baseValue": 5776
+   },
+   "bridges": {
+    "records": 259,
+    "state": 34,
+    "local": 225,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1901,
+    "longestFt": 506
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3175,6 +4116,21 @@
     -95.743,
     37.193
    ],
+   "population": {
+    "year": 2025,
+    "value": 30177,
+    "baseYear": 2020,
+    "baseValue": 31401
+   },
+   "bridges": {
+    "records": 326,
+    "state": 65,
+    "local": 261,
+    "closed": 0,
+    "register": 2,
+    "oldestYear": 1910,
+    "longestFt": 966
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3226,6 +4182,21 @@
     -96.642,
     38.696
    ],
+   "population": {
+    "year": 2025,
+    "value": 5348,
+    "baseYear": 2020,
+    "baseValue": 5363
+   },
+   "bridges": {
+    "records": 184,
+    "state": 29,
+    "local": 155,
+    "closed": 0,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 419
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3277,6 +4248,21 @@
     -101.798,
     37.191
    ],
+   "population": {
+    "year": 2025,
+    "value": 2470,
+    "baseYear": 2020,
+    "baseValue": 2697
+   },
+   "bridges": {
+    "records": 17,
+    "state": 8,
+    "local": 9,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1966,
+    "longestFt": 1066
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3328,6 +4314,21 @@
     -96.013,
     39.784
    ],
+   "population": {
+    "year": 2025,
+    "value": 10054,
+    "baseYear": 2020,
+    "baseValue": 10268
+   },
+   "bridges": {
+    "records": 362,
+    "state": 28,
+    "local": 334,
+    "closed": 4,
+    "register": 0,
+    "oldestYear": 1910,
+    "longestFt": 371
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3379,6 +4380,21 @@
     -95.307,
     37.558
    ],
+   "population": {
+    "year": 2025,
+    "value": 15637,
+    "baseYear": 2020,
+    "baseValue": 15916
+   },
+   "bridges": {
+    "records": 244,
+    "state": 66,
+    "local": 178,
+    "closed": 4,
+    "register": 2,
+    "oldestYear": 1900,
+    "longestFt": 1129
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3430,6 +4446,21 @@
     -99.916,
     38.48
    ],
+   "population": {
+    "year": 2025,
+    "value": 2617,
+    "baseYear": 2020,
+    "baseValue": 2674
+   },
+   "bridges": {
+    "records": 168,
+    "state": 45,
+    "local": 123,
+    "closed": 1,
+    "register": 1,
+    "oldestYear": 1901,
+    "longestFt": 311
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3481,6 +4512,21 @@
     -99.902,
     39.785
    ],
+   "population": {
+    "year": 2025,
+    "value": 5288,
+    "baseYear": 2020,
+    "baseValue": 5452
+   },
+   "bridges": {
+    "records": 242,
+    "state": 58,
+    "local": 184,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1906,
+    "longestFt": 702
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3532,6 +4578,21 @@
     -95.726,
     38.652
    ],
+   "population": {
+    "year": 2025,
+    "value": 15693,
+    "baseYear": 2020,
+    "baseValue": 15747
+   },
+   "bridges": {
+    "records": 303,
+    "state": 82,
+    "local": 221,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 577
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3583,6 +4644,21 @@
     -98.767,
     39.351
    ],
+   "population": {
+    "year": 2025,
+    "value": 3285,
+    "baseYear": 2020,
+    "baseValue": 3487
+   },
+   "bridges": {
+    "records": 242,
+    "state": 44,
+    "local": 198,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 629
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3634,6 +4710,21 @@
     -97.649,
     39.132
    ],
+   "population": {
+    "year": 2025,
+    "value": 5744,
+    "baseYear": 2020,
+    "baseValue": 5729
+   },
+   "bridges": {
+    "records": 295,
+    "state": 44,
+    "local": 251,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 453
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3685,6 +4776,21 @@
     -99.249,
     38.174
    ],
+   "population": {
+    "year": 2025,
+    "value": 5991,
+    "baseYear": 2020,
+    "baseValue": 6251
+   },
+   "bridges": {
+    "records": 163,
+    "state": 24,
+    "local": 139,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 563
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3736,6 +4842,21 @@
     -99.347,
     39.785
    ],
+   "population": {
+    "year": 2025,
+    "value": 4728,
+    "baseYear": 2020,
+    "baseValue": 4969
+   },
+   "bridges": {
+    "records": 248,
+    "state": 43,
+    "local": 205,
+    "closed": 4,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 482
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3787,6 +4908,21 @@
     -96.382,
     39.347
    ],
+   "population": {
+    "year": 2025,
+    "value": 27186,
+    "baseYear": 2020,
+    "baseValue": 25422
+   },
+   "bridges": {
+    "records": 298,
+    "state": 39,
+    "local": 259,
+    "closed": 2,
+    "register": 0,
+    "oldestYear": 1870,
+    "longestFt": 2113
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3838,6 +4974,21 @@
     -98.739,
     37.648
    ],
+   "population": {
+    "year": 2025,
+    "value": 9117,
+    "baseYear": 2020,
+    "baseValue": 9140
+   },
+   "bridges": {
+    "records": 118,
+    "state": 26,
+    "local": 92,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1927,
+    "longestFt": 333
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3889,6 +5040,21 @@
     -101.077,
     39.786
    ],
+   "population": {
+    "year": 2025,
+    "value": 2431,
+    "baseYear": 2020,
+    "baseValue": 2567
+   },
+   "bridges": {
+    "records": 102,
+    "state": 18,
+    "local": 84,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1924,
+    "longestFt": 400
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3940,6 +5106,21 @@
     -98.086,
     37.954
    ],
+   "population": {
+    "year": 2025,
+    "value": 61539,
+    "baseYear": 2020,
+    "baseValue": 61891
+   },
+   "bridges": {
+    "records": 578,
+    "state": 110,
+    "local": 468,
+    "closed": 2,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 1090
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -3991,6 +5172,21 @@
     -97.65,
     39.828
    ],
+   "population": {
+    "year": 2025,
+    "value": 4640,
+    "baseYear": 2020,
+    "baseValue": 4677
+   },
+   "bridges": {
+    "records": 266,
+    "state": 40,
+    "local": 226,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 1426
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4042,6 +5238,21 @@
     -98.201,
     38.348
    ],
+   "population": {
+    "year": 2025,
+    "value": 9266,
+    "baseYear": 2020,
+    "baseValue": 9382
+   },
+   "bridges": {
+    "records": 263,
+    "state": 47,
+    "local": 216,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 642
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4093,6 +5304,21 @@
     -96.676,
     39.305
    ],
+   "population": {
+    "year": 2025,
+    "value": 72598,
+    "baseYear": 2020,
+    "baseValue": 72011
+   },
+   "bridges": {
+    "records": 200,
+    "state": 49,
+    "local": 151,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1910,
+    "longestFt": 5350
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4144,6 +5370,21 @@
     -99.324,
     39.35
    ],
+   "population": {
+    "year": 2025,
+    "value": 4646,
+    "baseYear": 2020,
+    "baseValue": 4886
+   },
+   "bridges": {
+    "records": 170,
+    "state": 36,
+    "local": 134,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 474
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4195,6 +5436,21 @@
     -99.308,
     38.523
    ],
+   "population": {
+    "year": 2025,
+    "value": 2845,
+    "baseYear": 2020,
+    "baseValue": 2940
+   },
+   "bridges": {
+    "records": 169,
+    "state": 39,
+    "local": 130,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1925,
+    "longestFt": 355
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4246,6 +5502,21 @@
     -98.763,
     38.915
    ],
+   "population": {
+    "year": 2025,
+    "value": 6581,
+    "baseYear": 2020,
+    "baseValue": 6677
+   },
+   "bridges": {
+    "records": 261,
+    "state": 56,
+    "local": 205,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1901,
+    "longestFt": 1435
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4297,6 +5568,21 @@
     -97.65,
     38.784
    ],
+   "population": {
+    "year": 2025,
+    "value": 53377,
+    "baseYear": 2020,
+    "baseValue": 54260
+   },
+   "bridges": {
+    "records": 359,
+    "state": 119,
+    "local": 240,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 578
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4348,6 +5634,21 @@
     -100.906,
     38.483
    ],
+   "population": {
+    "year": 2025,
+    "value": 4815,
+    "baseYear": 2020,
+    "baseValue": 5141
+   },
+   "bridges": {
+    "records": 22,
+    "state": 7,
+    "local": 15,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1934,
+    "longestFt": 267
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4399,6 +5700,21 @@
     -97.48,
     37.694
    ],
+   "population": {
+    "year": 2025,
+    "value": 538433,
+    "baseYear": 2020,
+    "baseValue": 524831
+   },
+   "bridges": {
+    "records": 1346,
+    "state": 417,
+    "local": 929,
+    "closed": 5,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 12497
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4450,6 +5766,21 @@
     -100.85,
     37.193
    ],
+   "population": {
+    "year": 2025,
+    "value": 21073,
+    "baseYear": 2020,
+    "baseValue": 21857
+   },
+   "bridges": {
+    "records": 15,
+    "state": 9,
+    "local": 6,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1940,
+    "longestFt": 1403
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4501,6 +5832,21 @@
     -95.769,
     39.043
    ],
+   "population": {
+    "year": 2025,
+    "value": 178607,
+    "baseYear": 2020,
+    "baseValue": 178699
+   },
+   "bridges": {
+    "records": 561,
+    "state": 199,
+    "local": 362,
+    "closed": 0,
+    "register": 1,
+    "oldestYear": 1900,
+    "longestFt": 5535
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4552,6 +5898,21 @@
     -100.441,
     39.35
    ],
+   "population": {
+    "year": 2025,
+    "value": 2427,
+    "baseYear": 2020,
+    "baseValue": 2446
+   },
+   "bridges": {
+    "records": 116,
+    "state": 18,
+    "local": 98,
+    "closed": 1,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 363
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4603,6 +5964,21 @@
     -101.719,
     39.351
    ],
+   "population": {
+    "year": 2025,
+    "value": 5763,
+    "baseYear": 2020,
+    "baseValue": 5907
+   },
+   "bridges": {
+    "records": 105,
+    "state": 44,
+    "local": 61,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1925,
+    "longestFt": 564
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4654,6 +6030,21 @@
     -98.785,
     39.785
    ],
+   "population": {
+    "year": 2025,
+    "value": 3566,
+    "baseYear": 2020,
+    "baseValue": 3566
+   },
+   "bridges": {
+    "records": 279,
+    "state": 39,
+    "local": 240,
+    "closed": 4,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 339
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4705,6 +6096,21 @@
     -98.747,
     38.043
    ],
+   "population": {
+    "year": 2025,
+    "value": 4005,
+    "baseYear": 2020,
+    "baseValue": 4060
+   },
+   "bridges": {
+    "records": 117,
+    "state": 14,
+    "local": 103,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1929,
+    "longestFt": 444
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4756,6 +6162,21 @@
     -101.784,
     37.564
    ],
+   "population": {
+    "year": 2025,
+    "value": 1986,
+    "baseYear": 2020,
+    "baseValue": 2079
+   },
+   "bridges": {
+    "records": 21,
+    "state": 6,
+    "local": 15,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1941,
+    "longestFt": 183
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4807,6 +6228,21 @@
     -101.311,
     37.192
    ],
+   "population": {
+    "year": 2025,
+    "value": 4984,
+    "baseYear": 2020,
+    "baseValue": 5242
+   },
+   "bridges": {
+    "records": 3,
+    "state": 0,
+    "local": 3,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1968,
+    "longestFt": 497
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4858,6 +6294,21 @@
     -97.478,
     37.238
    ],
+   "population": {
+    "year": 2025,
+    "value": 22312,
+    "baseYear": 2020,
+    "baseValue": 22341
+   },
+   "bridges": {
+    "records": 660,
+    "state": 123,
+    "local": 537,
+    "closed": 4,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 800
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4909,6 +6360,21 @@
     -101.056,
     39.351
    ],
+   "population": {
+    "year": 2025,
+    "value": 7725,
+    "baseYear": 2020,
+    "baseValue": 7926
+   },
+   "bridges": {
+    "records": 82,
+    "state": 47,
+    "local": 35,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1930,
+    "longestFt": 371
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -4960,6 +6426,21 @@
     -99.873,
     38.914
    ],
+   "population": {
+    "year": 2025,
+    "value": 2740,
+    "baseYear": 2020,
+    "baseValue": 2809
+   },
+   "bridges": {
+    "records": 165,
+    "state": 45,
+    "local": 120,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 881
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5011,6 +6492,21 @@
     -96.223,
     38.976
    ],
+   "population": {
+    "year": 2025,
+    "value": 7018,
+    "baseYear": 2020,
+    "baseValue": 6895
+   },
+   "bridges": {
+    "records": 243,
+    "state": 67,
+    "local": 176,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 996
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5062,6 +6558,21 @@
     -101.762,
     38.917
    ],
+   "population": {
+    "year": 2025,
+    "value": 1441,
+    "baseYear": 2020,
+    "baseValue": 1512
+   },
+   "bridges": {
+    "records": 44,
+    "state": 16,
+    "local": 28,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1925,
+    "longestFt": 663
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5113,6 +6624,21 @@
     -97.087,
     39.784
    ],
+   "population": {
+    "year": 2025,
+    "value": 5533,
+    "baseYear": 2020,
+    "baseValue": 5544
+   },
+   "bridges": {
+    "records": 334,
+    "state": 35,
+    "local": 299,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1900,
+    "longestFt": 663
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5164,6 +6690,21 @@
     -101.346,
     38.482
    ],
+   "population": {
+    "year": 2025,
+    "value": 2031,
+    "baseYear": 2020,
+    "baseValue": 2150
+   },
+   "bridges": {
+    "records": 22,
+    "state": 6,
+    "local": 16,
+    "closed": 0,
+    "register": 0,
+    "oldestYear": 1929,
+    "longestFt": 326
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5215,6 +6756,21 @@
     -95.744,
     37.559
    ],
+   "population": {
+    "year": 2025,
+    "value": 8299,
+    "baseYear": 2020,
+    "baseValue": 8581
+   },
+   "bridges": {
+    "records": 207,
+    "state": 36,
+    "local": 171,
+    "closed": 2,
+    "register": 1,
+    "oldestYear": 1910,
+    "longestFt": 863
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5266,6 +6822,21 @@
     -95.74,
     37.887
    ],
+   "population": {
+    "year": 2025,
+    "value": 3118,
+    "baseYear": 2020,
+    "baseValue": 3095
+   },
+   "bridges": {
+    "records": 143,
+    "state": 22,
+    "local": 121,
+    "closed": 2,
+    "register": 0,
+    "oldestYear": 1920,
+    "longestFt": 678
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
@@ -5317,6 +6888,21 @@
     -94.75,
     39.097
    ],
+   "population": {
+    "year": 2025,
+    "value": 170597,
+    "baseYear": 2020,
+    "baseValue": 168921
+   },
+   "bridges": {
+    "records": 320,
+    "state": 230,
+    "local": 90,
+    "closed": 6,
+    "register": 1,
+    "oldestYear": 1907,
+    "longestFt": 5309
+   },
    "latest": {
     "period": "2020–2024",
     "medianIncome": [
