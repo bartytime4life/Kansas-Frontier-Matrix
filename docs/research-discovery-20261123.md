@@ -48,3 +48,11 @@ Local in-app-browser verification of the reconciled hosted version passed at 144
 The guided groundwater comparison retained its three distinct source periods and handed exactly those three layers to Explorer's On map view. Research-page browser errors were empty. A footer jump initially targeted the outer scroll container; the fix moves its anchor to the inner navigation. A fresh production build and reload confirmed that Back to top returns the scroll position to zero. The nine research unit/HTTP tests, TypeScript and edited workspace ESLint passed after this fix.
 
 Desktop, comparison and phone screenshots are saved on the owner's computer under the chat's visualization directory. These are local rendered checks, separate from Chrome, CI and Published acceptance. Chrome dashboard reads remain unavailable. The initial generation receipt is retained; the successor browser receipt records the final workspace and guide hashes without rewriting that history.
+
+## Landscape navigation correction — 2026-11-23
+
+Hosted run `45252651884` passed the full Node suite but failed the unchanged River Pulse browser journey at 568×320: the added Research Discovery menu row pushed Status below the viewport. The base `90d4c737f8` had a successful push run `45244049607`. Local reproduction measured the Status button at y=337–381 in a 320px viewport; this was an introduced navigation regression, not an inherited failure.
+
+The More menu now has a viewport-based maximum height, vertical scrolling and contained overscroll. Its opaque surface avoids a backdrop-filter containing block that would clip the nested fixed Compose panel. At 568×320, the menu fits y=55–305; Status is natively clickable after menu scrolling, and the Compose card fits y=62–310 with its center painted and controls reachable. No browser assertion or deadline changed.
+
+Production rebuild and 78 focused navigation/research unit/HTTP tests passed. The complete local Node 22.23.3 suite was repeated after the final CSS: 3,337 passed, 25 skipped, zero failures. Final-head hosted CI remains a separate pending gate; the earlier failing run is retained as failure evidence.
