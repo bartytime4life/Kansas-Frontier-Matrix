@@ -9,12 +9,25 @@ export function compactPanelOwner(open: OpenCompactPanels, focused: CompactPanel
   return (["tools", "chat", "evidence", "left", "time"] as const).find(panel => open[panel]) ?? null;
 }
 
-/** Reveal the retained control using only scroll containers inside its panel. */
-export function revealPanelControl(panel: HTMLElement, control: HTMLElement) {
+const minimumRevealInset = 8;
+
+function scrollPaddingInset(padding: string, height: number) {
+  const value = Number.parseFloat(padding);
+  if (!Number.isFinite(value)) return minimumRevealInset;
+  const pixels = padding.endsWith("%") ? height * value / 100 : value;
+  return Math.max(minimumRevealInset, pixels);
+}
+
+/** Reveal a control inside its panel, optionally reserving the CSS inset for sticky headings. */
+export function revealPanelControl(panel: HTMLElement, control: HTMLElement, { respectScrollPadding = false } = {}) {
   for (let node = control.parentElement; node && panel.contains(node); node = node.parentElement) {
-    if (!/^(auto|scroll)$/.test(window.getComputedStyle(node).overflowY) || node.scrollHeight <= node.clientHeight) continue;
+    const style = window.getComputedStyle(node);
+    if (!/^(auto|scroll)$/.test(style.overflowY) || node.scrollHeight <= node.clientHeight) continue;
     const frame = node.getBoundingClientRect(), target = control.getBoundingClientRect();
-    const top = frame.top + node.clientTop + 8, bottom = frame.top + node.clientTop + node.clientHeight - 8;
+    const startInset = respectScrollPadding ? scrollPaddingInset(style.scrollPaddingTop, node.clientHeight) : minimumRevealInset;
+    const endInset = respectScrollPadding ? scrollPaddingInset(style.scrollPaddingBottom, node.clientHeight) : minimumRevealInset;
+    const top = frame.top + node.clientTop + startInset;
+    const bottom = frame.top + node.clientTop + node.clientHeight - endInset;
     const delta = target.height > bottom - top || target.top < top ? target.top - top : target.bottom > bottom ? target.bottom - bottom : 0;
     if (Math.abs(delta) > 1) node.scrollBy({ top: delta, behavior: "instant" });
   }

@@ -27,6 +27,15 @@ the first Escape and uses the existing focus return after the catalogue becomes
 visible. Foreground map tools and the evidence drawer keep their keyboard
 priority. The same source IDs and provider links support inspection throughout.
 
+The first candidate, `19cc1cf88f0aa95c0dd941bccc01b377a0fe738d`, passed four
+of six browser cases. Both failures were at 681 × 468, where the sticky Layers
+heading covered the focused opener. An independent browser check also reproduced
+the obstruction by pressing Tab to **Provider & methodology**, Shift+Tab to
+the source summary, and then Escape. Source Status return now uses the scroll
+padding that the panel reserves for its heading. The browser regression repeats
+the provider-link sequence and checks that the returned focus is visible and
+that the control can be hit-tested.
+
 Start the production preview locally.
 
 ```sh
@@ -48,8 +57,9 @@ The matrix uses the KDOT roads (`kdot-roads`) and NASA thermal detections
 provider failures, and focus visibility after dismissal. Phone-sized Chrome
 emulation covers the compact layout. Physical devices, provider data, and
 deployment of the candidate require separate verification. Roll back through
-a reviewed revert of the keyboard handler and its tests. The change is confined
-to browser navigation and requires no stored-data migration.
+a reviewed revert of the keyboard handler, the scroll-padding change, and their
+tests. The change is confined to browser navigation and requires no stored-data
+migration.
 
 ## Short-window Status scrolling follow-up — November 15, 2026 candidate
 

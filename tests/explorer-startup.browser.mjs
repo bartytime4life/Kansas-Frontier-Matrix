@@ -3273,6 +3273,7 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
       const details=`${row} .official-context-options`;
       const statusRow=`.source-quality-row[data-source-id="${id}"]`;
       const summary=`${statusRow} details > summary`;
+      const providerLink=`${statusRow} details > a`;
       const back='[aria-label="Back to layers"]';
       const status='.layer-source-switch > button:last-child';
       const layersOpen=`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`;
@@ -3295,8 +3296,9 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
           }
         }
         const available=!e.closest('[hidden], [inert], [aria-hidden="true"]')&&getComputedStyle(e).visibility==='visible';
-        const visible=available&&r.width>0&&r.height>0&&r.left>=clip.left-1&&r.right<=clip.right+1&&r.top>=clip.top-1&&r.bottom<=clip.bottom+1&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));
-        return {visible,focused:document.activeElement===e,rect:r.toJSON(),clip,ancestors};
+        const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+        const visible=available&&r.width>0&&r.height>0&&r.left>=clip.left-1&&r.right<=clip.right+1&&r.top>=clip.top-1&&r.bottom<=clip.bottom+1&&e.contains(hit);
+        return {visible,focused:document.activeElement===e,focusVisible:e.matches(':focus-visible'),obscuredBy:e.contains(hit)?null:hit?.outerHTML.slice(0,180),rect:r.toJSON(),clip,ancestors};
       })()`;
       const focusControl=async selector=>{
         await p.wait(`!!document.querySelector(${JSON.stringify(selector)})`,'control exists');
@@ -3326,6 +3328,18 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
         await focusControl(details+' > summary');await p.key('Enter','Enter',13);
         await p.wait(`document.querySelector(${JSON.stringify(details)}).open`,'source controls expanded by keyboard');
         await focusControl(action);
+        if(width===681 && id==='kdot-roads'){
+          await p.key('Enter','Enter',13);
+          await p.wait(`(${geometry(summary)}).focused && (${geometry(summary)}).visible`,'the short viewport shows the focused source summary');
+          await p.key('Tab','Tab',9);
+          await p.wait(`(${geometry(providerLink)}).focused && (${geometry(providerLink)}).visible`,'Tab reaches the visible provider methodology link');
+          await p.key('Tab','Tab',9,8);
+          await p.wait(`(${geometry(summary)}).focused`,'Shift+Tab returns to the source summary');
+          await p.key('Escape','Escape',27);
+          await p.wait(`!(${statusOpen}) && (${layersOpen}) && (${geometry(action)}).focused && (${geometry(action)}).focusVisible && (${geometry(action)}).visible`,'Escape returns visible keyboard focus below the sticky Layers heading');
+          assert.deepEqual(await p.evaluate(selection),before,'the provider-link round trip preserves layer selections');
+          await capture('returned-provider-link');
+        }
         for(const dismissal of ['back','escape']){
           // The second opening uses the focus returned by the application.
           await p.key('Enter','Enter',13);

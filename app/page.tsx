@@ -5833,7 +5833,7 @@ export default function Home() {
     // Measure the catalog after React removes its hidden state.
     const target = modalReturnTarget(returnTarget, mapContainerRef.current);
     const panel = leftPanelRef.current;
-    if (target && panel?.contains(target)) revealPanelControl(panel, target);
+    if (target && panel?.contains(target)) revealPanelControl(panel, target, { respectScrollPadding: true });
     target?.focus({ preventScroll: true });
   }, [sourceStatusOpen, primaryWorkspace, guideOpen, leftOpen, leftPanelMode]);
 
