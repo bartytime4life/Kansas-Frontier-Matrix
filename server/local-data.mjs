@@ -39,6 +39,7 @@ export function localDataConfig(env=process.env){
 
 export function createLocalDataService({config,clock=Date.now,relay=createHomeRelay({keyId:config.keyId,secret:config.secret,worker:config.worker,clock,limits:LOCAL_DATA_RELAY_LIMITS,routes:LOCAL_DATA_ROUTES,workerPrefix:LOCAL_DATA_WORKER_PREFIX,diagnostic:code=>console.warn('[KFM local data] '+code)})}){
  const cache=new Map(),pending=new Map();let cachedBytes=0;
+ const workerOnline=()=>clock()-relay.lastSeen<=LOCAL_DATA_CACHE.workerSeenMs;
  const forget=key=>{const hit=cache.get(key);if(hit){cachedBytes-=hit.bytes;cache.delete(key);}};
  const remember=(key,value,bytes)=>{
   forget(key);cache.set(key,{value,bytes,at:clock()});cachedBytes+=bytes;
@@ -47,7 +48,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
 
  // A reply is parsed only after the gateway's signature over this exact request, status and body checks out.
  const call=async(method,path,payload)=>{
-  if(clock()-relay.lastSeen>LOCAL_DATA_CACHE.workerSeenMs)throw error('LOCAL_DATA_UNAVAILABLE');
+  if(!workerOnline())throw error('LOCAL_DATA_UNAVAILABLE');
   const body=payload===undefined?'':JSON.stringify(payload);
   const reply=await relay.submit({method,path,body,timeoutMs:LOCAL_DATA_LIMITS.clientMs});
   const {status,headers,bytes,requestHeaders}=reply;
@@ -80,7 +81,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   let normalized;
   try{normalized=dataset.parse(input);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
   const key=id+'\n'+JSON.stringify(normalized),hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
-  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return answer(hit.value,'fresh',hit.at,300);
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return workerOnline()?answer(hit.value,'fresh',hit.at,300):answer(hit.value,'stale',hit.at,60);
   try{
    // Identical questions arriving together share one trip to the PC. The PC re-validates the
    // visitor's own parameters, which parse() has just accepted.
@@ -96,7 +97,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
    if(failure.code==='QUERY_INVALID')return json({reasonCode:'QUERY_INVALID'},400);
    if(failure.code==='REPLY_TOO_LARGE')return json({reasonCode:'REPLY_TOO_LARGE',hint:'Ask for fewer rows (limit) or a shorter range.'},413);
    // The PC is off, busy, not ready or unreachable: the last answer, clearly marked, or a plain offline state.
-   if(hit&&age<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);
+   if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);
    if(failure.code==='DATASET_NOT_READY')return json({state:'local-data-preparing',reasonCode:'DATASET_NOT_READY'},503);
    return json({state:'local-data-offline',reasonCode:'LOCAL_DATA_UNAVAILABLE'},503);
   }
@@ -109,7 +110,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   */
  const health=async()=>{
   const key='\nhealth',hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
-  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return {value:hit.value,state:'fresh',at:hit.at};
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return {value:hit.value,state:workerOnline()?'fresh':'stale',at:hit.at};
   try{
    let trip=pending.get(key);
    if(!trip){
@@ -119,7 +120,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
    const value=await trip;
    return {value,state:'live',at:cache.get(key)?.at??clock()};
   }catch{
-   return hit&&age<LOCAL_DATA_CACHE.staleMs?{value:hit.value,state:'stale',at:hit.at}:null;
+   return hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs?{value:hit.value,state:'stale',at:hit.at}:null;
   }
  };
 
@@ -130,11 +131,10 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   */
  const catalog=async request=>{
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
-  const online=clock()-relay.lastSeen<=LOCAL_DATA_CACHE.workerSeenMs;
-  const status=online||cache.has('\nhealth')?await health():null;
+  const status=workerOnline()||cache.has('\nhealth')?await health():null;
   const byId=new Map((status?.value?.datasets??[]).map(d=>[d.id,d]));
   const datasets=datasetCatalog().map(d=>{const s=byId.get(d.id);return s?{...d,ready:s.ready,...(s.reason?{reason:s.reason}:{}),freshness:s.freshness??null}:d;});
-  const body={format:'kfm-local-data-catalog-v1',online,datasets};
+  const body={format:'kfm-local-data-catalog-v1',online:workerOnline(),datasets};
   if(status)body.status={state:status.state,at:new Date(status.at).toISOString(),generatedAt:status.value.generatedAt??null,collections:status.value.collections??{}};
   return json(body,200,'public, max-age=60');
  };

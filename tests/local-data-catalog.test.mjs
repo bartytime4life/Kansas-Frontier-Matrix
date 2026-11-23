@@ -58,11 +58,11 @@ test('the catalog carries readiness and freshness from one cached health trip, a
  assert.ok(!('gateway' in body.status));
 
  // Within freshMs the cached health answers; no second trip.
- now+=60_000;({body}=await get());
+ now+=60_000;relay.lastSeen=now;({body}=await get());
  assert.equal(relay.calls,1);assert.equal(body.status.state,'fresh');
 
- // The PC goes away: the cached health is served stale, marked, and the catalog is still complete.
- now+=LOCAL_DATA_CACHE.freshMs;relay.down=true;relay.lastSeen=now-LOCAL_DATA_CACHE.workerSeenMs-1;
+ // The PC goes away while the health answer is still fresh by age alone.
+ relay.down=true;relay.lastSeen=now-LOCAL_DATA_CACHE.workerSeenMs-1;
  ({body}=await get());
  assert.equal(body.online,false);assert.equal(body.status.state,'stale');assert.equal(body.datasets.length,22);
  assert.equal(body.datasets.find(d=>d.id==='storm-events').freshness.file,14);

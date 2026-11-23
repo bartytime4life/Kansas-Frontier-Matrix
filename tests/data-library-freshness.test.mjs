@@ -17,9 +17,9 @@ test('the catalog freshness is read strictly and the rest of the page keeps work
  assert.deepEqual(read.collections.get('observations-ahcb-changes'),fresh);
  assert.equal(read.collections.get('observations-ahcb-chronology'),null);
  assert.equal(read.collections.has('Bad Id'),false);
- // Without a status block (PC never answered) there is nothing to show.
- const bare=catalog();delete bare.status;
- assert.equal(model.readCatalogFreshness(bare),null);
+ // The relay may report connection state before load-date metadata is available.
+ const bare=catalog();delete bare.status;bare.online=false;
+ assert.deepEqual(model.readCatalogFreshness(bare),{state:null,at:null,online:false,datasets:new Map(),collections:new Map()});
  for(const bad of [null,[],{},{format:'other',datasets:[],status:{state:'live',at:'2026-11-05T19:00:00.000Z'}},{...catalog(),status:{state:'live',at:'yesterday'}}])assert.equal(model.readCatalogFreshness(bad),null);
  // Dates that are not ISO instants are refused rather than shown.
  const odd=catalog();odd.status.collections.x={retrievedAt:'2026-11-01',modifiedAt:null,sourceId:null,file:null};
@@ -43,6 +43,7 @@ test('loadedThrough and freshnessLine say what was loaded when, and nothing when
 test('fetchCatalogFreshness tolerates a failing or malformed catalog',async()=>{
  assert.equal(await model.fetchCatalogFreshness(new AbortController().signal,async()=>new Response('{}',{status:503})),null);
  assert.equal(await model.fetchCatalogFreshness(new AbortController().signal,async()=>new Response('not json',{status:200})),null);
+ assert.equal(await model.fetchCatalogFreshness(new AbortController().signal,async()=>new Response(' '.repeat(256_001))),null);
  const read=await model.fetchCatalogFreshness(new AbortController().signal,async(url,init)=>{assert.equal(url,'/api/local-data');assert.equal(init.credentials,'same-origin');return new Response(JSON.stringify(catalog()),{status:200});});
  assert.equal(read.datasets.get('storm-events').freshness.file,14);
 });

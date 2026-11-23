@@ -1,10 +1,11 @@
 // Freshness read from the public catalog (/api/local-data): when the pipeline PC last retrieved the
 // newest file behind each dataset and each recovered collection, so "no match" can be told from
 // "not loaded yet". The catalog carries it only when the PC has answered health recently; the
-// page shows nothing rather than a guess when it is missing.
+// connection flag is separate from those historical load dates.
+import {readBoundedJson} from '../bounded-json';
 export type Freshness={retrievedAt:string|null;modifiedAt:string|null;sourceId:string|null;file:number|null;basis?:string}|{reason:string;basis?:string};
 export type DatasetStatus={ready:boolean;reason?:string;freshness:Freshness|null};
-export type CatalogFreshness={state:string;at:string;online:boolean;datasets:Map<string,DatasetStatus>;collections:Map<string,Freshness|null>};
+export type CatalogFreshness={state:'live'|'fresh'|'stale'|null;at:string|null;online:boolean;datasets:Map<string,DatasetStatus>;collections:Map<string,Freshness|null>};
 
 const record=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v);
 const ISO=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
@@ -20,19 +21,20 @@ export function readFreshness(value:unknown):Freshness|null{
  return {retrievedAt:value.retrievedAt as string|null,modifiedAt:value.modifiedAt as string|null,sourceId:typeof value.sourceId==='string'?value.sourceId.slice(0,80):null,file:value.file as number|null,...(typeof value.basis==='string'?{basis:value.basis.slice(0,20)}:{})};
 }
 
-/** The catalog's freshness, or null when the catalog has none (PC away and nothing cached). */
+/** The catalog may report connection status before it has any load dates. */
 export function readCatalogFreshness(value:unknown):CatalogFreshness|null{
- if(!record(value)||value.format!=='kfm-local-data-catalog-v1'||!Array.isArray(value.datasets))return null;
+ if(!record(value)||value.format!=='kfm-local-data-catalog-v1'||typeof value.online!=='boolean'||!Array.isArray(value.datasets))return null;
  const status=value.status;
- if(!record(status)||typeof status.state!=='string'||!stamp(status.at))return null;
  const datasets=new Map<string,DatasetStatus>();
+ const collections=new Map<string,Freshness|null>();
+ if(status===undefined)return {state:null,at:null,online:value.online,datasets,collections};
+ if(!record(status)||(status.state!=='live'&&status.state!=='fresh'&&status.state!=='stale')||!stamp(status.at))return null;
  for(const d of value.datasets){
   if(!record(d)||typeof d.id!=='string'||typeof d.ready!=='boolean')continue;
   datasets.set(d.id,{ready:d.ready,...(typeof d.reason==='string'?{reason:d.reason.slice(0,40)}:{}),freshness:readFreshness(d.freshness)});
  }
- const collections=new Map<string,Freshness|null>();
  if(record(status.collections))for(const [id,f] of Object.entries(status.collections))if(/^[a-z][a-z0-9-]{0,80}$/.test(id))collections.set(id,readFreshness(f));
- return {state:status.state.slice(0,20),at:status.at as string,online:value.online===true,datasets,collections};
+ return {state:status.state,at:status.at as string,online:value.online,datasets,collections};
 }
 
 /** The day the newest file was retrieved, else the provider's own date, as YYYY-MM-DD; null when unknown. */
@@ -55,8 +57,8 @@ export function freshnessLine(f:Freshness|null|undefined):string{
 
 export async function fetchCatalogFreshness(signal:AbortSignal,fetcher=fetch):Promise<CatalogFreshness|null>{
  const response=await fetcher('/api/local-data',{signal,credentials:'same-origin'});
- if(!response.ok)return null;
+ if(!response.ok){void response.body?.cancel().catch(()=>undefined);return null;}
  let value:unknown;
- try{value=await response.json();}catch{return null;}
+ try{value=await readBoundedJson(response,256_000,signal);}catch{return null;}
  return readCatalogFreshness(value);
 }

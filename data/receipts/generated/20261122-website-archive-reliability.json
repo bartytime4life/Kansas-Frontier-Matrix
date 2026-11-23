@@ -1,0 +1,100 @@
+{
+  "receipt_id": "kfm-website-archive-reliability-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/archive-layer-control.tsx",
+    "app/archive-layer-data.ts",
+    "app/data-library/collection-browser.module.css",
+    "app/data-library/freshness.ts",
+    "app/data-library/page.tsx",
+    "server/local-data.mjs",
+    "tests/archive-layers.test.mjs",
+    "tests/data-library-freshness.test.mjs",
+    "tests/local-data-catalog.test.mjs",
+    "tests/local-data.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/archive-layer-control.tsx": "sha256:986b6e9db96d5265186944b742c63836892686e7a6727c14dec789b01b8fbadf",
+    "app/archive-layer-data.ts": "sha256:2f3de8cbf86d579fdb5053b788382692b01826a512913cf794037b8e6db67f8f",
+    "app/data-library/collection-browser.module.css": "sha256:f65a427bda83c942ca1ae339606785a32c55e9c8a19da02147e15462af0acce2",
+    "app/data-library/freshness.ts": "sha256:69c06f424782cca3e5c0a58b9ba5e7bca2f02cb0c61d6dfed74b2713ddf73fee",
+    "app/data-library/page.tsx": "sha256:07d609f7f65ba31c14d1552fee98fc37f7ebb0ffe3770809eee593ed50df54eb",
+    "server/local-data.mjs": "sha256:2809779804a270bd443502ef46ecfda9a903d1541cb4ae4ebcd21f37740545d3",
+    "tests/archive-layers.test.mjs": "sha256:9ec13e3062abd5605e0284dfb1daa3520f8abc393168967f87ac329a1a4ff31a",
+    "tests/data-library-freshness.test.mjs": "sha256:288c6a5f9326240670d3fdbf80281ae71deab0178b6acd05c320bbc2148bbc41",
+    "tests/local-data-catalog.test.mjs": "sha256:d16bacad35542a254706e9fb00a6fb5d3653a38b476c42ae3501a87a7370b5d3",
+    "tests/local-data.test.mjs": "sha256:4f44151e18f28807c51eac35214b46cb3c04b6eecd2620dfbec3bd42c412b5a8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8a5a93763fff4ab9747e945c054ed3fa33858ad9552866a8c85ac9827b3d52",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:449949d4e7da3a616322c49848f10e3ce0d8d41e86ddeb9f1b493c3c7a6322bd",
+      "sha256:66d78f8b93a53a88533f819ce214ac5c8ed99ad0f3356fdfcc8b9692cd2267fd",
+      "sha256:415279140fc22a7fb2c40c8a679211fa65ad118413099019aae2f71b130d25b1",
+      "sha256:cce16511cb92195214fc9ec46b0320a6ffb1ef375bed24685775dba35bc8d87f"
+    ],
+    "evidence_refs": [
+      "repo:0bfffe2f86816fc7e53f7a431dcef4848b7a839f:app/archive-layer-control.tsx",
+      "repo:0bfffe2f86816fc7e53f7a431dcef4848b7a839f:app/archive-layer-data.ts",
+      "repo:0bfffe2f86816fc7e53f7a431dcef4848b7a839f:app/data-library/freshness.ts",
+      "repo:0bfffe2f86816fc7e53f7a431dcef4848b7a839f:server/local-data.mjs"
+    ]
+  },
+  "truth_labels": {
+    "app/archive-layer-control.tsx": "CONFIRMED",
+    "app/archive-layer-data.ts": "CONFIRMED",
+    "app/data-library/collection-browser.module.css": "CONFIRMED",
+    "app/data-library/freshness.ts": "CONFIRMED",
+    "app/data-library/page.tsx": "CONFIRMED",
+    "server/local-data.mjs": "CONFIRMED",
+    "tests/archive-layers.test.mjs": "CONFIRMED",
+    "tests/data-library-freshness.test.mjs": "CONFIRMED",
+    "tests/local-data-catalog.test.mjs": "CONFIRMED",
+    "tests/local-data.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and Node suite (3,298 passed, 25 skipped, 0 failed)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript, scoped ESLint (one existing ref cleanup warning), production dependency audit, whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop Chrome synthetic archive load, mixed cache pages, evidence, failed refresh retention and empty refresh",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Library engagement at 390 and 320 CSS pixels with reduced-motion preference, Enter-to-heading focus and no horizontal overflow",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review, hosted checks and deployment",
+      "outcome": "SKIPPED",
+      "reason": "Hosted review follows a draft. Deployments have separate release controls."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T00:58:25.111959+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Application and test change for the existing public archive relay. Browser proof uses synthetic records. No PC data or credentials enter the patch. Public delivery and source admission require separate authority."
+}

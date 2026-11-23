@@ -63,7 +63,7 @@ test('bounded reads retain stale metadata and reject unexpected datasets and mal
  const response=await data.fetchArchive('ghcn-stations',{},controller.signal,async()=>Response.json(answer('ghcn-stations',rows,{cache:{state:'stale',at:'2026-11-01T00:00:00Z'}})));
  assert.equal(response.cache.state,'stale');
  for(const value of [answer('wrong',rows),answer('ghcn-stations',rows,{count:5}),answer('ghcn-stations',rows,{total:0})])await assert.rejects(data.fetchArchive('ghcn-stations',{},controller.signal,async()=>Response.json(value)));
- await assert.rejects(data.fetchArchive('ghcn-stations',{},controller.signal,async()=>Response.json({reasonCode:'LOCAL_DATA_UNAVAILABLE'},{status:503})),/unavailable/);
+ await assert.rejects(data.fetchArchive('ghcn-stations',{},controller.signal,async()=>new Response('<html>Unavailable</html>',{status:503})),/Archive service unavailable/);
 });
 test('spatial replies retain a boolean count-cap flag and reject missing or malformed qualifications',async()=>{
  const rows=[{id:'[1,1]',values:{name:'Fixture'}}],query={collection:'observations-faa-obstacles',bbox:'-99,38,-98,39',limit:'50'};
@@ -72,6 +72,7 @@ test('spatial replies retain a boolean count-cap flag and reject missing or malf
   assert.equal(result.totalCapped,totalCapped);
  }
  for(const totalCapped of [undefined,null,'false',0])await assert.rejects(data.fetchArchive('near-observations',query,new AbortController().signal,async()=>Response.json(answer('near-observations',rows,{total:10000,totalCapped,collection:query.collection}))),/Incomplete archive response/);
+ await assert.rejects(data.fetchArchive('near-observations',query,new AbortController().signal,async()=>Response.json(answer('near-observations',rows,{totalCapped:false,collection:'different-collection'}))),/Unexpected archive collection/);
 });
 test('oversized geometry responses reduce page size without dropping the original filter or offset',async()=>{
  const requests=[];
@@ -147,6 +148,45 @@ test('recovered map layers ask for the map area, page by offset and keep display
  await findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();await settle();h.render();h.render();
  assert.equal(calls[2].offset,'2');assert.equal(h.sources.get('kfm-'+id).data.features.length,2);h.harness.dispose();
 });
+
+test('failed archive refresh retains the active feature and the applied query',async()=>{
+ let calls=0;
+ const h=await rowHarness(async()=>{
+  if(++calls>1)throw Error('Archive service unavailable.');
+  return answer('ghcn-stations',[{id:'USW00003928',name:'Synthetic station',lat:38,lon:-98}]);
+ });
+ h.props.styleReady=true;h.render();await pause();await settle();
+ let tree=h.render();
+ findNode(tree,n=>n.type==='select').props.onChange({target:{value:'USW00003928'}});
+ tree=h.render();
+ findNode(tree,n=>n.type==='button'&&n.props.children==='Load around map centre').props.onClick();
+ await settle();tree=h.render();
+ assert.equal(h.sources.get('kfm-archive-ghcn').data.features.length,1);
+ assert.match(nodeText(tree),/Previously loaded records are still displayed/);
+ assert.equal(findNode(tree,n=>n.type==='h4').props.children,'Synthetic station');
+ assert.equal(h.saves.length,1);
+ h.harness.dispose();
+});
+
+test('later archive pages keep earlier cache provenance and stop after an empty page',async()=>{
+ let calls=0;
+ const h=await rowHarness(async()=>{
+  calls++;
+  const rows=calls===3?[]:[{id:`example-${calls}`,lat:38,lon:-98}];
+  return answer('ghcn-stations',rows,{total:calls===3?1:5,cache:{state:calls===1?'stale':'live',at:'2026-11-03T12:00:00Z'}});
+ });
+ h.props.styleReady=true;h.render();await pause();await settle();let tree=h.render();
+ for(let i=0;i<2;i++){
+  findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();
+  await settle();tree=h.render();
+ }
+ assert.match(nodeText(tree),/At least one page uses a retained cache response/);
+ assert.match(nodeText(tree),/2 records loaded. Matching counts changed between pages/);
+ assert.match(nodeText(tree),/No further records returned/);
+ assert.ok(!findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page'));
+ assert.equal(h.sources.get('kfm-archive-ghcn').data.features.length,2);
+ h.harness.dispose();
+});
 test('capped archive totals display as lower bounds across pages and retained failures; exact and unknown totals remain distinct',async()=>{
  const collection='observations-faa-obstacles',id='archive-records-'+collection;
  for(const [total,totalCapped,label] of [[10000,true,'10,000+'],[10000,false,'10,000'],[null,undefined,null]]){
@@ -192,4 +232,27 @@ test('only the topmost archive feature owns inspection, leaving other selected l
  const id='kfm-archive-ghcn-point',feature={source:'kfm-archive-ghcn',layer:{id},properties:{key:'USW00003928'}},event={point:{x:0,y:0},features:[feature]};
  h.map.queryRenderedFeatures=()=>[{source:'other-visible-layer',layer:{id:'other'}},feature];h.events.get('click'+id)(event);assert.equal(inspected.length,0);
  h.map.queryRenderedFeatures=()=>[feature];h.events.get('click'+id)(event);assert.deepEqual(inspected,['archive-ghcn']);h.harness.dispose();
+});
+
+test('picking a new map feature cancels readings tied to the previous feature',async()=>{
+ let finish,signal;
+ const h=await rowHarness(async(id,q,s)=>{
+  if(id==='ghcn-stations')return answer(id,[{id:'USW00003928',lat:38,lon:-98},{id:'USW00003936',lat:39,lon:-98}]);
+  signal=s;
+  return new Promise(resolve=>{finish=()=>resolve(answer(id,[{value:137}]));});
+ });
+ h.props.styleReady=true;h.render();await pause();await settle();let tree=h.render();
+ findNode(tree,n=>n.type==='select').props.onChange({target:{value:'USW00003928'}});
+ tree=h.render();
+ findNode(tree,n=>n.type==='button'&&/daily/i.test(nodeText(n))).props.onClick();
+ assert.ok(signal);
+ const id='kfm-archive-ghcn-point';
+ const feature={source:'kfm-archive-ghcn',layer:{id},properties:{key:'USW00003936'}};
+ h.map.queryRenderedFeatures=()=>[feature];
+ h.events.get('click'+id)({point:{x:0,y:0},features:[feature]});
+ assert.equal(signal.aborted,true);
+ finish();await settle();tree=h.render();
+ assert.equal(findNode(tree,n=>n.type==='h4').props.children,'USW00003936');
+ assert.doesNotMatch(nodeText(tree),/Loading records|137/);
+ h.harness.dispose();
 });
