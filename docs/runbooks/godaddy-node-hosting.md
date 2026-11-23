@@ -674,6 +674,30 @@ absent or empty.
 
 **Mirror.** None: `apps/site/source` does not carry the county bundles.
 
+<a id="public-readback-2026-11-23-third"></a>
+
+### Third publication verified on 2026-11-23: Kansas records
+
+At about 05:52 UTC on 2026-11-23 the identity checker reported
+`APPLICATION_INPUTS_MATCH` for `9c8e5447`, the head of the connected branch.
+
+| Change | Live readback |
+|---|---|
+| [#6054](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6054) Kansas records | `/records` returned 200 with the title "Kansas records · Kansas Frontier Matrix", its canonical address and 22 entries in four groups, from "Most people: 636,906" to "Rated F5 or EF5: 6 tornadoes". Each group carries its source line, and the tornado deaths entry carries the note that deaths are for the whole track. `/sitemap.xml` lists 130 addresses, `/records` among them. `/counties` and `/explore` each link to it |
+
+Not repeated on the public site: the browser accessibility checks made on the
+built application before merging.
+
+**Build record.** The checkout was no longer clean: `WORKTREE_MODIFIED` with
+`untrackedOther: 1` again, one publish after the
+[clean checkout](#public-readback-2026-11-23-later). The build started with
+**333 kept entries and 10,826,486 bytes**. That is what the single clean build
+before it staged, so one whole build is about 333 entries; later builds add
+only the files that changed. Against the 4,096-entry limit that leaves room
+for the folder to grow for a long time between resets.
+
+**Mirror.** None: `apps/site/source` does not carry these bundles.
+
 <a id="verified-starting-point-2026-10-19"></a>
 
 <a id="public-record-lab-2026-11-19"></a>
