@@ -11589,6 +11589,7 @@ export default function Home() {
             <div className="header-overflow-panel">
               <div className="header-overflow-workspaces" role="group" aria-label="Primary Explorer actions">
                 <a href="/labs">Research atlas</a>
+                <a href="/research">Research Discovery</a>
                 <button type="button" aria-current={primaryWorkspace === "map" ? "page" : undefined} onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); returnToPrimaryMap(); }}>Map</button>
                 <button type="button" aria-current={primaryWorkspace === "reports" ? "page" : undefined} onClick={(event) => { openPrimaryWorkspace("reports"); closeHeaderOverflow(event.currentTarget); }}>Reports</button>
                 <button type="button" aria-current={primaryWorkspace === "stories" ? "page" : undefined} onClick={(event) => { openPrimaryWorkspace("stories"); closeHeaderOverflow(event.currentTarget); }}>Stories</button>

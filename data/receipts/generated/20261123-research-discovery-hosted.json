@@ -1,0 +1,130 @@
+{
+  "receipt_id": "kfm-research-discovery-hosted-20261123",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/research/discovery.ts",
+    "app/research/page.tsx",
+    "app/research/workspace.tsx",
+    "app/research/research.module.css",
+    "app/about/page.tsx",
+    "app/crawler-discovery.ts",
+    "app/labs/page.jsx",
+    "app/living-welcome/welcome.jsx",
+    "app/observatory/sources/page.tsx",
+    "app/page.tsx",
+    "tests/research-discovery.test.mjs",
+    "tests/research-discovery-http.test.mjs",
+    "docs/research-discovery-20261123.md"
+  ],
+  "artifact_hashes": {
+    "app/research/discovery.ts": "sha256:3a7d547a450f51379f3ff8a83168d58b7ed33465f59d04384f98b9295b4673f2",
+    "app/research/page.tsx": "sha256:4bb63e7102a3f8ca25d841b70e18ef1fe99e91b80621f30054c9f53569acaa49",
+    "app/research/workspace.tsx": "sha256:8705a7ac033ca6b883ac3b77b8461ce68ee8bedc5e04752e2d64c5fdc3d86698",
+    "app/research/research.module.css": "sha256:f46d8022adcb8c211393a685ea47e01404e0885635128c264568d8210ddc111d",
+    "app/about/page.tsx": "sha256:62294e6b3fccfd6f00231b9e69b4900ea522548b5c5aeaa0c4b2dd9b9adf5dfa",
+    "app/crawler-discovery.ts": "sha256:6b14a7d6177911cd6eff2a0f724840815f10c79a55b25fbcd8d1cf3574754324",
+    "app/labs/page.jsx": "sha256:5653fa85097a9be138195c2ea353e680b0bb8b6463efe6fc807e3968acdbec4f",
+    "app/living-welcome/welcome.jsx": "sha256:91c6f5eebcbd895481a9150d22da13056b93ba250ca3c439abb56216c706c326",
+    "app/observatory/sources/page.tsx": "sha256:86e508fd5688b24766b0eb08ea760ba67b52bd19d92005542fe2d8895aa5fa5f",
+    "app/page.tsx": "sha256:ba01705b3cc5c28960054af9da822b4d41e3caf7c75970cbf759282712d2d55d",
+    "tests/research-discovery.test.mjs": "sha256:570a8c5d428c77db126768a73a27d67ebac962afac3aaee9e9fcf5ac3b045f5a",
+    "tests/research-discovery-http.test.mjs": "sha256:a7ceb019ef92ee7d59b13920ac42f5aa8ade8c6f83e666ca6273d4debb58aa2a",
+    "docs/research-discovery-20261123.md": "sha256:58795e9551012d9481edf4e3c4216df2a098ce2f63a5f5821dfc41826a226266"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:9a117520caa7243b690ca79ce8bef2c5e38c095a4018c4971ea80ced3c08475d",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "GitHub",
+      "TinyFish",
+      "life-sciences databases",
+      "life-sciences literature",
+      "cua_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:90d4c737f8e8bd7c462e9048241d2b2069956c7c:app/live-context.ts",
+      "repo:90d4c737f8e8bd7c462e9048241d2b2069956c7c:app/source-downloads.ts",
+      "repo:90d4c737f8e8bd7c462e9048241d2b2069956c7c:app/science-events.ts",
+      "repo:90d4c737f8e8bd7c462e9048241d2b2069956c7c:AGENTS.md"
+    ],
+    "evidence_hashes": [
+      "sha256:70e42e93fc0ee91e1b889cc5dba78d04a19920be6c513ee36b5a937047e981d1",
+      "sha256:4f2d03a8d8e47392378fa76d12e294116998c6fdb9da5302e0be4fd8df39f2b3",
+      "sha256:916a8484b0978a5c10a6e9f99a3fc1c8582f72dd53dd183b560d515e0c4ce154",
+      "sha256:48c535b877b79403673b25f82dafffeb57ad79e4e50c27ee23724552aaa05dcb"
+    ]
+  },
+  "truth_labels": {
+    "app/research/discovery.ts": "CONFIRMED",
+    "app/research/page.tsx": "CONFIRMED",
+    "app/research/workspace.tsx": "CONFIRMED",
+    "app/research/research.module.css": "CONFIRMED",
+    "app/about/page.tsx": "CONFIRMED",
+    "app/crawler-discovery.ts": "CONFIRMED",
+    "app/labs/page.jsx": "CONFIRMED",
+    "app/living-welcome/welcome.jsx": "CONFIRMED",
+    "app/observatory/sources/page.tsx": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "tests/research-discovery.test.mjs": "CONFIRMED",
+    "tests/research-discovery-http.test.mjs": "CONFIRMED",
+    "docs/research-discovery-20261123.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and staged assets",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full Node 22.23.3 suite: 3337 passed, 25 skipped, zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript, bounded changed-area ESLint and Git whitespace",
+      "outcome": "PASS",
+      "reason": "ESLint has zero errors and one inherited welcome hook warning; whole-tree lint is not claimed."
+    },
+    {
+      "gate": "Production HTTP route, assets, navigation, canonical, sitemap and URL input regression tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Rendered browser acceptance of reconciled hosted source",
+      "outcome": "SKIPPED",
+      "reason": "Chrome page reads fail in the browser connection after reconnect; mirror screenshots do not qualify."
+    },
+    {
+      "gate": "Exact-head hosted CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring."
+    },
+    {
+      "gate": "GoDaddy Preview and Published readback",
+      "outcome": "SKIPPED",
+      "reason": "Chrome dashboard page-read failure. Public /research still returns 404; no publication performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    "https://www.neonscience.org/field-sites/konz",
+    "https://www.ebi.ac.uk/biostudies/studies/E-GEOD-16418",
+    "https://www.ebi.ac.uk/biostudies/studies/E-GEOD-35492",
+    "https://pubmed.ncbi.nlm.nih.gov/41943985/",
+    "https://pubmed.ncbi.nlm.nih.gov/21328008/"
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T19:37:39.694451+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Navigation and metadata discovery only. Public references are not imported or admitted sources. No environment, model, storage, relay, audience, DNS or Sites synchronization change."
+}

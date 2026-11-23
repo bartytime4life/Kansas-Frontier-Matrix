@@ -30,6 +30,7 @@ export const metadata = { alternates: { canonical: "https://kansasfrontiermatrix
 export default function SourcesPage() {
   return <main className="event-research">
     <Link href="/observatory">← Event Observatory</Link>
+    <p><Link href="/research">Research Discovery → Search sources, compare their limits, and start a guided investigation.</Link></p>
     <h1>Temporal environmental layers for Kansas</h1>
     <p>The Event Observatory connects dated environmental observations and independently dated context on one Kansas map. Historical radar replay is immediately feasible; smoke footprints, streamflow, satellite acquisitions, geology and occurrence records need different time rules. A universal date slider is useful only if it preserves those distinctions.</p>
     <nav aria-label="Research sections"><a href="#coverage">Coverage</a> · <a href="#grammar">Science grammar</a> · <a href="#time">Time model</a> · <a href="#atmosphere">Radar & smoke</a> · <a href="#earth">Earth & water</a> · <a href="#ecology">Flora & fauna</a> · <a href="#delivery">Delivery boundaries</a> · <a href="#references">References</a></nav>
