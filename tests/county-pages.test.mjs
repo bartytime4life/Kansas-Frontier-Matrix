@@ -2,15 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { access, readFile } from 'node:fs/promises';
 import ts from 'typescript';
-import { buildCountyFacts, countySlug, readCountyBundle } from '../scripts/prepare-county-pages.mjs';
+import { buildCountyFacts, countySlug, readBridgeBundle, readCountyBundle, readPopulationBundle } from '../scripts/prepare-county-pages.mjs';
 
 const compile = async (path, modules = {}) => { const exports = {}; new Function('exports', 'require', ts.transpileModule(await readFile(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText)(exports, name => { if (name in modules) return modules[name]; throw new Error(`Unexpected import: ${name}`); }); return exports; };
 const facts = JSON.parse(await readFile('app/county-facts.generated.json', 'utf8'));
 const pages = await compile('app/county-pages.ts', { './county-facts.generated.json': { __esModule: true, default: facts } });
 
-test('the county table is exactly what the generator makes from the shipped Census bundle', async () => {
-  assert.deepEqual(facts, JSON.parse(JSON.stringify(buildCountyFacts(await readCountyBundle()))), 'run node scripts/prepare-county-pages.mjs after the bundle changes');
+test('the county table is exactly what the generator makes from the shipped bundles', async () => {
+  assert.deepEqual(facts, JSON.parse(JSON.stringify(buildCountyFacts(await readCountyBundle(), await readPopulationBundle(), await readBridgeBundle()))), 'run node scripts/prepare-county-pages.mjs after a bundle changes');
   assert.match(facts.source.path, /^\/labs-data-observatory\/county-conditions-[a-f0-9]{16}\.json$/);
+  assert.match(facts.sources.population.path, /^\/labs-data\/census-mosaic-[a-f0-9]{16}\.json$/);
+  assert.match(facts.sources.bridges.path, /^\/labs-data-bridges\/built-kansas-[a-f0-9]{16}\.json$/);
+  assert.match(facts.sources.bridges.inventoryAsOf, /^\d{4}-\d{2}-\d{2}$/);
 });
 
 test('all 105 counties have a page address, a place on the map and complete estimates', () => {
@@ -89,4 +92,33 @@ test('the sitemap lists every county and the public reading pages that were miss
     assert.ok(found, `${path} is a page in this application`);
   }
   assert.ok(!discovery.PUBLIC_PAGES.includes('/knowledge'), 'the Knowledge search is left out while its store is not provisioned');
+});
+
+test('population is two Census estimates side by side, and every bridge inventory record is counted in one county', async () => {
+  const bridgeBundle = await readBridgeBundle();
+  assert.equal(pages.COUNTY_PAGES.reduce((sum, county) => sum + county.bridges.records, 0), bridgeBundle.data.records.length, 'no inventory record is dropped or counted twice');
+  for (const county of pages.COUNTY_PAGES) {
+    const { population, bridges } = county;
+    assert.ok(population.year > population.baseYear && Number.isInteger(population.value) && population.value > 0 && Number.isInteger(population.baseValue) && population.baseValue > 0, county.name);
+    assert.equal(bridges.state + bridges.local, bridges.records, county.name);
+    assert.ok(bridges.records > 0 && bridges.closed <= bridges.records && bridges.register <= bridges.local, county.name);
+    assert.ok(bridges.oldestYear === null || bridges.oldestYear >= 1850 && bridges.oldestYear <= 2026, county.name);
+    assert.ok(bridges.longestFt === null || bridges.longestFt > 0, county.name);
+  }
+  // The inventory names Sedgwick County in capitals for state highways and in title case for local roads.
+  const sedgwick = pages.countyPage('sedgwick');
+  const named = bridgeBundle.data.records.filter(record => String(record.county).toLowerCase() === 'sedgwick');
+  assert.ok(named.some(record => record.county === 'SEDGWICK') && named.some(record => record.county === 'Sedgwick'));
+  assert.equal(sedgwick.bridges.records, named.length);
+  assert.equal(sedgwick.bridges.closed, named.filter(record => record.status === 'Closed to all traffic' || record.status === 'Closed').length);
+  assert.match(pages.countyBridgesHref(sedgwick), /^\/\?ctx=census-counties,kdot-bridges-state,kdot-bridges-local&c=-97\.\d+,37\.\d+&z=9\.5$/);
+  assert.deepEqual(pages.populationChange({ year: 2025, value: 538433, baseYear: 2020, baseValue: 524831 }), ['13,602 more than', 'up 2.6%']);
+  assert.deepEqual(pages.populationChange({ year: 2025, value: 12302, baseYear: 2020, baseValue: 12533 }), ['231 fewer than', 'down 1.8%']);
+  assert.deepEqual(pages.populationChange({ year: 2025, value: 5000, baseYear: 2020, baseValue: 5000 }), ['the same as', null]);
+  assert.deepEqual(pages.populationChange({ year: 2025, value: 500001, baseYear: 2020, baseValue: 500000 }), ['1 more than', 'up less than 0.1%']);
+  const page = await readFile('app/counties/county-page.tsx', 'utf8');
+  assert.match(page, /These are inventory records, which are not always one physical bridge each\./);
+  assert.match(page, /not a current safety assessment or permission to enter a structure/);
+  assert.match(page, /A later release can revise earlier years, and the page gives the two estimates without saying why they differ\./);
+  assert.match(page, /Inventory as of \{COUNTY_FACTS_SOURCES\.bridges\.inventoryAsOf\}/);
 });
