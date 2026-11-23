@@ -15,6 +15,23 @@ A button opens the map centred on the county with county outlines on
 (`/?ctx=census-counties&c=<lon>,<lat>&z=8.5`). The centre is the middle of the county's bounding
 box, used only to aim the map.
 
+## Population and bridges (added 2026-11-23, second pass)
+
+- **Population.** The page opens with the Census Bureau's July 1 population estimate for the
+  newest year (2025) beside its estimate for 2020, with the difference. A later release can
+  revise earlier years, and the page gives the two estimates without saying why they differ.
+- **Bridges.** A short section counts the county's records in the Kansas Department of
+  Transportation bridge inventory: the total, how many are on state highways and on local
+  roads, the oldest recorded built year, the longest structure, how many are recorded as closed
+  to traffic, and how many local-road bridges are marked as on the National Register. A link
+  opens the map on the county with both bridge layers on. The page says these are inventory
+  records, not always one physical bridge each, and that a recorded status is not a safety
+  assessment. The generator fails if any inventory record does not belong to one of the 105
+  counties, so the 105 counts add up to the whole inventory (24,877 records as of 2026-11-16).
+
+Both come from bundles the labs already ship (`public/labs-data/census-mosaic-*.json` and
+`public/labs-data-bridges/built-kansas-*.json`), through the same generated table.
+
 ## Where the numbers come from
 
 Nothing is fetched when a page is read. The pages read `app/county-facts.generated.json`, which
