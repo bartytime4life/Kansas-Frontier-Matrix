@@ -1,0 +1,79 @@
+{
+  "receipt_id": "kfm-research-discovery-landscape-20261123",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/globals.css",
+    "docs/research-discovery-20261123.md"
+  ],
+  "artifact_hashes": {
+    "app/globals.css": "sha256:725c8f611ba0423c883091f923a9e0a3fc51370afa544b9bed2db41beef6ac49",
+    "docs/research-discovery-20261123.md": "sha256:cb242808b776c7bf7ee5224a02d0e9ff8a34185a0e23f33dc3997614410f4d67"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:03da99bee732cebad9f7e332dbd523c075a9c839a98c07f36f9f7e5afe454e57",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "cua_repl",
+      "GitHub"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:8613b35ccd6bf57c5ccd4ec74d4deb58ff4a66d9:app/globals.css",
+      "data/receipts/generated/20261123-research-discovery-browser.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/45252651884"
+    ],
+    "evidence_hashes": [
+      "sha256:3061fb80625d8da725d3738889ceca68a937260c1a1f6a3fbfb8f6f37bed0dad",
+      "sha256:44611f0dc21d80614f7e51aee21e8e968453544ec19c259d6ae5fee804d0a6fd"
+    ]
+  },
+  "truth_labels": {
+    "app/globals.css": "CONFIRMED",
+    "docs/research-discovery-20261123.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production rebuild and 78 focused navigation/research unit and HTTP tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Complete local Node 22.23.3 suite after final CSS: 3337 passed, 25 skipped, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Local browser at 568x320: bounded menu and native Status/Compose actions with painted controls",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted run 45252651884 River Pulse 568x320 before the correction",
+      "outcome": "FAIL",
+      "reason": "Introduced additional menu row pushed Status offscreen. Corrected in this successor; historical run preserved."
+    },
+    {
+      "gate": "Corrected-head hosted CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring."
+    },
+    {
+      "gate": "Chrome GoDaddy Preview and Published readback",
+      "outcome": "SKIPPED",
+      "reason": "Chrome page-read connection error remains. No pull or publication performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T20:03:47.636283+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor to kfm-research-discovery-browser-20261123; original receipts remain intact. Unchanged browser tests retain real hit testing and their deadlines. No data admission, settings or publication changes."
+}

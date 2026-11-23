@@ -52,6 +52,7 @@ export default function AboutPage() {
         <span className="mark" aria-hidden="true">KFM</span>
         <span><strong>Kansas Frontier Matrix</strong><small>Explorer guide + boundaries</small></span>
       </div>
+      <Link href="/research">Research Discovery</Link>
       <Link href="/">Open the map</Link>
       <Link href="/privacy">Privacy + contact</Link>
     </nav>

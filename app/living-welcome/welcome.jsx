@@ -292,6 +292,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
             <label className="welcome-tool"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Don’t show on start</label>
             <button type="button" className="welcome-map-notes" onClick={()=>{onSources?.();openPanel('credits');}}>Map notes</button>
             <a className="welcome-tool" href="/labs">Research atlas ↗</a>
+            <a className="welcome-tool" href="/research">Research Discovery ↗</a>
             <button type="button" onClick={()=>run(()=>onAction('qwen'))}>Ask the atlas</button>
           </div></details>
           <button type="button" className="welcome-skip" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button>
