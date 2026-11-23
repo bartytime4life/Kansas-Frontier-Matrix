@@ -13,8 +13,12 @@
 import {str} from './query.mjs';
 
 export const SOURCES_INDEX=Object.freeze({name:'kfm_sql_sources_source_file',sql:'CREATE INDEX IF NOT EXISTS kfm_sql_sources_source_file ON kfm_sql_sources(source_id, file_id)'});
+const STORM_FILE_INDEXES=['details','fatalities','locations'].map(kind=>{
+ const table='kfm_storm_event_'+kind,name=table+'_file';
+ return Object.freeze({name,sql:`CREATE INDEX IF NOT EXISTS ${name} ON ${table}(file_id)`,namedOnly:true});
+});
 /** Indexes freshness needs per database; `indexes.mjs` plans them, the gateway never requires them to answer a question. */
-export const FRESHNESS_INDEXES=Object.freeze({observations:[SOURCES_INDEX],bulk:[SOURCES_INDEX]});
+export const FRESHNESS_INDEXES=Object.freeze({observations:[SOURCES_INDEX,...STORM_FILE_INDEXES],bulk:[SOURCES_INDEX]});
 // Receipt keys, in order of preference: feed receipts, hosted captures, older loaders.
 const RETRIEVED=['retrieved_at','retrievedAt','captureBucketAt','downloaded_at_utc','created_at'];
 const MODIFIED=['last_modified','lastModified','data_as_of'];
