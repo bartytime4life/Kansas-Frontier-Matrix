@@ -8,8 +8,14 @@ import { COUNTY_LAB_SNAPSHOTS } from '../app/labs/county-snapshots.mjs';
 import { KANSAS_COUNTIES } from '../app/labs/county-model.mjs';
 
 const round = (value, places) => typeof value === 'number' && Number.isFinite(value) ? Math.round(value * 10 ** places) / 10 ** places : null;
-// Estimate and its published or derived 90% margin of error, as [value, margin].
-const pair = (record, key, places) => [round(record[key], places), round(record[`${key}Moe`], places)];
+// Preserve the bundle's precision for comparisons. The page rounds for display.
+function pair(record, key) {
+  const value = record[key], margin = record[`${key}Moe`];
+  if (!Number.isFinite(value) || !Number.isFinite(margin) || margin < 0) {
+    throw new Error(`COUNTY_ESTIMATE_INCOMPLETE ${record.fips} ${record.year} ${key}`);
+  }
+  return [value, margin];
+}
 export const countySlug = name => name.replace(/\s+County$/, '').toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
 
 function center(geometry) {
@@ -30,12 +36,15 @@ export function buildCountyFacts(bundle, snapshot = COUNTY_LAB_SNAPSHOTS['county
     return {
       fips, name, slug: countySlug(name), center: center(latest.geometry),
       latest: {
-        period: latest.period, medianIncome: pair(latest, 'medianIncome', 0), medianAge: pair(latest, 'medianAge', 1),
-        medianHomeValue: pair(latest, 'medianHomeValue', 0), medianRent: pair(latest, 'medianRent', 0),
-        educationPct: pair(latest, 'educationPct', 1), povertyPct: pair(latest, 'povertyPct', 1),
-        ownerOccupiedPct: pair(latest, 'ownerOccupiedPct', 1), housingUnits: pair(latest, 'housingUnits', 0),
+        period: latest.period, medianIncome: pair(latest, 'medianIncome'), medianAge: pair(latest, 'medianAge'),
+        medianHomeValue: pair(latest, 'medianHomeValue'), medianRent: pair(latest, 'medianRent'),
+        educationPct: pair(latest, 'educationPct'), povertyPct: pair(latest, 'povertyPct'),
+        ownerOccupiedPct: pair(latest, 'ownerOccupiedPct'), housingUnits: pair(latest, 'housingUnits'),
       },
-      earlier: { period: earlier.period, medianAge: round(earlier.medianAge, 1), educationPct: round(earlier.educationPct, 1), povertyPct: round(earlier.povertyPct, 1), housingUnits: round(earlier.housingUnits, 0) },
+      earlier: {
+        period: earlier.period, medianAge: pair(earlier, 'medianAge'), educationPct: pair(earlier, 'educationPct'),
+        povertyPct: pair(earlier, 'povertyPct'), housingUnits: pair(earlier, 'housingUnits'),
+      },
     };
   });
   if (new Set(counties.map(county => county.slug)).size !== counties.length) throw new Error('COUNTY_SLUG_COLLISION');

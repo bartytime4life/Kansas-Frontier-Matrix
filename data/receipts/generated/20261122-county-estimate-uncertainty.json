@@ -1,0 +1,88 @@
+{
+  "receipt_id": "kfm-county-estimate-uncertainty-20261122",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/counties/county-page.tsx",
+    "app/county-facts.generated.json",
+    "app/county-pages.ts",
+    "docs/county-pages-20261123.md",
+    "scripts/prepare-county-pages.mjs",
+    "tests/county-pages.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/counties/county-page.tsx": "sha256:b465516a5e9b4121b9e000871e3dc933145256f740bd212fd7f12d1962e28289",
+    "app/county-facts.generated.json": "sha256:6cbdd9ca796bb75c9c02426fc20ec28b1293e3ca02dce0d67b6e3f2ba2cfb566",
+    "app/county-pages.ts": "sha256:1648943a9c8d179db8a126dd3b2d5f1bca18301d68985a7e03da66793c2885af",
+    "docs/county-pages-20261123.md": "sha256:4db54d35bdf0d3fde89ceb9ff86229e9b1033b95cbd1c259b493af2646f3da3d",
+    "scripts/prepare-county-pages.mjs": "sha256:77bebca01a32afb8bc39b8db9b1ee23043835ebadca45426c5fa73c46f1c030e",
+    "tests/county-pages.test.mjs": "sha256:8e7d26a4f7acd70425854862c9293b0a1e502a900ded892bfb4680ceb339804d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "apply_patch",
+      "web.run"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:f3a44dca83d2c21aa935bd59e2cee5da07f97682:app/counties/county-page.tsx",
+      "repo:f3a44dca83d2c21aa935bd59e2cee5da07f97682:app/county-facts.generated.json",
+      "repo:f3a44dca83d2c21aa935bd59e2cee5da07f97682:app/labs/observatory/CountyObservatory.jsx",
+      "repo:f3a44dca83d2c21aa935bd59e2cee5da07f97682:public/labs-data-observatory/county-conditions-63b3f2578632390e.json"
+    ],
+    "evidence_hashes": [
+      "sha256:661446e753e1393c2a079ffb7a2d7b450b24c5fe9307fa202b472d29a43e29e2",
+      "sha256:4ddef2668b7fe869da6e08fc00acf7c561686fb474b67bfb49ed6d81a28d8f5b",
+      "sha256:5de827a8d0846be04002daf589505b83ef78e63ee600e0a5ccfa44abd560c31c",
+      "sha256:63b3f2578632390e6322fc7cff37d1b02d90f0ccb575db24b1a6d797c786f6fb"
+    ]
+  },
+  "truth_labels": {
+    "app/counties/county-page.tsx": "CONFIRMED",
+    "app/county-facts.generated.json": "CONFIRMED",
+    "app/county-pages.ts": "CONFIRMED",
+    "docs/county-pages-20261123.md": "CONFIRMED",
+    "scripts/prepare-county-pages.mjs": "CONFIRMED",
+    "tests/county-pages.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Five focused county route, generator and comparison tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build and full Node suite with 3310 passes, 25 skips and zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "TypeScript and Git whitespace checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop and phone-width Chrome checks on the localhost production build verified reflow and keyboard handoff to Anderson County",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent review and hosted run at the draft head",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting draft review and exact-head hosted checks."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-23T02:28:05.444275+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "The public county comparison uses both source-period margins of error. County-to-Observatory navigation uses the existing county parameter."
+}

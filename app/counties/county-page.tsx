@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
-import { COUNTY_PAGES, comparedWith, count, countyMapHref, countyPage, countyPath, dollars, percent, years } from "../county-pages";
+import { COUNTY_PAGES, comparedWith, count, countyMapHref, countyObservatoryHref, countyPage, countyPath, dollars, percent, years } from "../county-pages";
 import { LANDING_GUIDES } from "../landing-guides";
 import explore from "../explore/explore.module.css";
 import styles from "./counties.module.css";
@@ -33,25 +33,26 @@ export function CountyPage({ slug }: { slug: string }) {
     <article className={explore.article}>
       <p className={explore.kicker}>Kansas county · FIPS {county.fips}</p>
       <h1>{county.name}, Kansas</h1>
-      <p>These are the Census Bureau&rsquo;s {latest.period} American Community Survey estimates for {county.name}. Each figure is followed by its margin of error: the survey asks a sample of households, so the true value is likely within that range.</p>
+      <p>These are the Census Bureau&rsquo;s {latest.period} American Community Survey estimates for {county.name}. The ± value shows the 90% margin of error.</p>
       <p><a className={explore.cta} href={href}>Open the map on {county.name} →</a></p>
       <h2>At a glance, {latest.period}</h2>
       <ul className={styles.facts}>
         <li><span>Median household income</span><strong>{dollars(latest.medianIncome)}</strong><em>in {latest.period.slice(-4)} dollars</em></li>
-        <li><span>Median age</span><strong>{years(latest.medianAge)}</strong><em>{comparedWith(latest.medianAge, earlier.medianAge, " years")} in {earlier.period}</em></li>
+        <li><span>Median age</span><strong>{years(latest.medianAge)}</strong><em>{earlier.period} estimate {years(earlier.medianAge)}<br />{comparedWith(latest.medianAge, earlier.medianAge, latest.period)}</em></li>
         <li><span>Median home value</span><strong>{dollars(latest.medianHomeValue)}</strong><em>owner-occupied homes</em></li>
         <li><span>Median rent</span><strong>{dollars(latest.medianRent)}</strong><em>per month, with utilities</em></li>
-        <li><span>Adults 25 and over with a bachelor&rsquo;s degree or higher</span><strong>{percent(latest.educationPct)}</strong><em>{comparedWith(latest.educationPct, earlier.educationPct, "%")} in {earlier.period}</em></li>
-        <li><span>People below the poverty line</span><strong>{percent(latest.povertyPct)}</strong><em>{comparedWith(latest.povertyPct, earlier.povertyPct, "%")} in {earlier.period}</em></li>
+        <li><span>Adults 25 and over with a bachelor&rsquo;s degree or higher</span><strong>{percent(latest.educationPct)}</strong><em>{earlier.period} estimate {percent(earlier.educationPct)}<br />{comparedWith(latest.educationPct, earlier.educationPct, latest.period)}</em></li>
+        <li><span>People below the poverty line</span><strong>{percent(latest.povertyPct)}</strong><em>{earlier.period} estimate {percent(earlier.povertyPct)}<br />{comparedWith(latest.povertyPct, earlier.povertyPct, latest.period)}</em></li>
         <li><span>Homes lived in by their owner</span><strong>{percent(latest.ownerOccupiedPct)}</strong><em>of occupied homes</em></li>
-        <li><span>Housing units</span><strong>{count(latest.housingUnits)}</strong><em>{new Intl.NumberFormat("en-US").format(earlier.housingUnits)} in {earlier.period}</em></li>
+        <li><span>Housing units</span><strong>{count(latest.housingUnits)}</strong><em>{earlier.period} estimate {count(earlier.housingUnits)}</em></li>
       </ul>
       <h2>On the map</h2>
       <p>The map opens centred on {county.name} with county outlines on. Switch on any layer from the Layers panel to see it for this county. These guides explain the main ones:</p>
       <ul>{LANDING_GUIDES.map(guide => <li key={guide.slug}><Link href={`/explore/${guide.slug}`}>{guide.title}</Link></li>)}</ul>
-      <p><Link href="/labs/observatory">Compare all 105 counties in the County Observatory →</Link></p>
+      <p><Link href={countyObservatoryHref(county)}>Compare {county.name} in the County Observatory →</Link></p>
       <h2>About these numbers</h2>
-      <p className={styles.source}>Source: U.S. Census Bureau, American Community Survey 5-year estimates for {earlier.period} and {latest.period}, with the published 90% margins of error. These are survey estimates for a five-year period, not a count for a single year. Dollar amounts are in the dollars of each period&rsquo;s last year and are not adjusted for inflation, so this page does not compare them across periods. A figure is described as up or down only when the difference is larger than the newer estimate&rsquo;s margin of error.</p>
+      <p className={styles.source}>The U.S. Census Bureau&rsquo;s American Community Survey 5-year estimates summarize {earlier.period} and {latest.period}. Dollar amounts use each period&rsquo;s final year and appear for {latest.period} only.</p>
+      <p className={styles.source}>The <a href="https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2025_Instructions_for_Stat_Testing_ACS.pdf">Census Bureau comparison method</a> uses both periods&rsquo; margins of error. “Difference uncertain” means the survey does not establish a change at the 90% confidence level. The education and poverty figures use margins of error derived from Census estimates.</p>
       <p className={explore.caution}>Census estimates are public statistical context from their provider, not Kansas Frontier Matrix evidence.</p>
     </article>
     <nav className={explore.related} aria-label="Other counties"><h2>More counties</h2>
