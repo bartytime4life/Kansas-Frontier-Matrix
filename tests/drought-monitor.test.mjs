@@ -139,31 +139,38 @@ test('the route answers a chosen week, falls back a week when the newest is late
  failing=new Set(['usdm_']);
  response=await route.GET(new Request(`http://x/api/drought-monitor?date=20000104`));
  assert.equal(response.status,502);assert.equal(response.headers.get('cache-control'),'no-store');
- const series=await compile('app/api/drought-series/route.ts',{'../event-atlas/upstream':{boundedFetch:async()=>({text:()=>'[{"MapDate":"20261020","None":23.4,"D0":76.6,"D1":50.1,"D2":20.3,"D3":3.2,"D4":0}]'})},'../../drought-monitor':dm});
- const answer=await (await series.GET()).json();
- assert.deepEqual(answer.weeks,[{date:'20261020',shares:[76.6,50.1,20.3,3.2,0]}]);
  const upstreamSource=await readFile('app/api/event-atlas/upstream.ts','utf8');
  assert.match(upstreamSource,/"https:\/\/droughtmonitor\.unl\.edu", "https:\/\/usdmdataservices\.unl\.edu"/,'both origins are on the bounded fetch allowlist');
 });
 
+// Build the actual weekly coverage through November 17, 2026 independently of the route's date helper.
+const firstArchiveWeek = Date.parse('2000-01-04T00:00:00Z');
+const archiveRows = Array.from({length:1403}, (_,i)=>({
+ MapDate:new Date(firstArchiveWeek+i*7*86_400_000).toISOString().slice(0,10).replaceAll('-',''),
+ StateAbbreviation:'KS',None:62.9,D0:37.1,D1:11.92,D2:1.66,D3:0,D4:0,
+}));
+
 test('the Kansas series asks by state code, falls back to the postal code on an empty answer, and keeps a series through a failed read',async()=>{
- // What the USDM data services sent on 2026-11-22: CSV for the state code, and an empty answer for the postal code.
- const csv='MapDate,StateAbbreviation,None,D0,D1,D2,D3,D4,ValidStart,ValidEnd,StatisticFormatID\n20261117,KS,62.90,37.10,11.92,1.66,0.00,0.00,2026-11-17,2026-11-23,1\n20261110,KS,64.50,35.50,11.49,1.75,0.00,0.00,2026-11-10,2026-11-16,1\n';
+ // The state code returns CSV and the alternate postal code may return an empty answer.
+ const columns=Object.keys(archiveRows[0]);
+ const csv=[columns.join(','),...archiveRows.map(row=>columns.map(key=>row[key]).join(','))].join('\n');
  const asked=[];let answer=url=>new URL(url).searchParams.get('aoi')==='20'?csv:'';
- const realNow=Date.now;let clock=realNow();Date.now=()=>clock;
+ const realNow=Date.now;let clock=Date.parse('2026-11-23T18:00:00Z');Date.now=()=>clock;
  try{
   const load=()=>compile('app/api/drought-series/route.ts',{'../event-atlas/upstream':{boundedFetch:async url=>{asked.push(new URL(url).searchParams.get('aoi'));const text=answer(url);if(text===null)throw new Error('Source unavailable (HTTP 503).');return {text:()=>text};}},'../../drought-monitor':dm});
   let route=await load();
   let response=await route.GET();
   assert.equal(response.status,200);
-  assert.deepEqual((await response.json()).weeks,[{date:'20261110',shares:[35.5,11.49,1.75,0,0]},{date:'20261117',shares:[37.1,11.92,1.66,0,0]}]);
+  const initial=await response.json();
+  assert.equal(initial.weeks.length,1403);
+  assert.deepEqual(initial.weeks.at(-1),{date:'20261117',shares:[37.1,11.92,1.66,0,0]});
   assert.deepEqual(asked,['20'],'the state code answers, so the postal code is not asked');
   // Within six hours the series in hand is served without asking.
   clock+=5*3600_000;await route.GET();assert.deepEqual(asked,['20']);
   // Past six hours the provider fails: the series in hand is served, briefly cacheable, and the provider is left alone for five minutes.
   clock+=2*3600_000;answer=()=>null;
   response=await route.GET();
-  assert.equal(response.status,200);assert.equal((await response.json()).weeks.length,2);
+  assert.equal(response.status,200);assert.deepEqual(await response.json(),{...initial,retained:'unavailable'});
   assert.equal(response.headers.get('cache-control'),'public, max-age=300');
   assert.deepEqual(asked,['20','20'],'a provider that does not answer is not asked under the other name');
   clock+=4*60_000;await route.GET();assert.deepEqual(asked,['20','20'],'not asked again inside five minutes');
@@ -184,6 +191,67 @@ test('the Kansas series asks by state code, falls back to the postal code on an 
   route=await load();asked.length=0;
   const both=await Promise.all([route.GET(),route.GET()]);
   assert.deepEqual(both.map(r=>r.status),[200,200]);assert.deepEqual(asked,['20']);
+ }finally{Date.now=realNow;}
+});
+
+test('a successful but incomplete response cannot replace the verified drought archive',async()=>{
+ const realNow=Date.now;let clock=Date.parse('2026-11-23T18:00:00Z');Date.now=()=>clock;
+ let rows=archiveRows;
+ const asked=[];
+ const load=()=>compile('app/api/drought-series/route.ts',{'../event-atlas/upstream':{
+  boundedFetch:async url=>{asked.push(new URL(url).searchParams.get('aoi'));return {text:()=>JSON.stringify(rows)};},
+ },'../../drought-monitor':dm});
+ try{
+  const route=await load();
+  const initial=await (await route.GET()).json();
+  assert.equal(initial.weeks.length,1403);
+  for(const incomplete of [
+   archiveRows.slice(-1), // a valid recent week with all preceding history gone
+   archiveRows.filter(row=>row.MapDate!=='20120807'), // an internal gap breaks a saved comparison
+   archiveRows.slice(0,-1), // the most recently verified week disappears
+  ]){
+   rows=incomplete;
+   clock+=dm.DROUGHT_SERIES_REFRESH_MS+1;
+   const response=await route.GET();
+   assert.equal(response.status,200);
+   assert.equal(response.headers.get('cache-control'),'public, max-age=300');
+   const retained=await response.json();
+   assert.ok(dm.validDroughtSeries(retained));
+   assert.deepEqual(retained,{...initial,retained:'incomplete'});
+   const count=asked.length;
+   assert.deepEqual(asked.slice(-2),['20','KS']);
+   clock+=dm.DROUGHT_SERIES_RETRY_MS-1;
+   assert.deepEqual(await (await route.GET()).json(),retained);
+   assert.equal(asked.length,count,'retries still respect the five-minute backoff');
+  }
+
+  // Coverage, not byte equality, is the admission rule for corrections and new weeks.
+  rows=archiveRows.map(row=>row.MapDate==='20120807'?{...row,D2:2.75}:row);
+  clock+=dm.DROUGHT_SERIES_RETRY_MS;
+  const corrected=await (await route.GET()).json();
+  assert.equal(corrected.weeks.length,1403);
+  assert.equal(corrected.weeks.find(week=>week.date==='20120807').shares[2],2.75);
+  assert.notEqual(corrected.retrievedAt,initial.retrievedAt);
+  assert.equal(corrected.retained,undefined);
+
+  rows=[...rows,{...rows.at(-1),MapDate:'20261124'}];
+  clock=Date.parse('2026-11-26T14:00:00Z');
+  const extended=await (await route.GET()).json();
+  assert.equal(extended.weeks.length,1404);
+  assert.equal(extended.weeks.at(-1).date,'20261124');
+  assert.equal(extended.retained,undefined);
+
+  rows=archiveRows.slice(-1);
+  const cold=await (await load()).GET();
+  assert.equal(cold.status,503);
+  assert.equal(cold.headers.get('cache-control'),'no-store');
+  const unavailable=await cold.json();
+  assert.equal(unavailable.reason,'incomplete');
+  assert.equal(unavailable.weeks,undefined);
+  rows=archiveRows; // Accept the verified-through-previous-week archive while publication is delayed.
+  const delayed=await (await load()).GET();
+  assert.equal(delayed.status,200);
+  assert.equal((await delayed.json()).weeks.at(-1).date,'20261117');
  }finally{Date.now=realNow;}
 });
 
@@ -276,6 +344,8 @@ test('history loading is separate from the weekly map and its source remains ava
    ['history retry pending',{},true,false],
    ['history failed with a usable weekly map',{seriesFailed:true},false,false],
    ['weekly map failed with usable history',{weeks,failed:true},false,true],
+   ['cold partial history leaves the weekly map usable',{seriesFailed:'incomplete'},false,false],
+   ['retained history stays selectable',{weeks,seriesRetained:{reason:'incomplete',retrievedAt:'2026-11-23T18:00:00.000Z'}},false,true],
    ['both requests failed',{seriesFailed:true,failed:true},false,false],
   ]){
    const state={...drought,...patch,comparison:{
@@ -284,8 +354,12 @@ test('history loading is separate from the weekly map and its source remains ava
    const tree=h.render(h.exports.CategoryMapDock,{...base,drought:state});
    const panel=findNode(tree,n=>n.props?.className==='category-map-dock-drought');
    const status=findNode(panel,n=>n.props?.role==='status');
-   assert.equal(Boolean(status),historyPending,name);
-   if(status)assert.equal(status.props.children,'Loading Kansas drought history…',name);
+   assert.equal(Boolean(status),historyPending||Boolean(state.seriesRetained),name);
+   if(historyPending)assert.equal(status.props.children,'Loading Kansas drought history…',name);
+   if(state.seriesRetained){
+    assert.match(JSON.stringify(status),/incomplete Kansas history.*Showing the archive retrieved/);
+    assert.equal(findNode(status,n=>n.type==='time').props.dateTime,state.seriesRetained.retrievedAt);
+   }
    assert.equal(Boolean(findNode(panel,n=>n.type===h.exports.DroughtChart)),chartVisible,name);
    assert.equal(Boolean(findNode(panel,n=>n.type===h.exports.DroughtWeekComparison)),chartVisible,name);
    const reading=findNode(panel,n=>n.type==='p'&&n.props.className==='category-map-dock-reading');
@@ -296,7 +370,8 @@ test('history loading is separate from the weekly map and its source remains ava
    assert.equal(links[0].props.children,'U.S. Drought Monitor source ↗',name);
    assert.equal(links[0].props.target,'_blank',name);
    assert.equal(links[0].props.rel,'noreferrer',name);
-   assert.equal(JSON.stringify(panel).includes('The USDM statistics did not answer'),state.seriesFailed,name);
+   assert.equal(JSON.stringify(panel).includes('The USDM statistics did not answer'),state.seriesFailed===true,name);
+   if(state.seriesFailed==='incomplete')assert.match(JSON.stringify(panel),/returned an incomplete Kansas history/);
   }
   const closed=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,on:false}});
   assert.ok(!findNode(closed,n=>n.props?.className==='category-map-dock-drought'),'a hidden tool announces no history load');
@@ -443,7 +518,9 @@ test('the page keeps the newest and the dozen weeks read most recently, the week
 test('while shown, the newest map and the Kansas series are read again as they age; past weeks are not',()=>{
  assert.equal(dm.DROUGHT_NEWEST_REFRESH_MS,3600000);assert.equal(dm.DROUGHT_SERIES_REFRESH_MS,21600000);
  assert.match(page,/if \(current\) \{\s*\/\/[^\n]*\n\s*if \(droughtId !== "newest"\) return;\s*const age = Date\.now\(\) - \(droughtReadAtRef\.current\.get\(droughtId\) \?\? 0\);\s*if \(age < DROUGHT_NEWEST_REFRESH_MS\) \{\s*const timer = setTimeout\(\(\) => setDroughtTick\(tick => tick \+ 1\), DROUGHT_NEWEST_REFRESH_MS - age\);/);
- assert.match(page,/const age = droughtSeries \? Date\.now\(\) - droughtSeriesReadAtRef\.current : Infinity;\s*if \(age < DROUGHT_SERIES_REFRESH_MS\)/);
+ assert.equal(dm.DROUGHT_SERIES_RETRY_MS,300000);
+ assert.match(page,/const refreshAfter = droughtSeries\?\.retained \? DROUGHT_SERIES_RETRY_MS : DROUGHT_SERIES_REFRESH_MS;\s*if \(age < refreshAfter\)/);
+ assert.match(page,/setDroughtSeries\(\{ \.\.\.droughtSeries, retained: failure \}\)/,'a browser refresh failure preserves history and marks it retained');
  assert.match(page,/setDroughtMaps\(maps => rememberDroughtMap\(maps, droughtId, value\)\);/);
  assert.match(page,/if \(current\) \{ droughtReadAtRef\.current\.set\(droughtId, Date\.now\(\)\); setDroughtTick\(tick => tick \+ 1\); \}\s*else setDroughtFailed\(droughtId\);/,'a failed re-read keeps the newest map shown');
  assert.match(page,/setDroughtFailed\(null\);\s*setDroughtSeriesFailed\(false\);/,'showing it again retries the series');
