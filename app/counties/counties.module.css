@@ -1,0 +1,9 @@
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 18px 0; padding: 0; list-style: none; }
+.facts li { border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 10px; padding: 12px 14px; }
+.facts span { display: block; font-size: 0.82rem; opacity: 0.78; }
+.facts strong { display: block; font-size: 1.15rem; margin: 2px 0; }
+.facts em { display: block; font-style: normal; font-size: 0.82rem; opacity: 0.78; }
+.index { columns: 4 160px; column-gap: 24px; padding: 0; list-style: none; }
+.index li { padding: 3px 0; break-inside: avoid; }
+.neighbors { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 0; list-style: none; }
+.source { font-size: 0.9rem; opacity: 0.85; }
