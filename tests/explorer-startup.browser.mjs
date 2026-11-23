@@ -993,15 +993,43 @@ async function droughtLoaded(p, week) {
 
 async function droughtScroll(p, selector, touch = false) {
   await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollTo({top:0,behavior:'instant'})`);
-  const before = await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node.getBoundingClientRect(),point={x:r.left+r.width/2,y:r.top+r.height/2};return {point,top:node.scrollTop,max:node.scrollHeight-node.clientHeight,height:r.height,hit:node.contains(document.elementFromPoint(point.x,point.y)),page:[scrollX,scrollY]};})()`);
-  assert.ok(before.hit, 'scroll gesture starts on the real panel, not an overlay');
+  // Let the compositor commit the reset, then start on passive panel content.
+  // A native range input can consume a touch gesture intended for scrolling.
+  await p.evaluate(`new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))`);
+  const before = await p.evaluate(`(()=>{
+    const node=document.querySelector(${JSON.stringify(selector)}),r=node.getBoundingClientRect();
+    const points=[.75,.6,.45].flatMap(fraction=>[{x:r.left+r.width/2,y:r.top+r.height*fraction},{x:r.left+8,y:r.top+r.height*fraction}]);
+    const point=points.find(point=>{const hit=document.elementFromPoint(point.x,point.y);return hit&&node.contains(hit)&&!hit.closest('button,input,select,a,summary,[role="slider"]');});
+    if(!point)throw new Error('No visible passive panel content for native scrolling');
+    const hit=document.elementFromPoint(point.x,point.y),ancestors=[];
+    for(let current=hit;current;current=current.parentElement)ancestors.push({tag:current.tagName,class:String(current.className),touchAction:getComputedStyle(current).touchAction});
+    const state={point,top:node.scrollTop,max:node.scrollHeight-node.clientHeight,height:r.height,target:{tag:hit.tagName,class:String(hit.className)},ancestors,page:[scrollX,scrollY],viewport:{width:innerWidth,height:innerHeight,outerWidth,outerHeight}};
+    window.__droughtScrollTrace={before:state,events:[]};
+    for(const type of ['touchstart','touchmove','touchcancel','scroll'])node.addEventListener(type,event=>{queueMicrotask(()=>window.__droughtScrollTrace.events.push({type:event.type,trusted:event.isTrusted,prevented:event.defaultPrevented,target:String(event.target?.className),top:node.scrollTop}));},{passive:true,once:true});
+    return state;
+  })()`);
   assert.ok(before.max>2, 'the real panel content needs scrolling');
-  if (touch) await p.call('Input.synthesizeScrollGesture', { ...before.point, xDistance:0, yDistance:-Math.min(200,before.height*.35), speed:600, preventFling:true, gestureSourceType:'touch' });
-  else {
+  if (touch) {
+    const {x,y}=before.point,distance=Math.min(80,before.height*.3);
+    await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
+    for(let index=1;index<=8;index++){
+      await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-distance*index/8}]});
+      await pause(25);
+    }
+    await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  } else {
     await p.call('Input.dispatchMouseEvent', { type:'mouseMoved', ...before.point });
     await p.call('Input.dispatchMouseEvent', { type:'mouseWheel', ...before.point, deltaX:0, deltaY:240 });
   }
-  await p.wait(`document.querySelector(${JSON.stringify(selector)}).scrollTop>1`, 'native gesture scrolls the instrument itself');
+  try {
+    await p.wait(`document.querySelector(${JSON.stringify(selector)}).scrollTop>1`, 'native gesture scrolls the instrument itself');
+  } catch(error) {
+    throw new Error(error.message+'; drought native-scroll trace: '+JSON.stringify(await p.evaluate(`window.__droughtScrollTrace`)));
+  }
+  if(touch){
+    const events=await p.evaluate(`window.__droughtScrollTrace.events`);
+    assert.ok(['touchstart','touchmove'].every(type=>events.some(event=>event.type===type&&event.trusted)), 'the panel received trusted native touch input');
+  }
   assert.deepEqual(await p.evaluate(`[scrollX,scrollY]`), before.page, 'the gesture does not displace the page');
   assert.equal(await p.evaluate(`document.documentElement.scrollWidth>innerWidth+1`), false, 'no horizontal page overflow');
 }
@@ -1160,12 +1188,12 @@ for(const nextOwner of ['newer keyboard focus','reopened tool']){
     await p.wait(`!document.querySelector('.category-map-dock') && window.__droughtCloseFrames.length===1`, 'actual close focus handoff is pending');
     if(nextOwner==='newer keyboard focus'){
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`); await p.key('Tab','Tab',9);
-      await p.evaluate(`window.__droughtNextFocus=document.activeElement`);
+      await p.evaluate(`void(window.__droughtNextFocus=document.activeElement)`);
       assert.equal(await p.evaluate(`document.activeElement===document.body || !!document.activeElement.closest('[inert]')`),false,'a newer native Tab choice owns visible focus');
     }else{
       await openCategoryTool(p,'Drought history & change');
       await p.wait(`document.activeElement?.matches('[data-category-tool="drought"]')`, 'new tool entry completes its own focus handoff');
-      await p.evaluate(`window.__droughtNextFocus=document.activeElement`);
+      await p.evaluate(`void(window.__droughtNextFocus=document.activeElement)`);
     }
     await p.evaluate(`new Promise(resolve=>{window.requestAnimationFrame=window.__droughtNativeFrame;for(const callback of window.__droughtCloseFrames.splice(0))requestAnimationFrame(callback);requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));})`);
     assert.equal(await p.evaluate(`document.activeElement===window.__droughtNextFocus`),true,'delayed close cannot steal the newer focus owner');
