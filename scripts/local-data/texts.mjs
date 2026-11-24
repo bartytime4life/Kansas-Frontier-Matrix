@@ -135,7 +135,10 @@ function countMatches(db,table,match,accept,facets,meta,yearOf,titleOf){
 /** Snippets for the rows on one page: the only reads of the text rows themselves. */
 function snippets(db,table,match,ids){
  if(!ids.length)return new Map();
- const rows=db.prepare(`SELECT rowid AS id,snippet(${table},0,?,?,'…',24) AS snippet FROM ${table} WHERE ${table} MATCH ? AND rowid IN (${ids.map(()=>'?').join(',')})`).all(SNIPPET_OPEN,SNIPPET_CLOSE,match,...ids);
+ // Node binds Number as SQLite REAL. On the installed FTS5 engine a REAL IN
+ // constraint can read every matching document instead of just this page.
+ // BigInt preserves INTEGER row IDs; returned IDs stay Numbers for the maps.
+ const rows=db.prepare(`SELECT rowid AS id,snippet(${table},0,?,?,'…',24) AS snippet FROM ${table} WHERE ${table} MATCH ? AND rowid IN (${ids.map(()=>'?').join(',')})`).all(SNIPPET_OPEN,SNIPPET_CLOSE,match,...ids.map(id=>BigInt(id)));
  return new Map(rows.map(r=>[r.id,str(r.snippet)]));
 }
 
