@@ -360,8 +360,9 @@ streams native FTS5 rank order and stops after the requested page, retaining
 exact filtered facets and the existing 10,000+ count cap.
 
 Before installing this gateway on dev, apply the additive partial index
-`kfm_environmental_usgs_site_minute` from `water.mjs` under the existing pipeline
-lock. It indexes only USGS site/time/parameter/geometry metadata; no observations
+`kfm_environmental_usgs_site_minute_cover` from `water.mjs` under the existing pipeline
+lock. It indexes only USGS captures, with site/time/parameter/geometry expressions and
+the original JSON for covering reads; no observations
 are changed. Both captured-water datasets require it. Keep all gateway
 EnvironmentFile overlays when switching the immutable release.
 

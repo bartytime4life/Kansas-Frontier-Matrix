@@ -95,14 +95,16 @@ const USGS_SOURCE=Object.freeze({temporalMode:'historical-capture',provider:'USG
  notes:'Historical captures, not a live gauge feed. Most values are provisional (approval_status) and may be revised by the USGS. Times are UTC; generatedAt and cache state describe relay delivery, not observation freshness.'});
 const SITE=/^USGS-\d{8,15}$/;
 // Only the USGS capture rows enter this compact index. Metadata-only grouping can read
-// it without loading and parsing every captured GeoJSON body from the spinning disk.
-export const USGS_CAPTURE_INDEX=Object.freeze({name:'kfm_environmental_usgs_site_minute',sql:`CREATE INDEX IF NOT EXISTS kfm_environmental_usgs_site_minute ON kfm_environmental_features(
+// it without parsing every captured GeoJSON body. The trailing JSON makes it
+// covering on the pipeline's WITHOUT ROWID table, avoiding a random primary-key
+// verification for every capture even when the selected expressions are indexed.
+export const USGS_CAPTURE_INDEX=Object.freeze({name:'kfm_environmental_usgs_site_minute_cover',sql:`CREATE INDEX IF NOT EXISTS kfm_environmental_usgs_site_minute_cover ON kfm_environmental_features(
  json_extract(feature_json,'$.properties.monitoring_location_id'),
  substr(json_extract(feature_json,'$.properties.time'),1,16),
  json_extract(feature_json,'$.properties.time'),
  json_extract(feature_json,'$.properties.parameter_code'),
- json_extract(feature_json,'$.geometry')) WHERE source_id='usgs-streamflow'`});
-const USGS_CAPTURE=" FROM kfm_environmental_features INDEXED BY kfm_environmental_usgs_site_minute WHERE source_id='usgs-streamflow'";
+ json_extract(feature_json,'$.geometry'),feature_json) WHERE source_id='usgs-streamflow'`});
+const USGS_CAPTURE=" FROM kfm_environmental_features INDEXED BY kfm_environmental_usgs_site_minute_cover WHERE source_id='usgs-streamflow'";
 
 export const usgsStreamflowSites={
  id:'usgs-streamflow-sites',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow sites',indexes:[USGS_CAPTURE_INDEX],source:USGS_SOURCE,

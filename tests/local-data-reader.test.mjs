@@ -29,7 +29,7 @@ test('the USGS expression index searches a site and minute range without changin
  const result=usgsStreamflow.run(wrapped,usgsStreamflow.parse({site:'USGS-06864500',from:'2026-11-01T12:00',to:'2026-11-01T12:00',parameter:'00060'}));
  assert.equal(result.total,1);assert.equal(result.rows[0].time,'2026-11-01T12:00:59Z');
  const plan=db.prepare('EXPLAIN QUERY PLAN '+statements[0]).all('USGS-06864500','2026-11-01T12:00','2026-11-01T12:00','00060').map(x=>x.detail).join(' ');
- assert.match(plan,/SEARCH.*kfm_environmental_usgs_site_minute/);
+ assert.match(plan,/SEARCH.*kfm_environmental_usgs_site_minute_cover/);
 });
 
 test('an index dropped after a successful query is detected before the next read',t=>{
