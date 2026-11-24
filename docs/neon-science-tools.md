@@ -37,6 +37,26 @@ no provider credential, cost, service or source-admission change. HTTP and
 controller tests do not establish actual GPU or visual acceptance; Chrome must
 render the deployed route for that separate evidence lane.
 
+## Terrain card entry
+
+The existing welcome **Terrain & elevation / Relief model** card is also the
+home for the historical **NEON · Konza pilot** source row. **Konza 3D** opens
+`/terrain` directly; **Terrain Science** opens `/labs/terrain`. The same small
+navigation entry is visible in the terrain Chosen map and full-screen preview
+panels, outside source-note disclosures. These are ordinary links: showing the
+card or a terrain preview starts no NEON request and creates no duplicate
+viewer/controller.
+
+The card body still opens the existing relief map; its arrow still opens that
+relief preview, and its plus still adds/removes Terrain in a combined map. The
+new entry does not change category defaults, relief elevation, photo-real/aerial
+context or their providers. The broad relief preview uses its existing Mapzen
+Terrarium display DEM; photo-real context may explicitly choose USGS 3DEP.
+Neither is the historical NEON ground/surface/independent-canopy sample tile.
+The Konza row labels September 2024 as a catalog month and retains sampled
+preview/review-pending scope. The accepted direct viewer, source mathematics,
+startup scheduler, cache/relay and Science/export contracts are unchanged.
+
 ## Shared data contract
 
 `app/neon-lidar-science.ts` exports `createNeonScienceDataset(input)` and

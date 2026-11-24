@@ -1184,3 +1184,62 @@ test('expanded preview Escape ignores background disclosures but retains their l
   }finally{h.harness.dispose();}
  }
 });
+
+
+const terrainEntry=tree=>findNode(tree,n=>n.type==='section'&&n.props['aria-label']==='Historical NEON Konza pilot');
+const topicChoice=(tree,id)=>findNode(tree,n=>n.props?.className==='topic-choice'&&n.props['data-carousel-topic']===id);
+const visibleCopy=node=>typeof node==='string'||typeof node==='number'?String(node):[node?.props?.children].flat(Infinity).filter(v=>v!=null).map(visibleCopy).join(' ').replace(/\s+/g,' ');
+function checkTerrainLinks(entry){
+ assert.ok(entry);assert.equal(findNode(entry,n=>n.type==='a'&&n.props.href==='/terrain').props.children[0],'Konza 3D ');
+ assert.equal(findNode(entry,n=>n.type==='a'&&n.props.href==='/labs/terrain').props.children[0],'Terrain Science ');
+ assert.match(visibleCopy(entry),/NEON · Konza pilot.*Historical Sep 2024 · catalog month/);
+ assert.match(visibleCopy(entry),/Sampled preview|sampled preview/);assert.match(visibleCopy(entry),/review pending/);
+ const visit=(node,interactive=false)=>{
+  if(!node||typeof node!=='object')return;
+  const current=['a','button'].includes(node.type);assert.ok(!(current&&interactive),'new source links never nest inside a link/button');
+  for(const child of [node.props?.children].flat(Infinity))visit(child,interactive||current);
+ };
+ visit(entry);
+}
+
+test('the exact terrain card exposes native Konza/Science destinations without acquiring data or changing arrow/plus/body actions',async()=>{
+ let requests=0;const h=await welcome(false,{fetch:()=>{requests++;throw Error('Terrain navigation must not acquire a preview');}});h.props.onMaps=ids=>h.calls.push(['maps',Array.from(ids)]);
+ try{
+  let tree=h.render(),card=topicChoice(tree,'terrain');checkTerrainLinks(terrainEntry(card));
+  for(const topic of TOPIC_STRUCTURE.filter(t=>t.id!=='terrain'))assert.equal(terrainEntry(topicChoice(tree,topic.id)),undefined,`${topic.id} has no Konza source entry`);
+  const parentCheck=(node,parent)=>{if(!node||typeof node!=='object')return;if(node.type==='a'&&['/terrain','/labs/terrain'].includes(node.props.href)&&parent?.type==='button')assert.fail('link nested in card button');for(const child of [node.props?.children].flat(Infinity))parentCheck(child,node);};parentCheck(card);
+  addCard(tree,'water').props.onClick();addCard(tree,'terrain').props.onClick();tree=h.render();assert.equal(addCard(tree,'terrain').props['aria-pressed'],true);assert.deepEqual(h.calls,[],'plus changes combined selection only');
+  previewCard(tree,'terrain').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],true);assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'terrain');assert.deepEqual(h.calls,[],'arrow still previews the relief category');
+  byText(tree,'Return to categories').props.onClick();tree=h.render();assert.equal(addCard(tree,'terrain').props['aria-pressed'],true,'return preserves selection');
+  findNode(topicChoice(tree,'terrain'),n=>n.type==='button'&&n.props.className?.includes('topic-callout')).props.onClick();assert.deepEqual(h.calls,[['maps',['terrain']],['close',false]],'body still opens its named relief map');
+  assert.equal(requests,0,'render and original map actions introduce no NEON acquisition');
+ }finally{h.harness.dispose();}
+});
+
+test('terrain chosen-map and full-screen panels repeat the same source entry outside disclosures; other categories and filters do not',async()=>{
+ const h=await welcome(false,{window:wideWindow});
+ try{
+  let tree=h.render();assert.equal(terrainEntry(focusPanel(tree)),undefined);
+  findNode(topicChoice(tree,'terrain'),n=>n.type==='button'&&n.props.className?.includes('topic-callout')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
+  const panel=focusPanel(tree);checkTerrainLinks(terrainEntry(panel));assert.ok(panel.props.children.includes(terrainEntry(panel)),'entry is a direct child, outside the closed About disclosure');
+  assert.equal(terrainEntry(findNode(panel,n=>n.type==='details')),undefined);assert.match(visibleCopy(terrainEntry(panel)),/Separate from the relief \/ aerial display context/);
+  previewCard(tree,'terrain').props.onClick();tree=h.render();checkTerrainLinks(terrainEntry(findNode(tree,n=>n.props?.className==='welcome-layer-demo')));
+  findNode(tree,n=>n.props?.className==='welcome-rail-card'&&n.props['data-topic']==='weather').props.onClick();tree=h.render();assert.equal(terrainEntry(findNode(tree,n=>n.props?.className==='welcome-layer-demo')),undefined);
+  byText(tree,'Return to categories').props.onClick();tree=h.render();findNode(tree,n=>n.type==='input'&&n.props['aria-describedby']==='topic-search-results').props.onChange({target:{value:'water'}});tree=h.render();
+  assert.equal(topicChoice(tree,'terrain'),undefined);assert.equal(terrainEntry(tree),undefined,'filtering out Terrain removes associated source entries');assert.deepEqual(h.calls,[]);
+ }finally{h.harness.dispose();}
+});
+
+test('phone terrain centering reserves its source-row deck only while that visible card is selected',async()=>{
+ const viewport=viewportWindow(390,844),h=await welcome(false,{window:viewport.window});
+ try{
+  h.render();let tree=h.render();assert.equal(rootOf(tree).props['data-carousel'],true);assert.equal(rootOf(tree).props['data-terrain-entry'],undefined);
+  let left=0;const cards=TOPIC_STRUCTURE.map((topic,index)=>({dataset:{carouselTopic:topic.id},getBoundingClientRect:()=>({left:50+index*300-left,width:280}),focus(){}}));
+  findNode(tree,n=>n.props?.className==='discovery-field discovery-field--grouped').props.ref.current={get scrollLeft(){return left;},scrollWidth:cards.length*300,clientWidth:390,getBoundingClientRect:()=>({left:0,width:390}),querySelector:selector=>cards.find(card=>selector.includes(card.dataset.carouselTopic)),querySelectorAll:()=>cards,scrollTo:options=>{left=options.left;}};
+  findNode(topicChoice(tree,'terrain'),n=>n.type==='button'&&n.props.className?.includes('topic-callout')).props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
+  assert.equal(rootOf(tree).props['data-terrain-entry'],true);checkTerrainLinks(terrainEntry(topicChoice(tree,'terrain')));
+  assert.ok(previewCard(tree,'terrain')&&addCard(tree,'terrain'),'both original touch targets remain present');
+  findNode(topicChoice(tree,'water'),n=>n.type==='button'&&n.props.className?.includes('topic-callout')).props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();assert.equal(rootOf(tree).props['data-terrain-entry'],undefined,'other centered topics retain their existing deck');
+  findNode(topicChoice(tree,'terrain'),n=>n.type==='button'&&n.props.className?.includes('topic-callout')).props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();findNode(tree,n=>n.type==='input'&&n.props['aria-describedby']==='topic-search-results').props.onChange({target:{value:'water'}});tree=h.render();assert.equal(rootOf(tree).props['data-terrain-entry'],undefined,'hidden Terrain cannot reserve a source row');assert.equal(terrainEntry(tree),undefined);assert.deepEqual(h.calls,[]);
+ }finally{h.harness.dispose();}
+});

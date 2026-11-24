@@ -37,6 +37,14 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
   <details className="welcome-aviation-notes"><summary>Source edition &amp; display limits</summary>{data?.edition&&<p>{data.edition.text} Source inventory: {data.volumes} airspace volumes; not all are visible in this view. Only zones are previewed here; airports, airways and other tools are in the opened map.</p>}<small>{mode==='slice'?'Only mapped volumes intersecting 4,000 ft MSL. ':mode==='3d'?'1× display heights above reference airport ground; not a terrain-clearance model. ':''}Not for navigation or authorization. Unshaded areas are not an all-clear; temporary restrictions and drone grids are separate.</small></details>
  </div>;
 }
+// Pure navigation only: the existing viewer owns acquisition and rendering.
+function renderTerrainSourceEntry(compact=false){
+ return <section className="terrain-source-entry" data-compact={compact||undefined} aria-label="Historical NEON Konza pilot">
+  <p><strong>NEON · Konza pilot</strong><span>Historical Sep 2024 · catalog month</span></p>
+  <div className="terrain-source-actions"><a href="/terrain">Konza 3D <span aria-hidden="true">↗</span></a><a href="/labs/terrain">Terrain Science <span aria-hidden="true">↗</span></a></div>
+  <small>{compact?'Sampled preview · review pending':'Ground, surface & independent canopy · sampled preview · review pending. Separate from the relief / aerial display context.'}</small>
+ </section>;
+}
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange,onSources=/** @type {(() => void) | undefined} */ (undefined)}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
   const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0),returnCardLeft=useRef(0);
@@ -275,7 +283,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   }
   function openSelection(){if(selection)run(()=>onMaps?onMaps(selection.topics):(onMap||onTopic)(selection.topics[0]));}
   const selectedIndex=TOPICS.findIndex(t=>t.id===control);
-  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-carousel={carousel} data-layout={atlas?"atlas":undefined} data-centered-topic={carousel?centered:undefined} data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
+  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-carousel={carousel} data-terrain-entry={carousel&&!fullscreen&&centered==='terrain'&&filteredTopics.some(t=>t.id==='terrain')||undefined} data-layout={atlas?"atlas":undefined} data-centered-topic={carousel?centered:undefined} data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
       <div className="welcome-capability-stage"><DomainStage topic={carousel||touched||atlas?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||storyOpen||(!engaged&&!fullscreen&&!atlas)} reduced={reduced} onPreviewState={setPreviewState}/></div>
@@ -324,6 +332,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           <button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} aria-label={`Open ${t.title} map: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){if(carousel)centerTopic(t.id,'instant');else engage(t.id);}}} onKeyDown={e=>carouselKey(e,t.id)} onBlur={release} onClick={()=>openTopicMap(t.id)}>
             <span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look?.name}</span><span className="topic-demo-label">Open map →</span></span>
           </button><div className="topic-card-actions"><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button><button type="button" className="topic-add" data-topic={t.id} aria-label={`${selectedTopics.includes(t.id)?'Remove':'Add'} ${t.title} ${selectedTopics.includes(t.id)?'from':'to'} combined map`} aria-pressed={selectedTopics.includes(t.id)} onClick={()=>toggleTopic(t.id)}><span aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span></button></div>
+          {t.id==='terrain'&&renderTerrainSourceEntry(true)}
         </div>)}</div>)}</section>
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try fewer words or another group.{selectedTopics.length>0?' Your combined map stays selected.':''}</p><button type="button" onClick={clearTopicFilters}>Show all topics</button></div>}
         {atlas&&<nav className="welcome-record-rail" aria-label="The public record">
@@ -343,6 +352,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           <button type="button" aria-label="Full-screen preview" onClick={()=>showStage(control)}>Preview <span aria-hidden="true">↗</span></button>
           <button type="button" aria-pressed={selectedTopics.includes(control)} onClick={()=>toggleTopic(control)}>{selectedTopics.includes(control)?'✓ In my map':'+ Add to my map'}</button>
         </div>
+        {control==='terrain'&&renderTerrainSourceEntry()}
         {/* The map keeps the screen: facets, the glimpse and the record fold away under one disclosure, their hooks unchanged. */}
         <details className="welcome-focus-more"><summary>About this map &amp; its records</summary>
         <ul className="welcome-focus-facets" aria-label="What this map covers">{atlasTopic.facets.map(facet=><li key={facet}>{facet}</li>)}</ul>
@@ -363,6 +373,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           {(control==='aviation'||welcomeView(control).starters?.length>0||welcomeView(control).scientificLayers?.length>0)&&<button type="button" aria-label={carousel?(layersVisible?'Hide layers in preview':'Show layers in preview'):(layersVisible?'Hide starter layers':'Show starter layers')} aria-pressed={layersVisible} onClick={()=>setLayersVisible(!layersVisible)}>{carousel?(layersVisible?'Hide layers':'Show layers'):(layersVisible?'Hide starter layers':'Show starter layers')}</button>}
           <button type="button" aria-label={carousel?'Details: source notes & demonstrations':'Source notes & demonstrations'} onClick={()=>openTopic(control,true)}>{carousel?'Details':'Source notes & demonstrations'}</button>
         </div>
+        {control==='terrain'&&renderTerrainSourceEntry()}
         <p>{glimpse?.try}</p><small>{glimpse?.limit}</small>
         {control==='geology'&&<button type="button" className="welcome-text-action" onClick={()=>run(()=>onAction('underground'))}>Open Underground Explorer →</button>}
         {control==='aviation'&&<details className="welcome-aviation-disclosure" open={!carousel}><summary>Airspace view &amp; source</summary><AviationGlimpse mode={aviationMode} onMode={setAviationMode} state={previewState?.topic===control?previewState:null} layersVisible={layersVisible}/></details>}
