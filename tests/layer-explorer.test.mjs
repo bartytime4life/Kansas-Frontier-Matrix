@@ -12,7 +12,7 @@ const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, 
 const declarations = new Map();
 function walk(node) { if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) declarations.set(node.name.text, node.initializer.getText(ast)); ts.forEachChild(node, walk); }
 walk(ast);
-const project = new Function("bindings", compile(`function project(bindings: any) { const { ARCHIVE_LAYERS, archiveSelection, OFFICIAL_CONTEXT_SOURCES, officialSourceTopics, specialtyLayerTopics, registryLayerTopics, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, aviationSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
+const project = new Function("bindings", compile(`function project(bindings: any) { const { terrainCellsEnabled, ARCHIVE_LAYERS, archiveSelection, OFFICIAL_CONTEXT_SOURCES, officialSourceTopics, specialtyLayerTopics, registryLayerTopics, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, aviationSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
 const catalogEntries = ${declarations.get("catalogEntries")};
 const selectedMapLayerCount = ${declarations.get("selectedMapLayerCount")};
 const matchingCatalogEntries = ${declarations.get("matchingCatalogEntries")};
@@ -20,23 +20,23 @@ return { catalogEntries, selectedMapLayerCount, matchingCatalogEntries }; }`) + 
 
 test("actual page catalog includes every selected family; all tab/topic/search projections preserve state", () => {
   const state = {
-    ...catalog, ...archive, archiveSelection:["archive-prism"], OFFICIAL_CONTEXT_SOURCES: [{ id: "usgs-streamflow", title: "River streamflow", shortTitle: "River Pulse", organization: "USGS", domain: "Living waters", defaultVisibility: true }, { id: "nws-radar", title: "Weather radar", shortTitle: "Radar", organization: "NOAA", domain: "Weather & hazards", defaultVisibility: false }],
+    ...catalog, ...archive, terrainCellsEnabled:true, archiveSelection:["archive-prism"], OFFICIAL_CONTEXT_SOURCES: [{ id: "usgs-streamflow", title: "River streamflow", shortTitle: "River Pulse", organization: "USGS", domain: "Living waters", defaultVisibility: true }, { id: "nws-radar", title: "Weather radar", shortTitle: "Radar", organization: "NOAA", domain: "Weather & hazards", defaultVisibility: false }],
     officialVisibility: { "usgs-streamflow": true, "nws-radar": true }, daylightEnabled: true, soilMapState: { visible: true, day: "2026-09-28", opacity: .67 }, cropSelected: true, reviewedWaterSelected: true, reviewedWeatherSelected: true, aviationSelected: true,
     EARTH_ENGINE_CONTEXT_LAYERS: [{ id: "ee-cdl", title: "crop classes", source: "USDA", attribution: "NASS" }], earthEngineDisplay: { visible: { "ee-cdl": true }, years: { "ee-cdl": 1999 } },
     LAYER_REGISTRY: [{ id: "registry", title: "Historical places", domain: "History", description: "Dated anchors" }], visibility: { registry: true },
     layerCatalogView: "selected", officialWorkspace: "all", officialSourceQuery: "",
   };
   const before = JSON.stringify(state), result = project(state);
-  assert.equal(result.selectedMapLayerCount, 11, "includes archive, held crop/water/weather, daylight, soil, aviation, selected uninstalled imagery, official and registry");
+  assert.equal(result.selectedMapLayerCount, 12, "includes archive, held crop/water/weather, daylight, soil, aviation, selected uninstalled imagery, official and registry");
   assert.equal(result.matchingCatalogEntries.length, result.selectedMapLayerCount);
-  for (const [query, topic, expected] of [["PRISM", "weather", ["archive-prism"]], ["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop"]], ["solar", "terrain", ["daylight"]], ["GHCN", "disaster", ["reviewed-weather"]], ["nass", "land", ["crop", "ee-cdl"]], ["airspace", "aviation", ["aviation"]], ["not present", "all", []]]) {
+  for (const [query, topic, expected] of [["terrain cells", "terrain", ["terrain-cells"]], ["PRISM", "weather", ["archive-prism"]], ["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop"]], ["solar", "terrain", ["daylight"]], ["GHCN", "disaster", ["reviewed-weather"]], ["nass", "land", ["crop", "ee-cdl"]], ["airspace", "aviation", ["aviation"]], ["not present", "all", []]]) {
     const filtered = project({ ...state, officialWorkspace: topic, officialSourceQuery: query });
-    assert.equal(filtered.matchingCatalogEntries.length,11,"On map ignores the hidden Browse filters");
+    assert.equal(filtered.matchingCatalogEntries.length,12,"On map ignores the hidden Browse filters");
     assert.deepEqual(result.catalogEntries.filter(entry=>catalog.layerEntryMatches(entry,"selected",topic,query)).map(entry=>entry.id),expected);
-    assert.equal(filtered.selectedMapLayerCount, 11, "count remains total selection, independent of search");
+    assert.equal(filtered.selectedMapLayerCount, 12, "count remains total selection, independent of search");
   }
   assert.deepEqual(project({ ...state, layerCatalogView: "local" }).matchingCatalogEntries.map(entry => entry.id), ["ee-cdl"]);
-  assert.equal(project({ ...state, layerCatalogView: "official" }).matchingCatalogEntries.length, 9 + archive.ARCHIVE_LAYERS.length);
+  assert.equal(project({ ...state, layerCatalogView: "official" }).matchingCatalogEntries.length, 10 + archive.ARCHIVE_LAYERS.length);
   assert.equal(JSON.stringify(state), before, "filter projections cannot mutate any owner selection, date or opacity");
 });
 

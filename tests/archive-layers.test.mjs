@@ -15,6 +15,13 @@ const get=id=>catalog.archiveLayer('archive-'+id);
 const polygon={type:'Polygon',coordinates:[[[-99,38],[-98,38],[-98,39],[-99,38]]]};
 const answer=(dataset,rows,extra={})=>({format:'kfm-local-data-v1',dataset,total:rows.length,count:rows.length,rows,source:{provider:'Fixture',coverage:'Synthetic test only',notes:'Not observations'},generatedAt:'2026-11-03T12:00:00Z',...extra});
 
+test('archive errors distinguish slow and busy queries without echoing an upstream message',async()=>{
+ const signal=new AbortController().signal;
+ await assert.rejects(data.fetchArchive('archive-search',{},signal,async()=>Response.json({reasonCode:'QUERY_TIMEOUT',hint:'untrusted detail'},{status:503})),/Narrow the date range/);
+ await assert.rejects(data.fetchArchive('archive-search',{},signal,async()=>Response.json({reasonCode:'QUERY_BUSY'},{status:503})),/data service is busy/);
+ await assert.rejects(data.fetchArchive('archive-search',{},signal,async()=>new Response('<html>upstream failure</html>',{status:503})),/Archive service unavailable/);
+});
+
 test('every existing public dataset and TIGER layer has an explicit map use or accuracy hold',()=>{
  assert.deepEqual(Object.keys(catalog.ARCHIVE_DATASET_USES).sort(),[...DATASETS.keys()].sort());
  assert.deepEqual(catalog.ARCHIVE_LAYERS.filter(l=>l.kind==='tiger').map(l=>l.reference),TIGER_LAYERS);

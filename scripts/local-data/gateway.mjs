@@ -10,7 +10,9 @@
 import {createServer} from 'node:http';
 import {readFileSync,statSync} from 'node:fs';
 import {pathToFileURL} from 'node:url';
-import {DatabaseSync} from 'node:sqlite';
+import {createDatabaseReader} from './database-reader.mjs';
+import {createQueryPool} from './query-pool.mjs';
+export {missingIndexes} from './database-reader.mjs';
 import {decodeSecret,verifyRequest,signResponse,createNonceCache,RESPONSE_SIGNATURE_HEADER} from '../home-inference/signature.mjs';
 import {LOCAL_DATA_GATEWAY,LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS,LOCAL_DATA_DATA_PREFIX} from './protocol.mjs';
 import {DATASETS} from './datasets.mjs';
@@ -20,7 +22,6 @@ import {lidarViewConfig,requestLidarView,loadLidarViewReceipt,loadLidarViewArtif
 import {LIDAR_VIEW_ROUTES,validViewKey} from './lidar-view-model.mjs';
 import {GROUND_ROUTE} from './ground-model.mjs';
 import {groundConfig,requestGround} from './ground-store.mjs';
-import {datasetFreshness,collectionsFreshness} from './freshness.mjs';
 
 const fail=code=>Object.assign(new Error(code),{code});
 const LOOPBACK=new Set(['127.0.0.1','::1']);
@@ -37,37 +38,18 @@ export function loadGatewayKey(path){
  return {keyId:value.id,secret};
 }
 
-/** Index names a dataset needs that its database does not have yet. */
-export function missingIndexes(db,dataset){
- if(!dataset.indexes.length)return [];
- const present=new Set(db.prepare(`SELECT name FROM sqlite_master WHERE type='index' AND name IN (${dataset.indexes.map(()=>'?').join(',')})`).all(...dataset.indexes.map(i=>i.name)).map(r=>r.name));
- return dataset.indexes.map(i=>i.name).filter(n=>!present.has(n));
-}
-
 /**
  * The gateway as a function of one request, so it can be tested without a socket.
  * databases: {observations, tiger, nwm, bulk} file paths (all but observations optional). dbPath is the
  * phase 1 name for databases.observations.
  */
-export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,neonPreview=null,lidarPoints=null,lidarView=null,ground=null,open=path=>new DatabaseSync(path,{readOnly:true})}){
+export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,neonPreview=null,lidarPoints=null,lidarView=null,ground=null,open,execute}){
  const secret=typeof rawSecret==='string'?decodeSecret(rawSecret):rawSecret;
  if(!Buffer.isBuffer(secret))throw fail('GATEWAY_KEY_INVALID');
  const keys=new Map([[keyId,{id:keyId,secret}]]),nonces=createNonceCache({clock});
- // Per-database memory that outlives one question: index checks that passed, PRISM's grid catalog, TIGER columns.
- const caches=new Map(),cacheFor=path=>{if(!caches.has(path))caches.set(path,new Map());return caches.get(path);};
- const ready=(db,path,dataset)=>{
-  const cache=cacheFor(path),key='ready:'+dataset.id;
-  if(cache.get(key))return [];
-  const missing=missingIndexes(db,dataset);if(!missing.length)cache.set(key,true);
-  return missing;
- };
- const withDatabase=(name,fn)=>{
-  const path=databases[name];if(!path)throw fail('DATABASE_NOT_CONFIGURED');
-  let db;try{db=open(path);}catch{throw fail('DATABASE_UNAVAILABLE');}
-  try{return fn(db,path);}finally{try{db.close();}catch{}}
- };
+ const read=execute??createDatabaseReader({databases,open,clock});
 
- return function handle({method,path,headers,body=''}){
+ return function handle({method,path,headers,body='',signal}){
   const reply=(status,value)=>{
    const bytes=Buffer.from(JSON.stringify({gateway:LOCAL_DATA_GATEWAY,...value}));
    return {status,body:bytes,signature:signResponse({secret,requestHeaders:headers,method,path,requestBody:body,status,body:bytes})};
@@ -117,39 +99,27 @@ export function createGateway({keyId,secret:rawSecret,dbPath,databases={observat
    }catch{return reply(503,{error:'NEON_PREVIEW_NOT_READY'});}
   }
 
-  if(path==='/v1/health'){
-   // Readiness and freshness per dataset, and freshness per recovered collection: bookkeeping
-   // lookups only (freshness.mjs), so health stays cheap enough for the website to ask every few minutes.
-   const collections={};
-   const datasets=[...DATASETS.values()].map(d=>{
-    try{
-     return withDatabase(d.db,(db,p)=>{
-      const missing=ready(db,p,d),cache=cacheFor(p);
-      const entry=missing.length?{id:d.id,ready:false,reason:'INDEX_MISSING'}:{id:d.id,ready:true};
-      entry.freshness=datasetFreshness(db,d,{cache});
-      if(d.freshness?.collections)Object.assign(collections,collectionsFreshness(db,d.freshness.collections,{cache}));
-      return entry;
-     });
-    }catch(error){return {id:d.id,ready:false,reason:error.code==='DATABASE_NOT_CONFIGURED'?'DATABASE_NOT_CONFIGURED':'DATABASE_UNAVAILABLE',freshness:{reason:'UNAVAILABLE'}};}
-   });
-   let stormEvents=null;
-   try{stormEvents=withDatabase('observations',db=>db.prepare('SELECT COUNT(*) AS n FROM kfm_storm_event_details').get().n);}catch{}
-   return reply(stormEvents===null?503:200,{ok:stormEvents!==null,datasets,collections,stormEvents,generatedAt:new Date(clock()).toISOString()});
-  }
+  const databaseError=error=>{
+   const code=error?.code;
+   if(code==='QUERY_INVALID')return reply(400,{error:code});
+   if(code==='REPLY_TOO_LARGE')return reply(413,{error:code});
+   return reply(503,{error:['DATASET_NOT_READY','QUERY_TIMEOUT','QUERY_BUSY'].includes(code)?code:'DATABASE_UNAVAILABLE'});
+  };
+  const run=(operation,format)=>{
+   try{
+    const value=read(operation,{signal});
+    return value&&typeof value.then==='function'?value.then(format).catch(databaseError):format(value);
+   }catch(error){return databaseError(error);}
+  };
+  if(path==='/v1/health')return run({kind:'health'},value=>reply(value.ok?200:503,value));
 
   const dataset=DATASETS.get(path.slice(LOCAL_DATA_DATA_PREFIX.length));
-  let query;try{query=dataset.parse(JSON.parse(body));}catch{return reply(400,{error:'QUERY_INVALID'});}
-  try{
-   const result=withDatabase(dataset.db,(db,dbPath)=>{
-    if(ready(db,dbPath,dataset).length)throw fail('DATASET_NOT_READY');
-    return dataset.run(db,query,{cache:cacheFor(dbPath)});
-   });
+  let input;try{input=JSON.parse(body);dataset.parse(input);}catch{return reply(400,{error:'QUERY_INVALID'});}
+  return run({kind:'dataset',id:dataset.id,input},({query,result})=>{
    const {rows,total,...extra}=result;
    const answer=reply(200,{format:dataset.format??'kfm-local-data-v1',dataset:dataset.id,query,total,count:rows.length,...extra,[dataset.rowsKey??'rows']:rows,source:dataset.source,generatedAt:new Date(clock()).toISOString()});
    return answer.body.length>LOCAL_DATA_LIMITS.replyBytes?reply(413,{error:'REPLY_TOO_LARGE'}):answer;
-  }catch(error){
-   return reply(503,{error:error.code==='DATASET_NOT_READY'?'DATASET_NOT_READY':'DATABASE_UNAVAILABLE'});
-  }
+  });
  };
 }
 
@@ -163,13 +133,17 @@ async function readBody(request){
 
 export function startGateway({host='127.0.0.1',port=8788,log=line=>console.log(JSON.stringify(line)),...options}){
  if(!LOOPBACK.has(host))throw fail('GATEWAY_HOST_NOT_LOOPBACK');
- const handle=createGateway(options);
+ const pool=options.execute?null:createQueryPool({databases:options.databases??{observations:options.dbPath}});
+ const handle=createGateway({...options,execute:options.execute??pool.run});
  const server=createServer(async(request,response)=>{
   let body;try{body=await readBody(request);}catch{response.writeHead(413).end();return;}
   const url=new URL(request.url,'http://localhost');
   if(url.search){response.writeHead(404).end();return;}
   const started=Date.now();
-  const answer=handle({method:request.method,path:url.pathname,headers:request.headers,body});
+  const controller=new AbortController();
+  response.once('close',()=>{if(!response.writableEnded)controller.abort();});
+  const answer=await handle({method:request.method,path:url.pathname,headers:request.headers,body,signal:controller.signal});
+  if(response.destroyed)return;
   response.writeHead(answer.status,{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',[RESPONSE_SIGNATURE_HEADER]:answer.signature});
   response.end(answer.body);
   // One line per question, so use and latency per dataset can be measured from the journal.
@@ -177,6 +151,7 @@ export function startGateway({host='127.0.0.1',port=8788,log=line=>console.log(J
   const dataset=url.pathname.startsWith(LOCAL_DATA_DATA_PREFIX)?url.pathname.slice(LOCAL_DATA_DATA_PREFIX.length):null;
   log({at:new Date(started).toISOString(),event:'answered',path:LOCAL_DATA_ROUTES.has(url.pathname)?url.pathname:'unknown',dataset:DATASETS.has(dataset)?dataset:null,status:answer.status,ms:Date.now()-started,bytes:answer.body.length});
  });
+ server.once('close',()=>{void pool?.close();});
  server.requestTimeout=LOCAL_DATA_LIMITS.gatewayMs;
  return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>resolve(server));});
 }

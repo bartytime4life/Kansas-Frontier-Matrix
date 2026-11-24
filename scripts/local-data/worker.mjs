@@ -17,6 +17,16 @@ export function createLocalDataWorker(config,overrides={}){
  return createWorker({...config,routes:LOCAL_DATA_ROUTES,sitePrefix:LOCAL_DATA_WORKER_PREFIX,version:LOCAL_DATA_WORKER,limits:LOCAL_DATA_WORKER_LIMITS,...overrides});
 }
 
+// Match the gateway's two read slots. A slow archive request must not occupy
+// the only outbound lease lane and delay unrelated map/source questions.
+export const LOCAL_DATA_WORKER_LANES=2;
+export async function runLocalDataWorkers(config,signal,factory=createLocalDataWorker){
+ const stop=new AbortController(),linked=signal?AbortSignal.any([signal,stop.signal]):stop.signal;
+ try{
+  await Promise.all(Array.from({length:LOCAL_DATA_WORKER_LANES},()=>factory(config)).map(async worker=>{try{await worker.run(linked);}finally{stop.abort();}}));
+ }finally{stop.abort();}
+}
+
 async function main(argv){
  let config;
  try{config=loadWorkerConfig({...process.env,KFM_WORKER_GATEWAY:process.env.KFM_WORKER_GATEWAY||'http://127.0.0.1:8788'});}
@@ -28,7 +38,7 @@ async function main(argv){
  }
  const controller=new AbortController();
  process.once('SIGTERM',()=>controller.abort());process.once('SIGINT',()=>controller.abort());
- await worker.run(controller.signal);
+ await runLocalDataWorkers(config,controller.signal);
  return 0;
 }
 

@@ -118,9 +118,16 @@ export async function fetchArchive(dataset: string, query: Record<string,string>
     signal.throwIfAborted();
     response = await fetcher(`/api/local-data/${dataset}?${new URLSearchParams(query)}`,{signal,credentials:'same-origin'});
     if(response.ok) value = await readBoundedJson(response,1_000_000,signal);
+    else if(response.status===503){
+      try{value=await readBoundedJson(response,4096,signal);}catch{signal.throwIfAborted();}
+    }
     else void response.body?.cancel().catch(()=>undefined);
   } finally {release();}
   if (response.status === 413 && Number(query.limit)>1) return fetchArchive(dataset,{...query,limit:String(Math.max(1,Math.floor(Number(query.limit)/2)))},signal,fetcher);
+  if(response.status===503&&record(value)){
+    if(value.reasonCode==='QUERY_TIMEOUT')throw new Error('This request took too long. Narrow the date range, choose one title, or use a smaller map area.');
+    if(value.reasonCode==='QUERY_BUSY')throw new Error('The data service is busy. Try again in a moment.');
+  }
   if (!response.ok) throw new Error(response.status === 503 || response.status === 404 ? 'Archive service unavailable. Try again in a moment.' : 'The archive request could not be completed.');
   if (!record(value) || value.dataset !== dataset || !['kfm-local-data-v1','kfm-local-data-storm-events-v1'].includes(String(value.format))) throw new Error('Unexpected archive response.');
   const rows = value.rows ?? value.events;

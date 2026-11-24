@@ -48,7 +48,7 @@ async function readBody(request,limits){
 export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY_LIMITS,routes=ROUTES,workerPrefix='/api/home-worker/v1',diagnostic=code=>console.warn('[KFM home relay] '+code)}){
  const queue=[],leased=new Map(),nonces=createNonceCache({clock}),workerKeys=new Map([[worker.keyId,{id:worker.keyId,secret:worker.secret}]]);
  const workerRoute=new RegExp('^'+workerPrefix.replace(/[.*+?^${}()|[\]\\/]/g,'\\$&')+'/(?:lease|status|result)$');
- let waiter=null,lastSeen=0;const noted=new Map();
+ const waiters=[],pollers=limits.pollers===2?2:1;let lastSeen=0;const noted=new Map();
  // Fixed codes only, and each at most once a minute so refused traffic cannot flood logs.
  const note=code=>{const now=clock();if(now-(noted.get(code)??-Infinity)<60000)return;noted.set(code,now);try{diagnostic(code);}catch{}};
  const settle=(job,outcome)=>{
@@ -82,17 +82,18 @@ export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY
   const waitMs=path==='/v1/chat'&&occupied?Math.min(INFERENCE_BUDGETS.queueMs,ahead*INFERENCE_BUDGETS.queueSlotMs):0;
   arm(job,limits.unleasedMs+waitMs,'GATEWAY_UNREACHABLE');
   queue.push(job);
-  if(waiter){const wake=waiter;waiter=null;wake();}
+  if(waiters.length)waiters.shift()();
  });
 
  const lease=async request=>{
   const ready=take();if(ready)return json(ready);
-  // Hold one long-poll. A newer poll from the worker replaces an older one.
-  if(waiter){const previous=waiter;waiter=null;previous();}
+  // Inference stays serial by default; data may opt into two bounded lanes.
+  // Replace only an excess poll, retaining the existing stale-poll recovery.
+  if(waiters.length>=pollers)waiters.shift()();
   await new Promise(resolve=>{
    const timer=setTimeout(done,limits.leaseWaitMs);timer.unref?.();
-   function done(){clearTimeout(timer);request.signal?.removeEventListener?.('abort',done);if(waiter===done)waiter=null;resolve();}
-   waiter=done;request.signal?.addEventListener?.('abort',done,{once:true});
+   function done(){clearTimeout(timer);request.signal?.removeEventListener?.('abort',done);const i=waiters.indexOf(done);if(i>=0)waiters.splice(i,1);resolve();}
+   waiters.push(done);request.signal?.addEventListener?.('abort',done,{once:true});
   });
   const next=take();
   return next?json(next):new Response(null,{status:204,headers:{'Cache-Control':'no-store'}});

@@ -94,15 +94,26 @@ export const usgsEarthquakes={
 const USGS_SOURCE=Object.freeze({temporalMode:'historical-capture',provider:'USGS Water Data API (continuous values)',url:'https://api.waterdata.usgs.gov/',coverage:'Kansas monitoring locations captured hourly by the pipeline since October 2026',
  notes:'Historical captures, not a live gauge feed. Most values are provisional (approval_status) and may be revised by the USGS. Times are UTC; generatedAt and cache state describe relay delivery, not observation freshness.'});
 const SITE=/^USGS-\d{8,15}$/;
+// Only the USGS capture rows enter this compact index. Metadata-only grouping can read
+// it without parsing every captured GeoJSON body. The trailing JSON makes it
+// covering on the pipeline's WITHOUT ROWID table, avoiding a random primary-key
+// verification for every capture even when the selected expressions are indexed.
+export const USGS_CAPTURE_INDEX=Object.freeze({name:'kfm_environmental_usgs_site_minute_cover',sql:`CREATE INDEX IF NOT EXISTS kfm_environmental_usgs_site_minute_cover ON kfm_environmental_features(
+ json_extract(feature_json,'$.properties.monitoring_location_id'),
+ substr(json_extract(feature_json,'$.properties.time'),1,16),
+ json_extract(feature_json,'$.properties.time'),
+ json_extract(feature_json,'$.properties.parameter_code'),
+ json_extract(feature_json,'$.geometry'),feature_json) WHERE source_id='usgs-streamflow'`});
+const USGS_CAPTURE=" FROM kfm_environmental_features INDEXED BY kfm_environmental_usgs_site_minute_cover WHERE source_id='usgs-streamflow'";
 
 export const usgsStreamflowSites={
- id:'usgs-streamflow-sites',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow sites',indexes:[],source:USGS_SOURCE,
+ id:'usgs-streamflow-sites',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow sites',indexes:[USGS_CAPTURE_INDEX],source:USGS_SOURCE,
  params:{limit:'1-500 (500)',offset:'0-1000'},
  parse(input){only(input,['limit','offset']);return page(input,{max:500,fallback:500,maxOffset:1000});},
  run(db,q){
   const sql="SELECT json_extract(feature_json,'$.properties.monitoring_location_id') AS site,COUNT(*) AS n,MIN(json_extract(feature_json,'$.properties.time')) AS first,MAX(json_extract(feature_json,'$.properties.time')) AS last,"
-   +"group_concat(DISTINCT json_extract(feature_json,'$.properties.parameter_code')) AS parameters,MAX(json_extract(feature_json,'$.geometry')) AS geometry"+CAPTURE+" GROUP BY site ORDER BY site";
-  const all=db.prepare(sql).all('usgs-streamflow').filter(r=>SITE.test(r.site??'')).map(r=>{
+   +"group_concat(DISTINCT json_extract(feature_json,'$.properties.parameter_code')) AS parameters,MAX(json_extract(feature_json,'$.geometry')) AS geometry"+USGS_CAPTURE+" GROUP BY site ORDER BY site";
+  const all=db.prepare(sql).all().filter(r=>SITE.test(r.site??'')).map(r=>{
    let geometry=null;try{geometry=JSON.parse(r.geometry);}catch{}
    return {site:r.site,readings:r.n,first:str(r.first),last:str(r.last),parameters:String(r.parameters??'').split(',').filter(Boolean).sort(),geometry};
   });
@@ -111,7 +122,7 @@ export const usgsStreamflowSites={
 };
 
 export const usgsStreamflow={
- id:'usgs-streamflow',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow readings',indexes:[],source:USGS_SOURCE,
+ id:'usgs-streamflow',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow readings',indexes:[USGS_CAPTURE_INDEX],source:USGS_SOURCE,
  params:{site:'monitoring location (required), e.g. USGS-07144100',parameter:'5-digit USGS parameter code, e.g. 00060 discharge',from:'YYYY-MM-DDTHH:MM UTC',to:'YYYY-MM-DDTHH:MM UTC',limit:'1-1000 (500)',offset:'0-100000'},
  parse(input){
   only(input,['site','parameter','from','to','limit','offset']);
@@ -119,9 +130,9 @@ export const usgsStreamflow={
   ordered(q.from,q.to);return q;
  },
  run(db,q){
-  const where=["json_extract(feature_json,'$.properties.monitoring_location_id')=?","substr(json_extract(feature_json,'$.properties.time'),1,16) BETWEEN ? AND ?"],params=['usgs-streamflow',q.site,q.from,q.to];
+  const where=["json_extract(feature_json,'$.properties.monitoring_location_id')=?","substr(json_extract(feature_json,'$.properties.time'),1,16) BETWEEN ? AND ?"],params=[q.site,q.from,q.to];
   if(q.parameter){where.push("json_extract(feature_json,'$.properties.parameter_code')=?");params.push(q.parameter);}
-  const clause=CAPTURE+where.map(w=>' AND '+w).join('');
+  const clause=USGS_CAPTURE+where.map(w=>' AND '+w).join('');
   const total=db.prepare('SELECT COUNT(*) AS n'+clause).get(...params).n;
   const rows=db.prepare("SELECT feature_json"+clause+" ORDER BY json_extract(feature_json,'$.properties.time') LIMIT ? OFFSET ?").all(...params,q.limit,q.offset).map(r=>{
    const f=feature(r.feature_json),p=f?.properties??{};

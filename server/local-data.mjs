@@ -30,7 +30,7 @@ export const LOCAL_DATA_WORKER_PREFIX='/api/local-data-worker/v1';
 // bytes caps the memory held by cached answers, whatever their number.
 export const LOCAL_DATA_CACHE=Object.freeze({freshMs:15*60000,staleMs:7*24*3600000,entries:500,bytes:64*1024*1024,workerSeenMs:30000});
 // The worker's /result carries up to replyBytes base64-encoded, over a home upload link.
-export const LOCAL_DATA_RELAY_LIMITS=Object.freeze({...RELAY_LIMITS,queue:16,requestBytes:Math.ceil(LOCAL_DATA_LIMITS.replyBytes*4/3)+4096,bodyMs:15000,
+export const LOCAL_DATA_RELAY_LIMITS=Object.freeze({...RELAY_LIMITS,pollers:2,queue:16,requestBytes:Math.ceil(LOCAL_DATA_LIMITS.replyBytes*4/3)+4096,bodyMs:15000,
  replyBytes:LOCAL_DATA_LIMITS.replyBytes,unleasedMs:8000,
  leasedMs:Object.freeze(Object.fromEntries([...LOCAL_DATA_ROUTES.keys()].map(path=>[path,LOCAL_DATA_LIMITS.gatewayMs+5000])))});
 const error=code=>Object.assign(new Error(code),{code});
@@ -92,6 +92,7 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
   if(status===400)throw error('QUERY_INVALID');
   if(status===413)throw error('REPLY_TOO_LARGE');
   if(status===503&&value.error==='DATASET_NOT_READY')throw error('DATASET_NOT_READY');
+  if(status===503&&['QUERY_TIMEOUT','QUERY_BUSY'].includes(value.error))throw error(value.error);
   if(status<200||status>299)throw error('LOCAL_DATA_UNAVAILABLE');
   return {value,bytes:bytes.length};
  };
@@ -142,6 +143,12 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
    // The PC is off, busy, not ready or unreachable: the last answer, clearly marked, or a plain offline state.
    if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60,tier);
    if(failure.code==='DATASET_NOT_READY')return json({state:'local-data-preparing',reasonCode:'DATASET_NOT_READY'},503);
+   if(failure.code==='QUERY_TIMEOUT')return json({state:'local-data-slow',reasonCode:'QUERY_TIMEOUT',hint:'This request took too long. Try a narrower date range, one title, or a smaller map area.'},503);
+   if(failure.code==='QUERY_BUSY'||failure.code==='GATEWAY_BUSY'){
+    const response=json({state:'local-data-busy',reasonCode:'QUERY_BUSY',hint:'The data service is busy. Try again in a moment.'},503);
+    response.headers.set('Retry-After','2');return response;
+   }
+   if(workerOnline())return json({state:'local-data-unavailable',reasonCode:'LOCAL_DATA_UNAVAILABLE',hint:'This data request is temporarily unavailable. Try again in a moment.'},503);
    return json({state:'local-data-offline',reasonCode:'LOCAL_DATA_UNAVAILABLE'},503);
   }
  };

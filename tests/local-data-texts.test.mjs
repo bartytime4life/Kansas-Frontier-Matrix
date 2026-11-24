@@ -106,6 +106,9 @@ test('the count stops at the cap and the dataset is refused without its FTS inde
  for(let i=0;i<TOTAL_CAP+5;i++){const id=1000+i;insert.run(i,id,'sn84029386','1920-01-01','https://example.org/'+id,'flood level');fts.run(id,'flood level');}
  const a=run(db,{q:'flood',source:'newspapers',limit:'50'});
  assert.equal(a.total,TOTAL_CAP);assert.equal(a.totalCapped,true);assert.equal(a.rows.length,50);
+ const faceted=run(db,{q:'flood',source:'newspapers',facets:'1',limit:'1'});
+ assert.equal(faceted.total,TOTAL_CAP);assert.equal(faceted.totalCapped,true);
+ assert.deepEqual(faceted.facets.years,[{year:1920,hits:TOTAL_CAP+5}],'facet totals remain exact beyond the ordinary count cap');
  assert.throws(()=>run(fixture(t,{fts:false}),{q:'flood',source:'newspapers'}),{code:'DATASET_NOT_READY'});
  assert.throws(()=>run(fixture(t,{fts:false}),{q:'flood',source:'texts'}),{code:'DATASET_NOT_READY'});
 });

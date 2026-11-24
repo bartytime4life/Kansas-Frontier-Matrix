@@ -10,7 +10,8 @@ import {createHomeRelay} from '../server/home-relay.mjs';
 import {LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS} from '../scripts/local-data/protocol.mjs';
 import {parseStormQuery,stormEvent} from '../scripts/local-data/storm-events.mjs';
 import {createGateway,startGateway} from '../scripts/local-data/gateway.mjs';
-import {createLocalDataWorker} from '../scripts/local-data/worker.mjs';
+import {createDatabaseReader} from '../scripts/local-data/database-reader.mjs';
+import {createLocalDataWorker,runLocalDataWorkers} from '../scripts/local-data/worker.mjs';
 import {localDataConfig,createLocalDataService,localDataRuntime,localDataWorkerRuntime,LOCAL_DATA_CACHE,LOCAL_DATA_RELAY_LIMITS,LOCAL_DATA_WORKER_PREFIX} from '../server/local-data.mjs';
 
 const SITE='https://kansasfrontiermatrix.com';
@@ -45,6 +46,35 @@ async function fixtureDb(t,{bulk=0,narrative=''}={}){
 const signed=(path,body='',{keyId='data-gw-1',secret=gatewaySecret,method=path==='/v1/health'?'GET':'POST'}={})=>({method,path,body,headers:{...signRequest({keyId,secret,method,path,body}),...(body?{'content-type':'application/json'}:{})}});
 const parse=answer=>JSON.parse(answer.body.toString('utf8'));
 const verified=(request,answer)=>verifyResponse({secret:decodeSecret(gatewaySecret),requestHeaders:request.headers,method:request.method,path:request.path,requestBody:request.body,status:answer.status,body:answer.body,headers:{[RESPONSE_SIGNATURE_HEADER]:answer.signature}});
+
+test('slow database work returns a signed timeout and authentication/replay checks remain in the parent',async()=>{
+ let calls=0,release;
+ const handle=createGateway({keyId:'data-gw-1',secret:gatewaySecret,execute:()=>{calls++;return new Promise((resolve,reject)=>{release=()=>reject(Object.assign(new Error(),{code:'QUERY_TIMEOUT'}));});}});
+ const bad=signed('/v1/data/storm-events','{}',{secret:newSecret()});
+ assert.equal(handle(bad).status,401);assert.equal(calls,0);
+ const request=signed('/v1/data/storm-events','{}'),pending=handle(request);
+ assert.equal(handle(request).status,401,'a pending request cannot replay its nonce');
+ release();const answer=await pending;
+ assert.equal(answer.status,503);assert.equal(parse(answer).error,'QUERY_TIMEOUT');assert.ok(verified(request,answer));
+});
+
+test('signed timeouts and busy replies are distinguished from a worker being offline',async()=>{
+ for(const code of ['QUERY_TIMEOUT','QUERY_BUSY']){
+  const config=localDataConfig({KFM_LOCAL_DATA:'1',KFM_LOCAL_DATA_ORIGIN:SITE,KFM_LOCAL_DATA_GATEWAY_KEY_ID:'data-gw-1',KFM_LOCAL_DATA_GATEWAY_SECRET:gatewaySecret,KFM_LOCAL_DATA_WORKER_KEY_ID:'data-worker-1',KFM_LOCAL_DATA_WORKER_SECRET:workerSecret});
+  const handle=createGateway({keyId:'data-gw-1',secret:gatewaySecret,execute:async()=>{throw Object.assign(new Error(),{code});}});
+  const relay={lastSeen:Date.now(),handler:()=>{},submit:async({method,path,body})=>{
+   const request=signed(path,body,{method}),answer=await handle(request);
+   return {status:answer.status,bytes:answer.body,requestHeaders:request.headers,headers:new Headers({'content-type':'application/json',[RESPONSE_SIGNATURE_HEADER]:answer.signature})};
+  }};
+  const service=createLocalDataService({config,relay});
+  const response=await service.query(new Request(SITE+'/api/local-data/storm-events'),'storm-events'),body=await response.json();
+  assert.equal(response.status,503);assert.equal(body.reasonCode,code);assert.equal(body.state,code==='QUERY_TIMEOUT'?'local-data-slow':'local-data-busy');assert.ok(body.hint);
+  if(code==='QUERY_BUSY')assert.equal(response.headers.get('Retry-After'),'2');
+  relay.lastSeen=0;
+  const offline=await (await service.query(new Request(SITE+'/api/local-data/storm-events'),'storm-events')).json();
+  assert.equal(offline.state,'local-data-offline');
+ }
+});
 
 test('storm queries are normalized and anything else is refused',()=>{
  assert.deepEqual(parseStormQuery({}),{county:null,from:'1950-01-01',to:'2100-12-31',type:null,limit:50,offset:0});
@@ -130,12 +160,12 @@ test('routes stay off unless configured, and the worker route answers only on th
 });
 
 // The website, relay, worker and loopback gateway together; only the website is simulated in-process.
-async function link(t,{dbPath,tamper=false}){
+async function link(t,{dbPath,tamper=false,execute,parallel=false}){
  let now=Date.now();const clock=()=>now;
  const config=localDataConfig({KFM_LOCAL_DATA:'1',KFM_LOCAL_DATA_ORIGIN:SITE,KFM_LOCAL_DATA_GATEWAY_KEY_ID:'data-gw-1',KFM_LOCAL_DATA_GATEWAY_SECRET:gatewaySecret,KFM_LOCAL_DATA_WORKER_KEY_ID:'data-worker-1',KFM_LOCAL_DATA_WORKER_SECRET:workerSecret});
  const relay=createHomeRelay({keyId:config.keyId,secret:config.secret,worker:config.worker,clock,limits:{...LOCAL_DATA_RELAY_LIMITS,leaseWaitMs:150},routes:LOCAL_DATA_ROUTES,workerPrefix:LOCAL_DATA_WORKER_PREFIX,diagnostic:()=>{}});
  const service=createLocalDataService({config,relay,clock});
- const server=await startGateway({host:'127.0.0.1',port:0,keyId:'data-gw-1',secret:gatewaySecret,dbPath});
+ const server=await startGateway({host:'127.0.0.1',port:0,keyId:'data-gw-1',secret:gatewaySecret,dbPath,execute});
  const gateway='http://127.0.0.1:'+server.address().port,trips=[];
  const transport=async(url,init)=>{
   if(url.startsWith(SITE))return relay.handler(new Request(url,init));
@@ -146,8 +176,8 @@ async function link(t,{dbPath,tamper=false}){
   const text=(await response.text()).replaceAll('SEDGWICK','DOUGLAS');
   return new Response(text,{status:response.status,headers:response.headers});
  };
- const worker=createLocalDataWorker({site:SITE,gateway,keyId:'data-worker-1',secret:decodeSecret(workerSecret)},{fetchImpl:transport,log:()=>{}});
- const stop=new AbortController(),running=worker.run(stop.signal);
+ const workerConfig={site:SITE,gateway,keyId:'data-worker-1',secret:decodeSecret(workerSecret)},factory=config=>createLocalDataWorker(config,{fetchImpl:transport,log:()=>{}});
+ const stop=new AbortController(),running=parallel?runLocalDataWorkers(workerConfig,stop.signal,factory):factory(workerConfig).run(stop.signal);
  const halt=async()=>{if(stop.signal.aborted)return;stop.abort();await running;};
  t.after(async()=>{await halt();server.closeAllConnections?.();await new Promise(resolve=>server.close(resolve));});
  while(relay.lastSeen===0)await new Promise(resolve=>setTimeout(resolve,10));
@@ -218,4 +248,18 @@ test('the data relay and the chat relay cannot carry each other\'s traffic',asyn
  assert.equal(validLease(lease('/v1/chat'),LOCAL_DATA_ROUTES),false);
  assert.equal(validLease(lease('/v1/data/storm-events'),LOCAL_DATA_ROUTES),true);
  assert.equal(validLease(lease('/v1/data/storm-events')),false);
+});
+
+
+test('two outbound data lanes return an unrelated signed answer while a slow query remains pending',async t=>{
+ const dbPath=await fixtureDb(t),read=createDatabaseReader({databases:{observations:dbPath}});let release,enter,blocked=false;
+ const entered=new Promise(resolve=>{enter=resolve;});
+ const execute=operation=>{if(!blocked&&operation.kind==='dataset'){blocked=true;return new Promise(resolve=>{release=()=>resolve(read(operation));enter();});}return read(operation);};
+ const {get}=await link(t,{dbPath,execute,parallel:true});let slowDone=false;const slow=get('county=173').then(value=>{slowDone=true;return value;});await entered;
+ let timer;
+ try{
+  const fast=await Promise.race([get('county=45'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Unrelated answer blocked behind slow query')),2000);})]);
+  assert.equal(fast.status,200);assert.deepEqual((await fast.json()).events.map(event=>event.eventId),[1003]);assert.equal(slowDone,false,'first read is still waiting while another signed result completes');
+ }finally{clearTimeout(timer);release();}
+ assert.equal((await slow).status,200);
 });

@@ -1,5 +1,5 @@
 "use client";
-import { KansasLidarBadge, KansasLidarLayers, useKansasLidarView } from "./kansas-lidar-controls";
+import { KansasLidarBadge, KansasLidarLayers, TerrainCellsSwitch, useKansasLidarView } from "./kansas-lidar-controls";
 import { pickNativeLidarPoint } from "./native-lidar-layer";
 import { NeonLidarMapBadge, NeonLidarMapControls, useNeonLidarMap } from "./neon-lidar-map-controls";
 import { hasNeonLocalHit } from "./neon-lidar-map";
@@ -2245,7 +2245,9 @@ export default function Home() {
   const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
   const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
   const selectedEarthEngineCount = Object.values(earthEngineDisplay.visible).filter(Boolean).length;
+  const [terrainCellsEnabled, setTerrainCellsEnabled] = useState(false);
   const catalogEntries: LayerCatalogEntry[] = [
+    { id: "terrain-cells", title: "3D terrain cells", keywords: "lidar ground surface canopy height elevation solid landscape", topics: ["terrain"], selected: terrainCellsEnabled },
     ...ARCHIVE_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.provider} ${layer.note} archive SQL`, topics: layer.topics, selected: archiveSelection.includes(layer.id) })),
     ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: officialSourceTopics(source.id) })),
     { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: specialtyLayerTopics("daylight"), selected: daylightEnabled },
@@ -9571,7 +9573,7 @@ export default function Home() {
   };
 
   const neonLidarMap = useNeonLidarMap({ mapRef, styleReady, flatMap: projection === "mercator" && scenePreset !== "elevation-3d", atPresent: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, reducedMotion, onFlatMap: () => activateMapRepresentation("2d"), claimedClicksRef: neonClaimedMapClicksRef });
-  const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && (officialWorkspace === "terrain" || officialWorkspace === "all" && welcomeTopics[0] === "terrain"), scale: verticalExaggeration, reducedMotion: reducedMotion || !dynamicEffects, onViewMap: () => setCategoryDockHidden(true),
+  const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, cellsOn: terrainCellsEnabled, onCells: setTerrainCellsEnabled, scale: verticalExaggeration, reducedMotion: reducedMotion || !dynamicEffects, onViewMap: () => setCategoryDockHidden(true),
     onScale: changeTerrainDepth, onSelected: () => setCategoryDockHidden(false), onNativeIntent: () => neonLidarMap.cancelRead(), onGround: () => activateMapRepresentation("terrain") });
 
   const startTerrainInvestigation = () => {
@@ -11691,7 +11693,7 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
-        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
+        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{(welcomeTopics.includes("terrain")||terrainCellsEnabled)&&<button type="button" aria-pressed={terrainCellsEnabled} onClick={()=>terrainCellsEnabled?kansasLidar.showBaseLandscape():kansasLidar.setCellsOn(true)}>3D terrain cells · {terrainCellsEnabled?"on":"off"}</button>}{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
@@ -12147,6 +12149,7 @@ export default function Home() {
           {officialWorkspace === "geology" && <GeologyLayerControls visibility={geologyPointVisibility} onVisibility={setGeologyPointKind} mineVisibility={geologyMineVisibility} onMineVisibility={setGeologyMineKind}
             earthquakeMode={quakeRecordOn ? "record" : officialVisibility["usgs-earthquakes"] ? "recent" : "off"}
             onEarthquakeMode={setGeologyEarthquakeMode} onUnderground={toggleUnderground} recentTime={officialArchiveDays["usgs-earthquakes"]} />}
+          {shownCatalogIds.has("terrain-cells") && <TerrainCellsSwitch controller={kansasLidar} compact/>}
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView === "local"} aria-labelledby="official-context-title">
             <h2 id="official-context-title" className="sr-only">Map layers</h2>
             <p className="archive-map-notice"><Link href="/data-library">Browse all recovered public data →</Link></p>

@@ -14,13 +14,13 @@ import {createTerrainPreparationClient} from './terrain-preparation-client';
 import type {PreparedTerrain} from './terrain-preparation-model';
 import {useVisitorTerrainResources} from './visitor-terrain-resources';
 import styles from './kansas-lidar-controls.module.css';
-type Options={mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;active:boolean;scale:number;reducedMotion:boolean;onViewMap:()=>void;onScale?:(value:number)=>void;onGround:()=>void;onNativeIntent?:()=>void;onSelected?:()=>void};
+type Options={mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;active:boolean;cellsOn:boolean;onCells:(value:boolean)=>void;scale:number;reducedMotion:boolean;onViewMap:()=>void;onScale?:(value:number)=>void;onGround:()=>void;onNativeIntent?:()=>void;onSelected?:()=>void};
 export function useKansasLidarView(options:Options){
   const [mode,setMode]=useState<LidarGridMode>('ground'),[pointsOn,setPointsOn]=useState(false),[opacity,setOpacity]=useState(85),[pointSize,setPointSize]=useState(3),[color,setColor]=useState<NativeColorMode>('elevation');
   const [result,setResult]=useState<KansasLidarView|null>(null),[receipt,setReceipt]=useState<LidarViewReceipt|null>(null),[phase,setPhase]=useState('idle'),[error,setError]=useState(''),[epoch,setEpoch]=useState(0),[selected,setSelected]=useState<{kind:'point'|'cell';index:number}|null>(null),[readingKind,setReadingKind]=useState<'point'|'cell'>('point'),[draft,setDraft]=useState(''),[applied,setApplied]=useState({points:false,grid:false});
   const resources=useVisitorTerrainResources(),markSlow=resources.markSlow;
-  const [visible,setVisible]=useState(true),[preparer]=useState(createTerrainPreparationClient),[prepared,setPrepared]=useState<{grid:TerrainGrid;mode:LidarGridMode;scale:number;color:GroundColor;value:PreparedTerrain}|null>(null),[preparationPhase,setPreparationPhase]=useState('idle'),[preparationError,setPreparationError]=useState('');
-  const preparationCache=useRef<typeof prepared>(null),refreshCache=useRef({ground:false,native:false});
+  const [visible,setVisible]=useState(true),[preparer]=useState(createTerrainPreparationClient),[prepared,setPrepared]=useState<{grid:TerrainGrid;mode:LidarGridMode;scale:number;color:GroundColor;groundReceipt:GroundReceipt|null;value:PreparedTerrain}|null>(null),[preparationPhase,setPreparationPhase]=useState('idle'),[preparationError,setPreparationError]=useState('');
+  const handoff=useRef(false),preparationCache=useRef<typeof prepared>(null),refreshCache=useRef({ground:false,native:false});
   const [gridColor,setGridColor]=useState<GroundColor>('height'),[pinned,setPinned]=useState(false);
   const study=useRef<{id:number;bbox:[number,number,number,number];zoom:number}|null>(null),studyRevision=useRef(0),readingIntent=useRef(false);
   const [groundReceipt,setGroundReceipt]=useState<GroundReceipt|null>(null),[groundPhase,setGroundPhase]=useState('idle'),[groundError,setGroundError]=useState('');
@@ -32,7 +32,7 @@ export function useKansasLidarView(options:Options){
   // An inactive/replaced map cannot retain a study-camera lease.
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(()=>{if(!options.active||!options.styleReady){study.current=null;setPinned(false);}},[options.active,options.styleReady]);
-  const wanted=options.active&&options.styleReady&&(pointsOn||mode!=='ground');
+  const wanted=options.active&&options.styleReady&&(pointsOn||options.cellsOn&&mode!=='ground');
   useEffect(()=>{
     const map=options.mapRef.current;if(!map)return;
     const owned=(event:unknown)=>!!study.current&&(event as {kfmTerrainStudy?:number}|undefined)?.kfmTerrainStudy===study.current.id;
@@ -41,7 +41,7 @@ export function useKansasLidarView(options:Options){
       if(owned(event))return;
       study.current=null;setPinned(false);if(moving.current)return;
       moving.current=true;readingIntent.current=false;selection.current=null;
-      session.cancel();groundSession.cancel();preparer.cancel();setGroundReceipt(null);setGroundPhase('moving');setResult(null);setReceipt(null);setSelected(null);setDraft('');setPhase('moving');
+      session.cancel();groundSession.cancel();preparer.cancel();setGroundPhase('moving');setResult(null);setReceipt(null);setSelected(null);setDraft('');setPhase('moving');
     };
     const end=(event?:unknown)=>{if(owned(event))return;moving.current=false;setEpoch(n=>n+1);};
     // User gestures can interrupt an owned ease without a second movestart.
@@ -57,45 +57,53 @@ export function useKansasLidarView(options:Options){
     setResult(null);setReceipt(null);if(selection.current?.kind==='point'){selection.current=null;readingIntent.current=false;setSelected(null);setDraft('');}setError('');
     if(!wanted){setPhase('idle');return;}
     if(moving.current){setPhase('moving');return;}
-    const map=options.mapRef.current;if(!map)return;const bounds=map.getBounds(),query=canonicalLidarView(study.current?.bbox??[bounds.getWest(),bounds.getSouth(),bounds.getEast(),bounds.getNorth()],study.current?.zoom??map.getZoom(),[...(mode!=='ground'?[mode]:[]),...(pointsOn?['points']:[])]);
-    if(!query){setPhase('outside');return;}
+    const map=options.mapRef.current;if(!map)return;const bounds=map.getBounds(),query=canonicalLidarView(study.current?.bbox??[bounds.getWest(),bounds.getSouth(),bounds.getEast(),bounds.getNorth()],study.current?.zoom??map.getZoom(),[...(options.cellsOn&&mode!=='ground'?[mode]:[]),...(pointsOn?['points']:[])]);
+    if(!query){setResult(null);setPhase('outside');return;}
     setPhase('waiting');const request=session.begin();
     const timer=setTimeout(()=>{setPhase('loading');const bypassCache=refreshCache.current.native;refreshCache.current.native=false;void readKansasLidarView(query,request.signal,r=>{if(request.current()){setReceipt(r);setPhase(r.state);}},{bypassCache}).then(data=>{if(request.current()&&latest.current.mapRef.current===map&&latest.current.active){setResult(data);if(!readingIntent.current)setReadingKind(data.points?'point':'cell');setReceipt(data.receipt);setPhase(data.receipt.state);}}).catch(e=>{if(request.current()){setError(e instanceof Error?e.message:'LiDAR view unavailable');setPhase('unavailable');}});},300);
     return()=>{if(timer)clearTimeout(timer);session.cancel();};
-  },[wanted,mode,pointsOn,epoch,options.mapRef,options.active,options.styleReady,session,visible]);
+  },[wanted,mode,pointsOn,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,session,visible]);
   useEffect(()=>{
     groundSession.cancel();
     if(!visible)return;
     // A Ground grid belongs only to the committed current viewport.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setGroundReceipt(null);setGroundError('');
-    if(!options.active||!options.styleReady||mode!=='ground'){setGroundPhase('idle');return;}
+    setGroundError('');
+    if(!options.active||!options.styleReady||!options.cellsOn||mode!=='ground'){setGroundPhase('idle');return;}
     if(moving.current){setGroundPhase('moving');return;}
     const map=options.mapRef.current;if(!map)return;const b=map.getBounds(),query=canonicalGroundQuery(study.current?.bbox??[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()]);
-    if(!query){setGroundPhase('outside');return;}
+    if(!query){setGroundReceipt(null);setGroundPhase('outside');return;}
     setGroundPhase('waiting');const request=groundSession.begin();
     const publish=(response:GroundReceipt)=>{if(request.current()&&latest.current.mapRef.current===map&&latest.current.active){setGroundReceipt(response);setGroundPhase(response.state);if(response.grid&&!readingIntent.current)setReadingKind('cell');}};
     const timer=setTimeout(()=>{setGroundPhase('loading');const bypassCache=refreshCache.current.ground;refreshCache.current.ground=false;void readKansasGround(query,request.signal,publish,{bypassCache}).then(publish).catch(e=>{if(request.current()){setGroundError(e instanceof Error?e.message:'Ground grid unavailable');setGroundPhase('unavailable');}});},300);
     return()=>{clearTimeout(timer);groundSession.cancel();};
-  },[mode,epoch,options.mapRef,options.active,options.styleReady,groundSession,visible]);
-  const grid=mode==='ground'?groundReceipt?.grid??null:result?.grid??null;
-  const groundAnalysis=prepared?.grid===grid?prepared.value.analysis:null;
-  const preparedForRender=prepared?.grid===grid&&prepared.mode===mode&&prepared.scale===options.scale&&prepared.color===gridColor&&visible&&opacity>0?prepared.value:null;
+  },[mode,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,groundSession,visible]);
+  const sourceGrid=mode==='ground'?groundReceipt?.grid??null:result?.receipt.query.layers.includes(mode)?result.grid:null;
+  const pending=['moving','waiting','loading','processing','unavailable'].includes(mode==='ground'?groundPhase:phase);
+  // Keep one previously prepared footprint through navigation and worker preparation.
+  // It is never stretched, relabelled as new coverage, or used to fill unsupported cells.
+  const displayPrepared=prepared?.mode===mode&&prepared.scale===options.scale&&prepared.color===gridColor&&(sourceGrid||pending)?prepared:null;
+  const grid=displayPrepared?.grid??sourceGrid;
+  const transitioning=!!displayPrepared&&(pending||displayPrepared.grid!==sourceGrid);
+  useLayoutEffect(()=>{handoff.current=transitioning;},[transitioning]);
+  const cellsOn=options.cellsOn;
+  const groundAnalysis=displayPrepared?.value.analysis??null;
+  const preparedForRender=cellsOn&&visible&&opacity>0?displayPrepared?.value??null:null;
   const cellsVisible=opacity>0;
   useEffect(()=>{
     preparer.cancel();
     // This mirrors a new current-viewport preparation job, never a CPU fallback.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPreparationError('');
-    const cached=preparationCache.current,matching=cached?.grid===grid&&cached.mode===mode&&cached.scale===options.scale&&cached.color===gridColor;
-    if(!matching){preparationCache.current=null;setPrepared(null);}
-    if(!grid||!options.active||!options.styleReady||!visible||!cellsVisible){setPreparationPhase(!visible?'paused':'idle');return;}
+    const cached=preparationCache.current,matching=cached?.grid===sourceGrid&&cached.mode===mode&&cached.scale===options.scale&&cached.color===gridColor;
+    if(!matching)preparationCache.current=null;
+    if(!sourceGrid||!cellsOn||!options.active||!options.styleReady||!visible||!cellsVisible){setPreparationPhase(!visible?'paused':'idle');return;}
     if(matching){setPrepared(cached);setPreparationPhase(cached.value.eligibleCount?'prepared':'empty');return;}
     setPreparationPhase('preparing');let current=true;
-    const previousAnalysis=cached?.grid===grid?cached.value.analysis:null;
-    preparer.prepare({grid,mode,scale:options.scale,color:gridColor,analysis:previousAnalysis},{ready:value=>{if(current){if(previousAnalysis)value={...value,analysis:previousAnalysis};preparationCache.current={grid,mode,scale:options.scale,color:gridColor,value};setPrepared(preparationCache.current);setPreparationPhase(value.eligibleCount?'prepared':'empty');}},error:message=>{if(current){setPreparationError(message);setPreparationPhase('unavailable');}},slow:()=>{if(current)markSlow();}});
+    const previousAnalysis=cached?.grid===sourceGrid?cached.value.analysis:null;
+    preparer.prepare({grid:sourceGrid,mode,scale:options.scale,color:gridColor,analysis:previousAnalysis},{ready:value=>{if(current){if(previousAnalysis)value={...value,analysis:previousAnalysis};preparationCache.current={grid:sourceGrid,mode,scale:options.scale,color:gridColor,groundReceipt,value};setPrepared(preparationCache.current);setPreparationPhase(value.eligibleCount?'prepared':'empty');}},error:message=>{if(current){setPreparationError(message);setPreparationPhase('unavailable');}},slow:()=>{if(current)markSlow();}});
     return()=>{current=false;preparer.cancel();};
-  },[grid,mode,options.scale,gridColor,options.active,options.styleReady,visible,cellsVisible,preparer,markSlow]);
+  },[sourceGrid,cellsOn,mode,options.scale,gridColor,options.active,options.styleReady,visible,cellsVisible,preparer,markSlow,groundReceipt]);
   useEffect(()=>{
     const map=options.mapRef.current;if(!map)return;let disposed=false;
     const remove=(id:string,ref:RefObject<NativePointLayer|null>)=>{const layer=ref.current;ref.current=null;if(layer&&(map.getLayer(id) as unknown as {implementation?:unknown})?.implementation===layer)try{map.removeLayer(id);}catch{/* Renderer disposal owns final teardown. */}};
@@ -106,7 +114,7 @@ export function useKansasLidarView(options:Options){
         if(preparedForRender){if(map.getLayer(KANSAS_LIDAR_GRID_LAYER))throw Error('Analysis layer ID belongs to another resource');gridLayer.current=createPreparedLidarGridLayer(preparedForRender,{...settings.current,selected:selection.current?.kind==='cell'?selection.current.index:null},report('grid'));if(gridLayer.current.eligible>0)map.addLayer(gridLayer.current);else gridLayer.current=null;}
         if(result?.points&&pointsOn){if(map.getLayer(NATIVE_LIDAR_LAYER))throw Error('Native point layer ID belongs to another resource');pointLayer.current=createNativePointLayer(result.points,settings.current,report('points'));if(pointLayer.current.eligible>0)map.addLayer(pointLayer.current);else pointLayer.current=null;}
         setApplied({grid:!!gridLayer.current&&!gridLayer.current.failed,points:!!pointLayer.current&&!pointLayer.current.failed});
-        registerNativeLidarPicker(map,point=>{const p=pointLayer.current?.pick(point);if(p!==null&&p!==undefined){readingIntent.current=true;setReadingKind('point');setSelected({kind:'point',index:p});setDraft(String(p+1));latest.current.onSelected?.();return true;}const cell=gridLayer.current?.pick(point);if(cell!==null&&cell!==undefined){readingIntent.current=true;setReadingKind('cell');setSelected({kind:'cell',index:cell});setDraft(String(cell+1));latest.current.onSelected?.();return true;}return false;});
+        registerNativeLidarPicker(map,point=>{if(moving.current||handoff.current)return false;const p=pointLayer.current?.pick(point);if(p!==null&&p!==undefined){readingIntent.current=true;setReadingKind('point');setSelected({kind:'point',index:p});setDraft(String(p+1));latest.current.onSelected?.();return true;}const cell=gridLayer.current?.pick(point);if(cell!==null&&cell!==undefined){readingIntent.current=true;setReadingKind('cell');setSelected({kind:'cell',index:cell});setDraft(String(cell+1));latest.current.onSelected?.();return true;}return false;});
       }catch(e){clear();setError(e instanceof Error?e.message:'LiDAR rendering unavailable');}
     };sync();map.on('style.load',sync);const lost=()=>{if(pointLayer.current||gridLayer.current){pointLayer.current?.invalidate();gridLayer.current?.invalidate();registerNativeLidarPicker(map,null);setApplied({points:false,grid:false});setError('Graphics context lost. Refresh this view after map recovery to retry native layers.');}};map.on('webglcontextlost',lost);const invalidate=()=>{pointLayer.current?.invalidate();gridLayer.current?.invalidate();};map.on('resize',invalidate);
     return()=>{disposed=true;map.off('style.load',sync);map.off('webglcontextlost',lost);map.off('resize',invalidate);clear();};
@@ -115,7 +123,7 @@ export function useKansasLidarView(options:Options){
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(()=>{try{pointLayer.current?.update(settings.current);if(preparedForRender)gridLayer.current?.update({...settings.current,selected:selected?.kind==='cell'?selected.index:null});}catch(e){setError(e instanceof Error?e.message:'LiDAR settings unavailable');}},[options.scale,pointSize,color,gridColor,selected,opacity,preparedForRender,resources.framePixelLimit]);
   function inspectLandscape(){
-    const current=latest.current,map=current.mapRef.current;if(!map||!grid||!preparedForRender||!applied.grid||!current.active||!current.styleReady||!visible)return;
+    const current=latest.current,map=current.mapRef.current;if(!map||!grid||!preparedForRender||!applied.grid||!current.active||!current.styleReady||!visible||handoff.current)return;
     try{
       const corners=grid.format==='kfm-3dep-ground-grid-v1'?groundCorners(grid):grid.cornersWgs84,lons=corners.map(p=>p[0]),lats=corners.map(p=>p[1]),bbox:[number,number,number,number]=[Math.min(...lons),Math.min(...lats),Math.max(...lons),Math.max(...lats)];
       const heights=(mode==='canopy'?grid.ground.map((z,i)=>z!==null&&grid.format==='kfm-lidar-grid-v1'&&grid.canopy[i]!==null&&grid.canopy[i]!>=0?z+grid.canopy[i]!:null):grid.format==='kfm-3dep-ground-grid-v1'?grid.ground:grid[mode]).filter((z):z is number=>z!==null&&Number.isFinite(z));
@@ -153,18 +161,39 @@ export function useKansasLidarView(options:Options){
     try{
       if(!map.getTerrain()||!Number.isFinite(map.getCenterElevation()))throw Error('terrain');
       const center=map.getCenter(),zoom=map.getZoom(),bearing=map.getBearing();if(![center.lng,center.lat,zoom,bearing].every(Number.isFinite))throw Error('camera');
-      map.easeTo({center:[center.lng,center.lat],zoom:Math.max(zoom,17.5),bearing,pitch:55,duration:current.reducedMotion?0:600,essential:false});current.onViewMap();
+      const b=map.getBounds(),radians=Math.PI/180;
+      const area=Math.abs((b.getEast()-b.getWest())*(b.getNorth()-b.getSouth()))*radians*radians*MAPLIBRE_EARTH_RADIUS_M**2*Math.cos(center.lat*radians);
+      // Area scales as 4^-zoom. Aim below the 1 km² native budget with margin
+      // for oblique bounds, projection differences and the change to 55° pitch.
+      const areaZoom=Number.isFinite(area)&&area>0?zoom+.5*Math.log2(Math.max(1,area/250000)):zoom+1;
+      const targetZoom=Math.min(20,Math.max(17.5,zoom+.5,areaZoom+(map.getPitch()<50?.75:0)));
+      map.easeTo({center:[center.lng,center.lat],zoom:targetZoom,bearing,pitch:55,duration:current.reducedMotion?0:600,essential:false});current.onViewMap();
     }catch{setError('Detail zoom needs loaded continuous elevation context. Use Ground, then retry the selected DEM in Continuous Kansas ground model. Coverage and analysis budgets still apply.');}
   }
   const count=readingKind==='cell'?(grid?grid.width*grid.height:0):result?.points?.points.length??0;
   function choose(value:string,kind:'point'|'cell'=readingKind){readingIntent.current=true;setReadingKind(kind);setDraft(value);const n=/^\d+$/.test(value)?Number(value)-1:-1,limit=kind==='point'?result?.points?.points.length??0:grid?(grid.width*grid.height):0;setSelected(Number.isSafeInteger(n)&&n>=0&&n<limit?{kind,index:n}:null);}
-  function selectMode(value:LidarGridMode){if(value===mode)return;refreshCache.current={ground:false,native:false};preparer.cancel();readingIntent.current=false;selection.current=null;latest.current.onNativeIntent?.();session.cancel();groundSession.cancel();setSelected(null);setDraft('');setReadingKind('cell');setMode(value);if(value==='ground')latest.current.onGround();}
-  function clear(){preparer.cancel();study.current=null;setPinned(false);readingIntent.current=false;selection.current=null;session.cancel();groundSession.cancel();setGroundReceipt(null);setEpoch(v=>v+1);setMode('ground');setPointsOn(false);setResult(null);setReceipt(null);setPhase('idle');setReadingKind('point');setSelected(null);setDraft('');setError('');}
-  return {resources,visible,preparationPhase,preparationError,mode,pinned,inspectLandscape,followMap,visualRelief,groundAnalysis,gridColor,setGridColor,pointsOn,opacity,pointSize,color,result,receipt,grid,groundReceipt,groundPhase,nativePhase:phase,phase:mode==='ground'?groundPhase:phase,error:[groundError,error,preparationError].filter(Boolean).join(' '),selected,readingKind,draft,applied,active:options.active&&options.styleReady,scale:options.scale,count:count||0,viewMap:()=>latest.current.onViewMap(),lookDown,tilt3D,detailHere,selectMode,togglePoints:()=>{latest.current.onNativeIntent?.();session.cancel();setPointsOn(v=>!v);},setOpacity,setPointSize,setColor,choose,step:(delta:number)=>{const next=selected?Math.max(0,Math.min((count||1)-1,selected.index+delta)):0;choose(String(next+1),readingKind);},retry:()=>{refreshCache.current={ground:mode==='ground',native:wanted};setEpoch(n=>n+1);},clear,clearSelection:()=>{readingIntent.current=true;setSelected(null);setDraft('');}};
+  function setCellsOn(value:boolean){latest.current.onCells(value);if(value){latest.current.onNativeIntent?.();latest.current.onGround();}else{preparer.cancel();groundSession.cancel();session.cancel();readingIntent.current=false;selection.current=null;setSelected(null);setDraft('');}}
+  function showBaseLandscape(){setCellsOn(false);setPointsOn(false);study.current=null;setPinned(false);latest.current.onViewMap();}
+  function selectMode(value:LidarGridMode){if(!latest.current.cellsOn)setCellsOn(true);if(value===mode)return;setResult(null);setGroundReceipt(null);setPrepared(null);preparationCache.current=null;refreshCache.current={ground:false,native:false};preparer.cancel();readingIntent.current=false;selection.current=null;latest.current.onNativeIntent?.();session.cancel();groundSession.cancel();setSelected(null);setDraft('');setReadingKind('cell');setMode(value);if(value==='ground')latest.current.onGround();}
+  function clear(){latest.current.onCells(false);preparer.cancel();setPrepared(null);preparationCache.current=null;study.current=null;setPinned(false);readingIntent.current=false;selection.current=null;session.cancel();groundSession.cancel();setGroundReceipt(null);setEpoch(v=>v+1);setMode('ground');setPointsOn(false);setResult(null);setReceipt(null);setPhase('idle');setReadingKind('point');setSelected(null);setDraft('');setError('');}
+  return {cellsOn,setCellsOn,showBaseLandscape,transitioning,resources,visible,preparationPhase,preparationError,mode,pinned,inspectLandscape,followMap,visualRelief,groundAnalysis,gridColor,setGridColor,pointsOn,opacity,pointSize,color,result,receipt,grid,groundReceipt:displayPrepared?.groundReceipt??groundReceipt,groundPhase,nativePhase:phase,phase:mode==='ground'?groundPhase:phase,error:[groundError,error,preparationError].filter(Boolean).join(' '),selected,readingKind,draft,applied,active:options.active&&options.styleReady,scale:options.scale,count:count||0,viewMap:()=>latest.current.onViewMap(),lookDown,tilt3D,detailHere,selectMode,togglePoints:()=>{latest.current.onNativeIntent?.();session.cancel();setPointsOn(v=>!v);},setOpacity,setPointSize,setColor,choose,step:(delta:number)=>{const next=selected?Math.max(0,Math.min((count||1)-1,selected.index+delta)):0;choose(String(next+1),readingKind);},retry:()=>{refreshCache.current={ground:mode==='ground',native:wanted};setEpoch(n=>n+1);},clear,clearSelection:()=>{readingIntent.current=true;setSelected(null);setDraft('');}};
 }
 export type KansasLidarController=ReturnType<typeof useKansasLidarView>;
 const metres=(v:number|null)=>v===null?'NoData':v.toFixed(3)+' m';
 const modeLabel=(mode:LidarGridMode)=>mode==='ground'?'Ground':mode==='surface'?'Surface':'Canopy height';
+export function TerrainCellsSwitch({controller:c,compact=false}:{controller:KansasLidarController;compact?:boolean}){
+ const nativeState=c.mode==='ground'?null:c.receipt?.layers.find(layer=>layer.kind===c.mode)?.state;
+ const detailRequired=nativeState==='detail-required';
+ const status=!c.active&&c.cellsOn?'Held outside the Present regional map.':!c.cellsOn?(c.pointsOn?'Raw LiDAR points are shown over the base landscape.':'Base landscape visible · LiDAR cells and points are off.'):detailRequired?'Zoom closer for complete native Surface or Canopy support (view at most 1 km²).':c.transitioning?'Updating zoom detail · keeping the previous footprint in place.':c.phase==='outside'?'This view is outside the Kansas data window.':['loading','waiting','moving'].includes(c.phase)?'Loading cells for this map view…':c.phase==='processing'?'Preparing native LiDAR for this view…':nativeState==='no-coverage'?'Native cells are unavailable here. Ground remains available; missing support stays missing.':c.preparationPhase==='preparing'?'Preparing cells on this device…':'Follows your map · click supported cells for unscaled heights.';
+ return <section className={styles.layerSwitch} aria-label="3D terrain cells layer">
+  <label><input type="checkbox" checked={c.cellsOn} onChange={e=>c.setCellsOn(e.target.checked)}/><span><strong>3D terrain cells</strong><small>Ground · Surface · Canopy height</small></span></label>
+  {compact&&c.cellsOn&&<><div className={styles.modes} role="group" aria-label="3D terrain cell layer">{(['ground','surface','canopy'] as const).map(mode=><button key={mode} type="button" aria-pressed={c.mode===mode} onClick={()=>c.selectMode(mode)}>{modeLabel(mode)}</button>)}</div><button type="button" disabled={!c.active} onClick={c.tilt3D}>Tilt to 3D</button></>}
+  {(c.cellsOn||c.pointsOn)&&<button type="button" onClick={c.showBaseLandscape}>Base landscape only</button>}
+  <p role="status">{status}</p>
+  {compact&&c.cellsOn&&detailRequired&&<button type="button" disabled={!c.active} onClick={c.detailHere}>Zoom to LiDAR detail here</button>}
+  {compact&&c.cellsOn&&c.error&&<><p role="alert">{c.error}</p><button type="button" disabled={!c.active} onClick={c.retry}>Retry this view</button></>}
+ </section>;
+}
 export function KansasLidarLayers({controller:c}:{controller:KansasLidarController}){
   const point=c.selected?.kind==='point'?c.result?.points?.points[c.selected.index]:null,grid=c.grid,providerGrid=grid?.format==='kfm-3dep-ground-grid-v1'?grid:null,nativeGrid=grid?.format==='kfm-lidar-grid-v1'?grid:null,cell=c.selected?.kind==='cell'&&nativeGrid?lidarGridCell(nativeGrid,c.selected.index):null,sample=c.selected?.kind==='cell'&&providerGrid?groundCell(providerGrid,c.selected.index):null,asset=point?c.result?.points?.manifest.source.assets[point[9]]:null;
   const domain=useMemo(()=>c.result?.points?nativeAttributeDomain(c.result.points,c.color):null,[c.result,c.color]);
@@ -176,10 +205,10 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
 
   const stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||c.result?.grid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   const phase=c.phase,reason=c.mode==='ground'?c.groundReceipt?.reason:c.receipt?.reason;
-  return <section className={styles.panel} aria-label="Kansas LiDAR layers"><h3>A landscape, cell by cell</h3>
+  return <section className={styles.panel} aria-label="Kansas LiDAR layers"><TerrainCellsSwitch controller={c}/><h3>A landscape, cell by cell</h3>
     <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground'],['surface','Surface'],['canopy','Canopy height']] as const).map(([mode,label])=><button key={mode} type="button" aria-pressed={c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}>{label}</button>)}</div>
-    <button className={styles.inspect} type="button" disabled={!c.active||!grid||!c.applied.grid} onClick={c.inspectLandscape}>Inspect landscape in 3D</button><div className={styles.actions}><button type="button" disabled={!c.active} onClick={c.visualRelief}>3× visual relief</button><button type="button" onClick={c.viewMap}>View map</button></div><p className={styles.study}>{c.pinned?'Study area pinned · framing keeps these same cells and readings. Navigate the map or choose Follow map to load a new area.':'Following map · inspect the loaded footprint as an opaque landscape block.'}</p>{c.pinned&&<button type="button" onClick={c.followMap}>Follow map</button>}
-    <p role="status">{!c.visible?'Terrain work paused while this tab is hidden.':!c.active?'Open the current Terrain map period.':phase==='outside'?'This view is outside the Kansas data window.':phase==='moving'||phase==='waiting'?'Waiting for this map view…':phase==='loading'?'Loading this landscape…':phase==='idle'?'Choose a layer for this map view.':phase==='processing'?'Preparing this landscape. Ground works across the Kansas view; surface and canopy need closer native detail.':reason??'Current source response loaded.'}</p>
+    <button className={styles.inspect} type="button" disabled={!c.active||!c.cellsOn||!grid||!c.applied.grid||c.transitioning} onClick={c.inspectLandscape}>Inspect landscape in 3D</button><div className={styles.actions}><button type="button" disabled={!c.active} onClick={c.visualRelief}>3× visual relief</button><button type="button" onClick={c.viewMap}>View map</button></div><p className={styles.study}>{c.transitioning?'Updating detail · the previous footprint stays in place until the new cells are ready. Readings are paused during this handoff.':c.pinned?'Study area pinned · framing keeps these same cells and readings. Navigate the map or choose Follow map to load a new area.':'Following map · inspect the loaded footprint as an opaque landscape block.'}</p>{c.pinned&&<button type="button" onClick={c.followMap}>Follow map</button>}
+    <p role="status">{!c.cellsOn?'3D terrain cells are off. Enable the layer to load this view.':!c.visible?'Terrain work paused while this tab is hidden.':!c.active?'Open the current Terrain map period.':phase==='outside'?'This view is outside the Kansas data window.':phase==='moving'||phase==='waiting'?'Waiting for this map view…':phase==='loading'?'Loading this landscape…':phase==='idle'?'Choose a layer for this map view.':phase==='processing'?'Preparing this landscape. Ground works across the Kansas view; surface and canopy need closer native detail.':reason??'Current source response loaded.'}</p>
     {c.error&&<p className={styles.error} role="alert">{c.error}</p>}{stale&&<p className={styles.notice}>Stale cached result · see source retrieval times below.</p>}
     <p aria-live="polite">{c.preparationPhase==='preparing'?'Preparing this landscape on your device…':c.preparationPhase==='unavailable'?'Solid preparation unavailable; continuous terrain and numeric source readings remain available.':c.preparationPhase==='empty'?'No supported solid cells in this grid.':c.applied.grid?'Solid landscape attached.':c.preparationPhase==='prepared'?'Attaching the prepared landscape…':''}</p>
     <p className={styles.displayNote}>{c.scale.toFixed(1)}× display · source readings unscaled. {c.applied.grid?'Solid height cells.':'Continuous elevation remains context.'} {c.opacity===0?'Cells hidden at 0% opacity.':''}</p>
@@ -224,7 +253,7 @@ export function KansasLidarBadge({controller:c,controlsOpen=false}:{controller:K
   const assets=c.result?.points?.manifest.source.assets??[],asset=point?assets[point[9]]:null,source=asset??(c.applied.grid?nativeGrid?.source:null),surveys=[...new Set(assets.map(a=>a.project))],dates=[...new Set(assets.map(a=>a.acquisition))],pointDates=dates.length===1?dates[0]:'mixed acquisition; see source details',stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||nativeGrid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   return <aside className={styles.badge} aria-label="Kansas LiDAR map identity"><strong>Terrain · {c.applied.grid?modeLabel(c.mode)+' cells · ':''}{c.applied.points?'native points':''}</strong>
     <span>{source?`${asset?'Selected point':'Grid'}: ${source.project} · ${source.acquisition}`:providerGrid?'USGS 3DEP mosaic · '+providerGrid.source.acquisition:`Points: ${surveys.length===1?surveys[0]:surveys.length+' source surveys'} · ${pointDates}`}</span>{c.applied.grid&&c.applied.points&&<span>Points: {surveys.length} source surveys · {pointDates}</span>}
-    <span>{c.scale.toFixed(1)}× display · {c.opacity}% opacity · source values unscaled{providerGrid&&c.gridColor!=='height'?' · color '+c.gridColor:''}</span>{c.pinned&&<span>Study area pinned · navigate to follow map</span>}<span>Coverage-limited · DEM registration unverified{stale?' · stale cache':''}</span>
+    <span>{c.scale.toFixed(1)}× display · {c.opacity}% opacity · source values unscaled{providerGrid&&c.gridColor!=='height'?' · color '+c.gridColor:''}</span>{c.transitioning&&<span>Updating view · previous footprint retained; map readings paused</span>}{c.pinned&&<span>Study area pinned · navigate to follow map</span>}<span>Coverage-limited · DEM registration unverified{stale?' · stale cache':''}</span>
     {point&&<b>{point[2].toFixed(3)} m · asset {point[9]} / record {point[10]} · unscaled</b>}
     {cell&&<b>{modeLabel(c.mode)} {metres(cell[c.mode])} · row {cell.row}, column {cell.column} · unscaled · grid footprint only</b>}
     {sample&&<b>Ground {metres(sample.ground)} · row {sample.row}, column {sample.column} · unscaled · resampled 96²</b>}

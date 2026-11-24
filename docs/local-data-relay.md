@@ -37,9 +37,9 @@ PC worker ──POST /api/local-data-worker/v1/result──▶ site (verifies th
   on the PC: unknown parameters, malformed values and unbounded requests are
   `400 QUERY_INVALID`. Only values, never names, reach SQL as parameters.
 - Each dataset names the indexes it relies on. Until they exist the gateway
-  refuses the dataset (`DATASET_NOT_READY`) rather than scan a large table: the
-  gateway's SQLite calls are synchronous, so a long scan would stall every
-  question.
+  refuses the dataset (`DATASET_NOT_READY`) rather than scan a large table. The
+  database operations execute in a bounded process pool, so a slow native
+  SQLite read cannot block parent authentication or unrelated queries.
 - If the worker has not polled for 30 s the PC is treated as away: a visitor gets
   the last cached answer marked `"cache":{"state":"stale"}`, or
   `503 {"state":"local-data-offline"}`. A job handed to a poll whose connection
@@ -341,3 +341,43 @@ on both the catalog and actual dataset responses. No database migration, index
 change, source-admission decision or broader publication approval is included.
 Rollback: restore the prior PC runtime release and site application together;
 retain all databases and existing records.
+
+## Bounded query execution (2026-11-24)
+
+The gateway keeps signing keys, replay protection and file/terrain routes in the
+parent. Two outbound data-worker lanes match two lazily started child processes. A slow
+archive read cannot monopolize the outbound lease connection. Children receive only database paths and
+allowlisted operations, with an empty environment. Each opens SQLite read-only.
+Four jobs may wait; execution is capped at 7 s and total queue plus execution at
+8.5 s, below the relay deadline. Over-budget native calls are killed at process
+level. Client cancellation retires the queued or active read. Each child has a
+256 MiB JavaScript heap limit; this is not a total process-memory guarantee.
+Health reuses one handle per database within its operation.
+
+Signed QUERY_TIMEOUT and QUERY_BUSY replies become distinct public slow/busy
+states, rather than falsely reporting an online PC as disconnected. A cached
+answer may still be served with its existing stale qualification. Archive search
+streams native FTS5 rank order and stops after the requested page, retaining
+exact filtered facets and the existing 10,000+ count cap.
+
+Before installing this gateway on dev, apply the additive partial index
+`kfm_environmental_usgs_site_minute_cover` from `water.mjs` under the existing pipeline
+lock. It indexes only USGS captures, with site/time/parameter/geometry expressions and
+the original JSON for covering reads; no observations
+are changed. Both captured-water datasets require it. Keep all gateway
+EnvironmentFile overlays when switching the immutable release.
+
+The optional **3D terrain cells** layer appears in Layers and the Terrain topic
+bar. It starts off, independently of the continuous DEM. Ground output keeps its
+96×96 budget as the viewport changes; Surface/Canopy retain their native support
+and 1 km² analysis limits. During navigation or preparation, one previous
+georeferenced footprint remains visible until the replacement is ready. Picking
+is paused during that handoff; terminal missing-support responses remove the
+previous native grid. No cells are stretched into new coverage, no surface or
+canopy is extrapolated from sparse returns, and source readings remain unscaled.
+
+**Base landscape only** switches off all LiDAR cells and raw point overlays,
+cancels their in-flight reads, and keeps the continuous terrain and camera
+unchanged. The last Ground/Surface/Canopy choice remains available to re-enable.
+The direct Terrain topic toggle also restores this base-only state when turned
+off. No LiDAR request starts until its optional layer is enabled.
