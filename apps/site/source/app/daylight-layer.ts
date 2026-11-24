@@ -443,6 +443,3 @@ export const buildDaylightGeometry = (instant: Date | number, samples = 360): Fe
   }
   return { type: "FeatureCollection", features };
 };
-
-export const solarReferenceElevation = (instant: Date | number, latitude: number, longitude: number): number =>
-  solarPositionAt(instant, latitude, longitude).elevationDegrees;

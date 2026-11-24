@@ -38,12 +38,6 @@ export function waterWorker(request: Request) {
   if (difference !== 0) throw new WaterAdminError("STAGING_TOKEN_REQUIRED", 403);
 }
 
-export async function waterActor(user: { id: string | null; email: string }) {
-  const bytes = new TextEncoder().encode(user.id ? `id:${user.id}` : `email:${user.email.toLowerCase()}`);
-  const hash = await crypto.subtle.digest("SHA-256", bytes);
-  return "owner:" + [...new Uint8Array(hash)].map((n) => n.toString(16).padStart(2, "0")).join("").slice(0, 32);
-}
-
 export function waterAdminFailure(error: unknown): Response {
   const known = error instanceof WaterAdminError;
   if (!known) console.error(JSON.stringify({ event: "water_admin_error", component: "site-water" }));

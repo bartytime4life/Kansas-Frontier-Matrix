@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { FeatureCollection } from "geojson";
-import { DAILY_FEEDS, type ArchiveCatalog, type ArchiveEntry, type ArchivePayload, type DailyFeed } from "../daily-archive";
+import { DAILY_FEEDS, archiveDay, type ArchiveCatalog, type ArchiveEntry, type ArchivePayload, type DailyFeed } from "../daily-archive";
 import { loadMapLibre, type Map as MapLibreMap } from "../maplibre-seam";
 import styles from "./archive.module.css";
 import { applyArchiveMapData } from "../daily-archive-map";
@@ -84,7 +84,8 @@ export default function DailyArchive() {
   const catalogError=!catalogPending?catalogRead?.error:null;
   const catalogReady=!catalogPending&&!catalogError&&catalog!==null;
   const refresh=()=>{setNote("");setRevision(value=>value+1);};
-  const chooseDay=(value:string)=>{if(value!==day){setStored(null);setCounties(null);}setDay(value);setId("");refresh();};
+  // A cleared or partial date input reports ""; keep the last exact day instead of requesting "?day=".
+  const chooseDay=(value:string)=>{if(!archiveDay(value))return;if(value!==day){setStored(null);setCounties(null);}setDay(value);setId("");refresh();};
   useEffect(()=>{
     const controller=new AbortController();
     let active=true,timedOut=false,cancelDeadline=()=>{};

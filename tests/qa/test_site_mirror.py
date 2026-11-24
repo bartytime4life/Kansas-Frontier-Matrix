@@ -3256,9 +3256,40 @@ def test_web_fixes_successor_preserves_topo_catalog_inventory_and_all_holds():
         WEB_FIXES_CHANGED,
         "de7901fd65f5287f246acdb61d83c25a84db4c38",
     )
-    assert TOOL.RECEIPT.name == "site-v268-web-fixes-overlay-20261124.json"
 
 
 WEB_FIXES_CHANGED = {
     "app/knowledge/record/page.tsx", "tests/knowledge-record-retry.test.mjs",
+}
+
+
+def test_web_cleanup_successor_preserves_web_fixes_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-web-cleanup-overlay-20261124.json",
+        "site-v268-web-fixes-overlay-20261124.json",
+        "da3d968886f5878c145fec8baba570ef99968571bb8a2689fdd133532949a169",
+        WEB_CLEANUP_CHANGED,
+        "709332690ad4ebf5db49e0bdb00244bd22969de6",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-web-cleanup-overlay-20261124.json"
+
+
+WEB_CLEANUP_CHANGED = {
+    "app/api/event-atlas/radar-frame/route.ts",
+    "app/api/event-atlas/tile/route.ts",
+    "app/daily-archive/workspace.tsx",
+    "app/data/land-records/workspace.tsx",
+    "app/daylight-layer.ts",
+    "app/earth-engine-export.ts",
+    "app/globals.css",
+    "app/governed-water-admin-server.ts",
+    "app/hms-smoke-playback-control.tsx",
+    "app/local-cache-settings.tsx",
+    "app/map-layer-composition.ts",
+    "app/map-layers.css",
+    "app/page.tsx",
+    "app/scene-overlays.ts",
+    "app/soil-moisture-control.tsx",
+    "app/subsurface-model.ts",
+    "tests/event-atlas.test.mjs",
 }

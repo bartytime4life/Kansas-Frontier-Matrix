@@ -92,12 +92,6 @@ export const requestRasterOpacity = (map: MapLibreMap, id: string, opacity: numb
   requests.set(id, Math.max(0, Math.min(1, opacity)));
 };
 
-export const balancedRasterOpacities = (requests: readonly number[]): number[] => {
-  const total = requests.reduce((sum, value) => sum + value, 0);
-  const scale = requests.length > 1 && total > 0.9 ? 0.9 / total : 1;
-  return requests.map((value) => value * scale);
-};
-
 export const balanceMapRasters = (map: MapLibreMap): void => {
   const requests = rasterRequests.get(map);
   if (!requests) return;

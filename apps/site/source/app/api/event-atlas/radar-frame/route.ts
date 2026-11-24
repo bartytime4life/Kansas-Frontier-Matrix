@@ -2,13 +2,15 @@ import { EVENT_BOUNDS, exactUtc, radarDirectory, parseRadarDirectory } from "../
 import { boundedFetch } from "../upstream";
 export const dynamic = "force-dynamic";
 const directories = new Map<string, { at: number; text: string }>();
+// Caller input errors are 400s; 502 is reserved for an unavailable upstream frame.
+class RadarQueryError extends Error {}
 
 export async function GET(request: Request) {
   try {
     const params = new URL(request.url).searchParams;
-    if ([...params.keys()].some((key) => key !== "time") || params.getAll("time").length !== 1) throw new Error("One exact time is required.");
+    if ([...params.keys()].some((key) => key !== "time") || params.getAll("time").length !== 1) throw new RadarQueryError("One exact time is required.");
     const time = exactUtc(params.get("time") ?? "");
-    if (!time || time < "1995-01-01" || Date.parse(time) > Date.now() || new Date(time).getUTCMinutes() % 5 || new Date(time).getUTCSeconds()) throw new Error("Invalid archived radar time.");
+    if (!time || time < "1995-01-01" || Date.parse(time) > Date.now() || new Date(time).getUTCMinutes() % 5 || new Date(time).getUTCSeconds()) throw new RadarQueryError("Invalid archived radar time.");
     const day = time.slice(0,10);
     let directory = directories.get(day);
     if (!directory || Date.now() - directory.at > 120_000) {
@@ -32,5 +34,8 @@ export async function GET(request: Request) {
     const dimensions = new DataView(frame.bytes.buffer);
     if (dimensions.getUint32(16) !== 1024 || dimensions.getUint32(20) !== 600) throw new Error("Unexpected radar image dimensions.");
     return new Response(frame.bytes, { headers: { "Content-Type": "image/png", "Cache-Control": "public, max-age=3600", "X-Content-Type-Options": "nosniff", "X-Radar-Mosaic-Time": time, "X-Radar-Product": scan.product, "X-Source-Artifact": scan.artifact } });
-  } catch { return Response.json({ message: "The exact historical radar frame is unavailable. No latest-image fallback was used." }, { status: 502, headers: { "Cache-Control": "no-store" } }); }
+  } catch (error) {
+    if (error instanceof RadarQueryError) return Response.json({ message: "Choose one exact five-minute UTC radar time from 1995 onward, not in the future." }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    return Response.json({ message: "The exact historical radar frame is unavailable. No latest-image fallback was used." }, { status: 502, headers: { "Cache-Control": "no-store" } });
+  }
 }

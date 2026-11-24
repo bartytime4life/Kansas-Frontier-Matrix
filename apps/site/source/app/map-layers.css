@@ -48,25 +48,12 @@
 .layer-map-time strong { color: #e7f2eb; }
 .layer-map-time button { flex: none; margin-left: auto; min-height: 36px; border: 0; background: transparent; color: #8cddd7; font: 700 12px system-ui, sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .layer-journey-intro { margin: 0; padding: 13px 17px 4px; color: #b8cec7; font-size: 12px; line-height: 1.5; }
-.layer-list-heading { display: flex; justify-content: space-between; gap: 9px; margin: 15px 17px 7px; color: #cfdfd8; font-size: 12px; }
-.layer-list-heading strong { color: #e9d9ad; letter-spacing: .02em; }
-.layer-list-heading span { color: #91aca6; font-size: 11px; }
 .local-layer-settings { display: block; padding-bottom: 16px; }
-.local-layer-settings .catalog-groups { border: 0; }
-.local-layer-settings .catalog-group { display: block; margin: 0 10px; border-bottom: 1px solid #29474b; background: transparent; }
 .local-layer-settings .catalog-group-heading { position: static; display: flex; align-items: center; gap: 8px; min-height: 52px; border: 0; background: transparent; padding: 8px; color: #e8f0e9; list-style: none; cursor: pointer; }
 .local-layer-settings .catalog-group-heading::-webkit-details-marker { display: none; }
 .local-layer-settings .catalog-group-heading strong { min-width: 0; font-size: 13px; font-weight: 750; }
 .local-layer-settings .catalog-group-heading small { margin-left: auto; color: #a5bbb5; font-size: 11px; white-space: nowrap; }
 .local-layer-settings .catalog-group-heading > span { margin-left: 4px; color: #9cd9d2; transition: transform .15s; }
-.local-layer-settings .catalog-group[open] .catalog-group-heading > span { transform: rotate(180deg); }
-.local-layer-settings .layer-row { margin: 0 -10px; border-color: #29474b; background: #0d2529; }
-.local-layer-settings .layer-row[data-active="true"] { background: #153338; }
-.local-layer-settings .layer-primary { grid-template-columns: 44px 9px minmax(0, 1fr); gap: 7px; min-height: 71px; padding: 8px 15px; }
-.local-layer-settings .layer-title { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name options" "cue options"; align-items: center; gap: 3px 8px; width: 100%; min-height: 44px; }
-.local-layer-settings .layer-title strong { grid-area: name; font-size: 14px; }
-.local-layer-settings .layer-title small { grid-area: cue; color: #a9c1ba; font-size: 11px; font-weight: 500; letter-spacing: 0; text-transform: none; }
-.local-layer-settings .layer-title em { grid-area: options; align-self: center; color: #8cddd7; font-size: 12px; letter-spacing: 0; }
 .layer-panel .visibility-switch { width: 44px; height: 44px; }
 .layer-panel .visibility-switch input { z-index: 1; inset: 0; width: 44px; height: 44px; margin: 0; cursor: pointer; }
 .layer-panel .visibility-switch span { top: 11px; right: auto; bottom: auto; left: 3px; width: 38px; height: 22px; border-color: #759390; background: #496368; pointer-events: none; }
@@ -74,10 +61,7 @@
 .layer-panel .visibility-switch input:checked + span { border-color: #9ce2d9; background: #79c9bf; }
 .layer-panel .visibility-switch input:checked + span::after { transform: translateX(16px); background: #143438; }
 .layer-panel .visibility-switch input:focus-visible + span { outline: 2px solid #edc67b; outline-offset: 3px; }
-.local-layer-settings .layer-detail { padding: 14px 17px; }
-.local-layer-settings .layer-detail dl div { min-height: 52px; }
-.local-layer-settings .layer-detail .opacity-control { margin-top: 14px; }
-.reviewed-imagery-section, .map-layer-advanced { margin: 14px 15px; border: 1px solid #365459; border-radius: 10px; background: #112d31; }
+.reviewed-imagery-section { margin: 14px 15px; border: 1px solid #365459; border-radius: 10px; background: #112d31; }
 .reviewed-imagery-section { border-color: #547873; background: linear-gradient(145deg, #173b3b, #102c31 72%); }
 .reviewed-imagery-section > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 8px; min-height: 57px; padding: 10px 13px; color: #e9d9ad; list-style: none; cursor: pointer; }
 .reviewed-imagery-section > summary::-webkit-details-marker { display: none; }
@@ -86,16 +70,7 @@
 .reviewed-imagery-section > summary::after { content: '⌄'; margin-left: 3px; color: #9cddd7; }
 .reviewed-imagery-section[open] > summary::after { transform: rotate(180deg); }
 .reviewed-imagery-section > section { margin: 0 9px 10px; }
-.reviewed-imagery-section > summary:focus-visible, .map-layer-advanced > summary:focus-visible { outline: 2px solid #edc67b; outline-offset: 2px; }
-.map-layer-advanced > summary { min-height: 47px; padding: 13px; color: #9cddd7; font-size: 13px; font-weight: 750; cursor: pointer; }
-.map-layer-advanced { scroll-margin-top: 60px; }
-.map-layer-advanced-body { display: grid; gap: 12px; border-top: 1px solid #365459; padding: 12px 0; }
-.map-layer-advanced-body > p { margin: 0 12px; color: #a9bdb7; font-size: 12px; line-height: 1.5; }
-.map-layer-bulk-actions { display: flex; gap: 7px; padding: 0 12px; }
-.map-layer-bulk-actions button { min-height: 40px; border: 1px solid #365459; border-radius: 7px; background: #17363b; color: #c8e1d9; padding: 0 9px; font-size: 12px; }
-.map-layer-advanced-body .layer-scene-entry { margin: 0 12px; }
-.map-layer-advanced .panel-footer-actions { display: flex; flex-wrap: wrap; gap: 7px; }
-.map-layer-advanced .panel-footer-actions > * { min-height: 38px; }
+.reviewed-imagery-section > summary:focus-visible { outline: 2px solid #edc67b; outline-offset: 2px; }
 .official-context-catalog { display: flex; flex-direction: column; }
 .official-context-catalog > header { order: 0; align-items: center; padding: 13px 17px 5px; }
 .official-context-catalog > header h2 { margin: 0; font-size: 14px; }
@@ -255,7 +230,7 @@
 .official-workspace-tabs button:focus-visible, .reference-layer-guidance button:focus-visible { outline: 2px solid #8cddd7; outline-offset: 2px; }
 .reference-layer-guidance { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 14px 10px; color: #c7d8cf; }
 .reference-layer-guidance small { flex: 1 1 170px; font-size: 11px; line-height: 1.5; }
-.reference-layer-guidance button, .layer-search-empty button { min-height: 36px; border: 1px solid #547873; border-radius: 6px; background: #183a3e; color: #a8e3db; padding: 5px 10px; cursor: pointer; }
+.reference-layer-guidance button { min-height: 36px; border: 1px solid #547873; border-radius: 6px; background: #183a3e; color: #a8e3db; padding: 5px 10px; cursor: pointer; }
 .reference-layer-legend { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; line-height: 1.5; color: #d2e1d8; }
 .reference-layer-legend i { flex: none; display: inline-block; width: 18px; height: 3px; margin-top: 7px; }
 /* What a counted layer holds in the current view; updates when the map stops moving. */
