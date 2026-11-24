@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import ts from 'typescript';
 import {nativeLidarBrowserFixtures} from './native-lidar-browser-fixtures.mjs';
 async function setup({rootReady=true}={}){
  const scripts=[],fixtures=await nativeLidarBrowserFixtures(new URL('http://127.0.0.1:5197'),{solid:true});await fixtures.setup(async(method,args)=>{if(method==='Page.addScriptToEvaluateOnNewDocument')scripts.push(args.source);});
@@ -27,4 +29,13 @@ test('solid probe attaches the DOM observer once when new-document injection pre
  const s=await setup({rootReady:false});assert.equal(s.observations(),0);assert.equal(s.listeners.length,1);assert.equal(s.listeners[0].type,'DOMContentLoaded');assert.deepEqual(s.listeners[0].options,{once:true});
  s.ready();assert.equal(s.observations(),1);s.ready();assert.equal(s.observations(),1,'duplicate readiness notifications cannot attach duplicate observers');
  s.answer(()=>9000);assert.equal(s.probe().index,9000);const builds=s.window.__solidProbeStats.builds,revision=s.window.__solidProbeDOMRevision;s.occlude(()=>false);assert.equal(s.window.__solidProbeDOMRevision,revision+1);assert.equal(s.probe().index,9000);assert.equal(s.window.__solidProbeStats.builds,builds+1,'the late-attached observer invalidates projected candidates after DOM changes');
+});
+
+test('solid browser readiness rejects the preceding selected mode, pending receipt and missing resource before recording request counts',async()=>{
+ const source=await readFile('tests/explorer-startup.browser.mjs','utf8'),ast=ts.createSourceFile('explorer-startup.browser.mjs',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.JS);let readySource;
+ const visit=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='waitSolidReady')readySource=node.initializer.getText(ast);ts.forEachChild(node,visit);};visit(ast);assert.ok(readySource);
+ let selected='Surface',state='idle',disabled=false,layer={failed:false};const inspect={textContent:'Inspect landscape in 3D',get disabled(){return disabled;}},selection=['Ground','Surface','Canopy height'].map(textContent=>({textContent,getAttribute:()=>textContent===selected?'true':'false'}));
+ const panel={querySelectorAll:selector=>selector==='[aria-label="Terrain layer selection"] button'?selection:selector==='button'?[inspect]:selector==='li'?[{querySelector:tag=>({textContent:tag==='strong'?'canopy':state})}]:[]},document={querySelector:()=>panel},window={__terrainAcceptanceMap:{getLayer:()=>layer?{implementation:layer}:undefined}},checks=[];
+ const p={async wait(expression,label){assert.match(label,/selected canopy receipt and applied solid grid/);const evaluate=()=>!!new Function('document','window',`return (${expression});`)(document,window);checks.push(evaluate());selected='Canopy height';checks.push(evaluate());state='partial';disabled=true;checks.push(evaluate());disabled=false;layer=null;checks.push(evaluate());layer={failed:true};checks.push(evaluate());layer={failed:false};checks.push(evaluate());assert.deepEqual(checks,[false,false,false,false,false,true],'the old enabled Surface button, uncommitted receipt and unapplied/failed Canopy resources must not freeze acquisition counts');}};
+ const waitReady=new Function('p',`return (${readySource});`)(p);await waitReady('canopy','Canopy height');
 });
