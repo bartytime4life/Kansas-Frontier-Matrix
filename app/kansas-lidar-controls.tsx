@@ -175,10 +175,15 @@ export type KansasLidarController=ReturnType<typeof useKansasLidarView>;
 const metres=(v:number|null)=>v===null?'NoData':v.toFixed(3)+' m';
 const modeLabel=(mode:LidarGridMode)=>mode==='ground'?'Ground':mode==='surface'?'Surface':'Canopy height';
 export function TerrainCellsSwitch({controller:c,compact=false}:{controller:KansasLidarController;compact?:boolean}){
+ const nativeState=c.mode==='ground'?null:c.receipt?.layers.find(layer=>layer.kind===c.mode)?.state;
+ const detailRequired=nativeState==='detail-required';
+ const status=!c.active&&c.cellsOn?'Held outside the Present regional map.':!c.cellsOn?'Optional height-cell overlay; continuous terrain stays available.':detailRequired?'Zoom closer for complete native Surface or Canopy support (view at most 1 km²).':c.transitioning?'Updating zoom detail · keeping the previous footprint in place.':c.phase==='outside'?'This view is outside the Kansas data window.':['loading','waiting','moving'].includes(c.phase)?'Loading cells for this map view…':c.phase==='processing'?'Preparing native LiDAR for this view…':nativeState==='no-coverage'?'Native cells are unavailable here. Ground remains available; missing support stays missing.':c.preparationPhase==='preparing'?'Preparing cells on this device…':'Follows your map · click supported cells for unscaled heights.';
  return <section className={styles.layerSwitch} aria-label="3D terrain cells layer">
   <label><input type="checkbox" checked={c.cellsOn} onChange={e=>c.setCellsOn(e.target.checked)}/><span><strong>3D terrain cells</strong><small>Ground · Surface · Canopy height</small></span></label>
   {compact&&c.cellsOn&&<><div className={styles.modes} role="group" aria-label="3D terrain cell layer">{(['ground','surface','canopy'] as const).map(mode=><button key={mode} type="button" aria-pressed={c.mode===mode} onClick={()=>c.selectMode(mode)}>{modeLabel(mode)}</button>)}</div><button type="button" disabled={!c.active} onClick={c.tilt3D}>Tilt to 3D</button></>}
-  <p>{!c.active&&c.cellsOn?'Held outside the Present regional map.':c.transitioning?'Updating zoom detail · keeping the previous footprint in place.':c.cellsOn?'Follows your map · click supported cells for unscaled heights.':'Optional height-cell overlay; continuous terrain stays available.'}</p>
+  <p role="status">{status}</p>
+  {compact&&c.cellsOn&&detailRequired&&<button type="button" disabled={!c.active} onClick={c.detailHere}>Zoom to LiDAR detail here</button>}
+  {compact&&c.cellsOn&&c.error&&<><p role="alert">{c.error}</p><button type="button" disabled={!c.active} onClick={c.retry}>Retry this view</button></>}
  </section>;
 }
 export function KansasLidarLayers({controller:c}:{controller:KansasLidarController}){
@@ -240,7 +245,7 @@ export function KansasLidarBadge({controller:c,controlsOpen=false}:{controller:K
   const assets=c.result?.points?.manifest.source.assets??[],asset=point?assets[point[9]]:null,source=asset??(c.applied.grid?nativeGrid?.source:null),surveys=[...new Set(assets.map(a=>a.project))],dates=[...new Set(assets.map(a=>a.acquisition))],pointDates=dates.length===1?dates[0]:'mixed acquisition; see source details',stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||nativeGrid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   return <aside className={styles.badge} aria-label="Kansas LiDAR map identity"><strong>Terrain · {c.applied.grid?modeLabel(c.mode)+' cells · ':''}{c.applied.points?'native points':''}</strong>
     <span>{source?`${asset?'Selected point':'Grid'}: ${source.project} · ${source.acquisition}`:providerGrid?'USGS 3DEP mosaic · '+providerGrid.source.acquisition:`Points: ${surveys.length===1?surveys[0]:surveys.length+' source surveys'} · ${pointDates}`}</span>{c.applied.grid&&c.applied.points&&<span>Points: {surveys.length} source surveys · {pointDates}</span>}
-    <span>{c.scale.toFixed(1)}× display · {c.opacity}% opacity · source values unscaled{providerGrid&&c.gridColor!=='height'?' · color '+c.gridColor:''}</span>{c.pinned&&<span>Study area pinned · navigate to follow map</span>}<span>Coverage-limited · DEM registration unverified{stale?' · stale cache':''}</span>
+    <span>{c.scale.toFixed(1)}× display · {c.opacity}% opacity · source values unscaled{providerGrid&&c.gridColor!=='height'?' · color '+c.gridColor:''}</span>{c.transitioning&&<span>Updating view · previous footprint retained; map readings paused</span>}{c.pinned&&<span>Study area pinned · navigate to follow map</span>}<span>Coverage-limited · DEM registration unverified{stale?' · stale cache':''}</span>
     {point&&<b>{point[2].toFixed(3)} m · asset {point[9]} / record {point[10]} · unscaled</b>}
     {cell&&<b>{modeLabel(c.mode)} {metres(cell[c.mode])} · row {cell.row}, column {cell.column} · unscaled · grid footprint only</b>}
     {sample&&<b>Ground {metres(sample.ground)} · row {sample.row}, column {sample.column} · unscaled · resampled 96²</b>}

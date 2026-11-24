@@ -199,3 +199,9 @@ test('unsupported native zoom result removes retained surface instead of inventi
  const s=await setup();try{let c=s.render();c.selectMode('surface');c=s.render();s.tick();s.requests[0].resolve(data(['surface']));await settle();c=s.render();assert.equal(c.applied.grid,true);s.emit('movestart');s.map.bounds=[-99,38,-98,39];s.emit('moveend');c=s.render();s.tick();assert.equal(c.applied.grid,true);const empty=data(['surface']);empty.grid=null;empty.receipt.grid=null;empty.receipt.state='detail-required';s.requests[1].resolve(empty);await settle();c=s.render();assert.equal(c.applied.grid,false);assert.equal(c.grid,null);assert.equal(c.pointsOn,false);
  }finally{s.h.dispose();}
 });
+
+
+test('the main layer row explains missing zoom detail and exposes its camera action without advanced controls',async()=>{
+ const s=await setup();try{let c=s.render();c.selectMode('surface');c=s.render();s.tick();const d=data(['surface']);d.grid=null;d.receipt.grid=null;d.receipt.state='detail-required';d.receipt.layers.find(layer=>layer.kind==='surface').state='detail-required';s.requests[0].resolve(d);await settle();c=s.render();const row=s.h.exports.TerrainCellsSwitch({controller:c,compact:true});assert.match(copy(row),/at most 1 km²/);const zoom=findNode(row,n=>n.type==='button'&&n.props.children==='Zoom to LiDAR detail here');assert.ok(zoom);assert.equal(zoom.props.disabled,false);s.allowCamera();zoom.props.onClick();c=s.render();assert.equal(s.camera.zoom,17.5);assert.equal(c.mode,'surface');assert.equal(c.pointsOn,false);
+ }finally{s.h.dispose();}
+});
