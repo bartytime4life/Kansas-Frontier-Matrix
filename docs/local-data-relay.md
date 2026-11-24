@@ -375,3 +375,9 @@ georeferenced footprint remains visible until the replacement is ready. Picking
 is paused during that handoff; terminal missing-support responses remove the
 previous native grid. No cells are stretched into new coverage, no surface or
 canopy is extrapolated from sparse returns, and source readings remain unscaled.
+
+**Base landscape only** switches off all LiDAR cells and raw point overlays,
+cancels their in-flight reads, and keeps the continuous terrain and camera
+unchanged. The last Ground/Surface/Canopy choice remains available to re-enable.
+The direct Terrain topic toggle also restores this base-only state when turned
+off. No LiDAR request starts until its optional layer is enabled.

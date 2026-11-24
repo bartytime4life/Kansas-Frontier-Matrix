@@ -211,3 +211,10 @@ test('native detail zoom adapts to wide views and progresses beyond the old fixe
  const s=await setup();try{s.camera.zoom=17.5;s.camera.pitch=55;s.map.bounds=[-96.61,39.075,-96.56,39.105];let c=s.render();c.selectMode('surface');c=s.render();s.allowCamera();const center=[...s.camera.center],bearing=s.camera.bearing;c.detailHere();c=s.render();assert.ok(s.camera.zoom>17.5&&s.camera.zoom<=20);assert.deepEqual(s.camera.center,center);assert.equal(s.camera.bearing,bearing);assert.equal(c.mode,'surface');assert.equal(c.scale,2.5);assert.equal(c.pointsOn,false);
  }finally{s.h.dispose();}
 });
+
+
+test('Base landscape only removes every LiDAR pixel overlay and cancels reads while preserving the continuous terrain, camera and chosen cell mode',async()=>{
+ const s=await setup();try{let c=s.render();c.selectMode('canopy');c.togglePoints();c=s.render();s.tick();s.requests[0].resolve(data(['canopy','points']));await settle();c=s.render();assert.equal(c.applied.grid,true);assert.equal(c.applied.points,true);const terrain=s.map.getTerrain(),camera={...s.camera,center:[...s.camera.center]},requests=s.requests.length;
+ const row=s.h.exports.TerrainCellsSwitch({controller:c,compact:true});findNode(row,n=>n.type==='button'&&n.props.children==='Base landscape only').props.onClick();c=s.render();s.tick();assert.equal(c.cellsOn,false);assert.equal(c.pointsOn,false);assert.equal(c.applied.grid,false);assert.equal(c.applied.points,false);assert.equal(s.layers.size,0);assert.equal(s.requests[0].signal.aborted,true);assert.equal(s.requests.length,requests);assert.equal(s.map.getTerrain().source,terrain.source);assert.deepEqual(s.camera,camera);assert.equal(c.mode,'canopy','comparison mode remains ready to re-enable');assert.match(copy(s.h.exports.TerrainCellsSwitch({controller:c,compact:true})),/Base landscape visible/);
+ }finally{s.h.dispose();}
+});
