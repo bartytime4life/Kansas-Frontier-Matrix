@@ -114,7 +114,7 @@ export function useNeonLidarPreview() {
 export type NeonLidarPreviewController = ReturnType<typeof useNeonLidarPreview>;
 
 /** One controller owns the exact preview shared by raster and scientific analysis. */
-export function NeonLidarWorkspace({ controller, embedded = false }: { controller: NeonLidarPreviewController; embedded?: boolean }) {
+export function NeonLidarWorkspace({ controller, embedded = false, anchorId }: { controller: NeonLidarPreviewController; embedded?: boolean; anchorId?: string }) {
   const id = useId();
   const { preview, pilotReceipt, mode, setMode, coordinateDraft, setCoordinateDraft, notice, reading, failed, importFile, loadPilot, clear, selectAxis } = controller;
   const domain = useMemo(() => preview ? neonElevationDomain(preview) : null, [preview]);
@@ -127,7 +127,7 @@ export function NeonLidarWorkspace({ controller, embedded = false }: { controlle
   const samples = preview?.grid[mode];
   const covered = samples?.filter(value => value !== null).length ?? 0;
   const saturated = mode === "chm" ? samples?.filter(value => value !== null && value > 30).length ?? 0 : 0;
-  return <section className={`${styles.panel} ${embedded ? styles.embedded : ""}`} aria-labelledby={`${id}-heading`}>
+  return <section id={anchorId} className={`${styles.panel} ${embedded ? styles.embedded : ""}`} aria-labelledby={`${id}-heading`}>
     <div className={styles.heading}>
       <div><p className={styles.eyebrow}>NEON / TERRAIN + VEGETATION</p><h2 id={`${id}-heading`}>Read the same ground</h2></div>
       <span className={styles.badge}>{pilotReceipt ? "Provider preview · review pending" : "Local preview · not admitted"}</span>
@@ -211,5 +211,5 @@ export function NeonLidarWorkspace({ controller, embedded = false }: { controlle
 
 export function NeonLidarPanel() {
   const controller = useNeonLidarPreview();
-  return <NeonLidarWorkspace controller={controller} />;
+  return <NeonLidarWorkspace controller={controller} anchorId="neon-lidar-lab" />;
 }
