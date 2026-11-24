@@ -280,9 +280,9 @@ jobs:
           retention-days: 14
 
   explorer-browser:
-    # Preserve the complete Explorer matrix and its artifacts independently of
-    # database/HTTP setup. The former combined job exhausted its 30-minute
-    # allocation; no case, assertion, browser deadline or source is relaxed.
+    # Preserve the Explorer matrix, with heavy native/solid GPU journeys in
+    # isolated standard-runner shards below. Every case and deadline remains;
+    # separate browsers avoid sharing GPU pressure with the full UI matrix.
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -298,7 +298,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - name: Complete Explorer browser matrix
+      - name: Explorer browser matrix excluding isolated terrain GPU shards
         shell: bash
         run: |
           set -euo pipefail
@@ -309,7 +309,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
             sleep 1
           done
-          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/workspace-screenshots" node --test tests/explorer-startup.browser.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/workspace-screenshots" node --test --test-skip-pattern='^(?:native cloud GPU picking, display scale and cleanup|solid Ground Surface Canopy render and source readings)' tests/explorer-startup.browser.mjs
       - name: Workspace browser acceptance artifacts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -318,5 +318,57 @@ jobs:
           path: |
             ${{ runner.temp }}/workspace-screenshots
             ${{ runner.temp }}/explorer-runtime.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  terrain-browser:
+    # Public repository, standard GitHub-hosted runners only. Each GPU family
+    # retains desktop/mobile cases and source-value assertions. The measured
+    # solid SwiftShader journey budget is documented in the test itself.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - family: native
+            pattern: '^native cloud GPU picking, display scale and cleanup'
+          - family: solid
+            pattern: '^solid Ground Surface Canopy render and source readings'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22.23.3'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Isolated terrain GPU journeys
+        shell: bash
+        env:
+          TERRAIN_TEST_PATTERN: ${{ matrix.pattern }}
+        run: |
+          set -euo pipefail
+          NODE_ENV=production PORT=5182 node server/start.mjs > "$RUNNER_TEMP/terrain-runtime.log" 2>&1 &
+          site_pid=$!
+          trap 'kill "$site_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
+            sleep 1
+          done
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/terrain-screenshots" node --test --test-name-pattern="$TERRAIN_TEST_PATTERN" tests/explorer-startup.browser.mjs
+      - name: Terrain browser acceptance artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: terrain-browser-${{ matrix.family }}
+          path: |
+            ${{ runner.temp }}/terrain-screenshots
+            ${{ runner.temp }}/terrain-runtime.log
           if-no-files-found: warn
           retention-days: 14

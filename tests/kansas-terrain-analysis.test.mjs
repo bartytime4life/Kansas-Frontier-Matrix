@@ -14,3 +14,9 @@ test('reproducible terrain study keeps exact source/mask/hash and explicit fixed
 test('local-relief renderer/legend domain is symmetric with centeredzero, explicit flat fallback and no invented missing spread',()=>{
  assert.deepEqual(analysis.terrainColorDomain([-2,0,7,null],'local-relief'),[-7,7]);assert.deepEqual(analysis.terrainColorDomain([0,0,null],'local-relief'),[0,0]);assert.equal(analysis.terrainColorDomain([null,null],'local-relief'),null);assert.deepEqual(analysis.terrainColorDomain([-2,0,7],'height'),[-2,7]);
 });
+
+
+test('top illumination uses supported unscaled physical gradients and a fixed NW light; holes never invent normals',()=>{
+ const w=5,h=5,make=(east,north)=>Array.from({length:w*h},(_,i)=>100+east*(i%w)*2-north*Math.floor(i/w)*3),toward=analysis.terrainGradients(make(1,-1),w,h,()=>[2,3]),away=analysis.terrainGradients(make(-1,1),w,h,()=>[2,3]),i=12;
+ assert.deepEqual(toward[i],{east:1,north:-1});assert.deepEqual(away[i],{east:-1,north:1});assert.ok(analysis.terrainIllumination(toward[i])>analysis.terrainIllumination(away[i]));assert.equal(toward[0],null);const masked=make(1,-1);masked[i-1]=null;assert.equal(analysis.terrainGradients(masked,w,h,()=>[2,3])[i],null);assert.equal(analysis.terrainIllumination(null),.82);const flat=analysis.terrainGradients(make(0,0),w,h,()=>[2,3]);assert.ok(Math.abs(analysis.terrainIllumination(flat[i])-(.55+.45*Math.SQRT1_2))<1e-12);assert.equal(analysis.TERRAIN_ANALYSIS_RECIPE.illumination.heights,'Unscaled; independent of visual relief');
+});

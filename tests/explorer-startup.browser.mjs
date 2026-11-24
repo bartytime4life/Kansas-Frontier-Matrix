@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, readdir, rm, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, mkdir, writeFile, appendFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
@@ -1416,7 +1416,15 @@ for(const width of [1280,390])test(`native cloud GPU picking, display scale and 
   const afterAngle=await p.evaluate(`(()=>{const m=window.__terrainAcceptanceMap,c=m.getCenter();return {center:[c.lng,c.lat],zoom:m.getZoom(),bearing:m.getBearing()};})()`);for(let i=0;i<2;i++)assert.ok(Math.abs(afterAngle.center[i]-beforeAngle.center[i])<1e-9);assert.equal(afterAngle.zoom,beforeAngle.zoom);assert.equal(afterAngle.bearing,beforeAngle.bearing);
   const angledPoint=await selectPoint(await p.evaluate(`window.__nativeVisiblePoint()`));await p.wait(`!!document.querySelector('.category-map-dock')`,'angle-adjusted pixel opens linked controls');const angledReading=await p.evaluate(nativeReading);assert.equal(angledReading.identity,angledPoint.asset+' / '+angledPoint.record);assert.ok(angledReading.height.includes(angledPoint.z.toFixed(3)+' m'));await hideControls();await p.wait(`${reading}?.includes('asset ${angledPoint.asset} / record ${angledPoint.record}')`,'closed-map badge retains the angle-adjusted source identity');
   if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`native-points-synthetic-${width}.png`),Buffer.from(shot.data,'base64'));}
-  await selectPoint(await p.evaluate(`window.__nativeVisiblePoint()`));await p.wait(`!!document.querySelector('.category-map-dock')`,'visible-point selection reopens its linked controls');
+  const cleanupPoint=await selectPoint(await p.evaluate(`window.__nativeVisiblePoint()`));await p.wait(`!!document.querySelector('.category-map-dock')`,'visible-point selection reopens its linked controls');
+  await p.evaluate(`window.__nativeCleanupResource=window.__terrainAcceptanceMap.getLayer('external-native-lidar-points').implementation`);
+  // The actual source-pixel click above reopens this same dock/footprint.
+  // Opening desktop Layers instead resizes the canvas and correctly acquires a
+  // new viewport resource; that is different from reopening these controls.
+  // A remounted dock does not retain <details> openness: expose it by keyboard.
+  await openNativeOptions();
+  assert.equal(await p.evaluate(`window.__terrainAcceptanceMap.getLayer('external-native-lidar-points')?.implementation===window.__nativeCleanupResource`),true,'opening controls retains the cloud that Clear must actually dispose');
+  assert.equal((await p.evaluate(nativeReading)).identity,cleanupPoint.asset+' / '+cleanupPoint.record);
   const beforeReload={manifest:fixtures.hits.manifest,chunks:fixtures.hits.chunks};
   await press('Clear native layers');await p.wait(`!window.__terrainAcceptanceMap.getLayer('external-native-lidar-points') && !document.querySelector('[aria-label="Kansas LiDAR map identity"]')`,'clear releases cloud resource and source reading');
   await openNativeOptions();await press('LiDAR points · off');await p.wait(`[...document.querySelectorAll('[aria-label="Kansas LiDAR layers"] button')].some(e=>e.textContent==='LiDAR points · on'&&e.getAttribute('aria-pressed')==='true')`,'explicit keyboard action enables native points while controls remain open');await hideControls();await p.wait(`!!window.__nativeVisiblePoint()`,'reload compiles and renders a fresh owned cloud');assert.equal(fixtures.hits.manifest,beforeReload.manifest+1);assert.equal(fixtures.hits.chunks,beforeReload.chunks+1);
@@ -1425,25 +1433,38 @@ for(const width of [1280,390])test(`native cloud GPU picking, display scale and 
 
 // Solid synthetic raster source; production top/wall shaders and source-cell ID
 // picking. This proves renderer integration, never native survey/field accuracy.
-for(const width of [1280,390])test(`solid Ground Surface Canopy render and source readings at ${width}px (synthetic grids)`,{timeout:150000},async t=>{
+// SwiftShader measured ~38 s Ground readiness plus multi-second frames/captures;
+// three modes share one cold start. This 240 s functional software-rendering
+// budget does not establish user performance acceptance; wait/CDP bounds stay fixed.
+for(const width of [1280,390])test(`solid Ground Surface Canopy render and source readings at ${width}px (synthetic grids)`,{timeout:240000},async t=>{
+ const started=Date.now(),stages=[];let lastStage='setup';
+ const record=async(event,stage,extra={})=>{const row={width,event,stage,at:new Date().toISOString(),elapsedMs:Date.now()-started,...extra};stages.push(row);console.log('KFM_SOLID_STAGE '+JSON.stringify(row));if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});await appendFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`solid-stages-${width}.jsonl`),JSON.stringify(row)+'\n');}};
+ const phase=async(name,action)=>{lastStage=name;const at=Date.now();await record('start',name);try{const value=await action();await record('end',name,{durationMs:Date.now()-at});return value;}catch(error){await record('failed',name,{durationMs:Date.now()-at,error:String(error).slice(0,500)});const state=await Promise.race([p.evaluate(`(()=>{const m=window.__terrainAcceptanceMap,c=m?.getCenter(),panel=document.querySelector('[aria-label="Kansas LiDAR layers"]');return {camera:m?{center:[c.lng,c.lat],zoom:m.getZoom(),pitch:m.getPitch(),bearing:m.getBearing(),moving:m.isMoving()}:null,canvas:m?.getCanvas().getBoundingClientRect().toJSON(),mode:[...panel?.querySelectorAll('button[aria-pressed="true"]')??[]].map(e=>e.textContent),status:panel?.querySelector('[role="status"]')?.textContent,probe:window.__solidProbeStats,frames:window.__solidFixtureFrames,glErrors:window.__nativeFixtureErrors};})()`).catch(e=>({unavailable:String(e).slice(0,300)})),pause(750).then(()=>({unavailable:'browser snapshot not available within750ms'}))]);await record('failure-state',name,{...state,hits:{...fixtures.hits}});throw error;}};
+ t.after(async()=>{await record('test-ended',lastStage);if(process.env.KFM_WORKSPACE_SCREENSHOTS)await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`solid-stages-${width}.json`),JSON.stringify({kind:'synthetic CI stage diagnostics; no provider acceptance',stages},null,2));});
  const fixtures=await nativeLidarBrowserFixtures(origin,{solid:true}),b=await browser(t),p=await pageSession(b,width,844,fixtures);
- await p.open('/?motion=off');await readyWelcome(p);await revealControl(p,'.topic-callout.topic-terrain');await p.evaluate(`document.querySelector('.topic-callout.topic-terrain').focus()`);await p.key('Enter','Enter',13);
+ await phase('startup',async()=>{await p.open('/?motion=off');await readyWelcome(p);await revealControl(p,'.topic-callout.topic-terrain');await p.evaluate(`document.querySelector('.topic-callout.topic-terrain').focus()`);await p.key('Enter','Enter',13);});
  const pressSolid=async text=>{await p.wait(`(()=>{const e=[...document.querySelectorAll('.category-map-dock button')].find(e=>e.textContent===${JSON.stringify(text)});if(!e||e.disabled)return false;e.scrollIntoView({block:'center'});e.focus();return document.activeElement===e;})()`,'solid layer action ready: '+text);await p.key('Enter','Enter',13);};
+ const waitSolidReady=async(mode,label)=>p.wait(`(()=>{const panel=document.querySelector('[aria-label="Kansas LiDAR layers"]'),selected=[...panel?.querySelectorAll('[aria-label="Terrain layer selection"] button')??[]].find(e=>e.textContent===${JSON.stringify(label)}),inspect=[...panel?.querySelectorAll('button')??[]].find(e=>e.textContent==='Inspect landscape in 3D'),layer=window.__terrainAcceptanceMap?.getLayer('external-kansas-lidar-grid')?.implementation,receipt=${JSON.stringify(mode)}==='ground'||[...panel?.querySelectorAll('li')??[]].some(e=>e.querySelector('strong')?.textContent===${JSON.stringify(mode)}&&['ready','partial'].includes(e.querySelector('span')?.textContent.trim()));return selected?.getAttribute('aria-pressed')==='true'&&inspect&&!inspect.disabled&&!!layer&&!layer.failed&&receipt;})()`,'selected '+mode+' receipt and applied solid grid are ready for inspection');
  const clickCell=async()=>{const pixel=await p.evaluate('window.__solidVisibleCell()');assert.ok(pixel);await p.evaluate('window.__solidDispatchedPick=null');for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,x:pixel.x,y:pixel.y,button:'left',clickCount:1});const picked=await p.evaluate('window.__solidDispatchedPick');assert.ok(picked&&picked.frame>0,'actual click reads the displayed solid-cell ID');await p.wait(`!!document.querySelector('.category-map-dock')`,'solid cell opens linked reading');return picked.index;};
- await p.wait(`!!document.querySelector('[aria-label="Kansas LiDAR layers"]')&&window.__terrainAcceptanceMap?.getProjection()?.type==='mercator'`,'generic Terrain controls mounted');
+ await phase('controls-mounted',()=>p.wait(`!!document.querySelector('[aria-label="Kansas LiDAR layers"]')&&window.__terrainAcceptanceMap?.getProjection()?.type==='mercator'`,'generic Terrain controls mounted'));
  for(const [mode,label] of [['ground','Ground'],['surface','Surface'],['canopy','Canopy height']]){
-  if(mode!=='ground')await pressSolid(label);
-  await pressSolid('View map');
+  if(mode!=='ground')await phase(mode+':select',()=>pressSolid(label));
+  await phase(mode+':ready',()=>waitSolidReady(mode,label));
+  const requestsBeforeInspect=JSON.stringify(fixtures.hits);
+  await phase(mode+':relief3x',()=>pressSolid('3× visual relief'));await phase(mode+':inspect',()=>pressSolid('Inspect landscape in 3D'));
+  await phase(mode+':pinned',()=>p.wait(`document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes('Study area pinned')&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes('3.0× display')&&Math.abs(window.__terrainAcceptanceMap.getPitch()-55)<.1`,'framed current-area landscape is pinned at explicit3x relief'));
+  assert.equal(JSON.stringify(fixtures.hits),requestsBeforeInspect,'owned framing does not download a replacement grid');
   const source=mode==='ground'?'USGS 3DEP mosaic':'KS_Statewide_B6A_2018';
-  await p.wait(`document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes(${JSON.stringify(label+' cells')})&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes(${JSON.stringify(source)})&&!!window.__solidVisibleCell()`,'production '+mode+' solid frame has an exposed cell pixel');
+  await phase(mode+':visible3x',()=>p.wait(`document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes(${JSON.stringify(label+' cells')})&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes(${JSON.stringify(source)})&&!!window.__solidVisibleCell()`,'production '+mode+' solid frame has an exposed cell pixel'));
   if(mode==='ground')assert.equal(fixtures.hits.manifest,0,'Ground requests no native EPT manifest or chunks');
-  const index=await clickCell(),grid=fixtures.grid,value=grid[mode][index];assert.notEqual(value,null);
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS)await phase(mode+':screenshot3x',async()=>{await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`solid-${mode}-synthetic-3x-${width}.png`),Buffer.from(shot.data,'base64'));});
+  const index=await phase(mode+':click3x',clickCell),grid=fixtures.grid,value=grid[mode][index];assert.notEqual(value,null);
   const reading=await p.evaluate(`[...document.querySelectorAll('[aria-label="Kansas LiDAR layers"] output')].find(e=>e.querySelector('small'))?.textContent`);
   assert.ok(reading?.includes(value.toFixed(3)+' m'),'clicked source cell height remains unscaled');
   assert.equal(await p.evaluate(`!!document.querySelector('[aria-label="Kansas LiDAR map identity"]')`),false,'open cell reading is not covered by its persistent badge');
-  await pressSolid('True vertical scale · 1×');await pressSolid('View map');await p.wait(`!!window.__solidVisibleCell()&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes('1.0× display')`,'unscaled source geometry redraws at true scale');
-  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`solid-${mode}-synthetic-${width}.png`),Buffer.from(shot.data,'base64'));}
-  await clickCell();assert.deepEqual(await p.evaluate('window.__nativeFixtureErrors'),[],'production solid shaders and shared color/ID pipeline have no GL error');
+  await phase(mode+':true-scale',()=>pressSolid('True vertical scale · 1×'));await phase(mode+':close1x',()=>pressSolid('View map'));await phase(mode+':visible1x',()=>p.wait(`!!window.__solidVisibleCell()&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes('1.0× display')`,'unscaled source geometry redraws at true scale'));
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS)await phase(mode+':screenshot1x',async()=>{await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`solid-${mode}-synthetic-${width}.png`),Buffer.from(shot.data,'base64'));});
+  await phase(mode+':click1x',clickCell);await phase(mode+':diagnostics',async()=>{const state=await p.evaluate(`(()=>{const m=window.__terrainAcceptanceMap,c=m.getCenter();return {camera:{center:[c.lng,c.lat],zoom:m.getZoom(),pitch:m.getPitch(),bearing:m.getBearing()},probe:window.__solidProbeStats,frames:window.__solidFixtureFrames};})()`);await record('state',mode,{...state,hits:{...fixtures.hits}});});assert.deepEqual(await p.evaluate('window.__nativeFixtureErrors'),[],'production solid shaders and shared color/ID pipeline have no GL error');
  }
  assert.equal(fixtures.hits.chunks,0,'surface/canopy grid journey does not download raw point chunks');t.diagnostic(JSON.stringify({source:'synthetic analytic grids; no provider or owner-hardware acceptance',hits:fixtures.hits,frames:await p.evaluate('window.__solidFixtureFrames')}));
 });
