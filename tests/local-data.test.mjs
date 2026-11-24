@@ -46,6 +46,35 @@ const signed=(path,body='',{keyId='data-gw-1',secret=gatewaySecret,method=path==
 const parse=answer=>JSON.parse(answer.body.toString('utf8'));
 const verified=(request,answer)=>verifyResponse({secret:decodeSecret(gatewaySecret),requestHeaders:request.headers,method:request.method,path:request.path,requestBody:request.body,status:answer.status,body:answer.body,headers:{[RESPONSE_SIGNATURE_HEADER]:answer.signature}});
 
+test('slow database work returns a signed timeout and authentication/replay checks remain in the parent',async()=>{
+ let calls=0,release;
+ const handle=createGateway({keyId:'data-gw-1',secret:gatewaySecret,execute:()=>{calls++;return new Promise((resolve,reject)=>{release=()=>reject(Object.assign(new Error(),{code:'QUERY_TIMEOUT'}));});}});
+ const bad=signed('/v1/data/storm-events','{}',{secret:newSecret()});
+ assert.equal(handle(bad).status,401);assert.equal(calls,0);
+ const request=signed('/v1/data/storm-events','{}'),pending=handle(request);
+ assert.equal(handle(request).status,401,'a pending request cannot replay its nonce');
+ release();const answer=await pending;
+ assert.equal(answer.status,503);assert.equal(parse(answer).error,'QUERY_TIMEOUT');assert.ok(verified(request,answer));
+});
+
+test('signed timeouts and busy replies are distinguished from a worker being offline',async()=>{
+ for(const code of ['QUERY_TIMEOUT','QUERY_BUSY']){
+  const config=localDataConfig({KFM_LOCAL_DATA:'1',KFM_LOCAL_DATA_ORIGIN:SITE,KFM_LOCAL_DATA_GATEWAY_KEY_ID:'data-gw-1',KFM_LOCAL_DATA_GATEWAY_SECRET:gatewaySecret,KFM_LOCAL_DATA_WORKER_KEY_ID:'data-worker-1',KFM_LOCAL_DATA_WORKER_SECRET:workerSecret});
+  const handle=createGateway({keyId:'data-gw-1',secret:gatewaySecret,execute:async()=>{throw Object.assign(new Error(),{code});}});
+  const relay={lastSeen:Date.now(),handler:()=>{},submit:async({method,path,body})=>{
+   const request=signed(path,body,{method}),answer=await handle(request);
+   return {status:answer.status,bytes:answer.body,requestHeaders:request.headers,headers:new Headers({'content-type':'application/json',[RESPONSE_SIGNATURE_HEADER]:answer.signature})};
+  }};
+  const service=createLocalDataService({config,relay});
+  const response=await service.query(new Request(SITE+'/api/local-data/storm-events'),'storm-events'),body=await response.json();
+  assert.equal(response.status,503);assert.equal(body.reasonCode,code);assert.equal(body.state,code==='QUERY_TIMEOUT'?'local-data-slow':'local-data-busy');assert.ok(body.hint);
+  if(code==='QUERY_BUSY')assert.equal(response.headers.get('Retry-After'),'2');
+  relay.lastSeen=0;
+  const offline=await (await service.query(new Request(SITE+'/api/local-data/storm-events'),'storm-events')).json();
+  assert.equal(offline.state,'local-data-offline');
+ }
+});
+
 test('storm queries are normalized and anything else is refused',()=>{
  assert.deepEqual(parseStormQuery({}),{county:null,from:'1950-01-01',to:'2100-12-31',type:null,limit:50,offset:0});
  assert.deepEqual(parseStormQuery({county:' sedgwick ',type:'tornado',from:'2020-01-01',limit:'200'}),{county:{name:'SEDGWICK'},from:'2020-01-01',to:'2100-12-31',type:'TORNADO',limit:200,offset:0});

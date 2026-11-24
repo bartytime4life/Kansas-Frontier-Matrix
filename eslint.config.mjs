@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Built, content-addressed bundles are generated from source checked above.
+    "public/assets/**",
     // Installed, pinned third-party browser decoder; not application source.
     "public/vendor/h5wasm/**",
   ]),

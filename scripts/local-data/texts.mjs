@@ -72,7 +72,8 @@ const dayOrYear=(v,fallback,{end=false}={})=>{
 
 /** A catalog built from one table, rebuilt only when the table's row count or last rowid changes. */
 function catalog(db,cache,key,table,rowid,build){
- const stamp=db.prepare(`SELECT COUNT(*) AS n,MAX(${rowid}) AS m FROM ${table}`).get();
+ // Separate aggregates let SQLite use its fast count and maximum-rowid paths.
+ const stamp={...db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get(),...db.prepare(`SELECT MAX(${rowid}) AS m FROM ${table}`).get()};
  const version=stamp.n+':'+stamp.m,held=cache.get('catalog:'+key);
  if(held&&held.version===version)return held.value;
  const value=build();
@@ -83,7 +84,7 @@ function catalog(db,cache,key,table,rowid,build){
 function newspaperTitles(db,cache){
  return catalog(db,cache,'newspaper-titles','kfm_newspaper_titles','rowid',()=>{
   const titles=new Map();
-  for(const r of db.prepare('SELECT lccn,title,place,location_json FROM kfm_newspaper_titles ORDER BY file_id,row_number').all()){
+ for(const r of db.prepare('SELECT lccn,title,place,location_json FROM kfm_newspaper_titles ORDER BY file_id,row_number').iterate()){
    let lat=null,lon=null;
    try{const ll=JSON.parse(r.location_json??'null')?.latlong;if(Array.isArray(ll)&&Number.isFinite(+ll[0])&&Number.isFinite(+ll[1])){lat=+ll[0];lon=+ll[1];}}catch{}
    titles.set(r.lccn,{title:str(r.title),place:str(r.place),lat,lon});
@@ -94,33 +95,48 @@ function newspaperTitles(db,cache){
 // page_rowid -> {lccn, issueDate}; read through the (lccn, issue_date, …) index, never the OCR rows.
 const newspaperPages=(db,cache)=>catalog(db,cache,'newspaper-pages','kfm_newspaper_pages','page_rowid',()=>{
  const pages=new Map();
- for(const r of db.prepare('SELECT page_rowid AS id,lccn,issue_date AS issueDate FROM kfm_newspaper_pages').all())pages.set(r.id,{lccn:r.lccn,issueDate:r.issueDate});
+ for(const r of db.prepare('SELECT page_rowid AS id,lccn,issue_date AS issueDate FROM kfm_newspaper_pages').iterate())pages.set(r.id,{lccn:r.lccn,issueDate:r.issueDate});
  return pages;
 });
 const archiveTexts=(db,cache)=>catalog(db,cache,'ia-texts','kfm_ia_texts','text_rowid',()=>{
  const texts=new Map();
- for(const r of db.prepare('SELECT text_rowid AS id,identifier,part FROM kfm_ia_texts').all())texts.set(r.id,{identifier:r.identifier,part:r.part});
+ for(const r of db.prepare('SELECT text_rowid AS id,identifier,part FROM kfm_ia_texts').iterate())texts.set(r.id,{identifier:r.identifier,part:r.part});
  return texts;
 });
 const archiveItems=(db,cache)=>catalog(db,cache,'ia-items','kfm_ia_items','rowid',()=>{
  const items=new Map();
- for(const r of db.prepare('SELECT identifier,title,creator,date,year,publisher FROM kfm_ia_items ORDER BY file_id,row_number').all())items.set(r.identifier,{title:str(r.title),creator:str(r.creator),date:str(r.date),year:num(r.year),publisher:str(r.publisher)});
+ for(const r of db.prepare('SELECT identifier,title,creator,date,year,publisher FROM kfm_ia_items ORDER BY file_id,row_number').iterate())items.set(r.identifier,{title:str(r.title),creator:str(r.creator),date:str(r.date),year:num(r.year),publisher:str(r.publisher)});
  return items;
 });
 
-/** Ranked matches from the FTS index alone: [{id, rank}] in bm25 order. */
-const ranked=(db,table,match)=>db.prepare(`SELECT rowid AS id,bm25(${table}) AS rank FROM ${table} WHERE ${table} MATCH ? ORDER BY rank`).all(match);
+/** Stream rank using FTS5's native ordering; stop once this filtered page is filled. */
+function rankedPage(db,table,match,accept,offset,limit){
+ const shown=[];let skipped=0;
+ for(const hit of db.prepare(`SELECT rowid AS id,rank FROM ${table} WHERE ${table} MATCH ? AND rank MATCH 'bm25()' ORDER BY rank`).iterate(match)){
+  if(!accept(hit.id))continue;
+  if(skipped++<offset)continue;
+  shown.push(hit);if(shown.length===limit)break;
+ }
+ return shown;
+}
+/** Counts need only posting IDs. Facets inspect all filtered IDs; ordinary totals stop at cap+1. */
+function countMatches(db,table,match,accept,facets,meta,yearOf,titleOf){
+ let count=0;const years=new Map(),titles=new Map();
+ for(const {id} of db.prepare(`SELECT rowid AS id FROM ${table} WHERE ${table} MATCH ?`).iterate(match)){
+  if(!accept(id))continue;
+  count++;
+  if(!facets){if(count>TOTAL_CAP)break;continue;}
+  const m=meta.get(id),y=yearOf(m),t=titleOf(m);
+  years.set(y,(years.get(y)??0)+1);titles.set(t,(titles.get(t)??0)+1);
+ }
+ return {total:Math.min(count,TOTAL_CAP),totalCapped:count>TOTAL_CAP,
+  facets:facets?{years:[...years].sort((a,b)=>a[0]-b[0]).map(([year,hits])=>({year,hits})),titles:[...titles].sort((a,b)=>b[1]-a[1]||(a[0]<b[0]?-1:1)).slice(0,FACET_TITLES).map(([id,hits])=>({id,hits}))}:null};
+}
 /** Snippets for the rows on one page: the only reads of the text rows themselves. */
 function snippets(db,table,match,ids){
  if(!ids.length)return new Map();
  const rows=db.prepare(`SELECT rowid AS id,snippet(${table},0,?,?,'…',24) AS snippet FROM ${table} WHERE ${table} MATCH ? AND rowid IN (${ids.map(()=>'?').join(',')})`).all(SNIPPET_OPEN,SNIPPET_CLOSE,match,...ids);
  return new Map(rows.map(r=>[r.id,str(r.snippet)]));
-}
-function facetsOf(hits,meta,yearOf,titleOf){
- const years=new Map(),titles=new Map();
- for(const h of hits){const m=meta.get(h.id),y=yearOf(m),t=titleOf(m);years.set(y,(years.get(y)??0)+1);titles.set(t,(titles.get(t)??0)+1);}
- return {years:[...years].sort((a,b)=>a[0]-b[0]).map(([year,hits])=>({year,hits})),
-  titles:[...titles].sort((a,b)=>b[1]-a[1]||(a[0]<b[0]?-1:1)).slice(0,FACET_TITLES).map(([id,hits])=>({id,hits}))};
 }
 
 export const archiveSearch={
@@ -143,33 +159,34 @@ export const archiveSearch={
    cache.set('ready:'+table,true);
   }
   const dated=q.from!=='1700-01-01'||q.to!=='2100-12-31';
-  const matches=ranked(db,table,q.match);
   if(q.source==='newspapers'){
    const pages=newspaperPages(db,cache),titles=newspaperTitles(db,cache);
-   const hits=matches.filter(m=>{const p=pages.get(m.id);return p&&(!dated||p.issueDate>=q.from&&p.issueDate<=q.to)&&(!q.title||p.lccn===q.title);});
-   const shown=hits.slice(q.offset,q.offset+q.limit),texts=snippets(db,table,q.match,shown.map(h=>h.id));
+   const accept=id=>{const p=pages.get(id);return p&&(!dated||p.issueDate>=q.from&&p.issueDate<=q.to)&&(!q.title||p.lccn===q.title);};
+   const counted=countMatches(db,table,q.match,accept,q.facets,pages,p=>+p.issueDate.slice(0,4),p=>p.lccn);
+   const shown=counted.total>q.offset?rankedPage(db,table,q.match,accept,q.offset,q.limit):[],texts=snippets(db,table,q.match,shown.map(h=>h.id));
    const detail=db.prepare('SELECT page_rowid AS id,edition,sequence,page_url,char_count FROM kfm_newspaper_pages WHERE page_rowid=?');
-   const answer={total:Math.min(hits.length,TOTAL_CAP),totalCapped:hits.length>TOTAL_CAP,
+   const answer={total:counted.total,totalCapped:counted.totalCapped,
     rows:shown.map(h=>{const p=pages.get(h.id),t=titles.get(p.lccn)??{},d=detail.get(h.id)??{};
      return {id:'page:'+h.id,source:'newspapers',lccn:p.lccn,title:t.title??null,place:t.place??null,lat:t.lat??null,lon:t.lon??null,issueDate:p.issueDate,
       edition:num(d.edition),sequence:num(d.sequence),pageUrl:str(d.page_url),characters:num(d.char_count),snippet:texts.get(h.id)??null,rank:num(h.rank)};})};
    if(q.facets){
-    const f=facetsOf(hits,pages,p=>+p.issueDate.slice(0,4),p=>p.lccn);
+    const f=counted.facets;
     answer.facets={years:f.years,titles:f.titles.map(t=>({id:t.id,title:titles.get(t.id)?.title??null,place:titles.get(t.id)?.place??null,hits:t.hits}))};
    }
    return answer;
   }
   const texts=archiveTexts(db,cache),items=archiveItems(db,cache);
-  const hits=matches.filter(m=>{const x=texts.get(m.id);if(!x)return false;const year=items.get(x.identifier)?.year??null;
-   return (!dated||year!==null&&year>=+q.from.slice(0,4)&&year<=+q.to.slice(0,4))&&(!q.title||x.identifier===q.title);});
-  const shown=hits.slice(q.offset,q.offset+q.limit),parts=snippets(db,table,q.match,shown.map(h=>h.id));
+  const accept=id=>{const x=texts.get(id);if(!x)return false;const year=items.get(x.identifier)?.year??null;
+   return (!dated||year!==null&&year>=+q.from.slice(0,4)&&year<=+q.to.slice(0,4))&&(!q.title||x.identifier===q.title);};
+  const counted=countMatches(db,table,q.match,accept,q.facets,texts,x=>items.get(x.identifier)?.year??null,x=>x.identifier);
+  const shown=counted.total>q.offset?rankedPage(db,table,q.match,accept,q.offset,q.limit):[],parts=snippets(db,table,q.match,shown.map(h=>h.id));
   const detail=db.prepare('SELECT char_count FROM kfm_ia_texts WHERE text_rowid=?');
-  const answer={total:Math.min(hits.length,TOTAL_CAP),totalCapped:hits.length>TOTAL_CAP,
+  const answer={total:counted.total,totalCapped:counted.totalCapped,
    rows:shown.map(h=>{const x=texts.get(h.id),i=items.get(x.identifier)??{};
     return {id:'text:'+h.id,source:'texts',identifier:x.identifier,title:i.title??null,creator:i.creator??null,date:i.date??null,year:i.year??null,publisher:i.publisher??null,part:num(x.part),
      itemUrl:'https://archive.org/details/'+encodeURIComponent(x.identifier),characters:num(detail.get(h.id)?.char_count),snippet:parts.get(h.id)??null,rank:num(h.rank)};})};
   if(q.facets){
-   const f=facetsOf(hits,texts,x=>items.get(x.identifier)?.year??null,x=>x.identifier);
+   const f=counted.facets;
    answer.facets={years:f.years,titles:f.titles.map(t=>({id:t.id,title:items.get(t.id)?.title??null,place:null,hits:t.hits}))};
   }
   return answer;
