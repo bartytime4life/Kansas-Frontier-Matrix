@@ -163,7 +163,7 @@ test("radar image adapter rejects absent frames before any WMS request", async (
   try {
     const response=await GET(new Request("https://app.test/api/event-atlas/radar-frame?time=2007-05-05T02%3A40%3A00Z"));
     assert.equal(response.status,404);assert.ok(seen.every((url)=>!url.includes("GetMap")));
-    const invalid=await GET(new Request("https://app.test/api/event-atlas/radar-frame?time=1994-01-01T00%3A00%3A00Z"));assert.equal(invalid.status,502);
+    const invalid=await GET(new Request("https://app.test/api/event-atlas/radar-frame?time=1994-01-01T00%3A00%3A00Z"));assert.equal(invalid.status,400);
   } finally {globalThis.fetch=previous;}
 });
 
@@ -178,7 +178,7 @@ test("tile adapter rejects time snapping and converts 204 into truly transparent
     assert.equal(empty.status,200);assert.equal(empty.headers.get("x-aggregate-state"),"no-records");
     const png=Buffer.from(await empty.arrayBuffer());const length=png.readUInt32BE(33);
     assert.deepEqual([...inflateSync(png.subarray(41,41+length))],[0,0,0,0,0]);
-    const precise=await GET(new Request("https://app.test/api/event-atlas/tile?kind=fauna&date=2023-06-07&z=12&x=900&y=1500"));assert.equal(precise.status,502);
+    const precise=await GET(new Request("https://app.test/api/event-atlas/tile?kind=fauna&date=2023-06-07&z=12&x=900&y=1500"));assert.equal(precise.status,400);
   } finally {globalThis.fetch=previous;}
 });
 

@@ -6648,14 +6648,22 @@ export default function Home() {
       return;
     }
     let disposed = false;
+    // Only the newest frame-list read may commit; a stalled read is bounded and
+    // a superseded or unmounted one is cancelled instead of overwriting newer frames.
+    let activeRead: AbortController | null = null;
     const load = async () => {
+      activeRead?.abort();
+      const controller = new AbortController();
+      activeRead = controller;
+      const deadline = window.setTimeout(() => controller.abort(), 20_000);
+      const ownsRead = () => !disposed && activeRead === controller;
       setLightningManifestState("loading");
       try {
-        const response = await fetch("/api/lightning/frames", { cache: "no-store" });
+        const response = await fetch("/api/lightning/frames", { cache: "no-store", signal: controller.signal });
         if (!response.ok) throw new Error("NOAA frame list unavailable");
-        const candidate = await readBoundedJson(response, 64 * 1024) as LightningManifest;
+        const candidate = await readBoundedJson(response, 64 * 1024, controller.signal) as LightningManifest;
         if (candidate.layer !== "ldn_lightning_strike_density" || candidate.evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || !Array.isArray(candidate.frames) || candidate.frames.length < 1 || candidate.frames.length > 32 || candidate.frames.some((frame) => typeof frame !== "string" || canonicalLightningTime(frame) !== frame)) throw new Error("NOAA frame list invalid");
-        if (disposed) return;
+        if (!ownsRead()) return;
         setLightningManifest(candidate);
         if (lightningAutoStartRef.current) {
           lightningAutoStartRef.current = false;
@@ -6666,16 +6674,18 @@ export default function Home() {
         }
         setLightningManifestState("ready");
       } catch {
-        if (disposed) return;
+        if (!ownsRead()) return;
         setLightningPlaying(false);
         setLightningManifestState("error");
         setOfficialStates((current) => ({ ...current, "noaa-lightning-density": "error" }));
         setOfficialErrors((current) => ({ ...current, "noaa-lightning-density": "NOAA advertised frames unavailable; no untimed image shown." }));
+      } finally {
+        window.clearTimeout(deadline);
       }
     };
     void load();
     const timer = window.setInterval(() => { if (!document.hidden) void load(); }, 180_000);
-    return () => { disposed = true; window.clearInterval(timer); };
+    return () => { disposed = true; activeRead?.abort(); window.clearInterval(timer); };
   }, [lightningSelected, lightningReloadToken, reducedMotion]);
 
   useEffect(() => {
