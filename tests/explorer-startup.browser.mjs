@@ -1374,6 +1374,8 @@ test('terrain detail successful 3DEP and manual provider recovery (synthetic DEM
   assert.equal(fixtures.hits.usgs, requests, 'manual selection disables automatic detail');
   fixtures.fail3dep(true); await choose('usgs-3dep');
   await p.wait(`document.querySelector('.terrain-mode-source')?.textContent.includes('USGS 3DEP · DEM unavailable') && !!document.querySelector('.runtime-degraded-banner')`, 'genuine manual provider failure remains visible');
+  await p.wait(`document.querySelector('.runtime-degraded-banner')?.textContent.includes('Retry the selected DEM in Terrain controls')`, 'the failure retains an actionable recovery message after map health updates');
+  assert.doesNotMatch(await p.evaluate(`document.querySelector('.runtime-degraded-banner').textContent`), /runtime proof is incomplete|MAP_SOURCE_FAILED/, 'the visitor sees recovery instructions instead of an internal diagnostic code');
   await p.evaluate(`[...document.querySelectorAll('button')].find(e=>e.textContent==='Use display DEM').click()`);
   await p.wait(ready('Mapzen'), 'explicit display DEM action restores terrain and runtime');
   assert.match(await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').textContent`), /Mapzen/);

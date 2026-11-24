@@ -118,3 +118,25 @@ test("continuous Kansas terrain admits z16/z17 detail with the same bounded prov
     if (z === 17) assert.ok(groundPixelMetres > 0.8 && groundPixelMetres < 1.1);
   }
 });
+
+test("3DEP memory and edge replies cannot outlive their original source-cache expiry", async () => {
+  const ttl = 21_600_000, started = 1000;
+  let now = started, calls = 0;
+  const bytes = new Uint8Array([137, 80, 78, 71]);
+  const serve = dem.create3DepDemTileService({ now: () => now, fetchBytes: async () => { calls++; return new Uint8Array(32); }, convert: async () => bytes });
+  assert.equal((await serve(tile())).headers.get("Cache-Control"), "public, max-age=900, s-maxage=21600");
+  now = started + ttl - 5000;
+  const memory = await serve(tile());
+  assert.equal(memory.headers.get("Cache-Control"), "public, max-age=5, s-maxage=5");
+  assert.equal(memory.headers.get("X-KFM-Retrieved-At"), new Date(started).toISOString());
+  assert.equal(calls, 1);
+  const edge = dem.create3DepDemTileService({ now: () => now, fetchBytes: async () => assert.fail("fresh edge copy must not fetch"), edgeCache: () => ({ match: async () => new Response(bytes, { headers: { "Content-Type": "image/png", "X-KFM-Retrieved-At": new Date(started).toISOString(), "Cache-Control": "public, max-age=900, s-maxage=21600" } }) }) });
+  const cached = await edge(tile());
+  assert.equal(cached.headers.get("X-KFM-Tile-Cache"), "EDGE");
+  assert.equal(cached.headers.get("Cache-Control"), "public, max-age=5, s-maxage=5");
+  now = started + ttl - 1;
+  assert.equal((await serve(tile())).headers.get("Cache-Control"), "public, max-age=0, s-maxage=0");
+  now++;
+  assert.equal((await serve(tile())).headers.get("X-KFM-Tile-Cache"), "ORIGIN");
+  assert.equal(calls, 2, "expired data requires a new source read");
+});

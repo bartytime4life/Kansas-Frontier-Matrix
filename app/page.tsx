@@ -7075,8 +7075,8 @@ export default function Home() {
           })) return;
           // MapLibre can fire load after errored tiles have settled. Do not
           // replace an already observed failure with a blocking loading state.
-          const existingFailure = runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}`
-            : degradedReason ?? basemapHealth.warning() ?? mapMutationErrorRef.current;
+          const existingFailure = degradedReason ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}`
+            : basemapHealth.warning() ?? mapMutationErrorRef.current);
           setRuntime(existingFailure ? { kind: "degraded", message: existingFailure }
             : { kind: "loading", message: `MapLibre ${version} loaded · verifying catalog layers and interactions…` });
         });
@@ -7679,7 +7679,7 @@ export default function Home() {
             setTerrainState("ERROR");
             setTerrainElevationReading(null);
             setTerrainElevationUnavailable(null);
-            degradedReason = `Terrain DEM is unavailable; the 2D map remains usable. ${message}`;
+            degradedReason = "Terrain DEM is unavailable. Retry the selected DEM in Terrain controls, or choose Mapzen display context. The map and records remain available.";
             setRuntime({ kind: "degraded", message: degradedReason });
             // A slow live 3DEP mosaic can fail many distinct tiles at once.
             // Leave its explicit Retry control available instead of adding
@@ -7786,7 +7786,7 @@ export default function Home() {
               && !mutationError;
             if (!ready) {
               const failedCheckMessage = probe.failedChecks.length ? `Map health checks need attention: ${probe.failedChecks.join(", ")}.` : null;
-              const next: RuntimeState = { kind: runtimeError || degradedReason || basemapWarning || mutationError || failedCheckMessage ? "degraded" : "loading", message: failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? basemapWarning ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") };
+              const next: RuntimeState = { kind: runtimeError || degradedReason || basemapWarning || mutationError || failedCheckMessage ? "degraded" : "loading", message: degradedReason ?? failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : basemapWarning ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") };
               setRuntime((current) => sameValues(current, next) ? current : next);
               return;
             }
@@ -9624,13 +9624,16 @@ export default function Home() {
       changeTerrainDepth(depth);
     }
     if (id === null) {
-      map.fitBounds([[-102.1, 36.9], [-94.5, 40.1]], { padding: 55, pitch: 60, bearing: -24, linear: true, duration: motionDuration(1400) });
+      // The live 3DEP export is expensive. A long animated zoom requests many
+      // intermediate DEM levels that the visitor never inspects; those orphaned
+      // reads can fill the host's bounded pool before the destination loads.
+      map.fitBounds([[-102.1, 36.9], [-94.5, 40.1]], { padding: 55, pitch: 60, bearing: -24, linear: true, duration: terrainProviderRef.current === "usgs-3dep" ? 0 : motionDuration(1400) });
       announce("Whole Kansas ground model · source and vertical scale preserved");
       return;
     }
     if (!landscape) return;
     const { center, zoom, pitch, bearing } = landscape.camera;
-    map.flyTo({ center: [center[0], center[1]], zoom, pitch, bearing, duration: motionDuration(1800), essential: false });
+    map.flyTo({ center: [center[0], center[1]], zoom, pitch, bearing, duration: terrainProviderRef.current === "usgs-3dep" ? 0 : motionDuration(1800), essential: false });
     announce(`${landscape.name} · ground model · ${verticalExaggerationRef.current.toFixed(1)}× display scale`);
   };
   // NASA SMAP L4 cells are 9 km across: a field-scale view would show one cell as

@@ -15,3 +15,6 @@
   :global(html):has(.page),:global(body):has(.page){height:auto!important;min-height:0!important;overflow:visible!important}
   .page{height:auto!important;min-height:0;overflow:visible!important}
 }
+
+/* Keep adjacent source-row actions usable with touch as well as a keyboard. */
+@media(max-width:580px),(pointer:coarse){.table td button{min-height:44px;min-width:44px;padding:8px 6px}}

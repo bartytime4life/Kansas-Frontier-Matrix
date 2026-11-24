@@ -106,8 +106,12 @@ export function create3DepDemTileService(options: Options = {}) {
   const pending = new Map<string, Promise<Entry>>();
   const recentFailures = new Map<string, Failure>();
   let memoryBytes = 0;
+  const cacheControl = (expires: number) => {
+    const remaining = Math.max(0, Math.floor((expires - now()) / 1000));
+    return `public, max-age=${Math.min(900, remaining)}, s-maxage=${remaining}`;
+  };
   const response = (entry: Entry, state: string) => new Response(new Uint8Array(entry.bytes), { headers: {
-    "Content-Type": "image/png", "Cache-Control": `public, max-age=900, s-maxage=${Math.max(0, Math.floor((entry.expires - now()) / 1000))}`,
+    "Content-Type": "image/png", "Cache-Control": cacheControl(entry.expires),
     "X-Content-Type-Options": "nosniff", "X-KFM-Tile-Cache": state,
     "X-KFM-Source": "USGS 3DEP bare-earth dynamic DEM; mixed source resolution", "X-KFM-Retrieved-At": entry.retrievedAt,
   } });
@@ -126,6 +130,7 @@ export function create3DepDemTileService(options: Options = {}) {
       if (hit?.ok && hit.headers.get("Content-Type") === "image/png" && expires > now()) {
         const result = new Response(hit.body, hit);
         result.headers.set("X-KFM-Tile-Cache", "EDGE");
+        result.headers.set("Cache-Control", cacheControl(expires));
         return result;
       }
     } catch { /* Memory cache is still available. */ }
