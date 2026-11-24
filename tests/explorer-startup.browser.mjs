@@ -1388,10 +1388,12 @@ for(const width of [1280,390])test(`native cloud GPU picking, display scale and 
   await revealControl(p,'.topic-callout.topic-terrain');await p.evaluate(`document.querySelector('.topic-callout.topic-terrain').focus()`);await p.key('Enter','Enter',13);
   await p.wait(`!!document.querySelector('[aria-label="Kansas LiDAR layers"]') && window.__terrainAcceptanceMap?.getProjection()?.type==='mercator'`,'Terrain native source controls ready');
   assert.equal(fixtures.hits.manifest,0,'rendering Terrain controls does not acquire native data');
-  const press=async text=>{await p.evaluate(`(()=>{const e=[...document.querySelectorAll('.category-map-dock button')].find(e=>e.textContent===${JSON.stringify(text)});if(!e)throw Error('Missing native action');e.scrollIntoView({block:'center'});e.focus();})()`);await p.key('Enter','Enter',13);};
+  // The dock can mount before styleReady enables its native actions. Focusing
+  // a disabled button is a no-op and would send Enter to the old close/opener.
+  const press=async text=>{await p.wait(`(()=>{const e=[...document.querySelectorAll('.category-map-dock button')].find(e=>e.textContent===${JSON.stringify(text)});if(!e||e.disabled)return false;e.scrollIntoView({block:'center'});e.focus();return document.activeElement===e;})()`,'enabled native action owns keyboard focus: '+text);await p.key('Enter','Enter',13);};
   const hideControls=async()=>{await p.evaluate(`document.querySelector('.category-map-dock-close').focus()`);await p.key('Enter','Enter',13);await p.wait(`!document.querySelector('.category-map-dock')`,'native layer persists when its controls close');};
   const selectPoint=async point=>{for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,x:point.x,y:point.y,button:'left',clickCount:1});};
-  await press('LiDAR points · off');await hideControls();
+  await press('LiDAR points · off');await p.wait(`[...document.querySelectorAll('[aria-label="Kansas LiDAR layers"] button')].some(e=>e.textContent==='LiDAR points · on'&&e.getAttribute('aria-pressed')==='true')`,'explicit keyboard action enables native points while controls remain open');await hideControls();
   await p.wait(`!!window.__nativeVisiblePoint()`,'real color/ID point frame has an exposed rendered pixel');
   const point=await p.evaluate(`window.__nativeVisiblePoint()`);
   await selectPoint(point);
@@ -1416,7 +1418,7 @@ for(const width of [1280,390])test(`native cloud GPU picking, display scale and 
   await selectPoint(await p.evaluate(`window.__nativeVisiblePoint()`));await p.wait(`!!document.querySelector('.category-map-dock')`,'visible-point selection reopens its linked controls');
   const beforeReload={manifest:fixtures.hits.manifest,chunks:fixtures.hits.chunks};
   await press('Clear native layers');await p.wait(`!window.__terrainAcceptanceMap.getLayer('external-native-lidar-points') && !document.querySelector('[aria-label="Kansas LiDAR map identity"]')`,'clear releases cloud resource and source reading');
-  await press('LiDAR points · off');await hideControls();await p.wait(`!!window.__nativeVisiblePoint()`,'reload compiles and renders a fresh owned cloud');assert.equal(fixtures.hits.manifest,beforeReload.manifest+1);assert.equal(fixtures.hits.chunks,beforeReload.chunks+1);
+  await press('LiDAR points · off');await p.wait(`[...document.querySelectorAll('[aria-label="Kansas LiDAR layers"] button')].some(e=>e.textContent==='LiDAR points · on'&&e.getAttribute('aria-pressed')==='true')`,'explicit keyboard action enables native points while controls remain open');await hideControls();await p.wait(`!!window.__nativeVisiblePoint()`,'reload compiles and renders a fresh owned cloud');assert.equal(fixtures.hits.manifest,beforeReload.manifest+1);assert.equal(fixtures.hits.chunks,beforeReload.chunks+1);
   t.diagnostic(JSON.stringify({source:'explicitly synthetic; no provider acceptance',hits:fixtures.hits,point,frames:await p.evaluate('window.__nativeFixtureFrames')}));
 });
 
