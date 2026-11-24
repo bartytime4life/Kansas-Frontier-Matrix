@@ -48,4 +48,39 @@ function solidViewportFixture(query){
  const asset={...view.receipt.points.source.assets[0],id:0},grid={...g,requestKey:view.receipt.requestKey,width:w,height:h,bounds:[666000,4328000,666640,4328640],cellSizeM:[10,10],cornersWgs84:corners,ground,surface,canopy,groundCounts:ground.map(v=>v===null?0:5),surfaceCounts:surface.map(v=>v===null?0:8),vegetationCounts:canopy.map(v=>v===null?0:3),groundResidualM:ground.map(v=>v===null?null:.1),source:{...g.source,project:asset.project,eptUrl:asset.eptUrl,assets:[asset],acquisition:asset.acquisition,verticalReference:asset.verticalReference}};
  view.receipt.points=query.layers.includes('points')?view.receipt.points:null;view.receipt.grid={format:grid.format,width:w,height:h,sourceProject:grid.source.project};view.receipt.state='partial';view.receipt.layers.forEach(l=>{l.state=query.layers.includes(l.kind)?'partial':l.kind==='ground'?'ready':'idle';});view.grid=grid;return view;
 }
-const solidSetupSource=`window.__solidFixtureFrames=0;window.__solidVisibleCell=()=>{const map=window.__terrainAcceptanceMap,layer=map?.getLayer('external-kansas-lidar-grid')?.implementation,m=window.__solidFixtureMatrix,v=window.__solidFixtureVertices;if(!layer||layer.failed||!m||!v)return null;const r=map.getCanvas().getBoundingClientRect();let last=0;for(let i=0;i+20<v.length;i+=7){const id=v[i+6];if(id===last)continue;last=id;const p=[(v[i]+v[i+7]+v[i+14])/3,(v[i+1]+v[i+8]+v[i+15])/3,(v[i+2]+v[i+9]+v[i+16])/3,1],c=Array.from({length:4},(_,row)=>p.reduce((n,x,col)=>n+x*m[col*4+row],0));if(c[3]<=0)continue;const x=(c[0]/c[3]+1)*r.width/2,y=(1-c[1]/c[3])*r.height/2;if(x<3||y<3||x>=r.width-3||y>=r.height-3||document.elementFromPoint(r.left+x,r.top+y)!==map.getCanvas())continue;const pageX=Math.round(r.left+x),pageY=Math.round(r.top+y),index=layer.pick({x:pageX-r.left,y:pageY-r.top});if(index!==null)return {index,x:pageX,y:pageY,frame:window.__solidFixtureFrames};}return null;};`;
+const solidSetupSource=String.raw`
+window.__solidFixtureFrames=0;
+window.__solidProbeDOMRevision=0;
+window.__solidProbeStats={calls:0,builds:0,reads:0,projected:0};
+if(typeof MutationObserver==='function'){
+ let observing=false;
+ const observe=()=>{if(observing||!document.documentElement)return;observing=true;new MutationObserver(()=>{window.__solidProbeDOMRevision++;}).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','style','open','hidden','aria-hidden']});};
+ observe();if(!observing)document.addEventListener('DOMContentLoaded',observe,{once:true});
+}
+window.__solidVisibleCell=()=>{
+ const map=window.__terrainAcceptanceMap,layer=map?.getLayer('external-kansas-lidar-grid')?.implementation,m=window.__solidFixtureMatrix,v=window.__solidFixtureVertices,stats=window.__solidProbeStats;stats.calls++;stats.reads=0;
+ if(!layer||layer.failed||!m||!v)return null;
+ const canvas=map.getCanvas(),r=canvas.getBoundingClientRect(),key=[...m,r.left,r.top,r.width,r.height,window.__solidProbeDOMRevision].join(','),old=window.__solidProbeCache;
+ let cache=old?.layer===layer&&old.vertices===v&&old.key===key?old:null;
+ if(!cache){
+  const projected=[];let last=0;stats.builds++;
+  for(let i=0;i+20<v.length;i+=7){const id=v[i+6];if(id===last)continue;last=id;
+   const x=(v[i]+v[i+7]+v[i+14])/3,y=(v[i+1]+v[i+8]+v[i+15])/3,z=(v[i+2]+v[i+9]+v[i+16])/3,w=x*m[3]+y*m[7]+z*m[11]+m[15];if(w<=0)continue;
+   const px=((x*m[0]+y*m[4]+z*m[8]+m[12])/w+1)*r.width/2,py=(1-(x*m[1]+y*m[5]+z*m[9]+m[13])/w)*r.height/2;
+   if(px<3||py<3||px>=r.width-3||py>=r.height-3)continue;projected.push({x:Math.round(r.left+px),y:Math.round(r.top+py)});
+  }
+  stats.projected=projected.length;
+  const buckets=new Map();if(projected.length){const xs=projected.map(p=>p.x),ys=projected.map(p=>p.y),left=Math.min(...xs),right=Math.max(...xs),top=Math.min(...ys),bottom=Math.max(...ys),width=Math.max(1,right-left),height=Math.max(1,bottom-top);
+   for(const p of projected){const col=Math.min(7,Math.floor((p.x-left)/width*8)),row=Math.min(7,Math.floor((p.y-top)/height*8)),id=row*8+col,cx=left+(col+.5)*width/8,cy=top+(row+.5)*height/8,distance=(p.x-cx)**2+(p.y-cy)**2;if(!buckets.has(id)||distance<buckets.get(id).distance)buckets.set(id,{...p,distance,priority:(col-3.5)**2+(row-3.5)**2});}
+  }
+  cache={layer,vertices:v,key,points:[...buckets.values()].sort((a,b)=>a.priority-b.priority),hit:null};window.__solidProbeCache=cache;
+ }
+ const seen=new Set(),candidates=cache.hit?[cache.hit,...cache.points]:cache.points;
+ for(const p of candidates){const pixel=p.x+','+p.y;if(seen.has(pixel))continue;seen.add(pixel);if(stats.reads>=64)break;
+  // Check the exact integer CSS pixel delivered by the real pointer dispatcher.
+  // Cached projections never substitute for the current production GPU-ID read.
+  if(document.elementFromPoint(p.x,p.y)!==canvas)continue;stats.reads++;const index=layer.pick({x:p.x-r.left,y:p.y-r.top});
+  if(index!==null){cache.hit=p;return {index,x:p.x,y:p.y,frame:window.__solidFixtureFrames};}
+ }
+ cache.hit=null;return null;
+};`;

@@ -61,11 +61,14 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
  const terrainFreshMs=terrainCache?HOSTED_TERRAIN_LIMITS.freshMs:LOCAL_DATA_CACHE.freshMs;
  const restoreTerrain=async(key,diskKey,validate,binding='')=>{
   if(cache.has(key)&&cache.get(key).binding!==binding)forget(key);
+  let servedTier='memory';
   if(!cache.has(key)){
    const hit=await terrainCache?.read(diskKey,validate,binding)??(groundBaseline&&diskKey.startsWith('ground:')?await groundBaseline(diskKey):null);
-   if(hit&&validate(hit.value))remember(key,hit.value,hit.bytes,hit.at,hit.tier??'disk',binding);
+   if(hit&&validate(hit.value)){servedTier=hit.tier??'disk';remember(key,hit.value,hit.bytes,hit.at,servedTier,binding);}
   }
-  return cache.get(key);
+  // Keep the saved origin for historical-baseline fallback, but report where
+  // this request obtained the data. Later warm hits do not read disk again.
+  const hit=cache.get(key);return hit?{...hit,servedTier}:hit;
  };
  const rememberTerrain=async(key,diskKey,value,bytes,binding='')=>{
   const at=clock();remember(key,value,bytes,at,'memory',binding);
@@ -196,7 +199,7 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
   let query;try{query=parseLidarViewSearch(new URL(request.url).searchParams);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
   const key=lidarViewKey(query),cacheKey=viewCacheKey(key),hit=await restoreTerrain(cacheKey,'view:'+key,v=>validLidarView(v,query)),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
-  try{const value=await cachedView(key,query);return terrainAnswer(value,workerOnline()?(fresh?'fresh':'live'):'stale',cache.get(cacheKey)?.at??clock(),value.state==='processing'?0:workerOnline()?60:0,fresh?hit.tier:'relay',request);}
+  try{const value=await cachedView(key,query);return terrainAnswer(value,workerOnline()?(fresh?'fresh':'live'):'stale',cache.get(cacheKey)?.at??clock(),value.state==='processing'?0:workerOnline()?60:0,fresh?hit.servedTier:'relay',request);}
   catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,0);return json({state:'local-data-offline',reasonCode:'LIDAR_VIEW_UNAVAILABLE'},503);}
  };
  const lidarViewArtifact=async(request,key,/** @type {number|'grid'} */ part)=>{
@@ -205,7 +208,7 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
   const cacheKey=viewCacheKey(key)+'/'+part;
   const parent=part==='grid'?await restoreTerrain(viewCacheKey(key),'view:'+key,v=>validLidarView(v,v.query)&&v.requestKey===key):null;
   const hit=part==='grid'&&parent?.value.grid?await restoreTerrain(cacheKey,'grid:'+key,v=>validLidarGrid(v,key)&&v.source.project===parent.value.grid.sourceProject&&v.width===parent.value.grid.width&&v.height===parent.value.grid.height,viewBinding(parent.value)):cache.get(cacheKey),age=hit?clock()-hit.at:Infinity;
-  if(hit&&age<(part==='grid'?terrainFreshMs:LOCAL_DATA_CACHE.freshMs))return terrainAnswer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60,hit.tier,request);
+  if(hit&&age<(part==='grid'?terrainFreshMs:LOCAL_DATA_CACHE.freshMs))return terrainAnswer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60,hit.servedTier??'memory',request);
   try{
    let trip=pending.get(cacheKey);
    if(!trip){trip=(async()=>{
@@ -222,11 +225,11 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
   let query;try{query=parseGroundSearch(new URL(request.url).searchParams);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
   const diskKey='ground:'+groundKey(query),key='\n'+diskKey,hit=await restoreTerrain(key,diskKey,v=>validGroundView(v,query)),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
-  if(fresh)return terrainAnswer(hit.value,workerOnline()?'fresh':'stale',hit.at,hit.value.state==='processing'?0:60,hit.tier,request);
+  if(fresh)return terrainAnswer(hit.value,workerOnline()?'fresh':'stale',hit.at,hit.value.state==='processing'?0:60,hit.servedTier,request);
   try{
    let trip=pending.get(key);if(!trip){trip=call('POST',GROUND_ROUTE,query).then(async({value,bytes})=>{delete value.gateway;if(!validGroundView(value,query))throw error('GATEWAY_RESPONSE_INVALID');return rememberTerrain(key,diskKey,value,bytes);}).finally(()=>pending.delete(key));pending.set(key,trip);}
    const value=await trip;return terrainAnswer(value,'live',cache.get(key)?.at??clock(),value.state==='processing'?0:60,'relay',request);
-  }catch{if(hit&&(hit.tier==='baseline'||clock()-hit.at<LOCAL_DATA_CACHE.staleMs))return terrainAnswer(hit.value,'stale',hit.at,0,hit.tier,request);return json({state:'local-data-offline',reasonCode:'GROUND_VIEW_UNAVAILABLE'},503);}
+  }catch{if(hit&&(hit.tier==='baseline'||clock()-hit.at<LOCAL_DATA_CACHE.staleMs))return terrainAnswer(hit.value,'stale',hit.at,0,hit.servedTier,request);return json({state:'local-data-offline',reasonCode:'GROUND_VIEW_UNAVAILABLE'},503);}
  };
 
  /**
