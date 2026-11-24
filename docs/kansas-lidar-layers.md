@@ -8,6 +8,18 @@ selected continuous elevation source. The other layers request the current map
 view; choosing one does not jump to a fixed example or change source values.
 There is no paid API, subscription or visitor provider account.
 
+**View map** closes the controls while retaining the enabled native layers.
+The panel remains bounded, its close control stays reachable while details
+scroll, and the persistent source/readout badge appears when controls are closed.
+**Look down here** also closes the controls and lowers a steeper map pitch to
+35° at the current center, zoom and bearing. It preserves a flatter angle and
+honors reduced motion. It does not change camera target elevation, source XYZ,
+display scale, or select a fixed source area. It is a view-angle shortcut, not a
+promise of denser or complete native sampling. Zoom controls remain available
+for choosing a smaller geographic area. A pitched horizon can make the queried
+bounds much larger than the nearby landscape.
+
+
 Pan or zoom to another area to refresh an enabled native layer. The old result
 is removed as the map moves. Each source can report processing, partial coverage,
 no coverage, detail required or unavailable. For derived surface/canopy, zoom

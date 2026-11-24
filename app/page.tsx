@@ -9571,7 +9571,7 @@ export default function Home() {
   };
 
   const neonLidarMap = useNeonLidarMap({ mapRef, styleReady, flatMap: projection === "mercator" && scenePreset !== "elevation-3d", atPresent: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, reducedMotion, onFlatMap: () => activateMapRepresentation("2d"), claimedClicksRef: neonClaimedMapClicksRef });
-  const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && (officialWorkspace === "terrain" || officialWorkspace === "all" && welcomeTopics[0] === "terrain"), scale: verticalExaggeration,
+  const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && (officialWorkspace === "terrain" || officialWorkspace === "all" && welcomeTopics[0] === "terrain"), scale: verticalExaggeration, reducedMotion: reducedMotion || !dynamicEffects, onViewMap: () => setCategoryDockHidden(true),
     onSelected: () => setCategoryDockHidden(false), onNativeIntent: () => neonLidarMap.cancelRead(), onGround: () => activateMapRepresentation("terrain") });
 
   const startTerrainInvestigation = () => {
@@ -12461,7 +12461,7 @@ export default function Home() {
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           <NeonLidarMapBadge controller={neonLidarMap} />
-          <KansasLidarBadge controller={kansasLidar} />
+          <KansasLidarBadge controller={kansasLidar} controlsOpen={showCategoryDock} />
           {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
