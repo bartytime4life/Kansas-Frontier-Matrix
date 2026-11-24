@@ -205,3 +205,9 @@ test('the main layer row explains missing zoom detail and exposes its camera act
  const s=await setup();try{let c=s.render();c.selectMode('surface');c=s.render();s.tick();const d=data(['surface']);d.grid=null;d.receipt.grid=null;d.receipt.state='detail-required';d.receipt.layers.find(layer=>layer.kind==='surface').state='detail-required';s.requests[0].resolve(d);await settle();c=s.render();const row=s.h.exports.TerrainCellsSwitch({controller:c,compact:true});assert.match(copy(row),/at most 1 km²/);const zoom=findNode(row,n=>n.type==='button'&&n.props.children==='Zoom to LiDAR detail here');assert.ok(zoom);assert.equal(zoom.props.disabled,false);s.allowCamera();zoom.props.onClick();c=s.render();assert.equal(s.camera.zoom,17.5);assert.equal(c.mode,'surface');assert.equal(c.pointsOn,false);
  }finally{s.h.dispose();}
 });
+
+
+test('native detail zoom adapts to wide views and progresses beyond the old fixed zoom without changing location or reading scale',async()=>{
+ const s=await setup();try{s.camera.zoom=17.5;s.camera.pitch=55;s.map.bounds=[-96.61,39.075,-96.56,39.105];let c=s.render();c.selectMode('surface');c=s.render();s.allowCamera();const center=[...s.camera.center],bearing=s.camera.bearing;c.detailHere();c=s.render();assert.ok(s.camera.zoom>17.5&&s.camera.zoom<=20);assert.deepEqual(s.camera.center,center);assert.equal(s.camera.bearing,bearing);assert.equal(c.mode,'surface');assert.equal(c.scale,2.5);assert.equal(c.pointsOn,false);
+ }finally{s.h.dispose();}
+});

@@ -161,7 +161,13 @@ export function useKansasLidarView(options:Options){
     try{
       if(!map.getTerrain()||!Number.isFinite(map.getCenterElevation()))throw Error('terrain');
       const center=map.getCenter(),zoom=map.getZoom(),bearing=map.getBearing();if(![center.lng,center.lat,zoom,bearing].every(Number.isFinite))throw Error('camera');
-      map.easeTo({center:[center.lng,center.lat],zoom:Math.max(zoom,17.5),bearing,pitch:55,duration:current.reducedMotion?0:600,essential:false});current.onViewMap();
+      const b=map.getBounds(),radians=Math.PI/180;
+      const area=Math.abs((b.getEast()-b.getWest())*(b.getNorth()-b.getSouth()))*radians*radians*MAPLIBRE_EARTH_RADIUS_M**2*Math.cos(center.lat*radians);
+      // Area scales as 4^-zoom. Aim below the 1 km² native budget with margin
+      // for oblique bounds, projection differences and the change to 55° pitch.
+      const areaZoom=Number.isFinite(area)&&area>0?zoom+.5*Math.log2(Math.max(1,area/250000)):zoom+1;
+      const targetZoom=Math.min(20,Math.max(17.5,zoom+.5,areaZoom+(map.getPitch()<50?.75:0)));
+      map.easeTo({center:[center.lng,center.lat],zoom:targetZoom,bearing,pitch:55,duration:current.reducedMotion?0:600,essential:false});current.onViewMap();
     }catch{setError('Detail zoom needs loaded continuous elevation context. Use Ground, then retry the selected DEM in Continuous Kansas ground model. Coverage and analysis budgets still apply.');}
   }
   const count=readingKind==='cell'?(grid?grid.width*grid.height:0):result?.points?.points.length??0;
