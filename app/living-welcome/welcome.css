@@ -1045,3 +1045,7 @@
 @media(max-height:500px) and (orientation:landscape){
  .living-welcome[data-builder=true][data-carousel=true] .topic-search-tools{right:10px}
 }
+
+/* Direct terrain is a visible destination, outside the preference disclosure. */
+.living-welcome .welcome-toolbar a.welcome-terrain-entry{color:#102c3b;background:#f0c979;text-decoration:none;white-space:nowrap}
+.living-welcome .welcome-toolbar a.welcome-terrain-entry:hover{background:#ffdfa0}

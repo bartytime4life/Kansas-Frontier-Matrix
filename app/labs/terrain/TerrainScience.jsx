@@ -50,7 +50,7 @@ export default function TerrainScience() {
   const controller = useNeonLidarPreview();
   const dataset = useMemo(() => controller.pilotReceipt ? createNeonScienceDataset(controller.pilotReceipt) : null, [controller.pilotReceipt]);
   return <div className={styles.page}>
-    <header className={styles.header}><Link href="/labs" className={styles.brand}>KFM <span>/ THE RESEARCH ATLAS</span></Link><nav aria-label="Terrain science navigation"><Link href="/">Map explorer ↗</Link><Link href="/labs">All Science labs</Link><Link href="/acquisition">Data & receipts</Link></nav></header>
+    <header className={styles.header}><Link href="/labs" className={styles.brand}>KFM <span>/ THE RESEARCH ATLAS</span></Link><nav aria-label="Terrain science navigation"><Link href="/terrain">3D Terrain ↗</Link><Link href="/">Map explorer ↗</Link><Link href="/labs">All Science labs</Link><Link href="/acquisition">Data & receipts</Link></nav></header>
     <main className={styles.main}>
       <section className={styles.intro}><p className={styles.eyebrow}>ONE TILE / THREE SURFACES / OPEN SCIENCE</p><h1>Terrain &amp; vegetation.</h1><p>Read the ground. Compare the canopy. Follow the same samples from the raster into distributions, relationships and a source-linked export.</p><div className={styles.datasetStrip} aria-label="Available provider pilot"><span><b>Available pilot · Konza Prairie</b> Kansas · 1 km tile</span><span><b>Historical acquisition</b> Catalog September 2024</span><span><b>Scientific review pending</b> Preview only · not admitted</span></div></section>
       <NeonLidarWorkspace controller={controller} embedded/>

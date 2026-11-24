@@ -6,6 +6,37 @@ workspace. It uses the existing `/api/neon/preview` route and the existing signe
 relay to dev’s 14 TB drive. It adds no provider credential, subscription, paid
 API, external tile service or new dev worker route.
 
+## Direct landscape view
+
+Open `/terrain` (or the visible **3D Terrain** link in the welcome toolbar,
+Research Atlas navigation or Terrain Science navigation). The explicit legacy
+review URL `/?neon-review=3` temporarily redirects to `/terrain`; ordinary root
+visits remain unchanged. The focused route automatically requests the same
+bounded, validated pilot once per live attempt. It starts on Ground at a
+clearly labelled 3× relative-height scale, fits the actual tile and pitches the
+camera to 60 degrees. Surface and independent Canopy, 1×–5× scale, fit/tilt,
+overhead samples, rotation, deterministic actual-sample story stops and original
+cell readings are visible on the page. No drawer or second loading action is
+required.
+
+The route uses the existing renderer acquisition seam and a local explicitly
+Mercator style with no external basemap, DEM, sprite or font dependency. A
+completed source request is not a rendering-success signal: ready requires an
+owned rendered sample feature in the framed viewport. Style/import and overlay
+startup have bounded deadlines. Errors or lost WebGL contexts remove the failed
+map; Retry recreates both the renderer and receipt attempt. Disposed attempts
+abort their request and ignore late callbacks. Reduced motion suppresses camera
+transitions. WebGL2-unavailable browsers receive a plain explanation and a link
+to the existing 2D Science inspector, not a fabricated 3D fallback.
+
+The neutral background and column illumination are display settings, not new
+observations. The native 83.41 m canopy outlier is retained as a review warning,
+not assigned to a preview location. Full source identity, all three hashes and
+source-linked JSON remain available under source details. The direct route adds
+no provider credential, cost, service or source-admission change. HTTP and
+controller tests do not establish actual GPU or visual acceptance; Chrome must
+render the deployed route for that separate evidence lane.
+
 ## Shared data contract
 
 `app/neon-lidar-science.ts` exports `createNeonScienceDataset(input)` and
