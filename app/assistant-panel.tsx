@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useRef} from 'react';
-import AssistantWorkspace from './assistant/workspace';
+import AssistantWorkspace from './assistant/loader';
 import type {AssistantFocus} from './assistant-context';
 import styles from './assistant-panel.module.css';
 export default function AssistantPanel({focus,onClose}:{focus:AssistantFocus;onClose:()=>void}){
@@ -12,6 +12,6 @@ export default function AssistantPanel({focus,onClose}:{focus:AssistantFocus;onC
  },[]);
  return <dialog ref={dialog} className={styles.panel} aria-label='KFM page assistant' onCancel={event=>{event.preventDefault();onClose();}}>
   <header><h2>Ask KFM</h2><button type='button' autoFocus onClick={onClose} aria-label='Close page assistant'>Close</button></header>
-  <AssistantWorkspace focus={focus}/>
+  <AssistantWorkspace active focus={focus}/>
  </dialog>;
 }

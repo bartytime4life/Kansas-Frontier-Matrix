@@ -118,7 +118,7 @@ import { MapShareDialog, copyMapLink, type MapShareRequest } from "./map-share-d
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import { countyResearch, researchCounties } from "./research-county";
-import AssistantWorkspace from "./assistant/workspace";
+import AssistantWorkspace from "./assistant/loader";
 import {sampleAssistantSelection, type AssistantFocus, type AssistantContext} from "./assistant-context";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import GeologyPointExplorer, { GEOLOGY_POINT_LAYER_IDS } from "./geology-point-explorer";
@@ -5475,7 +5475,7 @@ export default function Home() {
     window.setTimeout(() => {
       // One opening action owns one focus destination. Find must not compete
       // with a second delayed callback that sends its first keys to Close.
-      const target = focusTarget === "composer" ? globalSearchInputRef.current
+      const target = focusTarget === "composer" ? globalSearchInputRef.current ?? qwenPanelRef.current?.querySelector<HTMLElement>("[data-assistant-loading]")
         : qwenPanelRef.current?.querySelector<HTMLButtonElement>(isCompact ? '.inspection-map' : '[aria-label="Close Qwen companion"]');
       target?.focus({ preventScroll: true });
     }, 0);

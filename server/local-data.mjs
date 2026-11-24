@@ -17,6 +17,7 @@ import {parseLidarViewSearch,lidarViewKey,validViewKey,validLidarView,validNativ
 
 import {GROUND_ROUTE,parseGroundSearch,groundKey,validGroundView} from '../scripts/local-data/ground-model.mjs';
 import {createHostedTerrainCache,HOSTED_TERRAIN_LIMITS} from './hosted-terrain-cache.mjs';
+import {createHostedArchiveCache,archiveCacheKey,validArchiveAnswer} from './hosted-archive-cache.mjs';
 import {createHash} from 'node:crypto';
 import {terrainResponse} from './terrain-response.mjs';
 import {readGroundBaseline} from './terrain-baseline.mjs';
@@ -47,7 +48,7 @@ export function localDataConfig(env=process.env){
  return Object.freeze({origin,keyId:gateway.keyId,secret:gateway.secret,worker});
 }
 
-export function createLocalDataService({config,clock=Date.now,terrainCache=null,groundBaseline=null,relay=createHomeRelay({keyId:config.keyId,secret:config.secret,worker:config.worker,clock,limits:LOCAL_DATA_RELAY_LIMITS,routes:LOCAL_DATA_ROUTES,workerPrefix:LOCAL_DATA_WORKER_PREFIX,diagnostic:code=>console.warn('[KFM local data] '+code)})}){
+export function createLocalDataService({config,clock=Date.now,terrainCache=null,archiveCache=null,groundBaseline=null,relay=createHomeRelay({keyId:config.keyId,secret:config.secret,worker:config.worker,clock,limits:LOCAL_DATA_RELAY_LIMITS,routes:LOCAL_DATA_ROUTES,workerPrefix:LOCAL_DATA_WORKER_PREFIX,diagnostic:code=>console.warn('[KFM local data] '+code)})}){
  const cache=new Map(),pending=new Map();let cachedBytes=0;
  const workerOnline=()=>clock()-relay.lastSeen<=LOCAL_DATA_CACHE.workerSeenMs;
  const forget=key=>{const hit=cache.get(key);if(hit){cachedBytes-=hit.bytes;cache.delete(key);}};
@@ -95,11 +96,13 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
   return {value,bytes:bytes.length};
  };
 
- const answer=(value,state,at,maxAge)=>{
+ const answer=(value,state,at,maxAge,tier=null)=>{
   const body={...value,cache:{state,at:new Date(at).toISOString()}};
   // The public envelope is larger than the signed gateway reply after cache metadata is added.
   if(Buffer.byteLength(JSON.stringify(body))>LOCAL_DATA_LIMITS.replyBytes)return json({reasonCode:'REPLY_TOO_LARGE',hint:'Ask for fewer rows (limit) or a shorter range.'},413);
-  return json(body,200,'public, max-age='+maxAge);
+  const response=json(body,200,'public, max-age='+maxAge);
+  if(tier)response.headers.set('X-KFM-Data-Cache',tier);
+  return response;
  };
  /** GET /api/local-data/{id}: one dataset question, answered from cache or the PC. */
  const query=async(request,id)=>{
@@ -112,24 +115,32 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
   const input=Object.fromEntries(search);
   let normalized;
   try{normalized=dataset.parse(input);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
-  const key=id+'\n'+JSON.stringify(normalized),hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
-  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return workerOnline()?answer(hit.value,'fresh',hit.at,300):answer(hit.value,'stale',hit.at,60);
+  const key=id+'\n'+JSON.stringify(normalized),diskKey=archiveCacheKey(id,normalized);
+  let tier='memory';
+  if(!cache.has(key)&&archiveCache&&diskKey){
+   const saved=await archiveCache.read(diskKey,v=>validArchiveAnswer(v)&&v.dataset===id&&JSON.stringify(v.query)===JSON.stringify(normalized));
+   if(saved){remember(key,saved.value,saved.bytes,saved.at,'disk');tier='disk';}
+  }
+  const hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return workerOnline()?answer(hit.value,'fresh',hit.at,300,tier):answer(hit.value,'stale',hit.at,60,tier);
   try{
    // Identical questions arriving together share one trip to the PC. The PC re-validates the
    // visitor's own parameters, which parse() has just accepted.
    let trip=pending.get(key);
    if(!trip){
     trip=call('POST',LOCAL_DATA_DATA_PREFIX+id,input)
-     .then(({value,bytes})=>{delete value.gateway;remember(key,value,bytes);return value;}).finally(()=>pending.delete(key));
+     .then(async({value,bytes})=>{delete value.gateway;const at=clock();remember(key,value,bytes,at);
+      if(archiveCache&&diskKey&&validArchiveAnswer(value)&&JSON.stringify(value.query)===JSON.stringify(normalized))await archiveCache.write(diskKey,value,at);
+      return value;}).finally(()=>pending.delete(key));
     pending.set(key,trip);
    }
    const value=await trip;
-   return answer(value,'live',cache.get(key)?.at??clock(),300);
+   return answer(value,'live',cache.get(key)?.at??clock(),300,'relay');
   }catch(failure){
    if(failure.code==='QUERY_INVALID')return json({reasonCode:'QUERY_INVALID'},400);
    if(failure.code==='REPLY_TOO_LARGE')return json({reasonCode:'REPLY_TOO_LARGE',hint:'Ask for fewer rows (limit) or a shorter range.'},413);
    // The PC is off, busy, not ready or unreachable: the last answer, clearly marked, or a plain offline state.
-   if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);
+   if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60,tier);
    if(failure.code==='DATASET_NOT_READY')return json({state:'local-data-preparing',reasonCode:'DATASET_NOT_READY'},503);
    return json({state:'local-data-offline',reasonCode:'LOCAL_DATA_UNAVAILABLE'},503);
   }
@@ -277,7 +288,7 @@ export function createLocalDataService({config,clock=Date.now,terrainCache=null,
 // One service per process: the worker route and the public routes must share one relay.
 const SHARED=Symbol.for('kfm.local-data');
 function service(env){
- try{if(globalThis[SHARED])return globalThis[SHARED];const config=localDataConfig(env);return globalThis[SHARED]=createLocalDataService({config,terrainCache:createHostedTerrainCache({secret:config.secret,origin:config.origin}),groundBaseline:readGroundBaseline});}catch{return null;}
+ try{if(globalThis[SHARED])return globalThis[SHARED];const config=localDataConfig(env);return globalThis[SHARED]=createLocalDataService({config,terrainCache:createHostedTerrainCache({secret:config.secret,origin:config.origin}),archiveCache:createHostedArchiveCache({secret:config.secret,origin:config.origin}),groundBaseline:readGroundBaseline});}catch{return null;}
 }
 const off=async()=>json({state:'not-configured',reasonCode:'LOCAL_DATA_OFF'},404);
 
