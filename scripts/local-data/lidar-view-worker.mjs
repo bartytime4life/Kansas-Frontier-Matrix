@@ -70,9 +70,9 @@ export async function prepareLidarView(config,input,{python=process.env.KFM_LIDA
  }
  if((!nodes.length||!wantAnalysis)&&query.layers.includes('points')){
   let nativeCount=0;
-  for(const project of chosen){
+  for(const [index,project]of chosen.entries()){
    if(nodes.length>=128||nativeCount>=2000000){displayTruncated=true;break;}
-   try{const d=await discoverViewNodes(project,viewBounds,{zoom:query.zoom,reader,maxNodes:128-nodes.length,maxRecords:2000000-nativeCount});nodes.push(...d.nodes);nativeCount+=d.nativeRecords;displayTruncated ||= !d.displayComplete;}catch(e){failures.push(e.message);}
+   try{const d=await discoverViewNodes(project,viewBounds,{zoom:query.zoom,reader,maxNodes:Math.max(1,Math.floor((128-nodes.length)/(chosen.length-index))),maxRecords:Math.max(1,Math.floor((2000000-nativeCount)/(chosen.length-index)))});nodes.push(...d.nodes);nativeCount+=d.nativeRecords;displayTruncated ||= !d.displayComplete;}catch(e){failures.push(e.message);}
   }
  }
  // Native files remain immutable in the private URL+hash cache. No bulk archive,
