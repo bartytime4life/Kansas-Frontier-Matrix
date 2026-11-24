@@ -136,3 +136,30 @@ test('search terms are bound values: quoting, SQL and FTS syntax in a term canno
  assert.equal(run(db,{q:'tornado OR "0 OR 1"',source:'newspapers'}).total,2);
  assert.equal(db.prepare('SELECT COUNT(*) n FROM kfm_newspaper_pages').get().n,4);
 });
+
+for(const source of ['newspapers','texts'])test(`${source}: snippets read only the selected result page, including an offset page`,t=>{
+ const db=fixture(t),newspapers=source==='newspapers';
+ const table=newspapers?'kfm_newspaper_pages':'kfm_ia_texts',idColumn=newspapers?'page_rowid':'text_rowid',textColumn=newspapers?'ocr_text':'text',fts=table+'_fts';
+ if(!newspapers)db.exec("UPDATE kfm_ia_texts SET text='More bonds and railroad bonds.' WHERE text_rowid=23");
+ // Observe real external-content reads, not SQL text or a wall-clock threshold.
+ // Reading any matching document outside the selected page is a regression.
+ let allowed=new Set(),reads=[];
+ db.function('selected_ocr',(id,text)=>{assert.ok(allowed.has(id),'an unselected matching document was read');reads.push(id);return text;});
+ db.exec(`DROP TABLE ${fts};CREATE VIEW selected_content AS SELECT ${idColumn},selected_ocr(${idColumn},${textColumn}) AS ${textColumn} FROM ${table};
+  CREATE VIRTUAL TABLE ${fts} USING fts5(${textColumn},content='selected_content',content_rowid='${idColumn}');
+  INSERT INTO ${fts}(rowid,${textColumn}) SELECT ${idColumn},${textColumn} FROM ${table};`);
+ const q=newspapers?'tornado':'bonds',ranked=db.prepare(`SELECT rowid AS id,rank FROM ${fts} WHERE ${fts} MATCH ? ORDER BY rank`).all(searchExpression(q));
+ assert.equal(ranked.length,2);
+ for(const offset of [0,1]){
+  allowed=new Set([ranked[offset].id]);reads=[];
+  const answer=run(db,{q,source,limit:1,offset,facets:1});
+  assert.equal(answer.total,2);assert.equal(answer.rows.length,1);
+  assert.equal(answer.rows[0].id,(newspapers?'page:':'text:')+ranked[offset].id);
+  assert.equal(answer.rows[0].rank,ranked[offset].rank);
+  assert.ok(answer.rows[0].snippet.includes(SNIPPET_OPEN));
+  assert.deepEqual(reads,[ranked[offset].id]);
+ }
+ allowed=new Set(ranked.map(r=>r.id));reads=[];
+ assert.equal(run(db,{q,source,limit:2}).rows.length,2);
+ assert.deepEqual([...reads].sort((a,b)=>a-b),[...allowed].sort((a,b)=>a-b));
+});

@@ -381,3 +381,12 @@ cancels their in-flight reads, and keeps the continuous terrain and camera
 unchanged. The last Ground/Surface/Canopy choice remains available to re-enable.
 The direct Terrain topic toggle also restores this base-only state when turned
 off. No LiDAR request starts until its optional layer is enabled.
+
+Archive snippets bind the selected FTS row IDs as native SQLite INTEGER values
+using JavaScript BigInt. JavaScript Number binds as REAL; the installed FTS5
+engine can then read every matching OCR document for a `rowid IN (...)` snippet
+query instead of only the selected page. Integer binding preserves the original
+FTS ranking, exact facets, snippets and public response schema while avoiding
+that unrelated disk I/O. Both newspaper and archive-text paths have tests that
+reject any external-content read outside the requested result page. The existing
+query time, queue, process and response-size limits remain unchanged.
