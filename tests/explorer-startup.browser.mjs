@@ -1418,9 +1418,11 @@ for(const width of [1280,390])test(`native cloud GPU picking, display scale and 
   if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`native-points-synthetic-${width}.png`),Buffer.from(shot.data,'base64'));}
   const cleanupPoint=await selectPoint(await p.evaluate(`window.__nativeVisiblePoint()`));await p.wait(`!!document.querySelector('.category-map-dock')`,'visible-point selection reopens its linked controls');
   await p.evaluate(`window.__nativeCleanupResource=window.__terrainAcceptanceMap.getLayer('external-native-lidar-points').implementation`);
-  // Reopen through the real public keyboard navigation, then expose the
-  // secondary disclosure. A remounted dock does not retain <details> openness.
-  await openCategoryTool(p,'Terrain cross-section');await openNativeOptions();
+  // The actual source-pixel click above reopens this same dock/footprint.
+  // Opening desktop Layers instead resizes the canvas and correctly acquires a
+  // new viewport resource; that is different from reopening these controls.
+  // A remounted dock does not retain <details> openness: expose it by keyboard.
+  await openNativeOptions();
   assert.equal(await p.evaluate(`window.__terrainAcceptanceMap.getLayer('external-native-lidar-points')?.implementation===window.__nativeCleanupResource`),true,'opening controls retains the cloud that Clear must actually dispose');
   assert.equal((await p.evaluate(nativeReading)).identity,cleanupPoint.asset+' / '+cleanupPoint.record);
   const beforeReload={manifest:fixtures.hits.manifest,chunks:fixtures.hits.chunks};
@@ -1447,6 +1449,7 @@ for(const width of [1280,390])test(`solid Ground Surface Canopy render and sourc
   const source=mode==='ground'?'USGS 3DEP mosaic':'KS_Statewide_B6A_2018';
   await p.wait(`document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes(${JSON.stringify(label+' cells')})&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes(${JSON.stringify(source)})&&!!window.__solidVisibleCell()`,'production '+mode+' solid frame has an exposed cell pixel');
   if(mode==='ground')assert.equal(fixtures.hits.manifest,0,'Ground requests no native EPT manifest or chunks');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`solid-${mode}-synthetic-3x-${width}.png`),Buffer.from(shot.data,'base64'));}
   const index=await clickCell(),grid=fixtures.grid,value=grid[mode][index];assert.notEqual(value,null);
   const reading=await p.evaluate(`[...document.querySelectorAll('[aria-label="Kansas LiDAR layers"] output')].find(e=>e.querySelector('small'))?.textContent`);
   assert.ok(reading?.includes(value.toFixed(3)+' m'),'clicked source cell height remains unscaled');

@@ -142,3 +142,13 @@ test('clicking the active Ground, Surface or Canopy layer preserves pending requ
   c.step(-1);c=s.render();assert.equal(c.selected.kind,'cell');assert.equal(c.selected.index,2);c.choose('','cell');c=s.render();clickActive();c=s.render();assert.equal(c.pinned,true);assert.equal(c.readingKind,'cell');assert.equal(c.draft,'');assert.equal(c.selected,null);
  }finally{s.h.dispose();}}
 });
+
+
+test('same-footprint point/dock reopen preserves resource and reading; a genuine resized viewport retires and replaces both',async()=>{
+ const s=await setup();try{let c=s.render();c.togglePoints();c=s.render();s.tick();s.requests[0].resolve(data(['points']));await settle();c=s.render();c.choose('0002','point');c=s.render();const source=c.result,layer=s.layers.get('external-native-lidar-points'),requests=s.requests.length,events=s.events.filter(e=>e[0]==='camera').length;
+  c.viewMap();c=s.render();assert.equal(s.picker({x:1,y:2}),true,'production source-pixel picker reopens the existing controls');c=s.render();assert.ok(s.events.some(e=>e[0]==='selected'));assert.equal(c.result,source);assert.equal(c.selected.kind,'point');assert.equal(c.selected.index,1);assert.equal(c.result.points.points[c.selected.index][10],source.points.points[1][10]);assert.equal(s.layers.get('external-native-lidar-points'),layer);assert.equal(s.requests.length,requests);assert.equal(s.requests[0].signal.aborted,false);assert.equal(s.events.filter(e=>e[0]==='camera').length,events);
+  // Installed MapLibre resize() emits movestart -> resize -> moveend. A desktop
+  // side panel changes the true query footprint, unlike the overlay dock above.
+  s.emit('movestart');s.emit('resize');s.map.bounds=[-96.5875,38.9875,-96.5845,38.9905];s.emit('moveend');c=s.render();assert.equal(c.result,null);assert.equal(c.selected,null);assert.equal(s.layers.has('external-native-lidar-points'),false);assert.equal(s.requests[0].signal.aborted,true);s.tick();assert.equal(s.requests.length,requests+1);assert.deepEqual(Array.from(s.requests[1].query.bbox),s.map.bounds);s.requests[1].resolve(data(['points']));await settle();c=s.render();assert.equal(c.applied.points,true);assert.notEqual(s.layers.get('external-native-lidar-points'),layer,'new viewport gets its own resource instead of retaining stale coverage');
+ }finally{s.h.dispose();}
+});
