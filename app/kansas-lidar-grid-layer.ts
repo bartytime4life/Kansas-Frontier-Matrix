@@ -1,3 +1,4 @@
+import type {PreparedTerrain} from './terrain-preparation-model';
 import {createLidarGeometryLayer,type LidarGeometry,type NativeLayerOptions} from './native-lidar-layer';
 import type {LidarAnalysisGrid} from './kansas-lidar-view';
 import {MAPLIBRE_EARTH_RADIUS_M} from './native-lidar';
@@ -49,3 +50,8 @@ export function lidarGridGeometry(grid:TerrainGrid,mode:LidarGridMode,prepared?:
  }};
 }
 export function createLidarGridLayer(grid:TerrainGrid,mode:LidarGridMode,settings:NativeLayerOptions,report:(message:string)=>void,prepared?:ReturnType<typeof analyzeGroundGrid>|null){return createLidarGeometryLayer(lidarGridGeometry(grid,mode,prepared),settings,report);}
+
+/** Install worker-prepared vertices atomically; source values/IDs remain unchanged. */
+export function createPreparedLidarGridLayer(prepared:PreparedTerrain,settings:NativeLayerOptions,report:(message:string)=>void){
+ return createLidarGeometryLayer({id:KANSAS_LIDAR_GRID_LAYER,triangles:true,vertexLimit:TERRAIN_GRID_VERTEX_LIMIT,eligibleCount:prepared.eligibleCount,sourceCount:prepared.sourceCount,origin:()=>[...prepared.origin],isEligible:i=>prepared.eligible[i]===1,pack:options=>{if(options.scale!==prepared.settings.scale||(options.gridColor??'height')!==prepared.settings.color)throw Error('Terrain preparation no longer matches the display settings');return prepared.packed;}},settings,report);
+}
