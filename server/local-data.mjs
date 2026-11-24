@@ -12,6 +12,8 @@ import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
 import {LOCAL_DATA_GATEWAY,LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS,LOCAL_DATA_DATA_PREFIX} from '../scripts/local-data/protocol.mjs';
 import {DATASETS,datasetCatalog} from '../scripts/local-data/datasets.mjs';
 import {RECOVERED_COLLECTIONS} from '../scripts/local-data/recovered.mjs';
+import {LIDAR_POINTS_ROUTE,validLidarPointsManifest,validLidarPointsChunk} from '../scripts/local-data/lidar-points.mjs';
+import {parseLidarViewSearch,lidarViewKey,validViewKey,validLidarView,validNativeViewChunk,validLidarGrid,LIDAR_VIEW_ROUTES} from '../scripts/local-data/lidar-view-model.mjs';
 
 export const LOCAL_DATA_WORKER_PREFIX='/api/local-data-worker/v1';
 // workerSeenMs: the worker re-polls at least every leaseWaitMs (20 s) and pings /status while relaying,
@@ -127,6 +129,67 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }
  };
 
+ // Fixed native return capture, chunked below the unchanged reply budget.
+ const lidarPoints=async(request,/** @type {number|null} */ id=null)=>{
+  if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
+  if(new URL(request.url).search||id!==null&&(!Number.isInteger(id)||id<0||id>15))return json({reasonCode:'QUERY_INVALID'},400);
+  const route=LIDAR_POINTS_ROUTE+(id===null?'':'/'+id),key='\nlidar-points'+(id===null?'':'/'+id),hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return answer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60);
+  try{
+   let trip=pending.get(key);
+   if(!trip){
+    trip=(async()=>{
+     // Bind every chunk to the same validated manifest identity, not merely a URL.
+     let manifest=null;
+     if(id!==null){const response=await lidarPoints(new Request(new URL('/api/lidar/points',request.url)));if(!response.ok)throw error('LIDAR_POINTS_UNAVAILABLE');const body=await response.json();const {cache:ignored,...m}=body;void ignored;if(!validLidarPointsManifest(m)||!m.chunks[id])throw error('GATEWAY_RESPONSE_INVALID');manifest=m;}
+     const {value,bytes}=await call('GET',route);const {gateway:ignored,...body}=value;void ignored;
+     if(id===null?!validLidarPointsManifest(body):!validLidarPointsChunk(body,manifest,id))throw error('GATEWAY_RESPONSE_INVALID');
+     remember(key,body,bytes);return body;
+    })().finally(()=>pending.delete(key));pending.set(key,trip);
+   }
+   return answer(await trip,'live',cache.get(key)?.at??clock(),300);
+  }catch{
+   if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);
+   return json({state:'local-data-offline',reasonCode:'LIDAR_POINTS_UNAVAILABLE'},503);
+  }
+ };
+
+ // Kansas-wide viewport data. Processing receipts have a short cache lifetime;
+ // completed immutable artifacts share the existing bounded cache.
+ const viewCacheKey=key=>'\nlidar-view:'+key;
+ const viewTTL=v=>['processing','idle'].includes(v.state)?2000:v.state==='unavailable'?15000:LOCAL_DATA_CACHE.freshMs;
+ const cachedView=async(key,query=null)=>{
+  const cacheKey=viewCacheKey(key),hit=cache.get(cacheKey);
+  if(hit&&clock()-hit.at<viewTTL(hit.value))return hit.value;
+  let trip=pending.get(cacheKey);
+  if(!trip){trip=call('POST',LIDAR_VIEW_ROUTES.view,query??{requestKey:key}).then(({value,bytes})=>{
+   delete value.gateway;if(!validLidarView(value,query??value.query)||value.requestKey!==key)throw error('GATEWAY_RESPONSE_INVALID');remember(cacheKey,value,bytes);return value;
+  }).finally(()=>pending.delete(cacheKey));pending.set(cacheKey,trip);}
+  return trip;
+ };
+ const lidarView=async request=>{
+  if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
+  let query;try{query=parseLidarViewSearch(new URL(request.url).searchParams);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
+  const key=lidarViewKey(query),cacheKey=viewCacheKey(key),hit=cache.get(cacheKey),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
+  try{const value=await cachedView(key,query);return answer(value,workerOnline()?(fresh?'fresh':'live'):'stale',cache.get(cacheKey)?.at??clock(),value.state==='processing'?0:workerOnline()?60:0);}
+  catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,0);return json({state:'local-data-offline',reasonCode:'LIDAR_VIEW_UNAVAILABLE'},503);}
+ };
+ const lidarViewArtifact=async(request,key,/** @type {number|'grid'} */ part)=>{
+  if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
+  if(new URL(request.url).search||!validViewKey(key)||part!=='grid'&&(!Number.isInteger(part)||part<0||part>15))return json({reasonCode:'QUERY_INVALID'},400);
+  const cacheKey=viewCacheKey(key)+'/'+part,hit=cache.get(cacheKey),age=hit?clock()-hit.at:Infinity;
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return answer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60);
+  try{
+   let trip=pending.get(cacheKey);
+   if(!trip){trip=(async()=>{
+    const view=await cachedView(key);if(part==='grid'?!view.grid:!view.points?.chunks[part])throw error('LIDAR_VIEW_UNAVAILABLE');
+    const {value,bytes}=await call('POST',part==='grid'?LIDAR_VIEW_ROUTES.grid:LIDAR_VIEW_ROUTES.chunk,part==='grid'?{requestKey:key}:{requestKey:key,chunkId:part});delete value.gateway;
+    if(part==='grid'?!validLidarGrid(value,key)||value.source.project!==view.grid.sourceProject||value.width!==view.grid.width||value.height!==view.grid.height:!validNativeViewChunk(value,view.points,key,part))throw error('GATEWAY_RESPONSE_INVALID');remember(cacheKey,value,bytes);return value;
+   })().finally(()=>pending.delete(cacheKey));pending.set(cacheKey,trip);}
+   return answer(await trip,'live',cache.get(cacheKey)?.at??clock(),300);
+  }catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);return json({state:'local-data-offline',reasonCode:'LIDAR_VIEW_UNAVAILABLE'},503);}
+ };
+
  /**
   * The gateway's health (readiness and freshness per dataset and recovered collection), asked at
   * most once per freshMs and served stale for up to staleMs when the PC is away, like answers.
@@ -166,7 +229,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }
   return json(body,200,'public, max-age=60');
  };
- return {query,catalog,health,neonPreview,workerHandler:relay.handler,relay};
+ return {query,catalog,health,neonPreview,lidarPoints,lidarView,lidarViewArtifact,workerHandler:relay.handler,relay};
 }
 
 // One service per process: the worker route and the public routes must share one relay.
@@ -202,3 +265,13 @@ export function localNeonPreviewRuntime(env=process.env){
  const local=service(env);
  return local?local.neonPreview:off;
 }
+
+/** Fixed native-point manifest/chunks; no visitor-controlled file or upstream URL. */
+export function localLidarPointsRuntime(env=process.env){
+ const local=service(env);
+ return local?((request,/** @type {number|null} */ id=null)=>local.lidarPoints(request,id)):off;
+}
+
+/** Kansas viewport and immutable artifacts, through the same verified data relay. */
+export function localLidarViewRuntime(env=process.env){const local=service(env);return local?local.lidarView:off;}
+export function localLidarViewArtifactRuntime(env=process.env){const local=service(env);return local?((request,key,/** @type {number|'grid'} */ part)=>local.lidarViewArtifact(request,key,part)):off;}

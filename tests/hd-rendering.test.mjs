@@ -56,7 +56,7 @@ test('close 3D views over Kansas move to the USGS 3DEP mosaic once, fall back on
  assert.match(page,/if \(!wantsTerrainDetail \|\| detail\.byHand \|\| detail\.failed\) return;/);
  assert.match(page,/terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: true \};\s*chooseTerrainProvider\("usgs-3dep"\);/);
  // A failed automatic switch goes back to the display DEM instead of leaving the map degraded.
- assert.match(page,/if \(terrainDetailRef\.current\.auto && !terrainDetailRef\.current\.failed\) \{[\s\S]{0,140}terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: false, failed: true \};\s*terrainDetailFallbackRef\.current\?\.\(\);/);
+ assert.match(page,/if \(sourceId === TERRAIN_SOURCE_ID && terrainDetailRef\.current\.auto && !terrainDetailRef\.current\.failed\) \{[\s\S]{0,140}terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: false, failed: true \};\s*terrainDetailFallbackRef\.current\?\.\(\);/);
  assert.match(page,/if \(terrainProviderRef\.current !== "usgs-3dep"\) return;/,'errors from a replaced 3DEP source are ignored');
  const fallback=page.indexOf('if (terrainTiles.includes("/api/3dep-dem-tile"))'),generic=page.indexOf('failedTerrainSourceRef.current = map.getSource(TERRAIN_SOURCE_ID);');
  assert.ok(fallback>0&&generic>fallback,'the fallback runs before the generic DEM failure');

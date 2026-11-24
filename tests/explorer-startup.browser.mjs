@@ -9,6 +9,7 @@ import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
 import { isolateBrowserNetwork } from './browser-network.mjs';
 import { terrainBrowserFixtures } from './terrain-detail-browser-fixtures.mjs';
+import { nativeLidarBrowserFixtures } from './native-lidar-browser-fixtures.mjs';
 import { welcomeScientificBrowserFixtures } from './welcome-scientific-browser-fixtures.mjs';
 import { renderPerformanceFixtures } from './render-performance-browser-fixtures.mjs';
 import { welcomeAttributionBrowserFixtures } from './welcome-attribution-browser-fixtures.mjs';
@@ -1372,6 +1373,31 @@ test('terrain detail successful 3DEP and manual provider recovery (synthetic DEM
   await p.evaluate(`[...document.querySelectorAll('button')].find(e=>e.textContent==='Use display DEM').click()`);
   await p.wait(ready('Mapzen'), 'explicit display DEM action restores terrain and runtime');
   assert.match(await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').textContent`), /Mapzen/);
+});
+
+// Synthetic native-source transport; real installed WebGL2 shaders, color/ID
+// rendering and pointer dispatcher. Native-provider delivery is a separate lane.
+for(const width of [1280,390])test(`native cloud GPU picking, display scale and cleanup at ${width}px (synthetic source)`,{timeout:150000},async t=>{
+  const fixtures=await nativeLidarBrowserFixtures(origin),b=await browser(t),p=await pageSession(b,width,844,fixtures);
+  await p.open('/?motion=off');await readyWelcome(p);await revealControl(p,'.topic-callout.topic-terrain');await p.evaluate(`document.querySelector('.topic-callout.topic-terrain').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`!!document.querySelector('[aria-label="Kansas LiDAR layers"]') && window.__terrainAcceptanceMap?.getProjection()?.type==='mercator'`,'Terrain native source controls ready');
+  assert.equal(fixtures.hits.manifest,0,'rendering Terrain controls does not acquire native data');
+  const press=async text=>{await p.evaluate(`(()=>{const e=[...document.querySelectorAll('.category-map-dock button')].find(e=>e.textContent===${JSON.stringify(text)});if(!e)throw Error('Missing native action');e.scrollIntoView({block:'center'});e.focus();})()`);await p.key('Enter','Enter',13);};
+  await press('LiDAR points · off');
+  await p.wait(`!!window.__nativeVisiblePoint()`,'real color/ID point frame has an exposed rendered pixel');
+  const point=await p.evaluate(`window.__nativeVisiblePoint()`);
+  for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,x:point.x,y:point.y,button:'left',clickCount:1});
+  const reading=`document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent`;
+  await p.wait(`${reading}?.includes('asset ${point.asset} / record ${point.record}')`,'visible pixel links exact source identity');
+  assert.ok((await p.evaluate(reading)).includes(point.z.toFixed(3)+' m'),'reading is the unscaled original source elevation');
+  assert.deepEqual(await p.evaluate('window.__nativeFixtureErrors'),[],'production shader/MRT/composite path emits no WebGL errors');
+  await press('True vertical scale · 1×');await p.wait(`${reading}?.includes('1.0× display') && !!window.__nativeVisiblePoint()`,'scale change renders a new cloud frame');
+  assert.ok((await p.evaluate(reading)).includes('asset '+point.asset+' / record '+point.record));assert.ok((await p.evaluate(reading)).includes(point.z.toFixed(3)+' m'),'display scale leaves native values unchanged');
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`native-points-synthetic-${width}.png`),Buffer.from(shot.data,'base64'));}
+  const beforeReload={manifest:fixtures.hits.manifest,chunks:fixtures.hits.chunks};
+  await press('Clear native layers');await p.wait(`!window.__terrainAcceptanceMap.getLayer('external-native-lidar-points') && !document.querySelector('[aria-label="Kansas LiDAR map identity"]')`,'clear releases cloud resource and source reading');
+  await press('LiDAR points · off');await p.wait(`!!window.__nativeVisiblePoint()`,'reload compiles and renders a fresh owned cloud');assert.equal(fixtures.hits.manifest,beforeReload.manifest+1);assert.equal(fixtures.hits.chunks,beforeReload.chunks+1);
+  t.diagnostic(JSON.stringify({source:'explicitly synthetic; no provider acceptance',hits:fixtures.hits,point,frames:await p.evaluate('window.__nativeFixtureFrames')}));
 });
 
 // Exercise actual DomainStage failures, rather than injecting React state.

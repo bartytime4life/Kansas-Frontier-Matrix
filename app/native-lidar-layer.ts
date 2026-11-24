@@ -1,0 +1,77 @@
+import type {CustomLayerInterface,CustomRenderMethodInput,Map as MapLibreMap} from './maplibre-seam';
+import {nativeAttributeDomain,nativePointColor,nativePointEligible,nativePointPosition,type NativeColorMode,type NativeDataset} from './native-lidar';
+export const NATIVE_LIDAR_LAYER='external-native-lidar-points';
+export const NATIVE_FRAME_PIXEL_LIMIT=4_194_304;
+export type NativeLayerOptions={scale:number;size:number;color:NativeColorMode;selected:number|null;opacity?:number};
+export function nativeTranslatedMatrix(matrix:ArrayLike<number>,origin:readonly number[]):Float32Array{
+  const out=Float32Array.from(matrix);for(let row=0;row<4;row++)out[12+row]=matrix[row]*origin[0]+matrix[4+row]*origin[1]+matrix[8+row]*origin[2]+matrix[12+row];return out;
+}
+export function nativePickPixel(point:{x:number;y:number},cssWidth:number,cssHeight:number,width:number,height:number):[number,number]|null{
+  if(![point.x,point.y,cssWidth,cssHeight,width,height].every(Number.isFinite)||cssWidth<=0||cssHeight<=0||width<1||height<1||point.x<0||point.y<0||point.x>=cssWidth||point.y>=cssHeight)return null;
+  return [Math.floor(point.x/cssWidth*width),height-1-Math.floor(point.y/cssHeight*height)];
+}
+export const nativeDecodePick=(pixel:ArrayLike<number>,count:number):number|null=>{const id=pixel[0]+pixel[1]*256+pixel[2]*65536-1;return Number.isInteger(id)&&id>=0&&id<count?id:null;};
+const VERTEX=`#version 300 es
+layout(location=0) in vec3 position;layout(location=1) in vec3 color;layout(location=2) in float pointId;
+uniform mat4 matrix;uniform float size;uniform float selected;out vec3 vColor;flat out uint vId;flat out float vSelected;
+void main(){gl_Position=matrix*vec4(position,1.);vId=uint(pointId);vSelected=pointId==selected?1.:0.;gl_PointSize=size+(vSelected>.5?4.:0.);vColor=color;}`;
+const FRAGMENT=`#version 300 es
+precision highp float;precision highp int;in vec3 vColor;flat in uint vId;flat in float vSelected;
+uniform bool circles;layout(location=0) out vec4 color;layout(location=1) out vec4 pickId;
+void main(){float radius=length(gl_PointCoord-.5);if(circles&&radius>.5)discard;color=vec4(vSelected>.5&&(!circles||radius>.28)?vec3(1.,.83,.28):vColor,1.);pickId=vec4(float(vId&255u),float((vId>>8u)&255u),float((vId>>16u)&255u),255.)/255.;}`;
+const QUAD_VERTEX=`#version 300 es
+out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
+const QUAD_FRAGMENT=`#version 300 es
+precision highp float;in vec2 uv;uniform sampler2D cloud;uniform float opacity;out vec4 color;void main(){color=texture(cloud,uv)*opacity;}`;
+export type NativePointLayer=CustomLayerInterface&{update(options:NativeLayerOptions):void;pick(point:{x:number;y:number}):number|null;invalidate():void;readonly eligible:number;readonly failed:boolean};
+/** Native point cloud has its own depth buffer. Its color and ID attachments are
+ * produced by the SAME rasterization, then composed above map context. Terrain
+ * is intentionally not an occluder: registration is unverified, not corrected. */
+export type LidarGeometry={id:string;eligibleCount:number;sourceCount:number;triangles?:boolean;origin:(scale:number)=>[number,number,number];pack:(options:NativeLayerOptions)=>Float32Array;isEligible:(index:number)=>boolean};
+export function createNativePointLayer(dataset:NativeDataset,initial:NativeLayerOptions,report:(message:string)=>void):NativePointLayer{
+  const eligible=dataset.points.reduce((n,p)=>n+Number(nativePointEligible(p)),0);
+  return createLidarGeometryLayer({id:NATIVE_LIDAR_LAYER,eligibleCount:eligible,sourceCount:dataset.points.length,origin:scale=>nativePointPosition(dataset.points[0],scale).mercator,isEligible:index=>nativePointEligible(dataset.points[index]),pack:options=>{
+    const origin=nativePointPosition(dataset.points[0],options.scale).mercator,packed=new Float32Array(eligible*7),domain=nativeAttributeDomain(dataset,options.color)??[0,0];let count=0;
+    dataset.points.forEach((p,id)=>{if(!nativePointEligible(p))return;const pos=nativePointPosition(p,options.scale).mercator,color=nativePointColor(p,options.color,domain),offset=count++*7;packed.set([pos[0]-origin[0],pos[1]-origin[1],pos[2]-origin[2],...color,id+1],offset);});return packed;
+  }},initial,report);
+}
+export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLayerOptions,report:(message:string)=>void):NativePointLayer{
+  let map:MapLibreMap|null=null,gl:WebGL2RenderingContext|null=null,program:WebGLProgram|null=null,quad:WebGLProgram|null=null,vao:WebGLVertexArrayObject|null=null,quadVao:WebGLVertexArrayObject|null=null,buffer:WebGLBuffer|null=null;
+  let fbo:WebGLFramebuffer|null=null,depth:WebGLRenderbuffer|null=null,textures:WebGLTexture[]=[],width=0,height=0,ready=false,failed=false,dirty=true,options={...initial};
+  const eligible=geometry.eligibleCount,origin=geometry.origin(initial.scale);
+  let count=0;
+  const fail=()=>{if(failed)return;failed=true;ready=false;report('Native point rendering is unavailable. Continuous terrain and the source data remain available; retry the point view.');};
+  const compile=(kind:number,source:string)=>{const shader=gl!.createShader(kind);if(!shader)throw Error('Shader allocation');gl!.shaderSource(shader,source);gl!.compileShader(shader);if(!gl!.getShaderParameter(shader,gl!.COMPILE_STATUS)){gl!.deleteShader(shader);throw Error('Point shader');}return shader;};
+  const link=(vertex:string,fragment:string)=>{const v=compile(gl!.VERTEX_SHADER,vertex);let f:WebGLShader|null=null,p:WebGLProgram|null=null;try{f=compile(gl!.FRAGMENT_SHADER,fragment);p=gl!.createProgram();if(!p)throw Error('Program allocation');gl!.attachShader(p,v);gl!.attachShader(p,f);gl!.linkProgram(p);if(!gl!.getProgramParameter(p,gl!.LINK_STATUS))throw Error('Point program');return p;}catch(error){if(p)gl!.deleteProgram(p);throw error;}finally{gl!.deleteShader(v);if(f)gl!.deleteShader(f);}};
+  const disposeFrame=()=>{if(!gl)return;for(const texture of textures)gl.deleteTexture(texture);textures=[];if(depth)gl.deleteRenderbuffer(depth);if(fbo)gl.deleteFramebuffer(fbo);depth=null;fbo=null;width=0;height=0;ready=false;};
+  const allocate=(w:number,h:number)=>{
+    if(w===width&&h===height&&fbo)return;disposeFrame();width=w;height=h;fbo=gl!.createFramebuffer();depth=gl!.createRenderbuffer();if(!fbo||!depth)throw Error('Framebuffer allocation');gl!.bindFramebuffer(gl!.FRAMEBUFFER,fbo);
+    for(let index=0;index<2;index++){const t=gl!.createTexture();if(!t)throw Error('Texture allocation');textures.push(t);gl!.bindTexture(gl!.TEXTURE_2D,t);gl!.texParameteri(gl!.TEXTURE_2D,gl!.TEXTURE_MIN_FILTER,gl!.NEAREST);gl!.texParameteri(gl!.TEXTURE_2D,gl!.TEXTURE_MAG_FILTER,gl!.NEAREST);gl!.texParameteri(gl!.TEXTURE_2D,gl!.TEXTURE_WRAP_S,gl!.CLAMP_TO_EDGE);gl!.texParameteri(gl!.TEXTURE_2D,gl!.TEXTURE_WRAP_T,gl!.CLAMP_TO_EDGE);gl!.texImage2D(gl!.TEXTURE_2D,0,gl!.RGBA8,w,h,0,gl!.RGBA,gl!.UNSIGNED_BYTE,null);gl!.framebufferTexture2D(gl!.FRAMEBUFFER,gl!.COLOR_ATTACHMENT0+index,gl!.TEXTURE_2D,t,0);}
+    gl!.bindRenderbuffer(gl!.RENDERBUFFER,depth);gl!.renderbufferStorage(gl!.RENDERBUFFER,gl!.DEPTH_COMPONENT24,w,h);gl!.framebufferRenderbuffer(gl!.FRAMEBUFFER,gl!.DEPTH_ATTACHMENT,gl!.RENDERBUFFER,depth);gl!.drawBuffers([gl!.COLOR_ATTACHMENT0,gl!.COLOR_ATTACHMENT1]);if(gl!.checkFramebufferStatus(gl!.FRAMEBUFFER)!==gl!.FRAMEBUFFER_COMPLETE)throw Error('Incomplete point frame');
+  };
+  const upload=()=>{origin.splice(0,3,...geometry.origin(options.scale));const packed=geometry.pack(options);if(packed.length%7!==0||packed.length>100_000*7)throw Error('Geometry budget');count=packed.length/7;gl!.bindBuffer(gl!.ARRAY_BUFFER,buffer);gl!.bufferData(gl!.ARRAY_BUFFER,packed,gl!.STATIC_DRAW);dirty=false;};
+  const layer:NativePointLayer={id:geometry.id,type:'custom',renderingMode:'3d',get eligible(){return eligible;},get failed(){return failed;},
+    update(next){if(!Number.isFinite(next.scale)||next.scale<.1||next.scale>5||!Number.isFinite(next.size)||next.size<1||next.size>6||!['elevation','classification','intensity'].includes(next.color)||(next.opacity!==undefined&&(!Number.isFinite(next.opacity)||next.opacity<0||next.opacity>1)))throw Error('Invalid point display settings');dirty||=next.scale!==options.scale||next.color!==options.color;options={...next};ready=false;map?.triggerRepaint();},invalidate(){ready=false;},
+    onAdd(nextMap,context){map=nextMap;gl=context;const priorVao=gl.getParameter(gl.VERTEX_ARRAY_BINDING),priorBuffer=gl.getParameter(gl.ARRAY_BUFFER_BINDING);try{if(typeof gl.drawBuffers!=='function')throw Error('WebGL2 required');program=link(VERTEX,FRAGMENT);quad=link(QUAD_VERTEX,QUAD_FRAGMENT);buffer=gl.createBuffer();vao=gl.createVertexArray();quadVao=gl.createVertexArray();if(!buffer||!vao||!quadVao)throw Error('Point buffers');gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);for(let a=0;a<3;a++){gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,a===2?1:3,gl.FLOAT,false,28,a===0?0:a===1?12:24);}dirty=true;}catch{fail();}finally{gl.bindVertexArray(priorVao);gl.bindBuffer(gl.ARRAY_BUFFER,priorBuffer);}},
+    render(context,input:CustomRenderMethodInput){
+      if(failed||!map||!gl||!program||!quad||!vao||!buffer)return;
+      if(map.getProjection()?.type!=='mercator'||options.opacity===0){ready=false;return;}
+      const prior={draw:gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING),read:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),viewport:gl.getParameter(gl.VIEWPORT),program:gl.getParameter(gl.CURRENT_PROGRAM),vao:gl.getParameter(gl.VERTEX_ARRAY_BINDING),buffer:gl.getParameter(gl.ARRAY_BUFFER_BINDING),renderbuffer:gl.getParameter(gl.RENDERBUFFER_BINDING),active:gl.getParameter(gl.ACTIVE_TEXTURE),stencil:gl.isEnabled(gl.STENCIL_TEST),depth:gl.isEnabled(gl.DEPTH_TEST),blend:gl.isEnabled(gl.BLEND),cull:gl.isEnabled(gl.CULL_FACE),scissor:gl.isEnabled(gl.SCISSOR_TEST),depthMask:gl.getParameter(gl.DEPTH_WRITEMASK),depthFunc:gl.getParameter(gl.DEPTH_FUNC),depthRange:gl.getParameter(gl.DEPTH_RANGE),dither:gl.isEnabled(gl.DITHER),colorMask:gl.getParameter(gl.COLOR_WRITEMASK),clear:gl.getParameter(gl.COLOR_CLEAR_VALUE),clearDepth:gl.getParameter(gl.DEPTH_CLEAR_VALUE),equationRGB:gl.getParameter(gl.BLEND_EQUATION_RGB),equationAlpha:gl.getParameter(gl.BLEND_EQUATION_ALPHA),srcRGB:gl.getParameter(gl.BLEND_SRC_RGB),dstRGB:gl.getParameter(gl.BLEND_DST_RGB),srcAlpha:gl.getParameter(gl.BLEND_SRC_ALPHA),dstAlpha:gl.getParameter(gl.BLEND_DST_ALPHA)};
+      gl.activeTexture(gl.TEXTURE0);const oldTexture=gl.getParameter(gl.TEXTURE_BINDING_2D);
+      try{
+        if(gl.isContextLost())throw Error('Context lost');const ratio=Math.min(1,Math.sqrt(NATIVE_FRAME_PIXEL_LIMIT/(gl.drawingBufferWidth*gl.drawingBufferHeight))),w=Math.max(1,Math.floor(gl.drawingBufferWidth*ratio)),h=Math.max(1,Math.floor(gl.drawingBufferHeight*ratio));allocate(w,h);if(dirty)upload();
+        gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.viewport(0,0,w,h);gl.disable(gl.SCISSOR_TEST);gl.disable(gl.STENCIL_TEST);gl.disable(gl.BLEND);gl.disable(gl.DITHER);gl.disable(gl.CULL_FACE);gl.enable(gl.DEPTH_TEST);gl.depthRange(0,1);gl.depthFunc(gl.LESS);gl.depthMask(true);gl.colorMask(true,true,true,true);gl.clearColor(0,0,0,0);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);gl.bindVertexArray(vao);
+        gl.uniformMatrix4fv(gl.getUniformLocation(program,'matrix'),false,nativeTranslatedMatrix(input.defaultProjectionData.mainMatrix,origin));const cssWidth=map.getCanvas().clientWidth||1;gl.uniform1f(gl.getUniformLocation(program,'size'),Math.min(Number(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)[1]),options.size*w/cssWidth));gl.uniform1f(gl.getUniformLocation(program,'selected'),options.selected===null?-1:options.selected+1);gl.uniform1i(gl.getUniformLocation(program,'circles'),geometry.triangles?0:1);gl.drawArrays(geometry.triangles?gl.TRIANGLES:gl.POINTS,0,count);
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,prior.draw);gl.viewport(...Array.from(prior.viewport) as [number,number,number,number]);gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendEquationSeparate(gl.FUNC_ADD,gl.FUNC_ADD);gl.blendFuncSeparate(gl.ONE,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.useProgram(quad);gl.bindVertexArray(quadVao);gl.bindTexture(gl.TEXTURE_2D,textures[0]);gl.uniform1i(gl.getUniformLocation(quad,'cloud'),0);gl.uniform1f(gl.getUniformLocation(quad,'opacity'),options.opacity??1);gl.drawArrays(gl.TRIANGLES,0,3);ready=true;
+      }catch{fail();}finally{
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,prior.draw);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,prior.read);gl.viewport(...Array.from(prior.viewport) as [number,number,number,number]);gl.bindRenderbuffer(gl.RENDERBUFFER,prior.renderbuffer);gl.bindTexture(gl.TEXTURE_2D,oldTexture);gl.activeTexture(prior.active);gl.useProgram(prior.program);gl.bindVertexArray(prior.vao);gl.bindBuffer(gl.ARRAY_BUFFER,prior.buffer);for(const [flag,on] of [[gl.STENCIL_TEST,prior.stencil],[gl.DEPTH_TEST,prior.depth],[gl.BLEND,prior.blend],[gl.CULL_FACE,prior.cull],[gl.SCISSOR_TEST,prior.scissor]] as const){if(on)gl.enable(flag);else gl.disable(flag);}gl.depthMask(prior.depthMask);gl.depthFunc(prior.depthFunc);gl.depthRange(prior.depthRange[0],prior.depthRange[1]);if(prior.dither)gl.enable(gl.DITHER);else gl.disable(gl.DITHER);gl.colorMask(...Array.from(prior.colorMask) as [boolean,boolean,boolean,boolean]);gl.clearColor(...Array.from(prior.clear) as [number,number,number,number]);gl.clearDepth(prior.clearDepth);gl.blendEquationSeparate(prior.equationRGB,prior.equationAlpha);gl.blendFuncSeparate(prior.srcRGB,prior.dstRGB,prior.srcAlpha,prior.dstAlpha);
+      }
+    },
+    pick(point){if(!ready||failed||!gl||!map||!fbo)return null;const pixel=nativePickPixel(point,map.getCanvas().clientWidth,map.getCanvas().clientHeight,width,height);if(!pixel)return null;const previous=gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);try{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,fbo);gl.readBuffer(gl.COLOR_ATTACHMENT1);const color=new Uint8Array(4);gl.readPixels(pixel[0],pixel[1],1,1,gl.RGBA,gl.UNSIGNED_BYTE,color);const id=nativeDecodePick(color,geometry.sourceCount);return id!==null&&geometry.isEligible(id)?id:null;}catch{fail();return null;}finally{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,previous);}},
+    onRemove(){ready=false;if(gl){disposeFrame();if(program)gl.deleteProgram(program);if(quad)gl.deleteProgram(quad);if(vao)gl.deleteVertexArray(vao);if(quadVao)gl.deleteVertexArray(quadVao);if(buffer)gl.deleteBuffer(buffer);}program=null;quad=null;vao=null;quadVao=null;buffer=null;gl=null;map=null;}
+  };return layer;
+}
+
+const nativePickers=new WeakMap<MapLibreMap,(point:{x:number;y:number})=>boolean>();
+export function registerNativeLidarPicker(map:MapLibreMap,pick:((point:{x:number;y:number})=>boolean)|null){if(pick)nativePickers.set(map,pick);else nativePickers.delete(map);}
+export const pickNativeLidarPoint=(map:MapLibreMap,point:{x:number;y:number})=>nativePickers.get(map)?.(point)??false;

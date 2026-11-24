@@ -121,7 +121,7 @@ test("the real page handler claims point completion and other priority clicks be
   s.map.getLayer = id => id === "geology-marker" ? geologyActive ? { id } : undefined : baseLayer(id);
   s.map.queryRenderedFeatures = (_point, options) => options?.layers?.includes("geology-marker") ? geologyActive ? [{}] : [] : s.map.hits;
   s.map.doubleClickZoom = { enable() { completed = true; } };
-  const main = await mainClickHandler({ map: s.map, neonClaimedMapClicksRef: claimedClicksRef, aviationPickingRef, undergroundOpenRef, measureModeRef, measureCoordinatesRef,
+  const main = await mainClickHandler({ pickNativeLidarPoint:()=>false, map: s.map, neonClaimedMapClicksRef: claimedClicksRef, aviationPickingRef, undergroundOpenRef, measureModeRef, measureCoordinatesRef,
     GEOLOGY_POINT_LAYER_IDS: ["geology-marker"], pickKansasSkyAircraft() { return false; }, setMeasureCoordinateCount() {}, updateMeasurementSource() {}, buildMeasurementData() { return {}; }, setMeasurement() {}, measurementLabelFor() { return "point"; }, measureUnitRef: { current: "meters" }, setMeasureMode() {}, announce() {},
     OFFICIAL_CONTEXT_BY_SOURCE_ID: {}, findLayerByRenderer() { return null; }, hasNeonLocalHit: hits => hits.some(hit => hit.source === SOURCE) });
   // Match the page: its click handler is registered when the map is created, before the hook.
@@ -306,4 +306,8 @@ test("the early 3D action invokes the full workflow and exposes the active scale
   assert.ok(findNode(tree, node => node.type === "button" && node.props.children === "Return to flat view")); assert.ok(JSON.stringify(tree).includes('3× relative heights'));
   s.options.flatMap = false; c = s.render(); tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c }); assert.equal(findNode(tree, node => node.type === "button" && node.props.children === "Explore in 3D").props.disabled, true);
   s.harness.dispose(); controls.dispose();
+});
+
+test('an external camera intent cancels a pending explicit pilot Explore without installing stale data or moving the map',async()=>{
+ let finish;const s=await setup({}, {readNeonLidarPilot:()=>new Promise(resolve=>{finish=resolve;})});let c=s.render();const work=c.explore3D();c=s.render();c.cancelRead();finish(relayReceipt());await work;c=s.render();assert.equal(c.preview,null);assert.equal(c.enabled,false);assert.equal(s.calls.filter(call=>call.kind==='fit').length,0);assert.equal(c.busy,false);s.harness.dispose();
 });
