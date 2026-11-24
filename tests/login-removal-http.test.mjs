@@ -2,6 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {startProdServer} from 'vinext/server/prod-server';
 
+const RETIRED_PATH = /^\/(?:data$|(?:signin-with-chatgpt|api\/owner|stewards|daily-archive|source-operations|governed\/(?:water|weather)-release|earth-engine-context\/install)(?:\/|$))/i;
+function retiredLocalLink(href, origin) {
+ const url=new URL(href.replaceAll('&amp;','&'),origin);
+ return url.origin===origin && RETIRED_PATH.test(decodeURIComponent(url.pathname));
+}
+
+test('public-link audit distinguishes retired local routes from external scientific data',()=>{
+ const origin='https://kfm.example.test';
+ for(const href of ['/data','/data?q=1','/api/owner/session',origin+'/stewards','//kfm.example.test/daily-archive','/%64ata','/governed/water-release','/earth-engine-context/install'])assert.equal(retiredLocalLink(href,origin),true,href);
+ for(const href of ['/data-library','/data/groundwater/kgs-water-table.geojson','/api/lidar/sources','/labs/terrain','https://icesat-2.gsfc.nasa.gov/icesat-2-data','https://external.example.test/data'])assert.equal(retiredLocalLink(href,origin),false,href);
+});
+
 test('production app has no login routes and retired sessions cannot unlock private operations',async t=>{
  const {server,port}=await startProdServer({port:0,host:'127.0.0.1',outDir:process.cwd()+'/dist'});
  t.after(()=>new Promise(resolve=>{server.closeAllConnections();server.close(resolve);}));
@@ -20,7 +32,8 @@ test('production app has no login routes and retired sessions cannot unlock priv
  await t.test('public pages have no login controls or links to retired destinations',async()=>{
   for(const path of ['/','/?kfm-chat=1','/about','/privacy','/observatory','/observatory/sources','/earth-engine','/acquisition']){
    const response=await fetch(origin+path,{headers:retiredHeaders,redirect:'manual'});assert.equal(response.status,200,path);assert.equal(response.headers.get('location'),null,path);
-   const html=await response.text();assert.doesNotMatch(html,/steward-login-button|Administrator sign-in|Sign in with|name="(?:username|password|invitation)"|type="password"|href="[^"\s]*(?:signin-with-chatgpt|api\/owner|data(?:[?#\"]|$)|stewards|daily-archive|source-operations|governed\/(?:water|weather)-release|earth-engine-context\/install)/i,path);
+   const html=await response.text();assert.doesNotMatch(html,/steward-login-button|Administrator sign-in|Sign in with|name="(?:username|password|invitation)"|type="password"/i,path);
+   for(const [,href]of html.matchAll(/\bhref="([^"\s]+)"/gi))assert.equal(retiredLocalLink(href,origin),false,`${path}: ${href}`);
   }
   const status=await fetch(origin+'/api/ai/status');assert.equal(status.status,200);assert.equal((await status.json()).requiresLogin,false);
  });
