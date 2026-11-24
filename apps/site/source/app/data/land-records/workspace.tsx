@@ -34,15 +34,17 @@ export default function LandWorkspace({name,steward,initialId}:{name:string;stew
     const n=++listGeneration.current;try{const p=new URLSearchParams();if(before)p.set("before",before);if(queue)p.set("scope","review");const body=await read(await fetch(`/api/land-records?${p}`,{cache:"no-store"}));if(n!==listGeneration.current)return;setBundles(old=>before?[...old,...body.items]:body.items);setBundleCursor(body.nextCursor);}catch(e){if(n===listGeneration.current)setError((e as Error).message);}
   },[queue]);
   useEffect(()=>{
-    const n=++listGeneration.current,controller=new AbortController();
-    fetch(`/api/land-records?${queue?"scope=review":""}`,{cache:"no-store",signal:controller.signal}).then(read).then(body=>{if(n===listGeneration.current){setBundles(body.items);setBundleCursor(body.nextCursor);}}).catch(e=>{if(n===listGeneration.current&&e.name!=="AbortError")setError(e.message);});
-    return()=>{controller.abort();if(listGeneration.current===n)listGeneration.current++;};
+    // Generation counters are not DOM refs: cleanup must read their latest value.
+    const lists=listGeneration,n=++lists.current,controller=new AbortController();
+    fetch(`/api/land-records?${queue?"scope=review":""}`,{cache:"no-store",signal:controller.signal}).then(read).then(body=>{if(n===lists.current){setBundles(body.items);setBundleCursor(body.nextCursor);}}).catch(e=>{if(n===lists.current&&e.name!=="AbortError")setError(e.message);});
+    return()=>{controller.abort();if(lists.current===n)lists.current++;};
   },[queue]);
   useEffect(()=>{
-    const n=++generation.current,controller=new AbortController();selectionGeneration.current++;evidenceRequest.current?.abort();
+    const details=generation,selections=selectionGeneration,evidence=evidenceRequest;
+    const n=++details.current,controller=new AbortController();selections.current++;evidence.current?.abort();
     if(!id)return()=>controller.abort();
-    fetch(`/api/land-records/${id}?${query}`,{cache:"no-store",signal:controller.signal}).then(read).then(body=>{if(n===generation.current)setDetail(body);}).catch(e=>{if(n===generation.current&&e.name!=="AbortError")setError(e.message);}).finally(()=>{if(n===generation.current)setLoading(false);});
-    return()=>{controller.abort();generation.current++;selectionGeneration.current++;evidenceRequest.current?.abort();};
+    fetch(`/api/land-records/${id}?${query}`,{cache:"no-store",signal:controller.signal}).then(read).then(body=>{if(n===details.current)setDetail(body);}).catch(e=>{if(n===details.current&&e.name!=="AbortError")setError(e.message);}).finally(()=>{if(n===details.current)setLoading(false);});
+    return()=>{controller.abort();details.current++;selections.current++;evidence.current?.abort();};
   },[id,query,revision]);
   function clearResult(nextId=id){generation.current++;selectionGeneration.current++;evidenceRequest.current?.abort();setSelected(null);setEvidenceRead(null);setDetail(null);setError("");setLoading(Boolean(nextId));}
   function openBundle(value:string){clearResult(value);setRevision(n=>n+1);setId(value);setCursor("");setFilters(initialFilters);setDraft(initialFilters);window.history.replaceState(null,"",`/data/land-records?submission=${encodeURIComponent(value)}`);}

@@ -146,7 +146,7 @@ export function SoilMoistureControl({
     if (next === day) return;
     setMapState({ ...OFF, state: "loading", day: next, view });
     setDay(next);
-  }, [day, view]);
+  }, [day, setDay, view]);
 
   const availabilityAbortRef = useRef<AbortController | null>(null);
   useEffect(() => () => availabilityAbortRef.current?.abort(), []);
@@ -182,7 +182,7 @@ export function SoilMoistureControl({
     } finally {
       if (id === requestId.current) setChecking(false);
     }
-  }, [clearRaster, day, range.from, range.through]);
+  }, [clearRaster, day, range.from, range.through, setDay]);
 
   const displayState = enabled && checking ? "loading" : mapState.state;
 

@@ -32,10 +32,12 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
     if (!enabled || reducedMotion) stop();
   }, [enabled, reducedMotion, stop]);
   useEffect(() => {
+    // Request and generation refs are not DOM refs: unmount must cancel their latest values.
+    const requests = request, prefetches = prefetch, generations = generation;
     const hidden = () => { if (document.hidden) stop(); };
     document.addEventListener("visibilitychange", hidden);
     const clock = setInterval(() => setToday(hmsToday()), 60_000);
-    return () => { request.current?.abort(); prefetch.current?.abort(); generation.current++; clearInterval(clock); document.removeEventListener("visibilitychange", hidden); };
+    return () => { requests.current?.abort(); prefetches.current?.abort(); generations.current++; clearInterval(clock); document.removeEventListener("visibilitychange", hidden); };
   }, [stop]);
   const show = useCallback(async (day: string) => {
     request.current?.abort(); prefetch.current?.abort();

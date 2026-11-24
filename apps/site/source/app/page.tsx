@@ -1941,12 +1941,14 @@ export default function Home() {
     .concat(effectiveOfficialVisibility["nws-forecast-wind"] ? windArrowFrame?.retrievedAtUtc ?? [] : [])
     .sort()
     .at(-1) ?? null;
+  // Key the frames on the archived payload itself; every write to the archive ref
+  // is followed by an official payload/day state update that re-renders here.
+  const earthquakeArchiveDay = officialArchiveDays["usgs-earthquakes"];
+  const earthquakeArchivePayload = officialArchivePayloadsRef.current["usgs-earthquakes"];
   const earthquakeArchiveFrames = useMemo(() => {
-    const day = officialArchiveDays["usgs-earthquakes"];
-    const payload = officialArchivePayloadsRef.current["usgs-earthquakes"];
-    if (!day || !payload) return [];
-    return earthquakeEventTimes(payload, day);
-  }, [officialArchiveDays, officialPayloads]);
+    if (!earthquakeArchiveDay || !earthquakeArchivePayload) return [];
+    return earthquakeEventTimes(earthquakeArchivePayload, earthquakeArchiveDay);
+  }, [earthquakeArchiveDay, earthquakeArchivePayload]);
   const streamflowFrames = useMemo(() => streamflowBundle
     ? streamflowArchiveDay ? streamflowExactFrames(streamflowBundle) : streamflowDisplayFrames(streamflowBundle)
     : [], [streamflowArchiveDay, streamflowBundle]);
@@ -3545,7 +3547,7 @@ export default function Home() {
     } finally {
       if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
     }
-  }, [announce, runMapMutation, runtimeOfficialVisibility]);
+  }, [announce, runMapMutation, runtimeOfficialVisibility, setRightOpen]);
 
   const reserveSmokePlayback = useCallback((day: string) => {
     officialRequestsRef.current.get("noaa-hms-smoke")?.abort();
@@ -3600,7 +3602,7 @@ export default function Home() {
       }
     }
     });
-  }, []);
+  }, [runtimeOfficialVisibility]);
 
   const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string, force = false) => {
     if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
@@ -3943,7 +3945,7 @@ export default function Home() {
     window.setTimeout(() => {
       qwenPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Qwen companion"]')?.focus({ preventScroll: true });
     }, 0);
-  }, [dismissMapUtilityWithoutFocus, isCompact]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, setQwenOpen, setRightOpen]);
 
   const openEvidencePanel = useCallback(() => {
     dismissMapUtilityWithoutFocus();
@@ -3992,7 +3994,7 @@ export default function Home() {
       if (returnTarget?.isConnected && returnTarget.getClientRects().length > 0) returnTarget.focus({ preventScroll: true });
       else mapContainerRef.current?.focus({ preventScroll: true });
     }, 0);
-  }, []);
+  }, [setQwenOpen]);
 
   useLayoutEffect(() => {
     if (!qwenOpen || !isCompact || repositoryOpen) return;
@@ -4295,7 +4297,7 @@ export default function Home() {
       const targetIsUsable = returnTarget?.isConnected && !returnTarget.closest("[inert]");
       (targetIsUsable ? returnTarget : mapContainerRef.current)?.focus();
     }, 0);
-  }, []);
+  }, [setRightOpen]);
 
   const closeLeftPanel = useCallback(() => {
     setSourceStatusOpen(false);
@@ -4381,7 +4383,7 @@ export default function Home() {
     setLeftOpen(false);
     setRightOpen(false);
     if (isCompact) setTimelineOpen(false);
-  }, [isCompact]);
+  }, [isCompact, setRightOpen]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !mapUtilityOpen) return;
@@ -4405,7 +4407,7 @@ export default function Home() {
     if (isCompact && mapUtilityOpen && mapUtilityView === "localAtlas") {
       setTimelineOpen(false); setLeftOpen(false); setRightOpen(false);
     }
-  }, [isCompact, mapUtilityOpen, mapUtilityView]);
+  }, [isCompact, mapUtilityOpen, mapUtilityView, setRightOpen]);
 
   const showLocalAtlasMap = useCallback(() => {
     setLocalAtlasPeek(true);
@@ -4432,7 +4434,7 @@ export default function Home() {
     setRightOpen(false);
     dismissMapUtilityWithoutFocus();
     if (isCompact) setTimelineOpen(false);
-  }, [dismissMapUtilityWithoutFocus, isCompact, primaryWorkspace]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, primaryWorkspace, setRightOpen]);
 
   const openMapSettings = useCallback(() => {
     openMapUtility("scene");
@@ -4485,7 +4487,7 @@ export default function Home() {
     };
     document.addEventListener("keydown", handleWorkspaceShortcut);
     return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
-  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, primaryWorkspace, repositoryOpen]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, primaryWorkspace, repositoryOpen, setRightOpen]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -4497,7 +4499,7 @@ export default function Home() {
     setRightOpen(false);
     if (isCompact) setTimelineOpen(false);
     window.setTimeout(() => leftPanelRef.current?.querySelector<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled])")?.focus(), 0);
-  }, [isCompact]);
+  }, [isCompact, setRightOpen]);
 
   const openSelection = useCallback((context: SelectedContext, returnElement?: HTMLElement | null) => {
     setSubsurfaceInspection(null);
@@ -4663,7 +4665,7 @@ export default function Home() {
     setHelpOpen(false);
     setQwenOpen(false);
     announce(`${mode === "reports" ? "Report" : "Story"} workspace ${freshFromMap ? "started from the current governed map state" : "opened"}`);
-  }, [announce, captureMapSnapshot, locationCameraRedacted, primaryWorkspace, researchLocationRedacted, subsurfacePrivate, workspaceSnapshot]);
+  }, [announce, captureMapSnapshot, locationCameraRedacted, primaryWorkspace, researchLocationRedacted, setQwenOpen, subsurfacePrivate, workspaceSnapshot]);
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
@@ -4757,7 +4759,7 @@ export default function Home() {
     setRightOpen(Boolean(context));
     if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, context?.geometry ?? null);
     announce(`Opened story scene “${scene.title}” on the map; evidence and policy state remain unchanged`);
-  }, [allEvidenceRecords, announce, layerOrder, opacity]);
+  }, [allEvidenceRecords, announce, layerOrder, opacity, setRightOpen]);
 
   const clearSelectionState = useCallback(() => {
     setFocusStage("outcome");
@@ -4768,7 +4770,7 @@ export default function Home() {
     setSelected(null);
     setRightOpen(false);
     if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, null);
-  }, []);
+  }, [setRightOpen]);
 
   const clearSelection = useCallback(() => {
     clearSelectionState();
@@ -4789,7 +4791,7 @@ export default function Home() {
     update();
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
-  }, []);
+  }, [setRightOpen]);
 
   const restoreExplorerFromUrl = useCallback(() => {
       const params = explorerHistoryParams(window.location.search, window.history.state);
@@ -5083,7 +5085,7 @@ export default function Home() {
       }
       explorerRestoredRef.current = true;
       setLayerPreferencesReady(true);
-  }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
+  }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, setRightOpen]);
 
   useEffect(() => {
     if (explorerRestoredRef.current) saveExplorerHistoryView(buildExplorerParams(), window.history);
@@ -5928,7 +5930,7 @@ export default function Home() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [announce, runMapMutation, runtimeOfficialVisibility]);
+  }, [announce, previewEvidence, runMapMutation, runtimeOfficialVisibility, setRightOpen]);
 
   useEffect(() => {
     const map = mapRef.current;

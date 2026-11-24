@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { automaticLocalConnection, formatDownloadBytes as bytes, localDownloadRequest } from "./local-download-client";
 import { cacheBudgetBytes, cacheBudgetError, cacheBudgetGb, parseCacheBudget, type CacheBudget } from "./cache-budget";
 import styles from "./local-cache-settings.module.css";
@@ -9,28 +9,35 @@ export default function LocalCacheSettings({ onSaved }: { onSaved?: () => void }
   const [busy, setBusy] = useState(false), [notice, setNotice] = useState("");
   const life = useRef<AbortController | null>(null), operating = useRef(false);
   const proposed = cacheBudgetBytes(draft);
-  async function request(save = false) {
+  // One stable reader: the mount effect and the buttons share it, and save inputs
+  // are passed explicitly so the mount-time call never closes over a stale render.
+  const run = useCallback(async (save?: { limitBytes: number; sessionToken: string; onSaved?: () => void }) => {
     const controller = life.current;
-    if (!controller || controller.signal.aborted || operating.current || save && (!saved || proposed === null)) return;
+    if (!controller || controller.signal.aborted || operating.current) return;
     operating.current = true; setBusy(true); setNotice("");
     try {
       const { response, body } = await localDownloadRequest("/cache-budget", controller.signal,
-        save ? { limitBytes: proposed } : undefined, save ? saved?.sessionToken : undefined);
+        save ? { limitBytes: save.limitBytes } : undefined, save?.sessionToken);
       const parsed = parseCacheBudget(body);
       if (!response.ok || !parsed) throw new Error(cacheBudgetError((body as { error?: unknown })?.error));
       if (controller.signal.aborted) return;
       setSaved(parsed); setDraft(cacheBudgetGb(parsed.limitBytes));
       setNotice(save ? `Saved ${cacheBudgetGb(parsed.limitBytes)} GB on this computer. Existing files are retained.` : "Saved budget refreshed.");
-      if (save) onSaved?.();
+      save?.onSaved?.();
     } catch (error) {
       if (!controller.signal.aborted) setNotice(error instanceof Error && /^(Wait for|Enter a|The budget)/.test(error.message) ? error.message : cacheBudgetError(null));
     } finally { if (life.current === controller) { operating.current = false; if (!controller.signal.aborted) setBusy(false); } }
+  }, []);
+  function request(save = false) {
+    if (!save) return run();
+    if (!saved || proposed === null) return;
+    return run({ limitBytes: proposed, sessionToken: saved.sessionToken, onSaved });
   }
   useEffect(() => {
     life.current = new AbortController(); operating.current = false;
-    if (automaticLocalConnection(window.location.origin)) void request();
+    if (automaticLocalConnection(window.location.origin)) void run();
     return () => { life.current?.abort(); };
-  }, []);
+  }, [run]);
   return <section id="cache-budget" className={styles.card} aria-labelledby="cache-budget-heading">
     <div className={styles.heading}><div><h2 id="cache-budget-heading">Local cache budget</h2><p>Choose how much space the replaceable cache may use. 500 GB is the default; you can go higher or lower.</p></div><button type="button" disabled={busy} onClick={() => void request()}>{busy ? "Checking…" : saved ? "Refresh budget" : "Connect to this computer"}</button></div>
     {saved && <>
