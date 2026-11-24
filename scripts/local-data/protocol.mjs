@@ -6,7 +6,7 @@ export const LOCAL_DATA_GATEWAY='kfm-local-data/1';
 export const LOCAL_DATA_WORKER='kfm-local-data-worker/1';
 export const LOCAL_DATA_DATA_PREFIX='/v1/data/';
 // The only calls that ever reach the PC: health, and one fixed, read-only question per dataset.
-export const LOCAL_DATA_ROUTES=new Map([['/v1/health','GET'],['/v1/neon/preview','GET'],...[...DATASETS.keys()].map(id=>[LOCAL_DATA_DATA_PREFIX+id,'POST'])]);
+export const LOCAL_DATA_ROUTES=new Map([['/v1/health','GET'],['/v1/terrain/ground','POST'],['/v1/neon/preview','GET'],['/v1/lidar/view','POST'],['/v1/lidar/view/chunk','POST'],['/v1/lidar/view/grid','POST'],['/v1/lidar/points','GET'],...Array.from({length:16},(_,id)=>['/v1/lidar/points/'+id,'GET']),...[...DATASETS.keys()].map(id=>[LOCAL_DATA_DATA_PREFIX+id,'POST'])]);
 export const LOCAL_DATA_LIMITS=Object.freeze({
  requestBytes:4096,
  // A full page of any dataset stays under this; larger pages are refused with REPLY_TOO_LARGE.

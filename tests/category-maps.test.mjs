@@ -366,7 +366,7 @@ test('the storm desk opens and closes the live radar loop from its dock, clear o
  assert.match(css,/\.map-stage\[data-live-dock="true"\] \.category-map-dock\{bottom:calc\(var\(--live-dock-clearance\) \+ 6px\)/,'the dock sits above the radar and lightning panels');
  assert.match(css,/@media\(max-width:760px\)\{\.map-stage\[data-live-dock="true"\] \.category-map-dock\{display:none\}\}/,'on a phone the loop panel has the bottom of the map to itself');
  assert.match(page,/className="noaa-radar-close" onClick=\{closeLiveInstrument\} aria-label="Close radar loop controls"/,'so the radar panel closes itself, giving the dock back on a phone');
- assert.match(css,/@media\(max-width:760px\)\{\.category-map-dock\{[^}]*max-height:calc\(100% - 152px - env\(safe-area-inset-bottom,0px\)\)/,'a tall dock stops below the map information button');
+ assert.match(css,/@media\(max-width:760px\)\{\.category-map-dock\{[^}]*max-height:min\(var\(--category-dock-height-ceiling,100%\),calc\(100% - 152px - env\(safe-area-inset-bottom,0px\)\)\)/,'a tall dock stops below the map information button');
  assert.match(css,/\.category-map-dock-modes button\[aria-pressed=true\]:disabled\{color:#f1e6c2;/,'a requested but unavailable mode keeps a readable label');
 });
 

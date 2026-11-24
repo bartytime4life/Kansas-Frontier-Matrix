@@ -44,7 +44,7 @@ export function terrainHarness() {
   };
   const set = field => value => { h[field] = typeof value === 'function' ? value(h[field]) : value; };
   const scope = {
-    basemapHealth: basemapModule.createBasemapHealth(), BASEMAP_RELIEF_DEM_SOURCE_ID:reliefId, topographicOverlayRef:ref(false),setTopographicOverlay:()=>{},applyTerrainReliefStyle:()=>{},applyTopographicRasterDepth:()=>{},atmospherePresetRef:ref('clear'),lightAzimuthRef:ref(235), classifyBasemapError: basemapModule.classifyBasemapError,
+    basemapHealth: basemapModule.createBasemapHealth(), nativeTerrainHiddenRef:ref(false), BASEMAP_RELIEF_DEM_SOURCE_ID:reliefId, topographicOverlayRef:ref(false),setTopographicOverlay:()=>{},applyTerrainReliefStyle:()=>{},applyTopographicRasterDepth:()=>{},atmospherePresetRef:ref('clear'),lightAzimuthRef:ref(235), classifyBasemapError: basemapModule.classifyBasemapError,
     map, mapRef: ref(map), terrainProviderRef: ref(h.provider), attachedTerrainProviderRef: ref(h.provider),
     terrainDetailRef: ref({ auto: false, failed: false, byHand: false }), terrainDetailFallbackRef: ref(null),
     failedTerrainSourceRef: ref(null), scenePresetRef: ref(h.scene), mapMutationErrorRef: ref(null),

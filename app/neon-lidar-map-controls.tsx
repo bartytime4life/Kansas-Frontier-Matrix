@@ -170,6 +170,7 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
       setOpacity(previous => previous > 0 ? previous : 80); setEnabled(true); setActionError("");
     } catch { setActionError("The 3D view could not open. Source samples are retained; try the flat view or reload the map."); }
   }
+  function cancelRead() { session.cancel(); setBusy(false); }
   async function explore3D() {
     if (busy) return;
     const block = runtime3DBlock();
@@ -221,7 +222,7 @@ export function useNeonLidarMap({ mapRef, styleReady, flatMap, atPresent, reduce
               : opacity === 0 ? "Local overlay hidden at 0% opacity. Increase opacity to show its cells."
                 : applied ? "Sampled cells enabled at Present. This is dated context, not live vegetation or KFM evidence." : "Applying local preview to the map…";
   return { preview, pilotReceipt, mode, opacity, enabled, busy, fileError, mapError: displayError, status, canShow, canExplore3D, explore3DStatus, explore3D, applied, flatMap, atPresent, coordinateDraft, probe, elevationDomain,
-    importFile, loadPilot, clear, toggle, fit, selectAxis, onFlatMap, representation, setRepresentation, verticalExaggeration, columns, storyStops, pitch, plan, focusStop,
+    importFile, loadPilot, cancelRead, clear, toggle, fit, selectAxis, onFlatMap, representation, setRepresentation, verticalExaggeration, columns, storyStops, pitch, plan, focusStop,
     setVerticalExaggeration: (value: number) => { if (Number.isFinite(value)) setVerticalExaggeration(Math.max(1, Math.min(5, value))); },
     setMode, setOpacity: (value: number) => { if (Number.isFinite(value)) setOpacity(Math.max(0, Math.min(100, value))); } };
 }

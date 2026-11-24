@@ -1,4 +1,6 @@
 "use client";
+import { KansasLidarBadge, KansasLidarLayers, useKansasLidarView } from "./kansas-lidar-controls";
+import { pickNativeLidarPoint } from "./native-lidar-layer";
 import { NeonLidarMapBadge, NeonLidarMapControls, useNeonLidarMap } from "./neon-lidar-map-controls";
 import { hasNeonLocalHit } from "./neon-lidar-map";
 import { withCivicKey } from "./map-keys";
@@ -7281,6 +7283,7 @@ export default function Home() {
           });
           // The topmost archive feature owns this click.
           if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) { neonClaimedMapClicksRef.current.add(event); return; }
+          if (pickNativeLidarPoint(map, event.point)) { neonClaimedMapClicksRef.current.add(event); return; }
           if (hasNeonLocalHit(renderedHits)) return;
           // Local previews own their selection; never inspect official features beneath them.
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
@@ -9568,6 +9571,8 @@ export default function Home() {
   };
 
   const neonLidarMap = useNeonLidarMap({ mapRef, styleReady, flatMap: projection === "mercator" && scenePreset !== "elevation-3d", atPresent: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, reducedMotion, onFlatMap: () => activateMapRepresentation("2d"), claimedClicksRef: neonClaimedMapClicksRef });
+  const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && (officialWorkspace === "terrain" || officialWorkspace === "all" && welcomeTopics[0] === "terrain"), scale: verticalExaggeration, reducedMotion: reducedMotion || !dynamicEffects, onViewMap: () => setCategoryDockHidden(true),
+    onSelected: () => setCategoryDockHidden(false), onNativeIntent: () => neonLidarMap.cancelRead(), onGround: () => activateMapRepresentation("terrain") });
 
   const startTerrainInvestigation = () => {
     activateMapRepresentation("terrain");
@@ -11420,7 +11425,8 @@ export default function Home() {
     openCategoryMap(topics[0], topics);
     setPrimaryWorkspace("map");
     setLeftOpen(false); setRightOpen(false); setTimelineOpen(false);
-    setCategoryDockHidden(true);
+    // Terrain opens directly on its geographic layers; other maps keep their map-first entry.
+    setCategoryDockHidden(topics[0] !== "terrain");
     setInstrumentOpen(false);
     setLayerCatalogView("selected");
     // Opening a map should reveal the map, not a full-screen layer catalogue.
@@ -11574,7 +11580,7 @@ export default function Home() {
               <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} data-active={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => chooseMapMenuRepresentation("2d")}><b>2D</b><span>Map</span></button>
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} onClick={() => chooseMapMenuRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
-              {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{" · " + verticalExaggeration.toFixed(1) + "× " + (Math.abs(verticalExaggeration - 1) < .001 ? "true vertical scale" : "display exaggeration") }{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
+              {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : terrainState === "OFF" ? "DEM mesh hidden" : "DEM loading"}{" · " + verticalExaggeration.toFixed(1) + "× " + (Math.abs(verticalExaggeration - 1) < .001 ? "true vertical scale" : "display exaggeration") }{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
               {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProviderByHand("mapzen")}>Use display DEM</button>}
               {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} onClick={() => chooseMapMenuRepresentation("globe")}><b>Globe</b><span>◎</span></button>
@@ -12455,6 +12461,7 @@ export default function Home() {
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           <NeonLidarMapBadge controller={neonLidarMap} />
+          <KansasLidarBadge controller={kansasLidar} controlsOpen={showCategoryDock} />
           {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
@@ -12495,7 +12502,7 @@ export default function Home() {
             }}
             keys={currentMapKeys}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
-            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />}
+            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} />}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic, officialWorkspace === "all" && welcomeTopics.length > 1 ? welcomeTopics : [activeCategoryMap.topic]) : resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
               state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",

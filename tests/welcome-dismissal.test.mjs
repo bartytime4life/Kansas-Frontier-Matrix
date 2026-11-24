@@ -68,13 +68,15 @@ function mapEntryFixture(nested) {
   for (const name of ['openCategoryMap', 'setPrimaryWorkspace', 'setLeftOpen', 'setRightOpen', 'setTimelineOpen',
     'setCategoryDockHidden', 'setInstrumentOpen', 'setLayerCatalogView', 'setPlaying', 'setTemporalMode',
     'commitTemporalFrame', 'dismissMapUtilityWithoutFocus', 'setWelcomeSourcesOpen', 'writeExplorerGuideDismissed']) context[name] = () => {};
+  context.setCategoryDockHidden = value => { state.dockHidden = value; };
+  context.openCategoryMap = (topic, topics) => { state.opened = [topic, Array.from(topics)]; state.dockHidden = false; };
   const load = code => new Function(...Object.keys(context), ts.transpileModule(`return (${code});`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022 },
   }).outputText)(...Object.values(context));
   assert.ok(mapEntry, 'execute the actual welcome map entry');
   const open = load(mapEntry), close = load(initializer);
   return { body, document, focused, guide, edit, control, state,
-    enter() { open(['sky']); close(false); document.activeElement = body; },
+    enter(topics = ['sky']) { open(topics); close(false); document.activeElement = body; },
     nextFrame() { frames.shift()?.(); },
     flush() { while (frames.length) frames.shift()(); },
   };
@@ -109,4 +111,15 @@ test('a keyboard choice between queued entry frames is not overwritten by remain
     h.flush();
     assert.equal(h.document.activeElement, newer);
   }
+});
+
+
+test('the actual welcome handoff preserves visible Terrain layer controls and the other categories map-first behavior',()=>{
+ for(const topics of [['terrain'],['terrain','water'],['water','terrain'],['sky']]){
+  const h=mapEntryFixture(false);h.enter(topics);
+  assert.deepEqual(h.state.opened,[topics[0],topics]);
+  assert.equal(h.state.dockHidden,topics[0]!=='terrain','only a primary Terrain entry retains its opened layer dock');
+  assert.equal(h.state.shown,false,'the welcome is dismissed before using the map controls');
+  h.flush();assert.equal(h.document.activeElement,h.edit,'entry retains the existing safe keyboard handoff');
+ }
 });
