@@ -3256,9 +3256,29 @@ def test_web_fixes_successor_preserves_topo_catalog_inventory_and_all_holds():
         WEB_FIXES_CHANGED,
         "de7901fd65f5287f246acdb61d83c25a84db4c38",
     )
-    assert TOOL.RECEIPT.name == "site-v268-web-fixes-overlay-20261124.json"
 
 
 WEB_FIXES_CHANGED = {
     "app/knowledge/record/page.tsx", "tests/knowledge-record-retry.test.mjs",
+}
+
+
+def test_web_cleanup_successor_preserves_web_fixes_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-web-cleanup-overlay-20261124.json",
+        "site-v268-web-fixes-overlay-20261124.json",
+        "da3d968886f5878c145fec8baba570ef99968571bb8a2689fdd133532949a169",
+        WEB_CLEANUP_CHANGED,
+        "709332690ad4ebf5db49e0bdb00244bd22969de6",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-web-cleanup-overlay-20261124.json"
+
+
+WEB_CLEANUP_CHANGED = {
+    "app/daylight-layer.ts",
+    "app/earth-engine-export.ts",
+    "app/governed-water-admin-server.ts",
+    "app/map-layer-composition.ts",
+    "app/scene-overlays.ts",
+    "app/subsurface-model.ts",
 }
