@@ -30,7 +30,7 @@ export const LOCAL_DATA_WORKER_PREFIX='/api/local-data-worker/v1';
 // bytes caps the memory held by cached answers, whatever their number.
 export const LOCAL_DATA_CACHE=Object.freeze({freshMs:15*60000,staleMs:7*24*3600000,entries:500,bytes:64*1024*1024,workerSeenMs:30000});
 // The worker's /result carries up to replyBytes base64-encoded, over a home upload link.
-export const LOCAL_DATA_RELAY_LIMITS=Object.freeze({...RELAY_LIMITS,queue:16,requestBytes:Math.ceil(LOCAL_DATA_LIMITS.replyBytes*4/3)+4096,bodyMs:15000,
+export const LOCAL_DATA_RELAY_LIMITS=Object.freeze({...RELAY_LIMITS,pollers:2,queue:16,requestBytes:Math.ceil(LOCAL_DATA_LIMITS.replyBytes*4/3)+4096,bodyMs:15000,
  replyBytes:LOCAL_DATA_LIMITS.replyBytes,unleasedMs:8000,
  leasedMs:Object.freeze(Object.fromEntries([...LOCAL_DATA_ROUTES.keys()].map(path=>[path,LOCAL_DATA_LIMITS.gatewayMs+5000])))});
 const error=code=>Object.assign(new Error(code),{code});

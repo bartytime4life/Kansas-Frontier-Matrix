@@ -345,7 +345,8 @@ retain all databases and existing records.
 ## Bounded query execution (2026-11-24)
 
 The gateway keeps signing keys, replay protection and file/terrain routes in the
-parent. Two lazily started child processes receive only database paths and
+parent. Two outbound data-worker lanes match two lazily started child processes. A slow
+archive read cannot monopolize the outbound lease connection. Children receive only database paths and
 allowlisted operations, with an empty environment. Each opens SQLite read-only.
 Four jobs may wait; execution is capped at 7 s and total queue plus execution at
 8.5 s, below the relay deadline. Over-budget native calls are killed at process
