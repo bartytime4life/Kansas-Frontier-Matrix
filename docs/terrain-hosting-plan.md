@@ -1,5 +1,7 @@
 # KFM terrain: GoDaddy delivery, dev processing, visitor workspace
 
+For the wider website, archive, AI, media and browser design, see [KFM resource placement and loading](resource-placement.md).
+
 Owner direction, 2026-11-24: optimize the actual Kansas Frontier Matrix website across the existing GoDaddy app `urdng3v1vk` and dev PC; use the approximately100GB of existing hosting storage they report, without new costs. The localhost preview is a verification surface, not the destination. Account remaining quota is not independently readable through the connected GoDaddy tools.
 
 ## Implemented candidate

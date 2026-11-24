@@ -1,5 +1,7 @@
 # Local SQL data relay
 
+Update, 2026-11-24: compact public first pages can now also persist on GoDaddy. Full databases remain on dev. See [resource placement](resource-placement.md) for the bounded cache policy, current scope and validation.
+
 The owner decided on 2026-11-01 that pipeline data stays on the pipeline PC (dev)
 and that the hosting SQL database is not used for it. This relay lets the public
 site answer fixed, read-only questions from the PC's local SQL databases without

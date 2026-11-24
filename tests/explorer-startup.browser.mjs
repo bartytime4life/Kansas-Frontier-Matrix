@@ -3598,3 +3598,38 @@ for (const [width,height] of [[1280,800],[390,844],[681,468]]) {
     });
   }
 }
+
+
+for(const [width,height] of [[1440,900],[390,844]])test(`optional chat downloads on demand and keeps its draft at ${width}px`,{timeout:90000},async t=>{
+ const {default:manifest}=await import('../dist/server/ssr/__vite_rsc_assets_manifest.js');
+ let loader;
+ for(const deps of Object.values(manifest.clientReferenceDeps)){
+  const candidate=deps.js.find(path=>/\/assistant-panel-[^/]+\.js$/.test(path));
+  if(candidate){const code=await readFile('dist/client'+candidate,'utf8');if(code.includes('Opening Chat with KFM')){loader=code;break;}}
+ }
+ assert.ok(loader,'production loader is a separate small module');
+ const path='/assets/'+loader.match(/import\(\x60\.\/(workspace-[^`]+\.js)\x60\)/)?.[1];
+ assert.ok(!path.endsWith('undefined'),'locate actual dynamically imported workspace');
+ const b=await browser(t),requests=[],held=[];
+ b.listeners.add(message=>{if(message.method==='Network.requestWillBeSent')requests.push(new URL(message.params.request.url).pathname);});
+ const p=await pageSession(b,width,height,{
+  setup:call=>call('Fetch.enable',{patterns:[{urlPattern:origin.origin+'/api/*'},{urlPattern:origin.origin+path}]}),
+  intercept:async(params)=>{if(new URL(params.request.url).pathname!==path)return false;held.push(params.requestId);return true;},
+ });
+ await p.open('/','1');
+ assert.equal(requests.filter(url=>url===path).length,0,'initial map must not download chat implementation');
+ await p.evaluate(`document.querySelector('.qwen-header-entry').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`document.activeElement?.matches('[data-assistant-loading]')`,'loading chat owns requested composer focus');
+ await p.key('Escape','Escape',27);
+ await p.wait(`document.querySelector('#qwen-map-panel')?.hidden&&document.activeElement===document.querySelector('.qwen-header-entry')`,'closing pending chat restores header focus');
+ const until=Date.now()+10000;while(!held.length&&Date.now()<until)await pause(20);assert.equal(held.length,1);
+ await p.call('Fetch.continueRequest',{requestId:held[0]});await pause(250);
+ assert.equal(await p.evaluate(`!!document.querySelector('#qwen-map-panel textarea')`),false,'late import does not mount closed workspace');
+ await p.key('Enter','Enter',13);
+ await p.wait(`document.activeElement===document.querySelector('#qwen-map-panel textarea')`,'reopen focuses loaded composer');
+ await p.call('Input.insertText',{text:'Kansas river terrace notes'});
+ await p.key('Escape','Escape',27);await p.wait(`document.querySelector('#qwen-map-panel')?.hidden`,'draft stays in closed workspace');
+ await p.key('Enter','Enter',13);await p.wait(`document.activeElement===document.querySelector('#qwen-map-panel textarea')`,'composer refocuses on reopen');
+ assert.equal(await p.evaluate(`document.querySelector('#qwen-map-panel textarea').value`),'Kansas river terrace notes');
+ assert.equal(requests.filter(url=>url===path).length,1,'reopening reuses the same module');
+});
