@@ -14,7 +14,7 @@ export const NEWSPAPER_TERMS=Object.freeze({
  people:['census','colony'],government:['legislature','election'],places:['post office','town site'],'public-safety':['sheriff','fire'],
  science:['eclipse','telegraph'],sky:['comet','meteor'],evidence:['survey','deed'],
 });
-export const newspaperSearchUrl=(q,source='newspapers')=>`/data-library?q=${encodeURIComponent(q)}&source=${source}`;
+export const newspaperSearchUrl=(q,source='newspapers')=>`/data-library?q=${encodeURIComponent(q)}&source=${source}#archive-text-search`;
 export const librarySearchUrl=find=>`/data-library?find=${encodeURIComponent(find)}`;
 const PREFER=/storm-event-details|ghcnd-stations|wind-stations|usdm-county|usgs-sites|nrhp-locations|gnis|post-office|nbi-bridges|nid-dams|nasr-airports|kgs-wells|census-acs-geographies|osm-places|pbdb|nass|frs-facilities|climdiv-monthly|prism-county|wqp-stations|neotoma-sites|msha-mines/;
 const family=id=>id.replace(/^(?:observations|bulk)-/,'').split('-')[0];

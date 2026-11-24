@@ -17,7 +17,7 @@ async function fixture(search='',globals={}){
   './library.module.css':{default:new Proxy({},{get:(_t,key)=>key})},
  },{location:{search},URLSearchParams,queueMicrotask,...globals});
  const dispose=h.dispose;h.dispose=()=>{dispose();for(const item of pending)item.resolve(response());};
- const render=()=>{const tree=h.render(h.exports.default,{});h.commit();return tree;};
+ const render=()=>{const tree=h.render(h.exports.default,{});globals.mount?.(tree);h.commit();return tree;};
  let tree=render();await settle();tree=render();
  return {h,pending,calls,render,get tree(){return tree;},refresh(){tree=render();return tree;},
   change(name,value){field(tree,name).props.onChange({target:{value}});tree=render();},
@@ -116,15 +116,17 @@ test('deep links initialize the submitted query and zero-row pages never report 
  }finally{f.h.dispose();}
 });
 
-test('newspaper links preserve a valid title and reject other title inputs',async()=>{
+test('linked searches preserve valid newspaper and book titles and reject malformed title inputs',async()=>{
  const valid=await fixture('?q=railroad&source=newspapers&from=1900&to=1900&title=SN84029386');
- const foreign=await fixture('?q=railroad&source=texts&title=SN84029386');
+ const foreign=await fixture('?q=railroad&source=texts&title=%00invalid');
+ const book=await fixture('?q=prairie&source=texts&title=prairie_1900');
  const invalid=await fixture('?q=railroad&source=newspapers&title=unrecognized');
  try{
   assert.equal(valid.calls[0].query.title,'sn84029386');
   assert.equal(foreign.calls[0].query.title,undefined);
+  assert.equal(book.calls[0].query.title,'prairie_1900');
   assert.equal(invalid.calls[0].query.title,undefined);
- }finally{valid.h.dispose();foreign.h.dispose();invalid.h.dispose();}
+ }finally{valid.h.dispose();foreign.h.dispose();book.h.dispose();invalid.h.dispose();}
 });
 
 test('a response arriving after the timeout stays unapplied and can be retried',async()=>{
@@ -134,5 +136,62 @@ test('a response arriving after the timeout stays unapplied and can be retried',
   f.change('Words or phrase','tornado');f.submit();expire();await f.answer();
   assert.equal(resultTitle(f.tree),undefined);assert.match(status(f.tree),/did not respond in time/);
   f.click('Retry last search');await f.answer();assert.ok(resultTitle(f.tree));
+ }finally{f.h.dispose();}
+});
+
+
+test('only accepted search filters update a reloadable address while preserving collection browsing',async()=>{
+ const location={search:'?find=climate&mapped=1',hash:''},writes=[],history={state:{retained:'router'},replaceState(state,_title,url){writes.push({state,url});const u=new URL(url,'https://example.test');location.search=u.search;location.hash=u.hash;}};
+ const f=await fixture('',{location,history});try{
+  f.change('Words or phrase','dust storm');f.change('From year','1900');f.change('To year','1920');f.submit();
+  assert.equal(writes.length,0,'pending searches do not change the reload target');await f.answer();
+  const link=new URL(writes.at(-1).url,'https://example.test');
+  assert.equal(link.hash,'#archive-text-search');assert.equal(link.searchParams.get('q'),'dust storm');assert.equal(link.searchParams.get('from'),'1900');assert.equal(link.searchParams.get('to'),'1920');
+  assert.equal(link.searchParams.get('find'),'climate');assert.equal(link.searchParams.get('mapped'),'1');assert.equal(writes.at(-1).state,history.state);
+  f.change('Words or phrase','prairie');assert.equal(writes.length,1,'drafts do not replace the accepted query');
+  f.submit();await f.fail();assert.equal(writes.length,1,'failures retain the accepted address');
+  f.submit();f.click('Cancel search');await f.answer();assert.equal(writes.length,1,'cancelled late responses cannot rewrite history');
+ }finally{f.h.dispose();}
+});
+
+function focusFixture(){
+ const events=[],body={},outside={},document={body,activeElement:body};
+ const result={focus(){events.push('results focus');document.activeElement=result;},scrollIntoView(){events.push('results scroll');}};
+ const heading={focus(){events.push('search focus');document.activeElement=heading;},scrollIntoView(){events.push('search scroll');}};
+ return {events,document,outside,globals:{document,mount(tree){
+  const section=findNode(tree,n=>n.type==='section'&&n.props['aria-labelledby']==='archive-search-title');if(section.props.ref)section.props.ref.current={contains:active=>active!==outside};
+  const title=findNode(tree,n=>n.props?.id==='archive-search-title');if(title.props.ref)title.props.ref.current=heading;
+  const results=resultTitle(tree);if(results?.props.ref)results.props.ref.current=result;
+ }}};
+}
+
+test('successful page navigation exposes the new results; failed and cancelled work does not move focus',async()=>{
+ const focus=focusFixture(),f=await fixture('',focus.globals);try{
+  f.change('Words or phrase','tornado');f.submit();await f.answer();
+  assert.deepEqual(focus.events,['results focus','results scroll']);assert.equal(resultTitle(f.tree).props.tabIndex,-1);
+  f.click('Next');assert.equal(focus.events.length,2);await f.answer();assert.equal(focus.events.length,4);
+  f.click('Next');await f.fail();assert.equal(focus.events.length,4);
+  f.submit();f.click('Cancel search');await f.answer();assert.equal(focus.events.length,4);
+  f.submit();focus.document.activeElement=focus.outside;await f.answer();assert.equal(focus.events.length,4,'a reader who moved elsewhere keeps focus');
+ }finally{f.h.dispose();}
+});
+
+test('a linked search exposes its form on arrival without a later background focus jump',async()=>{
+ const focus=focusFixture(),f=await fixture('?q=prairie&source=texts',focus.globals);try{
+  assert.deepEqual(focus.events,['search focus','search scroll']);await f.answer();assert.equal(focus.events.length,2);
+ }finally{f.h.dispose();}
+ const collectionFocus=focusFixture(),c=await fixture('?q=prairie&collection=bulk-newspaper-pages',collectionFocus.globals);try{
+  assert.deepEqual(collectionFocus.events,[],'an explicit collection deep link remains the destination');
+ }finally{c.h.dispose();}
+});
+
+
+test('reusable search links retain the accepted title and safely encode the query',async()=>{
+ const f=await fixture();try{
+  const query={q:'prairie & "Kansas"',source:'texts',from:'1890',to:'1900',title:'prairie_1900'};
+  const u=new URL(f.h.exports.archiveSearchLocation('?find=climate&title=old',query),'https://example.test');
+  assert.equal(u.pathname,'/data-library');assert.equal(u.hash,'#archive-text-search');
+  for(const [key,value] of Object.entries(query))assert.equal(u.searchParams.get(key),value);
+  assert.equal(u.searchParams.get('find'),'climate');
  }finally{f.h.dispose();}
 });

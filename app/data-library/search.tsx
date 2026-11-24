@@ -1,5 +1,5 @@
 'use client';
-import {useEffect,useRef,useState,type FormEvent} from 'react';
+import {useEffect,useLayoutEffect,useRef,useState,type FormEvent} from 'react';
 import {fetchArchive} from '../archive-layer-data';
 import styles from './library.module.css';
 
@@ -16,7 +16,17 @@ const YEAR=/^\d{4}$/;
 const NEWSPAPER_TITLE=/^[a-z]{2}\d{8}$/i;
 type SearchQuery={q:string;source:Source;from:string;to:string;title:string};
 type SearchRequest={query:SearchQuery;offset:number;previous:number[]};
-type SearchPage=SearchRequest&{answer:SearchAnswer};
+type SearchPage=SearchRequest&{answer:SearchAnswer;focusResults:boolean};
+function searchTitle(source:Source,value:string){
+ if(source==='newspapers')return NEWSPAPER_TITLE.test(value)?value.toLowerCase():'';
+ return value.length<=200&&[...value].every(c=>c.charCodeAt(0)>31&&c.charCodeAt(0)!==127)?value:'';
+}
+/** Accepted filters only; retain the independent collection finder state. */
+export function archiveSearchLocation(search:string,query:SearchQuery){
+ const params=new URLSearchParams(search);params.set('q',query.q);params.set('source',query.source);
+ for(const [key,value] of [['from',query.from],['to',query.to],['title',searchTitle(query.source,query.title)]]){if(value)params.set(key,value);else params.delete(key);}
+ return `/data-library?${params}#archive-text-search`;
+}
 
 /** Matched terms arrive between ⟦ and ⟧; render them as <mark> without interpreting anything else. */
 export function Snippet({text}:{text:string|null}){
@@ -43,8 +53,15 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
  const [page,setPage]=useState<SearchPage|null>(null),[retry,setRetry]=useState<SearchRequest|null>(null);
  const [status,setStatus]=useState('Search the digitised newspaper pages and archive texts by word, phrase or year.'),[busy,setBusy]=useState(false),[formError,setFormError]=useState('');
  const request=useRef<AbortController|null>(null),generation=useRef(0),queryInput=useRef<HTMLInputElement>(null);
+ const section=useRef<HTMLElement>(null),searchHeading=useRef<HTMLHeadingElement>(null),resultsHeading=useRef<HTMLHeadingElement>(null);
+ useLayoutEffect(()=>{
+  if(!page?.focusResults)return;
+  const active=typeof document==='undefined'?null:document.activeElement;
+  if(active&&active!==document.body&&!section.current?.contains(active))return;
+  resultsHeading.current?.focus({preventScroll:true});resultsHeading.current?.scrollIntoView({block:'start',behavior:'auto'});
+ },[page]);
  useEffect(()=>()=>{generation.current++;request.current?.abort();},[]);
- async function run(search:SearchRequest){
+ async function run(search:SearchRequest,focusResults=false){
   const asked={...search.query,q:search.query.q.trim()};
   let invalid='';
   if(!asked.q)invalid='Type a word or a "quoted phrase" to search.';
@@ -59,15 +76,19 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
    const result=await fetchArchive('archive-search',{q:asked.q,source:asked.source,facets:'1',limit:String(Math.min(PAGE,MAX_OFFSET-search.offset)),offset:String(search.offset),...(asked.from?{from:asked.from}:{}),...(asked.to?{to:asked.to}:{}),...(asked.title?{title:asked.title}:{})},controller.signal) as unknown as SearchAnswer;
    controller.signal.throwIfAborted();
    if(version!==generation.current)return;
-   setPage({...attempt,answer:result});
+   setPage({...attempt,answer:result,focusResults});
+   try{
+    // A background linked query must not replace an explicit collection/hash destination.
+    if(focusResults||!new URLSearchParams(location.search).has('collection')&&(!location.hash||location.hash==='#archive-text-search'))history.replaceState(history.state,'',archiveSearchLocation(location.search,asked));
+   }catch{/* Reading remains available when history writes are blocked. */}
    const total=result.total??0;
    setStatus(result.rows.length?`${total.toLocaleString()}${result.totalCapped?'+':''} ${asked.source==='newspapers'?'pages':'text parts'} match, ranked by relevance. Showing ${search.offset+1}–${search.offset+result.rows.length}.`:total?'No further matches were returned on this page. Go back or narrow the search.':'No matches. OCR text is uncorrected: try another spelling, a prefix (wich*) or a wider year range.');
   }catch(error){if(version===generation.current){setRetry(attempt);setStatus(controller.signal.aborted?'The archive did not respond in time. Retry when the PC is available.':error instanceof Error?error.message:'Archive unavailable.');}}
   finally{clearTimeout(timer);if(version===generation.current){setBusy(false);request.current=null;}}
  }
  function cancel(){generation.current++;request.current?.abort();request.current=null;setBusy(false);setRetry(null);setStatus('Search cancelled. No new results were applied.');queryInput.current?.focus();}
- function submit(event:FormEvent){event.preventDefault();void run({query:{q,source,from,to,title:''},offset:0,previous:[]});}
- function filterTitle(value:string){if(page)void run({query:{...page.query,title:value},offset:0,previous:[]});}
+ function submit(event:FormEvent){event.preventDefault();void run({query:{q,source,from,to,title:''},offset:0,previous:[]},true);}
+ function filterTitle(value:string){if(page)void run({query:{...page.query,title:value},offset:0,previous:[]},true);}
  useEffect(()=>{
   let current=true;
   queueMicrotask(()=>{
@@ -76,8 +97,9 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
    if(!linkedQ.trim())return;
    const linkedSource:Source=params.get('source')==='texts'?'texts':'newspapers',linkedFrom=YEAR.test(params.get('from')??'')?params.get('from')!:'',linkedTo=YEAR.test(params.get('to')??'')?params.get('to')!:'';
    const requestedTitle=params.get('title')??'';
-   const linkedTitle=linkedSource==='newspapers'&&NEWSPAPER_TITLE.test(requestedTitle)?requestedTitle.toLowerCase():'';
+   const linkedTitle=searchTitle(linkedSource,requestedTitle);
    setQ(linkedQ);setSource(linkedSource);setFrom(linkedFrom);setTo(linkedTo);
+   if(!params.has('collection')&&(!location.hash||location.hash==='#archive-text-search')){searchHeading.current?.focus({preventScroll:true});searchHeading.current?.scrollIntoView({block:'start',behavior:'auto'});}
    void run({query:{q:linkedQ,source:linkedSource,from:linkedFrom,to:linkedTo,title:linkedTitle},offset:0,previous:[]});
   });
   return()=>{current=false;};
@@ -87,8 +109,8 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
  const total=answer?.total??0,nextOffset=offset+(answer?.rows.length??0),canNext=!!answer?.rows.length&&nextOffset<total&&nextOffset<MAX_OFFSET;
  const draftChanged=page&&(q.trim()!==page.query.q||source!==page.query.source||from!==page.query.from||to!==page.query.to);
  const period=page?.query.from&&page.query.to?`${page.query.from}–${page.query.to}`:page?.query.from?`${page.query.from} onward`:page?.query.to?`through ${page.query.to}`:'all loaded years';
- return <section className={styles.search} aria-labelledby="archive-search-title">
-  <h2 id="archive-search-title">Search the texts</h2>
+ return <section ref={section} className={styles.search} aria-labelledby="archive-search-title">
+  <h2 ref={searchHeading} tabIndex={-1} id="archive-search-title">Search the texts</h2>
   <p>Full-text search over the Kansas newspaper pages and public-domain texts the PC has loaded: words, <q>quoted phrases</q>, prefixes such as <code>wich*</code>, and AND, OR, NOT between terms. Results rank the original OCR, so spellings and scanning errors of the period affect what is found.</p>
   <p><a href="/labs/newspaper-pulse">Compare word coverage in Newspaper Pulse →</a></p>
   {loadedThrough&&(loadedThrough.newspapers||loadedThrough.texts)&&<p className={styles.note}>Loading continues on the PC: {loadedThrough.newspapers?`newspaper pages last added ${loadedThrough.newspapers}`:'newspaper load date not reported'}; {loadedThrough.texts?`archive texts last added ${loadedThrough.texts}`:'text load date not reported'}. A missing match may not be loaded yet.</p>}
@@ -102,12 +124,12 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
   </form>
   {formError&&<p id="archive-search-error" className={styles.note} role="alert">{formError}</p>}
   <p role="status" aria-live="polite" aria-atomic="true">{status}</p>
-  {retry&&!busy&&<button type="button" onClick={()=>{queryInput.current?.focus();void run(retry);}}>Retry last search</button>}
+  {retry&&!busy&&<button type="button" onClick={()=>{queryInput.current?.focus();void run(retry,true);}}>Retry last search</button>}
   {page&&(busy||retry||draftChanged)&&<p className={styles.note}>{busy?'Searching. Previous results remain below until the new search finishes.':retry?'The last search failed. Previous results remain below.':"Form changes have not been applied. Search to update the results below."}</p>}
   {title&&answer&&<p className={styles.note}>Showing one title only. <button type="button" disabled={busy} onClick={()=>filterTitle('')}>Show all titles</button></p>}
   {answer&&page&&<section className={styles.searchLayout} aria-labelledby="archive-results-title" aria-busy={busy}>
    <div className={styles.hits}>
-    <h3 id="archive-results-title">Results for “{page.query.q}”</h3>
+    <h3 ref={resultsHeading} tabIndex={-1} id="archive-results-title">Results for “{page.query.q}”</h3>
     <p className={styles.meta}>{page.query.source==='newspapers'?'Newspaper pages':'Archive texts'} · {period}</p>
     {answer.rows.map(hit=><article className={styles.hit} key={hit.id}>
      <h4>{hit.title??(hit.source==='newspapers'?hit.lccn:hit.identifier)}</h4>
@@ -120,8 +142,9 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
       :hit.itemUrl&&<a href={hit.itemUrl} target="_blank" rel="noopener noreferrer">Open this item at the Internet Archive ↗</a>}</p>
     </article>)}
     <div className={styles.actions}>
-     <button type="button" disabled={busy||!page.previous.length} onClick={()=>void run({query:page.query,offset:page.previous.at(-1)!,previous:page.previous.slice(0,-1)})}>Previous</button>
-     <button type="button" disabled={busy||!canNext} onClick={()=>void run({query:page.query,offset:nextOffset,previous:[...page.previous,offset]})}>Next</button>
+     <a href={archiveSearchLocation('',page.query)}>Link to this search</a>
+     <button type="button" disabled={busy||!page.previous.length} onClick={()=>void run({query:page.query,offset:page.previous.at(-1)!,previous:page.previous.slice(0,-1)},true)}>Previous</button>
+     <button type="button" disabled={busy||!canNext} onClick={()=>void run({query:page.query,offset:nextOffset,previous:[...page.previous,offset]},true)}>Next</button>
      {answer.total!==null&&nextOffset>=MAX_OFFSET&&<small>The first {MAX_OFFSET.toLocaleString()} ranked hits are browsable; narrow the search to reach the rest.</small>}
     </div>
     <p className={styles.meta}>Received {answer.generatedAt}. {answer.source.notes}</p>

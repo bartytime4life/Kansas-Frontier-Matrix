@@ -1135,7 +1135,7 @@ test('the record search routes a place to the map and words to the data library,
  const form=findNode(tree,node=>node.props?.className==='welcome-record-search');
  findNode(form,node=>node.type==='input').props.onChange({target:{value:'dust storm'}});tree=h.render();
  findNode(findNode(tree,node=>node.props?.className==='welcome-record-search'),node=>node.type==='form'||node.props?.onSubmit).props.onSubmit({preventDefault(){}});
- assert.deepEqual(visited,['/data-library?q=dust%20storm&source=newspapers']);
+ assert.deepEqual(visited,['/data-library?q=dust%20storm&source=newspapers#archive-text-search']);
  assert.deepEqual(h.calls,[['close',false]]);
  h.harness.dispose();
  const g=await welcome(false,{window:{...wideWindow,location:{assign:url=>visited.push(url)}}});tree=g.render();tree=g.render();
@@ -1148,7 +1148,7 @@ test('the record search routes a place to the map and words to the data library,
  g.harness.dispose();
  assert.equal(recordLinks.RECORD_COUNTS.collections,183);assert.equal(recordLinks.RECORD_COUNTS.mapped,55);
  for(const topic of TOPIC_STRUCTURE.map(t=>t.id)){const links=recordLinks.recordLinksFor(topic);assert.ok(links.terms.length>=1,topic);assert.ok(links.collections.length<=4);}
- assert.equal(recordLinks.newspaperSearchUrl('"dust storm"','texts'),'/data-library?q=%22dust%20storm%22&source=texts');
+ assert.equal(recordLinks.newspaperSearchUrl('"dust storm"','texts'),'/data-library?q=%22dust%20storm%22&source=texts#archive-text-search');
 });
 
 
