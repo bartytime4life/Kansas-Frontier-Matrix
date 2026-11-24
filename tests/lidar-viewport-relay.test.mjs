@@ -78,11 +78,18 @@ test('signed viewport relay publishes only validated key-bound artifacts and ref
 test('failed immutable view receipts retry transient failures after backoff at most three times',t=>{
  const config=root(t),q=query(),f=ready(config,q),key=f.key;
  function failed(){const view=initialLidarView(q,'unavailable','Synthetic transient failure');view.state='unavailable';const bytes=Buffer.from(JSON.stringify(view));writeFileSync(join(f.dir,'view.json'),bytes,{mode:0o600});writeFileSync(join(f.dir,'ready.json'),JSON.stringify({requestKey:key,viewSha256:digest(bytes),gridSha256:null,completedAt:new Date(Date.now()-61000).toISOString()}),{mode:0o600});}
- for(let n=0;n<2;n++){failed();assert.equal(requestLidarView(config,q).state,'processing');assert.equal(readdirSync(join(config.root,'jobs')).filter(s=>s.startsWith('.failed-')).length,n+1);assert.equal(readFileSync(join(config.root,'jobs',readdirSync(join(config.root,'jobs')).find(s=>s.startsWith('.failed-')),'chunk-0.json'),'utf8'),JSON.stringify(f.c));}
+ let preservedOriginal;for(let n=0;n<2;n++){failed();assert.equal(requestLidarView(config,q).state,'processing');const archives=readdirSync(join(config.root,'jobs')).filter(s=>s.startsWith('.failed-'));assert.equal(archives.length,n+1);if(n===0)preservedOriginal=archives[0];assert.equal(readFileSync(join(config.root,'jobs',preservedOriginal,'chunk-0.json'),'utf8'),JSON.stringify(f.c));}
  failed();assert.equal(requestLidarView(config,q).state,'unavailable');assert.equal(readdirSync(join(config.root,'jobs')).filter(s=>s.startsWith('.failed-')).length,2);
 });
 test('source cache reserves retained bytes before output and validates decoded encoded-body lengths',async t=>{
  const config=root(t),url='https://usgs-lidar-public.s3.amazonaws.com/KS_Statewide_B6A_2018/ept-hierarchy/0-0-0-0.json';
  const bytes=Buffer.from('{"synthetic":"decoded test only"}');const reader=createSourceReader(config.root,{fetcher:async()=>new Response(bytes,{headers:{'content-length':'8','content-encoding':'gzip'}})});
  const r=await reader.get(url,100);assert.equal(r.bytes,bytes.length);assert.equal(JSON.parse(readFileSync(join(config.root,'cache','ledger.json'))).bytes,bytes.length);assert.equal(r.contentEncoding,'gzip');
+});
+
+test('the hierarchy budget is shared across source projects and cached replies',async t=>{
+ const config=root(t),reader=createSourceReader(config.root,{fetcher:async()=>new Response('{}')});
+ const urls=['KS_Statewide_B6A_2018','KS_Statewide_B5_2018'].map(p=>'https://usgs-lidar-public.s3.amazonaws.com/'+p+'/ept-hierarchy/0-0-0-0.json');
+ for(let i=0;i<PREPARE_LIMITS.hierarchyReplies;i++)await reader.get(urls[i%2],100);
+ await assert.rejects(reader.get(urls[0],100),/HIERARCHY_BUDGET/);
 });

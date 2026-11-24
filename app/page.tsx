@@ -11425,7 +11425,8 @@ export default function Home() {
     openCategoryMap(topics[0], topics);
     setPrimaryWorkspace("map");
     setLeftOpen(false); setRightOpen(false); setTimelineOpen(false);
-    setCategoryDockHidden(true);
+    // Terrain opens directly on its geographic layers; other maps keep their map-first entry.
+    setCategoryDockHidden(topics[0] !== "terrain");
     setInstrumentOpen(false);
     setLayerCatalogView("selected");
     // Opening a map should reveal the map, not a full-screen layer catalogue.

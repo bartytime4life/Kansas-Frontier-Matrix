@@ -19,11 +19,11 @@ export function nodeBounds(cube,key){const [depth,x,y,z]=key.split('-').map(Numb
 const intersectXY=(a,b)=>a[0]<=b[2]&&a[3]>=b[0]&&a[1]<=b[3]&&a[4]>=b[1];
 function sourceUrlValid(url){const {projects}=loadLidarDiscovery();try{const u=new URL(url),parts=u.pathname.split('/');return u.protocol==='https:'&&u.host==='usgs-lidar-public.s3.amazonaws.com'&&!u.search&&!u.hash&&!u.username&&!u.password&&projects.has(parts[1])&&parts.length===4&&['ept-data','ept-hierarchy'].includes(parts[2])&&/^\d{1,2}-\d{1,10}-\d{1,10}-\d{1,10}\.(?:json|laz)$/.test(parts[3])&&(parts[2]==='ept-data'?parts[3].endsWith('.laz'):parts[3].endsWith('.json'));}catch{return false;}}
 export function createSourceReader(root,{fetcher=fetch,clock=Date.now,signal}={}){
- const cache=privateViewDir(join(root,'cache'),true);let transfer=0,replies=0;
+ const cache=privateViewDir(join(root,'cache'),true);let transfer=0,replies=0,hierarchyReads=0;
  const ledgerPath=join(cache,'ledger.json');let stored=existsSync(ledgerPath)?json(readPrivateViewFile(ledgerPath,4096)).bytes:0;
  if(!Number.isSafeInteger(stored)||stored<0||stored>PREPARE_LIMITS.sourceCacheBytes)throw Error('SOURCE_CACHE_LEDGER_INVALID');
  return {get transferBytes(){return transfer;},get replies(){return replies;},async get(url,max){
-  if(!sourceUrlValid(url))throw Error('SOURCE_NOT_ALLOWLISTED');signal?.throwIfAborted();const key=createHash('sha256').update(url).digest('hex'),path=join(cache,key+'.bin'),receiptPath=join(cache,key+'.json');
+  if(!sourceUrlValid(url))throw Error('SOURCE_NOT_ALLOWLISTED');if(url.includes('/ept-hierarchy/')&&++hierarchyReads>PREPARE_LIMITS.hierarchyReplies)throw Error('HIERARCHY_BUDGET');signal?.throwIfAborted();const key=createHash('sha256').update(url).digest('hex'),path=join(cache,key+'.bin'),receiptPath=join(cache,key+'.json');
   if(existsSync(receiptPath)){
    const r=json(readPrivateViewFile(receiptPath,4096));if(r.url!==url||!Number.isSafeInteger(r.bytes)||r.bytes<1||r.bytes>max)throw Error('SOURCE_CACHE_INVALID');const bytes=readPrivateViewFile(path,max,r.sha256);if(bytes.length!==r.bytes)throw Error('SOURCE_CACHE_INVALID');transfer+=bytes.length;if(transfer>PREPARE_LIMITS.transferBytes)throw Error('TRANSFER_BUDGET');return {...r,path,bytesValue:bytes};
   }

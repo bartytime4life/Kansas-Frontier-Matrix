@@ -1,6 +1,8 @@
 # Kansas LiDAR layers in Terrain & elevation
 
-Open **Terrain & elevation**. Its first controls are **Ground**, **Surface**,
+From the welcome **Terrain & elevation** card, choose **Open Kansas terrain & layers**
+(the card itself opens the map). The Terrain controls stay visible after entry.
+Its first controls are **Ground**, **Surface**,
 **Canopy height** and an independent **LiDAR points** toggle. Ground keeps the
 selected continuous elevation source. The other layers request the current map
 view; choosing one does not jump to a fixed example or change source values.
@@ -60,7 +62,8 @@ obsolete work. The GPU budget is at most100,000 display points,64² grid cells
 and4,194,304 offscreen pixels per native-layer frame (at most two frames).
 
 The preserved NEON example at `/terrain` and Terrain Science at `/labs/terrain`
-remain secondary examples; neither represents generic Kansas-wide coverage.
+remain secondary examples in source details and the Science library; they are not
+welcome-card actions and neither represents generic Kansas-wide coverage.
 The generic models retain complete grid provenance for later science adapters;
 a link alone does not claim that arbitrary tools ingest them automatically.
 
