@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
+import { LidarSourcePanel } from '../../lidar-source-panel';
 import { NeonLidarWorkspace, useNeonLidarPreview } from '../../neon-lidar-panel';
 import { createNeonScienceDataset, neonScienceDatasetJSON } from '../../neon-lidar-science';
 import RecordLab, { toCSV } from '../../living-welcome/stories/record-lab.jsx';
@@ -54,6 +55,7 @@ export default function TerrainScience() {
     <main className={styles.main}>
       <section className={styles.intro}><p className={styles.eyebrow}>ONE TILE / THREE SURFACES / OPEN SCIENCE</p><h1>Terrain &amp; vegetation.</h1><p>Read the ground. Compare the canopy. Follow the same samples from the raster into distributions, relationships and a source-linked export.</p><div className={styles.datasetStrip} aria-label="Available provider pilot"><span><b>Available pilot · Konza Prairie</b> Kansas · 1 km tile</span><span><b>Historical acquisition</b> Catalog September 2024</span><span><b>Scientific review pending</b> Preview only · not admitted</span></div></section>
       <NeonLidarWorkspace controller={controller} embedded/>
+      <LidarSourcePanel/>
       {dataset ? <TerrainAnalysis key={dataset.id} dataset={dataset} controller={controller}/> : <section className={styles.analysisEmpty} aria-labelledby="terrain-analysis-empty"><p className={styles.eyebrow}>02 / SCIENCE WORKSPACE</p><h2 id="terrain-analysis-empty">A real dataset opens the instrument.</h2><p>{controller.preview ? 'Your imported grid remains available in the raster inspector. Scientific analysis here requires the validated Konza Prairie provider receipt; a local or synthetic file is not treated as that pilot.' : 'Load the Konza Prairie pilot above to compare distributions, inspect quartiles and missingness, choose relationship axes, and download the selected source samples.'}</p><p>Free tools. No subscription. The provider preview retains its source files, sampling method and pending review.</p></section>}
     </main><footer className={styles.footer}><span>KANSAS FRONTIER MATRIX / TERRAIN SCIENCE</span><Link href="/labs">Return to the research atlas ↑</Link></footer>
   </div>;

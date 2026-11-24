@@ -308,6 +308,7 @@ import {
   type StoryScene,
   type TrustState,
 } from "./workspace-model";
+import { LidarSourcePanel } from "./lidar-source-panel";
 import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { setWaterFlowMotion, subscribeWaterFlowStatus, syncWaterFlow, waterFlowIsAnimating, waterFlowReading, type WaterFlowStatus } from "./water-flow-sync";
 import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d } from "./scene-overlays";
@@ -9581,7 +9582,7 @@ export default function Home() {
     if (landscapeId === null) {
       basemapRef.current = look.basemap; setBasemap(look.basemap);
       if (photorealHidHillshadeRef.current) { photorealHidHillshadeRef.current = false; setOfficialContextVisible("usgs-3dep-hillshade", true); }
-      if (terrainProviderRef.current !== "mapzen") chooseTerrainProvider("mapzen");
+      if (terrainProviderRef.current !== (look.terrainProvider ?? "mapzen")) chooseTerrainProvider(look.terrainProvider ?? "mapzen");
       changeTerrainDepth(DEFAULT_TERRAIN_DEPTH);
       announce(`${look.name} relief colours restored`);
       return;
@@ -9601,6 +9602,26 @@ export default function Home() {
     const { center, zoom, pitch, bearing } = landscape.camera;
     mapRef.current?.flyTo({ center: [center[0], center[1]], zoom, pitch, bearing, duration: motionDuration(2600), essential: false });
     announce(`${landscape.name} · photo-real 3D · USGS 3DEP at ${verticalExaggerationRef.current === 1 ? "true vertical scale" : `vertical ×${verticalExaggerationRef.current.toFixed(1)}`}`);
+  };
+  const showTerrainLandscape = (id: string | null) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const landscape = id === null ? null : PHOTOREAL_LANDSCAPES.find(place => place.id === id && place.id !== "wichita");
+    if (id !== null && !landscape) return;
+    if (categoryMode !== "terrain") {
+      const depth = verticalExaggerationRef.current;
+      activateMapRepresentation("terrain");
+      changeTerrainDepth(depth);
+    }
+    if (id === null) {
+      map.fitBounds([[-102.1, 36.9], [-94.5, 40.1]], { padding: 55, pitch: 60, bearing: -24, linear: true, duration: motionDuration(1400) });
+      announce("Whole Kansas ground model · source and vertical scale preserved");
+      return;
+    }
+    if (!landscape) return;
+    const { center, zoom, pitch, bearing } = landscape.camera;
+    map.flyTo({ center: [center[0], center[1]], zoom, pitch, bearing, duration: motionDuration(1800), essential: false });
+    announce(`${landscape.name} · ground model · ${verticalExaggerationRef.current.toFixed(1)}× display scale`);
   };
   // NASA SMAP L4 cells are 9 km across: a field-scale view would show one cell as
   // a flat wash, so switching the soil tool on pulls out to the region they describe.
@@ -11295,6 +11316,7 @@ export default function Home() {
     if (mapRef.current?.isStyleLoaded()) updateImportPreviewSource(mapRef.current, null);
     setEarthEngineDisplay(current => ({ ...current, visible: {} }));
     setUndergroundOpen(false);
+    if (look.terrainProvider) chooseTerrainProviderByHand(look.terrainProvider);
     activateMapRepresentation(look.scene);
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
@@ -11547,7 +11569,7 @@ export default function Home() {
               <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} data-active={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => chooseMapMenuRepresentation("2d")}><b>2D</b><span>Map</span></button>
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} onClick={() => chooseMapMenuRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
-              {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
+              {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{" · " + verticalExaggeration.toFixed(1) + "× " + (Math.abs(verticalExaggeration - 1) < .001 ? "true vertical scale" : "display exaggeration") }{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
               {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProviderByHand("mapzen")}>Use display DEM</button>}
               {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} onClick={() => chooseMapMenuRepresentation("globe")}><b>Globe</b><span>◎</span></button>
@@ -12468,6 +12490,7 @@ export default function Home() {
             }}
             keys={currentMapKeys}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
+            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic, officialWorkspace === "all" && welcomeTopics.length > 1 ? welcomeTopics : [activeCategoryMap.topic]) : resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
               state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",

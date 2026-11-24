@@ -19,7 +19,7 @@ const tile = (query = "z=8&x=58&y=98") => new Request(`https://kfm.test/api/3dep
 test("3DEP elevation requests are Kansas-bound and cannot select arbitrary origins or transformations", async () => {
   let calls = 0;
   const serve = dem.create3DepDemTileService({ fetchBytes: async () => { calls += 1; return new Uint8Array(32); } });
-  for (const query of ["z=8&x=58&y=98&url=https://other.test", "z=8&x=58&y=98&z=9", "z=8&x=0&y=0", "z=16&x=58&y=98", "z=8&x=-1&y=98", "z=NaN&x=58&y=98", "z=8&x=256&y=98", "v=1&z=8&x=58&y=98", "v=2&v=2&z=8&x=58&y=98"]) assert.equal((await serve(tile(query))).status, 400);
+  for (const query of ["z=8&x=58&y=98&url=https://other.test", "z=8&x=58&y=98&z=9", "z=8&x=0&y=0", "z=18&x=58&y=98", "z=8&x=-1&y=98", "z=NaN&x=58&y=98", "z=8&x=256&y=98", "v=1&z=8&x=58&y=98", "v=2&v=2&z=8&x=58&y=98"]) assert.equal((await serve(tile(query))).status, 400);
   assert.equal(calls, 0);
   const upstream = new URL(dem.demTileRequest(new URL(tile().url)).upstream);
   assert.equal(upstream.origin, "https://elevation.nationalmap.gov");
@@ -98,4 +98,23 @@ test("masked elevation tiles report a persistent source gap without repeated ups
   now += 21_600_001;
   assert.equal((await serve(tile())).status, 422);
   assert.equal(calls, 2);
+});
+
+
+test("continuous Kansas terrain admits z16/z17 detail with the same bounded provider and metre encoding", () => {
+  for (const z of [6, 15, 16, 17]) {
+    const n = 2 ** z, lon = -96.56, lat = 39.1;
+    const x = Math.floor((lon + 180) / 360 * n);
+    const y = Math.floor((1 - Math.asinh(Math.tan(lat * Math.PI / 180)) / Math.PI) / 2 * n);
+    const result = dem.demTileRequest(new URL(tile(`z=${z}&x=${x}&y=${y}`).url));
+    const upstream = new URL(result.upstream);
+    assert.equal(upstream.origin, "https://elevation.nationalmap.gov");
+    assert.equal(upstream.searchParams.get("pixelType"), "F32");
+    assert.equal(upstream.searchParams.get("size"), "256,256");
+    const extent = upstream.searchParams.get("bbox").split(",").map(Number);
+    assert.ok(extent.every(Number.isFinite));
+    assert.ok(Math.abs((extent[2] - extent[0]) - 40075016.68557849 / n) < 1e-7);
+    const groundPixelMetres = (extent[2] - extent[0]) / 256 * Math.cos(lat * Math.PI / 180);
+    if (z === 17) assert.ok(groundPixelMetres > 0.8 && groundPixelMetres < 1.1);
+  }
 });

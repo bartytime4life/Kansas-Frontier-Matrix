@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { acquisitionJobLabels, parseAcquisitionInventory, formatAcquisitionBytes as size, type AcquisitionInventory } from "../acquisition-inventory";
 import { createAcquisitionSession, readAcquisitionLocalJson } from "../acquisition-client";
 import { TerrainProvenancePanel } from "../terrain-provenance";
+import { LidarSourcePanel } from "../lidar-source-panel";
 import { NeonLidarPanel } from "../neon-lidar-panel";
 import { parseAcquisitionTerrain, type AcquisitionTerrain } from "../acquisition-terrain";
 import styles from "./workspace.module.css";
@@ -43,6 +44,7 @@ export default function AcquisitionWorkspace() {
     <header><Link href="/">KFM / Explorer</Link><nav aria-label="Acquisition navigation"><Link href="/earth-engine">History & recipes</Link><Link href="/?layers=sources">Source status &amp; files</Link><Link href="/acquisition" aria-current="page">Acquisition</Link></nav></header>
     <section className={styles.intro}><p className={styles.eyebrow}>LOCAL KANSAS DATA / RECEIPT REVIEW</p><h1>Data acquisition & terrain history</h1><p>Explore an available terrain preview, or inspect saved acquisition receipts and terrain metadata. The Konza pilot comes from the configured data workstation through KFM; receipt imports stay in this tab and do not start acquisition jobs.</p></section>
     <section className={styles.available}><p className={styles.eyebrow}>AVAILABLE DATA / FREE PREVIEW</p><h2>Konza Prairie terrain &amp; vegetation</h2><p>One historical 1 km NEON tile. Compare ground, surface and canopy, then use distributions, relationships and source-linked exports. Scientific review remains pending.</p><Link href="/labs/terrain">Open Terrain Science →</Link><a href="#neon-raster">Inspect the raster here ↓</a></section>
+    <LidarSourcePanel anchorId="lidar-sources" />
     <div id="neon-raster"><NeonLidarPanel /></div>
     <h2 className={styles.advancedHeading}>Advanced imports, storage &amp; history</h2>
     <div className={styles.policy}><strong>Inspect before transferring data</strong><p>Cache budgets belong to the separate local worker. Imported receipts show their recorded budget, selected file limits and capture status; they do not establish current free capacity. Ordinary worker completion requires an expected checksum; a separately recorded local capture without a provider checksum stays an unreviewed protected candidate.</p><p>Review the access for your registered Earth Engine project, remaining quota and export storage before running a recipe. <a href="https://developers.google.com/earth-engine/guides/noncommercial_tiers" target="_blank" rel="noreferrer">Check Earth Engine access and quotas ↗</a></p></div>

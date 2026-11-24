@@ -6,7 +6,7 @@ import ts from 'typescript';
 import {installWelcomeAttributionFixture} from './welcome-attribution-browser-fixtures.mjs';
 
 // The welcome map's view module and its local dependencies as CommonJS in one context.
-const files={'./welcome-map-view':'app/welcome-map-view.ts','./category-maps':'app/category-maps.ts','./category-basemaps':'app/category-basemaps.ts','./external-context-sources':'app/external-context-sources.ts','./kansas-orientation':'app/kansas-orientation.ts','./category-basemap-keys':'app/category-basemap-keys.ts'};
+const files={'./welcome-map-view':'app/welcome-map-view.ts','./category-maps':'app/category-maps.ts','./category-basemaps':'app/category-basemaps.ts','./external-context-sources':'app/external-context-sources.ts','./kansas-orientation':'app/kansas-orientation.ts','./category-basemap-keys':'app/category-basemap-keys.ts','./terrain-sources':'app/terrain-sources.ts'};
 const compiled=Object.fromEntries(await Promise.all(Object.entries(files).map(async([id,path])=>[id,ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText])));
 const cache=new Map();
 function load(id){
@@ -24,6 +24,7 @@ test('each topic previews real map renderers and starters, and the idle view is 
   assert.equal(v.topic,topic);
   if(!['flora','fauna','ecology','land','history','evidence','public-safety'].includes(topic)){
    assert.equal(v.basemap,look.basemap);assert.equal(v.scene,look.scene);assert.deepEqual(plain(v.camera),plain(look.camera));assert.equal(v.name,look.name);
+   if(topic==='terrain')assert.deepEqual(plain(v.camera),{center:[-96.585,39.09],zoom:13.2,pitch:68,bearing:-35},'first preview frame is a close window into the continuous terrain, not a subpixel state overview');
   }else assert.ok(v.key,'the geographic preview retains its short source key');
   for(const id of look.starters.filter(id=>!view.WELCOME_PREVIEW_SKIPPED_STARTERS.has(id)))assert.ok(v.starters.includes(id),`${topic}: the preview retains its own starters`);
   assert.ok(v.starters.length||v.scientificLayers.length||v.scene==='terrain',`${topic}: a scientific layer or real terrain, beyond a plain basemap`);
@@ -66,6 +67,7 @@ test('terrain looks get their own Terrarium DEM, globe looks the globe projectio
  assert.deepEqual(plain(terrain.terrain),{source:view.WELCOME_DEM_SOURCE_ID,exaggeration:view.WELCOME_TERRAIN_EXAGGERATION});
  assert.equal(terrain.sources[view.WELCOME_DEM_SOURCE_ID].type,'raster-dem');
  assert.notEqual(terrain.sources[view.WELCOME_DEM_SOURCE_ID],relief.sources[basemaps.BASEMAP_RELIEF_DEM_SOURCE_ID],'a separate source object, so hillshade and terrain do not share one');
+ assert.match(terrain.sources[view.WELCOME_DEM_SOURCE_ID].tiles[0],/^\/api\/3dep-dem-tile/);assert.equal(terrain.sources[view.WELCOME_DEM_SOURCE_ID].maxzoom,17);assert.deepEqual(plain(terrain.sources[view.WELCOME_DEM_SOURCE_ID]),plain(terrain.sources[basemaps.BASEMAP_RELIEF_DEM_SOURCE_ID]),'mesh, color and shade use identical provider grids');assert.equal(view.welcomeView('terrain').terrainProvider,'usgs-3dep');assert.equal(view.welcomeView('engineering').terrainProvider,undefined);assert.match(view.welcomeView('terrain').detail,/mixed-date ground model/);
  assert.equal(relief.terrain,undefined,'the shared basemap style is not modified');
  const engineering=view.welcomeStyle(network,view.welcomeView('engineering'));
  assert.equal(engineering.sources[view.WELCOME_DEM_SOURCE_ID].encoding,'terrarium','a style without a DEM gets the registered Terrarium source');

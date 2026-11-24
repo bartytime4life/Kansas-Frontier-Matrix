@@ -5,6 +5,7 @@ import type {
   LayerSpecification,
   Map as MapLibreMap,
   StyleSpecification,
+  SourceSpecification,
 } from "./maplibre-seam";
 import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
@@ -427,6 +428,25 @@ export const terrainPresentationSourceMatches = (map: MapLibreMap, source: Terra
 export const LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d";
 export type Structures3DState = "OFF" | "READY" | "UNAVAILABLE" | "ERROR";
 
+/** Rebind a category basemap's color/hillshade to the selected mesh provider.
+ * Replace the source and its layers together: tile zoom/bounds cannot be changed
+ * by repainting a layer. Keep every original layer's order, paint and metadata. */
+function alignBasemapReliefSource(map: MapLibreMap, dem: SourceSpecification): void {
+  if (!map.getSource(BASEMAP_RELIEF_DEM_SOURCE_ID)) return;
+  const style = map.getStyle(), current = style.sources?.[BASEMAP_RELIEF_DEM_SOURCE_ID];
+  if (current?.type !== "raster-dem" || dem.type !== "raster-dem") throw new Error("Incompatible basemap elevation source");
+  if (current.tiles?.[0] === dem.tiles?.[0] && current.maxzoom === dem.maxzoom && current.minzoom === dem.minzoom && current.encoding === dem.encoding) return;
+  const layers = style.layers ?? [], affected = layers.filter(layer => "source" in layer && layer.source === BASEMAP_RELIEF_DEM_SOURCE_ID);
+  const ids = new Set(affected.map(layer => layer.id));
+  for (const layer of [...affected].reverse()) map.removeLayer(layer.id);
+  map.removeSource(BASEMAP_RELIEF_DEM_SOURCE_ID);
+  map.addSource(BASEMAP_RELIEF_DEM_SOURCE_ID, dem);
+  for (const layer of affected) {
+    const before = layers.slice(layers.indexOf(layer) + 1).find(candidate => !ids.has(candidate.id) && map.getLayer(candidate.id))?.id;
+    map.addLayer(layer, before);
+  }
+}
+
 /**
  * Real elevation presentation is opt-in and remains a display carrier. The
  * active terrain carrier is not a KFM release and never changes evidence,
@@ -472,6 +492,7 @@ export const setTerrainPresentation = (
       encoding: source.encoding,
       attribution: source.attribution,
     });
+    alignBasemapReliefSource(map, demSource());
     if (!map.getSource(TERRAIN_SOURCE_ID)) {
       map.addSource(TERRAIN_SOURCE_ID, demSource());
     }

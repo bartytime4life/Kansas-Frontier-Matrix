@@ -42,7 +42,7 @@ function renderTerrainSourceEntry(compact=false){
  return <section className="terrain-source-entry" data-compact={compact||undefined} aria-label="Historical NEON Konza pilot">
   <p><strong>NEON · Konza pilot</strong><span>Historical Sep 2024 · catalog month</span></p>
   <div className="terrain-source-actions"><a href="/terrain">Konza 3D <span aria-hidden="true">↗</span></a><a href="/labs/terrain">Terrain Science <span aria-hidden="true">↗</span></a></div>
-  <small>{compact?'Sampled preview · review pending':'Ground, surface & independent canopy · sampled preview · review pending. Separate from the relief / aerial display context.'}</small>
+  <small>{compact?'Secondary sampled preview · review pending':'Ground, surface & independent canopy · sampled preview · review pending. Separate from the relief / aerial display context.'}</small>
  </section>;
 }
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange,onSources=/** @type {(() => void) | undefined} */ (undefined)}){
@@ -295,7 +295,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           {selection&&<button type="button" className="welcome-primary selection-open" aria-label={`Open my map with ${selectedTopics.length} selected ${selectedTopics.length===1?'topic':'topics'}`} onClick={openSelection}>Open my map <span className="selection-count" aria-hidden="true">{selectedTopics.length}</span><span aria-hidden="true">→</span></button>}
           <span className="sr-only" role="status">{selectedTopics.length?`${selectedTopics.length} ${selectedTopics.length===1?'topic':'topics'} selected for your combined map.`:'No topics selected for your combined map.'}</span>
           {!(carousel&&selection)&&<button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>}
-          <a className="welcome-primary welcome-terrain-entry" href="/terrain">3D Terrain <span aria-hidden="true">↗</span></a>
           <details className="welcome-preferences"><summary>Options</summary><div>
             <button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button>
             <label className="welcome-tool"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Don’t show on start</label>

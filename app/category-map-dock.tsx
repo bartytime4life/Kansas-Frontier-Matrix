@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type CSSProperties } from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
 import type { DroughtComparison, DroughtComparisonChoice, DroughtComparisonSlot, DroughtSeriesFailure, droughtComparisonDates } from "./drought-monitor";
 import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
@@ -104,7 +104,7 @@ export const renderMapKeys = (keys: readonly MapKey[]) => (
       </div>
 );
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, populationChange, quakes, onQuakes, onQuakeYear, onQuakeMonth, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, terrainSource, onTerrainProvider, onTerrainPlace, onTerrainRetry, sourceCatalog, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, populationChange, quakes, onQuakes, onQuakeYear, onQuakeMonth, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -131,6 +131,11 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   terrainAvailable: boolean;
   onMode: (mode: CategoryScene) => void;
   onDepth: (value: number) => void;
+  terrainSource?: Readonly<{ provider: "mapzen" | "usgs-3dep"; state: string; landscapes: readonly PhotorealLandscape[] }>;
+  onTerrainProvider?: (provider: "mapzen" | "usgs-3dep") => void;
+  onTerrainPlace?: (id: string | null) => void;
+  onTerrainRetry?: () => void;
+  sourceCatalog?: ReactNode;
   onAzimuth: (value: number) => void;
   onRealSun: (on: boolean) => void;
   /** A time of day as a fraction of today in Kansas, or null to follow the clock again. */
@@ -449,12 +454,25 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   onClose: () => void;
 }>) {
   const swatch = { "--m0": look.swatch[0], "--m1": look.swatch[1], "--m2": look.swatch[2] } as CSSProperties;
+  const groundShortcuts = terrainSource?.landscapes.filter(place => place.id === "konza" || place.id === "red-hills") ?? [];
+  const moreGroundLandscapes = terrainSource?.landscapes.filter(place => place.id !== "konza" && place.id !== "red-hills") ?? [];
   return <section className="category-map-dock" aria-label={`${look.name} controls`} tabIndex={-1} data-mode={mode} style={swatch}>
     <header>
       <span className="category-map-dock-swatch" aria-hidden="true" />
       <div><strong>{look.name}{currentMapOnly ? " tools" : ""}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
       <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
     </header>
+    {look.topic === "terrain" && terrainSource && <section className="category-map-dock-terrain" aria-label="Continuous Kansas ground model">
+      <strong>Kansas ground model</strong>
+      <p className="category-map-dock-reading">{terrainSource.provider === "usgs-3dep" ? "USGS 3DEP · mixed-date ground model" : "Mapzen · coarse display DEM"} · {terrainSource.state === "READY" ? "DEM ready" : terrainSource.state === "ERROR" ? "DEM unavailable" : terrainSource.state === "OFF" ? "3D off" : "DEM loading"}</p>
+      {onTerrainProvider && <label>Elevation source<select aria-label="Terrain card elevation source" value={terrainSource.provider} onChange={event => onTerrainProvider(event.target.value as "mapzen" | "usgs-3dep")}><option value="usgs-3dep">USGS 3DEP · continuous ground</option><option value="mapzen">Mapzen · coarse display context</option></select></label>}
+      <div className="category-map-dock-actions"><button type="button" aria-pressed={Math.abs(depth - 1) < .001} onClick={() => onDepth(1)}>True vertical scale · 1×</button><button type="button" onClick={() => onTerrainPlace?.(null)}>Whole Kansas</button></div>
+      <p className="category-map-dock-reading">{Math.abs(depth - 1) < .001 ? "1× true vertical scale" : depth.toFixed(1) + "× display exaggeration"} · source elevations stay unscaled. Resolution, acquisition dates, datum and accuracy vary; this is not statewide 1 m LiDAR.</p>
+      {terrainSource.state === "ERROR" && onTerrainRetry && <button type="button" className="category-map-dock-tool" onClick={onTerrainRetry}>Retry selected DEM</button>}
+      {onTerrainPlace && <div className="category-map-dock-places" role="group" aria-label="Ground model landscape shortcuts">{groundShortcuts.map(place => <button type="button" key={place.id} onClick={() => onTerrainPlace(place.id)}>{place.name}</button>)}</div>}
+      {onTerrainPlace && moreGroundLandscapes.length > 0 && <details><summary>More Kansas landscapes</summary><div className="category-map-dock-places" role="group" aria-label="More ground model landscapes">{moreGroundLandscapes.map(place => <button type="button" key={place.id} onClick={() => onTerrainPlace(place.id)}>{place.name}</button>)}</div></details>}
+      {sourceCatalog}
+    </section>}
     {keys && keys.length > 0 && <details className="category-map-dock-map-key">
       <summary>Map key <span>Colors &amp; symbols</span></summary>
       {renderMapKeys(keys)}

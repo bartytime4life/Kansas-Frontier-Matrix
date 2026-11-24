@@ -4,7 +4,9 @@ import { TERRAIN_TILE_BOUNDS, TERRAIN_TILE_TTL } from "./terrain-tiles";
 
 const ORIGIN = "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage";
 const MIN_ZOOM = 6;
-const MAX_ZOOM = 15;
+// At Kansas latitudes z17 samples the display at about one metre per pixel.
+// This does not assert one-metre native coverage or survey accuracy.
+const MAX_ZOOM = 17;
 const TILE_SIZE = 256;
 const MAX_LERC_BYTES = 1_048_576;
 const FAILURE_PAUSE_MS = 5_000;

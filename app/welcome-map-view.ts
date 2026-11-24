@@ -1,5 +1,6 @@
 import { BASEMAP_RELIEF_DEM_SOURCE_ID } from "./category-basemaps";
 import { CATEGORY_MAPS, categorySceneLabel, type CategoryCamera, type CategoryScene } from "./category-maps";
+import { terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { externalContextSource } from "./external-context-sources";
 import type { OfficialContextId } from "./live-context";
 import type { TopicId } from "./layer-workspaces";
@@ -23,6 +24,7 @@ export type WelcomeView = Readonly<{
   topic: string | null;
   basemap: BasemapKey;
   scene: CategoryScene;
+  terrainProvider?: TerrainProvider;
   camera: CategoryCamera;
   /** Starter data layers the preview draws (provider-context ids). */
   starters: readonly string[];
@@ -63,6 +65,7 @@ const SCIENTIFIC_LAYERS: Partial<Record<TopicId, readonly WelcomeScientificLayer
   sky: ["daylight"],
 };
 const PREVIEW_DETAIL: Partial<Record<TopicId, string>> = {
+  terrain: "USGS 3DEP · continuous mixed-date ground model · 1.5× display scale. Native resolution, acquisition dates and accuracy vary; not statewide 1 m LiDAR.",
   water: "Published USGS/NRCS watershed boundaries over rivers and lakes; live gauge samples load in the opened map.",
   agriculture: "USDA NASS crop classes over Kansas aerial imagery; crop classification is separate from soil-moisture measurements.",
   ecology: "Tuttle Creek and the Big Blue River: NLCD 2021 classes and published watershed boundaries on real imagery and 1.5× terrain.",
@@ -78,6 +81,7 @@ const PREVIEW_DETAIL: Partial<Record<TopicId, string>> = {
 // Fine land-cover cells and survey sections need local-scale cameras; GBIF's
 // coarse aggregate remains at regional scale and source zoom never exceeds six.
 const GEOGRAPHIC_VIEWS: Partial<Record<TopicId, Partial<Pick<WelcomeView, "basemap" | "scene" | "camera" | "name" | "key">>>> = {
+  terrain: { key: "USGS 3DEP · mixed-date ground model · 1.5× display" },
   flora: { basemap: "kansas-aerial", scene: "terrain", camera: { center: [-96.56, 38.43], zoom: 10.1, pitch: 52, bearing: -16 }, name: "Flint Hills vegetation", key: "NLCD 2021 · 30 m · grassland / forest / water" },
   fauna: { basemap: "standard", scene: "2d", camera: { center: [-98.38, 38.48], zoom: 6.5, pitch: 0, bearing: 0 }, name: "Kansas animal records", key: "GBIF · 2025 · coarse record density, not animal abundance" },
   ecology: { basemap: "imagery", scene: "terrain", camera: { center: [-96.64, 39.32], zoom: 9.1, pitch: 48, bearing: -24 }, name: "Big Blue River landscape", key: "NLCD 2021 · 30 m + USGS watershed boundaries" },
@@ -104,7 +108,7 @@ export function welcomeView(topic: string | null): WelcomeView {
   if (!look) return WELCOME_IDLE_VIEW;
   const starters = [...new Set([...look.starters, ...(PREVIEW_CONTEXT[look.topic] ?? [])])].filter(id => !WELCOME_PREVIEW_SKIPPED_STARTERS.has(id));
   const geography = GEOGRAPHIC_VIEWS[look.topic] ?? {};
-  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, ...geography, starters, scientificLayers: SCIENTIFIC_LAYERS[look.topic] ?? [], prisms: Boolean(look.overlays?.includes("population")), name: geography.name ?? look.name, detail: `${categorySceneLabel(geography.scene ?? look.scene)} · ${PREVIEW_DETAIL[look.topic] ?? look.lede}` };
+  return { topic: look.topic, basemap: look.basemap, scene: look.scene, terrainProvider: look.terrainProvider, camera: look.camera, ...geography, starters, scientificLayers: SCIENTIFIC_LAYERS[look.topic] ?? [], prisms: Boolean(look.overlays?.includes("population")), name: geography.name ?? look.name, detail: `${categorySceneLabel(geography.scene ?? look.scene)} · ${PREVIEW_DETAIL[look.topic] ?? look.lede}` };
 }
 
 /**
@@ -120,9 +124,16 @@ export function welcomeStyle(style: StyleSpecification, view: WelcomeView): Styl
   }
   const terrarium = externalContextSource("aws-mapzen-terrarium");
   const relief = style.sources?.[BASEMAP_RELIEF_DEM_SOURCE_ID];
-  const dem = relief?.type === "raster-dem" ? relief
+  const selected = view.terrainProvider ? terrainSourceFor(view.terrainProvider) : null;
+  const dem = selected ? { type: "raster-dem" as const, tiles: [selected.tileTemplate!], tileSize: selected.tileSize!,
+    minzoom: selected.minZoom, maxzoom: selected.maxZoom, encoding: selected.encoding,
+    ...(selected.bounds ? { bounds: [...selected.bounds] as [number, number, number, number] } : {}), attribution: selected.attribution }
+    : relief?.type === "raster-dem" ? relief
     : { type: "raster-dem" as const, tiles: [terrarium.requestUrl], tileSize: 256, maxzoom: 11, encoding: "terrarium" as const, attribution: terrarium.attribution };
-  return { ...style, projection, sources: { ...style.sources, [WELCOME_DEM_SOURCE_ID]: { ...dem } }, terrain: { source: WELCOME_DEM_SOURCE_ID, exaggeration: view.topic === "aviation" ? 1 : WELCOME_TERRAIN_EXAGGERATION } };
+  // Mesh, color relief and hillshade use identical provider grids, with separate
+  // tile-manager objects so the hillshade source never drives the mesh itself.
+  const sources = { ...style.sources, ...(selected && relief?.type === "raster-dem" ? { [BASEMAP_RELIEF_DEM_SOURCE_ID]: { ...dem } } : {}), [WELCOME_DEM_SOURCE_ID]: { ...dem } };
+  return { ...style, projection, sources, terrain: { source: WELCOME_DEM_SOURCE_ID, exaggeration: view.topic === "aviation" ? 1 : WELCOME_TERRAIN_EXAGGERATION } };
 }
 
 type MotionProfile = Readonly<{ east: number; north: number; turn: number; zoom: number; tilt?: number; seconds: number }>;

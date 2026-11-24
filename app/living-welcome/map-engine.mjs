@@ -227,7 +227,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     clearTimeout(driftTimer);
     view = next; leg = 0;
     requestData(next);
-    const key = `${next.basemap}|${next.scene}`;
+    const key = `${next.basemap}|${next.scene}|${next.terrainProvider ?? "default"}`;
     // Stopping the last drift ends a move; it must not start one for the new view.
     applying = true; map.stop(); applying = false;
     if (key !== styleKey) {
