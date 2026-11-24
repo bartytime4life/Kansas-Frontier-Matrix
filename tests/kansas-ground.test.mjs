@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import ts from 'typescript';import {groundFixture} from './kansas-ground-fixtures.mjs';
 const url=s=>'data:text/javascript;base64,'+Buffer.from(ts.transpileModule(s,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText).toString('base64');
-const modelURL=url(await readFile('app/kansas-ground.ts','utf8')),model=await import(modelURL),client=await import(url((await readFile('app/kansas-ground-client.ts','utf8')).replace("from './kansas-ground'","from '"+modelURL+"'")));
+const modelURL=url(await readFile('app/kansas-ground.ts','utf8')),model=await import(modelURL),client=await import(url((await readFile('app/kansas-ground-client.ts','utf8')).replace("from './visitor-terrain-cache'","from '"+url(await readFile('app/visitor-terrain-cache.ts','utf8'))+"'").replace("from './kansas-ground'","from '"+modelURL+"'")));
 test('Ground canonical query and SHA bind only Kansas bounds/fixed96 size and no native EPT query',async()=>{
  assert.deepEqual(model.canonicalGroundQuery([-105,35,-95,42]),{bbox:[-102.2,36.8,-95,40.2],size:96});assert.equal(model.canonicalGroundQuery([-90,38,-89,39]),null);assert.equal(model.canonicalGroundQuery([NaN,38,-96,39]),null);
  const f=groundFixture();assert.equal(await model.groundRequestKey(f.query),f.requestKey);assert.equal(model.groundPath(f.query),'/api/terrain/ground?bbox='+f.query.bbox.join(',')+'&size=96');assert.ok(model.parseGroundReceipt(f.receipt,f.query,f.requestKey));

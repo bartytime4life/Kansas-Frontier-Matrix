@@ -1450,6 +1450,7 @@ for(const width of [1280,390])test(`solid Ground Surface Canopy render and sourc
  for(const [mode,label] of [['ground','Ground'],['surface','Surface'],['canopy','Canopy height']]){
   if(mode!=='ground')await phase(mode+':select',()=>pressSolid(label));
   await phase(mode+':ready',()=>waitSolidReady(mode,label));
+  assert.ok(fixtures.workerAssets.some(path=>/^\/assets\/terrain-preparation-worker-[\w-]+\.js$/.test(path)),'solid geometry arrived through the emitted production worker asset');
   const requestsBeforeInspect=JSON.stringify(fixtures.hits);
   await phase(mode+':relief3x',()=>pressSolid('3× visual relief'));await phase(mode+':inspect',()=>pressSolid('Inspect landscape in 3D'));
   await phase(mode+':pinned',()=>p.wait(`document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes('Study area pinned')&&document.querySelector('[aria-label="Kansas LiDAR map identity"]')?.textContent.includes('3.0× display')&&Math.abs(window.__terrainAcceptanceMap.getPitch()-55)<.1`,'framed current-area landscape is pinned at explicit3x relief'));

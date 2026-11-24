@@ -8,3 +8,5 @@
 .legend[data-color=local-relief]>i{background:linear-gradient(90deg,rgb(46,115,194),rgb(166,176,166) 50%,rgb(250,217,61))}
 
 .panel .inspect{display:block;width:100%;margin:12px 0 6px;background:#edca83;color:#102c3b;font-size:12px;font-weight:700;border-color:#f6dfa9}.panel button.inspect:hover:not(:disabled){background:#ffe0a0}.panel .inspect:focus-visible{outline-color:#102c3b;outline-offset:-5px}.panel .study{border-left:2px solid #8bcad0;padding:4px 0 4px 8px;color:#d6e6e5}
+
+.panel .device{border-top-color:#8bcad0}.panel .device .storage{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}.panel .device input[type=checkbox]{width:20px;height:20px;min-height:20px;flex:0 0 20px;accent-color:#edca83}.panel .device>button{width:100%}.panel .device select{width:100%}

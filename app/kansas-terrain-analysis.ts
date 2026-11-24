@@ -35,7 +35,7 @@ export function terrainColorDomain(values:readonly (number|null)[],color:GroundC
  if(color==='local-relief'){const extent=Math.max(...finite.map(Math.abs));return extent===0?[0,0]:[-extent,extent];}
  return [Math.min(...finite),Math.max(...finite)];
 }
-export function terrainStudyJSON(receipt:GroundReceipt){
+export function terrainStudyJSON(receipt:GroundReceipt,prepared?:ReturnType<typeof analyzeGroundGrid>){
  const validated=parseGroundReceipt(receipt,receipt.query,receipt.requestKey);if(!validated?.grid)throw Error('No validated Ground grid to export');
- return JSON.stringify({format:'kfm-terrain-study-v1',source:validated,recipe:TERRAIN_ANALYSIS_RECIPE,derived:analyzeGroundGrid(validated.grid),limits:'Display grid analysis only. No cultural, archaeological or certified field-accuracy inference.'},null,2);
+ return JSON.stringify({format:'kfm-terrain-study-v1',source:validated,recipe:TERRAIN_ANALYSIS_RECIPE,derived:prepared??analyzeGroundGrid(validated.grid),limits:'Display grid analysis only. No cultural, archaeological or certified field-accuracy inference.'},null,2);
 }
