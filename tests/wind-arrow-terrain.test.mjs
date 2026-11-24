@@ -538,3 +538,18 @@ test("terrain tile errors stay in terrain recovery instead of switching the base
   assert.equal(terrain.shouldFallbackStandardBasemap("kfm-terrain-dem", false, false, false), false);
   assert.equal(terrain.shouldFallbackStandardBasemap(undefined, true, false, false), false);
 });
+
+test('selected DEM coherently drives terrain mesh and existing basemap color/shade without changing layer order or paint',()=>{
+ const sources=new Map(),layers=[];let active=null;const operations=[];
+ const map={getSource:id=>sources.get(id),getLayer:id=>layers.find(layer=>layer.id===id),addSource:(id,spec)=>{sources.set(id,structuredClone(spec));operations.push(['source',id]);},removeSource:id=>{assert.ok(!layers.some(layer=>layer.source===id));assert.notEqual(active?.source,id);sources.delete(id);},addLayer:(spec,before)=>{const index=layers.findIndex(layer=>layer.id===before);layers.splice(index<0?layers.length:index,0,structuredClone(spec));},removeLayer:id=>{const index=layers.findIndex(layer=>layer.id===id);layers.splice(index,1);},getStyle:()=>({sources:Object.fromEntries(sources),layers:[...layers]}),setTerrain:value=>{active=value;},setLayoutProperty:(id,key,value)=>{const layer=layers.find(layer=>layer.id===id);(layer.layout??={})[key]=value;}};
+ const base='basemap-relief-dem',mapzen=terrainSources.terrainSourceFor('mapzen'),usgs=terrainSources.terrainSourceFor('usgs-3dep');
+ sources.set(base,{type:'raster-dem',tiles:[mapzen.tileTemplate],tileSize:256,maxzoom:12,encoding:'terrarium'});
+ layers.push({id:'kfm-background',type:'background',paint:{'background-color':'#000'}},{id:'relief-tint',type:'color-relief',source:base,paint:{'color-relief-opacity':.8}},{id:'roads',type:'line',source:'roads',paint:{'line-color':'#fff'}},{id:'basemap-relief-hillshade',type:'hillshade',source:base,paint:{'hillshade-exaggeration':.7}},{id:'labels',type:'symbol',source:'roads',layout:{'text-field':'name'}},{id:'external-kept',type:'fill',source:'existing',metadata:{preserve:true}});
+ const before=structuredClone(layers),ids=before.map(layer=>layer.id);
+ assert.equal(terrain.setTerrainPresentation(map,true,2.5,usgs),'LOADING');
+ assert.deepEqual(layers.filter(layer=>ids.includes(layer.id)),before,'existing layer order, data, paint and metadata are preserved');
+ for(const id of [base,terrain.TERRAIN_SOURCE_ID,terrain.TERRAIN_HILLSHADE_SOURCE_ID]){assert.equal(sources.get(id).tiles[0],usgs.tileTemplate);assert.equal(sources.get(id).maxzoom,17);}
+ assert.equal(terrain.setTerrainHeightOverlay(map,true,usgs),true);assert.equal(sources.get(terrain.TERRAIN_COLOR_SOURCE_ID).tiles[0],usgs.tileTemplate);
+ const changes=operations.length;terrain.setTerrainPresentation(map,true,1,usgs);assert.equal(operations.length,changes,'scale change reuses matching provider source managers');
+ assert.equal(terrain.setTerrainPresentation(map,true,1,mapzen),'LOADING');assert.equal(sources.get(base).tiles[0],mapzen.tileTemplate);assert.equal(sources.get(base).maxzoom,mapzen.maxZoom);assert.deepEqual(layers.filter(layer=>ids.includes(layer.id)),before);
+});

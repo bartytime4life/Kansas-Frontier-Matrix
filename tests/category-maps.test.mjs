@@ -64,7 +64,7 @@ test('every start-page category has exactly one map look with a real basemap, sc
   assert.ok(['2d','terrain','globe'].includes(look.scene),id);
   const {center:[lon,lat],zoom,pitch,bearing}=look.camera;
   assert.ok(lon>-106&&lon<-90&&lat>34&&lat<43,`${id}: camera is over Kansas`);
-  assert.ok(zoom>=2&&zoom<=12&&pitch>=0&&pitch<=65&&Math.abs(bearing)<=180,id);
+  assert.ok(zoom>=2&&zoom<=(id==='terrain'?13.2:12)&&pitch>=0&&pitch<=(id==='terrain'?68:65)&&Math.abs(bearing)<=180,id);
   if(look.scene!=='terrain')assert.equal(pitch,0,`${id}: only 3D looks start tilted`);
   for(const starter of look.starters)assert.ok(officialIds.includes(starter),`${id}: ${starter} is an official context id`);
   assert.equal(look.swatch.length,3);for(const color of look.swatch)assert.match(color,/^#[0-9a-f]{6}$/);
@@ -519,4 +519,26 @@ test('multiple cards produce an ordered, deduplicated union with one explicit ma
  const all=maps.combineCategoryMaps(Object.keys(maps.CATEGORY_MAPS));
  assert.equal(new Set(all.look.starters).size,all.look.starters.length);
  assert.ok(all.look.tools.includes('daylight'));assert.ok(all.look.overlays.includes('aviation'));
+});
+
+test('continuous terrain dock exposes the real provider, true scale, named ground cameras and retry through existing handlers',async()=>{
+ const h=await componentHarness('app/category-map-dock.tsx',{}),calls=[],places=await load('app/photoreal-landscapes.ts');
+ assert.deepEqual(maps.CATEGORY_MAPS.terrain.camera,places.PHOTOREAL_LANDSCAPES.find(place=>place.id==='konza').camera,'Terrain opens the existing close Flint Hills camera, without changing elevations or exaggeration');
+ const props={look:maps.CATEGORY_MAPS.terrain,mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth:v=>calls.push(['scale',v]),onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},terrainSource:{provider:'usgs-3dep',state:'READY',landscapes:places.PHOTOREAL_LANDSCAPES.filter(place=>place.id!=='wichita')},onTerrainProvider:p=>calls.push(['provider',p]),onTerrainPlace:p=>calls.push(['place',p]),onTerrainRetry:()=>calls.push(['retry'])};
+ let tree=h.render(h.exports.CategoryMapDock,props);const box=findNode(tree,n=>n.props?.['aria-label']==='Continuous Kansas ground model');assert.ok(box);assert.match(JSON.stringify(box),/USGS 3DEP · mixed-date ground model/);
+ const shortcuts=box.props.children.find(n=>n?.props?.['aria-label']==='Ground model landscape shortcuts');assert.ok(shortcuts,'shortcuts are outside a disclosure');assert.ok(findNode(shortcuts,n=>n.type==='button'&&n.props.children==='Konza Prairie · Flint Hills'));assert.ok(findNode(shortcuts,n=>n.type==='button'&&n.props.children==='Red Hills · Barber County'));const more=findNode(box,n=>n.type==='details');assert.equal(more.props.open,undefined);assert.match(JSON.stringify(more),/More Kansas landscapes.*Monument Rocks/);assert.doesNotMatch(JSON.stringify(more),/Konza Prairie|Red Hills/);
+ findNode(box,n=>n.type==='select').props.onChange({target:{value:'mapzen'}});findNode(box,n=>n.type==='button'&&n.props.children==='True vertical scale · 1×').props.onClick();findNode(box,n=>n.type==='button'&&n.props.children==='Whole Kansas').props.onClick();findNode(box,n=>n.type==='button'&&n.props.children==='Red Hills · Barber County').props.onClick();assert.deepEqual(calls,[['provider','mapzen'],['scale',1],['place',null],['place','red-hills']]);
+ tree=h.render(h.exports.CategoryMapDock,{...props,depth:1,terrainSource:{...props.terrainSource,provider:'mapzen',state:'ERROR'}});assert.match(JSON.stringify(tree),/Mapzen · coarse display DEM/);assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='True vertical scale · 1×').props['aria-pressed'],true);findNode(tree,n=>n.type==='button'&&n.props.children==='Retry selected DEM').props.onClick();assert.deepEqual(calls.at(-1),['retry']);
+ tree=h.render(h.exports.CategoryMapDock,{...props,look:maps.CATEGORY_MAPS.aviation});assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Continuous Kansas ground model'),undefined);h.dispose();
+});
+
+test('ground landscape handler frames actual Kansas locations without enabling the aerial provider or replacing source/scale',async()=>{
+ const source=await readFile('app/page.tsx','utf8'),ast=ts.createSourceFile('page.tsx',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);let handler;
+ function walk(node){if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='showTerrainLandscape')handler=node.initializer.getText(ast);ts.forEachChild(node,walk);}walk(ast);assert.ok(handler);
+ const places=await load('app/photoreal-landscapes.ts'),calls=[],map={fitBounds:(...args)=>calls.push(['fit',...args]),flyTo:args=>calls.push(['fly',args])};
+ const run=new Function('mapRef','categoryMode','activateMapRepresentation','PHOTOREAL_LANDSCAPES','motionDuration','announce','verticalExaggerationRef','changeTerrainDepth',ts.transpileModule('return ('+handler+');',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)({current:map},'terrain',()=>assert.fail('already terrain'),places.PHOTOREAL_LANDSCAPES,()=>0,()=>{}, {current:1},()=>assert.fail('scale is already set'));
+ run(null);assert.deepEqual(calls[0][1],[[-102.1,36.9],[-94.5,40.1]]);assert.equal(calls[0][2].pitch,60);run('red-hills');assert.deepEqual(calls[1][1].center,[-98.73,37.21]);assert.equal(calls[1][1].duration,0);run('missing');run('wichita');assert.equal(calls.length,2,'only real ground-landscape ids are allowed');
+ const depth={current:1},changes=[];
+ const fromFlat=new Function('mapRef','categoryMode','activateMapRepresentation','PHOTOREAL_LANDSCAPES','motionDuration','announce','verticalExaggerationRef','changeTerrainDepth',ts.transpileModule('return ('+handler+');',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)({current:map},'2d',()=>{changes.push('terrain');depth.current=2.5;},places.PHOTOREAL_LANDSCAPES,()=>0,()=>{},depth,value=>{changes.push(value);depth.current=value;});
+ fromFlat('missing');assert.deepEqual(changes,[],'invalid destinations do not change representation');fromFlat(null);assert.deepEqual(changes,['terrain',1]);assert.equal(depth.current,1,'entering 3D preserves a chosen true-scale setting');
 });

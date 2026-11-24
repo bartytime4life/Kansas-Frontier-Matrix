@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 import { browserHeaders } from "./server/browser-headers.mjs";
 
 const nextConfig: NextConfig = {
+  // Preserve the owner's explicit review link without redirecting normal map visits.
+  async redirects() {
+    return [{ source: "/", has: [{ type: "query", key: "neon-review", value: "3" }], destination: "/terrain", permanent: false }];
+  },
   // Vinext applies its multipart guard before API-route dispatch. Allow room
   // for a 10 MB file plus form fields; the route enforces the lower byte cap.
   experimental: { serverActions: { bodySizeLimit: "11mb" } },

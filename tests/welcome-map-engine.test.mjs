@@ -31,10 +31,11 @@ const stubs = {
   "'../welcome-map-view'": toUrl(`
     const view = (topic, basemap, scene, zoom, starters = [], prisms = false, scientificLayers = []) => ({ topic, basemap, scene, camera: { center: topic === 'terrain' ? [-99.6, 38.9] : [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms, scientificLayers });
     const VIEWS = { aviation: view('aviation', 'relief', 'terrain', 7.9), satellite: view('satellite', 'standard', '2d', 5.4, ['noaa-goes-geocolor']), evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']), people: view('people', 'relief', 'terrain', 6.3, ['census-counties'], true) };
+    VIEWS.terrain.terrainProvider='usgs-3dep';
     VIEWS.flora=view('flora','relief','2d',5.9,[],false,['land-cover']); VIEWS.agriculture=view('agriculture','relief','2d',10.5,[],false,['cropland']); VIEWS.sky.scientificLayers=['daylight'];
     export const WELCOME_DEM_SOURCE_ID = 'welcome-terrain-dem'; export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
-    export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene });
+    export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene, provider: v.terrainProvider ?? 'mapzen' });
     export const welcomeDriftLeg = v => ({ bearing: v.camera.bearing + 24, zoom: v.camera.zoom, duration: 30000 });`),
 };
 let source = await readFile('app/living-welcome/map-engine.mjs', 'utf8');
@@ -54,7 +55,7 @@ class FakeMap {
   on(type, fn) { this.handlers.set(type, [...(this.handlers.get(type) ?? []), { fn }]); }
   once(type, fn) { this.handlers.set(type, [...(this.handlers.get(type) ?? []), { fn, once: true }]); }
   emit(type, event = {}) { const list = this.handlers.get(type) ?? []; this.handlers.set(type, list.filter(h => !h.once)); for (const h of list) h.fn(event); }
-  setStyle(style) { this.log.push(['setStyle', style.name ?? style.url, style.scene]); }
+  setStyle(style) { this.style=style; this.log.push(['setStyle', style.name ?? style.url, style.scene]); }
   // Camera moves end at once, as a programmatic jump does.
   jumpTo(camera) { this.camera = camera; this.log.push(['jumpTo', camera.zoom]); this.emit('moveend'); }
   flyTo(camera) { this.log.push(['flyTo', camera.zoom]); }
@@ -182,7 +183,7 @@ test('battery saver previews stay still across focus and category changes', asyn
   const { engine, map } = await start({ pixelRatio: 1, tileCache: 48, efficient: true });
   t.after(() => engine.dispose());
   engine.setPaused(false); engine.show('terrain'); await tick(); await tick(); map.emit('style.load');
-  engine.show('geology'); await settle();
+  engine.show('geology'); await settle(); await tick(); map.emit('style.load');
   engine.setReduced(true); engine.setReduced(false);
   engine.setPaused(true); engine.setPaused(false);
   assert.equal(map.log.filter(([name]) => name === 'easeTo' || name === 'flyTo').length, 0);
@@ -405,13 +406,13 @@ test('pausing an interrupted same-style flight leaves the selected category came
  const { engine, map } = await start();
  t.after(() => engine.dispose());
  engine.setPaused(false); engine.show('geology'); await tick(); await tick(); map.emit('style.load');
- engine.show('terrain'); await settle();
+ engine.show('weather'); await settle();
  assert.ok(map.log.some(([name]) => name === 'flyTo'));
  engine[pause](true);
- assert.deepEqual(map.camera.center, [-99.6, 38.9]);
- assert.equal(map.camera.zoom, 7.4);
+ assert.deepEqual(map.camera.center, [-98, 38]);
+ assert.equal(map.camera.zoom, 5.9);
  engine[pause](false);
- assert.deepEqual(map.camera.center, [-99.6, 38.9], 'resuming drift cannot keep the previous category center');
+ assert.equal(map.camera.zoom, 5.9, 'resuming drift cannot keep the previous category zoom');
  engine.dispose();
  }
 });
@@ -429,7 +430,7 @@ test('aviation is lazy, uses one renderer, switches chart/slice without reloadin
  engine.setLayersVisible(false); assert.deepEqual(globalThis.__welcome.aviation.at(-1),[false,'slice']);
  assert.equal(sourceReports.at(-1).aviation.state,'hidden'); engine.setLayersVisible(true);
  assert.equal(map.log.filter(([name])=>name==='setStyle').length,styles); assert.equal(fetches.length,requests);
- engine.show('terrain'); await settle(); const count=globalThis.__welcome.aviation.length;
+ engine.show('terrain'); await settle(); await tick(); map.emit('style.load'); const count=globalThis.__welcome.aviation.length;
  globalThis.__welcome.aviationChanged(); assert.equal(globalThis.__welcome.aviation.length,count,'late aviation completion cannot redraw another topic');
  assert.equal(sourceReports.at(-1).aviation,null);
 });
@@ -454,4 +455,13 @@ test('camera completion defers and coalesces drift without reentering a resize o
   engine.setReduced(false); engine.dispose(); await tick();
   assert.equal(count(),2,'unmounted maps cannot resume queued motion');
  } finally { engine.dispose(); }
+});
+
+test('preview styles cannot reuse a different elevation provider just because basemap and scene match',async()=>{
+ const {engine,map}=await start();try{
+ engine.show('geology');await settle();await tick();map.emit('style.load');const before=map.log.filter(([kind])=>kind==='setStyle').length;assert.equal(map.style.provider,'mapzen');
+ engine.show('terrain');await settle();await tick();map.emit('style.load');assert.equal(map.style.provider,'usgs-3dep');assert.equal(map.log.filter(([kind])=>kind==='setStyle').length,before+1);
+ engine.show('terrain');await settle();assert.equal(map.log.filter(([kind])=>kind==='setStyle').length,before+1,'the same selected source is reused');
+ engine.show('geology');await settle();await tick();assert.equal(map.style.provider,'mapzen','other category retains its default');
+ }finally{engine.dispose();}
 });

@@ -111,3 +111,11 @@ test("combined card setup enables the union and removes deselected topic layers"
   assert.ok(h.calls.some(([name, on]) => name === "showLandCover" && on === true));
   assert.ok(h.calls.some(([name, on]) => name === "toggleDaylightVisibility" && on === true));
 });
+
+test("only a primary Terrain category explicitly selects USGS; unrelated primary categories preserve the current provider",()=>{
+ const h=session();
+ h.open('water');assert.equal(h.calls.some(([name])=>name==='chooseTerrainProviderByHand'),false);
+ h.open('terrain');assert.deepEqual(h.calls.filter(([name])=>name==='chooseTerrainProviderByHand'),[['chooseTerrainProviderByHand','usgs-3dep']]);
+ h.open('aviation');h.open('water',['water','terrain']);assert.equal(h.calls.filter(([name])=>name==='chooseTerrainProviderByHand').length,1);
+ h.open('terrain',['terrain','water']);assert.equal(h.calls.filter(([name])=>name==='chooseTerrainProviderByHand').length,2);
+});
