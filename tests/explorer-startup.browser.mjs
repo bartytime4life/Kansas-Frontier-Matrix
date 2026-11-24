@@ -30,7 +30,11 @@ async function readyWelcome(p) {
   await p.wait(`document.querySelector('.living-welcome')?.dataset.carousel===String(matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)').matches)`, 'responsive chooser settles before input coordinates are measured');
   await p.wait(`(document.querySelector('.living-welcome')?.dataset.layout==='atlas')===matchMedia('(min-width:1101px)').matches`, 'desktop atlas or compact layout is settled before geometry');
   const actual = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>({id:[...card.classList].find(name=>name.startsWith('topic-')&&name!=='topic-callout')?.slice(6),title:card.querySelector('strong')?.textContent,facets:card.querySelector('small')?.textContent,label:card.getAttribute('aria-label')}))`);
-  assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.slice(0,2).join(' · '), label:'Open '+topic.title+' map: '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
+  assert.deepEqual(actual, welcomeTopics.map(topic => ({
+    id:topic.id, title:topic.title,
+    facets:topic.id==='terrain'?'Ground · Surface · Canopy height · LiDAR points':topic.facets.slice(0,2).join(' · '),
+    label:topic.id==='terrain'?'Open Terrain & elevation map and Kansas layers: Ground, Surface, Canopy height, LiDAR points':'Open '+topic.title+' map: '+topic.facets.join(' · '),
+  })), 'every shared domain appears once, in order, with its actual facets and accessible name');
   assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video,.living-welcome .motion-portal').length`), 0, 'the welcome does not mount retired footage players');
   assert.equal(await p.evaluate(`document.querySelector('.welcome-preview-brief')`), null, 'category browsing has no floating glimpse card');
   await p.wait(`[...document.querySelectorAll('.living-welcome .topic-callout')].every(card=>Number(getComputedStyle(card).opacity)>=.98)`, 'card arrival completes before geometry checks');
