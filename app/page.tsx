@@ -9572,7 +9572,7 @@ export default function Home() {
 
   const neonLidarMap = useNeonLidarMap({ mapRef, styleReady, flatMap: projection === "mercator" && scenePreset !== "elevation-3d", atPresent: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, reducedMotion, onFlatMap: () => activateMapRepresentation("2d"), claimedClicksRef: neonClaimedMapClicksRef });
   const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && (officialWorkspace === "terrain" || officialWorkspace === "all" && welcomeTopics[0] === "terrain"), scale: verticalExaggeration, reducedMotion: reducedMotion || !dynamicEffects, onViewMap: () => setCategoryDockHidden(true),
-    onSelected: () => setCategoryDockHidden(false), onNativeIntent: () => neonLidarMap.cancelRead(), onGround: () => activateMapRepresentation("terrain") });
+    onScale: changeTerrainDepth, onSelected: () => setCategoryDockHidden(false), onNativeIntent: () => neonLidarMap.cancelRead(), onGround: () => activateMapRepresentation("terrain") });
 
   const startTerrainInvestigation = () => {
     activateMapRepresentation("terrain");

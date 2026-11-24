@@ -10,8 +10,12 @@ area; missing support remains a hole. Raw **LiDAR points** are secondary control
 There is no paid API, subscription or visitor provider account, and no fixed
 Konza location is selected.
 
-**View map** closes the controls while retaining the enabled layers. **Tilt3D**
-uses the current center, zoom and bearing. The source/readout badge appears when
+**View map** closes the controls while retaining the enabled layers. **Inspect landscape in3D** frames the acquired current-area grid with margins,
+55° pitch and the current bearing, using full opacity. It pins that study
+footprint through the deliberate camera move, without reacquiring a larger grid
+or clearing a reading. **3× visual relief** is an explicit display preset; source
+readings remain unscaled. **Follow map** or deliberate navigation releases the
+study area. No source height or camera elevation is rebased. The source/readout badge appears when
 controls close. **Zoom to detail here** is an explicit close-up action at the
 current location, available when safe terrain camera context is ready. A close
 view can still exceed source budgets or lack classification. These controls do
@@ -163,8 +167,13 @@ pedestal/vegetation walls needs at most221,184. Grid upload has a300,000-vertex
 ceiling, independent of the100,000 point-row/vertex ceiling. The own-depth color/ID
 render and registration limits remain. Reading and source values never scale.
 
-View in3D explicitly tilts the current center/zoom/bearing to60degrees; View map
-closes only controls. Zoom to detail here is an explicit conditional shortcut for
+Inspect landscape in3D frames the current acquired footprint at55degrees,
+with visible margins and100% opacity. The study area and reading stay pinned
+through that tagged camera move; comparison modes use the same requested study
+bounds. User navigation or Follow map resumes viewport loading. The current
+public FOV/elevation and scaled grid tops bound close framing without setting
+elevation/clamp. The3× visual relief action changes the existing display scale,
+never source values. View map closes only controls. Zoom to detail here is an explicit conditional shortcut for
 native detail-required views: current center/bearing, at least zoom17.5,pitch55,
 only with actual terrain and a finite public center-elevation value. It never
 sets/rebases elevation and does not guarantee coverage or analysis-budget success.
@@ -191,3 +200,28 @@ those retained inputs; display exaggeration is never an analytical input.
 Local-relief colors and the legend share a symmetric[-maxAbs,+maxAbs] domain.
 Zero is the neutral center; below/above the local mean are blue/yellow. A flat
 zero result uses neutral color with a[0,0] legend, without inventing a spread.
+
+
+## Supported illumination and compact solid geometry
+
+Ground and Surface top-face light uses complete Horn3×3 source-height support,
+independent of display exaggeration. Ground distances use local WGS84 east/north
+factors for EPSG:3857; native Surface uses the returned UTM grid spacing (grid
+north, projection scale and DEM registration remain qualified). A fixed light
+from northwest grid direction at45° gives55% ambient +45% clamped Lambertian
+light. Unsupported neighbors use constant82% ambient color, not invented normals.
+Illumination conveys shape; the legend and readings retain the original variable.
+The study JSON includes the exact recipe. Canopy retains its independent height
+color and neutral same-ground pedestal; no canopy shape is invented from Ground.
+
+Only exposed step intervals and actual outer/NoData boundary walls are emitted.
+There are no two full-depth coplanar pedestal walls on a shared cell edge. The
+taller cell owns an exposed shared step and keeps its source-cell picking ID.
+Equal-height neighbors have no internal wall. This removes hidden overlap and
+reduces packed geometry without smoothing, interpolating or bridging missing cells.
+The cap remains300,000 vertices;9216 cells require at most276,480. Validated
+Ground derivatives are prepared once per grid and shared by the controls and
+renderer. Opacity, selection and camera-only frames do not re-upload positions;
+a changed display scale or color recipe does. Each new area retires old work.
+Independent Ground/optional-point completions preserve an explicit reading type,
+including an empty/leading-zero draft, rather than taking over its navigation.

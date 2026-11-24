@@ -16,6 +16,10 @@ import {LIDAR_POINTS_ROUTE,validLidarPointsManifest,validLidarPointsChunk} from 
 import {parseLidarViewSearch,lidarViewKey,validViewKey,validLidarView,validNativeViewChunk,validLidarGrid,LIDAR_VIEW_ROUTES} from '../scripts/local-data/lidar-view-model.mjs';
 
 import {GROUND_ROUTE,parseGroundSearch,groundKey,validGroundView} from '../scripts/local-data/ground-model.mjs';
+import {createHostedTerrainCache,HOSTED_TERRAIN_LIMITS} from './hosted-terrain-cache.mjs';
+import {createHash} from 'node:crypto';
+import {terrainResponse} from './terrain-response.mjs';
+import {readGroundBaseline} from './terrain-baseline.mjs';
 
 export const LOCAL_DATA_WORKER_PREFIX='/api/local-data-worker/v1';
 // workerSeenMs: the worker re-polls at least every leaseWaitMs (20 s) and pings /status while relaying,
@@ -43,14 +47,33 @@ export function localDataConfig(env=process.env){
  return Object.freeze({origin,keyId:gateway.keyId,secret:gateway.secret,worker});
 }
 
-export function createLocalDataService({config,clock=Date.now,relay=createHomeRelay({keyId:config.keyId,secret:config.secret,worker:config.worker,clock,limits:LOCAL_DATA_RELAY_LIMITS,routes:LOCAL_DATA_ROUTES,workerPrefix:LOCAL_DATA_WORKER_PREFIX,diagnostic:code=>console.warn('[KFM local data] '+code)})}){
+export function createLocalDataService({config,clock=Date.now,terrainCache=null,groundBaseline=null,relay=createHomeRelay({keyId:config.keyId,secret:config.secret,worker:config.worker,clock,limits:LOCAL_DATA_RELAY_LIMITS,routes:LOCAL_DATA_ROUTES,workerPrefix:LOCAL_DATA_WORKER_PREFIX,diagnostic:code=>console.warn('[KFM local data] '+code)})}){
  const cache=new Map(),pending=new Map();let cachedBytes=0;
  const workerOnline=()=>clock()-relay.lastSeen<=LOCAL_DATA_CACHE.workerSeenMs;
  const forget=key=>{const hit=cache.get(key);if(hit){cachedBytes-=hit.bytes;cache.delete(key);}};
- const remember=(key,value,bytes)=>{
-  forget(key);cache.set(key,{value,bytes,at:clock()});cachedBytes+=bytes;
+ const remember=(key,value,bytes,at=clock(),tier='memory',binding='')=>{
+  forget(key);cache.set(key,{value,bytes,at,tier,binding});cachedBytes+=bytes;
   while(cache.size>LOCAL_DATA_CACHE.entries||cachedBytes>LOCAL_DATA_CACHE.bytes)forget(cache.keys().next().value);
  };
+
+ // Only validated compact terrain receipts/grids are persisted on the web host.
+ // No SQL answers, raw point chunks, private paths, source files or secrets enter it.
+ const terrainFreshMs=terrainCache?HOSTED_TERRAIN_LIMITS.freshMs:LOCAL_DATA_CACHE.freshMs;
+ const restoreTerrain=async(key,diskKey,validate,binding='')=>{
+  if(cache.has(key)&&cache.get(key).binding!==binding)forget(key);
+  if(!cache.has(key)){
+   const hit=await terrainCache?.read(diskKey,validate,binding)??(groundBaseline&&diskKey.startsWith('ground:')?await groundBaseline(diskKey):null);
+   if(hit&&validate(hit.value))remember(key,hit.value,hit.bytes,hit.at,hit.tier??'disk',binding);
+  }
+  return cache.get(key);
+ };
+ const rememberTerrain=async(key,diskKey,value,bytes,binding='')=>{
+  const at=clock();remember(key,value,bytes,at,'memory',binding);
+  if(terrainCache)await terrainCache.write(diskKey,value,at,binding);
+  return value;
+ };
+ const terrainAnswer=(value,state,at,maxAge,tier='memory',request=null)=>terrainResponse(value,{state,at,maxAge,tier,request,replyBytes:LOCAL_DATA_LIMITS.replyBytes});
+ const viewBinding=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
  // A reply is parsed only after the gateway's signature over this exact request, status and body checks out.
  const call=async(method,path,payload)=>{
@@ -159,36 +182,38 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
  // Kansas-wide viewport data. Processing receipts have a short cache lifetime;
  // completed immutable artifacts share the existing bounded cache.
  const viewCacheKey=key=>'\nlidar-view:'+key;
- const viewTTL=v=>['processing','idle'].includes(v.state)?2000:v.state==='unavailable'?15000:LOCAL_DATA_CACHE.freshMs;
+ const viewTTL=v=>['processing','idle'].includes(v.state)?2000:v.state==='unavailable'?15000:terrainFreshMs;
  const cachedView=async(key,query=null)=>{
-  const cacheKey=viewCacheKey(key),hit=cache.get(cacheKey);
+  const cacheKey=viewCacheKey(key),hit=await restoreTerrain(cacheKey,'view:'+key,v=>validLidarView(v,query??v.query)&&v.requestKey===key);
   if(hit&&clock()-hit.at<viewTTL(hit.value))return hit.value;
   let trip=pending.get(cacheKey);
-  if(!trip){trip=call('POST',LIDAR_VIEW_ROUTES.view,query??{requestKey:key}).then(({value,bytes})=>{
-   delete value.gateway;if(!validLidarView(value,query??value.query)||value.requestKey!==key)throw error('GATEWAY_RESPONSE_INVALID');remember(cacheKey,value,bytes);return value;
+  if(!trip){trip=call('POST',LIDAR_VIEW_ROUTES.view,query??{requestKey:key}).then(async({value,bytes})=>{
+   delete value.gateway;if(!validLidarView(value,query??value.query)||value.requestKey!==key)throw error('GATEWAY_RESPONSE_INVALID');return rememberTerrain(cacheKey,'view:'+key,value,bytes);
   }).finally(()=>pending.delete(cacheKey));pending.set(cacheKey,trip);}
   return trip;
  };
  const lidarView=async request=>{
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
   let query;try{query=parseLidarViewSearch(new URL(request.url).searchParams);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
-  const key=lidarViewKey(query),cacheKey=viewCacheKey(key),hit=cache.get(cacheKey),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
-  try{const value=await cachedView(key,query);return answer(value,workerOnline()?(fresh?'fresh':'live'):'stale',cache.get(cacheKey)?.at??clock(),value.state==='processing'?0:workerOnline()?60:0);}
+  const key=lidarViewKey(query),cacheKey=viewCacheKey(key),hit=await restoreTerrain(cacheKey,'view:'+key,v=>validLidarView(v,query)),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
+  try{const value=await cachedView(key,query);return terrainAnswer(value,workerOnline()?(fresh?'fresh':'live'):'stale',cache.get(cacheKey)?.at??clock(),value.state==='processing'?0:workerOnline()?60:0,fresh?hit.tier:'relay',request);}
   catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,0);return json({state:'local-data-offline',reasonCode:'LIDAR_VIEW_UNAVAILABLE'},503);}
  };
  const lidarViewArtifact=async(request,key,/** @type {number|'grid'} */ part)=>{
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
   if(new URL(request.url).search||!validViewKey(key)||part!=='grid'&&(!Number.isInteger(part)||part<0||part>15))return json({reasonCode:'QUERY_INVALID'},400);
-  const cacheKey=viewCacheKey(key)+'/'+part,hit=cache.get(cacheKey),age=hit?clock()-hit.at:Infinity;
-  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return answer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60);
+  const cacheKey=viewCacheKey(key)+'/'+part;
+  const parent=part==='grid'?await restoreTerrain(viewCacheKey(key),'view:'+key,v=>validLidarView(v,v.query)&&v.requestKey===key):null;
+  const hit=part==='grid'&&parent?.value.grid?await restoreTerrain(cacheKey,'grid:'+key,v=>validLidarGrid(v,key)&&v.source.project===parent.value.grid.sourceProject&&v.width===parent.value.grid.width&&v.height===parent.value.grid.height,viewBinding(parent.value)):cache.get(cacheKey),age=hit?clock()-hit.at:Infinity;
+  if(hit&&age<(part==='grid'?terrainFreshMs:LOCAL_DATA_CACHE.freshMs))return terrainAnswer(hit.value,workerOnline()?'fresh':'stale',hit.at,workerOnline()?300:60,hit.tier,request);
   try{
    let trip=pending.get(cacheKey);
    if(!trip){trip=(async()=>{
     const view=await cachedView(key);if(part==='grid'?!view.grid:!view.points?.chunks[part])throw error('LIDAR_VIEW_UNAVAILABLE');
     const {value,bytes}=await call('POST',part==='grid'?LIDAR_VIEW_ROUTES.grid:LIDAR_VIEW_ROUTES.chunk,part==='grid'?{requestKey:key}:{requestKey:key,chunkId:part});delete value.gateway;
-    if(part==='grid'?!validLidarGrid(value,key)||value.source.project!==view.grid.sourceProject||value.width!==view.grid.width||value.height!==view.grid.height:!validNativeViewChunk(value,view.points,key,part))throw error('GATEWAY_RESPONSE_INVALID');remember(cacheKey,value,bytes);return value;
+    if(part==='grid'?!validLidarGrid(value,key)||value.source.project!==view.grid.sourceProject||value.width!==view.grid.width||value.height!==view.grid.height:!validNativeViewChunk(value,view.points,key,part))throw error('GATEWAY_RESPONSE_INVALID');if(part==='grid')return rememberTerrain(cacheKey,'grid:'+key,value,bytes,viewBinding(view));remember(cacheKey,value,bytes);return value;
    })().finally(()=>pending.delete(cacheKey));pending.set(cacheKey,trip);}
-   return answer(await trip,'live',cache.get(cacheKey)?.at??clock(),300);
+   return terrainAnswer(await trip,'live',cache.get(cacheKey)?.at??clock(),300,'relay',request);
   }catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);return json({state:'local-data-offline',reasonCode:'LIDAR_VIEW_UNAVAILABLE'},503);}
  };
 
@@ -196,12 +221,12 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
  const ground=async request=>{
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
   let query;try{query=parseGroundSearch(new URL(request.url).searchParams);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
-  const key='\nground:'+groundKey(query),hit=cache.get(key),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
-  if(fresh)return answer(hit.value,workerOnline()?'fresh':'stale',hit.at,hit.value.state==='processing'?0:60);
+  const diskKey='ground:'+groundKey(query),key='\n'+diskKey,hit=await restoreTerrain(key,diskKey,v=>validGroundView(v,query)),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
+  if(fresh)return terrainAnswer(hit.value,workerOnline()?'fresh':'stale',hit.at,hit.value.state==='processing'?0:60,hit.tier,request);
   try{
-   let trip=pending.get(key);if(!trip){trip=call('POST',GROUND_ROUTE,query).then(({value,bytes})=>{delete value.gateway;if(!validGroundView(value,query))throw error('GATEWAY_RESPONSE_INVALID');remember(key,value,bytes);return value;}).finally(()=>pending.delete(key));pending.set(key,trip);}
-   const value=await trip;return answer(value,'live',cache.get(key)?.at??clock(),value.state==='processing'?0:60);
-  }catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,0);return json({state:'local-data-offline',reasonCode:'GROUND_VIEW_UNAVAILABLE'},503);}
+   let trip=pending.get(key);if(!trip){trip=call('POST',GROUND_ROUTE,query).then(async({value,bytes})=>{delete value.gateway;if(!validGroundView(value,query))throw error('GATEWAY_RESPONSE_INVALID');return rememberTerrain(key,diskKey,value,bytes);}).finally(()=>pending.delete(key));pending.set(key,trip);}
+   const value=await trip;return terrainAnswer(value,'live',cache.get(key)?.at??clock(),value.state==='processing'?0:60,'relay',request);
+  }catch{if(hit&&(hit.tier==='baseline'||clock()-hit.at<LOCAL_DATA_CACHE.staleMs))return terrainAnswer(hit.value,'stale',hit.at,0,hit.tier,request);return json({state:'local-data-offline',reasonCode:'GROUND_VIEW_UNAVAILABLE'},503);}
  };
 
  /**
@@ -249,7 +274,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
 // One service per process: the worker route and the public routes must share one relay.
 const SHARED=Symbol.for('kfm.local-data');
 function service(env){
- try{return globalThis[SHARED]??=createLocalDataService({config:localDataConfig(env)});}catch{return null;}
+ try{if(globalThis[SHARED])return globalThis[SHARED];const config=localDataConfig(env);return globalThis[SHARED]=createLocalDataService({config,terrainCache:createHostedTerrainCache({secret:config.secret,origin:config.origin}),groundBaseline:readGroundBaseline});}catch{return null;}
 }
 const off=async()=>json({state:'not-configured',reasonCode:'LOCAL_DATA_OFF'},404);
 

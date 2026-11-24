@@ -5,8 +5,8 @@ import ts from 'typescript';
 
 const source=await readFile('tests/explorer-startup.browser.mjs','utf8');
 const ast=ts.createSourceFile('explorer-startup.browser.mjs',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.JS);
-let pressSource;
-function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='press')pressSource=node.initializer.getText(ast);ts.forEachChild(node,visit);}
+let pressSource,openOptionsSource;
+function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='press')pressSource=node.initializer.getText(ast);if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='openNativeOptions')openOptionsSource=node.initializer.getText(ast);ts.forEachChild(node,visit);}
 visit(ast);assert.ok(pressSource);
 
 test('the CI native keyboard action waits for map readiness and real focus ownership before Enter',async()=>{
@@ -35,4 +35,12 @@ test('exposed native fixture sampling uses the same integer page pixel sent to t
  await fixtures.setup(async(method,args)=>{if(method==='Page.addScriptToEvaluateOnNewDocument')scripts.push(args.source);});const source=scripts.find(s=>s.includes('window.__nativeFixturePoints='));assert.ok(source);
  const sampled=[],r={left:11.3,top:22.6,width:100,height:100},canvas={getBoundingClientRect:()=>r},window={},document={querySelector:()=>({textContent:'1.0× display'}),elementFromPoint:()=>canvas};
  new Function('window','document',source)(window,document);window.__terrainAcceptanceMap={getLayer:()=>({implementation:{failed:false,pick:point=>{sampled.push(point);return 0;}}}),getCanvas:()=>canvas};window.__nativeFixtureMatrix=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];const point=window.__nativeVisiblePoint();assert.ok(point);assert.equal(Number.isInteger(point.x),true);assert.equal(Number.isInteger(point.y),true);assert.equal(sampled.at(-1).x,point.x-r.left);assert.equal(sampled.at(-1).y,point.y-r.top);assert.equal(point.record,0);
+});
+
+
+test('native cleanup keyboard flow opens a remounted closed raw-point disclosure before focusing its Clear action',async()=>{
+ const document={activeElement:null},details={open:false},summary={focus(){document.activeElement=this;}},button={textContent:'Clear native layers',disabled:false,scrollIntoView(){},focus(){if(details.open)document.activeElement=this;}};
+ document.querySelector=selector=>selector==='[data-native-points]'?details:selector==='[data-native-points]>summary'?summary:null;document.querySelectorAll=()=>[button];const evaluate=expression=>new Function('document',`return (${expression});`)(document),events=[];
+ const p={async evaluate(expression){return evaluate(expression);},async wait(expression){assert.ok(evaluate(expression),'requested public keyboard target is available');},async key(key,code,n){assert.equal(key,'Enter');assert.equal(code,'Enter');assert.equal(n,13);if(document.activeElement===summary){details.open=true;events.push('open-raw-options');}else {assert.equal(document.activeElement,button);assert.equal(details.open,true);events.push('clear-native-layer');}}};
+ button.focus();assert.equal(document.activeElement,null,'closed remounted options cannot receive cleanup focus');const open=new Function('p',`return (${openOptionsSource});`)(p),press=new Function('p',`return (${pressSource});`)(p);await open();await press('Clear native layers');assert.deepEqual(events,['open-raw-options','clear-native-layer']);
 });
