@@ -58,7 +58,7 @@ import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasse
 import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, monthlyCadence, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
-import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
+import { AVIATION_TINT_BANDS, BASEMAP_RELIEF_DEM_SOURCE_ID, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryCapabilityPanel } from "./category-capability-panel";
 import { categoryCapabilityGroups } from "./category-capabilities";
@@ -1425,7 +1425,10 @@ export default function Home() {
   const setTerrainPresentation = (map: MapLibreMap, enabled: boolean, scale: number) => {
     const provider = terrainProviderRef.current;
     const source = terrainSourceFor(provider);
+    const priorRelief = map.getSource(BASEMAP_RELIEF_DEM_SOURCE_ID);
     const state = applyTerrainPresentation(map, enabled, scale, source);
+    const currentRelief = map.getSource(BASEMAP_RELIEF_DEM_SOURCE_ID);
+    if (priorRelief && currentRelief) basemapHealthRef.current?.replaceSource(BASEMAP_RELIEF_DEM_SOURCE_ID, priorRelief, currentRelief);
     const attachedMatches = enabled && terrainPresentationSourceMatches(map, source);
     if (enabled && state !== "ERROR") {
       applyTerrainReliefStyle(map, basemapRef.current === "topo" ? "topographic" : "general", atmospherePresetRef.current, lightAzimuthRef.current);
@@ -7638,18 +7641,33 @@ export default function Home() {
           // MapLibre includes the originating source specification on the event.
           // The stable source ID may already belong to its replacement by now.
           const terrainEventSource = (event as typeof event & { source?: { tiles?: string[] } }).source;
-          const terrainTiles = sourceId === TERRAIN_SOURCE_ID ? terrainEventSource?.tiles?.[0]
-            ?? (map.getSource(TERRAIN_SOURCE_ID) as { serialize?: () => { tiles?: string[] } } | undefined)?.serialize?.().tiles?.[0] ?? "" : "";
+          const terrainOwned = sourceId === TERRAIN_SOURCE_ID || sourceId === TERRAIN_HILLSHADE_SOURCE_ID || sourceId === TERRAIN_COLOR_SOURCE_ID;
+          if (terrainOwned && !map.getSource(sourceId)) return;
+          const terrainTiles = terrainOwned ? terrainEventSource?.tiles?.[0]
+            ?? (map.getSource(sourceId!) as { serialize?: () => { tiles?: string[] } } | undefined)?.serialize?.().tiles?.[0] ?? "" : "";
           if (terrainTiles && terrainTiles !== terrainSourceFor(terrainProviderRef.current).tileTemplate) return;
           if (terrainTiles.includes("/api/3dep-dem-tile")) {
             // A 3DEP source already replaced by the display DEM can still report tiles in flight.
             if (terrainProviderRef.current !== "usgs-3dep") return;
-            if (terrainDetailRef.current.auto && !terrainDetailRef.current.failed) {
+            if (sourceId === TERRAIN_SOURCE_ID && terrainDetailRef.current.auto && !terrainDetailRef.current.failed) {
               // The automatic 3DEP detail did not load here: back to the display DEM, once.
               terrainDetailRef.current = { ...terrainDetailRef.current, auto: false, failed: true };
               terrainDetailFallbackRef.current?.();
               return;
             }
+          }
+          if (sourceId === TERRAIN_HILLSHADE_SOURCE_ID) {
+            if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", "none");
+            announce("Terrain shadows are unavailable; the elevation surface remains active");
+            return;
+          }
+          if (sourceId === TERRAIN_COLOR_SOURCE_ID) {
+            topographicOverlayRef.current = false;
+            setTopographicOverlay(false);
+            setTerrainElevationReading(null);
+            setTerrainElevationUnavailable(null);
+            announce("Topographic height overlay is unavailable; Terrain 3D remains active");
+            return;
           }
           runtimeError = message;
           if (sourceId) failedSourceIds.add(sourceId);
@@ -7677,19 +7695,6 @@ export default function Home() {
                 map.refreshTiles(TERRAIN_SOURCE_ID);
               }, terrainRetryCount * 6000);
             }
-            return;
-          }
-          if (sourceId === TERRAIN_HILLSHADE_SOURCE_ID) {
-            if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", "none");
-            announce("Terrain shadows are unavailable; the elevation surface remains active");
-            return;
-          }
-          if (sourceId === TERRAIN_COLOR_SOURCE_ID) {
-            topographicOverlayRef.current = false;
-            setTopographicOverlay(false);
-            setTerrainElevationReading(null);
-            setTerrainElevationUnavailable(null);
-            announce("Topographic height overlay is unavailable; Terrain 3D remains active");
             return;
           }
           if (sourceId === "usgs-topo-context") {

@@ -75,6 +75,15 @@ export function createBasemapHealth(maxFailures = 128) {
       }
       return kind;
     },
+    // A provider switch may replace one source without replacing the style.
+    // Retire only the exact abandoned source instance, retaining newer errors
+    // for this ID and failures of every unrelated source.
+    replaceSource(sourceId: string, previous: object, next: object) {
+      if (!previous || !next || previous === next) return;
+      for (let i = failures.length - 1; i >= 0; i--) {
+        if (failures[i].sourceId === sourceId && failures[i].sourceInstance === previous) failures.splice(i, 1);
+      }
+    },
     loaded(input: BasemapHealthInput) {
       const event = record(input.event);
       if (record(event?.tile)?.state !== "loaded" || !input.sourceInstance) return;

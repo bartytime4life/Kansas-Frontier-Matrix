@@ -74,3 +74,24 @@ test('a genuine Mapzen failure after fallback is still a provider failure', () =
   assert.equal(h.provider, 'mapzen'); assert.equal(h.terrain, 'ERROR'); assert.equal(h.runtime.kind, 'degraded');
   assert.ok(h.errors().runtimeError); assert.deepEqual(h.errors().failedSourceIds, ['kfm-terrain-dem']);
 });
+
+
+test('provider replacement retires only abandoned relief failures and recovers the actual runtime callback closure',()=>{
+ for(const manual of [false,true]){
+  const h=manual?terrainHarness():automatic();if(manual)h.manual('usgs-3dep');const old=h.attach();
+  h.fail(h.sources.get('basemap-relief-dem').serialize(),'basemap-relief-dem');assert.ok(h.scope.basemapHealth.warning());
+  if(manual)h.manual('mapzen');else h.fail(old);
+  h.attach();h.complete();assert.equal(h.scope.basemapHealth.warning(),null);assert.equal(h.runtime.kind,'ready');h.fail(old);h.idle();assert.equal(h.runtime.kind,'ready','late old DEM error cannot relatch recovery');
+ }
+});
+test('new provider and unrelated basemap failures survive retirement of the abandoned relief instance',()=>{
+ for(const current of [true,false]){
+  const h=automatic();h.attach();h.fail(undefined,'basemap-relief-dem');h.fail();
+  if(!current){h.sources.set('other-basemap',{serialize:()=>({type:'raster',tiles:['https://example.test/other/{z}/{x}/{y}']})});h.fail(h.sources.get('other-basemap').serialize(),'other-basemap');}
+  h.attach();if(current)h.fail(undefined,'basemap-relief-dem');h.complete();assert.equal(h.terrain,'READY');assert.equal(h.runtime.kind,'degraded');assert.ok(h.scope.basemapHealth.warning(),'only abandoned source failures are retired');
+ }
+});
+test('late terrain shadow/color events are identity guarded; handled optional failures do not poison runtime readiness',()=>{
+ const h=automatic(),old=h.attach();h.fail();h.attach();h.complete();
+ for(const id of [h.scope.TERRAIN_HILLSHADE_SOURCE_ID,h.scope.TERRAIN_COLOR_SOURCE_ID]){h.fail(old,id);h.idle();assert.equal(h.runtime.kind,'ready');h.fail(h.sources.get(id).serialize(),id);h.idle();assert.equal(h.runtime.kind,'ready','optional shading failure is local to its display control');}
+});
