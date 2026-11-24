@@ -26,3 +26,20 @@ test("a knowledge record can recover from an unavailable read without leaving th
   assert.ok(findNode(recovered, n => n.type === "p" && n.props.children === "No knowledge release is active yet."));
   h.dispose();
 });
+
+test("a knowledge record page without an identifier does not query the store", async () => {
+  const requests = [];
+  const h = await componentHarness("app/knowledge/record/page.tsx", {
+    "next/link": { default: "a" }, "next/navigation": { useSearchParams: () => new URLSearchParams() },
+    "../knowledge.module.css": { default: {} },
+    "../../knowledge-read": {
+      knowledgeUnavailable: () => ({ envelope: { outcome: "ERROR", reason_code: "STORAGE_UNAVAILABLE" } }),
+      readKnowledge: query => { requests.push(query); return new Promise(() => {}); },
+    },
+  }, {}, "\nexport { KnowledgeRecordContent as TestRecord };\n");
+  const tree = h.render(h.exports.TestRecord, { id: "" }); h.commit(); await settle();
+  assert.equal(requests.length, 0);
+  assert.equal(findNode(tree, n => n.props?.["aria-busy"] !== undefined).props["aria-busy"], false);
+  assert.ok(findNode(tree, n => n.type === "p" && Array.isArray(n.props.children) && n.props.children[0] === "No record was selected. "));
+  h.dispose();
+});

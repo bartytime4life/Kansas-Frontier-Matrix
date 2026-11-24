@@ -2,8 +2,8 @@
 // Fail-closed checks on the built public-site bundle before it may be deployed.
 // Usage: node apps/public-site/check.mjs [distDir]
 
-import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, extname, join, relative, resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -69,15 +69,22 @@ for (const page of ["index.html", "404.html"]) {
   const path = join(dist, page);
   if (!existsSync(path)) continue;
   const html = readFileSync(path, "utf8");
-  for (const [, ref] of html.matchAll(/\b(?:href|src|srcset)="([^"]+)"/g)) {
+  const refs = [...html.matchAll(/\b(href|src|srcset)="([^"]+)"/g)].flatMap(([, attr, value]) =>
+    // A srcset lists comma-separated candidates, each a URL and an optional descriptor.
+    attr === "srcset" ? value.split(",").map((candidate) => candidate.trim().split(/\s+/)[0]).filter(Boolean) : [value]);
+  for (const ref of refs) {
     if (/^(?:https:|mailto:|#)/.test(ref)) continue;
     if (/^http:/.test(ref)) {
       fail(`${page} links over plain http: ${ref}`);
       continue;
     }
     const target = ref.split(/[?#]/)[0];
-    const file = target === "/" ? "index.html" : target.replace(/^\//, "");
-    if (!existsSync(join(dist, file))) fail(`${page} references missing ${ref}`);
+    const file = resolve(dist, target === "/" ? "index.html" : target.replace(/^\//, ""));
+    // The server cannot serve a path above the bundle root or a bare directory.
+    const inside = relative(dist, file);
+    if (inside === ".." || inside.startsWith("../") || isAbsolute(inside) || !existsSync(file) || !statSync(file).isFile()) {
+      fail(`${page} references missing ${ref}`);
+    }
   }
   for (const [img] of html.matchAll(/<img\b[^>]*>/g)) if (!/\balt="/.test(img)) fail(`${page} image lacks alt: ${img.slice(0, 80)}`);
 }

@@ -1,10 +1,26 @@
+import importlib
 import json
 from wsgiref.simple_server import make_server, WSGIServer, WSGIRequestHandler
 
 from governed_api.routes.registry import ROUTES
+from governed_api.stub import invoke_sync_fixture_operation, make_error_envelope
 
 _RELEASE_STORE = None
-from governed_api.stub import invoke_sync_fixture_operation, make_error_envelope
+
+# Versioned domain routes and the module that serves them. Modules are imported
+# on first use: the compatibility water routes need no optional serving package.
+_DOMAIN_PREFIXES = {
+    "/v1": "water",
+    "/v1/weather": "weather",
+    "/v1/soil": "soil",
+    "/v1/storm-events": "storm_events",
+    "/v1/earthquakes": "earthquakes",
+}
+_DOMAIN_ROUTES = {
+    f"{prefix}/{leaf}": module
+    for prefix, module in _DOMAIN_PREFIXES.items()
+    for leaf in ("bootstrap", "layers", "evidence")
+}
 
 
 # Transport status for each guarded failure class. Only defects map to 500:
@@ -48,22 +64,10 @@ def app(environ, start_response):
     path = environ.get("PATH_INFO", "")
     if path == "/healthz" and environ.get("REQUEST_METHOD", "GET") == "GET":
         return _json_response(start_response, "200 OK", {"process": "LIVE", "release_store": "CONFIGURED" if _RELEASE_STORE is not None else "NOT_CONFIGURED", "evidence_readiness": "NOT_ESTABLISHED", "build": "kfm-water-v1"})
-    if path in {"/v1/bootstrap", "/v1/layers", "/v1/evidence"}:
-        # Compatibility routes do not need the optional water serving package.
-        from governed_api import water
-        return water.respond(environ, start_response, _RELEASE_STORE)
-    if path in {"/v1/weather/bootstrap", "/v1/weather/layers", "/v1/weather/evidence"}:
-        from governed_api import weather
-        return weather.respond(environ, start_response, _RELEASE_STORE)
-    if path in {"/v1/soil/bootstrap", "/v1/soil/layers", "/v1/soil/evidence"}:
-        from governed_api import soil
-        return soil.respond(environ, start_response, _RELEASE_STORE)
-    if path in {"/v1/storm-events/bootstrap", "/v1/storm-events/layers", "/v1/storm-events/evidence"}:
-        from governed_api import storm_events
-        return storm_events.respond(environ, start_response, _RELEASE_STORE)
-    if path in {"/v1/earthquakes/bootstrap", "/v1/earthquakes/layers", "/v1/earthquakes/evidence"}:
-        from governed_api import earthquakes
-        return earthquakes.respond(environ, start_response, _RELEASE_STORE)
+    domain = _DOMAIN_ROUTES.get(path)
+    if domain is not None:
+        module = importlib.import_module(f"governed_api.{domain}")
+        return module.respond(environ, start_response, _RELEASE_STORE)
     method = environ.get("REQUEST_METHOD", "GET")
 
     if path in ROUTES and method != "GET":

@@ -15,7 +15,8 @@ sys.path[:0] = [str(ROOT / "packages/domains/people-dna-land/src")]
 from people_dna_land.land_records import KINDS, SOURCES, canonical, iso_date, public_projection
 from people_dna_land.land_store import audit, evidence_for, immutable, list_records, read_file, status
 
-ASSETS = Path(__file__).parent / "static"
+# From the resolved ROOT: read_file refuses symlinked parents, so a checkout reached through a symlink would otherwise 400 every asset.
+ASSETS = ROOT / "apps/land-records/static"
 HEADERS = [("Cache-Control", "private, no-store"), ("X-Content-Type-Options", "nosniff"), ("Referrer-Policy", "no-referrer"),
            ("Content-Security-Policy", "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'")]
 
@@ -81,7 +82,9 @@ def application(root, token, port):
             logging.getLogger("kfm.land-runtime").error("LAND_STORE_UNAVAILABLE %s", type(error).__name__)
             status_code, payload, media = "503 Service Unavailable", {"outcome": "ABSTAIN", "reason_code": "STORE_UNAVAILABLE"}, "application/json"
         body = payload if isinstance(payload, bytes) else canonical(payload)
-        start_response(status_code, [("Content-Type", media), ("Content-Length", str(len(body))), *HEADERS])
+        # RFC 9110 15.5.2: a 401 must name its authentication scheme.
+        challenge = [("WWW-Authenticate", 'Bearer realm="kfm-land-review"')] if status_code.startswith("401") else []
+        start_response(status_code, [("Content-Type", media), ("Content-Length", str(len(body))), *challenge, *HEADERS])
         return [body]
     return app
 

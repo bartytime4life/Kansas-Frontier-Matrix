@@ -12,15 +12,17 @@ export default function KnowledgeRecordPage() {
 
 function SelectedRecord() {
   const params = useSearchParams();
-  const id = params.get("id") ?? "";
+  const id = (params.get("id") ?? "").trim();
   return <KnowledgeRecordContent key={id} id={id} />;
 }
 
 function KnowledgeRecordContent({ id }: { id: string }) {
   const [result, setResult] = useState<KnowledgeResult | null>(null);
   const [retry, setRetry] = useState(0);
-  const busy = result === null;
+  const missing = !id;
+  const busy = !missing && result === null;
   useEffect(() => {
+    if (!id) return;
     const abort = new AbortController();
     void readKnowledge({ kind: "record", id }, abort.signal)
       .then(result => { if (!abort.signal.aborted) setResult(result); })
@@ -35,6 +37,7 @@ function KnowledgeRecordContent({ id }: { id: string }) {
       <p>Only the active, reviewed release can supply this page. Named locations are source labels, not inferred boundaries or exact sites.</p></div>
     <section className={styles.results} aria-live="polite" aria-busy={busy}>
       {busy && <p>Checking reviewed record…</p>}
+      {missing && <p>No record was selected. <Link href="/knowledge">Search Kansas knowledge</Link> to open a reviewed record.</p>}
       {!busy && result?.envelope.reason_code === "NO_APPROVED_KNOWLEDGE" && <p>No knowledge release is active yet.</p>}
       {!busy && result?.envelope.reason_code === "RECORD_NOT_FOUND" && <p>No released record matches this identifier. A source record may still exist outside the released collection.</p>}
       {!busy && result?.envelope.reason_code === "RELEASE_HELD" && <p>The current knowledge release is held or withdrawn.</p>}

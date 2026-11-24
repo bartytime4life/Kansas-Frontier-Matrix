@@ -570,3 +570,21 @@ def test_runtime_asset_failure_reports_json_media_type(tmp_path, monkeypatch, er
         status_code, data, headers = request(app, path)
         assert status_code.startswith(code) and data["outcome"] == "ABSTAIN"
         assert headers["Content-Type"] == "application/json"
+
+
+def test_runtime_assets_load_through_symlinked_checkout(tmp_path):
+    # read_file refuses symlinked parents; a checkout reached through a symlink must still serve the UI.
+    link = tmp_path / "checkout"; link.symlink_to(ROOT, target_is_directory=True)
+    spec = importlib.util.spec_from_file_location("land_review_runtime_link", link / "apps/land-records/server.py")
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    app = module.application(tmp_path / "store", "x" * 43, 5271)
+    for path in ("/review", "/review.js", "/review.css"):
+        status_code, body, _ = raw_request(app, path)
+        assert status_code.startswith("200") and body
+
+
+def test_runtime_unauthorized_names_bearer_challenge(tmp_path):
+    import_csv(tmp_path, [ROW]); app = load_runtime().application(tmp_path, "x" * 43, 5271)
+    status_code, _, headers = request(app, "/review/v1/status")
+    assert status_code.startswith("401") and headers["WWW-Authenticate"].startswith("Bearer ")
+    assert "WWW-Authenticate" not in request(app, "/healthz")[2]

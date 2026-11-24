@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # Keep exactly one RECEIPT binding: mirror checks and ADR-0048 topology read it.
 # Resolve conflicts to the successor matching the merged bytes; never delete it.
 # Content parity does not approve overlays, activation, or publication.
-RECEIPT = ROOT / "data/receipts/generated/site-v268-topo-catalog-address-overlay-20261122.json"
+RECEIPT = ROOT / "data/receipts/generated/site-v268-web-fixes-overlay-20261124.json"
 DESTINATION = ROOT / "apps/site/source"
 
 

@@ -3246,4 +3246,19 @@ def test_topo_catalog_address_successor_preserves_kept_feeds_parity_inventory_an
         },
         "9890000f2e9f337c689817fdfc63910eaa383026",
     )
-    assert TOOL.RECEIPT.name == "site-v268-topo-catalog-address-overlay-20261122.json"
+
+
+def test_web_fixes_successor_preserves_topo_catalog_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-web-fixes-overlay-20261124.json",
+        "site-v268-topo-catalog-address-overlay-20261122.json",
+        "e05414c89cd644be40d3b51ca45b84aec26cc9c2f333fe71487a9085a28e29b2",
+        WEB_FIXES_CHANGED,
+        "de7901fd65f5287f246acdb61d83c25a84db4c38",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-web-fixes-overlay-20261124.json"
+
+
+WEB_FIXES_CHANGED = {
+    "app/knowledge/record/page.tsx", "tests/knowledge-record-retry.test.mjs",
+}
