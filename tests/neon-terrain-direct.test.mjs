@@ -29,11 +29,11 @@ const {NEON_LOCAL_SOURCE:SOURCE,NEON_LOCAL_FILL:FILL,NEON_LOCAL_GROUND:GROUND}=m
 const deferred = () => {let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return{promise,resolve,reject};};
 
 async function harness(options={}) {
-  const timers=new Map(); let timerId=0;
+  const timers=new Map(); let timerId=0, env;
   const controllerHarness=await componentHarness('app/terrain/terrain-controller.ts',{
-    '../maplibre-seam':{loadMapLibre:()=>{}},'../map-performance':{browserRenderBudget:()=>{}},'../webgl-support':{webgl2Available:()=>true},'../neon-lidar-pilot-client':{readNeonLidarPilot:()=>{}},'../neon-lidar-science':science,'../neon-lidar-preview':preview,'../neon-lidar-map':mapModel,'../neon-lidar-story':story,
-  },{queueMicrotask,setTimeout:(fn,ms)=>{const id=++timerId;timers.set(id,{fn,ms});return id;},clearTimeout:id=>timers.delete(id)});
-  const env={maps:[],loads:0,reads:0,unobserved:0,states:[],timers,host:{getBoundingClientRect:()=>({width:1000,height:550})},...options};
+    '../maplibre-seam':{loadMapLibre:()=>{env.loads++;return Promise.resolve(env.lib);}},'../map-performance':{browserRenderBudget:()=>({pixelRatio:1.5,tileCache:24})},'../webgl-support':{webgl2Available:()=>options.webgl!==false},'../neon-lidar-pilot-client':{readNeonLidarPilot:signal=>{env.reads++;env.signal=signal;return Promise.resolve(options.receipt??fixture());}},'../neon-lidar-science':science,'../neon-lidar-preview':preview,'../neon-lidar-map':mapModel,'../neon-lidar-story':story,
+  },{queueMicrotask:options.nativeQueue??queueMicrotask,ResizeObserver:class{constructor(fn){this.fn=fn;}observe(){env.resize=this.fn;}disconnect(){env.unobserved++;}},...options.globals,setTimeout:(fn,ms)=>{const id=++timerId;timers.set(id,{fn,ms});return id;},clearTimeout:id=>timers.delete(id)});
+  env={maps:[],loads:0,reads:0,unobserved:0,states:[],timers,host:{getBoundingClientRect:()=>({width:1000,height:550})},...options};
   class FakeMap {
     constructor(config){this.config=config;this.events=new Map();this.sources=new Map();this.layers=new Map();this.canvas=new EventTarget();this.canvas.setAttribute=()=>{};this.fits=[];this.moves=[];this.zoom=14;this.bearing=-25;this.resizeCount=0;this.removed=0;this.hits=[];this.sourceReady=false;this.projection=config.style.projection;env.maps.push(this);}
     on(name,fn){if(!this.events.has(name))this.events.set(name,new Set());this.events.get(name).add(fn);return this;}
@@ -54,11 +54,35 @@ async function harness(options={}) {
   }
   const lib={Map:FakeMap,setWorkerUrl:value=>env.worker=value};
   const runtime={loadMap:()=>{env.loads++;return options.mapPending?.promise??Promise.resolve(lib);},readPilot:signal=>{env.reads++;env.signal=signal;return options.pilotPending?.promise??Promise.resolve(options.receipt??fixture());},webgl:()=>options.webgl!==false,budget:()=>({pixelRatio:1.5,tileCache:24}),observe:(_host,fn)=>{env.resize=fn;return()=>env.unobserved++;},defer:options.defer??queueMicrotask};
-  env.controller=controllerHarness.exports.createTerrainController(env.host,state=>env.states.push(state),options.reduced??false,runtime);
-  env.lib=lib;env.current=()=>env.controller.getState();env.stop=()=>env.controller.dispose();
+  env.lib=lib;
+  env.controller=options.productionDefault
+    ? controllerHarness.exports.createTerrainController(env.host,state=>env.states.push(state),options.reduced??false)
+    : controllerHarness.exports.createTerrainController(env.host,state=>env.states.push(state),options.reduced??false,runtime);
+  env.current=()=>env.controller.getState();env.stop=()=>env.controller.dispose();
   await settle();return env;
 }
 const ready=env=>{const map=env.maps[0];map.emit('style.load');map.sourceReady=true;map.hits=[{source:SOURCE,properties:{row:0,column:0}}];map.emit('render');return map;};
+
+test('production default startup preserves the browser global receiver for native microtask scheduling',async()=>{
+  // WebIDL operation semantics: undefined/null uses the relevant global;
+  // a non-null ordinary receiver cannot implement Window/WorkerGlobalScope.
+  // Node's queueMicrotask does not make this receiver check, so ordinary Node
+  // injection hid the original client-effect Illegal invocation failure.
+  const brand=Symbol('browser-global'),pending=[],receivers=[];
+  function nativeQueue(callback){
+    if(this!=null&&this.__terrainWindowBrand!==brand)throw new TypeError('Illegal invocation');
+    receivers.push(this);pending.push(callback);
+  }
+  assert.throws(()=>({defer:nativeQueue}).defer(()=>{}),/Illegal invocation/);
+  const env=await harness({productionDefault:true,nativeQueue,globals:{__terrainWindowBrand:brand}});
+  try{
+    assert.equal(pending.length,1);assert.equal(env.reads,0);assert.equal(env.loads,0,'default session is deferred until the native microtask runs');
+    assert.equal(receivers[0].__terrainWindowBrand,brand,'production default calls the actual global, not its runtime container');
+    pending.shift()();await settle();assert.equal(env.reads,1);assert.equal(env.loads,1);
+    const map=ready(env);assert.equal(env.current().phase,'ready');assert.equal(map.fits[0].config.pitch,60);
+    env.stop();assert.equal(env.signal.aborted,true);assert.equal(map.removed,1);assert.equal(env.unobserved,1);assert.equal(env.timers.size,0);
+  }finally{env.stop();}
+});
 
 test('direct session automatically loads once, frames pitched 3× columns and waits for actual owned viewport features',async()=>{
   const env=await harness();try{

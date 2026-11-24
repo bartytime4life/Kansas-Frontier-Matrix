@@ -24,7 +24,9 @@ function observe(container: HTMLElement, resize: () => void) {
   const observer = new ResizeObserver(resize); observer.observe(container);
   return () => observer.disconnect();
 }
-const defaultRuntime = { loadMap: loadMapLibre, readPilot: readNeonLidarPilot, webgl: webgl2Available, budget: browserRenderBudget, observe, defer: queueMicrotask };
+// Native browser scheduling checks its Window/Worker receiver. Keep the global
+// call inside a wrapper instead of rebinding it to this runtime container.
+const defaultRuntime = { loadMap: loadMapLibre, readPilot: readNeonLidarPilot, webgl: webgl2Available, budget: browserRenderBudget, observe, defer: (callback: () => void) => globalThis.queueMicrotask(callback) };
 const draftNumber = (value: string, limit: number) => /^\d+$/.test(value) && Number.isInteger(Number(value)) && Number(value) >= 1 && Number(value) <= limit ? Number(value) - 1 : null;
 
 /** One route session owns one bounded receipt and one local renderer. No external basemap or DEM. */
