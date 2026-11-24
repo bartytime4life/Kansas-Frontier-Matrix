@@ -390,3 +390,13 @@ FTS ranking, exact facets, snippets and public response schema while avoiding
 that unrelated disk I/O. Both newspaper and archive-text paths have tests that
 reject any external-content read outside the requested result page. The existing
 query time, queue, process and response-size limits remain unchanged.
+
+
+Archive search navigation exposes the form when a welcome/deep link targets a
+query. Accepted queries retain words, source, years and the title filter in the
+address; drafts, failures and cancelled responses cannot replace that address.
+“Link to this search” opens the first ranked page for those filters. Pagination
+moves focus to the newly accepted results unless the reader has moved outside
+the search workspace. Collection-finder parameters and explicit collection/hash
+destinations remain independent. These links preserve a query, not a frozen data
+snapshot: later archive loads may change the matches.
