@@ -3275,10 +3275,21 @@ def test_web_cleanup_successor_preserves_web_fixes_inventory_and_all_holds():
 
 
 WEB_CLEANUP_CHANGED = {
+    "app/api/event-atlas/radar-frame/route.ts",
+    "app/api/event-atlas/tile/route.ts",
+    "app/daily-archive/workspace.tsx",
+    "app/data/land-records/workspace.tsx",
     "app/daylight-layer.ts",
     "app/earth-engine-export.ts",
+    "app/globals.css",
     "app/governed-water-admin-server.ts",
+    "app/hms-smoke-playback-control.tsx",
+    "app/local-cache-settings.tsx",
     "app/map-layer-composition.ts",
+    "app/map-layers.css",
+    "app/page.tsx",
     "app/scene-overlays.ts",
+    "app/soil-moisture-control.tsx",
     "app/subsurface-model.ts",
+    "tests/event-atlas.test.mjs",
 }

@@ -1252,9 +1252,9 @@
       "state": "identical"
     },
     "app/api/event-atlas/radar-frame/route.ts": {
-      "mirror_sha256": "d48dec24dccbd903ecdaa670e65e97750d3bdccb1a205d6ef7c76500bfc4442d",
+      "mirror_sha256": "1ecdf1c120f0dacdf09afc4f0bdfd9edc93353f9afab9546a5e60665fd12759b",
       "site_sha256": "d48dec24dccbd903ecdaa670e65e97750d3bdccb1a205d6ef7c76500bfc4442d",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/api/event-atlas/resources/route.ts": {
       "mirror_sha256": "f8cbf39378b0406cd6a1bc298028039b919b5a695c8eeb1c5f40794ad4e9dfc4",
@@ -1268,7 +1268,7 @@
     },
     "app/api/event-atlas/tile/route.ts": {
       "difference": "Bounded repository context transport, export HTTP integrity and finite repository check correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "bca85408ab34840f028deb8febf9022731f1c270b78f2a65b0494f6ae74605da",
+      "mirror_sha256": "a65ac8d5b5a76bf72efc6d0c0712513258fd8cfc2a3088eb1d23740a93b7aee3",
       "site_sha256": "5dad3c7b3849e5a2214538c4f917922d7a8416db63c079963d8d2526e7a55224",
       "state": "repository_safety_overlay"
     },
@@ -1886,7 +1886,7 @@
     },
     "app/daily-archive/workspace.tsx": {
       "difference": "Repository follow-up byte reconciliation only; no hosted-source equivalence, review acceptance, data activation or publication.",
-      "mirror_sha256": "787155610343e1a853d80fcac5df8653963c11a40a614cd323e1ff0f9061d543",
+      "mirror_sha256": "dbd32809010566fae40efcf90fdd229bcc16350303c87c6cd28580dd15e8c3b5",
       "site_sha256": "e0eceff8f07819077679929addbc8772596c7c1e75bbd805fd80682edde4bf14",
       "state": "repository_safety_overlay"
     },
@@ -1918,7 +1918,7 @@
     },
     "app/data/land-records/workspace.tsx": {
       "difference": "Bounded repository evidence integrity, streamed-body and review recovery correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "2e79ba4d6f2a6d68a2b35d2217e0c1a8ac3efb2c54d2e29373abce024276a4ca",
+      "mirror_sha256": "5228c22c70761705519cf27b7a9935e655586baad02e1ce44e70211d494b992e",
       "site_sha256": "d313a48408d4a55486dd80de7f776cbfe595750537f43016c0b6d90f8caa4b25",
       "state": "repository_safety_overlay"
     },
@@ -2356,7 +2356,7 @@
     },
     "app/globals.css": {
       "difference": "Bounded repository context transport, export HTTP integrity and finite repository check correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "97d13a3f7536b1fe3b2bbd15a5facacdf506832f92138e01dd4aa04962755ba5",
+      "mirror_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
       "site_sha256": "7b16ffbe6884755f9827df2d6b4f48fb90703ec8dc360d8184dd2752c1c96637",
       "state": "inherited_repository_overlay"
     },
@@ -2598,7 +2598,7 @@
     },
     "app/hms-smoke-playback-control.tsx": {
       "difference": "Bounded saved investigation/source preference restore, map-preview recovery and exact reviewed-water clock correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "3bc204efe8b694a99cbdb26718d0c305df2d0f8bf8b4b0baedb65c3708a390e6",
+      "mirror_sha256": "b0a7713731dded11ae7b79d521a704d9128b38a9e04df08d69f7916983558bbc",
       "site_sha256": "69e59dfbd2187d9f583cd91a3757dad924dde7c618c76c8a8cbdd893daecdf13",
       "state": "repository_safety_overlay"
     },
@@ -2864,9 +2864,9 @@
       "state": "identical"
     },
     "app/local-cache-settings.tsx": {
-      "mirror_sha256": "abd9731f930bde93762d04cf9392c3496ee1cbb2011df962c92bc5ee4c547529",
+      "mirror_sha256": "b224a52222ad6d88b71ce3cbb918b3051ab215a6cd6b0f00248f414fad832baa",
       "site_sha256": "abd9731f930bde93762d04cf9392c3496ee1cbb2011df962c92bc5ee4c547529",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/local-companion-session.ts": {
       "mirror_sha256": "a0cc480461791f1d5df260fe40da9acf616ef4c79291e66101a32ec21122c8b4",
@@ -2939,7 +2939,7 @@
       "state": "repository_safety_overlay"
     },
     "app/map-layers.css": {
-      "mirror_sha256": "997526f1ea032ef631dd473186f23afeb9eb83f34663087597be213be5aa148c",
+      "mirror_sha256": "ae126287a8044a9daccf14472e6abe9a6d3b60b6fdcba7bcc5e0563a5b33d74c",
       "site_sha256": "5e6dd670d2e688187e932c847148df968fd7491d7be9fb22f0a894e9389d85a6",
       "state": "inherited_repository_overlay"
     },
@@ -3078,7 +3078,7 @@
     },
     "app/page.tsx": {
       "difference": "Bounded shared terrain-source integrity, malformed soil-link recovery and NOAA daily-weather qualifier integrity only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "6ddf02eb009a2615b93696a0c6bcbb5ded45336a1f1a09f672de52f3195b766d",
+      "mirror_sha256": "60c2d2c58a1be93a9161b2eee7854619386f01362061a930e4f146598e7e5ce9",
       "site_sha256": "2833eb08843b9fce2ee6bf8ca2903a55f9a3580afd460cf35321642972f27610",
       "state": "inherited_repository_overlay"
     },
@@ -3329,7 +3329,7 @@
     },
     "app/soil-moisture-control.tsx": {
       "difference": "Repository-only older-and-newer layer integration proposed on branch claude/sweet-ramanujan-xqhl2y from main@2aaf6626a5a2e8c8bd5bdefc13c3c0a6eb811619: themed starters, map guides, Science lab map links, sitemap/robots and bounded-read reliability fixes. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "1836af08c1e3a7c6660f69e5f59e019aad164b2091a8dc2b46c45907a9bb0122",
+      "mirror_sha256": "97c9889a353c7da9aad05376a44815f5842b76337d545df34c921293847dc7d7",
       "site_sha256": "e924eca35e734a016a610e47950a34e061be0fbba4e5d06c0f398e2bedcbf5ce",
       "state": "repository_safety_overlay"
     },
@@ -4957,7 +4957,7 @@
     },
     "tests/event-atlas.test.mjs": {
       "difference": "Bounded repository context transport, export HTTP integrity and finite repository check correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "04129b8789c8e902bac45a00502427a3291815ff5cad9c3a503d1f7637e7034c",
+      "mirror_sha256": "5d433c34a2de3a193679ed0254394af502973e91e75db0e4a455c1dedc8ab876",
       "site_sha256": "bb6b777a45306fbcfe7bfe05ab318dd81ae20def19b383c1c50fc4fcefa33e73",
       "state": "repository_safety_overlay"
     },
@@ -6304,13 +6304,13 @@
   "counts": {
     "canonical_document_mappings": 2,
     "canonical_tool_mappings": 2,
-    "identical": 640,
+    "identical": 638,
     "inherited_repository_overlay": 69,
     "merged_water_overlay": 0,
     "missing": 0,
     "repository_only_overlay": 152,
     "repository_only_water_overlay": 0,
-    "repository_safety_overlay": 153,
+    "repository_safety_overlay": 155,
     "repository_withheld": 262,
     "source_paths": 867,
     "unexpected_difference": 0
@@ -6546,7 +6546,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "ff0e7bd3ab7e1dae638a064fb85d55c30f99f735e04472033e3e20275cae4654",
+  "inventory_sha256": "c8e8266c40d7621e0bf3e1126e38e899f029dd3943a754607abad8c2839506dc",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8734,13 +8734,45 @@
       ]
     }
   },
-  "recorded_at": "2026-11-24T21:57:05.799012+00:00",
+  "recorded_at": "2026-11-24T22:07:04.445172+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "709332690ad4ebf5db49e0bdb00244bd22969de6",
   "repository_reconciliation": {
     "authority": "CONTENT_PARITY_ONLY",
     "base_commit": "709332690ad4ebf5db49e0bdb00244bd22969de6",
     "changes": [
+      {
+        "mirror_sha256": "1ecdf1c120f0dacdf09afc4f0bdfd9edc93353f9afab9546a5e60665fd12759b",
+        "path": "app/api/event-atlas/radar-frame/route.ts",
+        "previous_receipt_sha256": "d48dec24dccbd903ecdaa670e65e97750d3bdccb1a205d6ef7c76500bfc4442d",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "d48dec24dccbd903ecdaa670e65e97750d3bdccb1a205d6ef7c76500bfc4442d",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "a65ac8d5b5a76bf72efc6d0c0712513258fd8cfc2a3088eb1d23740a93b7aee3",
+        "path": "app/api/event-atlas/tile/route.ts",
+        "previous_receipt_sha256": "bca85408ab34840f028deb8febf9022731f1c270b78f2a65b0494f6ae74605da",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "bca85408ab34840f028deb8febf9022731f1c270b78f2a65b0494f6ae74605da",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "dbd32809010566fae40efcf90fdd229bcc16350303c87c6cd28580dd15e8c3b5",
+        "path": "app/daily-archive/workspace.tsx",
+        "previous_receipt_sha256": "787155610343e1a853d80fcac5df8653963c11a40a614cd323e1ff0f9061d543",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "787155610343e1a853d80fcac5df8653963c11a40a614cd323e1ff0f9061d543",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "5228c22c70761705519cf27b7a9935e655586baad02e1ce44e70211d494b992e",
+        "path": "app/data/land-records/workspace.tsx",
+        "previous_receipt_sha256": "2e79ba4d6f2a6d68a2b35d2217e0c1a8ac3efb2c54d2e29373abce024276a4ca",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "2e79ba4d6f2a6d68a2b35d2217e0c1a8ac3efb2c54d2e29373abce024276a4ca",
+        "state": "repository_safety_overlay"
+      },
       {
         "mirror_sha256": "015a22ff59a0d9c3f1e87579dcf498418b1a228a6034d35210d8cca0b129b6af",
         "path": "app/daylight-layer.ts",
@@ -8758,11 +8790,35 @@
         "state": "repository_safety_overlay"
       },
       {
+        "mirror_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
+        "path": "app/globals.css",
+        "previous_receipt_sha256": "97d13a3f7536b1fe3b2bbd15a5facacdf506832f92138e01dd4aa04962755ba5",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "97d13a3f7536b1fe3b2bbd15a5facacdf506832f92138e01dd4aa04962755ba5",
+        "state": "inherited_repository_overlay"
+      },
+      {
         "mirror_sha256": "694814d1bd61ff808d1a6f700ee201a6e0c160aa02a6b811b021026c6e2dc6f5",
         "path": "app/governed-water-admin-server.ts",
         "previous_receipt_sha256": "ac609af5e25d26d721ac813ed88a084c3297aa69fcfec989da0e4b4a72438478",
         "proposed_in_this_change": true,
         "repository_base_sha256": "ac609af5e25d26d721ac813ed88a084c3297aa69fcfec989da0e4b4a72438478",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "b0a7713731dded11ae7b79d521a704d9128b38a9e04df08d69f7916983558bbc",
+        "path": "app/hms-smoke-playback-control.tsx",
+        "previous_receipt_sha256": "3bc204efe8b694a99cbdb26718d0c305df2d0f8bf8b4b0baedb65c3708a390e6",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "3bc204efe8b694a99cbdb26718d0c305df2d0f8bf8b4b0baedb65c3708a390e6",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "b224a52222ad6d88b71ce3cbb918b3051ab215a6cd6b0f00248f414fad832baa",
+        "path": "app/local-cache-settings.tsx",
+        "previous_receipt_sha256": "abd9731f930bde93762d04cf9392c3496ee1cbb2011df962c92bc5ee4c547529",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "abd9731f930bde93762d04cf9392c3496ee1cbb2011df962c92bc5ee4c547529",
         "state": "repository_safety_overlay"
       },
       {
@@ -8774,6 +8830,22 @@
         "state": "repository_safety_overlay"
       },
       {
+        "mirror_sha256": "ae126287a8044a9daccf14472e6abe9a6d3b60b6fdcba7bcc5e0563a5b33d74c",
+        "path": "app/map-layers.css",
+        "previous_receipt_sha256": "997526f1ea032ef631dd473186f23afeb9eb83f34663087597be213be5aa148c",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "997526f1ea032ef631dd473186f23afeb9eb83f34663087597be213be5aa148c",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "60c2d2c58a1be93a9161b2eee7854619386f01362061a930e4f146598e7e5ce9",
+        "path": "app/page.tsx",
+        "previous_receipt_sha256": "6ddf02eb009a2615b93696a0c6bcbb5ded45336a1f1a09f672de52f3195b766d",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "6ddf02eb009a2615b93696a0c6bcbb5ded45336a1f1a09f672de52f3195b766d",
+        "state": "inherited_repository_overlay"
+      },
+      {
         "mirror_sha256": "bea60ac6fcde654eee8cb381b0814b7be638150a842d8f537612817aa7cd4501",
         "path": "app/scene-overlays.ts",
         "previous_receipt_sha256": "a33640c3709002d34709f377547afde84060717857cea1ff91778dc8e9685b31",
@@ -8782,11 +8854,27 @@
         "state": "repository_safety_overlay"
       },
       {
+        "mirror_sha256": "97c9889a353c7da9aad05376a44815f5842b76337d545df34c921293847dc7d7",
+        "path": "app/soil-moisture-control.tsx",
+        "previous_receipt_sha256": "1836af08c1e3a7c6660f69e5f59e019aad164b2091a8dc2b46c45907a9bb0122",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "1836af08c1e3a7c6660f69e5f59e019aad164b2091a8dc2b46c45907a9bb0122",
+        "state": "repository_safety_overlay"
+      },
+      {
         "mirror_sha256": "f6155ca816b9aee59893db61c9b736a64e1c403900850f76709881b31388522d",
         "path": "app/subsurface-model.ts",
         "previous_receipt_sha256": "70a5fcfd9122e89a8acec76ef80890dd461cd7984dcdd95b54f86e10e2fc7619",
         "proposed_in_this_change": true,
         "repository_base_sha256": "70a5fcfd9122e89a8acec76ef80890dd461cd7984dcdd95b54f86e10e2fc7619",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "5d433c34a2de3a193679ed0254394af502973e91e75db0e4a455c1dedc8ab876",
+        "path": "tests/event-atlas.test.mjs",
+        "previous_receipt_sha256": "04129b8789c8e902bac45a00502427a3291815ff5cad9c3a503d1f7637e7034c",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "04129b8789c8e902bac45a00502427a3291815ff5cad9c3a503d1f7637e7034c",
         "state": "repository_safety_overlay"
       }
     ],
@@ -8821,7 +8909,7 @@
   },
   "rollback": {
     "mirror": "Revert the listed Site files and the successor selector/QA together; preserve immutable receipts.",
-    "runtime": "Client and route fixes only. No dependency, saved-schema or operational-store migration.",
+    "runtime": "Client request guards, two event-atlas status codes (400 for caller input errors), hook dependency fixes, dead export and CSS removal. No dependency, saved-schema or operational-store migration.",
     "site": "No Site synchronization, deployment or publication."
   },
   "security": {
@@ -8854,10 +8942,10 @@
   "source_identity_currentness": "PREDECESSOR_DECLARATION_ONLY; historical Site identity retained without fresh hosted-source readback.",
   "status": "REVIEW_ONLY",
   "validation": {
-    "app_tests": "PASS: 2096 tests (2094 pass, 2 skipped).",
-    "browser": "NOT_RUN: unreferenced-export removal only.",
-    "focused_tests": "NOT_APPLICABLE: no behaviour change.",
-    "lint": "PASS: 0 errors; inherited warnings only.",
+    "app_tests": "PASS: 2096 tests (2094 pass, 2 skipped), including event-atlas with corrected 400 assertions for caller input errors.",
+    "browser": "PASS: local Playwright sweep of 44 routes matches the pre-change baseline apart from the removed empty knowledge read; CSS removals checked by computed-style diffs on 11 routes at 1280x800 and 375x740.",
+    "focused_tests": "PASS: event-atlas, daily-archive, hms-smoke, local-cache and soil-moisture suites within the full run.",
+    "lint": "PASS: 0 errors; 10 inherited warnings (down from 34).",
     "mirror": "PASS: strict selected successor inventory and immutable predecessor chain; 262 withheld paths remain absent.",
     "production_build": "PASS: Vite/Vinext build and held-output containment; route-classification limitations remain inherited.",
     "provider_and_release": "NOT_RUN: no hosted release, source admission, deployment or publication from this branch.",
