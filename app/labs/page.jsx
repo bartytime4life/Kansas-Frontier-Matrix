@@ -17,6 +17,7 @@ const IMPLEMENTED = STORIES.filter(story => story.status === 'ready');
 const GUIDED = STORIES.filter(story => story.status === 'guided');
 const AVAILABLE = Object.keys(PUBLIC_LAB_SNAPSHOTS).length + GUIDED.length;
 const QUESTIONS = [
+  ['neon-terrain', 'What rises above the ground?', 'Compare one Konza Prairie tile: ground, surface and independent canopy heights.'],
   ['climate-stripes', 'How has Kansas warmed?', 'Since 1895 · 10 areas · temperature, rain & drought'],
   ['census-mosaic', 'Which counties are changing?', '105 counties · population, births & migration'],
   ['river-memory', 'When did the rivers surge?', '3 gauges · daily flow · compare the record'],

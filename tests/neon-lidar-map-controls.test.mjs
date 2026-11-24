@@ -12,6 +12,7 @@ const SOURCE = "kfm-neon-local-preview", FILL = "external-neon-local-fill";
 const boundedUrl = moduleUrl(await readFile("app/bounded-json.ts", "utf8"));
 const pilotUrl = moduleUrl((await readFile("app/neon-lidar-pilot-client.ts", "utf8")).replace('"./bounded-json"', JSON.stringify(boundedUrl)).replace('"./neon-lidar-preview"', JSON.stringify(moduleUrl(await readFile("app/neon-lidar-preview.ts", "utf8")))));
 const pilotClient = await import(pilotUrl);
+const story = await import(moduleUrl((await readFile("app/neon-lidar-story.ts", "utf8")).replace('"./neon-lidar-preview"', JSON.stringify(moduleUrl(await readFile("app/neon-lidar-preview.ts", "utf8"))))));
 
 function fixture(georeferenced = true) {
   const width = 8, tile = "NEON_D06_KONZ_DP3_666000_4328000";
@@ -28,24 +29,29 @@ function fixture(georeferenced = true) {
 const file = input => ({ size: 10000, text: async () => JSON.stringify(input) });
 async function setup(overrides = {}, pilotOverrides = {}) {
   const handlers = new Map(), calls = [], map = {
-    overlay: null, hits: [], fail: false,
+    overlay: null, hits: [], fail: false, terrain: null, projection: "mercator", loaded: true,
+    getProjection() { return { type: this.projection }; },
+    getTerrain() { return this.terrain; },
+    isStyleLoaded() { return this.loaded; },
     on(event, callback) { if (!handlers.has(event)) handlers.set(event, new Set()); handlers.get(event).add(callback); },
     off(event, callback) { handlers.get(event)?.delete(callback); },
     emit(event, payload) { for (const callback of [...handlers.get(event) ?? []]) callback(payload); },
-    getLayer(id) { return this.overlay && id === FILL ? { id, source: SOURCE } : undefined; },
-    queryRenderedFeatures() { return this.hits; },
+    getLayer(id) { return this.overlay && (id === FILL || id === "external-neon-local-ground" && this.overlay.options?.representation === "columns") ? { id, source: SOURCE } : undefined; },
+    queryRenderedFeatures(_point, options) { calls.push({ kind: "pick-query", options }); return this.hits; },
     getCanvas() { return { getBoundingClientRect: () => ({ width: 1200, height: 800 }) }; },
     fitBounds(bounds, options) { calls.push({ kind: "fit", bounds, options }); },
+    easeTo(options) { calls.push({ kind: "camera", options }); },
   };
   const mapping = {
-    NEON_LOCAL_SOURCE: SOURCE, NEON_LOCAL_FILL: FILL,
+    NEON_LOCAL_SOURCE: SOURCE, NEON_LOCAL_FILL: FILL, NEON_LOCAL_GROUND: "external-neon-local-ground",
     buildNeonMapData: value => value.georeferencing ? { type: "FeatureCollection", features: [], tile: value.source.tile } : null,
+    buildNeon3DMapData: (data, mode, verticalExaggeration) => ({ data, metadata: { baseline_m: 300, eligible_cells: 64, omitted_cells: 0, input_cells: 64, vertical_exaggeration: verticalExaggeration } }),
     neonMapBounds: value => value.georeferencing ? [[-97.09, 39.082], [-97.082, 39.09]] : null,
-    applyNeonMapOverlay(target, data, mode, opacity) { if (target.fail) throw new Error("Mutation failed"); target.overlay = opacity === 0 ? null : { data, mode, opacity }; calls.push({ kind: "apply", mode, opacity }); },
+    applyNeonMapOverlay(target, data, mode, opacity, options) { if (target.fail) throw new Error("Mutation failed"); target.overlay = opacity === 0 ? null : { data, mode, opacity, options }; calls.push({ kind: "apply", mode, opacity }); },
     clearNeonMapOverlay(target) { target.overlay = null; calls.push({ kind: "clear" }); },
   };
   const options = { mapRef: { current: map }, styleReady: true, flatMap: true, atPresent: true, reducedMotion: true, ...overrides };
-  const harness = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": { ...pilotClient, ...pilotOverrides }, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": mapping, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
+  const harness = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": { ...pilotClient, ...pilotOverrides }, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": mapping, "./neon-lidar-story": story, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
   const render = () => { let c = harness.render(harness.exports.useNeonLidarMap, options); harness.commit(); c = harness.render(harness.exports.useNeonLidarMap, options); harness.commit(); return c; };
   return { harness, map, calls, handlers, options, render };
 }
@@ -161,7 +167,7 @@ test("main map integration owns hover and click hits before existing evidence se
 
 test("controls expose the empty local import and all loaded numeric/readout actions", async () => {
   const s = await setup(); let c = s.render();
-  const controls = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": pilotClient, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": {}, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
+  const controls = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": pilotClient, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": {}, "./neon-lidar-story": story, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
   let tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c });
   assert.ok(findNode(tree, node => node.type === "input" && node.props.type === "file")); assert.equal(findNode(tree, node => node.props?.children === "Show on map"), undefined);
   await c.importFile(file(fixture())); c = s.render(); tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c });
@@ -214,7 +220,7 @@ test("explicit pilot loading retains source/cache provenance and pending science
   const s = await setup({}, { readNeonLidarPilot: async () => { reads++; return relayReceipt(); } }); let c = s.render(); assert.equal(reads, 0);
   await c.loadPilot(); c = s.render(); assert.equal(reads, 1); assert.equal(c.enabled, false); assert.equal(s.map.overlay, null); assert.match(c.status, /Dev-processed provider pilot ready/);
   assert.equal(c.pilotReceipt.cache.state, "stale"); assert.equal(c.preview.data_kind, "provider-files");
-  const controls = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": pilotClient, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": {}, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
+  const controls = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": pilotClient, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": {}, "./neon-lidar-story": story, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
   const tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c });
   assert.ok(findNode(tree, node => node.type === "time" && node.props.dateTime === "2026-11-23T22:00:00Z"));
   assert.ok(findNode(tree, node => node.type === "p" && Array.isArray(node.props.children) && node.props.children.some(text => typeof text === "string" && /independent accuracy and vertical reference are unverified/.test(text))));
@@ -231,4 +237,73 @@ test("replaced or canceled pilot reads cannot restore old map data or probes", a
   assert.equal(observedSignal.aborted, true); assert.equal(c.pilotReceipt, null); assert.equal(c.preview.data_kind, "synthetic-test"); assert.equal(c.enabled, false);
   const canceled = c.loadPilot(); c.clear(); finish(relayReceipt()); await canceled; c = s.render(); assert.equal(c.preview, null); assert.equal(c.pilotReceipt, null); assert.equal(c.busy, false);
   s.harness.dispose();
+});
+
+
+test("sample columns are opt-in, bounded, source readings stay unscaled and camera movement is deliberate", async () => {
+  const s = await setup(); let c = s.render(); await c.importFile(file(fixture())); c = s.render();
+  assert.equal(c.representation, "flat"); assert.equal(c.verticalExaggeration, 1); assert.equal(s.calls.filter(call => call.kind === "camera").length, 0);
+  c.setRepresentation("columns"); c.setVerticalExaggeration(99); c = s.render(); assert.equal(c.verticalExaggeration, 5);
+  assert.equal(s.map.overlay, null); c.pitch(); assert.equal(s.calls.filter(call => call.kind === "camera").length, 0);
+  c.toggle(); c = s.render(); assert.equal(s.map.overlay.options.representation, "columns"); assert.equal(s.map.overlay.options.verticalExaggeration, 5);
+  let badge = s.harness.exports.NeonLidarMapBadge({ controller: c }); assert.ok(findNode(badge, node => node.type === "span" && [node.props.children].flat().join("").includes("3D sample columns · 5× vertical scale · relative sampled heights")));
+  c.pitch(); assert.equal(s.calls.at(-1).options.pitch, 55); assert.equal(s.calls.at(-1).options.duration, 0);
+  c.focusStop("high-canopy"); c = s.render(); assert.equal(c.mode, "chm"); assert.equal(c.probe.chm, 12); assert.equal(c.probe.dtm, 300); assert.equal(c.coordinateDraft.row, "1");
+  assert.deepEqual(s.calls.at(-1).options.center, c.storyStops.find(stop => stop.id === "high-canopy").display_center);
+  s.map.hits = [{ source: SOURCE, layer: { id: "external-neon-local-ground" }, properties: { row: 2, column: 3 } }]; s.map.emit("click", { point: { x: 3, y: 4 } }); c = s.render();
+  assert.equal(c.probe.row, 2); assert.ok(s.calls.filter(call => call.kind === "pick-query").at(-1).options.layers.includes("external-neon-local-ground"));
+  c.setVerticalExaggeration(-10); c = s.render(); assert.equal(c.verticalExaggeration, 1);
+  c.setVerticalExaggeration(NaN); c = s.render(); assert.equal(c.verticalExaggeration, 1);
+  badge = s.harness.exports.NeonLidarMapBadge({ controller: c }); assert.ok(findNode(badge, node => node.type === "span" && [node.props.children].flat().join("").includes("3D sample columns · 1× vertical scale · relative sampled heights")));
+  c.plan(); c = s.render(); assert.equal(c.representation, "flat"); assert.equal(s.calls.filter(call => call.kind === "camera").at(-1).options.pitch, 0);
+  s.options.flatMap = false; c = s.render(); const count = s.calls.length; c.pitch(); c.focusStop("high-ground"); assert.equal(s.calls.length, count);
+  s.harness.dispose();
+});
+
+
+test("Explore in 3D enables the exact loaded samples, restores visibility and fits/pitches in one transition", async () => {
+  const s = await setup(); let c = s.render(); const input = fixture(); input.grid.dtm[0] = 309.65; input.grid.dsm[0] = 321.65;
+  await c.importFile(file(input)); c = s.render(); c.selectAxis("row", "1"); c.setOpacity(0); c = s.render();
+  s.map.loaded = false; // Unrelated source tiles may be loading while the host style generation is ready.
+  await c.explore3D(); c = s.render();
+  assert.equal(c.preview.grid.dtm[0], 309.65); assert.equal(c.probe.surfaceAboveGround, 12); assert.equal(c.enabled, true); assert.equal(c.representation, "columns"); assert.equal(c.verticalExaggeration, 3); assert.equal(c.opacity, 80);
+  const fits = s.calls.filter(call => call.kind === "fit"); assert.equal(fits.length, 1); assert.equal(fits[0].options.pitch, 60); assert.equal(fits[0].options.bearing, -25); assert.equal(fits[0].options.linear, true); assert.equal(fits[0].options.duration, 0); assert.equal(s.calls.filter(call => call.kind === "camera").length, 0);
+  assert.ok(JSON.stringify(s.harness.exports.NeonLidarMapBadge({ controller: c })).includes('relative sampled heights'));
+  c.setVerticalExaggeration(1.5); c = s.render(); s.options.reducedMotion = false; c = s.render(); await c.explore3D(); c = s.render(); assert.equal(c.verticalExaggeration, 1.5); assert.equal(s.calls.filter(call => call.kind === "fit").at(-1).options.duration, 850);
+  c.plan(); c = s.render(); assert.equal(c.representation, "flat"); assert.equal(s.calls.filter(call => call.kind === "camera").at(-1).options.pitch, 0); s.harness.dispose();
+});
+
+test("Explore in 3D explicitly loads the pilot once from empty and canceled or replaced loads never move the camera", async () => {
+  let finish, reads = 0;
+  const s = await setup({}, { readNeonLidarPilot: () => { reads++; return new Promise(resolve => { finish = resolve; }); } }); let c = s.render();
+  const first = c.explore3D(); c = s.render(); assert.equal(c.busy, true); assert.equal(reads, 1); finish(relayReceipt()); await first; c = s.render();
+  assert.equal(c.preview.data_kind, "provider-files"); assert.equal(c.pilotReceipt.cache.state, "stale"); assert.equal(c.enabled, true); assert.equal(c.representation, "columns"); assert.equal(c.verticalExaggeration, 3); assert.equal(s.calls.filter(call => call.kind === "fit").length, 1);
+  c.clear(); c = s.render(); const canceled = c.explore3D(); c.clear(); finish(relayReceipt()); await canceled; c = s.render(); assert.equal(c.preview, null); assert.equal(c.enabled, false); assert.equal(s.calls.filter(call => call.kind === "fit").length, 1);
+  const replaced = c.explore3D(); await c.importFile(file(fixture())); finish(relayReceipt()); await replaced; c = s.render(); assert.equal(c.preview.data_kind, "synthetic-test"); assert.equal(c.enabled, false); assert.equal(c.representation, "flat"); assert.equal(s.calls.filter(call => call.kind === "fit").length, 1);
+  s.harness.dispose();
+});
+
+test("3D scene guards prevent loads or camera mutations and recheck delayed scene/map changes", async () => {
+  let reads = 0, finish;
+  const s = await setup({}, { readNeonLidarPilot: () => { reads++; return new Promise(resolve => { finish = resolve; }); } }); let c = s.render();
+  for (const field of ["flatMap", "atPresent", "styleReady"]) {
+    s.options[field] = false; c = s.render(); assert.equal(c.canExplore3D, false); await c.explore3D(); assert.equal(reads, 0); s.options[field] = true; c = s.render();
+  }
+  s.map.terrain = { source: 'external-dem' }; await c.explore3D(); c = s.render(); assert.match(c.mapError, /external elevation terrain/); assert.equal(reads, 0); s.map.terrain = null;
+  s.map.projection = 'globe'; await c.explore3D(); c = s.render(); assert.match(c.mapError, /Mercator/); assert.equal(reads, 0); s.map.projection = 'mercator';
+  const delayed = c.explore3D(); s.options.atPresent = false; c = s.render(); finish(relayReceipt()); await delayed; c = s.render(); assert.equal(c.enabled, false); assert.equal(s.calls.filter(call => call.kind === 'fit').length, 0);
+  s.options.atPresent = true; c = s.render(); c.clear(); c = s.render(); const changedMap = c.explore3D(); s.options.mapRef.current = { ...s.map }; finish(relayReceipt()); await changedMap; c = s.render(); assert.equal(c.enabled, false); assert.match(c.mapError, /map changed/); assert.equal(s.calls.filter(call => call.kind === 'fit').length, 0);
+  s.options.mapRef.current.getCanvas = () => ({ getBoundingClientRect: () => ({ width: 120, height: 100 }) });
+  await c.explore3D(); c = s.render(); assert.equal(c.enabled, false); assert.match(c.mapError, /viewport is too small/); assert.equal(s.calls.filter(call => call.kind === 'fit').length, 0);
+  s.harness.dispose();
+});
+
+test("the early 3D action invokes the full workflow and exposes the active scale and flat return", async () => {
+  const s = await setup({}, { readNeonLidarPilot: async () => relayReceipt() }); let c = s.render();
+  const controls = await componentHarness("app/neon-lidar-map-controls.tsx", { "next/link": { default: "a" }, "./acquisition-client": acquisition, "./neon-lidar-pilot-client": pilotClient, "./neon-lidar-preview": previewHelpers, "./neon-lidar-map": {}, "./neon-lidar-story": story, "./neon-lidar-map-controls.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
+  let tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c }); const launch = findNode(tree, node => node.type === "button" && node.props.children === "Explore in 3D"); assert.equal(launch.props.disabled, false); launch.props.onClick(); await settle(); c = s.render();
+  assert.equal(c.enabled, true); assert.equal(c.representation, "columns"); tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c });
+  assert.ok(findNode(tree, node => node.type === "button" && node.props.children === "Return to flat view")); assert.ok(JSON.stringify(tree).includes('3× relative heights'));
+  s.options.flatMap = false; c = s.render(); tree = controls.render(controls.exports.NeonLidarMapControls, { controller: c }); assert.equal(findNode(tree, node => node.type === "button" && node.props.children === "Explore in 3D").props.disabled, true);
+  s.harness.dispose(); controls.dispose();
 });

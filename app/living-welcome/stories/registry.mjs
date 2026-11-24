@@ -208,6 +208,15 @@ export const STORIES = Object.freeze([
     tables: ['kfm_nass_quickstats'], feeds: ['nass'],
   }),
   guided({
+    id: 'neon-terrain', group: 'Living record', title: 'Terrain & vegetation', kicker: 'KONZA PRAIRIE · ONE SAMPLED TILE',
+    href: '/labs/terrain',
+    summary: 'Inspect one NEON tile and compare ground, surface and independent provider canopy samples.',
+    try: 'Probe the raster, explore distributions and relationships, and export source-linked selections.',
+    limit: 'Historical sampled preview; scientific review pending. Sampled heights do not establish vegetation area, species or change.',
+    palette: ['#061a26', '#78cbd2', '#ebca87'],
+    sources: ['National Ecological Observatory Network'], tables: [], feeds: [],
+  }),
+  guided({
     id: 'kansas-then-and-now', group: 'Living record', title: 'Kansas Then & Now', kicker: 'GARDEN CITY · TWO AERIAL EDITIONS',
     href: '/labs/then-now',
     summary: 'Compare two aligned aerial views of the Arkansas River crossing at Garden City.',

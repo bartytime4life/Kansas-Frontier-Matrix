@@ -112,7 +112,7 @@ test("empty panel explains cost and local boundaries, includes useful import con
 
 test("new file selection clears the old probe, stale read cannot replace a new grid, and cancel retires work", async () => {
   const harness = await componentHarness("app/neon-lidar-panel.tsx", { "./neon-lidar-preview": helpers, "./neon-lidar-pilot-client": pilotClient, "./acquisition-client": client, "./neon-lidar-panel.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
-  const render = () => { const tree = harness.render(harness.exports.NeonLidarPanel); harness.commit(); return tree; };
+  const render = () => { const tree = harness.render(() => { const workspace = harness.exports.NeonLidarPanel(); return harness.exports.NeonLidarWorkspace(workspace.props); }); harness.commit(); return tree; };
   const fileInput = tree => findNode(tree, node => node.type === "input" && node.props.type === "file");
   const upload = (tree, value) => fileInput(tree).props.onChange({ target: { files: [value], value: "chosen.json" } });
   const localFile = data => ({ size: 1000, text: async () => JSON.stringify(data) });
@@ -134,7 +134,7 @@ test("new file selection clears the old probe, stale read cannot replace a new g
 
 test("row and column drafts can be cleared and retyped without restoring an old probe; canvas synchronizes both", async () => {
   const harness = await componentHarness("app/neon-lidar-panel.tsx", { "./neon-lidar-preview": helpers, "./neon-lidar-pilot-client": pilotClient, "./acquisition-client": client, "./neon-lidar-panel.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
-  const render = () => { const tree = harness.render(harness.exports.NeonLidarPanel); harness.commit(); return tree; };
+  const render = () => { const tree = harness.render(() => { const workspace = harness.exports.NeonLidarPanel(); return harness.exports.NeonLidarWorkspace(workspace.props); }); harness.commit(); return tree; };
   const axis = (tree, suffix) => findNode(tree, node => node.type === "input" && node.props.type === "number" && node.props.id.endsWith(suffix));
   const canvas = tree => findNode(tree, node => typeof node.type === "function" && node.type.name === "GridCanvas");
   let tree = render();
@@ -163,7 +163,7 @@ test("acquisition pilot action shows dev/cache/unknown QA and retires canceled o
   const receipt = { format: "kfm-neon-relay-pilot-v1", preview, generatedAt: "2026-11-23T23:00:00Z", cache: { state: "stale", at: "2026-11-23T22:00:00Z" }, review: { status: "pending", scientific_accuracy_verified: false, source_admitted: false, canopy_native_max_m: 83.41000366210938, canopy_native_cells_above_50m: 5, surface_minus_ground_native_max_m: 32.5, notes: ["Accuracy and vertical reference remain unverified."] } };
   let finish, reads = 0;
   const harness = await componentHarness("app/neon-lidar-panel.tsx", { "./neon-lidar-preview": helpers, "./neon-lidar-pilot-client": { ...pilotClient, readNeonLidarPilot: () => { reads++; return new Promise(resolve => { finish = resolve; }); } }, "./acquisition-client": client, "./neon-lidar-panel.module.css": { default: new Proxy({}, { get: (_, key) => key }) } });
-  const render = () => { const tree = harness.render(harness.exports.NeonLidarPanel); harness.commit(); return tree; };
+  const render = () => { const tree = harness.render(() => { const workspace = harness.exports.NeonLidarPanel(); return harness.exports.NeonLidarWorkspace(workspace.props); }); harness.commit(); return tree; };
   const load = tree => findNode(tree, node => node.type === "button" && node.props.children === "Load Konza Prairie pilot").props.onClick();
   let tree = render(); assert.equal(reads, 0); load(tree); tree = render(); finish(receipt); await settle(); tree = render();
   assert.ok(findNode(tree, node => node.type === "time" && node.props.dateTime === receipt.cache.at));
@@ -176,4 +176,20 @@ test("acquisition pilot action shows dev/cache/unknown QA and retires canceled o
   assert.equal(findNode(tree, node => node.type === "time" && node.props.dateTime === receipt.cache.at), undefined);
   load(tree); tree = render(); findNode(tree, node => node.type === "button" && node.props.children === "Cancel local read").props.onClick(); finish(receipt); await settle(); tree = render();
   assert.equal(findNode(tree, node => node.type === "input" && node.props.type === "number"), undefined); harness.dispose();
+});
+
+
+test("embedded Science raster requires click or tap, retains keyboard input and ignores repeated cell selection", async () => {
+  const imports = { "./neon-lidar-preview": helpers, "./neon-lidar-pilot-client": pilotClient, "./acquisition-client": client, "./neon-lidar-panel.module.css": { default: new Proxy({}, { get: (_, key) => key }) } };
+  const harness = await componentHarness("app/neon-lidar-panel.tsx", imports);
+  const render = () => { const tree = harness.render(() => { const controller = harness.exports.useNeonLidarPreview(); return harness.exports.NeonLidarWorkspace({ controller, embedded: true }); }); harness.commit(); return tree; };
+  let tree = render(); findNode(tree, node => node.type === "input" && node.props.type === "file").props.onChange({ target: { files: [{ size: 1000, text: async () => JSON.stringify(fixture()) }], value: "fixture.json" } }); await settle(); tree = render();
+  const canvas = findNode(tree, node => typeof node.type === "function" && node.type.name === "GridCanvas"); assert.equal(canvas.props.hover, false);
+  assert.ok(findNode(tree, node => node.type === "input" && node.props.type === "number"));
+  const drawing = await componentHarness("app/neon-lidar-panel.tsx", imports, {}, "\nexports.GridCanvas=GridCanvas;"); let selected = null;
+  const props = { ...canvas.props, select: next => { selected = next; } };
+  const grid = drawing.render(drawing.exports.GridCanvas, props), element = findNode(grid, node => node.type === "canvas");
+  const event = { pointerType: "mouse", clientX: 125, clientY: 250, currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 1000, height: 1000 }) } };
+  element.props.onPointerMove(event); assert.equal(selected, null); element.props.onPointerDown(event); assert.equal(selected.row, 2); assert.equal(selected.column, 1);
+  harness.dispose(); drawing.dispose();
 });

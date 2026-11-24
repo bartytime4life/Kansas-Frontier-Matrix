@@ -16,9 +16,9 @@ const meters = (value: number | null) => value === null ? "NoData" : `${value.to
 const coordinate = (value: number) => value.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const coordinateIndex = (input: string, limit: number): number | null => /^\d+$/.test(input) && Number.isInteger(Number(input)) && Number(input) >= 1 && Number(input) <= limit ? Number(input) - 1 : null;
 
-function GridCanvas({ preview, mode, selected, select, descriptionId }: {
+function GridCanvas({ preview, mode, selected, select, descriptionId, hover = true }: {
   preview: NeonLidarPreview; mode: NeonLidarMode; selected: { row: number; column: number } | null;
-  select: (selection: { row: number; column: number }) => void; descriptionId: string;
+  select: (selection: { row: number; column: number }) => void; descriptionId: string; hover?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const domain = useMemo(() => mode === "chm" ? [0, 30] as [number, number] : neonElevationDomain(preview), [mode, preview]);
@@ -57,15 +57,14 @@ function GridCanvas({ preview, mode, selected, select, descriptionId }: {
   }
   return <div className={styles.canvasFrame}>
     <canvas ref={ref} width={preview.grid.width * 4} height={preview.grid.height * 4} role="img" aria-label={`${MODES.find(item => item.kind === mode)?.label}, north-up local sampled raster`} aria-describedby={descriptionId}
-      onPointerMove={event => { if (event.pointerType === "mouse") pointer(event); }} onPointerDown={pointer}>
+      onPointerMove={event => { if (hover && event.pointerType === "mouse") pointer(event); }} onPointerDown={pointer}>
       Use the row and column controls to read every numeric sample without the canvas.
     </canvas>
     <span className={styles.north} aria-hidden="true">N ↑</span>
   </div>;
 }
 
-export function NeonLidarPanel() {
-  const id = useId();
+export function useNeonLidarPreview() {
   const [preview, setPreview] = useState<NeonLidarPreview | null>(null);
   const [pilotReceipt, setPilotReceipt] = useState<NeonPilotReceipt | null>(null);
   const [mode, setMode] = useState<NeonLidarMode>("chm");
@@ -75,16 +74,6 @@ export function NeonLidarPanel() {
   const [failed, setFailed] = useState(false);
   const [session] = useState(createAcquisitionSession);
   useEffect(() => () => session.cancel(), [session]);
-  const domain = useMemo(() => preview ? neonElevationDomain(preview) : null, [preview]);
-  const selected = useMemo(() => {
-    if (!preview) return null;
-    const row = coordinateIndex(coordinateDraft.row, preview.grid.height), column = coordinateIndex(coordinateDraft.column, preview.grid.width);
-    return row === null || column === null ? null : { row, column };
-  }, [preview, coordinateDraft]);
-  const probe = preview && selected ? neonLidarProbe(preview, selected.row, selected.column) : null;
-  const samples = preview?.grid[mode];
-  const covered = samples?.filter(value => value !== null).length ?? 0;
-  const saturated = mode === "chm" ? samples?.filter(value => value !== null && value > 30).length ?? 0 : 0;
   async function importFile(file: File | undefined) {
     if (!file) return;
     const request = session.begin();
@@ -113,31 +102,32 @@ export function NeonLidarPanel() {
   function selectAxis(axis: "row" | "column", input: string) {
     if (!preview) return;
     setCoordinateDraft(previous => {
+      if (previous[axis] === input) return previous;
       const next = { ...previous, [axis]: input };
       // A first valid axis starts at the other axis's first cell; later edits stay independent.
       if (!previous.row && !previous.column && coordinateIndex(input, preview.grid.width) !== null) next[axis === "row" ? "column" : "row"] = "1";
       return next;
     });
   }
-  return <section id="neon-lidar-lab" tabIndex={-1} className={styles.panel} aria-labelledby={`${id}-heading`}>
     <div className={styles.heading}>
-      <div><p className={styles.eyebrow}>NEON / LOCAL RASTER LAB</p><h2 id={`${id}-heading`}>Terrain &amp; vegetation, one shared ground</h2></div>
-      <span className={styles.badge}>Local preview · not admitted</span>
+      <div><p className={styles.eyebrow}>NEON / TERRAIN + VEGETATION</p><h2 id={`${id}-heading`}>Read the same ground</h2></div>
+      <span className={styles.badge}>{pilotReceipt ? "Provider preview · review pending" : "Local preview · not admitted"}</span>
     </div>
-    <p className={styles.intro}>Compare ground elevation, the upper surface and provider canopy height on the same 1 km tile. Free, no subscription. Your imported file stays in this browser and is not uploaded.</p>
-    <div className={styles.sourceLinks}><a href="https://data.neonscience.org/data-products/DP3.30024.001" target="_blank" rel="noreferrer">NEON elevation products ↗</a><a href="https://data.neonscience.org/data-products/DP3.30015.001" target="_blank" rel="noreferrer">NEON canopy height ↗</a></div>
-    <button type="button" className={styles.pilotButton} disabled={reading} onClick={() => void loadPilot()}>Load Konza Prairie pilot</button>
-    <div className={styles.importControls}>
-      <label htmlFor={`${id}-file`}>Import prepared preview JSON <span>2 MiB maximum</span><input id={`${id}-file`} type="file" accept="application/json,.json" onChange={event => { void importFile(event.target.files?.[0]); event.target.value = ""; }} /></label>
+    <p className={styles.intro}>Compare ground, surface and provider canopy height on one 1 km tile. Free, no subscription.</p>
+    <div className={styles.loadActions}><button type="button" className={styles.pilotButton} disabled={reading} onClick={() => void loadPilot()}>Load Konza Prairie pilot</button>
       <button type="button" onClick={clear} disabled={!preview && !reading && !failed}>{reading ? "Cancel local read" : "Clear preview"}</button>
+      {!embedded && <a href="/labs/terrain">Analyze in the Science lab →</a>}
     </div>
+    <details className={styles.localImport}><summary>Import your own prepared preview</summary><div className={styles.importControls}>
+      <label htmlFor={`${id}-file`}>Prepared preview JSON <span>2 MiB maximum · stays in this tab; not uploaded</span><input id={`${id}-file`} type="file" accept="application/json,.json" onChange={event => { void importFile(event.target.files?.[0]); event.target.value = ""; }} /></label>
+    </div></details>
     <p className={failed ? styles.error : styles.notice} role="status" aria-live="polite" aria-busy={reading}>{notice}</p>
     {!preview ? <div className={styles.empty}>
       <span className={styles.emptyMark} aria-hidden="true">01 / 02 / 03</span><h3>Three surfaces. One numeric probe.</h3>
       <p>Load the Konza Prairie pilot, or import a prepared NEON preview JSON from your data workstation with matching ground, surface and canopy samples. The viewer starts with no sample terrain.</p>
       <p>Use a Kansas NEON tile from Konza Prairie (KONZ), the Konza agricultural site (KONA), or the University of Kansas Field Station (UKFS). These site tiles do not cover all of Kansas.</p>
     </div> : <>
-      {pilotReceipt && <div className={styles.pilotReview}><p><strong>Provider preview · processed on the development computer.</strong> Scientific review pending; independent accuracy and vertical reference are unverified.</p><p className={pilotReceipt.cache.state === "stale" ? styles.warning : styles.precision}>Cache {pilotReceipt.cache.state} · <time dateTime={pilotReceipt.cache.at}>{pilotReceipt.cache.at}</time>{pilotReceipt.cache.state === "stale" ? ". This cached preview is stale; it is not a new observation." : ". Acquisition dates remain separate from cache time."}</p><p className={styles.warning}>Native CHM maximum {pilotReceipt.review.canopy_native_max_m.toFixed(2)} m; {pilotReceipt.review.canopy_native_cells_above_50m} native cells above 50 m. Outliers retained for review, not identified as trees.</p></div>}
+      {pilotReceipt && <div className={styles.pilotReview}><p><strong>Provider preview · processed on the data workstation.</strong> Scientific review pending; independent accuracy and vertical reference are unverified.</p><p className={pilotReceipt.cache.state === "stale" ? styles.warning : styles.precision}>Cache {pilotReceipt.cache.state} · <time dateTime={pilotReceipt.cache.at}>{pilotReceipt.cache.at}</time>{pilotReceipt.cache.state === "stale" ? ". This cached preview is stale; it is not a new observation." : ". Acquisition dates remain separate from cache time."}</p><p className={styles.warning}>Native CHM maximum {pilotReceipt.review.canopy_native_max_m.toFixed(2)} m; {pilotReceipt.review.canopy_native_cells_above_50m} native cells above 50 m. Outliers retained for review, not identified as trees.</p></div>}
       {preview.data_kind === "synthetic-test" && <p className={styles.synthetic}><strong>Synthetic test grid · not observed terrain.</strong> These analytic values demonstrate the viewer and do not describe this NEON site.</p>}
       <div className={styles.identity}><strong>{preview.source.site}</strong><span>Catalog month {preview.source.month}</span><span>Recorded run {preview.source.acquisition_run}</span><span>{preview.source.release}</span><code>{preview.source.tile}</code></div>
       <div className={styles.modeControls} role="group" aria-label="Raster surface">
@@ -146,9 +136,9 @@ export function NeonLidarPanel() {
       <div className={styles.lab}>
         <figure className={styles.figure}>
           <div className={styles.northBounds}><span>{coordinate(preview.grid.bounds[0])} E</span><span>{coordinate(preview.grid.bounds[3])} N</span></div>
-          <GridCanvas preview={preview} mode={mode} selected={selected} select={selection => setCoordinateDraft({ row: String(selection.row + 1), column: String(selection.column + 1) })} descriptionId={`${id}-canvas-description`} />
+          <GridCanvas preview={preview} mode={mode} selected={selected} hover={!embedded} select={selection => setCoordinateDraft(previous => { const row = String(selection.row + 1), column = String(selection.column + 1); return previous.row === row && previous.column === column ? previous : { row, column }; })} descriptionId={`${id}-canvas-description`} />
           <div className={styles.southBounds}><span>{coordinate(preview.grid.bounds[1])} N</span><span>{coordinate(preview.grid.bounds[2])} E</span></div>
-          <figcaption id={`${id}-canvas-description`}>North up · native projected meters. Each block is one nearest source sample; no interpolation. Hover or tap to probe, or use row and column.</figcaption>
+          <figcaption id={`${id}-canvas-description`}>North up · native projected meters. Each block is one nearest source sample; no interpolation. {embedded ? "Click or tap" : "Hover or tap"} to probe, or use row and column.</figcaption>
           <div className={styles.legend} aria-label={mode === "chm" ? "Fixed canopy legend, 0 to 30 meters" : "Shared ground and surface elevation legend"}>
             <div className={styles.legendBar} />
             <div className={styles.legendLabels}><span>{mode === "chm" ? "0 m" : domain ? meters(domain[0]) : "No elevation samples"}</span><span>{mode === "chm" ? "30 m" : domain ? meters(domain[1]) : ""}</span></div>
@@ -194,8 +184,13 @@ export function NeonLidarPanel() {
         <p>NEON data use <a href="https://www.neonscience.org/usage-policies" target="_blank" rel="noreferrer">CC BY 4.0 and NEON attribution policies ↗</a>. Direct provider downloads require <a href="https://www.neonscience.org/about/user-accounts" target="_blank" rel="noreferrer">free NEON sign-in or an API token ↗</a>; this local viewer requires no account.</p>
         {pilotReceipt && <><p>Native maximum DSM − DTM: {pilotReceipt.review.surface_minus_ground_native_max_m.toFixed(2)} m, distinct from provider CHM.</p><ul>{pilotReceipt.review.notes.map((note, index) => <li key={index}>{note}</li>)}</ul></>}
         <ul className={styles.files}>{preview.source.files.map(file => <li key={file.kind}><strong>{file.kind.toUpperCase()} · {file.product}</strong><code>{file.name}</code><span>{file.bytes.toLocaleString("en-US")} bytes</span><code>SHA-256 {file.sha256}</code></li>)}</ul>
-        <h4>Recorded native horizontal CRS</h4><pre>{preview.source.horizontal_crs}</pre>
+        <div className={styles.sourceLinks}><a href="https://data.neonscience.org/data-products/DP3.30024.001" target="_blank" rel="noreferrer">NEON elevation products ↗</a><a href="https://data.neonscience.org/data-products/DP3.30015.001" target="_blank" rel="noreferrer">NEON canopy height ↗</a></div><h4>Recorded native horizontal CRS</h4><pre>{preview.source.horizontal_crs}</pre>
       </details>
     </>}
   </section>;
+}
+
+export function NeonLidarPanel() {
+  const controller = useNeonLidarPreview();
+  return <NeonLidarWorkspace controller={controller} />;
 }

@@ -2,6 +2,8 @@
 
 The Explorer's Appearance controls and acquisition lab offer **Load Konza Prairie pilot**. Loading is explicit; **Show on map** and **Fit preview** remain separate actions. Local JSON import remains available. The pilot is historical provider context and is not admitted KFM evidence or a field-accuracy claim.
 
+The follow-up [Terrain Science workspace](neon-science-tools.md) at `/labs/terrain` reuses the same validated samples in KFM’s descriptive science instruments. Optional relative 3D sample columns and data-driven map story stops keep their local baseline and vertical exaggeration explicit. Source readings and exports remain unchanged. This follow-up has its own review and publication boundary.
+
 The selected footprint is one 1 km tile: `NEON_D06_KONZ_DP3_706000_4336000`, KONZ, catalog month September 2024, acquisition `2024_KONZ_10`, `RELEASE-2026`. DTM/DSM use `DP3.30024.001`; provider canopy uses `DP3.30015.001`. Three originals total 8,331,760 bytes. Their reported CRC32C checksums were verified on dev; local SHA-256 records preserve exact bytes. CRC32C is Castagnoli, not IEEE CRC32, and verifies transfer integrity rather than scientific accuracy.
 
 ## Data path and credentials

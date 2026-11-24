@@ -178,6 +178,17 @@ export function recordsCSV(bundle, options = {}) {
   // Avoid repeating dozens of paged-acquisition receipts in every inventory row.
   const retrievedAt = publicHash ? bundle.built_at || '' : snapshots.map(snapshot => snapshot.retrievedAt || '').join(' | ');
   const snapshotHash = publicHash || snapshots.map(snapshot => snapshot.rawSha256 || '').join(' | ');
+  const context = analysisContextCSV(model.data.analysisContext);
   return { filename: `kfm-${String(bundle.story || bundle.id || 'records').replace(/[^a-zA-Z0-9_-]/g, '-')}-selection.csv`,
-    rows: [[...allKeys, 'source_urls', 'snapshot_retrieved_at', 'snapshot_sha256'], ...records.map(row => [...allKeys.map(key => safeCell(row[key])), (bundle.sources || []).map(source => source.url).filter(Boolean).join(' | '), retrievedAt, snapshotHash])] };
+    rows: [[...allKeys, 'source_urls', 'snapshot_retrieved_at', 'snapshot_sha256', ...(context === null ? [] : ['analysis_context'])], ...records.map(row => [...allKeys.map(key => safeCell(row[key])), (bundle.sources || []).map(source => source.url).filter(Boolean).join(' | '), retrievedAt, snapshotHash, ...(context === null ? [] : [context])])] };
+}
+
+/** Optional source/method context travels with exports; existing bundles keep identical CSV columns. */
+export function analysisContextCSV(context) {
+  if (context === undefined) return null;
+  if (!context || typeof context !== 'object' || Array.isArray(context)) throw new Error('Invalid analysis context');
+  let text;
+  try { text = JSON.stringify(context); } catch { throw new Error('Invalid analysis context'); }
+  if (typeof text !== 'string' || new TextEncoder().encode(text).byteLength > 24000) throw new Error('Invalid analysis context');
+  return safeCell(text);
 }
