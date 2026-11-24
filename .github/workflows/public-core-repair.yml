@@ -323,7 +323,8 @@ jobs:
 
   terrain-browser:
     # Public repository, standard GitHub-hosted runners only. Each GPU family
-    # retains desktop/mobile cases, source-value assertions and 150 s deadlines.
+    # retains desktop/mobile cases and source-value assertions. The measured
+    # solid SwiftShader journey budget is documented in the test itself.
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
