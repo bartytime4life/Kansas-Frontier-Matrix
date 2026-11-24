@@ -3628,7 +3628,7 @@ for(const [width,height] of [[1440,900],[390,844]])test(`optional chat downloads
  await p.key('Enter','Enter',13);
  await p.wait(`document.activeElement===document.querySelector('#qwen-map-panel textarea')`,'reopen focuses loaded composer');
  await p.call('Input.insertText',{text:'Kansas river terrace notes'});
- await p.key('Escape','Escape',27);await p.wait(`document.querySelector('#qwen-map-panel')?.hidden`,'draft stays in closed workspace');
+ await p.key('Escape','Escape',27);await p.wait(`document.querySelector('#qwen-map-panel')?.hidden&&document.activeElement===document.querySelector('.qwen-header-entry')`,'draft stays in closed workspace and header focus is restored');
  await p.key('Enter','Enter',13);await p.wait(`document.activeElement===document.querySelector('#qwen-map-panel textarea')`,'composer refocuses on reopen');
  assert.equal(await p.evaluate(`document.querySelector('#qwen-map-panel textarea').value`),'Kansas river terrace notes');
  assert.equal(requests.filter(url=>url===path).length,1,'reopening reuses the same module');

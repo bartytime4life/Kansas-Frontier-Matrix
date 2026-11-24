@@ -202,7 +202,8 @@ async function pageSession(browser, width, height) {
   const open = async (nextMode = 'held', nextFixture = payload('ready', features), status = 200) => {
     mode = nextMode; fixture = nextFixture; httpStatus = status; held.length = 0;
     await call('Page.navigate', { url: origin.href });
-    await wait(`document.querySelector('#qwen-map-panel textarea') && document.querySelector('.map-chrome-dock')`, 'application mounted');
+    // The optional composer is deliberately absent until Find or Chat opens.
+    await wait(`document.querySelector('.atlas-scope-control') && document.querySelector('.map-chrome-dock')`, 'application shell mounted');
     const deadline = Date.now() + 30000;
     while (!held.length && Date.now() < deadline) { await interceptions.assertHealthy(); await pause(50); }
     assert.ok(held.length, 'hydrated application started its county request');
@@ -221,7 +222,7 @@ async function pageSession(browser, width, height) {
     const find = await evaluate(`(() => {const r=document.querySelector('.atlas-scope-control').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
     await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...find});
     await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...find});
-    await wait(`!document.querySelector('#qwen-map-panel').hidden`, 'unified Find composer opened');
+    await wait(`!document.querySelector('#qwen-map-panel').hidden && document.querySelector('#qwen-map-panel textarea') && document.activeElement === document.querySelector('#qwen-map-panel textarea')`, 'unified Find composer loaded and focused');
     // A real key must reach React before acceptance begins; no private hooks.
     await fill('hydration probe');
     await wait(`document.querySelector('#global-search-results [role=status]')`, 'search hydration');
