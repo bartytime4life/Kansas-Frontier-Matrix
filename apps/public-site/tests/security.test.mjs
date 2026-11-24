@@ -220,6 +220,10 @@ test("bundle checks fail closed on secrets, missing files, expiry and oversized 
     ["missing", "missing required file", (d) => rmSync(join(d, "favicon.svg"))],
     ["expired", "Expires is missing or past", (d) => writeFileSync(join(d, ".well-known/security.txt"), "Contact: https://example.com\nExpires: 2000-01-01T00:00:00Z\n")],
     ["size", "limit 10485760", (d) => writeFileSync(join(d, "assets/og.png"), Buffer.alloc(11 * 1024 * 1024))],
+    // A path above the bundle (scratch holds httpd.conf) or a bare directory exists on disk but is not a served page asset.
+    ["escape", "references missing /../httpd.conf", (d) => writeFileSync(join(d, "404.html"), '<a href="/../httpd.conf">x</a>')],
+    ["directory", "references missing /assets/", (d) => writeFileSync(join(d, "404.html"), '<a href="/assets/">x</a>')],
+    ["srcset", "references missing /assets/absent.svg", (d) => writeFileSync(join(d, "404.html"), '<img alt="" srcset="/favicon.svg 1x, /assets/absent.svg 2x">')],
   ];
   for (const [name, diagnostic, mutate] of cases) {
     const directory = join(scratch, `negative-${name}`);
