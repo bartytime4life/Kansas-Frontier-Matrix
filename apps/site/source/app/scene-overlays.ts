@@ -300,6 +300,3 @@ export const nightSkyIsVisible = (map: MapLibreMap): boolean =>
 
 /** Stars twinkle only through air: on a tilted map, not from orbit. */
 export const nightSkyIsTwinkling = (map: MapLibreMap): boolean => nightSkyIsVisible(map) && projectionOf(map) !== "globe";
-
-/** IDs of every overlay this module may add, for tests and composition. */
-export const SCENE_OVERLAY_LAYER_IDS: readonly string[] = [...KANSAS_GLOW_LAYER_IDS, RELIEF_2D_LAYER_ID, NIGHT_SKY_LAYER_ID];

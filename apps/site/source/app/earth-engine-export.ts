@@ -3,7 +3,6 @@ import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, type EarthEngin
 
 export type EarthEngineExportScope = "sample" | "statewide";
 const GRID_30M = { crs: "EPSG:5070", crsTransform: [30, 0, -1200000, 0, -30, 2400000] };
-export const EARTH_ENGINE_EXPORT_GRID = Object.freeze(GRID_30M);
 // PRISM ANm/ANd projection read directly from authenticated GEE metadata on 2026-10-06.
 export const PRISM_NATIVE_GRID = { crs: "EPSG:4269", crsTransform: [0.041666666667, 0, -125.0208333333335, 0, -0.041666666667, 49.9375000000005] } as const;
 const NATIVE_CLIMATE_GRIDS = {
