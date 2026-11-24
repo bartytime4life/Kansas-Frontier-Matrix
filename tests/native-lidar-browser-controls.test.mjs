@@ -29,3 +29,10 @@ test('the CI native keyboard action waits for map readiness and real focus owner
   assert.ok(events.includes('waiting'),'exercise either delayed map readiness or a competing focus owner');assert.equal(events.includes('disabled-focus'),false);assert.equal(events.at(-1),'native-key');
  }
 });
+
+test('exposed native fixture sampling uses the same integer page pixel sent to the real pointer dispatcher',async()=>{
+ const {nativeLidarBrowserFixtures}=await import('./native-lidar-browser-fixtures.mjs'),fixtures=await nativeLidarBrowserFixtures(new URL('http://127.0.0.1:5197')),scripts=[];
+ await fixtures.setup(async(method,args)=>{if(method==='Page.addScriptToEvaluateOnNewDocument')scripts.push(args.source);});const source=scripts.find(s=>s.includes('window.__nativeFixturePoints='));assert.ok(source);
+ const sampled=[],r={left:11.3,top:22.6,width:100,height:100},canvas={getBoundingClientRect:()=>r},window={},document={querySelector:()=>({textContent:'1.0× display'}),elementFromPoint:()=>canvas};
+ new Function('window','document',source)(window,document);window.__terrainAcceptanceMap={getLayer:()=>({implementation:{failed:false,pick:point=>{sampled.push(point);return 0;}}}),getCanvas:()=>canvas};window.__nativeFixtureMatrix=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];const point=window.__nativeVisiblePoint();assert.ok(point);assert.equal(Number.isInteger(point.x),true);assert.equal(Number.isInteger(point.y),true);assert.equal(sampled.at(-1).x,point.x-r.left);assert.equal(sampled.at(-1).y,point.y-r.top);assert.equal(point.record,0);
+});

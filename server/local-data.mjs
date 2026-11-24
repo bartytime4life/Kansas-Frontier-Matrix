@@ -15,6 +15,8 @@ import {RECOVERED_COLLECTIONS} from '../scripts/local-data/recovered.mjs';
 import {LIDAR_POINTS_ROUTE,validLidarPointsManifest,validLidarPointsChunk} from '../scripts/local-data/lidar-points.mjs';
 import {parseLidarViewSearch,lidarViewKey,validViewKey,validLidarView,validNativeViewChunk,validLidarGrid,LIDAR_VIEW_ROUTES} from '../scripts/local-data/lidar-view-model.mjs';
 
+import {GROUND_ROUTE,parseGroundSearch,groundKey,validGroundView} from '../scripts/local-data/ground-model.mjs';
+
 export const LOCAL_DATA_WORKER_PREFIX='/api/local-data-worker/v1';
 // workerSeenMs: the worker re-polls at least every leaseWaitMs (20 s) and pings /status while relaying,
 // so a longer silence means the PC is away and a visitor gets the cached or offline answer at once
@@ -190,6 +192,18 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);return json({state:'local-data-offline',reasonCode:'LIDAR_VIEW_UNAVAILABLE'},503);}
  };
 
+ // Provider DEM Ground is a distinct resampled raster receipt, not a native EPT grid.
+ const ground=async request=>{
+  if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
+  let query;try{query=parseGroundSearch(new URL(request.url).searchParams);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
+  const key='\nground:'+groundKey(query),hit=cache.get(key),fresh=hit&&clock()-hit.at<viewTTL(hit.value);
+  if(fresh)return answer(hit.value,workerOnline()?'fresh':'stale',hit.at,hit.value.state==='processing'?0:60);
+  try{
+   let trip=pending.get(key);if(!trip){trip=call('POST',GROUND_ROUTE,query).then(({value,bytes})=>{delete value.gateway;if(!validGroundView(value,query))throw error('GATEWAY_RESPONSE_INVALID');remember(key,value,bytes);return value;}).finally(()=>pending.delete(key));pending.set(key,trip);}
+   const value=await trip;return answer(value,'live',cache.get(key)?.at??clock(),value.state==='processing'?0:60);
+  }catch{if(hit&&clock()-hit.at<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,0);return json({state:'local-data-offline',reasonCode:'GROUND_VIEW_UNAVAILABLE'},503);}
+ };
+
  /**
   * The gateway's health (readiness and freshness per dataset and recovered collection), asked at
   * most once per freshMs and served stale for up to staleMs when the PC is away, like answers.
@@ -229,7 +243,7 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }
   return json(body,200,'public, max-age=60');
  };
- return {query,catalog,health,neonPreview,lidarPoints,lidarView,lidarViewArtifact,workerHandler:relay.handler,relay};
+ return {query,catalog,health,neonPreview,lidarPoints,lidarView,lidarViewArtifact,ground,workerHandler:relay.handler,relay};
 }
 
 // One service per process: the worker route and the public routes must share one relay.
@@ -275,3 +289,5 @@ export function localLidarPointsRuntime(env=process.env){
 /** Kansas viewport and immutable artifacts, through the same verified data relay. */
 export function localLidarViewRuntime(env=process.env){const local=service(env);return local?local.lidarView:off;}
 export function localLidarViewArtifactRuntime(env=process.env){const local=service(env);return local?((request,key,/** @type {number|'grid'} */ part)=>local.lidarViewArtifact(request,key,part)):off;}
+
+export function localGroundRuntime(env=process.env){const local=service(env);return local?local.ground:off;}

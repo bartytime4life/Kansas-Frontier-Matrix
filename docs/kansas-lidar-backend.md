@@ -16,7 +16,7 @@ where to look, not that all native data is installed, or that classification,
 acquisition date, accuracy and density are uniform. Project names do not prove
 coverage or flight dates. The fixed public bucket excludes requester-pays data.
 
-Ground retains the selected continuous DEM context. Native points are an
+Ground retains continuous DEM context and adds a separately typed provider raster grid described below. Native points are an
 additive EPT display selection, cropped to the viewport and bounded to100,000
 records. Surface and canopy need complete intersecting hierarchy support from
 one survey, independently of point display thinning. All native hierarchy levels
@@ -110,3 +110,44 @@ records were independently compared against their original LAZ XYZ/attributes
 and record IDs. No vegetation classes were present in these particular tests;
 canopy correctly remained null. This is bounded native/processor evidence,
 separate from browser/GPU, public deployment and independent scientific review.
+
+## Provider DEM Ground actor
+
+The separate Ground pipeline uses the fixed USGS3DEP ImageServer `exportImage`
+endpoint with EPSG3857,96×96,TIFF,F32,nearest-neighbor interpolation and
+`adjustAspectRatio=false`. Rasterio rejects a wrong driver, band count, dtype,
+CRS, rotated geometry, dimensions or actual extent. It retains exact decoded
+Float32 elevation values and the provider mask; masked/nonfinite/out-of-display-
+range values become null, with excluded values counted. Original bytes remain
+private and immutable. This receipt never claims complete native EPT support.
+
+`KFM_GROUND_VIEW_ROOT` is a separate owner-private0700 directory on the data
+drive. `ground-worker.mjs` uses the existing isolated Python selected by
+`KFM_LIDAR_VIEW_PYTHON`, not a new GoDaddy dependency. It queues at most16 views,
+retains at most2048 view directories and1GiB of original provider replies,
+limits each upstream reply to2MB, preserves a2GiB disk reserve, performs at most
+two bounded fetch attempts and caps a job at110seconds. Failures have backoff
+and at most three canonical attempts with old failure receipts preserved.
+There is no automatic eviction. The independent actor has a private singleton
+lock and does not compete with native EPT preparation for the same source cache.
+
+The only new relay route is HMAC-signed `POST /v1/terrain/ground` with exactly
+`{bbox,size:96}`. Public callers use `GET /api/terrain/ground`; no URL, path, SQL,
+credential or arbitrary raster endpoint is accepted. The existing1MB reply cap
+is unchanged. Typical real96² receipts are under200KB. Website responses carry
+live/fresh/stale transport labels separately from source retrieval metadata.
+Poll processing every2seconds; cancel work tied to an obsolete map revision.
+The queued source work may finish and be retained after a visitor moves away.
+
+The optional fixed catalog query preserves at most100 intersecting candidates;
+truncation and unavailable metadata remain explicit. Candidate membership is not
+per-cell source assignment. Raw catalog date/resolution attributes do not become
+flight dates or universally metre-based resolution. Provider local metadata
+paths are excluded from public links. Hashes verify retained bytes, not field
+accuracy. Scientific review/admission remains pending/false.
+
+`ground-science-test.py` checks analytic float preservation, north-to-south row
+ordering, NoData holes, nonfinite values, wrong coordinate system, byte images,
+wrong dimensions and rotation. `tests/ground-view.test.mjs` checks schema/query
+binding, private storage, bounded sources and the signed live/fresh/stale relay.
+Actual provider readback and rendered/browser acceptance are separate evidence.

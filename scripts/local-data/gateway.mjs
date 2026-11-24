@@ -18,6 +18,8 @@ import {NEON_PREVIEW_ROUTE,loadNeonPreview,neonPreviewConfig} from './neon-previ
 import {LIDAR_POINTS_ROUTE,loadLidarPoints,lidarPointsConfig} from './lidar-points.mjs';
 import {lidarViewConfig,requestLidarView,loadLidarViewReceipt,loadLidarViewArtifact} from './lidar-view.mjs';
 import {LIDAR_VIEW_ROUTES,validViewKey} from './lidar-view-model.mjs';
+import {GROUND_ROUTE} from './ground-model.mjs';
+import {groundConfig,requestGround} from './ground-store.mjs';
 import {datasetFreshness,collectionsFreshness} from './freshness.mjs';
 
 const fail=code=>Object.assign(new Error(code),{code});
@@ -47,7 +49,7 @@ export function missingIndexes(db,dataset){
  * databases: {observations, tiger, nwm, bulk} file paths (all but observations optional). dbPath is the
  * phase 1 name for databases.observations.
  */
-export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,neonPreview=null,lidarPoints=null,lidarView=null,open=path=>new DatabaseSync(path,{readOnly:true})}){
+export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,neonPreview=null,lidarPoints=null,lidarView=null,ground=null,open=path=>new DatabaseSync(path,{readOnly:true})}){
  const secret=typeof rawSecret==='string'?decodeSecret(rawSecret):rawSecret;
  if(!Buffer.isBuffer(secret))throw fail('GATEWAY_KEY_INVALID');
  const keys=new Map([[keyId,{id:keyId,secret}]]),nonces=createNonceCache({clock});
@@ -73,6 +75,11 @@ export function createGateway({keyId,secret:rawSecret,dbPath,databases={observat
   if(LOCAL_DATA_ROUTES.get(path)!==method)return reply(404,{error:'ROUTE_NOT_FOUND'});
   // One answer for every authentication failure, so the gateway is not an oracle.
   if(!verifyRequest({headers,method,path,body,keys,nonces,now:clock()}).ok)return reply(401,{error:'UNAUTHORIZED'});
+
+  if(path===GROUND_ROUTE){
+   try{const input=JSON.parse(body),value=requestGround(ground,input),answer=reply(200,value);return answer.body.length>LOCAL_DATA_LIMITS.replyBytes?reply(413,{error:'REPLY_TOO_LARGE'}):answer;}
+   catch(e){return reply(e.message==='QUERY_INVALID'?400:503,{error:e.message==='QUERY_INVALID'?'QUERY_INVALID':'GROUND_NOT_READY'});}
+  }
 
   if(Object.values(LIDAR_VIEW_ROUTES).includes(path)){
    let input;try{input=JSON.parse(body);}catch{return reply(400,{error:'QUERY_INVALID'});}
@@ -185,7 +192,7 @@ async function main(){
  let options;
  try{
   const {keyId,secret}=loadGatewayKey(process.env.KFM_LOCAL_DATA_KEY_FILE);
-  options={keyId,secret,databases:databasesFromEnv(),neonPreview:neonPreviewConfig(),lidarPoints:lidarPointsConfig(),lidarView:lidarViewConfig(),port:Number(process.env.KFM_LOCAL_DATA_PORT||8788)};
+  options={keyId,secret,databases:databasesFromEnv(),neonPreview:neonPreviewConfig(),lidarPoints:lidarPointsConfig(),lidarView:lidarViewConfig(),ground:groundConfig(),port:Number(process.env.KFM_LOCAL_DATA_PORT||8788)};
  }catch(error){console.error(JSON.stringify({event:'config_refused',code:error.code??'CONFIG_INVALID'}));process.exitCode=1;return;}
  const server=await startGateway(options);
  console.log(JSON.stringify({at:new Date().toISOString(),event:'listening',gateway:LOCAL_DATA_GATEWAY,address:`127.0.0.1:${server.address().port}`,databases:Object.keys(options.databases).filter(k=>options.databases[k])}));

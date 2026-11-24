@@ -1,7 +1,9 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import ts from 'typescript';import {pointFixture} from './native-lidar-fixtures.mjs';import {kansasFixture} from './kansas-lidar-fixtures.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import ts from 'typescript';import {pointFixture} from './native-lidar-fixtures.mjs';import {kansasFixture} from './kansas-lidar-fixtures.mjs';import {groundFixture} from './kansas-ground-fixtures.mjs';
 const url=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64'),compile=s=>ts.transpileModule(s,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const modelURL=url(compile(await readFile('app/native-lidar.ts','utf8'))),model=await import(modelURL),layerURL=url(compile((await readFile('app/native-lidar-layer.ts','utf8')).replace("from './native-lidar'","from '"+modelURL+"'"))),layer=await import(layerURL);
-const gridLayer=await import(url(compile((await readFile('app/kansas-lidar-grid-layer.ts','utf8')).replace("from './native-lidar-layer'","from '"+layerURL+"'").replace("from './native-lidar'","from '"+modelURL+"'"))));
+const groundURL=url(compile(await readFile('app/kansas-ground.ts','utf8')));
+const analysisURL=url(compile((await readFile('app/kansas-terrain-analysis.ts','utf8')).replace("from './kansas-ground'","from '"+groundURL+"'")));
+const gridLayer=await import(url(compile((await readFile('app/kansas-lidar-grid-layer.ts','utf8')).replace("from './kansas-terrain-analysis'","from '"+analysisURL+"'").replace("from './kansas-ground'","from '"+groundURL+"'").replace("from './native-lidar-layer'","from '"+layerURL+"'").replace("from './native-lidar'","from '"+modelURL+"'"))));
 function fixture(){const f=pointFixture();return model.assembleNativeDataset(model.parseNativeManifest(f.manifest),f.chunks);}
 function glHarness(){
  const g={drawingBufferWidth:200,drawingBufferHeight:100,log:[],lost:false,live:new Set(),params:new Map(),enabled:new Set()};let next=1;
@@ -47,4 +49,13 @@ test('native points and qualified cells honor low ScenePanel scales on initial l
   }
  }
  assert.equal(JSON.stringify({points,grid}),before,'native values and cell readings remain unscaled');
+});
+
+test('maximum96² solid Ground uploads its separate geometry budget and every source cell keeps color/ID picking',()=>{
+ const g=glHarness(),map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){}},grid=groundFixture().receipt.grid,p=gridLayer.createLidarGridLayer(grid,'ground',options,()=>assert.fail('solid Ground render failed'));
+ p.onAdd(map,g);p.render(g,{defaultProjectionData:{mainMatrix:matrix}});assert.equal(p.failed,false);assert.equal(p.eligible,9216);const packed=g.log.filter(r=>r[0]==='bufferData').at(-1)[2];assert.equal(packed.length/7,276480);assert.ok(g.log.some(r=>r[0]==='drawArrays'&&r[1]===g.TRIANGLES&&r[3]===276480));g.pixelId=9216;assert.equal(p.pick({x:1,y:1}),9215);p.update({...options,gridColor:'slope'});assert.equal(p.pick({x:1,y:1}),null);p.render(g,{defaultProjectionData:{mainMatrix:matrix}});const colored=g.log.filter(r=>r[0]==='bufferData').at(-1)[2];for(let i=0;i<packed.length;i+=7){assert.equal(colored[i],packed[i]);assert.equal(colored[i+1],packed[i+1]);assert.equal(colored[i+2],packed[i+2]);assert.equal(colored[i+6],packed[i+6]);}p.onRemove(map,g);assert.equal(g.live.size,0);
+});
+
+test('grid ceiling stays300k vertices and the separate point ceiling stays100k even with a requested higher budget',()=>{
+ for(const [triangles,count] of [[true,300001],[false,100001]]){const g=glHarness(),reports=[],map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){}},geometry={id:'budget-test',triangles,vertexLimit:300000,eligibleCount:1,sourceCount:1,origin:()=>[0,0,0],isEligible:()=>true,pack:()=>new Float32Array(count*7)},p=layer.createLidarGeometryLayer(geometry,options,m=>reports.push(m));p.onAdd(map,g);p.render(g,{defaultProjectionData:{mainMatrix:matrix}});assert.equal(p.failed,true);assert.equal(reports.length,1);assert.equal(p.pick({x:1,y:1}),null);p.onRemove(map,g);assert.equal(g.live.size,0);}
 });

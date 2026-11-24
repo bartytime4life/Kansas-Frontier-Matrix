@@ -2,3 +2,7 @@
 .classLegend{padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10px}.classLegend i{display:inline-block;width:10px;height:10px;margin-right:5px}
 
 .panel .states strong{font-size:12px}.states li{padding:3px 0;border-bottom:1px solid #7595a238}.panel .reading small{text-transform:none;letter-spacing:0}
+
+.panel .modes{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.panel .modes button{padding:7px 3px;font-size:11px;line-height:1.35}.legend>strong{grid-column:1/-1;font-family:inherit;font-size:11px;color:#ead8a8}.panel .displayNote{border-left:2px solid #edca83;padding:5px 0 5px 9px;color:#eeddae;margin:8px 0}.panel>details{border-top:1px solid #53727d;margin-top:9px}.panel .reading{margin-top:10px;padding-top:10px}.panel .reading>output{font-size:23px;line-height:1.35}.panel .reading>p{margin:5px 0}
+
+.legend[data-color=local-relief]>i{background:linear-gradient(90deg,rgb(46,115,194),rgb(166,176,166) 50%,rgb(250,217,61))}
