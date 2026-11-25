@@ -3302,7 +3302,6 @@ def test_web_followups_successor_preserves_web_cleanup_inventory_and_all_holds()
         WEB_FOLLOWUPS_CHANGED,
         "9de4defdf49c71925491a932477d258100fc5ce6",
     )
-    assert TOOL.RECEIPT.name == "site-v268-web-followups-overlay-20261125.json"
 
 
 WEB_FOLLOWUPS_CHANGED = {
@@ -3343,4 +3342,20 @@ WEB_FOLLOWUPS_CHANGED = {
     "tests/lightning-flash-loop-order.test.mjs",
     "tests/lightning-transport.test.mjs",
     "tests/subsurface-soil.test.mjs",
+}
+
+
+def test_web_a11y_perf_successor_preserves_web_followups_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-web-a11y-perf-overlay-20261125.json",
+        "site-v268-web-followups-overlay-20261125.json",
+        "33f0bb824ebdc07bb57ce6392e12301002956dd1e575b669d4ad31c599548902",
+        WEB_A11Y_PERF_CHANGED,
+        "de7ec1d5aa39b9db46672189986212e5eb0a1026",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-web-a11y-perf-overlay-20261125.json"
+
+
+WEB_A11Y_PERF_CHANGED = {
+    "app/page.tsx",
 }
