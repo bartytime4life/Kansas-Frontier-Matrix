@@ -9,7 +9,7 @@ import { componentHarness, findNode, settle } from "./component-harness.mjs";
 const moduleUrl = source => `data:text/javascript;base64,${Buffer.from(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText).toString("base64")}`;
 const helpersUrl = moduleUrl(await readFile("app/neon-lidar-preview.ts", "utf8"));
 const helpers = await import(helpersUrl);
-const { NEON_LIDAR_MAX_BYTES, parseNeonLidarPreview, neonLidarProbe, neonElevationDomain, neonSampleColor, readNeonLidarLocalJson } = helpers;
+const { NEON_LIDAR_MAX_BYTES, parseNeonLidarPreview, neonLidarProbe, neonLidarProfile, neonElevationDomain, neonSampleColor, readNeonLidarLocalJson } = helpers;
 const inventoryUrl = moduleUrl(await readFile("app/acquisition-inventory.ts", "utf8"));
 const clientUrl = moduleUrl((await readFile("app/acquisition-client.ts", "utf8")).replace('from "./acquisition-inventory"', `from "${inventoryUrl}"`));
 const client = await import(clientUrl);
@@ -78,6 +78,60 @@ test("recorded acquisition run must match the catalog year and site with a posit
   for (const run of [undefined, "", "2025_KONZ_1", "2024_KONA_1", "2024_UKFS_1", "2024_KONZ_0", "2024_KONZ_-1", "2024_KONZ_01", "2024_KONZ_1.5", "2024_KONZ_1/../2", "2024_KONZ_" + "1".repeat(100)]) rejected(input => { input.source.acquisition_run = run; });
   const repeated = fixture(); repeated.source.acquisition_run = "2024_KONZ_23"; assert.ok(parseNeonLidarPreview(repeated));
   const otherSite = fixture(); otherSite.source.site = "UKFS"; otherSite.source.acquisition_run = "2024_UKFS_2"; otherSite.source.tile = otherSite.source.tile.replace("KONZ", "UKFS"); otherSite.source.files.forEach(file => { file.name = file.name.replace("KONZ", "UKFS"); }); assert.ok(parseNeonLidarPreview(otherSite));
+});
+
+test("profiles retain discrete row and column measurements with native-center distances", () => {
+  const input = fixture();
+  for (let row = 0; row < 8; row++) for (let column = 0; column < 8; column++) {
+    const index = row * 8 + column;
+    input.grid.dtm[index] = 100 + row * 10 + column;
+    input.grid.dsm[index] = input.grid.dtm[index] + column - 2;
+    input.grid.chm[index] = row;
+  }
+  const across = neonLidarProfile(input, "row", 2);
+  assert.equal(across.axis, "row"); assert.equal(across.fixedIndex, 2);
+  assert.deepEqual(across.samples.map(sample => sample.dtm), [120, 121, 122, 123, 124, 125, 126, 127]);
+  assert.deepEqual(across.samples.map(sample => sample.distance_m), [0, 125, 250, 375, 500, 625, 750, 875]);
+  assert.deepEqual(across.samples.map(sample => [sample.row, sample.column]), Array.from({ length: 8 }, (_, column) => [2, column]));
+  assert.equal(across.samples[0].easting, 666062.5); assert.equal(across.samples[0].northing, 4328687.5);
+  assert.equal(across.samples[0].surfaceAboveGround, -2); assert.equal(across.samples[0].differenceIssue, "negative");
+  const down = neonLidarProfile(input, "column", 3);
+  assert.deepEqual(down.samples.map(sample => sample.dtm), [103, 113, 123, 133, 143, 153, 163, 173]);
+  assert.deepEqual(down.samples.map(sample => sample.distance_m), [0, 125, 250, 375, 500, 625, 750, 875]);
+  assert.equal(down.samples.at(-1).northing, 4328062.5); assert.equal(down.samples.at(-1).easting, 666437.5);
+});
+
+test("non-divisor profiles use actual nearest-center positions, not nominal grid spacing or tile edges", () => {
+  const input = fixture(12);
+  const expected = [0, 84, 167, 250, 334, 417, 500, 584, 667, 750, 834, 917];
+  for (const axis of ["row", "column"]) {
+    const profile = neonLidarProfile(input, axis, 11);
+    assert.deepEqual(profile.samples.map(sample => sample.distance_m), expected);
+    assert.equal(profile.samples.length, 12);
+    assert.notEqual(profile.samples.at(-1).distance_m, 1000);
+  }
+});
+
+test("profiles preserve per-surface NoData, zero, negative and overflow QA without changing source arrays", () => {
+  const input = fixture(); input.grid.dtm.fill(null); input.grid.dsm.fill(null); input.grid.chm.fill(null);
+  input.grid.dtm[0] = 0; input.grid.dsm[0] = 0; input.grid.chm[0] = 0;
+  input.grid.dtm[2] = 2; input.grid.dsm[2] = 1;
+  input.grid.dtm[3] = -1e308; input.grid.dsm[3] = 1e308;
+  const original = structuredClone(input);
+  input.grid.dtm = Object.freeze(input.grid.dtm); input.grid.dsm = Object.freeze(input.grid.dsm); input.grid.chm = Object.freeze(input.grid.chm);
+  const samples = neonLidarProfile(input, "row", 0).samples;
+  assert.deepEqual(samples.map(sample => sample.surfaceAboveGround), [0, null, -1, null, null, null, null, null]);
+  assert.deepEqual(samples.map(sample => sample.differenceIssue), [null, "missing", "negative", "nonfinite", "missing", "missing", "missing", "missing"]);
+  assert.equal(samples[0].chm, 0); assert.equal(samples[2].chm, null);
+  assert.equal(samples[3].dtm, -1e308); assert.equal(samples[3].dsm, 1e308);
+  assert.equal(neonLidarProfile(input, "row", 7).samples.every(sample => sample.dtm === null && sample.dsm === null && sample.chm === null), true);
+  assert.deepEqual(input, original);
+});
+
+test("profiles reject invalid axis or fixed index without selecting a substitute sample", () => {
+  const input = fixture();
+  for (const axis of ["row", "column"]) for (const index of [-1, 8, 0.5, NaN, Infinity, "1", null, undefined]) assert.equal(neonLidarProfile(input, axis, index), null);
+  for (const axis of ["diagonal", "", null, undefined]) assert.equal(neonLidarProfile(input, axis, 0), null);
 });
 
 test("shared elevation domain excludes NoData and CHM; color handles constants, saturation and extreme finite inputs", () => {

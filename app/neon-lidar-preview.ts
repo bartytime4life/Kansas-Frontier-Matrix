@@ -129,6 +129,22 @@ export function neonLidarProbe(preview: NeonLidarPreview, row: number, column: n
   };
 }
 
+export type NeonLidarProfileAxis = "row" | "column";
+
+/** Discrete retained samples from an already validated preview; no interpolation. */
+export function neonLidarProfile(preview: NeonLidarPreview, axis: NeonLidarProfileAxis, fixedIndex: number) {
+  if ((axis !== "row" && axis !== "column") || !Number.isInteger(fixedIndex) || fixedIndex < 0
+    || fixedIndex >= (axis === "row" ? preview.grid.height : preview.grid.width)) return null;
+  const length = axis === "row" ? preview.grid.width : preview.grid.height;
+  const first = neonLidarProbe(preview, axis === "row" ? fixedIndex : 0, axis === "row" ? 0 : fixedIndex);
+  if (!first) return null;
+  const samples = Array.from({ length }, (_, index) => {
+    const probe = neonLidarProbe(preview, axis === "row" ? fixedIndex : index, axis === "row" ? index : fixedIndex)!;
+    return { ...probe, distance_m: axis === "row" ? probe.easting - first.easting : first.northing - probe.northing };
+  });
+  return { axis, fixedIndex, samples };
+}
+
 export function neonSampleColor(value: number, domain: [number, number]): string {
   const [min, max] = domain, span = max - min;
   const fraction = min === max ? 0.5 : Number.isFinite(span) ? (value - min) / span : (value / 2 - min / 2) / (max / 2 - min / 2);

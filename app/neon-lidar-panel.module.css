@@ -63,3 +63,59 @@
 .pilotButton { margin: 4px 0 18px; }.pilotReview { padding: 10px 14px; margin: 20px 0; border: 1px solid #a18d58; background: #182b32; }.pilotReview strong { color: #f0e3b8; }
 
 .embedded{margin:28px 0 0}.heading h2{font-family:Georgia,'Times New Roman',serif;font-weight:400}.loadActions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:20px 0 12px}.loadActions .pilotButton{margin:0;background:#ebca87;color:#061a26;border-color:#ebca87}.loadActions .pilotButton:hover:not(:disabled){background:#f5dfaf;color:#061a26}.loadActions a{font-size:13px;min-height:44px;display:inline-flex;align-items:center}.localImport{margin:10px 0;border-bottom:1px solid var(--line)}.localImport summary{cursor:pointer;font-size:13px;padding:12px 0;min-height:44px;color:#c6dbe0}.localImport .importControls{border:0;padding:0 0 16px}.embedded .lab{grid-template-columns:minmax(0,1fr) minmax(250px,.8fr)}.embedded .figure{max-width:620px}.identity{padding:13px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}@media(max-width:760px){.embedded .lab{grid-template-columns:1fr}.embedded .figure{max-width:100%}}
+
+/* Discrete profiles share one source selection; elevation and height keep separate scales. */
+.profile { margin-top: 30px; padding-top: 25px; border-top: 1px solid #78cbd299; min-width: 0; }
+.profileHeading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px 24px; }
+.profileHeading h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: clamp(23px, 2.4vw, 29px); margin: 0; color: #f6efe0; }
+.profileHeading .eyebrow { margin-bottom: 7px; }
+.profileAxis { display: flex; gap: 8px; flex-wrap: wrap; }
+.profileAxis button { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+.profileAxis button span { color: #adc5cf; font-size: 11px; white-space: nowrap; }
+.profileAxis button[aria-pressed="true"] { border-color: #8cdee2; background: #173f4b; box-shadow: inset 0 -2px #8cdee2; }
+.profileAxis button[aria-pressed="true"] span { color: #c7edf0; }
+.panel .profilePrompt { padding: 18px 0 0; max-width: 680px; color: #d5e3df; }
+.profileSelection { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 20px; margin-top: 20px; }
+.profileSelection p { margin: 0; display: grid; gap: 4px; }
+.profileSelection strong { color: #f2ce86; font-size: 17px; font-weight: 500; }
+.profileSelection p > span { font-size: 12px; font-variant-numeric: tabular-nums; }
+.profileSampleCount { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #b9d3d3; border-left: 2px solid #78cbd2; padding: 6px 0 6px 10px; }
+.profileNavigator { display: grid; grid-template-columns: auto minmax(80px, 1fr) auto; align-items: end; gap: 10px 16px; margin: 18px 0 25px; }
+.profileNavigator button { font-size: 12px; white-space: nowrap; }
+.profileNavigator label { display: grid; min-width: 0; gap: 2px; font-size: 12px; color: #cce0de; }
+.profileNavigator input[type="range"] { width: 100%; min-width: 0; margin: 0; padding: 0; border: 0; accent-color: #8cdee2; background: transparent; cursor: pointer; }
+.profilePlots { display: grid; gap: 26px; }
+.profilePlot { margin: 0; min-width: 0; }
+.profilePlot figcaption { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 20px; }
+.profilePlot figcaption strong { color: #edf0dd; font-size: 14px; font-weight: 500; }
+.profilePlot figcaption > span { color: #adc5cf; font-size: 11px; }
+.profileLegend { display: flex; flex-wrap: wrap; gap: 9px 26px; list-style: none; margin: 12px 0 10px; padding: 0; }
+.profileLegend li { display: flex; align-items: center; gap: 7px; color: #d4e1db; font-size: 12px; }
+.profileLegend svg { flex: 0 0 auto; }
+.profileLegend .profileMissing { color: #aec3ca; font-size: 11px; padding-left: 3px; }
+.profileGraph { display: grid; grid-template-columns: minmax(46px, 64px) minmax(0, 1fr); gap: 8px; }
+.profileScale { display: flex; justify-content: space-between; flex-direction: column; padding: 6px 0 22px; text-align: right; min-width: 0; font-size: 11px; font-variant-numeric: tabular-nums; color: #b8ccd0; }
+.profileDrawing { min-width: 0; position: relative; }
+.profileChart { width: 100%; height: 142px; display: block; cursor: crosshair; overflow: visible; }
+.profileGrid { stroke: #607d8d; stroke-opacity: .42; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.profileZero { stroke: #b1c6c5; stroke-opacity: .8; stroke-width: 1; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.profileCursor { stroke: #edf2d7; stroke-opacity: .8; stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.profileDistance { display: flex; justify-content: space-between; gap: 10px; margin-top: 3px; font-variant-numeric: tabular-nums; color: #b8ccd0; font-size: 11px; }
+.panel .profileAxisLabel { font-size: 11px; margin: 8px 0 0 72px; color: #b8ccd0; text-align: center; }
+.panel .profileEmptyText { position: absolute; inset: 20% 10% auto; margin: 0; text-align: center; color: #d1dedc; font-size: 12px; }
+.panel .profileLimits { margin: 22px 0 0; padding-top: 13px; border-top: 1px solid var(--line); font-size: 12px; max-width: 900px; }
+@media (max-width: 480px) {
+  .profile { margin-top: 24px; padding-top: 20px; }
+  .profileAxis { display: grid; width: 100%; grid-template-columns: 1fr 1fr; }
+  .profileAxis button { flex-wrap: wrap; justify-content: flex-start; gap: 3px 7px; padding: 9px 10px; }
+  .profileAxis button span { font-size: 10px; }
+  .profileNavigator { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .profileNavigator label { grid-column: 1 / -1; grid-row: 1; }
+  .profileNavigator button { width: 100%; }
+  .profilePlots { gap: 27px; }
+  .profileLegend { gap: 8px 16px; }
+  .profileGraph { grid-template-columns: 46px minmax(0, 1fr); gap: 7px; }
+  .profileChart { min-height: 115px; }
+  .panel .profileAxisLabel { margin-left: 53px; }
+  .profileScale { padding: 6px 0 24px; font-size: 10px; }
+}
