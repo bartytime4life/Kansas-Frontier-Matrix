@@ -530,6 +530,9 @@ test("a failed airspace context has an explicit retry that verifies the pinned a
     findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
     tree = await renderUntil(cycle, retry, "the direct airspace retry");
     assert.equal(contextReads, 1);
+    const trafficStatus = JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("Traffic:")));
+    assert.match(trafficStatus, /next scheduled refresh will try again/);
+    assert.doesNotMatch(trafficStatus, /every listed receiver network/);
     retry(tree).props.onClick();
     tree = await renderUntil(cycle, tree => findNode(tree, node => node.type === "p" && node.props["data-edition"]), "the verified edition after retry");
     assert.equal(contextReads, 2);

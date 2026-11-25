@@ -43,7 +43,8 @@ Aircraft refreshes keep their 20-second cadence, with one request in flight at
 a time; a tick during a slow read is skipped. A later scheduled tick can retry
 after failure or timeout. Closing the layer cancels the read and prevents late
 success or failure from changing its state. The same cancellation guard applies
-to weather, TFR and UAS-grid replies. These browser bounds do not change route
+to weather, TFR and UAS-grid replies. An unavailable browser read does not
+establish that every upstream receiver network failed. These browser bounds do not change route
 deadlines, provider caches or provider request pacing. The independent five-second
 expiry tick continues to remove aircraft older than the existing 60-second limit;
 replay history retains its separate meaning.
