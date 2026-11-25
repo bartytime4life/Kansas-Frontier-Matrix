@@ -22,9 +22,9 @@ export default function ConnectionMap({view,receipt}:{view:View;receipt:Receipt}
      const add=(c:unknown):void=>{if(!Array.isArray(c))return;if(typeof c[0]==="number"&&typeof c[1]==="number")bounds.extend([c[0],c[1]]);else c.forEach(add);};
      view.features.forEach(f=>add(f.geometry?.coordinates));if(!bounds.isEmpty())instance.fitBounds(bounds,{padding:45,maxZoom:13,duration:0});
     }
-    if(view.raster){const [w,s,e,n]=view.raster.bbox;instance.addSource("raster",{type:"image",url:"/api/connections?action=entity&id="+receipt.captureId,coordinates:[[w,n],[e,n],[e,s],[w,s]]});instance.addLayer({id:"raster",source:"raster",type:"raster",paint:{"raster-opacity":1}});instance.fitBounds([[w,s],[e,n]],{padding:20,duration:0});}
+    if(view.raster){const [w,s,e,n]=view.raster.bbox;instance.addSource("raster",{type:"image",url:"/api/connections?action=entity&id="+encodeURIComponent(receipt.captureId),coordinates:[[w,n],[e,n],[e,s],[w,s]]});instance.addLayer({id:"raster",source:"raster",type:"raster",paint:{"raster-opacity":1}});instance.fitBounds([[w,s],[e,n]],{padding:20,duration:0});}
    });
-  }).catch(()=>{if(current)current.textContent="Map renderer unavailable. Source records remain in the table.";});
+  }).catch(()=>{if(current&&!disposed)current.textContent="Map renderer unavailable. Source records remain in the table.";});
   return()=>{disposed=true;map.current?.remove();map.current=null;};
  },[view,receipt]);
  return <figure className="connection-map"><div ref={container} aria-label="Captured source geometry review map" role="region"/><figcaption>Source geometry in geographic context. Dark background carries no additional measurements. {view.raster?view.raster.vintage+" · actual per-pixel acquisition date unknown.":"No interpolation or inferred terrain."}</figcaption></figure>;

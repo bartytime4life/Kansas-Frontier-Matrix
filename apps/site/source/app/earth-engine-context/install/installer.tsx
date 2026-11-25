@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   EARTH_ENGINE_CONTEXT_PREFIX,
   parseEarthEngineManifest,
@@ -42,15 +42,22 @@ export function EarthEngineInstaller() {
   const [message, setMessage] = useState("Select the prepared folder from KFM's private data store.");
   const [working, setWorking] = useState(false);
   const [uploaded, setUploaded] = useState(false);
+  // Inspecting a folder hashes its manifest; only the newest selection may show its result.
+  const selection = useRef(0);
 
   async function select(files: FileList | null) {
+    const current = ++selection.current;
     setPrepared(null); setUploaded(false); setProgress(0);
     if (!files) return;
     try {
       const candidate = await inspect(files);
+      if (current !== selection.current) return;
       setPrepared(candidate);
       setMessage(`${candidate.manifest.layers.filter((layer) => layer.status === "approved").length} reviewed layers · ${candidate.files.length} immutable files. Check the set before uploading.`);
-    } catch (error) { setMessage(error instanceof Error ? error.message : "The display folder failed validation."); }
+    } catch (error) {
+      if (current !== selection.current) return;
+      setMessage(error instanceof Error ? error.message : "The display folder failed validation.");
+    }
   }
 
   async function upload() {
@@ -74,6 +81,7 @@ export function EarthEngineInstaller() {
               if (![429, 502, 503, 504].includes(response.status) || attempt === 2) {
                 throw new Error(`${entry.key}: ${response.status} ${(await response.json().catch(() => ({}))).error ?? "upload failed"}`);
               }
+              await response.body?.cancel().catch(() => undefined); // release the failed response before retrying
               await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
             }
             completed++;
