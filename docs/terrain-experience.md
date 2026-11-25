@@ -78,3 +78,37 @@ closure geometry, source metadata or registration claims. It uses MapLibre's
 public zero-duration camera operation because animated terrain elevation can
 replace an explicit height target during easing. Native and base data remain
 scientifically separate; this display fit does not align their vertical datums.
+
+### Measurement instrument and truthful empty states — 2026-11-25
+
+The Terrain & elevation dock now presents the three measurement choices as one
+compact instrument: **Ground** follows bare earth, **Surface** includes supported
+vegetation and structures, and **Canopy height** measures classified vegetation
+above same-survey ground. The small cross-section is explicitly illustrative;
+it is not a rendered survey, a height scale or evidence of local coverage. The
+main map remains the landscape. Base landscape turns cells and raw points off
+in one action; relief and aerial backdrops remain available in Display & backdrop.
+
+The full dock and compact layer switch use one status function. Native receipts
+with no grid remain available as coverage evidence for the current measurement
+mode. Optional raw-point receipts and previous-mode receipts cannot supply cell
+coverage. Pending work is separate from final missing support, failures offer
+Retry unavailable tiles, and only detail-required results offer native zoom.
+Supported partial tiles remain readable; absent cells never receive a click-to-
+read invitation. Hidden, inactive, zero-opacity and preparation-failure states
+explain why measurements are not drawn. The inspection action is enabled only
+for drawn cells, while Base landscape stays independently available.
+
+The visible science note separates visual relief and display sampling from
+source metres. Full acquisition dates, vertical references, cache times, source
+assets, NoData treatment, derivation limits, raw-point controls, sample navigation
+and study downloads remain in the existing disclosures. No acquisition policy,
+source arithmetic, cell masks, geometry, camera behavior, resource budget or
+provider permissions change in this refinement.
+
+A selected cell is bound to its exact grid object and source tile. A refresh that
+replaces that grid retires the reading and typed record draft; it cannot silently
+reuse the same row index for replacement source values. Refreshing another tile
+retains the unchanged selected grid. These are component/source guarantees,
+not field accuracy, provider admission or deployed browser acceptance. This is
+an isolated authoring candidate; publication remains on hold.
