@@ -123,8 +123,8 @@ export function buildCountyModel(input = {}, options = {}) {
   const descriptor = (key, label, unit, sourceId, period, kind, note, extra = {}) => ({ key, label, unit, sourceId, period, kind, note, ...extra });
   const metrics = [
     descriptor('population', 'Population', 'people', 'census-mosaic', periods.population, 'count', 'Annual Census Population Estimates Program estimate.'),
-    descriptor('populationChange', 'Population change since 2020', 'people', 'census-mosaic', periods.populationChange, 'count', 'Same population-estimate vintage at both endpoints.'),
-    descriptor('populationChangePct', 'Population change since 2020', '%', 'census-mosaic', periods.populationChange, 'rate', 'Difference divided by the July 1, 2020 population estimate.', { rate: { numerator: 'populationChange', denominator: 'population2020', scale: 100, denominatorPeriod: 'July 1, 2020' } }),
+    descriptor('populationChange', 'Population change since 2020 (people)', 'people', 'census-mosaic', periods.populationChange, 'count', 'Same population-estimate vintage at both endpoints.'),
+    descriptor('populationChangePct', 'Population change since 2020 (%)', '%', 'census-mosaic', periods.populationChange, 'rate', 'Difference divided by the July 1, 2020 population estimate.', { rate: { numerator: 'populationChange', denominator: 'population2020', scale: 100, denominatorPeriod: 'July 1, 2020' } }),
     ...ACS_METRICS.map(([key, label, unit, kind, note]) => descriptor(key, label, unit.startsWith('dollars') ? `${acsYear} ${unit}` : unit, 'county-conditions', periods.acs, kind, note,
       { moeKey: key + 'Moe', confidenceLevel: .90, moeMethod: ACS_RATES[key] ? 'Census approximate derived proportion MOE' : 'Published source MOE',
         ...(ACS_RATES[key] ? { rate: { numerator: ACS_RATES[key][0], denominator: ACS_RATES[key][1], scale: 100, denominatorPeriod: periods.acs } } : {}) })),
