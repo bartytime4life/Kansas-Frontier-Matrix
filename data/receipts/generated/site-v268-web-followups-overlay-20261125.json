@@ -2356,7 +2356,7 @@
     },
     "app/globals.css": {
       "difference": "Bounded repository context transport, export HTTP integrity and finite repository check correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
+      "mirror_sha256": "7292e25043a605772ac5713c874fc2051638641a4ab1758db923ef6eaf3dd117",
       "site_sha256": "7b16ffbe6884755f9827df2d6b4f48fb90703ec8dc360d8184dd2752c1c96637",
       "state": "inherited_repository_overlay"
     },
@@ -2939,7 +2939,7 @@
       "state": "repository_safety_overlay"
     },
     "app/map-layers.css": {
-      "mirror_sha256": "ae126287a8044a9daccf14472e6abe9a6d3b60b6fdcba7bcc5e0563a5b33d74c",
+      "mirror_sha256": "6f15d5a35cc3404d8748b5304c0435495e6dceab44aef05a17d35a050e7423a7",
       "site_sha256": "5e6dd670d2e688187e932c847148df968fd7491d7be9fb22f0a894e9389d85a6",
       "state": "inherited_repository_overlay"
     },
@@ -3245,7 +3245,7 @@
     },
     "app/scene-effects.css": {
       "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
+      "mirror_sha256": "3fbdc45622e03ba1b7fc420c4bd3c1dc0fbc5d26eeb7090b1f465bb93e8f7a2b",
       "site_sha256": "a93e11dce684d91e2b6d612763b79fcfb5a0740348a4b5bc03f22e385c439ff2",
       "state": "inherited_repository_overlay"
     },
@@ -6554,7 +6554,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "1ae50ab637d239ef5365f93897588456f5c95cb7c8a07c17b156c91ae3a656e7",
+  "inventory_sha256": "b5a4391cea66234b8ff470ca5b82cd990fb75471ee42b3a1db8d3c9e8bd2976c",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8742,7 +8742,7 @@
       ]
     }
   },
-  "recorded_at": "2026-11-25T05:12:56.287151+00:00",
+  "recorded_at": "2026-11-25T05:29:20.269607+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "9de4defdf49c71925491a932477d258100fc5ce6",
   "repository_reconciliation": {
@@ -8774,12 +8774,36 @@
         "state": "repository_safety_overlay"
       },
       {
+        "mirror_sha256": "7292e25043a605772ac5713c874fc2051638641a4ab1758db923ef6eaf3dd117",
+        "path": "app/globals.css",
+        "previous_receipt_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
+        "state": "inherited_repository_overlay"
+      },
+      {
         "mirror_sha256": "2332afbaeff64af78e0b451bd3b0d50d4b00c36b4063f78722dc9afd3f07a990",
         "path": "app/lightning-flash-loop.tsx",
         "previous_receipt_sha256": "b6d9302f867364355e4d4e2e3fdc20177b2add96f1cd371940e19825aee5cda6",
         "proposed_in_this_change": true,
         "repository_base_sha256": "b6d9302f867364355e4d4e2e3fdc20177b2add96f1cd371940e19825aee5cda6",
         "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "6f15d5a35cc3404d8748b5304c0435495e6dceab44aef05a17d35a050e7423a7",
+        "path": "app/map-layers.css",
+        "previous_receipt_sha256": "ae126287a8044a9daccf14472e6abe9a6d3b60b6fdcba7bcc5e0563a5b33d74c",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "ae126287a8044a9daccf14472e6abe9a6d3b60b6fdcba7bcc5e0563a5b33d74c",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "3fbdc45622e03ba1b7fc420c4bd3c1dc0fbc5d26eeb7090b1f465bb93e8f7a2b",
+        "path": "app/scene-effects.css",
+        "previous_receipt_sha256": "6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
+        "state": "inherited_repository_overlay"
       },
       {
         "mirror_sha256": "594072bfa6ef05cbbd2a50d541993dd7dd99f246cf7d1aa245629cdfed59bf2a",
@@ -8837,7 +8861,7 @@
   },
   "rollback": {
     "mirror": "Revert the listed Site files and the successor selector/QA together; preserve immutable receipts.",
-    "runtime": "Newest-request guards in the lightning flash loop and Earth Engine installer, a released retry body, an encoded entity id, and input validation ordered before the NOAA frame read. No dependency, saved-schema or operational-store migration.",
+    "runtime": "Newest-request guards in the lightning flash loop and Earth Engine installer, a released retry body, an encoded entity id, and input validation ordered before the NOAA frame read. No dependency, saved-schema or operational-store migration. CSS: 209 never-effective overridden declarations and one unused keyframes rule removed.",
     "site": "No Site synchronization, deployment or publication."
   },
   "security": {
@@ -8871,7 +8895,7 @@
   "status": "REVIEW_ONLY",
   "validation": {
     "app_tests": "PASS: 2100 tests (2098 pass, 2 skipped), including lightning-flash-loop-order, earth-engine-installer-selection and lightning-transport.",
-    "browser": "NOT_RUN: ordering and validation fixes are covered by component and route tests that fail without each fix.",
+    "browser": "PASS: local Playwright sweep of 44 routes shows no new console errors, status changes or overflow; the CSS removal was checked by computed-style diffs (2 before, 3 after runs) and screenshots on 11 routes at 1280x800 and 375x740, with no differences beyond run-to-run animation and live-data noise.",
     "focused_tests": "PASS: lightning-flash-loop-order (2), earth-engine-installer-selection (1), lightning-transport (7).",
     "lint": "PASS: 0 errors; 10 inherited warnings.",
     "mirror": "PASS: strict selected successor inventory and immutable predecessor chain; 262 withheld paths remain absent.",
