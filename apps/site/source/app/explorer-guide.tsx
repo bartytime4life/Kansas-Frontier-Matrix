@@ -58,8 +58,10 @@ export function ExplorerGuide({ open, onClose, onAction, onMore }: Readonly<{
         onCloseRef.current(Boolean(rememberRef.current?.checked));
       }
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    // Capture on document so the page-wide Escape handler does not also
+    // close the Evidence Drawer and move focus to the map.
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
   }, [open]);
 
   if (!open) return null;

@@ -1355,6 +1355,7 @@ export default function Home() {
   const sourceSearchFocusPendingRef = useRef(false);
   const rightPanelRef = useRef<HTMLElement>(null);
   const timelineRef = useRef<HTMLElement>(null);
+  const timelineReturnRef = useRef<HTMLElement | null>(null);
   const repositoryButtonRef = useRef<HTMLButtonElement>(null);
   const repositoryPanelRef = useRef<HTMLElement>(null);
   const workspaceDetailsRef = useRef<HTMLDetailsElement>(null);
@@ -4360,7 +4361,9 @@ export default function Home() {
   const closeTimelinePanel = useCallback(() => {
     setTimelineOpen(false);
     setPlaying(false);
-    window.setTimeout(() => mapContainerRef.current?.focus(), 0);
+    const returnTarget = timelineReturnRef.current;
+    timelineReturnRef.current = null;
+    window.setTimeout(() => modalReturnTarget(returnTarget, mapContainerRef.current)?.focus(), 0);
   }, []);
 
   const openSourceStatus = useCallback((returnElement?: HTMLElement | null) => {
@@ -7148,7 +7151,9 @@ export default function Home() {
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || repositoryOpen) return;
+      // React listens on this same document, so a menu that already handled
+      // Escape with stopPropagation() still reaches here; leave its focus alone.
+      if (event.key !== "Escape" || repositoryOpen || event.cancelBubble) return;
       if (workspaceDetailsRef.current?.open) workspaceDetailsRef.current.open = false;
       else if (sourceStatusOpen) closeSourceStatus();
       else if (qwenOpen) closeQwenCompanion();
@@ -9120,7 +9125,7 @@ export default function Home() {
           <nav className="map-chrome-dock" aria-label="Map view and controls">
           <span className="map-dock-context sr-only" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
-              <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
+              <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={(event) => { timelineReturnRef.current = event.currentTarget; toggleTimelinePanel(); }}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
         {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar open={scenePanelOpen} rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={changeScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
@@ -9132,7 +9137,7 @@ export default function Home() {
                     {mapRepresentationControls()}
                   </div>
                   <div className="map-dock-menu-quick" role="group" aria-label="Quick map controls">
-                    <button type="button" aria-pressed={timelineOpen} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); toggleTimelinePanel(); }}>Time · {formatTimelineStep(year)}</button>
+                    <button type="button" aria-pressed={timelineOpen} onClick={(event) => { timelineReturnRef.current = event.currentTarget; closeHeaderOverflow(event.currentTarget, false); toggleTimelinePanel(); }}>Time · {formatTimelineStep(year)}</button>
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("layers", event.currentTarget); }}>Layers · {selectedMapLayerCount}</button>
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("places", event.currentTarget); }}>Places · {savedWorkspaces.length}</button>
                   </div>
@@ -9156,8 +9161,8 @@ export default function Home() {
               </div>
           <div className="map-context-composer">
             <button ref={composerTriggerRef} className="new-from-map-action" type="button" aria-expanded={mapContextOpen} aria-controls="map-context-card" onClick={() => { setMapContextOpen((current) => !current); setHelpOpen(false); }} title="Create from the current map context"><span aria-hidden="true">＋</span><span className="new-from-map-label">Compose</span><span className="new-from-map-caret" aria-hidden="true">⌄</span></button>
-            {mapContextOpen && <aside ref={composerRef} id="map-context-card" className="map-context-card" role="dialog" aria-modal="false" aria-labelledby="map-context-title">
-              <header>
+            {mapContextOpen && <section ref={composerRef} id="map-context-card" className="map-context-card" role="dialog" aria-modal="false" aria-labelledby="map-context-title">
+              <header role="none">
                 <div><span>CONTEXT COMPOSER</span><h2 id="map-context-title">Map context ready</h2></div>
                 <button type="button" onClick={() => setMapContextOpen(false)} aria-label="Close map context composer">×</button>
               </header>
@@ -9181,7 +9186,7 @@ export default function Home() {
                 <button type="button" onClick={() => { setMapContextOpen(false); setSourceObservatoryView("candidates"); setRepositoryView("sources"); setRepositoryOpen(true); announce("Opened verified candidate portals; discovery has no public effect"); }}><span aria-hidden="true">↗</span><strong>Inspect connected sources</strong><small>Official portals, intake gates, and known limits</small></button>
               </div>
               <footer><span>DRAFT · NOT PUBLISHED</span><p>Provider-backed map context remains distinct from admitted KFM evidence.</p></footer>
-            </aside>}
+            </section>}
           </div>
           <button ref={repositoryButtonRef} className="status-header-action" type="button" onClick={() => { setRepositoryView("updates"); setRepositoryOpen(true); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" title="Check Site, data, and repository connections"><span aria-hidden="true">⌁</span><span>Status</span></button>
               <button className="share-action" type="button" onClick={(event) => { closeHeaderOverflow(event.currentTarget); void shareView(); }}>Share current view</button>
@@ -9190,14 +9195,14 @@ export default function Home() {
           </details>
         </div>
 
-        {helpOpen && <aside ref={mapGuideRef} className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
+        {helpOpen && <section ref={mapGuideRef} className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={closeMapGuide} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
           <p>Choose a real source layer or select a mapped feature to inspect its provider, time, and limits. External context is not admitted KFM evidence.</p>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
-        </aside>}
+        </section>}
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
@@ -9217,7 +9222,7 @@ export default function Home() {
       />}
 
       <div className="repository-overlay" hidden={!repositoryOpen} onMouseDown={(event) => { if (event.target === event.currentTarget) closeRepository(); }}>
-        <aside ref={repositoryPanelRef} id="repository-briefing" className="repository-briefing" role="dialog" aria-modal="true" aria-labelledby="repository-briefing-title">
+        <section ref={repositoryPanelRef} id="repository-briefing" className="repository-briefing" role="dialog" aria-modal="true" aria-labelledby="repository-briefing-title">
           <header className="repository-heading">
             <div><p className="panel-kicker">CONNECTIONS + REPOSITORY + SOURCES</p><h2 id="repository-briefing-title">Inspect KFM boundaries</h2><p>A pinned implementation snapshot, live read-only GitHub currentness, and source ideas without collapsing discovery into release.</p></div>
             <button className="icon-close" type="button" onClick={closeRepository} aria-label="Close repository briefing">×</button>
@@ -9399,7 +9404,7 @@ export default function Home() {
                 <article className="runtime-envelope" data-outcome={governedRouteResult.envelope.outcome}>
                   <header><div><span>HTTP {governedRouteResult.http_status}</span><strong>{governedRouteResult.envelope.outcome}</strong></div><b>CODE SHAPE · NOT DEPLOYED</b></header>
                   <div className="runtime-resolution"><code>{governedMethod} {governedRoute}</code><span>→</span><strong>{governedRouteResult.envelope.reason_code}</strong></div>
-                  <pre aria-label="Static runtime response envelope">{JSON.stringify(governedRouteResult, null, 2)}</pre>
+                  <pre role="region" aria-label="Static runtime response envelope" tabIndex={0}>{JSON.stringify(governedRouteResult, null, 2)}</pre>
                   <footer><span>Four client outcomes only</span><b>ANSWER · ABSTAIN · DENY · ERROR</b><p>HOLD, PASS, FAIL, and APPROVE_READY are workflow or assessment states—not runtime outcomes.</p></footer>
                 </article>
               </div>
@@ -9507,7 +9512,7 @@ export default function Home() {
               <p>This briefing reports inspected repository bytes. Map geometry uses separately labeled external source context. A merge, test, receipt, or renderer does not itself release or publish KFM data.</p>
             </aside>
           </div>
-        </aside>
+        </section>
       </div>
 
       <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-inspector={inspectionPanel ?? "closed"} data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
@@ -10064,8 +10069,8 @@ export default function Home() {
                     {reportSections.findings && <section className="report-preview-section"><span>FINDINGS</span><ol>{reportFindings.map((finding) => <li key={finding}>{finding}</li>)}</ol></section>}
                     <section className="report-preview-section report-temporal-comparison"><span>TIME A / TIME B CATALOG AVAILABILITY</span><div className="report-metrics"><article><span>{formatTimelineStep(compareTimeA)}</span><strong>{reportTemporalComparison.timeARecordCount}</strong><small>scoped records</small></article><article><span>{formatTimelineStep(compareTimeB)}</span><strong>{reportTemporalComparison.timeBRecordCount}</strong><small>scoped records</small></article><article><span>DELTA</span><strong>{reportTemporalComparison.recordDelta >= 0 ? "+" : ""}{reportTemporalComparison.recordDelta}</strong><small>catalog records</small></article><article><span>CHANGED</span><strong>{reportTemporalComparison.changedLayerCount}</strong><small>included layers</small></article></div><p>Applies this report’s layer, evidence, query, selection, visibility, viewport, or analysis-area scope to both times. Catalog availability is not observed change or imagery analysis.</p></section>
                     {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
-                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
-                      {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
+                      {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div role="cell"><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span role="cell" data-state={properties.evidenceState}>{properties.evidenceState}</span><p role="cell">{properties.summary}</p></article>)}
+                      {reportRecords.length === 0 && <div className="report-empty" role="row"><strong role="cell">No records match</strong><p role="cell">Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
                     </div></section>}
                     {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
                     {reportSections.limitations && <aside className="report-boundary"><strong>Use boundary</strong><p>No KFM domain records are released in this Site. A generated report preserves limitations and cannot admit or release data.</p></aside>}
@@ -10403,7 +10408,7 @@ export default function Home() {
                   <div><dt>Review posture</dt><dd>{selected?.properties.reviewState ?? "NO SELECTION"}</dd></div>
                   <div><dt>Correction time/state</dt><dd>{selected?.properties.correctionState ?? "NO SELECTION"} · time not modeled</dd></div>
                 </dl><p>External sources have separate observation, publication, and retrieval times. Missing timestamps remain missing in exports.</p></div>
-                <article className="export-manifest-preview"><header><span>MANIFEST PREVIEW</span><strong>{exportReview.downloadAllowed ? "READY TO DOWNLOAD" : "BLOCKED"}</strong></header><pre>{JSON.stringify({ format: exportReview.payload.format, authority: exportReview.payload.authority, workspace: currentWorkspace, exportedAt: exportGeneratedAt, publicEffect: exportReview.payload.publicEffect, redaction: exportReview.payload.trust, effects: "NONE" }, null, 2)}</pre></article>
+                <article className="export-manifest-preview"><header><span>MANIFEST PREVIEW</span><strong>{exportReview.downloadAllowed ? "READY TO DOWNLOAD" : "BLOCKED"}</strong></header><pre role="region" aria-label="Export manifest preview" tabIndex={0}>{JSON.stringify({ format: exportReview.payload.format, authority: exportReview.payload.authority, workspace: currentWorkspace, exportedAt: exportGeneratedAt, publicEffect: exportReview.payload.publicEffect, redaction: exportReview.payload.trust, effects: "NONE" }, null, 2)}</pre></article>
                 <div className="map-utility-actions export-actions"><button type="button" onClick={() => void copyExportManifest()}>Copy reviewed manifest</button><button type="button" disabled={!exportReview.downloadAllowed} onClick={downloadPublicSafeExport}>Download public-safe JSON</button></div>
                 <aside className="map-utility-boundary" data-tone="privacy"><strong>Evidence-preserving export boundary</strong><p>The download is a browser-local demonstration artifact. It cannot admit a source, prove an EvidenceBundle, change policy or review state, release, deploy, promote, or publish KFM data.</p></aside>
               </section>}
@@ -10439,7 +10444,7 @@ export default function Home() {
             <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Map layers <b>{selectedMapLayerCount}</b></button>
             <button type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" onClick={(event) => { openSourceStatus(event.currentTarget); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
-            <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
+            <button type="button" onClick={(event) => { timelineReturnRef.current = event.currentTarget; setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={openMapSettings}>Style</button>
           </nav>
 
@@ -10511,7 +10516,7 @@ export default function Home() {
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </section>}
 
-        <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
+        <section ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <InspectionPanelSwitch active="evidence" onEvidence={() => {}} onQwen={() => openQwenCompanion()} onClose={closeRightPanel} />
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
@@ -10707,7 +10712,7 @@ export default function Home() {
             </div>
           </>}
           </>}
-        </aside>
+        </section>
 
         <section ref={timelineRef} className="timeline-panel" aria-label="Timeline and temporal controls" aria-hidden={isCompact && !timelineOpen || undefined} inert={isCompact && !timelineOpen} aria-modal={isCompact && timelineOpen || undefined} role={isCompact && timelineOpen ? "dialog" : undefined}>
           <div className="timeline-compact">
