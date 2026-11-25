@@ -10,6 +10,7 @@ const compileModule = async (name) => {
   return import(`data:text/javascript;base64,${Buffer.from(output).toString("base64")}`);
 };
 
+const bounded = await compileModule("bounded-json");
 const airspace = await compileModule("aviation-airspace");
 const weather = await compileModule("aviation-weather");
 const drone = await compileModule("aviation-drone-data");
@@ -507,6 +508,38 @@ const renderUntil = async (cycle, ready, what) => {
   assert.fail(`timed out waiting for ${what}`);
 };
 
+test("a failed airspace context has an explicit retry that verifies the pinned asset again", { timeout: 10_000 }, async () => {
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  let contextReads = 0;
+  const fetch = async (path, init) => {
+    if (path !== airspace.AVIATION_CONTEXT_ASSET.url) return Response.json({}, { status: 503 });
+    contextReads++;
+    assert.equal(init.cache, "force-cache");
+    return contextReads === 1 ? new Response(null, { status: 503 }) : new Response(bytes);
+  };
+  const h = await componentHarness("app/aviation-layer-control.tsx", {
+    "./bounded-json": bounded, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
+    "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: null }, styleReady: false };
+  const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const retry = tree => findNode(tree, node => node.type === "button" && node.props.children === "Retry airspace context");
+  try {
+    let tree = await cycle();
+    findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, retry, "the direct airspace retry");
+    assert.equal(contextReads, 1);
+    const trafficStatus = JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("Traffic:")));
+    assert.match(trafficStatus, /next scheduled refresh will try again/);
+    assert.doesNotMatch(trafficStatus, /every listed receiver network/);
+    retry(tree).props.onClick();
+    tree = await renderUntil(cycle, tree => findNode(tree, node => node.type === "p" && node.props["data-edition"]), "the verified edition after retry");
+    assert.equal(contextReads, 2);
+    assert.equal(retry(tree), undefined);
+  } finally { h.dispose(); }
+});
+
 test("the UAS grid request survives its own loading-state re-render and reaches ready", { timeout: 10_000 }, async () => {
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
   const control = await import("node:fs/promises").then(fs => fs.readFile(new URL("../app/aviation-layer-control.tsx", import.meta.url), "utf8"));
@@ -515,7 +548,7 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
   const pendingGrid = new Promise(resolve => { release = resolve; });
   const fetch = async (path, init) => {
     if (path === drone.UASFM_API_PATH) { gridSignal = init.signal; await pendingGrid; return { ok: true, path }; }
-    if (path === airspace.AVIATION_CONTEXT_ASSET.url) return { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
+    if (path === airspace.AVIATION_CONTEXT_ASSET.url) return new Response(bytes);
     return { ok: false, path };
   };
   const readBoundedJson = async (response, _max, signal) => {
@@ -525,9 +558,9 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
       : {};
   };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
+    "./bounded-json": { ...bounded, readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
     "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   try {
@@ -552,7 +585,7 @@ test("turning traffic off and on never redraws the previous positions as current
       if (trafficReads > 1) await new Promise(resolve => { release = resolve; });
       return { ok: true, path };
     }
-    if (path === airspace.AVIATION_CONTEXT_ASSET.url) return { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
+    if (path === airspace.AVIATION_CONTEXT_ASSET.url) return new Response(bytes);
     return { ok: false, path };
   };
   const readBoundedJson = async (response, _max, signal) => {
@@ -562,9 +595,9 @@ test("turning traffic off and on never redraws the previous positions as current
       : {};
   };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
+    "./bounded-json": { ...bounded, readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders,
     "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   const status = tree => JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("Traffic:")) ?? null);
@@ -592,11 +625,11 @@ test("switching to the 2D chart redraws every 3D form flat, with chart labels an
     on() {}, off() {}, once() {}, getCanvas: () => ({ style: {} }), getBearing: () => -18, easeTo: options => { cameras.push(options); },
   };
   const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
-    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+    ? new Response(bytes) : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./bounded-json": { ...bounded, readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   const formTypes = () => Object.fromEntries([...layers.values()].filter(layer => layer.id.endsWith("-3d")).map(layer => [layer.id.replace("kfm-aviation-", ""), layer.type]));
@@ -673,11 +706,11 @@ test("drawing a side view with two map clicks renders the cross-section and its 
     on() {}, off() { click = null; }, once: (type, handler) => { if (type === "click") click = handler; }, getCanvas: () => ({ style: {} }), getBearing: () => 0, easeTo() {},
   };
   const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
-    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+    ? new Response(bytes) : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./bounded-json": { ...bounded, readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   const button = (tree, text) => findNode(tree, node => node.type === "button" && JSON.stringify(node.props.children ?? "").includes(text));
@@ -731,11 +764,11 @@ test("the aviation layer offers dossier points while shown and withdraws them wh
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
   const offered = [];
   const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
-    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+    ? new Response(bytes) : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./bounded-json": { ...bounded, readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false, onResearchRecords: records => offered.push(records) };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   const toggle = tree => findNode(tree, node => node.type === "input" && /aviation layers$/.test(node.props["aria-label"] ?? ""));
@@ -767,11 +800,11 @@ test("Inspect on an aviation dossier record opens the aviation point inspector t
     /detailsRef\.current\.open = true/, "the collapsed aviation controls expand before the inspector is focused");
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
   const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
-    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+    ? new Response(bytes) : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./bounded-json": { ...bounded, readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false, inspectRequest: null };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   const inspector = tree => findNode(tree, node => node.type === "div" && node.props["data-aviation-inspector"] !== undefined);
@@ -800,11 +833,11 @@ test("aviation drawing owns selection until cancelled and supports keyboard map-
     getBearing: () => 0, easeTo: value => cameras.push(value),
   };
   const fetch = async path => path === airspace.AVIATION_CONTEXT_ASSET.url
-    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+    ? new Response(bytes) : { ok: false, path };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./bounded-json": { ...bounded, readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./kansas-sky-control": { KansasSkyControl: () => null }, ...decoders, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
-  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder, Error,
+  }, { fetch, setInterval, clearInterval, DOMException, crypto: globalThis.crypto, TextDecoder, Error,
     window: { matchMedia: () => ({ matches: true }), addEventListener: (key, fn, capture) => { assert.equal(capture, true); keys.set(key, fn); }, removeEventListener: (key, fn, capture) => { assert.equal(capture, true); if (keys.get(key) === fn) keys.delete(key); } } });
   const props = { mapRef: { current: map }, styleReady: true, onPickingChange: value => ownership.push(value) };
   const cycle = async () => { const tree = h.render(h.exports.AviationLayerControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };

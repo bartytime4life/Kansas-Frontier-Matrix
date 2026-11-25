@@ -16,6 +16,7 @@ async function compileLinked(name) {
 }
 const load = async name => import(await compileLinked(name));
 
+const bounded = await load("bounded-json");
 const dossier = await load("aviation-dossier");
 const phase = await load("aviation-phase");
 const types = await load("aircraft-types");
@@ -162,7 +163,7 @@ test("choosing a public-use airport opens a dossier with runways, weather, forec
   const tfrShape = shape(square(SLN.lon - 0.05, SLN.lat - 0.05, 0.1), "SALINA AREA");
   const envelope = records => ({ evidenceRole: "EXTERNAL_CONTEXT_ONLY", retrievedAt: new Date().toISOString(), sourceTitle: "test", sourceUrl: "https://example.invalid/", records, dropped: 0, limitation: "" });
   const fetch = async path => path === airspace.AVIATION_CONTEXT_ASSET.url
-    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: true, path };
+    ? new Response(bytes) : { ok: true, path };
   const readBoundedJson = async (response, _max, signal) => {
     if (signal?.aborted) throw new Error("aborted");
     switch (response.path) {
@@ -175,7 +176,7 @@ test("choosing a public-use airport opens a dossier with runways, weather, forec
     }
   };
   const h = await componentHarness("app/aviation-layer-control.tsx", {
-    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
+    "./bounded-json": { ...bounded, readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
     "./kansas-sky-control": { KansasSkyControl: () => null }, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
     "./aviation-phase": phase, "./aircraft-types": types, "./aviation-dossier": dossier,
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
