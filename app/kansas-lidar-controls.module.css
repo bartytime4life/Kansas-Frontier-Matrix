@@ -12,3 +12,10 @@
 @media(max-width:700px){.insightStats dd{font-size:18px}.profile figcaption{display:block}.profile figcaption>span{display:block}.badge:has(.profileCompact){max-width:min(270px,calc(100% - 124px))}.badge .profileCompact svg{max-height:52px}}
 
 .profilePoint[data-drawn=false]{fill:#638e92;opacity:.65}
+
+.badge .profileCompact .profileAxis{font-size:8px;line-height:1.4;margin-top:2px;gap:6px}.badge .profileCompact .profileAxis span{font-size:8px;color:#c3d9d7}
+
+.panel .insightStats dd,.panel .insightStats small,.profile figcaption,.profile figcaption span,.profileCompact figcaption,.profileCompact figcaption span,.profileAxis,.profileAxis span,.badge .profileCompact .profileAxis span{text-transform:none;letter-spacing:normal}
+
+/* Keep profile heading, complete plot and linked reading together in short docks. */
+.profileDetails{position:relative}.panel .profileDetails>summary{display:block;padding-right:110px;line-height:1.3;scroll-margin-top:2px}.profileDetails>summary>span{display:block;margin-top:3px}.panel .profileBack{position:absolute;right:0;top:0;width:105px;min-height:44px;font-size:9px;line-height:1.35;padding:5px;color:#c4e5df;border-color:#759c99}.profile svg{height:80px;margin-top:2px}.panel .profileNavigation{margin-top:7px;gap:3px}.panel .profileNavigation input[type=range]{min-height:36px}.panel .profileHelp{font-size:9px;line-height:1.4;margin:5px 0}.profileAxis{margin-top:3px}

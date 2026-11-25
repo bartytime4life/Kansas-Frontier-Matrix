@@ -144,6 +144,7 @@ export function TerrainCellsSwitch({controller:c,compact=false}:{controller:Kans
  </section>;
 }
 export function KansasLidarLayers({controller:c}:{controller:KansasLidarController}){
+  const layerControlsRef=useRef<HTMLDivElement|null>(null);
   const point=c.selected?.kind==='point'?c.result?.points?.points[c.selected.index]:null,grid=c.grid,providerGrid=grid?.format==='kfm-3dep-ground-grid-v1'?grid:null,nativeGrid=grid?.format==='kfm-lidar-grid-v1'?grid:null,cell=c.selected?.kind==='cell'&&nativeGrid?lidarGridCell(nativeGrid,c.selected.index):null,sample=c.selected?.kind==='cell'&&providerGrid?groundCell(providerGrid,c.selected.index):null,asset=point?c.result?.points?.manifest.source.assets[point[9]]:null;
   const domain=useMemo(()=>c.result?.points?nativeAttributeDomain(c.result.points,c.color):null,[c.result,c.color]);
   const presentClasses=useMemo(()=>c.result?.points?[...new Set(c.result.points.points.filter(nativePointEligible).map(p=>p[4]))].sort((a,b)=>a-b):[],[c.result]);
@@ -155,7 +156,7 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
   const stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||c.result?.grid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   const status=terrainLayerStatus(c);
   return <section className={styles.panel} aria-label="Kansas LiDAR layers">
-    <div className={styles.displayModes} role="group" aria-label="Landscape display">
+    <div ref={layerControlsRef} className={styles.displayModes} role="group" aria-label="Landscape display">
       <button type="button" aria-pressed={!c.cellsOn&&!c.pointsOn} onClick={c.showBaseLandscape}>Base landscape</button>
       <button type="button" aria-pressed={c.cellsOn} disabled={!c.active} onClick={()=>c.setCellsOn(true)}>3D cells</button>
     </div>
@@ -170,7 +171,7 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
       <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground','Bare earth'],['surface','Surface','Top surface'],['canopy','Canopy height','Vegetation']] as const).map(([mode,label,hint])=><button key={mode} type="button" aria-label={label} aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}><strong>{label}</strong><small>{hint}</small></button>)}</div>
 
     </div>
-    {c.cellsOn&&<TerrainLandscapeInsights controller={c}/>}
+    {c.cellsOn&&<TerrainLandscapeInsights controller={c} onLayers={()=>layerControlsRef.current?.scrollIntoView({block:'start',behavior:'auto'})}/>}
     <div className={styles.statusStrip} data-state={status.tone} data-ready={status.tone==='ready'} data-display-scale={c.applied.grid?c.renderedScale:undefined} role="status"><span aria-hidden="true"/><div><strong>{status.title}</strong><small>{status.detail}</small></div></div>
     {c.cellsOn&&<>
       {status.detailRequired&&<button className={styles.detailAction} type="button" disabled={!c.active} onClick={c.detailHere}>Zoom for native detail</button>}
@@ -244,26 +245,26 @@ export function KansasLidarBadge({controller:c,controlsOpen=false}:{controller:K
 
 /** Measured source row, deliberately separate from the illustrative layer diagram. */
 export function TerrainProfile({profile,selected,compact=false}:{profile:TerrainRowProfile;selected:number;compact?:boolean}){
- const geometry=terrainProfileGeometry(profile),column=selected-profile.row*profile.values.length,marker=profile.drawn[column]?geometry.points[column]:null,name=modeLabel(profile.mode);
+ const plotHeight=compact?64:80,geometry=terrainProfileGeometry(profile,280,plotHeight),column=selected-profile.row*profile.values.length,marker=profile.drawn[column]?geometry.points[column]:null,name=modeLabel(profile.mode);
  return <figure className={compact?styles.profileCompact:styles.profile}>
   <figcaption>{name} · source row {profile.row+1}<span>{compact?'source metres':'Source-row samples · source metres'}</span></figcaption>
-  <svg viewBox="0 0 280 100" role="img" aria-label={`${name} source row ${profile.row+1}, ${profile.low===null?'no drawn samples':`${profile.low.toFixed(2)} to ${profile.high!.toFixed(2)} metres`}. Gaps are missing source support. Only drawn columns have linked selectable markers.`}>
-   <path className={styles.profileGuide} d="M8 8H272M8 50H272M8 92H272"/>
+  <svg viewBox={`0 0 280 ${plotHeight}`} preserveAspectRatio="none" role="img" aria-label={`${name} source row ${profile.row+1}, ${profile.low===null?'no supported source samples':`${profile.low.toFixed(2)} to ${profile.high!.toFixed(2)} metres`}. Gaps are missing source support. Only drawn columns have linked selectable markers.`}>
+   <path className={styles.profileGuide} d={`M8 8H272M8 ${plotHeight/2}H272M8 ${plotHeight-8}H272`}/>
    {geometry.paths.map((path,index)=><path key={index} className={styles.profileLine} d={path}/>)}
    {geometry.points.map((point,index)=>point&&<circle key={index} className={styles.profilePoint} data-drawn={profile.drawn[index]} cx={point.x} cy={point.y} r={compact?1.5:2}/>)}
-   {marker&&<><path className={styles.profileMarker} d={`M${marker.x} 4V96`}/><circle className={styles.profileSelected} cx={marker.x} cy={marker.y} r="4"/></>}
+   {marker&&<><path className={styles.profileMarker} d={`M${marker.x} 4V${plotHeight-4}`}/><circle className={styles.profileSelected} cx={marker.x} cy={marker.y} r="4"/></>}
   </svg>
-  {!compact&&<div className={styles.profileAxis}><span>{profile.low===null?'NoData':profile.low.toFixed(2)}–{profile.high===null?'NoData':profile.high.toFixed(2)} m</span><span>{profile.distance.toFixed(profile.distance<100?1:0)} m across row</span></div>}
+  <div className={styles.profileAxis}><span>{profile.low===null?'NoData':profile.low.toFixed(2)}–{profile.high===null?'NoData':profile.high.toFixed(2)} m</span><span>{profile.units==='approximate ground metres'?'≈ ':''}{profile.distance.toFixed(profile.distance<100?1:0)} m {compact?'row span':'across row'}{profile.units==='UTM grid metres'?' · grid':''}</span></div>
  </figure>;
 }
-export function TerrainLandscapeInsights({controller:c}:{controller:KansasLidarController}){
+export function TerrainLandscapeInsights({controller:c,onLayers}:{controller:KansasLidarController;onLayers?:()=>void}){
  const insight=c.terrainInsights,profile=c.rowProfile,bound=insight?.binding,selected=c.selected?.kind==='cell'?c.selected.index:null,position=profile&&selected!==null?profile.indices.indexOf(selected):-1,disabled=!c.insightsEnabled;
- const profileRef=useRef<HTMLDetailsElement|null>(null),lastProfile=useRef<{grid:TerrainGrid;row:number}|null>(null),source=bound?.grid,row=profile?.row;
- useEffect(()=>{if(source&&row!==undefined&&(lastProfile.current?.grid!==source||lastProfile.current.row!==row)){lastProfile.current={grid:source,row};profileRef.current?.scrollIntoView({block:'nearest',behavior:'auto'});}},[source,row]);
+ const profileRef=useRef<HTMLElement|null>(null),lastProfile=useRef<{grid:TerrainGrid;row:number}|null>(null),source=bound?.grid,row=profile?.row;
+ useEffect(()=>{if(source&&row!==undefined&&(lastProfile.current?.grid!==source||lastProfile.current.row!==row)){lastProfile.current={grid:source,row};profileRef.current?.scrollIntoView({block:'start',behavior:'auto'});}},[source,row]);
  return <details className={styles.landscapeInsights} open={selected!==null||undefined}>
-  <summary><span>Read this landscape</span><small>Source insights ↗</small></summary>
+  <summary><span>Read this landscape</span><small>Source insights</small></summary>
   {insight&&bound&&<>
-   {profile&&selected!==null?<details ref={profileRef} className={styles.profileDetails} open><summary>Measured row profile <span>Row {profile.row+1}</span></summary><TerrainProfile profile={profile} selected={selected}/>{profile.indices.length>0&&<label className={styles.profileNavigation}>Explore drawn columns <output>{position<0?'Source-only reading':`Column ${selected%profile.values.length+1} · ${profile.values[selected%profile.values.length]!.toFixed(3)} m`}</output><input type="range" min="0" max={profile.indices.length-1} step="1" value={Math.max(0,position)} disabled={disabled||profile.indices.length<2} aria-label="Explore drawn profile columns" aria-valuetext={position<0?'Choose a drawn source column':`Column ${selected%profile.values.length+1}, ${profile.values[selected%profile.values.length]} metres`} onChange={event=>c.exploreCell(bound,profile.indices[Number(event.target.value)])}/></label>}<p className={styles.profileHelp}>{position<0?'Source-only reading · no linked visible cell. ':''}Source-row samples; only drawn columns are selectable. Gaps stay missing.</p><details className={styles.profileMethods}><summary>Profile distance &amp; method</summary><p>The line includes supported source-row samples beyond display LOD. No interpolation. Distance uses {profile.units} between source centers. The row runs grid-west → grid-east, which need not be true east. Values are unscaled; each tile keeps its own vertical reference.</p></details></details>:<p className={styles.profilePrompt}>Choose a cell or Find low / high to link the 3D landscape with a measured row profile.</p>}
+   {profile&&selected!==null?<details className={styles.profileDetails} open><summary ref={profileRef}>Measured row profile <span>Row {profile.row+1}</span></summary>{onLayers&&<button className={styles.profileBack} type="button" onClick={onLayers}>Back to layer controls ↑</button>}<TerrainProfile profile={profile} selected={selected}/>{profile.indices.length>0&&<label className={styles.profileNavigation}>Explore drawn columns <output>{position<0?'Source-only reading':`Column ${selected%profile.values.length+1} · ${profile.values[selected%profile.values.length]!.toFixed(3)} m`}</output><input type="range" min="0" max={profile.indices.length-1} step="1" value={Math.max(0,position)} disabled={disabled||profile.indices.length<2} aria-label="Explore drawn profile columns" aria-valuetext={position<0?'Choose a drawn source column':`Column ${selected%profile.values.length+1}, ${profile.values[selected%profile.values.length]} metres`} onChange={event=>c.exploreCell(bound,profile.indices[Number(event.target.value)])}/></label>}<p className={styles.profileHelp}>{position<0?'Source-only reading · no linked visible cell. ':''}Source-row samples; only drawn columns are selectable. Gaps stay missing.</p><details className={styles.profileMethods}><summary>Profile distance &amp; method</summary><p>The line includes supported source-row samples beyond display LOD. No interpolation. Distance uses {profile.units} between source centers. The row runs grid-west → grid-east, which need not be true east. Values are unscaled; each tile keeps its own vertical reference.</p></details></details>:<p className={styles.profilePrompt}>Choose a cell or Find low / high to link the 3D landscape with a measured row profile.</p>}
   </>}
   {c.mode==='ground'&&<><div className={styles.lenses} role="group" aria-label="Ground color lens">{([['height','Elevation'],['slope','Slope'],['local-relief','Local relief']] as const).map(([value,label])=><button type="button" key={value} aria-pressed={c.gridColor===value} disabled={!c.active||!c.visible||c.opacity===0||c.navigating} onClick={()=>c.setGridColor(value)}>{label}</button>)}</div><p className={styles.lensHelp}>{c.gridColor==='height'?'Color follows source elevation.':c.gridColor==='slope'?'Color reveals steepness from supported 3 × 3 Ground neighborhoods.':'Color reveals height above or below the supported 7 × 7 local mean.'} Color changes; source height geometry stays unchanged.</p></>}
   {insight&&insight.count>0&&bound?<>
