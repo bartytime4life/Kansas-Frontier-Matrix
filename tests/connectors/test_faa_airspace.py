@@ -45,7 +45,9 @@ def inputs(features=None, airports=None, routes=None, cycle="2026-10-29", airpor
         {"designation": "V4", "type": "VICTOR", "waypoints": [{"identifier": "AAA", "lon": -98.0, "lat": 38.0, "minimumEnrouteAltitudeFt": 4000, "maximumAuthorizedAltitudeFt": 17999},
                                                              {"identifier": "BBB", "lon": -97.0, "lat": 38.5}]},
         {"designation": "J99", "type": "JET", "waypoints": [{"identifier": "FAR", "lon": -80.0, "lat": 30.0}, {"identifier": "AWY", "lon": -79.0, "lat": 30.0}]}]}
-    return [gzip.compress(json.dumps(x).encode()) for x in (a, p, w)]
+    # mtime=0: gzip otherwise stamps the current second into the header, so two
+    # calls that straddle a second boundary hash differently.
+    return [gzip.compress(json.dumps(x).encode(), mtime=0) for x in (a, p, w)]
 
 
 def test_deterministic_product_keeps_vertical_references_and_cycle_validity():

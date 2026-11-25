@@ -73,7 +73,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
     : null;
   return <section className="scene-effects-controls" aria-labelledby={`${id}-title`}
     onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()}
-    onDoubleClick={(event) => event.stopPropagation()} onWheel={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+    onDoubleClick={(event) => event.stopPropagation()} onWheel={(event) => event.stopPropagation()} onKeyDown={(event) => { if (event.key !== "Escape") event.stopPropagation(); }}>
     <header><div><span>LIGHT / LAND / LENS</span><strong id={`${id}-title`}>Scene studio</strong></div><em data-view={view}>{SCENE_VIEW_LABELS[view]}</em></header>
     {view === "terrain" && terrain && <section className="scene-terrain-depth" aria-labelledby={`${id}-depth-title`}>
       <header><strong id={`${id}-depth-title`}>Terrain depth</strong><output htmlFor={`${id}-depth`}>{terrain.scale.toFixed(1)}×</output></header>
