@@ -26,7 +26,7 @@ export function sameTerrainFootprint(a: TerrainFootprint, b: TerrainFootprint): 
   return a.every((value, index) => Math.abs(value - b[index]) <= 1e-7);
 }
 
-export type TerrainViewLease = Readonly<{bounds:TerrainFootprint;zoom:number;width:number;height:number}>;
+export type TerrainViewLease = Readonly<{bounds:TerrainFootprint;zoom:number;width:number;height:number;sourceZoom?:number}>;
 /** Keep the acquired window fixed through small cumulative pans. Only its
  * central 65% is a navigation lease; it does not claim the new viewport is
  * covered. Zoom, resize and crossing that core always acquire a new window. */

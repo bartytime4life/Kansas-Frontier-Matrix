@@ -48,7 +48,7 @@ an unsafe range remap. Precision improves visibility; it does not imply higher
 survey accuracy or resolution.
 
 After Fit 3D, a same-scale pan requests a new window with the accepted Mercator
-spacing. It no longer substitutes the wider fitted-camera viewport and abruptly
+spacing and native source-selection zoom. It no longer substitutes the wider fitted-camera viewport and abruptly
 coarsens the grid. Zoom, resize and explicit Follow/Refresh still acquire from
 the current viewport. The previous geometry stays at its original coordinates
 and cannot supply readings during the handoff; it is never moved to fill gaps.

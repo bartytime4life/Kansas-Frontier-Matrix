@@ -329,3 +329,13 @@ test('pan after Fit 3D retains acquired ground resolution rather than replacing 
   assert.equal(s.camera.zoom,fittedZoom,'acquisition cannot move the camera');assert.equal(c.pinned,false);assert.equal(c.transitioning,true);
  }finally{s.h.dispose();}
 });
+
+test('native pan after inspection retains the accepted acquisition zoom along with its source spacing',async()=>{
+ const s=await setup();try{
+  s.camera.center=[-96.586,38.989];const world=512*2**15,mercatorY=latitude=>(1-Math.log(Math.tan(Math.PI/4+latitude*Math.PI/360))/Math.PI)/2;
+  const width=world*.004/(360*.82),height=world*(mercatorY(38.987)-mercatorY(38.991))/.82;s.map.getCanvas=()=>({clientWidth:width,clientHeight:height});
+  let c=s.render();c.selectMode('surface');c=s.render();s.tick();const first=s.requests[0];first.resolve(data(['surface']));await settle();c=s.render();s.allowCamera();c.inspectLandscape();c=s.render();assert.notEqual(s.camera.zoom,first.query.zoom,'inspection camera zoom differs from source selection zoom');
+  s.emit('movestart');s.camera.center=[-96.5845,38.989];s.emit('moveend');c=s.render();s.tick();assert.equal(s.requests.length,2);assert.equal(s.requests[1].query.zoom,first.query.zoom,'inspection does not change the native source selection level');
+  c.selectMode('ground');c=s.render();s.tick();c.selectMode('canopy');c=s.render();s.tick();assert.equal(s.requests.at(-1).query.zoom,first.query.zoom,'switching through Ground retains the acquisition level for native comparison');
+ }finally{s.h.dispose();}
+});
