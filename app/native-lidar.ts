@@ -81,6 +81,30 @@ export function nativePointPosition(point:Pick<NativePoint,0|1|2>,scale=1):{long
   const longitude=point[0]/WEB_MERCATOR_RADIUS_M*180/Math.PI,latitude=(2*Math.atan(Math.exp(point[1]/WEB_MERCATOR_RADIUS_M))-Math.PI/2)*180/Math.PI;
   return {longitude,latitude,mercator:[.5+point[0]/(2*Math.PI*WEB_MERCATOR_RADIUS_M),.5-point[1]/(2*Math.PI*WEB_MERCATOR_RADIUS_M),point[2]*scale/(2*Math.PI*MAPLIBRE_EARTH_RADIUS_M*Math.cos(latitude*Math.PI/180))]};
 }
+/** Sequential display colors shared by solid cells, elevation returns and legends.
+ * Each stop has increasing relative luminance; this changes no source/domain. */
+const TERRAIN_HEIGHT_STOPS = [
+  [31, 77, 82], [69, 115, 99], [122, 158, 110], [186, 194, 125], [245, 219, 145],
+] as const;
+const TERRAIN_RELIEF_STOPS = [[31, 87, 103], [166, 176, 166], [245, 219, 145]] as const;
+type TerrainColorStop = readonly [number, number, number];
+function terrainRampColor(stops: readonly TerrainColorStop[], value: number): readonly [number, number, number] {
+  const t = Math.max(0, Math.min(1, Number.isFinite(value) ? value : .5));
+  const position = t * (stops.length - 1), index = Math.min(stops.length - 2, Math.floor(position));
+  const fraction = position - index, low = stops[index], high = stops[index + 1];
+  return [(low[0] + (high[0] - low[0]) * fraction) / 255,
+    (low[1] + (high[1] - low[1]) * fraction) / 255,
+    (low[2] + (high[2] - low[2]) * fraction) / 255];
+}
+function terrainRampCSS(stops: readonly TerrainColorStop[]) {
+  return `linear-gradient(90deg,${stops.map((color, index) => `rgb(${color.join(',')}) ${index / (stops.length - 1) * 100}%`).join(',')})`;
+}
+export const TERRAIN_HEIGHT_RAMP_CSS = terrainRampCSS(TERRAIN_HEIGHT_STOPS);
+export const TERRAIN_RELIEF_RAMP_CSS = terrainRampCSS(TERRAIN_RELIEF_STOPS);
+export const terrainHeightColor = (t: number) => terrainRampColor(TERRAIN_HEIGHT_STOPS, t);
+/** Negative/positive local relief uses a neutral zero; the legend stays symmetric. */
+export const terrainReliefColor = (t: number) => terrainRampColor(TERRAIN_RELIEF_STOPS, t);
+
 export type NativeColorMode='elevation'|'classification'|'intensity';
 export const NATIVE_CLASS_COLORS:Readonly<Record<number,readonly [number,number,number]>>={0:[.6,.65,.7],1:[.72,.76,.82],2:[.83,.63,.34],3:[.45,.75,.42],4:[.22,.64,.36],5:[.08,.47,.3],6:[.89,.38,.32],7:[.85,.31,.72],9:[.25,.64,.9],18:[.85,.31,.72]};
 export function nativeAttributeDomain(dataset:NativeDataset,mode:NativeColorMode):readonly [number,number]|null{
@@ -91,5 +115,5 @@ export function nativeAttributeDomain(dataset:NativeDataset,mode:NativeColorMode
 export function nativePointColor(point:NativePoint,mode:NativeColorMode,domain:readonly [number,number]):readonly [number,number,number] {
   if(mode==='classification')return NATIVE_CLASS_COLORS[point[4]]??[.7,.63,.82];
   const value=mode==='intensity'?point[3]:point[2],t=domain[1]===domain[0]?.5:Math.max(0,Math.min(1,(value-domain[0])/(domain[1]-domain[0])));
-  return mode==='intensity'?[t,t,t]:[.18+.8*t,.45+.4*t,.76-.52*t];
+  return mode==='intensity'?[t,t,t]:terrainHeightColor(t);
 }

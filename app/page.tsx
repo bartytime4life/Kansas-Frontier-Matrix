@@ -9494,6 +9494,9 @@ export default function Home() {
       return;
     }
 
+    // A layer toggle inside terrain must not reset the camera, light, FOV,
+    // vertical scale or reload the already selected elevation presentation.
+    if (mode === "terrain" && projectionRef.current === "mercator" && scenePresetRef.current === "elevation-3d") return;
     stopSceneOrbit(false);
     stopFlyover(false);
     const map = mapRef.current;
@@ -9574,6 +9577,7 @@ export default function Home() {
 
   const neonLidarMap = useNeonLidarMap({ mapRef, styleReady, flatMap: projection === "mercator" && scenePreset !== "elevation-3d", atPresent: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, reducedMotion, onFlatMap: () => activateMapRepresentation("2d"), claimedClicksRef: neonClaimedMapClicksRef });
   const kansasLidar = useKansasLidarView({ mapRef, styleReady, active: primaryWorkspace === "map" && guideOpen !== true && !undergroundOpen && projection === "mercator" && buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME, cellsOn: terrainCellsEnabled, onCells: setTerrainCellsEnabled, scale: verticalExaggeration, reducedMotion: reducedMotion || !dynamicEffects, onViewMap: () => setCategoryDockHidden(true),
+    backdrop: basemap === "kansas-aerial" || basemap === "photoreal" ? "aerial" : "relief", onBackdrop: value => { const next = value === "aerial" ? "kansas-aerial" : "relief"; if (basemapRef.current !== next) { basemapRef.current = next; setBasemap(next); } setCategoryDockTopic("terrain"); },
     onScale: changeTerrainDepth, onSelected: () => setCategoryDockHidden(false), onNativeIntent: () => neonLidarMap.cancelRead(), onGround: () => activateMapRepresentation("terrain") });
 
   const startTerrainInvestigation = () => {
@@ -11693,7 +11697,7 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
-        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{(welcomeTopics.includes("terrain")||terrainCellsEnabled)&&<button type="button" aria-pressed={terrainCellsEnabled} onClick={()=>terrainCellsEnabled?kansasLidar.showBaseLandscape():kansasLidar.setCellsOn(true)}>3D terrain cells · {terrainCellsEnabled?"on":"off"}</button>}{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
+        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{(welcomeTopics.includes("terrain")||terrainCellsEnabled)&&<><button type="button" aria-pressed={terrainCellsEnabled} onClick={()=>terrainCellsEnabled?kansasLidar.showBaseLandscape():kansasLidar.setCellsOn(true)}>3D terrain cells · {terrainCellsEnabled?"on":"off"}</button>{terrainCellsEnabled&&<button type="button" disabled={!kansasLidar.applied.grid||kansasLidar.transitioning} onClick={kansasLidar.inspectLandscape}>Fit 3D</button>}<button type="button" onClick={()=>{setOfficialWorkspace("terrain");setCategoryDockTopic("terrain");setCategoryDockHidden(false);}}>Terrain tools</button></>}{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces

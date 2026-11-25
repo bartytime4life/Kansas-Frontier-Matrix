@@ -41,3 +41,12 @@ test('the explicitly synthetic CI GPU transport is complete and its native-recei
  const fixture=nativeCloudFixture(),manifest=model.parseNativeManifest(fixture.manifest),d=model.assembleNativeDataset(manifest,fixture.chunks);assert.ok(d);assert.equal(d.points.length,1681);assert.equal(d.points.filter(model.nativePointEligible).length,1680);assert.match(d.manifest.source.selection,/Synthetic/);assert.equal(fixture.manifest.chunks[0].bytes,Buffer.byteLength(JSON.stringify(fixture.chunks[0])));
  const fixtures=await nativeLidarBrowserFixtures(new URL('http://127.0.0.1:4173')),scripts=[];await fixtures.setup(async(method,args)=>{if(method==='Page.addScriptToEvaluateOnNewDocument')scripts.push(args.source);});for(const source of scripts)new Function(source);assert.ok(scripts.some(s=>s.includes('__nativeVisiblePoint')),'CI helper projects actual source candidates then reads production GPU IDs');
 });
+
+
+test('terrain elevation colors have monotonic luminance and match the legend stops without changing source attributes',()=>{
+ const linear=v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4,luminance=c=>.2126*linear(c[0])+.7152*linear(c[1])+.0722*linear(c[2]);
+ let previous=-1;for(let i=0;i<=100;i++){const color=model.terrainHeightColor(i/100);assert.ok(color.every(v=>v>=0&&v<=1));const current=luminance(color);assert.ok(current>previous,'height ramp stays ordered by relative luminance');previous=current;}
+ const stops=[...model.TERRAIN_HEIGHT_RAMP_CSS.matchAll(/rgb\((\d+),(\d+),(\d+)\) (\d+)%/g)];assert.equal(stops.length,5);for(const stop of stops)assert.deepEqual(model.terrainHeightColor(Number(stop[4])/100),stop.slice(1,4).map(Number).map(v=>v/255));
+ const d=dataset(),before=JSON.stringify(d.points),point=d.points[0];assert.deepEqual(model.nativePointColor(point,'elevation',[point[2]-1,point[2]+1]),model.terrainHeightColor(.5));assert.deepEqual(model.nativePointColor(point,'intensity',[point[3]-1,point[3]+1]),[.5,.5,.5]);assert.deepEqual(model.nativePointColor(point,'classification',[0,1]),model.NATIVE_CLASS_COLORS[point[4]]);assert.equal(JSON.stringify(d.points),before);
+ assert.deepEqual(model.terrainReliefColor(.5),[166/255,176/255,166/255]);assert.match(model.TERRAIN_RELIEF_RAMP_CSS,/rgb\(166,176,166\) 50%/);assert.deepEqual(model.terrainHeightColor(-1),model.terrainHeightColor(0));assert.deepEqual(model.terrainHeightColor(2),model.terrainHeightColor(1));
+});

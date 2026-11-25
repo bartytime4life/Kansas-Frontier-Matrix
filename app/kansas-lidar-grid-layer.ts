@@ -1,7 +1,7 @@
 import type {PreparedTerrain} from './terrain-preparation-model';
 import {createLidarGeometryLayer,type LidarGeometry,type NativeLayerOptions} from './native-lidar-layer';
 import type {LidarAnalysisGrid} from './kansas-lidar-view';
-import {MAPLIBRE_EARTH_RADIUS_M} from './native-lidar';
+import {MAPLIBRE_EARTH_RADIUS_M,terrainHeightColor,terrainReliefColor} from './native-lidar';
 import {groundCorners,type GroundGrid} from './kansas-ground';
 import {analyzeGroundGrid,groundColorValues,terrainColorDomain,terrainGradients,terrainIllumination} from './kansas-terrain-analysis';
 export const KANSAS_LIDAR_GRID_LAYER='external-kansas-lidar-grid';
@@ -35,7 +35,7 @@ export function lidarGridGeometry(grid:TerrainGrid,mode:LidarGridMode,prepared?:
   const face=(indices:number[],heights:number[],color:readonly number[],id:number)=>{for(const k of [0,1,2,0,2,3])vertex(indices[k],heights[k],color,id);};
   const side=(indices:number[],edge:number,bottom:number,height:number,color:readonly number[],id:number)=>{if(bottom>=height)return;const a=indices[edge],b=indices[(edge+1)%4],shade=[.7,.85,.62,.8][edge];face([a,b,b,a],[bottom,bottom,height,height],color.map(v=>v*shade),id);};
   values.forEach((value,i)=>{
-   if(!eligible[i])return;const c=Math.floor(i/grid.width)*(grid.width+1)+i%grid.width,indices=[c,c+grid.width+1,c+grid.width+2,c+1],colorValue=colors[i],t=min===max?.5:Math.max(0,Math.min(1,((colorValue??min)-min)/(max-min))),color=colorValue===null?[.38,.44,.46]:grid.format==='kfm-3dep-ground-grid-v1'&&options.gridColor==='local-relief'?(t<=.5?[.18+(.65-.18)*t*2,.45+(.69-.45)*t*2,.76+(.65-.76)*t*2]:[.65+(.98-.65)*(t-.5)*2,.69+(.85-.69)*(t-.5)*2,.65+(.24-.65)*(t-.5)*2]):[.18+.8*t,.45+.4*t,.76-.52*t],height=top(i);
+   if(!eligible[i])return;const c=Math.floor(i/grid.width)*(grid.width+1)+i%grid.width,indices=[c,c+grid.width+1,c+grid.width+2,c+1],colorValue=colors[i],t=min===max?.5:Math.max(0,Math.min(1,((colorValue??min)-min)/(max-min))),color=colorValue===null?[.38,.44,.46]:grid.format==='kfm-3dep-ground-grid-v1'&&options.gridColor==='local-relief'?terrainReliefColor(t):terrainHeightColor(t),height=top(i);
    face(indices,[height,height,height,height],color.map(v=>v*(gradients?terrainIllumination(gradients[i]):1)),i);
    // Emit only the exposed height interval. Adjacent cells must not carry two
    // coplanar full-depth walls: that duplicates hidden faces and causes z-fighting.

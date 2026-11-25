@@ -12,3 +12,33 @@
 .panel .device{border-top-color:#8bcad0}.panel .device .storage{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}.panel .device input[type=checkbox]{width:20px;height:20px;min-height:20px;flex:0 0 20px;accent-color:#edca83}.panel .device>button{width:100%}.panel .device select{width:100%}
 
 .layerSwitch{border:1px solid #8bcad0;border-radius:8px;padding:12px;background:#102f3c;color:#d7e7eb;margin:10px 0}.layerSwitch label{display:flex;gap:12px;align-items:center;cursor:pointer;min-height:44px;margin:0}.layerSwitch input[type=checkbox]{min-height:22px;width:22px;height:22px;accent-color:#edca83;flex:0 0 22px}.layerSwitch strong,.layerSwitch small{display:block}.layerSwitch strong{color:#f2dfad;font-size:15px}.layerSwitch small,.layerSwitch p{font-size:11px;line-height:1.5;color:#c4d9df}.layerSwitch button{min-height:44px;font:inherit;background:#123b49;color:#e4f0f2;border:1px solid #7496a2;border-radius:4px;padding:8px;cursor:pointer}.layerSwitch button[aria-pressed=true]{background:#edca83;color:#102c3b}.layerSwitch :focus-visible{outline:3px solid #ffe0a0;outline-offset:2px}.layerSwitch .modes{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* A small landscape instrument: display, layer and camera are the first three
+   rows. Scientific support stays visible; full methods stay one click away. */
+.panel{border-top:0;padding-top:0;line-height:1.45}
+.displayModes{display:grid;grid-template-columns:1.2fr 1fr;gap:5px;margin:0 0 7px}
+.panel .displayModes button{font-size:12px;font-weight:700;min-height:44px}
+.panel .modes{margin:0 0 7px;gap:5px}
+.panel .modes button{min-height:44px;font-size:11px;font-weight:600}
+.focusActions{display:grid;grid-template-columns:minmax(0,1fr) 74px;gap:5px;margin:0 0 9px}
+.panel .focusActions .inspect{margin:0;min-height:44px;font-size:11px;padding:8px 5px}
+.panel .focusActions>button:last-child{font-size:11px;padding:6px}
+.statusStrip{display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-top:1px solid #62818b66;border-bottom:1px solid #62818b66}
+.statusStrip>span{width:6px;height:6px;border-radius:50%;background:#e8c77e;flex:none;margin-top:5px}
+.statusStrip[data-ready=true]>span{background:#88c6b9}
+.statusStrip strong{font-family:inherit!important;font-size:11px!important;font-weight:600;color:#e2eeeb!important}
+.statusStrip small{display:block!important;text-transform:none!important;letter-spacing:0!important;color:#adc6cc!important;font-size:10px!important;margin-top:3px}
+.panel .displayNote{border-left:0;padding:0;margin:8px 0;color:#b9d0d4;font-size:10px}
+.panel .legend{margin-top:10px;gap:3px}
+.panel .legend>i{height:6px;border-radius:1px}
+.panel .legend>strong{font-size:10px}
+.panel .appearance>summary{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.panel .appearance>summary>span{font-variant-numeric:tabular-nums;color:#9fc6c9}
+.panel .appearance label{margin:8px 0}
+.panel .appearance label>output{color:#f2dfad}
+.panel .reading>strong{font-size:11px}
+.panel .reading>p{font-size:10px}
+.panel .detailAction{display:block;width:100%;background:#e8c77e;color:#102c3b;font-weight:700;margin-top:8px}
+.panel>details>summary{font-size:11px}
+@media(max-width:700px){.panel .displayModes button{font-size:12px}.panel .focusActions .inspect{font-size:11px}.panel .displayNote{font-size:10px}}
+.backdropModes{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.panel .backdropModes button{font-size:11px;min-height:44px;padding:6px}.panel .finerAction{width:100%;margin-top:6px;font-size:11px;min-height:44px;color:#ecd49a;background:#123944}

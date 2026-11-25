@@ -457,14 +457,37 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   const swatch = { "--m0": look.swatch[0], "--m1": look.swatch[1], "--m2": look.swatch[2] } as CSSProperties;
   const groundShortcuts = terrainSource?.landscapes.filter(place => place.id === "konza" || place.id === "red-hills") ?? [];
   const moreGroundLandscapes = terrainSource?.landscapes.filter(place => place.id !== "konza" && place.id !== "red-hills") ?? [];
-  return <section className="category-map-dock" aria-label={`${look.name} controls`} tabIndex={-1} data-mode={mode} style={swatch}>
-    <header>
-      <span className="category-map-dock-swatch" aria-hidden="true" />
-      <div><strong>{look.name}{currentMapOnly ? " tools" : ""}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
-      <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
-    </header>
+  const cameraControls = <>
+    <div className="category-map-dock-modes" role="group" aria-label="View">
+      {MODES.map(([value, label, title]) => <button key={value} type="button" aria-pressed={mode === value} title={title}
+        disabled={value === "terrain" && !terrainAvailable} onClick={() => onMode(value)}>{label}</button>)}
+    </div>
+    {mode === "terrain" && <label className="category-map-dock-range"><span>Relief</span>
+      <input type="range" min={0.5} max={3} step={0.1} value={depth} aria-valuetext={`${depth.toFixed(1)} times vertical exaggeration`} onChange={event => onDepth(Number(event.target.value))} />
+      <output>{depth.toFixed(1)}×</output></label>}
+    {mode !== "globe" && sunAvailable && (sun
+      ? <>
+        <p className="category-map-dock-sun-reading" aria-live="polite"><span>{sun.live ? "Real sun" : "Sun at"}</span><output>{sunReading(sun.light, sun.at)}</output></p>
+        <div className="category-map-dock-range category-map-dock-sun-time"><span id="category-map-dock-sun-time">Time</span>
+          <input type="range" min={0} max={SUN_TIME_STEPS - 1} step={1} value={Math.min(SUN_TIME_STEPS - 1, Math.round(sun.dayFraction * SUN_TIME_STEPS))} aria-labelledby="category-map-dock-sun-time"
+            aria-valuetext={sunReading(sun.light, sun.at)} onChange={event => onSunTime(Number(event.target.value) / SUN_TIME_STEPS)} />
+          <button type="button" disabled={sun.live} onClick={() => onSunTime(null)} title="Follow the clock again">Now</button></div>
+      </>
+      : <label className="category-map-dock-range"><span>Sun from</span>
+        <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
+        <output>{azimuthLabel(azimuth)}</output></label>)}
+    {mode !== "globe" && sunAvailable && (sun
+      ? <div className="category-map-dock-sun-actions">
+        <button type="button" className="category-map-dock-sun" aria-pressed={sunPlaying && motionAllowed} disabled={!motionAllowed} onClick={() => onSunPlay(!sunPlaying)}
+          title={motionAllowed ? "Sweep the sun through the rest of today in quarter-hour steps" : "Reduced motion is on; move Time by hand"}>{sunPlaying && motionAllowed ? "Pause" : "Play the day"}</button>
+        <button type="button" className="category-map-dock-sun" aria-pressed={true} onClick={() => onRealSun(false)} title="Set the light direction by hand">Set light by hand</button>
+      </div>
+      : <button type="button" className="category-map-dock-sun" aria-pressed={false} onClick={() => onRealSun(true)} title="Light the map from where the sun is now over the map center">Use the real sun now</button>)}
+  </>;
+  const dockContent = <>
     {look.topic === "terrain" && terrainSource && <section className="category-map-dock-terrain" aria-label="Continuous Kansas ground model">
       {lidarLayers}
+      <details className="category-map-dock-ground"><summary>Base elevation &amp; Kansas landscapes</summary>
       <strong>Kansas ground model</strong>
       <p className="category-map-dock-reading">{terrainSource.provider === "usgs-3dep" ? "USGS 3DEP · mixed-date ground model" : "Mapzen · coarse display DEM"} · {terrainSource.state === "READY" ? "DEM ready" : terrainSource.state === "ERROR" ? "DEM unavailable" : terrainSource.state === "OFF" ? "3D off" : "DEM loading"}</p>
       {onTerrainProvider && <label>Elevation source<select aria-label="Terrain card elevation source" value={terrainSource.provider} onChange={event => onTerrainProvider(event.target.value as "mapzen" | "usgs-3dep")}><option value="usgs-3dep">USGS 3DEP · continuous ground</option><option value="mapzen">Mapzen · coarse display context</option></select></label>}
@@ -474,6 +497,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       {onTerrainPlace && <div className="category-map-dock-places" role="group" aria-label="Ground model landscape shortcuts">{groundShortcuts.map(place => <button type="button" key={place.id} onClick={() => onTerrainPlace(place.id)}>{place.name}</button>)}</div>}
       {onTerrainPlace && moreGroundLandscapes.length > 0 && <details><summary>More Kansas landscapes</summary><div className="category-map-dock-places" role="group" aria-label="More ground model landscapes">{moreGroundLandscapes.map(place => <button type="button" key={place.id} onClick={() => onTerrainPlace(place.id)}>{place.name}</button>)}</div></details>}
       {sourceCatalog}
+      </details>
     </section>}
     {keys && keys.length > 0 && <details className="category-map-dock-map-key">
       <summary>Map key <span>Colors &amp; symbols</span></summary>
@@ -517,31 +541,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         </div>)}
       </details>
     </div>}
-    <div className="category-map-dock-modes" role="group" aria-label="View">
-      {MODES.map(([value, label, title]) => <button key={value} type="button" aria-pressed={mode === value} title={title}
-        disabled={value === "terrain" && !terrainAvailable} onClick={() => onMode(value)}>{label}</button>)}
-    </div>
-    {mode === "terrain" && <label className="category-map-dock-range"><span>Relief</span>
-      <input type="range" min={0.5} max={3} step={0.1} value={depth} aria-valuetext={`${depth.toFixed(1)} times vertical exaggeration`} onChange={event => onDepth(Number(event.target.value))} />
-      <output>{depth.toFixed(1)}×</output></label>}
-    {mode !== "globe" && sunAvailable && (sun
-      ? <>
-        <p className="category-map-dock-sun-reading" aria-live="polite"><span>{sun.live ? "Real sun" : "Sun at"}</span><output>{sunReading(sun.light, sun.at)}</output></p>
-        <div className="category-map-dock-range category-map-dock-sun-time"><span id="category-map-dock-sun-time">Time</span>
-          <input type="range" min={0} max={SUN_TIME_STEPS - 1} step={1} value={Math.min(SUN_TIME_STEPS - 1, Math.round(sun.dayFraction * SUN_TIME_STEPS))} aria-labelledby="category-map-dock-sun-time"
-            aria-valuetext={sunReading(sun.light, sun.at)} onChange={event => onSunTime(Number(event.target.value) / SUN_TIME_STEPS)} />
-          <button type="button" disabled={sun.live} onClick={() => onSunTime(null)} title="Follow the clock again">Now</button></div>
-      </>
-      : <label className="category-map-dock-range"><span>Sun from</span>
-        <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
-        <output>{azimuthLabel(azimuth)}</output></label>)}
-    {mode !== "globe" && sunAvailable && (sun
-      ? <div className="category-map-dock-sun-actions">
-        <button type="button" className="category-map-dock-sun" aria-pressed={sunPlaying && motionAllowed} disabled={!motionAllowed} onClick={() => onSunPlay(!sunPlaying)}
-          title={motionAllowed ? "Sweep the sun through the rest of today in quarter-hour steps" : "Reduced motion is on; move Time by hand"}>{sunPlaying && motionAllowed ? "Pause" : "Play the day"}</button>
-        <button type="button" className="category-map-dock-sun" aria-pressed={true} onClick={() => onRealSun(false)} title="Set the light direction by hand">Set light by hand</button>
-      </div>
-      : <button type="button" className="category-map-dock-sun" aria-pressed={false} onClick={() => onRealSun(true)} title="Light the map from where the sun is now over the map center">Use the real sun now</button>)}
+    {look.topic === "terrain" ? <details className="category-map-dock-camera"><summary>Camera &amp; sunlight</summary>{cameraControls}</details> : cameraControls}
     {look.tools?.includes("flow") && flow && onFlow && <>
       <button type="button" data-category-tool="flow" className="category-map-dock-tool" aria-pressed={flow.on} onClick={() => onFlow(!flow.on)}
         title="Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach">{flow.on ? "Hide river flow" : "Show river flow"}</button>
@@ -1027,6 +1027,14 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       <button type="button" onClick={onReset}>{currentMapOnly ? "Open default view" : "Reset view"}</button>
       <button type="button" onClick={onLayers}>Layers for this map</button>
     </div>
+  </>;
+  return <section className="category-map-dock" aria-label={`${look.name} controls`} tabIndex={-1} data-mode={mode} data-topic={look.topic} style={swatch}>
+    <header>
+      <span className="category-map-dock-swatch" aria-hidden="true" />
+      <div><strong>{look.name}{currentMapOnly ? " tools" : ""}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
+      <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
+    </header>
+    {look.topic === "terrain" ? <div className="category-map-dock-body">{dockContent}</div> : dockContent}
   </section>;
 }
 
