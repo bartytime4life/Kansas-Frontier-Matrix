@@ -179,6 +179,14 @@ class TileFieldAllowlistTests(unittest.TestCase):
         self.assertIsNone(policy)
         self.assertEqual(["POLICY_DUPLICATE_KEY"], sorted(item.code for item in findings))
 
+    def test_inline_policy_merge_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "policy.yaml"
+            path.write_text("policy: {<<: {field: permitted}}\n", encoding="utf-8")
+            policy, findings = validator.load_policy(path)
+        self.assertIsNone(policy)
+        self.assertEqual(["POLICY_INPUT_INVALID"], [item.code for item in findings])
+
     def test_cli_fixture_mode_emits_value_safe_machine_output(self) -> None:
         buffer = io.StringIO()
         with contextlib.redirect_stdout(buffer):

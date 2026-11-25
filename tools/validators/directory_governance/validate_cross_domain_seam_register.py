@@ -26,7 +26,16 @@ class StrictLoader(yaml.SafeLoader):
         if self.check_event(AliasEvent): raise AliasDenied
         return super().compose_node(parent,index)
 def construct_mapping(loader,node,deep=False):
-    loader.flatten_mapping(node);out={}
+    for key_node, _ in node.value:
+        if key_node.tag == "tag:yaml.org,2002:merge":
+            raise yaml.constructor.ConstructorError(
+                "while constructing a mapping",
+                node.start_mark,
+                "YAML merge keys are unsupported",
+                key_node.start_mark,
+            )
+    loader.flatten_mapping(node)
+    out = {}
     for kn,vn in node.value:
         k=loader.construct_object(kn,deep=deep)
         if k in out: raise DuplicateKey

@@ -132,7 +132,7 @@ jobs:
           ### Control-plane YAML validation boundary
 
           This lane parses every tracked `control_plane/*.yaml` file with
-          `PyYAML==6.0.3`, rejects duplicate mapping keys, and requires each
+          `PyYAML==6.0.4`, rejects duplicate mapping keys, and requires each
           document root to be a mapping.
 
           A green result does not prove that every field has the correct

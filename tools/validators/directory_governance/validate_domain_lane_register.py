@@ -79,6 +79,14 @@ def _construct_mapping(
     node: yaml.MappingNode,
     deep: bool = False,
 ) -> dict[object, object]:
+    for key_node, _ in node.value:
+        if key_node.tag == "tag:yaml.org,2002:merge":
+            raise yaml.constructor.ConstructorError(
+                "while constructing a mapping",
+                node.start_mark,
+                "YAML merge keys are unsupported",
+                key_node.start_mark,
+            )
     loader.flatten_mapping(node)
     value: dict[object, object] = {}
     for key_node, value_node in node.value:
