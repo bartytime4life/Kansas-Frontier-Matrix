@@ -139,3 +139,13 @@ test('library return opens editable Layers without source status or a saved welc
  const library = await readFile('app/data-library/page.tsx', 'utf8');
  assert.match(library, /href="\/\?panel=layers"/, 'exercise the destination used by the library');
 });
+
+test('shared native-detail camera zooms round-trip through the actual URL restore block',async()=>{
+ const page=await readFile('app/page.tsx','utf8'),camera=await componentHarness('app/terrain-camera.ts',{});
+ const start=page.indexOf('      const restoredView: ViewState = {'),end=page.indexOf('      const restoredCameraRedaction',start),source=ts.transpile(page.slice(start,end)+'\nresult=restoredView;');assert.ok(start>0&&end>start);
+ for(const globe of [false,true])for(const zoom of [17.5,18,20,30,-2]){
+  const scope={params:new URLSearchParams({z:String(zoom)}),center:[-96.585,39.09],restoringGlobe:globe,KANSAS_VIEW:{zoom:7,bearing:0,pitch:0},TERRAIN_DETAIL_MAX_ZOOM:camera.exports.TERRAIN_DETAIL_MAX_ZOOM,clamp:(n,min,max)=>Math.min(max,Math.max(min,n)),parseNumber:(value,fallback)=>value===null?fallback:Number(value),result:null};
+  vm.runInNewContext(source,scope);assert.equal(scope.result.zoom,Math.min(camera.exports.TERRAIN_DETAIL_MAX_ZOOM,Math.max(globe?0:4,zoom)),'restoration and the runtime must share their ceiling');
+ }
+ camera.dispose();
+});

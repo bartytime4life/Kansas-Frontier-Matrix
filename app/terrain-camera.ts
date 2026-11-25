@@ -1,4 +1,6 @@
 /** Camera math for a bounded landscape window. Source elevations never change. */
+// Shared with the actual MapLibre constructor: detail actions must be reachable.
+export const TERRAIN_DETAIL_MAX_ZOOM = 20;
 export type TerrainFootprint = readonly [number, number, number, number];
 export type TerrainViewport = Readonly<{center: readonly [number, number]; zoom: number; width: number; height: number}>;
 const DEG = Math.PI / 180;
@@ -69,12 +71,17 @@ export function terrainInspectionCamera(input: TerrainInspection) {
   const northY = Math.min(...corners.map(p => mercatorY(p[1]))), southY = Math.max(...corners.map(p => mercatorY(p[1])));
   const center: [number, number] = [(west + east) / 2, latitudeAt((northY + southY) / 2)];
   const metresPerWorld = 2 * Math.PI * EARTH * Math.cos(center[1] * DEG);
-  const origin = Number.isFinite(input.centerElevation) ? input.centerElevation : 0;
+  const contextOrigin = Number.isFinite(input.centerElevation) ? input.centerElevation : 0;
   const pitch = 52, sine = Math.sin(pitch * DEG), cosine = Math.cos(pitch * DEG), angle = bearing * DEG;
   const focal = height / (2 * Math.tan(fieldOfView * DEG / 2));
   const availableX = width * .76 / 2 / focal, availableY = height * .70 / 2 / focal;
   let low=Infinity,high=-Infinity;
   for(const z of heights){if(!Number.isFinite(z))throw Error('Unsupported source height');low=Math.min(low,z*scale);high=Math.max(high,z*scale);}
+  // A missing/fallback DEM can leave the camera aimed hundreds of metres
+  // below the native cells. Frame their supported height prism explicitly in
+  // that case, without rebasing data or changing the ground-clamp preference.
+  const retarget = contextOrigin < low - 100 || contextOrigin > high + 100;
+  const origin = retarget ? (low + high) / 2 : contextOrigin;
   let distance = Math.max(100, high - origin + 80) / (metresPerWorld * cosine);
   for (const [longitude, latitude] of corners) {
     const eastOffset = (longitude - center[0]) / 360;
@@ -90,5 +97,5 @@ export function terrainInspectionCamera(input: TerrainInspection) {
   }
   const zoom = Math.min(18, Math.log2(focal / (512 * distance * 1.06)));
   if (!Number.isFinite(zoom)) throw Error('Footprint could not be framed');
-  return {center, zoom, bearing, pitch};
+  return {center, zoom, bearing, pitch, ...(retarget ? {elevation: origin} : {})};
 }

@@ -39,10 +39,11 @@ test('inspection perspective fits all supported height-prism corners on desktop 
     assert.ok(pose.zoom>11&&pose.zoom<=18,'local tile stays local instead of zooming out to Kansas');
     const focal=height/(2*Math.tan(36.87*radians/2)),distance=focal/(512*2**pose.zoom),p=pose.pitch*radians,b=bearing*radians;
     const metres=2*Math.PI*6371008.8*Math.cos(pose.center[1]*radians);
-    assert.ok(origin+distance*metres*Math.cos(p)>Math.max(...heights)*scale+79);
+    const cameraOrigin=pose.elevation??origin;
+    assert.ok(cameraOrigin+distance*metres*Math.cos(p)>Math.max(...heights)*scale+79);
     let widest=0,tallest=0;
     for(const [lon,lat] of corners)for(const elevation of [Math.min(...heights),Math.max(...heights)]){
-      const point=[(lon-pose.center[0])/360,mercatorY(pose.center[1])-mercatorY(lat),(elevation*scale-origin)/metres];
+      const point=[(lon-pose.center[0])/360,mercatorY(pose.center[1])-mercatorY(lat),(elevation*scale-cameraOrigin)/metres];
       const location=[distance*Math.sin(b)*Math.sin(p),-distance*Math.cos(b)*Math.sin(p),distance*Math.cos(p)];
       const delta=point.map((v,i)=>v-location[i]),dot=axis=>axis.reduce((sum,v,i)=>sum+v*delta[i],0);
       const depth=dot([-Math.sin(b)*Math.sin(p),Math.cos(b)*Math.sin(p),-Math.cos(p)]);
@@ -85,4 +86,12 @@ test('pan-window translation preserves Mercator cell spacing and declines genuin
  const next=camera.terrainPanFootprint(lease,view);assert.ok(next);assert.ok(Math.abs((next[0]+next[2])/2-view.center[0])<1e-12);assert.ok(Math.abs((next[2]-next[0])-(lease.bounds[2]-lease.bounds[0]))<1e-12);assert.ok(Math.abs((mercatorY(next[1])-mercatorY(next[3]))-(mercatorY(lease.bounds[1])-mercatorY(lease.bounds[3])))<1e-12);
  for(const patch of [{zoom:13.1},{width:1000},{height:800},{center:[NaN,38.5]}])assert.equal(camera.terrainPanFootprint(lease,{...view,...patch}),null);
  assert.deepEqual(lease,source,'translation describes only a new query, never relabels source coordinates');
+});
+
+test('a distant or missing context elevation cannot make native Fit 3D shrink to a speck',()=>{
+ const input={corners:[[-96.587,39.091],[-96.583,39.091],[-96.583,39.089],[-96.587,39.089]],heights:[353.61,382.05],scale:2.5,width:1280,height:582,bearing:-35,fieldOfView:36.87,centerElevation:0};
+ const source=structuredClone(input),pose=camera.terrainInspectionCamera(input);
+ assert.ok(pose.elevation>=Math.min(...input.heights)*input.scale&&pose.elevation<=Math.max(...input.heights)*input.scale,'explicit fit aims at supported cell heights when context is far away');
+ assert.ok(pose.zoom>16,'native detail should occupy a useful part of the view');assert.deepEqual(input,source,'camera targeting does not rebase source measurements');
+ const normal=camera.terrainInspectionCamera({...input,centerElevation:900});assert.equal(normal.elevation,undefined,'nearby terrain context keeps its existing camera reference');
 });

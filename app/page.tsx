@@ -1,5 +1,6 @@
 "use client";
 import { KansasLidarBadge, KansasLidarLayers, TerrainCellsSwitch, useKansasLidarView } from "./kansas-lidar-controls";
+import { TERRAIN_DETAIL_MAX_ZOOM } from "./terrain-camera";
 import { pickNativeLidarPoint } from "./native-lidar-layer";
 import { NeonLidarMapBadge, NeonLidarMapControls, useNeonLidarMap } from "./neon-lidar-map-controls";
 import { hasNeonLocalHit } from "./neon-lidar-map";
@@ -6468,7 +6469,7 @@ export default function Home() {
         : KANSAS_VIEW.center;
       const restoredView: ViewState = {
         center,
-        zoom: clamp(parseNumber(params.get("z"), KANSAS_VIEW.zoom), restoringGlobe ? 0 : 4, 16),
+        zoom: clamp(parseNumber(params.get("z"), KANSAS_VIEW.zoom), restoringGlobe ? 0 : 4, TERRAIN_DETAIL_MAX_ZOOM),
         bearing: clamp(parseNumber(params.get("b"), KANSAS_VIEW.bearing), -180, 180),
         pitch: clamp(parseNumber(params.get("p"), KANSAS_VIEW.pitch), 0, 85),
       };
@@ -6855,7 +6856,7 @@ export default function Home() {
           maxPitch: scenePresetRef.current === "elevation-3d" ? 72 : 60,
           renderWorldCopies: false,
           minZoom: projectionRef.current === "globe" ? 0 : 4,
-          maxZoom: 16,
+          maxZoom: TERRAIN_DETAIL_MAX_ZOOM,
           maxBounds: projectionRef.current === "globe" ? undefined : REGIONAL_NAVIGATION_BOUNDS,
           attributionControl: false,
           cooperativeGestures: gestureModeRef.current === "cooperative",

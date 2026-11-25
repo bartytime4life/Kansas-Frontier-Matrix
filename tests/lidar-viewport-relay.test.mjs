@@ -5,8 +5,8 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {normalizeLidarView,lidarViewKey,parseLidarViewSearch,validLidarView,validNativeViewManifest,validNativeViewChunk,validLidarGrid} from '../scripts/local-data/lidar-view-model.mjs';
-import {loadLidarDiscovery,selectViewProjects,initialLidarView,requestLidarView,loadLidarViewArtifact} from '../scripts/local-data/lidar-view.mjs';
-import {nodeBounds,discoverViewNodes,createSourceReader,PREPARE_LIMITS} from '../scripts/local-data/lidar-view-worker.mjs';
+import {loadLidarDiscovery,selectViewProjects,initialLidarView,requestLidarView,loadLidarViewReceipt,loadLidarViewArtifact} from '../scripts/local-data/lidar-view.mjs';
+import {nodeBounds,discoverViewNodes,createSourceReader,prepareLidarView,PREPARE_LIMITS} from '../scripts/local-data/lidar-view-worker.mjs';
 import {LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS} from '../scripts/local-data/protocol.mjs';
 import {createGateway} from '../scripts/local-data/gateway.mjs';
 import {createLocalDataService} from '../server/local-data.mjs';
@@ -92,4 +92,17 @@ test('the hierarchy budget is shared across source projects and cached replies',
  const urls=['KS_Statewide_B6A_2018','KS_Statewide_B5_2018'].map(p=>'https://usgs-lidar-public.s3.amazonaws.com/'+p+'/ept-hierarchy/0-0-0-0.json');
  for(let i=0;i<PREPARE_LIMITS.hierarchyReplies;i++)await reader.get(urls[i%2],100);
  await assert.rejects(reader.get(urls[0],100),/HIERARCHY_BUDGET/);
+});
+
+
+test('grid-only hierarchy limits stop before point downloads or decoding; failed sources stay retryable',async t=>{
+ for(const kind of ['records','source','hierarchy']){
+  const failed=kind==='source',config=root(t),q={...query(),layers:['canopy']},calls=[];
+  // Local executable test double: bounds only. Any point decode is a regression.
+  const python=join(config.root,'bounds-only.mjs');writeFileSync(python,`#!${process.execPath}\nimport fs from 'node:fs';const v=JSON.parse(fs.readFileSync(process.argv[3]));if(v.mode!=='bounds')process.exit(8);console.log(JSON.stringify({boundsUTM:[0,0,100,100],support3857:${JSON.stringify((await import('../scripts/local-data/lidar-view-worker.mjs')).boundsMercator(q.bbox))}}));`,{mode:0o700});
+  const fetcher=async url=>{calls.push(url);assert.ok(url.includes('/ept-hierarchy/'),'a grid-only failed preflight must never download LAZ points');if(kind==='hierarchy'){const key=new URL(url).pathname.split('/').at(-1).slice(0,-5),[d,x,y,z]=key.split('-').map(Number),h={[key]:1};for(let a=0;a<2;a++)for(let b=0;b<2;b++)for(let c=0;c<2;c++)h[`${d+1}-${x*2+a}-${y*2+b}-${z*2+c}`]=-1;return new Response(JSON.stringify(h));}return failed?new Response('unavailable',{status:503}):new Response(JSON.stringify({'0-0-0-0':2000000,'1-0-0-0':1,'1-1-0-0':1,'1-0-1-0':1,'1-1-1-0':1,'1-0-0-1':1,'1-1-0-1':1,'1-0-1-1':1,'1-1-1-1':1}));};
+  const outcome=await prepareLidarView(config,q,{python,fetcher});assert.equal(outcome.state,failed?'unavailable':'detail-required');assert.equal(outcome.sourceAssets,0);assert.equal(outcome.analysisComplete,false);assert.equal(outcome.points,0);
+  const receipt=loadLidarViewReceipt(config,lidarViewKey(q));assert.equal(receipt.grid,null);assert.equal(receipt.points,null);assert.equal(receipt.layers.find(l=>l.kind==='canopy').state,outcome.state);assert.ok(calls.length<=(kind==='hierarchy'?PREPARE_LIMITS.hierarchyReplies:3));if(kind==='hierarchy')assert.equal(calls.length,PREPARE_LIMITS.hierarchyReplies);
+  const metrics=JSON.parse(readFileSync(join(config.root,'jobs',lidarViewKey(q),'processing-receipt.json')));assert.equal(metrics.preflightOnly,true);assert.equal(metrics.decodedNativeRecords,0);assert.equal(metrics.sourceAssets,0);
+ }
 });
