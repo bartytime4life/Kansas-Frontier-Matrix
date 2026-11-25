@@ -27,12 +27,12 @@ export function useTerrainTileView(options:Options){
   const map=options.mapRef.current;
   if(!map||!options.active||!options.styleReady||!options.enabled||!visible){store.pause();return;}
   if(moving.current)return;
-  const timer=setTimeout(()=>{const b=map.getBounds(),plan=terrainTilePlan([b.getWest(),b.getSouth(),b.getEast(),b.getNorth()],map.getZoom(),options.mode,options.lightweight),bypass=lastRefresh.current!==refresh;lastRefresh.current=refresh;store.set(plan,options.mode,bypass);},160);
+  const timer=setTimeout(()=>{const b=map.getBounds(),center=map.getCenter(),plan=terrainTilePlan([b.getWest(),b.getSouth(),b.getEast(),b.getNorth()],map.getZoom(),options.mode,options.lightweight,[center.lng,center.lat]),bypass=lastRefresh.current!==refresh;lastRefresh.current=refresh;store.set(plan,options.mode,bypass);},160);
   return()=>clearTimeout(timer);
  },[options.mapRef,options.active,options.styleReady,options.enabled,options.mode,options.lightweight,visible,revision,refresh,store]);
  // A progress receipt does not rebuild geometry. Prepare only a changed set of
  // validated grids; nearby pans reuse exact tiles and their original times.
- const entries=snapshot.entries.filter(e=>e.grid),signature=entries.map(e=>e.tile.key).join('|')+':'+snapshot.version;
+ const entries=snapshot.entries.filter(e=>e.grid&&e.tile.key.startsWith(options.mode+':')),signature=entries.map(e=>e.tile.key).join('|')+':'+snapshot.version;
  useEffect(()=>{
   preparer.cancel();
   if(!options.enabled||!options.active||!options.styleReady||!visible||!entries.length)return;
@@ -48,5 +48,5 @@ export function useTerrainTileView(options:Options){
  },[signature,options.mode,options.scale,options.color,options.lightweight,options.enabled,options.active,options.styleReady,visible,preparer]);
  const display=snapshot.plan.state==='ready'&&(entries.length>0||snapshot.pending>0)&&prepared?.mode===options.mode&&prepared.scale===options.scale&&prepared.color===options.color?prepared:null;
  const phase=snapshot.plan.state!=='ready'?snapshot.plan.state:snapshot.pending?'loading':snapshot.failed?'partial':snapshot.entries.some(e=>e.state==='detail-required')?'detail-required':snapshot.entries.some(e=>e.grid)?'ready':'no-coverage';
- return {snapshot,display,phase,preparationPhase,error,visible,navigating,revision,retry:()=>setRefresh(n=>n+1)};
+ return {snapshot,display,phase,preparationPhase,error,visible,navigating,revision,retry:()=>setRefresh(n=>n+1),retryMissing:()=>store.retryUnavailable()};
 }

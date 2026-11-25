@@ -12,7 +12,7 @@ subdivide into four adjoining children, to level 18 and at most 24 tiles in the
 view. This is additional acquisition, not interpolation. Wider native views
 ask for a closer view. Actual missing/classification support remains missing.
 
-Two source acquisitions run at a time. Stable overlapping tiles and bounded
+Two source acquisitions run at a time, prioritized near the actual map target rather than a distant oblique-bounds midpoint. A transient failed tile gets one delayed recovery attempt; targeted retry leaves successful tiles intact. Stable overlapping tiles and bounded
 in-memory receipts are reused during pans. Old jobs outside the new plan are
 canceled; obsolete completions cannot restore coverage. The existing bounded
 public browser cache remains expendable and does not renew source timestamps.
