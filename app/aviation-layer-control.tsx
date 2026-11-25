@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "./maplibre-seam";
-import { readBoundedJson } from "./bounded-json";
+import { readBoundedBytes, readBoundedJson } from "./bounded-json";
 import { aviationResearchPoints } from "./aviation-research";
 import type { ResearchRecord } from "./research-context";
 import { unexaggeratedTerrainElevation } from "./map-runtime";
@@ -37,6 +37,7 @@ const WEATHER_REFRESH_MS = 5 * 60_000;
 const TRAFFIC_REFRESH_MS = 20_000;
 const TRAFFIC_EXPIRY_TICK_MS = 5_000;
 const TFR_REFRESH_MS = 10 * 60_000;
+const AVIATION_READ_TIMEOUT_MS = 25_000;
 const EXAGGERATIONS = [1, 3, 6] as const;
 
 type LoadState = "idle" | "loading" | "ready" | "error";
@@ -46,22 +47,44 @@ type FeedState<T> = Readonly<{ state: LoadState; value: T | null }>;
 type UasGrid = Readonly<{ retrievedAt: string; cells: readonly UasCell[] }>;
 type TfrList = Readonly<{ retrievedAt: string; kansas: readonly TfrEntry[]; total: number; shapes: readonly TfrShape[]; detailsChecked: number; detailsFailed: number }>;
 
+/** One complete browser read, including headers and a stalled body; never a provider retry. */
+async function withinAviationRead<T>(signal: AbortSignal, read: (bounded: AbortSignal) => Promise<T>): Promise<T> {
+  signal.throwIfAborted();
+  const controller = new AbortController();
+  let rejectRead: (reason: unknown) => void;
+  const interrupted = new Promise<never>((_resolve, reject) => { rejectRead = reject; });
+  const stop = () => { controller.abort(signal.reason); rejectRead(signal.reason); };
+  signal.addEventListener("abort", stop, { once: true });
+  const timeout = setTimeout(() => {
+    const reason = new DOMException("The aviation read timed out. Try again.", "TimeoutError");
+    controller.abort(reason); rejectRead(reason);
+  }, AVIATION_READ_TIMEOUT_MS);
+  try { return await Promise.race([read(controller.signal), interrupted]); }
+  finally { clearTimeout(timeout); signal.removeEventListener("abort", stop); }
+}
+
 /** Same-origin read of one aviation route; `check` rejects any shape the route did not promise. */
 async function readFeed<T>(path: string, signal: AbortSignal, maxBytes: number, check: (value: Record<string, unknown>) => boolean): Promise<T> {
-  const response = await fetch(path, { signal, cache: "no-store", credentials: "same-origin" });
-  const value = await readBoundedJson(response, maxBytes, signal);
-  if (!response.ok || !value || typeof value !== "object" || (value as { evidenceRole?: unknown }).evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || !check(value as Record<string, unknown>)) throw new Error("unavailable");
-  return value as T;
+  return withinAviationRead(signal, async bounded => {
+    const response = await fetch(path, { signal: bounded, cache: "no-store", credentials: "same-origin" });
+    if (!response.ok) { void response.body?.cancel().catch(() => undefined); throw new Error("unavailable"); }
+    const value = await readBoundedJson(response, maxBytes, bounded);
+    bounded.throwIfAborted();
+    if (!value || typeof value !== "object" || Array.isArray(value) || (value as { evidenceRole?: unknown }).evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || !check(value as Record<string, unknown>)) throw new Error("unavailable");
+    return value as T;
+  });
 }
 
 async function loadContext(signal: AbortSignal): Promise<AviationContext> {
-  const response = await fetch(AVIATION_CONTEXT_ASSET.url, { signal, cache: "force-cache" });
-  if (!response.ok) throw new Error("The aviation context file is unavailable.");
-  const buffer = await response.arrayBuffer();
-  if (buffer.byteLength > AVIATION_CONTEXT_ASSET.maxBytes) throw new Error("The aviation context exceeded its size bound.");
-  const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", buffer)), byte => byte.toString(16).padStart(2, "0")).join("");
-  if (digest !== AVIATION_CONTEXT_ASSET.sha256) throw new Error("The aviation context did not match its pinned digest.");
-  return parseAviationContext(JSON.parse(new TextDecoder().decode(buffer)) as unknown);
+  return withinAviationRead(signal, async bounded => {
+    const response = await fetch(AVIATION_CONTEXT_ASSET.url, { signal: bounded, cache: "force-cache" });
+    if (!response.ok) { void response.body?.cancel().catch(() => undefined); throw new Error("The aviation context file is unavailable."); }
+    const bytes = await readBoundedBytes(response, AVIATION_CONTEXT_ASSET.maxBytes, bounded);
+    const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), byte => byte.toString(16).padStart(2, "0")).join("");
+    bounded.throwIfAborted();
+    if (digest !== AVIATION_CONTEXT_ASSET.sha256) throw new Error("The aviation context did not match its pinned digest.");
+    return parseAviationContext(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) as unknown);
+  });
 }
 
 function isEnvelope<T>(value: unknown): value is AviationWeatherEnvelope<T> {
@@ -129,6 +152,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   const [contextState, setContextState] = useState<LoadState>("idle");
   const [context, setContext] = useState<AviationContext | null>(null);
   const [contextError, setContextError] = useState("");
+  const [contextRetry, setContextRetry] = useState(0);
   const [groups, setGroups] = useState<ReadonlySet<AirspaceGroup>>(() => new Set((Object.keys(AIRSPACE_GROUPS) as AirspaceGroup[]).filter(group => AIRSPACE_GROUPS[group].defaultOn)));
   const [showDrone, setShowDrone] = useState(true);
   const [showAirports, setShowAirports] = useState(true);
@@ -201,20 +225,19 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
     const abort = new AbortController();
     contextRequest.current = abort;
     setContextState("loading");
-    loadContext(abort.signal).then(value => { setContext(value); setContextState("ready"); })
+    setContextError("");
+    loadContext(abort.signal).then(value => { if (!abort.signal.aborted) { setContext(value); setContextState("ready"); } })
       .catch(error => { if (abort.signal.aborted) return; setContextError(error instanceof Error ? error.message : "Unavailable."); setContextState("error"); })
       .finally(() => { if (contextRequest.current === abort) contextRequest.current = null; });
-  }, [visible, context]);
+  }, [visible, context, contextRetry]);
   useEffect(() => () => contextRequest.current?.abort(), []);
 
   const refreshWeather = useCallback(async (signal: AbortSignal) => {
     // Earlier observations stay drawn while a refresh is in flight; a failure clears them.
     const read = async <T,>(path: string, set: (value: WeatherState<T>) => void) => {
       try {
-        const response = await fetch(path, { signal, cache: "no-store", credentials: "same-origin" });
-        const value = await readBoundedJson(response, 4 * 1024 * 1024, signal);
-        if (!response.ok || !isEnvelope<T>(value)) throw new Error("unavailable");
-        set({ state: "ready", envelope: value, message: "" });
+        const value = await readFeed<AviationWeatherEnvelope<T>>(path, signal, 4 * 1024 * 1024, isEnvelope<T>);
+        if (!signal.aborted) set({ state: "ready", envelope: value, message: "" });
       } catch {
         if (!signal.aborted) set({ state: "error", envelope: null, message: "Unavailable. No cached or synthetic observations are shown." });
       }
@@ -242,7 +265,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
     const start = setTimeout(() => {
       setUas({ state: "loading", value: null });
       readFeed<UasGrid>(UASFM_API_PATH, abort.signal, 16 * 1024 * 1024, value => Array.isArray(value.cells))
-        .then(value => { uasLoaded.current = true; setUas({ state: "ready", value }); })
+        .then(value => { if (!abort.signal.aborted) { uasLoaded.current = true; setUas({ state: "ready", value }); } })
         .catch(() => { if (!abort.signal.aborted) setUas({ state: "error", value: null }); });
     }, 0);
     return () => { clearTimeout(start); abort.abort(); };
@@ -252,7 +275,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
     if (!visible) return;
     const abort = new AbortController();
     const load = () => readFeed<TfrList>(TFR_API_PATH, abort.signal, 4 * 1024 * 1024, value => Array.isArray(value.kansas) && Array.isArray(value.shapes) && typeof value.detailsFailed === "number")
-      .then(value => setTfrs({ state: "ready", value })).catch(() => { if (!abort.signal.aborted) setTfrs({ state: "error", value: null }); });
+      .then(value => { if (!abort.signal.aborted) setTfrs({ state: "ready", value }); }).catch(() => { if (!abort.signal.aborted) setTfrs({ state: "error", value: null }); });
     const initial = setTimeout(load, 0), interval = setInterval(load, TFR_REFRESH_MS);
     return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); };
   }, [visible]);
@@ -261,8 +284,16 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   useEffect(() => {
     if (!visible || !showTraffic) return;
     const abort = new AbortController();
-    const load = () => readFeed<TrafficEnvelope>(AVIATION_TRAFFIC_API_PATH, abort.signal, 8 * 1024 * 1024, value => Array.isArray(value.records) && Boolean(value.provider) && typeof value.provider === "object")
-      .then(value => setTraffic({ state: "ready", value: { ...value, receivedAt: Date.now() } })).catch(() => { if (!abort.signal.aborted) setTraffic({ state: "error", value: null }); });
+    let inFlight = false;
+    const load = async () => {
+      if (inFlight || abort.signal.aborted) return;
+      inFlight = true;
+      try {
+        const value = await readFeed<TrafficEnvelope>(AVIATION_TRAFFIC_API_PATH, abort.signal, 8 * 1024 * 1024, value => Array.isArray(value.records) && Boolean(value.provider) && typeof value.provider === "object");
+        if (!abort.signal.aborted) setTraffic({ state: "ready", value: { ...value, receivedAt: Date.now() } });
+      } catch { if (!abort.signal.aborted) setTraffic({ state: "error", value: null }); }
+      finally { inFlight = false; }
+    };
     const tick = () => setTrafficNow(Date.now());
     const initial = setTimeout(() => { tick(); void load(); }, 0), interval = setInterval(load, TRAFFIC_REFRESH_MS), expiry = setInterval(tick, TRAFFIC_EXPIRY_TICK_MS);
     // Positions are only meaningful while fresh: turning traffic off drops them, so turning it back on never redraws old aircraft as "now".
@@ -562,7 +593,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
     <details className="specialty-layer-details" ref={detailsRef}><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
       <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. Listed TFR boundaries may be future-dated or incomplete; effective times and exceptions must be checked in each FAA NOTAM.</p>
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
-      {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}
+      {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place. <button type="button" onClick={() => setContextRetry(current => current + 1)}>Retry airspace context</button></p>}
       {edition && <p role="status" data-edition={edition.state}><strong>{edition.state === "CURRENT" ? "Current edition" : edition.state === "PREVIEW" ? "Preview edition" : "Expired edition"}:</strong> {edition.text}</p>}
       <fieldset><legend>Kansas Sky · aircraft journeys</legend>
           <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Kansas Sky · observed aircraft, trails and recorded replay</label>

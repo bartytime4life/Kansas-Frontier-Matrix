@@ -30,6 +30,27 @@ heliports, glider, ultralight and balloon ports). Nearest-ground references use
 every listed facility except heliports, whose published elevation can be a
 rooftop. Contacts, owner names and remarks are never copied.
 
+## Browser read recovery
+
+Each aviation browser read has a 25-second budget covering response headers
+and the complete body. Failed HTTP responses are rejected before body parsing.
+The pinned NASR asset is streamed within its existing 2 MiB limit, then hashed
+over its exact bytes before decoding and contract validation. If it fails,
+**Retry airspace context** repeats that verified read without resetting the
+visitor's selected layers. No substitute airspace is drawn while it is unavailable.
+
+Aircraft refreshes keep their 20-second cadence, with one request in flight at
+a time; a tick during a slow read is skipped. A later scheduled tick can retry
+after failure or timeout. Closing the layer cancels the read and prevents late
+success or failure from changing its state. The same cancellation guard applies
+to weather, TFR and UAS-grid replies. These browser bounds do not change route
+deadlines, provider caches or provider request pacing. The independent five-second
+expiry tick continues to remove aircraft older than the existing 60-second limit;
+replay history retains its separate meaning.
+
+Regression evidence uses synthetic responses and the shipped pinned asset.
+It does not qualify live providers, navigation use or hosted deployment.
+
 ## What is drawn
 
 - **Airspace shells (3D).** Each NASR volume is extruded from its floor to its
