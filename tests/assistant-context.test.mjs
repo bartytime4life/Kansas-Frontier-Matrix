@@ -97,3 +97,36 @@ test('resolved source changes invalidate same-selector history and pending expir
  release({key:'late',prompt:'Late synthetic source',label:'Late source',boundary:'Unverified context'});
  const late=await pending;assert.equal((await settle(late.body.id,first.cookie)).body.state,'expired');assert.equal(calls,2);
 });
+
+
+test('a reply crossing UTC midnight keeps its accepted date while new jobs use the current date and sources still recheck',async()=>{
+ const origin='https://kansasfrontiermatrix.com';
+ let clockMs=Date.parse('2026-11-24T23:59:59.000Z'),finish;
+ let record={title:'Synthetic catalogue record',year:2026,prompt:'Original synthetic source.'};
+ const seen=[],resolver=createAssistantContextResolver({now:()=>new Date(clockMs),catalog:()=>record});
+ const handler=createPublicAiHandler({origin,clock:()=>clockMs,resolveEvidence:async()=>null,resolveContext:resolver,
+  model:{ready:true,online:true,discuss:async(question,options)=>{seen.push(options);if(seen.length===1)await new Promise(resolve=>{finish=resolve;});return {text:'Synthetic interpretation only.'};}}});
+ const request=async(path,value,cookie)=>{
+  const response=await handler(new Request(origin+'/api/ai/'+path,{method:value?'POST':'GET',headers:{...(value?{'content-type':'application/json',origin}:{}),...(cookie?{cookie}:{})},body:value?JSON.stringify(value):undefined}));
+  return {status:response.status,body:await response.json(),cookie:response.headers.get('set-cookie')?.split(';')[0]};
+ };
+ const waitUntil=async check=>{for(let i=0;i<40;i++){if(check())return;await new Promise(resolve=>setImmediate(resolve));}throw Error('did not settle');};
+ const settle=async(id,cookie)=>{for(let i=0;i<40;i++){const next=await request('jobs/'+id,null,cookie);if(next.body.state==='completed')return next;await new Promise(resolve=>setImmediate(resolve));}throw Error('did not settle');};
+ const input={question:'Explain the application controls.',term:'controls',mode:'explore',context:{...context,selection:null}};
+ const first=await request('jobs',input);assert.equal(first.status,202);
+ await waitUntil(()=>finish);assert.match(seen[0].context,/2026-11-24/);
+ clockMs+=2000;finish();
+ const done=await settle(first.body.id,first.cookie);
+ assert.equal(done.body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ assert.equal(done.body.result.interpretation,'Synthetic interpretation only.');
+ assert.match(done.body.checkedAt,/^2026-11-25T/);
+ const again=await request('jobs/'+first.body.id,null,first.cookie);
+ assert.equal(again.body.sourceRevision,done.body.sourceRevision);
+ const next=await request('jobs',input,first.cookie);await settle(next.body.id,first.cookie);
+ assert.match(seen[1].context,/2026-11-25/);assert.deepEqual(seen[1].history,[]);
+ const selected=await request('jobs',{...input,context:{...input.context,selection:{kind:'registry',layerId:'synthetic-layer',featureId:'synthetic-feature'}}},first.cookie);
+ assert.equal((await settle(selected.body.id,first.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ record={...record,prompt:'Corrected synthetic source.'};
+ const withdrawn=await request('jobs/'+selected.body.id,null,first.cookie);
+ assert.equal(withdrawn.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(withdrawn.body.context,null);
+});
