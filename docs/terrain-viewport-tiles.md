@@ -6,7 +6,7 @@ acquires a single center window or pins that window after a camera inspection.
 Base landscape remains independently available without a cell overlay.
 
 Ground chooses a pyramid level with at most 12 visible tiles (8 in lightweight
-mode). Native tiles start at level 16 or finer, keeping each complete native
+mode). Native modes retain up to 12 initial tiles on either device policy so a camera tilt cannot silently drop a supported viewport; lightweight geometry still targets 150,000 vertices. Native tiles start at level 16 or finer, keeping each complete native
 analysis within the existing 1 km² limit. A native source-budget result can
 subdivide into four adjoining children, to level 18 and at most 24 tiles in the
 view. This is additional acquisition, not interpolation. Wider native views
