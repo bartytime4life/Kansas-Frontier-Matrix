@@ -18,7 +18,7 @@ export function terrainTilePlan(bounds:TerrainFootprint,zoom:number,mode:LidarGr
  if(![...bounds,zoom].every(Number.isFinite)||bounds[0]>=bounds[2]||bounds[1]>=bounds[3])return empty('outside');
  const b=[Math.max(bounds[0],KANSAS_LIDAR_WINDOW[0]),Math.max(bounds[1],KANSAS_LIDAR_WINDOW[1]),Math.min(bounds[2],KANSAS_LIDAR_WINDOW[2]),Math.min(bounds[3],KANSAS_LIDAR_WINDOW[3])];
  if(b[0]>=b[2]||b[1]>=b[3])return empty('outside');
- const limit=lightweight?8:12,min=mode==='ground'?4:16;
+ const limit=mode==='ground'&&lightweight?8:12,min=mode==='ground'?4:16;
  for(let z=Math.min(19,Math.max(min,Math.floor(zoom)));z>=min;z--){
   const n=2**z,x0=Math.floor((b[0]+180)/360*n),x1=Math.ceil((b[2]+180)/360*n)-1,y0=Math.floor(worldY(b[3])*n),y1=Math.ceil(worldY(b[1])*n)-1;
   if((x1-x0+1)*(y1-y0+1)>limit)continue;
@@ -51,7 +51,7 @@ export function createTerrainTileStore(notify:(s:TerrainTileSnapshot)=>void,load
  function refine(){
   if(mode==='ground')return;
   // Refine only a bounded source-budget result, never interpolate unsupported
-  // surfaces. At most 24 source grids (8 on a lightweight initial plan) share
+  // surfaces. At most 24 source grids (12 on either native initial plan) share
   // the SAME vertex/FBO budget; each child is still an independently validated
   // complete native request. Stable split keys survive neighboring pans.
   let changed=true;
