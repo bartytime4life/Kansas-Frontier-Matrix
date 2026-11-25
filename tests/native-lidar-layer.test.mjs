@@ -20,9 +20,9 @@ function glHarness(){
  g.enable(g.STENCIL_TEST);g.enable(g.DITHER);g.enable(g.BLEND);g.enable(g.SCISSOR_TEST);g.pixelId=2;g.readPixels=(x,y,w,h,format,type,out)=>{g.log.push(['readPixels',x,y,g.params.get(g.READ_FRAMEBUFFER_BINDING)]);out.set([g.pixelId&255,(g.pixelId>>8)&255,(g.pixelId>>16)&255,255]);};return g;
 }
 const matrix=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],options={scale:2.5,size:3,color:'elevation',selected:null};
-test('point color and pick ID share one bounded depth-tested rasterization and restore surrounding GL state',()=>{
+test('point color and pick ID share one bounded depth-tested rasterization and preserve render targets and untracked flags',()=>{
  const g=glHarness(),map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){}};const p=layer.createNativePointLayer(fixture(),options,()=>assert.fail('unexpected point error'));const vao={foreign:'vao'},buffer={foreign:'buffer'};g.params.set(g.VERTEX_ARRAY_BINDING,vao);g.params.set(g.ARRAY_BUFFER_BINDING,buffer);p.onAdd(map,g);assert.equal(g.getParameter(g.VERTEX_ARRAY_BINDING),vao);assert.equal(g.getParameter(g.ARRAY_BUFFER_BINDING),buffer);const prior=new Map(g.params),enabled=new Set(g.enabled);p.render(g,{defaultProjectionData:{mainMatrix:matrix}});
- assert.equal(p.eligible,3,'withheld return retained in source data but not uploaded');const pointDraw=g.log.filter(row=>row[0]==='drawArrays'&&row[1]===g.POINTS);assert.equal(pointDraw.length,1);assert.equal(pointDraw[0][3],3);assert.ok(g.log.some(row=>row[0]==='drawBuffers'&&row[1][0]===g.COLOR_ATTACHMENT0&&row[1][1]===g.COLOR_ATTACHMENT1));assert.deepEqual(g.enabled,enabled);for(const key of [g.DRAW_FRAMEBUFFER_BINDING,g.READ_FRAMEBUFFER_BINDING,g.VIEWPORT,g.DEPTH_RANGE,g.DEPTH_CLEAR_VALUE,g.DEPTH_WRITEMASK])assert.deepEqual(g.getParameter(key),prior.get(key)??null);
+ assert.equal(p.eligible,3,'withheld return retained in source data but not uploaded');const pointDraw=g.log.filter(row=>row[0]==='drawArrays'&&row[1]===g.POINTS);assert.equal(pointDraw.length,1);assert.equal(pointDraw[0][3],3);assert.ok(g.log.some(row=>row[0]==='drawBuffers'&&row[1][0]===g.COLOR_ATTACHMENT0&&row[1][1]===g.COLOR_ATTACHMENT1));for(const flag of [g.SCISSOR_TEST,g.DITHER])assert.equal(g.isEnabled(flag),enabled.has(flag));for(const key of [g.DRAW_FRAMEBUFFER_BINDING,g.READ_FRAMEBUFFER_BINDING,g.VIEWPORT])assert.deepEqual(g.getParameter(key),prior.get(key)??null);
  assert.equal(p.pick({x:25,y:10}),1,'read actual rendered ID, not nearest projected source XY');assert.deepEqual(g.log.filter(row=>row[0]==='readPixels').at(-1).slice(1,3),[50,79]);g.pixelId=0;assert.equal(p.pick({x:25,y:10}),null,'empty visible pixel has no native height');g.pixelId=3;assert.equal(p.pick({x:25,y:10}),null,'withheld record cannot become a rendered hit');
  p.invalidate();const reads=g.log.filter(row=>row[0]==='readPixels').length;assert.equal(p.pick({x:25,y:10}),null);assert.equal(g.log.filter(row=>row[0]==='readPixels').length,reads,'camera/resize invalidation blocks old-frame picking');p.render(g,{defaultProjectionData:{mainMatrix:matrix}});p.update({...options,size:5});assert.equal(p.pick({x:1,y:1}),null,'new point size requires matching rasterization');p.onRemove(map,g);assert.equal(g.live.size,0,'owned programs, buffers, textures and frame attachments released');
 });
@@ -82,7 +82,7 @@ test('unchanged terrain frames reuse the exact color/ID raster while composing e
  const prior=new Map(g.params),enabled=new Set(g.enabled);
  for(let i=0;i<100;i++)p.render(g,input);
  assert.equal(raster(),1,'an unchanged landscape needs no repeated raster work');assert.equal(composite(),101,'the cached color is still composed over each new map frame');assert.equal(uploads(),1);assert.equal(g.log.filter(r=>r[0]==='getUniformLocation').length,lookupCount,'uniform lookup is program-lifetime work');assert.equal(p.pick({x:25,y:10}),1,'cached ID attachment retains the actual source cell');
- assert.deepEqual(g.enabled,enabled);for(const key of [g.DRAW_FRAMEBUFFER_BINDING,g.READ_FRAMEBUFFER_BINDING,g.VIEWPORT,g.DEPTH_RANGE,g.DEPTH_CLEAR_VALUE,g.DEPTH_WRITEMASK,g.COLOR_WRITEMASK,g.CURRENT_PROGRAM,g.VERTEX_ARRAY_BINDING,g.TEXTURE_BINDING_2D])assert.deepEqual(g.getParameter(key),prior.get(key)??null,'cached composition restores surrounding GL state');
+ for(const flag of [g.SCISSOR_TEST,g.DITHER])assert.equal(g.isEnabled(flag),enabled.has(flag));for(const key of [g.DRAW_FRAMEBUFFER_BINDING,g.READ_FRAMEBUFFER_BINDING,g.VIEWPORT])assert.deepEqual(g.getParameter(key),prior.get(key)??null,'cached composition restores surrounding GL state');
  p.update({...options,opacity:.35});p.render(g,input);assert.equal(raster(),1);assert.equal(g.log.filter(r=>r[0]==='uniform1f'&&r[1]==='opacity').at(-1)[2],.35);assert.equal(p.pick({x:1,y:1}),1);
  const beforeHide=composite();p.update({...options,opacity:0});p.render(g,input);assert.equal(p.pick({x:1,y:1}),null);assert.equal(composite(),beforeHide);p.update({...options,opacity:1});p.render(g,input);assert.equal(raster(),1,'showing the same cached surface only recomposes it');
  p.update({...options,selected:1});assert.equal(p.pick({x:1,y:1}),null);p.render(g,input);assert.equal(raster(),2);assert.equal(uploads(),1,'selection changes raster color, not source geometry');
@@ -103,4 +103,25 @@ test('cached native frames reraster for size, source color, drawing budget and p
  p.update({...options,size:5,color:'classification',framePixelLimit:1048576});p.render(g,input);assert.equal(raster(),4);assert.equal(uploads(),2);const image=g.log.filter(r=>r[0]==='texImage2D').at(-1);assert.ok(image[4]*image[5]<=1048576);
  projection='globe';p.render(g,input);assert.equal(raster(),4);assert.equal(p.pick({x:10,y:10}),null);projection='mercator';p.render(g,input);assert.equal(raster(),5);
  g.lost=true;p.render(g,input);assert.equal(p.failed,true);assert.equal(reports.length,1);assert.equal(p.pick({x:10,y:10}),null,'a cached ID frame cannot survive lost context');p.onRemove(map,g);assert.equal(g.live.size,0);
+});
+
+
+test('terrain navigation avoids synchronous graphics-state snapshots already owned by MapLibre',()=>{
+ const g=glHarness(),map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){}},p=gridLayer.createLidarGridLayer(groundFixture().receipt.grid,'ground',options,()=>assert.fail('terrain renderer failed'));
+ p.onAdd(map,g);const reads=[],get=g.getParameter;g.getParameter=key=>{reads.push(key);return get(key);};
+ for(let i=0;i<12;i++)p.render(g,{defaultProjectionData:{mainMatrix:matrix.map((v,j)=>j===12?i*.001:v)}});
+ assert.equal(reads.length,36,'only actual draw/read targets and viewport need reads; renderer-owned state is set explicitly');
+ assert.ok(reads.every(key=>[g.DRAW_FRAMEBUFFER_BINDING,g.READ_FRAMEBUFFER_BINDING,g.VIEWPORT].includes(key)));
+ p.onRemove(map,g);assert.equal(g.live.size,0);
+});
+
+
+test('independent terrain depth distinguishes centimetre steps at landscape camera distances without moving XY or altering clip coverage',()=>{
+ const near=1,far=100000,f=1.5,perspective=[f,0,0,0,0,f,0,0,0,0,-(far+near)/(far-near),-1,0,0,-2*far*near/(far-near),0],bounds=[[-500,-500,-2010],[500,500,-1990]];
+ const tight=layer.nativeTranslatedMatrix(perspective,[0,0,0],bounds),raw=layer.nativeTranslatedMatrix(perspective,[0,0,0]);
+ const project=(m,z)=>{const w=Math.fround(-z),clip=Math.fround(Math.fround(m[10]*z)+m[14]);return Math.floor((clip/w+1)*.5*16777215);};
+ assert.equal(project(raw,-2000),project(raw,-2000.01),'broad map depth quantizes these separate tops to the same 24-bit depth');
+ assert.notEqual(project(tight,-2000),project(tight,-2000.01),'cell-local depth must keep these surfaces distinct');
+ for(const row of [0,1,3])for(let col=0;col<4;col++)assert.equal(tight[col*4+row],raw[col*4+row],'screen position and perspective W are unchanged');
+ assert.deepEqual(Array.from(layer.nativeTranslatedMatrix(perspective,[0,0,0],[[-1,-1,-1],[1,1,1]])),Array.from(raw),'bounds crossing the camera retain the original clipping matrix');
 });

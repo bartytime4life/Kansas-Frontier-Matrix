@@ -27,3 +27,28 @@ First-time source preparation still depends on dev and upstream providers. A war
 The production destination remains the existing GoDaddy app `urdng3v1vk`, branch `a0-hosted-ai-web-20261017`. Source tests and a loopback preview using public data are separate from publication; verify the live `/api/build` digest and browser behavior after Publish.
 
 Renderer contracts: [MapLibre custom layers](https://maplibre.org/maplibre-gl-js/docs/API/interfaces/CustomLayerInterface/) and [Map camera API](https://maplibre.org/maplibre-gl-js/docs/API/classes/Map/). Existing storage/resource design remains in [terrain-hosting-plan.md](terrain-hosting-plan.md).
+
+
+### Terrain field repair — 2026-11-24
+
+A live navigation profile identified synchronous GL state reads in the custom
+cell renderer as a significant CPU cost. The renderer now reads only the actual
+draw/read framebuffer and viewport (3 reads per frame, previously 21). MapLibre
+6.9.0 marks its managed state dirty after a custom layer; the renderer preserves
+its targets and untracked scissor/dither flags explicitly. Resource teardown,
+color/ID correspondence, vertex budgets and cache invalidation remain bounded.
+This is a state-read reduction, not a claim of a particular device frame rate.
+
+The independent 24-bit depth attachment now maps the loaded geometry's depth
+range before converting the translated projection to Float32. This keeps small
+neighboring height steps distinct at landscape camera distances. Original XY/W,
+source heights, IDs, eligibility and original camera clipping remain unchanged.
+Bounds crossing the camera retain the original projection rather than applying
+an unsafe range remap. Precision improves visibility; it does not imply higher
+survey accuracy or resolution.
+
+After Fit 3D, a same-scale pan requests a new window with the accepted Mercator
+spacing. It no longer substitutes the wider fitted-camera viewport and abruptly
+coarsens the grid. Zoom, resize and explicit Follow/Refresh still acquire from
+the current viewport. The previous geometry stays at its original coordinates
+and cannot supply readings during the handoff; it is never moved to fill gaps.

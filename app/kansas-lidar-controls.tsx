@@ -13,7 +13,7 @@ import {MAPLIBRE_EARTH_RADIUS_M,TERRAIN_HEIGHT_RAMP_CSS,TERRAIN_RELIEF_RAMP_CSS,
 import {createTerrainPreparationClient} from './terrain-preparation-client';
 import type {PreparedTerrain} from './terrain-preparation-model';
 import {useVisitorTerrainResources} from './visitor-terrain-resources';
-import {terrainViewFootprint,sameTerrainFootprint,terrainInspectionCamera,terrainLeaseContains,type TerrainViewLease,type TerrainFootprint} from './terrain-camera';
+import {terrainViewFootprint,sameTerrainFootprint,terrainInspectionCamera,terrainLeaseContains,terrainPanFootprint,type TerrainViewLease,type TerrainFootprint} from './terrain-camera';
 import styles from './kansas-lidar-controls.module.css';
 type Options={mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;active:boolean;cellsOn:boolean;onCells:(value:boolean)=>void;scale:number;reducedMotion:boolean;onViewMap:()=>void;backdrop?:'relief'|'aerial';onBackdrop?:(value:'relief'|'aerial')=>void;onScale?:(value:number)=>void;onGround:()=>void;onNativeIntent?:()=>void;onSelected?:()=>void};
 export function useKansasLidarView(options:Options){
@@ -74,7 +74,8 @@ export function useKansasLidarView(options:Options){
       const center=map.getCenter();
       if(spatialLease.current&&terrainLeaseContains(spatialLease.current,{center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight})){setNearbyHeld(true);resumeDeferred();return;}
       deferredAcquisition.current={ground:false,native:false};
-      study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);readingIntent.current=false;selection.current=null;
+      const panWindow=spatialLease.current&&center.lng>=next[0]&&center.lng<=next[2]&&center.lat>=next[1]&&center.lat<=next[3]&&terrainPanFootprint(spatialLease.current,{center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight});
+      study.current=null;spatialLease.current=panWindow?leaseFor(map,panWindow):null;setPinned(false);setNearbyHeld(false);readingIntent.current=false;selection.current=null;
       session.cancel();groundSession.cancel();preparer.cancel();setGroundPhase('moving');setResult(null);setReceipt(null);setSelected(null);setDraft('');setPhase('moving');setEpoch(n=>n+1);
     };
     // User gestures can interrupt an owned ease without a second movestart.
