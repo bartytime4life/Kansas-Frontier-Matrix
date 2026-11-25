@@ -56,8 +56,8 @@ the current viewport. The previous geometry stays at its original coordinates
 and cannot supply readings during the handoff; it is never moved to fill gaps.
 
 
-Native-detail repair (2026-11-25): the actual Explorer map now shares the
-zoom-20 ceiling with its detail action. Previously the action requested zoom
+Native-detail repair (2026-11-25): the actual Explorer map and shared-link restoration now share the
+zoom-20 ceiling with the detail action. Previously the action requested zoom
 17.5 while MapLibre clamped every request to 16, leaving users at the same
 unsupported footprint. Zooming to detail does not require the independent base
 DEM to be available. Source layers keep their own resolution/zoom limits;
