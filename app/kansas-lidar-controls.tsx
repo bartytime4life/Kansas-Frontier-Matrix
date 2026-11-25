@@ -182,7 +182,10 @@ export function useKansasLidarView(options:Options){
       const query=mode==='ground'?groundReceipt?.query:result?.receipt.query;
       map.stop(); // Finish an older owned ease while its original event tag is still current.
       study.current={id:++studyRevision.current,bbox:[...(query?.bbox??bbox)],zoom:query&&'zoom' in query?query.zoom:map.getZoom()};setPinned(true);setOpacity(100);
-      map.easeTo({...camera,duration:current.reducedMotion?0:700,essential:false},{kfmTerrainStudy:study.current.id});current.onViewMap();
+      // MapLibre animates terrain-derived elevation during easeTo. A distant
+      // context reference needs one atomic camera fit so it cannot undo this
+      // source-height target; normal fits retain their smooth transition.
+      map.easeTo({...camera,duration:current.reducedMotion||camera.elevation!==undefined?0:700,essential:false},{kfmTerrainStudy:study.current.id});current.onViewMap();
     }catch{study.current=null;setPinned(false);setError('This landscape could not be framed. Its source cells and readings are unchanged.');}
   }
   function followMap(){study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);latest.current.mapRef.current?.stop();moving.current=false;readingIntent.current=false;selection.current=null;session.cancel();groundSession.cancel();setSelected(null);setDraft('');setEpoch(n=>n+1);}

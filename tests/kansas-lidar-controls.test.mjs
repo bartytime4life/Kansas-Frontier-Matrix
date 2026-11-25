@@ -115,7 +115,7 @@ test('independent Ground/native completions preserve explicit cell and point dra
 });
 
 test('Inspect landscape frames and pins only the acquired current footprint, preserving readings and GPU resources through its tagged move',async()=>{
- for(const reducedMotion of [false,true]){const s=await setup();try{s.props.reducedMotion=reducedMotion;let c=s.render();s.tick();const response=groundFixture(s.map.bounds).receipt;s.groundRequests[0].resolve(response);await settle();c=s.render();c.choose('0004657','cell');c=s.render();const grid=c.grid,analysis=c.groundAnalysis,layer=s.layers.get('external-kansas-lidar-grid'),adds=s.events.filter(e=>e[0]==='add').length;
+ for(const reducedMotion of [false,true]){const s=await setup();try{s.props.reducedMotion=reducedMotion;let c=s.render();s.tick();const response=groundFixture(s.map.bounds).receipt;const heights=response.grid.ground.filter(z=>z!==null);s.map.getCenterElevation=()=>s.props.scale*(Math.min(...heights)+Math.max(...heights))/2;s.groundRequests[0].resolve(response);await settle();c=s.render();c.choose('0004657','cell');c=s.render();const grid=c.grid,analysis=c.groundAnalysis,layer=s.layers.get('external-kansas-lidar-grid'),adds=s.events.filter(e=>e[0]==='add').length;
   s.allowCamera();findNode(s.view(c),n=>n.type==='button'&&n.props.children==='Inspect landscape in 3D').props.onClick();c=s.render();
   const action=s.events.filter(e=>e[0]==='camera').at(-1)[1];assert.ok(action.center[0]>s.map.bounds[0]&&action.center[0]<s.map.bounds[2]);assert.ok(action.center[1]>s.map.bounds[1]&&action.center[1]<s.map.bounds[3]);assert.equal(action.bearing,-35);assert.equal(action.pitch,52);assert.equal(action.duration,reducedMotion?0:700);assert.ok(Number.isFinite(action.zoom));
   assert.equal(c.pinned,true);assert.equal(c.opacity,100);assert.equal(c.draft,'0004657');assert.equal(c.readingKind,'cell');assert.equal(c.selected.index,4656);assert.equal(c.grid,grid);assert.equal(c.groundAnalysis,analysis);assert.equal(s.layers.get('external-kansas-lidar-grid'),layer);assert.equal(s.events.filter(e=>e[0]==='add').length,adds);s.tick();assert.equal(s.groundRequests.length,1,'owned camera must not load a replacement viewport');assert.match(copy(s.h.exports.KansasLidarBadge({controller:c})),/Study area pinned/);
@@ -374,5 +374,13 @@ test('missing vegetation classification is shown in the main status without pret
  const s=await setup();try{
   let c=s.render();c.selectMode('canopy');c=s.render();s.tick();const response=data(['canopy']);response.grid.canopy.fill(null);response.receipt.state='no-coverage';const layer=response.receipt.layers.find(l=>l.kind==='canopy');layer.state='no-coverage';layer.message='No supported classified-vegetation height is available here. Unclassified objects are not canopy.';s.requests[0].resolve(response);await settle();c=s.render();
   const status=findNode(s.view(c),n=>n.props?.role==='status');assert.match(copy(status),/Base landscape shown/);assert.match(copy(status),/classified-vegetation/);assert.equal(c.applied.grid,false);assert.ok(c.grid.canopy.every(v=>v===null));
+ }finally{s.h.dispose();}
+});
+
+
+test('explicit native fit retargets a distant context atomically without changing source cells or clamp preference',async()=>{
+ const s=await setup();try{
+  s.map.getCenterElevation=()=>0;let c=s.render();c.selectMode('surface');c=s.render();s.tick();s.requests[0].resolve(data(['surface']));await settle();c=s.render();c.choose('4','cell');c=s.render();const grid=c.grid,reading=grid.surface[3];s.allowCamera();c.inspectLandscape();c=s.render();const action=s.events.find(e=>e[0]==='camera')[1];
+  assert.equal(action.duration,0);assert.ok(Number.isFinite(action.elevation));assert.equal(c.grid,grid);assert.equal(c.grid.surface[3],reading);assert.equal(c.selected.index,3);assert.equal(s.requests.length,1);assert.equal(c.error,'');
  }finally{s.h.dispose();}
 });

@@ -6,7 +6,7 @@ The Terrain & elevation card keeps the clean continuous landscape separate from 
 
 A steep camera's geographic bounds can include a distant horizon. The cell request now uses a bounded local window at 82% of the unpitched viewport scale, independent of pitch and bearing. Initial terrain framing uses 52° pitch and zoom 14.3. This changes display sampling, never source resolution. The Ground service still returns its validated 96×96 provider-resampled grid.
 
-The inspection camera solves perspective constraints for the footprint's height prism at the target pitch. It fits the measured data, retains altitude clearance above its scaled tops, and preserves the active map's elevation/clamp. Source elevations are not rebased. Display scale is explicitly separate from unscaled readings.
+The inspection camera solves perspective constraints for the footprint's height prism at the target pitch. It fits the measured data, retains altitude clearance above its scaled tops, and preserves the active map's ground-clamp preference. When the context reference lies more than 100 m outside the supported height prism, explicit Fit 3D targets the prism midpoint in one atomic camera move; nearby-reference fits remain animated. Source elevations are not rebased. Display scale is explicitly separate from unscaled readings.
 
 Rotating or tilting retains the same source footprint and prepared geometry. Small cumulative pans within the central 65% of the committed query footprint reuse that exact footprint; the lease anchor is never shifted to follow each small pan. Crossing its core boundary, zooming or genuinely resizing the viewport commits a new request. Explicit Refresh and Follow map can release the lease. Obsolete work remains cancelled and the previous footprint stays georeferenced during handoff. Picking pauses during navigation/handoff. Basemap style replacement suspends drawing and reinstalls the validated held study on the same map without renewing source/cache timestamps. Explicit Refresh still bypasses cached delivery. Native detail zoom keeps its preparation status visible.
 
@@ -71,3 +71,10 @@ remain `detail-required`. Native support, source masks, transfer/record/time
 limits and optional raw-point behavior are unchanged. This worker change needs
 the existing dev processing actor to receive the updated source separately from
 the GoDaddy application build.
+
+
+The fallback-reference fit changes only the camera target, never cell elevations,
+closure geometry, source metadata or registration claims. It uses MapLibre's
+public zero-duration camera operation because animated terrain elevation can
+replace an explicit height target during easing. Native and base data remain
+scientifically separate; this display fit does not align their vertical datums.
