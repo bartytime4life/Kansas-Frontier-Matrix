@@ -144,7 +144,7 @@ export function TerrainCellsSwitch({controller:c,compact=false}:{controller:Kans
  </section>;
 }
 export function KansasLidarLayers({controller:c}:{controller:KansasLidarController}){
-  const layerControlsRef=useRef<HTMLDivElement|null>(null);
+  const layerControlsRef=useRef<HTMLDivElement|null>(null),baseButtonRef=useRef<HTMLButtonElement|null>(null),layerButtonRefs=useRef<Partial<Record<LidarGridMode,HTMLButtonElement|null>>>({});
   const point=c.selected?.kind==='point'?c.result?.points?.points[c.selected.index]:null,grid=c.grid,providerGrid=grid?.format==='kfm-3dep-ground-grid-v1'?grid:null,nativeGrid=grid?.format==='kfm-lidar-grid-v1'?grid:null,cell=c.selected?.kind==='cell'&&nativeGrid?lidarGridCell(nativeGrid,c.selected.index):null,sample=c.selected?.kind==='cell'&&providerGrid?groundCell(providerGrid,c.selected.index):null,asset=point?c.result?.points?.manifest.source.assets[point[9]]:null;
   const domain=useMemo(()=>c.result?.points?nativeAttributeDomain(c.result.points,c.color):null,[c.result,c.color]);
   const presentClasses=useMemo(()=>c.result?.points?[...new Set(c.result.points.points.filter(nativePointEligible).map(p=>p[4]))].sort((a,b)=>a-b):[],[c.result]);
@@ -157,7 +157,7 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
   const status=terrainLayerStatus(c);
   return <section className={styles.panel} aria-label="Kansas LiDAR layers">
     <div ref={layerControlsRef} className={styles.displayModes} role="group" aria-label="Landscape display">
-      <button type="button" aria-pressed={!c.cellsOn&&!c.pointsOn} onClick={c.showBaseLandscape}>Base landscape</button>
+      <button ref={baseButtonRef} type="button" aria-pressed={!c.cellsOn&&!c.pointsOn} onClick={c.showBaseLandscape}>Base landscape</button>
       <button type="button" aria-pressed={c.cellsOn} disabled={!c.active} onClick={()=>c.setCellsOn(true)}>3D cells</button>
     </div>
     <div className={styles.instrument} data-layer={c.cellsOn?c.mode:'base'}>
@@ -168,10 +168,10 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
         <path className={styles.diagramCanopy} d="M111 15V47M106 16H116M106 47H116M220 18V37M215 18H225M215 37H225"/>
         <text x="8" y="13">ILLUSTRATIVE SECTION</text>
       </svg>
-      <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground','Bare earth'],['surface','Surface','Top surface'],['canopy','Canopy height','Vegetation']] as const).map(([mode,label,hint])=><button key={mode} type="button" aria-label={label} aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}><strong>{label}</strong><small>{hint}</small></button>)}</div>
+      <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground','Bare earth'],['surface','Surface','Top surface'],['canopy','Canopy height','Vegetation']] as const).map(([mode,label,hint])=><button ref={node=>{layerButtonRefs.current[mode]=node;}} key={mode} type="button" aria-label={label} aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}><strong>{label}</strong><small>{hint}</small></button>)}</div>
 
     </div>
-    {c.cellsOn&&<TerrainLandscapeInsights controller={c} onLayers={()=>layerControlsRef.current?.scrollIntoView({block:'start',behavior:'auto'})}/>}
+    {c.cellsOn&&<TerrainLandscapeInsights controller={c} onLayers={()=>{layerControlsRef.current?.scrollIntoView({block:'start',behavior:'auto'});(c.cellsOn?layerButtonRefs.current[c.mode]??baseButtonRef.current:baseButtonRef.current)?.focus({preventScroll:true});}}/>}
     <div className={styles.statusStrip} data-state={status.tone} data-ready={status.tone==='ready'} data-display-scale={c.applied.grid?c.renderedScale:undefined} role="status"><span aria-hidden="true"/><div><strong>{status.title}</strong><small>{status.detail}</small></div></div>
     {c.cellsOn&&<>
       {status.detailRequired&&<button className={styles.detailAction} type="button" disabled={!c.active} onClick={c.detailHere}>Zoom for native detail</button>}
