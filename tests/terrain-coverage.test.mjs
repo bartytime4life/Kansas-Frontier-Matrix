@@ -46,3 +46,9 @@ test('coverage component exposes numbered keyboard-selectable tiles and retires 
  const e=native('canopy');ui=h.render(h.exports.TerrainCoveragePanel,{...props,coverage:terrainCoverage(snapshot('canopy',[e]),'canopy'),preparing:true});assert.match(text(ui),/Canopy height/);assert.equal(findNode(ui,n=>n.type==='select').props.value,e.tile.key);assert.match(text(ui),/drawing is still preparing/);
  }finally{h.dispose();}
 });
+
+test('an empty native plan offers closer detail without a meaningless zero denominator; paused receipts are labeled historical',async()=>{
+ const h=await componentHarness('app/terrain-coverage-panel.tsx',{'./terrain-coverage':coverage,'./terrain-coverage-panel.module.css':{default:{}}});
+ try{const c=terrainCoverage({version:1,plan:{state:'detail-required',key:'surface:detail-required',tiles:[]},entries:[],pending:0,failed:0},'surface');let ui=h.render(h.exports.TerrainCoveragePanel,{coverage:c,navigating:false,preparing:false});assert.match(text(ui),/Zoom closer/);assert.doesNotMatch(text(ui),/0\/0|supported tiles/);const e=ground();ui=h.render(h.exports.TerrainCoveragePanel,{coverage:terrainCoverage(snapshot('ground',[e]),'ground'),navigating:false,preparing:false,paused:true});assert.match(text(ui),/Paused · last requested footprint/);assert.doesNotMatch(text(ui),/Current requested tile footprint/);
+ }finally{h.dispose();}
+});

@@ -175,7 +175,7 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
       <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground','Bare earth'],['surface','Surface','Top surface'],['canopy','Canopy height','Vegetation']] as const).map(([mode,label,hint])=><button ref={node=>{layerButtonRefs.current[mode]=node;}} key={mode} type="button" aria-label={label} aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}><strong>{label}</strong><small>{hint}</small></button>)}</div>
 
     </div>
-    {c.cellsOn&&<TerrainCoveragePanel coverage={c.coverage} navigating={c.navigating} preparing={c.preparationPhase==='preparing'}/>}
+    {c.cellsOn&&<TerrainCoveragePanel coverage={c.coverage} paused={!c.active||!c.visible} navigating={c.navigating} preparing={c.preparationPhase==='preparing'}/>}
     {c.cellsOn&&<TerrainLandscapeInsights controller={c} onLayers={()=>{layerControlsRef.current?.scrollIntoView({block:'start',behavior:'auto'});(c.cellsOn?layerButtonRefs.current[c.mode]??baseButtonRef.current:baseButtonRef.current)?.focus({preventScroll:true});}}/>}
     <div className={styles.statusStrip} data-state={status.tone} data-ready={status.tone==='ready'} data-display-scale={c.applied.grid?c.renderedScale:undefined} role="status"><span aria-hidden="true"/><div><strong>{status.title}</strong><small>{status.detail}</small></div></div>
     {c.cellsOn&&<>
