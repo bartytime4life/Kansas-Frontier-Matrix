@@ -299,3 +299,21 @@ test('native points without cells retain opacity and overhead inspection actions
   s.allowCamera();findNode(s.view(c),n=>n.type==='button'&&n.props.children==='Look down here').props.onClick();c=s.render();s.tick();assert.equal(s.requests.length,1);assert.equal(c.result,original);assert.equal(c.cellsOn,false);
  }finally{s.h.dispose();}
 });
+
+test('a layer selected during an orientation-only gesture resumes acquisition when movement settles',async()=>{
+ for(const mode of ['surface','ground']){const s=await setup();try{
+  let c=s.render();if(mode==='ground'){c.selectMode('surface');c=s.render();}s.tick();s.emit('movestart');s.camera.bearing=80;c.selectMode(mode);c=s.render();s.tick();const before=mode==='ground'?s.groundRequests.length:s.requests.length;assert.equal(c.phase,'moving');s.emit('moveend');c=s.render();s.tick();assert.equal(mode==='ground'?s.groundRequests.length:s.requests.length,before+1,'the selected source cannot remain stuck after a reusable camera move');c=s.render();assert.equal(c.phase,'loading');
+ }finally{s.h.dispose();}}
+});
+
+test('resuming deferred native work does not abort a genuinely reusable pending Ground request',async()=>{
+ const s=await setup();try{
+  let c=s.render();s.tick();const groundRead=s.groundRequests[0];s.emit('movestart');c.togglePoints();c=s.render();s.tick();assert.equal(s.requests.length,0);assert.equal(groundRead.signal.aborted,false);s.emit('moveend');c=s.render();s.tick();assert.equal(s.requests.length,1,'deferred points acquisition resumes');assert.equal(s.groundRequests.length,1);assert.equal(groundRead.signal.aborted,false,'resuming points cannot cancel the independently reusable Ground job');
+ }finally{s.h.dispose();}
+});
+
+test('visibility resume during a lease-contained pan starts only the deferred current acquisition at moveend',async()=>{
+ const s=await setup();try{
+  s.map.bounds=[-96.7,39,-96.4,39.2];let c=s.render();s.tick();const old=s.groundRequests[0],anchor=old.query.bbox;s.emit('movestart');s.camera.center=[s.camera.center[0]+(anchor[2]-anchor[0])*.1,s.camera.center[1]];s.visibility(false);c=s.render();assert.equal(old.signal.aborted,true);s.visibility(true);c=s.render();s.tick();assert.equal(s.groundRequests.length,1);assert.equal(c.phase,'moving');s.emit('moveend');c=s.render();s.tick();assert.equal(s.groundRequests.length,2,'visible current work resumes after the accepted small pan');assert.deepEqual(Array.from(s.groundRequests[1].query.bbox),Array.from(anchor));c=s.render();assert.equal(c.phase,'loading');
+ }finally{s.h.dispose();}
+});
