@@ -12,6 +12,7 @@ import {TERRAIN_HEIGHT_RAMP_CSS,TERRAIN_RELIEF_RAMP_CSS,NATIVE_CLASS_COLORS,nati
 import {useTerrainTileView} from './terrain-tile-view';
 import {useVisitorTerrainResources} from './visitor-terrain-resources';
 import {TERRAIN_DETAIL_MAX_ZOOM,terrainInspectionCamera,type TerrainFootprint} from './terrain-camera';
+import {readTerrainInsights,terrainRowProfile,terrainProfileGeometry,insightEligible,sameInsightBinding,insightCellCenter,type TerrainInsightBinding,type TerrainRowProfile} from './terrain-insights';
 import styles from './kansas-lidar-controls.module.css';
 type Options={mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;active:boolean;cellsOn:boolean;onCells:(value:boolean)=>void;scale:number;reducedMotion:boolean;onViewMap:()=>void;backdrop?:'relief'|'aerial';onBackdrop?:(value:'relief'|'aerial')=>void;onScale?:(value:number)=>void;onGround:()=>void;onNativeIntent?:()=>void;onSelected?:()=>void};
 export function useKansasLidarView(options:Options){
@@ -39,6 +40,19 @@ export function useKansasLidarView(options:Options){
  const transitioning=options.cellsOn&&tiles.snapshot.pending>0,phase=tiles.phase;
  const groundAnalysis=entry?prepared?.value.analyses?.[entries.indexOf(entry)]??null:null;
  const globalSelected=validSelected?.kind==='cell'&&preparedForRender?.tiles?preparedForRender.tiles.find(t=>t.key===validSelected.tile)?.start:null;
+ const insightKey=entry?.tile.key,insightMask=preparedForRender?.eligible,insightRange=insightKey&&preparedForRender?.tiles?.find(tile=>tile.key===insightKey),insightStart=insightRange?insightRange.start:null,insightModeMatches=prepared?.mode===mode&&prepared.value.settings.mode===mode;
+ const insightBinding=useMemo<TerrainInsightBinding|null>(()=>grid&&insightKey&&insightMask&&insightStart!==null&&insightModeMatches?{key:insightKey,grid,mode,eligible:insightMask,start:insightStart,analysis:groundAnalysis}:null,[grid,insightKey,mode,insightMask,insightStart,insightModeMatches,groundAnalysis]);
+ const terrainInsights=useMemo(()=>insightBinding?readTerrainInsights(insightBinding):null,[insightBinding]);
+ const selectedRow=validSelected?.kind==='cell'?Math.floor(validSelected.index/(grid?.width??1)):null;
+ const rowProfile=useMemo(()=>insightBinding&&selectedRow!==null?terrainRowProfile(insightBinding,selectedRow):null,[insightBinding,selectedRow]);
+ const insightsEnabled=options.active&&options.styleReady&&options.cellsOn&&tiles.visible&&cellsVisible&&applied.grid&&!tiles.navigating&&prepared?.mode===mode&&prepared.scale===options.scale&&prepared.color===gridColor&&!!insightBinding;
+ const insightCurrent=useRef({binding:insightBinding,enabled:insightsEnabled});useLayoutEffect(()=>{insightCurrent.current={binding:insightBinding,enabled:insightsEnabled};},[insightBinding,insightsEnabled]);
+ function exploreCell(bound:TerrainInsightBinding,index:number,focus=false){
+  if(!insightCurrent.current.enabled||moving.current||!sameInsightBinding(bound,insightCurrent.current.binding)||!insightEligible(bound,index))return;
+  setReadingKind('cell');setSelected({kind:'cell',index,tile:bound.key,source:bound.grid});setDraft(String(index+1));latest.current.onSelected?.();
+  if(focus){const map=latest.current.mapRef.current,center=insightCellCenter(bound,index);if(map&&center){map.stop();map.easeTo({center,zoom:map.getZoom(),bearing:map.getBearing(),pitch:map.getPitch(),duration:motionAllowed?650:0,essential:false});}}
+ }
+
  const settings:NativeLayerOptions=useMemo(()=>({scale:options.scale,size:pointSize,color,gridColor,selected:validSelected?.kind==='point'?validSelected.index:null,opacity:opacity/100,framePixelLimit:resources.framePixelLimit,motion:motionAllowed}),[options.scale,pointSize,color,gridColor,validSelected,opacity,resources.framePixelLimit,motionAllowed]);
  const settingsRef=useRef(settings);useLayoutEffect(()=>{settingsRef.current=settings;},[settings]);
  function viewportFootprint(map:MapLibreMap):TerrainFootprint{const b=map.getBounds();return [b.getWest(),b.getSouth(),b.getEast(),b.getNorth()];}
@@ -86,7 +100,7 @@ export function useKansasLidarView(options:Options){
  function retry(){setError('');setSelected(null);setDraft('');tiles.retry();setRawEpoch(n=>n+1);}
  function clear(){showBaseLandscape();setMode('ground');setSelected(null);setDraft('');setError('');}
  const tileStatus={loaded:tiles.snapshot.entries.filter(e=>e.grid).length,total:tiles.snapshot.plan.tiles.length,pending:tiles.snapshot.pending,failed:tiles.snapshot.failed,missing:tiles.snapshot.entries.filter(e=>!e.grid&&!e.error&&['no-coverage','detail-required'].includes(e.state)).length};
- return {cellsOn:options.cellsOn,setCellsOn,showBaseLandscape,motionAllowed,replayRise:()=>{if(motionAllowed&&!moving.current)gridLayer.current?.reveal();},transitioning,navigating:tiles.navigating,nearbyHeld:false,pinned:false,followMap:retry,backdrop:options.backdrop??'relief',setBackdrop:(value:'relief'|'aerial')=>latest.current.onBackdrop?.(value),setScale:(value:number)=>latest.current.onScale?.(value),resources,visible:tiles.visible,preparationPhase:tiles.preparationPhase,preparationError:tiles.error,mode,inspectLandscape,visualRelief:()=>latest.current.onScale?.(3),groundAnalysis,gridColor,setGridColor,pointsOn,opacity,pointSize,color,result,receipt,cellReceipt,rawReceipt,grid,groundReceipt,groundPhase:phase,nativePhase,phase,error:[...new Set([error,tiles.error,...tiles.snapshot.entries.map(e=>e.error)].filter(Boolean))].join(' '),selected:validSelected,readingKind,draft,applied,active:options.active&&options.styleReady,scale:options.scale,count,viewMap:()=>latest.current.onViewMap(),lookDown:()=>changeAngle(true),tilt3D:()=>changeAngle(false),detailHere,selectMode,togglePoints:()=>{latest.current.onNativeIntent?.();setPointsOn(v=>!v);},setOpacity,setPointSize,setColor,choose,step:(delta:number)=>choose(String(validSelected?Math.max(0,Math.min(Math.max(0,count-1),validSelected.index+delta))+1:1)),retry,clear,clearSelection:()=>{setSelected(null);setDraft('');},tileStatus,renderedScale:preparedForRender?.settings.scale??null,retryMissing:tiles.retryMissing,displayTiles:entries.length,displayDomain:prepared?.value.domain??null,displayStride:prepared?.value.stride??1};
+ return {terrainInsights,rowProfile,insightsEnabled,exploreCell,cellsOn:options.cellsOn,setCellsOn,showBaseLandscape,motionAllowed,replayRise:()=>{if(motionAllowed&&!moving.current)gridLayer.current?.reveal();},transitioning,navigating:tiles.navigating,nearbyHeld:false,pinned:false,followMap:retry,backdrop:options.backdrop??'relief',setBackdrop:(value:'relief'|'aerial')=>latest.current.onBackdrop?.(value),setScale:(value:number)=>latest.current.onScale?.(value),resources,visible:tiles.visible,preparationPhase:tiles.preparationPhase,preparationError:tiles.error,mode,inspectLandscape,visualRelief:()=>latest.current.onScale?.(3),groundAnalysis,gridColor,setGridColor,pointsOn,opacity,pointSize,color,result,receipt,cellReceipt,rawReceipt,grid,groundReceipt,groundPhase:phase,nativePhase,phase,error:[...new Set([error,tiles.error,...tiles.snapshot.entries.map(e=>e.error)].filter(Boolean))].join(' '),selected:validSelected,readingKind,draft,applied,active:options.active&&options.styleReady,scale:options.scale,count,viewMap:()=>latest.current.onViewMap(),lookDown:()=>changeAngle(true),tilt3D:()=>changeAngle(false),detailHere,selectMode,togglePoints:()=>{latest.current.onNativeIntent?.();setPointsOn(v=>!v);},setOpacity,setPointSize,setColor,choose,step:(delta:number)=>choose(String(validSelected?Math.max(0,Math.min(Math.max(0,count-1),validSelected.index+delta))+1:1)),retry,clear,clearSelection:()=>{setSelected(null);setDraft('');},tileStatus,renderedScale:preparedForRender?.settings.scale??null,retryMissing:tiles.retryMissing,displayTiles:entries.length,displayDomain:prepared?.value.domain??null,displayStride:prepared?.value.stride??1};
 }
 export type KansasLidarController=ReturnType<typeof useKansasLidarView>;
 const metres=(v:number|null)=>v===null?'NoData':v.toFixed(3)+' m';
@@ -156,6 +170,7 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
       <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground','Bare earth'],['surface','Surface','Top surface'],['canopy','Canopy height','Vegetation']] as const).map(([mode,label,hint])=><button key={mode} type="button" aria-label={label} aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}><strong>{label}</strong><small>{hint}</small></button>)}</div>
 
     </div>
+    {c.cellsOn&&<TerrainLandscapeInsights controller={c}/>}
     <div className={styles.statusStrip} data-state={status.tone} data-ready={status.tone==='ready'} data-display-scale={c.applied.grid?c.renderedScale:undefined} role="status"><span aria-hidden="true"/><div><strong>{status.title}</strong><small>{status.detail}</small></div></div>
     {c.cellsOn&&<>
       {status.detailRequired&&<button className={styles.detailAction} type="button" disabled={!c.active} onClick={c.detailHere}>Zoom for native detail</button>}
@@ -176,7 +191,6 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
       {c.cellsOn&&<>
       <label>Visual relief <output>{c.scale.toFixed(1)}×</output><input aria-label="Cell visual relief" type="range" min="0.5" max="3" step="0.1" value={c.scale} onChange={e=>c.setScale(Number(e.target.value))}/></label>
       <div className={styles.actions}><button type="button" aria-pressed={c.scale===1} onClick={()=>c.setScale(1)}>True scale · 1×</button><button type="button" aria-pressed={c.scale===3} onClick={c.visualRelief}>3× visual relief</button></div>
-      {providerGrid&&<label>Ground color<select value={c.gridColor} onChange={e=>c.setGridColor(e.target.value as GroundColor)}><option value="height">Height</option><option value="slope">Slope · degrees</option><option value="local-relief">Local relief · metres</option></select></label>}
       <label>Layer opacity <output>{c.opacity}%</output><input type="range" min="0" max="100" value={c.opacity} onChange={e=>c.setOpacity(Number(e.target.value))}/></label>
       <div className={styles.actions}><button type="button" disabled={!c.active} onClick={c.retry}>Refresh this view</button><button type="button" disabled={!c.active} onClick={c.lookDown}>Look down here</button></div>
 
@@ -224,5 +238,40 @@ export function KansasLidarBadge({controller:c,controlsOpen=false}:{controller:K
     {point&&<b>{point[2].toFixed(3)} m · asset {point[9]} / record {point[10]} · unscaled</b>}
     {cell&&<b>{modeLabel(c.mode)} {metres(cell[c.mode])} · row {cell.row}, column {cell.column} · unscaled · selected source tile only</b>}
     {sample&&<b>Ground {metres(sample.ground)} · row {sample.row}, column {sample.column} · unscaled · resampled 96²</b>}
+    {c.cellsOn&&c.rowProfile&&c.selected?.kind==='cell'&&<TerrainProfile profile={c.rowProfile} selected={c.selected.index} compact/>}
   </aside>;
+}
+
+/** Measured source row, deliberately separate from the illustrative layer diagram. */
+export function TerrainProfile({profile,selected,compact=false}:{profile:TerrainRowProfile;selected:number;compact?:boolean}){
+ const geometry=terrainProfileGeometry(profile),column=selected-profile.row*profile.values.length,marker=profile.drawn[column]?geometry.points[column]:null,name=modeLabel(profile.mode);
+ return <figure className={compact?styles.profileCompact:styles.profile}>
+  <figcaption>{name} · source row {profile.row+1}<span>{compact?'source metres':'Source-row samples · source metres'}</span></figcaption>
+  <svg viewBox="0 0 280 100" role="img" aria-label={`${name} source row ${profile.row+1}, ${profile.low===null?'no drawn samples':`${profile.low.toFixed(2)} to ${profile.high!.toFixed(2)} metres`}. Gaps are missing source support. Only drawn columns have linked selectable markers.`}>
+   <path className={styles.profileGuide} d="M8 8H272M8 50H272M8 92H272"/>
+   {geometry.paths.map((path,index)=><path key={index} className={styles.profileLine} d={path}/>)}
+   {geometry.points.map((point,index)=>point&&<circle key={index} className={styles.profilePoint} data-drawn={profile.drawn[index]} cx={point.x} cy={point.y} r={compact?1.5:2}/>)}
+   {marker&&<><path className={styles.profileMarker} d={`M${marker.x} 4V96`}/><circle className={styles.profileSelected} cx={marker.x} cy={marker.y} r="4"/></>}
+  </svg>
+  {!compact&&<div className={styles.profileAxis}><span>{profile.low===null?'NoData':profile.low.toFixed(2)}–{profile.high===null?'NoData':profile.high.toFixed(2)} m</span><span>{profile.distance.toFixed(profile.distance<100?1:0)} m across row</span></div>}
+ </figure>;
+}
+export function TerrainLandscapeInsights({controller:c}:{controller:KansasLidarController}){
+ const insight=c.terrainInsights,profile=c.rowProfile,bound=insight?.binding,selected=c.selected?.kind==='cell'?c.selected.index:null,position=profile&&selected!==null?profile.indices.indexOf(selected):-1,disabled=!c.insightsEnabled;
+ const profileRef=useRef<HTMLDetailsElement|null>(null),lastProfile=useRef<{grid:TerrainGrid;row:number}|null>(null),source=bound?.grid,row=profile?.row;
+ useEffect(()=>{if(source&&row!==undefined&&(lastProfile.current?.grid!==source||lastProfile.current.row!==row)){lastProfile.current={grid:source,row};profileRef.current?.scrollIntoView({block:'nearest',behavior:'auto'});}},[source,row]);
+ return <details className={styles.landscapeInsights} open={selected!==null||undefined}>
+  <summary><span>Read this landscape</span><small>Source insights ↗</small></summary>
+  {insight&&bound&&<>
+   {profile&&selected!==null?<details ref={profileRef} className={styles.profileDetails} open><summary>Measured row profile <span>Row {profile.row+1}</span></summary><TerrainProfile profile={profile} selected={selected}/>{profile.indices.length>0&&<label className={styles.profileNavigation}>Explore drawn columns <output>{position<0?'Source-only reading':`Column ${selected%profile.values.length+1} · ${profile.values[selected%profile.values.length]!.toFixed(3)} m`}</output><input type="range" min="0" max={profile.indices.length-1} step="1" value={Math.max(0,position)} disabled={disabled||profile.indices.length<2} aria-label="Explore drawn profile columns" aria-valuetext={position<0?'Choose a drawn source column':`Column ${selected%profile.values.length+1}, ${profile.values[selected%profile.values.length]} metres`} onChange={event=>c.exploreCell(bound,profile.indices[Number(event.target.value)])}/></label>}<p className={styles.profileHelp}>{position<0?'Source-only reading · no linked visible cell. ':''}Source-row samples; only drawn columns are selectable. Gaps stay missing.</p><details className={styles.profileMethods}><summary>Profile distance &amp; method</summary><p>The line includes supported source-row samples beyond display LOD. No interpolation. Distance uses {profile.units} between source centers. The row runs grid-west → grid-east, which need not be true east. Values are unscaled; each tile keeps its own vertical reference.</p></details></details>:<p className={styles.profilePrompt}>Choose a cell or Find low / high to link the 3D landscape with a measured row profile.</p>}
+  </>}
+  {c.mode==='ground'&&<><div className={styles.lenses} role="group" aria-label="Ground color lens">{([['height','Elevation'],['slope','Slope'],['local-relief','Local relief']] as const).map(([value,label])=><button type="button" key={value} aria-pressed={c.gridColor===value} disabled={!c.active||!c.visible||c.opacity===0||c.navigating} onClick={()=>c.setGridColor(value)}>{label}</button>)}</div><p className={styles.lensHelp}>{c.gridColor==='height'?'Color follows source elevation.':c.gridColor==='slope'?'Color reveals steepness from supported 3 × 3 Ground neighborhoods.':'Color reveals height above or below the supported 7 × 7 local mean.'} Color changes; source height geometry stays unchanged.</p></>}
+  {insight&&insight.count>0&&bound?<>
+   <p className={styles.scope}>{c.selected?.kind==='cell'?'Selected source tile':'Loaded source tile · select a cell to change'}<span>Drawn samples only · {insight.count.toLocaleString()} cells</span></p>
+   <dl className={styles.insightStats}><div><dt>Low</dt><dd>{insight.low!.value.toFixed(2)}<small>m</small></dd></div><div><dt>High</dt><dd>{insight.high!.value.toFixed(2)}<small>m</small></dd></div><div><dt>Span</dt><dd>{insight.span!.toFixed(2)}<small>m</small></dd></div></dl>
+   <div className={styles.insightTargets} role="group" aria-label="Explore drawn source cells"><button type="button" disabled={disabled} onClick={()=>c.exploreCell(bound,insight.low!.index,true)}>Find low</button><button type="button" disabled={disabled} onClick={()=>c.exploreCell(bound,insight.high!.index,true)}>Find high</button>{insight.steepest&&<button type="button" disabled={disabled} onClick={()=>c.exploreCell(bound,insight.steepest!.index,true)}>Steepest {insight.steepest.value.toFixed(1)}°</button>}</div>
+   <p className={styles.measureMeaning}>{c.mode==='canopy'?'Vegetation height above the same survey’s ground.':c.mode==='surface'?'Surface elevation includes supported vegetation and structures.':'Bare-earth elevation from the resampled provider DEM.'} One source tile; not whole-view statistics.</p>
+
+  </>:<p className={styles.profilePrompt}>{c.preparationPhase==='preparing'?'Preparing drawn source samples…':'Supported drawn cells are needed for readings and a measured profile. The base landscape remains independent.'}</p>}
+ </details>;
 }
