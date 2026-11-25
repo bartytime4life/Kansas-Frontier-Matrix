@@ -19,7 +19,8 @@ const server = compile((await source("historical-topo-overlay-server"))
   .replace('import { env } from "cloudflare:workers";', "const env = globalThis.__topoQuota.env; const fetch = (...args) => globalThis.__topoQuota.fetch(...args);")
   .replace('import { getChatGPTUser } from "./chatgpt-auth";', "const getChatGPTUser = async () => globalThis.__topoQuota.user;")
   .replace('"./historical-topo"', JSON.stringify(model))
-  .replace('"./historical-topo-overlay"', JSON.stringify(overlay)));
+  .replace('"./historical-topo-overlay"', JSON.stringify(overlay))
+  .replace('"./bounded-json"', JSON.stringify(compile(await source("bounded-json")))));
 const quota = compile((await source("historical-topo-request-quota"))
   .replace('"./historical-topo-overlay"', JSON.stringify(overlay))
   .replace('"./historical-topo-overlay-server"', JSON.stringify(server)));
@@ -234,4 +235,17 @@ test("authentication, same-origin and ID validation precede quota and provider a
   assert.equal((await ask(1)).status, 401);
   assert.equal(state.calls, 0);
   assert.equal((await bucket.list()).objects.length, 0);
+});
+
+test("an oversized USGS catalog response without Content-Length is read only up to its limit", async () => {
+  const { topoCatalogSheet } = await import(server);
+  const original = state.fetch;
+  let pulls = 0;
+  state.fetch = async () => new Response(new ReadableStream({
+    pull(controller) { pulls++; controller.enqueue(new Uint8Array(128 * 1024).fill(32)); if (pulls > 64) controller.close(); },
+  }, { highWaterMark: 0 }), { headers: { "Content-Type": "application/json" } });
+  try {
+    await assert.rejects(topoCatalogSheet(7), error => error.status === 502);
+    assert.ok(pulls <= 6, `stopped after ${pulls} chunks instead of buffering the whole body`);
+  } finally { state.fetch = original; }
 });

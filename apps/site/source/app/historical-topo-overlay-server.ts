@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { readBoundedBytes } from "./bounded-json";
 import { getChatGPTUser } from "./chatgpt-auth";
 import { parseTopoCatalog, TOPO_CATALOG_URL, type TopoSheet } from "./historical-topo";
 import { parseTopoActivePointer, parseTopoOverlayManifest, topoActiveKey, topoManifestKey, type TopoActivePointer, type TopoOverlayManifest } from "./historical-topo-overlay";
@@ -56,7 +57,7 @@ export async function topoBytes(key: string, maximum: number): Promise<ArrayBuff
 export async function topoDigest(bytes: ArrayBuffer): Promise<string> {
   return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), (value) => value.toString(16).padStart(2, "0")).join("");
 }
-export function topoJson(bytes: ArrayBuffer): unknown {
+export function topoJson(bytes: ArrayBuffer | Uint8Array): unknown {
   try { return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); }
   catch { throw new TopoOverlayError("Historical map metadata failed validation.", 503); }
 }
@@ -80,8 +81,8 @@ export async function topoCatalogSheet(id: number): Promise<TopoSheet> {
   try {
     const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal, headers: { Accept: "application/json" } });
     if (!response.ok || response.redirected || !response.headers.get("content-type")?.includes("json") || Number(response.headers.get("content-length") ?? 0) > 512_000) throw new Error("USGS catalog unavailable.");
-    const bytes = await response.arrayBuffer();
-    if (bytes.byteLength > 512_000) throw new Error("USGS catalog response exceeded its limit.");
+    // A response without Content-Length is still read only up to the limit.
+    const bytes = await readBoundedBytes(response, 512_000, controller.signal);
     const sheets = parseTopoCatalog(topoJson(bytes)).sheets;
     if (sheets.length !== 1 || sheets[0].id !== id) throw new TopoOverlayError("Kansas historical sheet not found.", 404);
     return sheets[0];
