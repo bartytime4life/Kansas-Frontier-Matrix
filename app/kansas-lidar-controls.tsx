@@ -24,6 +24,8 @@ export function useKansasLidarView(options:Options){
   const [navigating,setNavigating]=useState(false),[nearbyHeld,setNearbyHeld]=useState(false);
   const spatialLease=useRef<TerrainViewLease|null>(null);
   const handoff=useRef(false),preparationCache=useRef<typeof prepared>(null),refreshCache=useRef({ground:false,native:false});
+  const deferredAcquisition=useRef({ground:false,native:false});
+  const [groundResume,setGroundResume]=useState(0),[nativeResume,setNativeResume]=useState(0);
   const [gridColor,setGridColor]=useState<GroundColor>('height'),[pinned,setPinned]=useState(false);
   const study=useRef<{id:number;bbox:[number,number,number,number];zoom:number}|null>(null),studyRevision=useRef(0),readingIntent=useRef(false),studyMap=useRef<MapLibreMap|null>(null);
   const stylePause=useRef<{ground:MapLibreMap|null;native:MapLibreMap|null}>({ground:null,native:null});
@@ -48,6 +50,13 @@ export function useKansasLidarView(options:Options){
   useEffect(()=>{
     const map=options.mapRef.current;if(!map)return;
     let startingFootprint=viewportFootprint(map),startingZoom=map.getZoom(),startingSize=[map.getCanvas().clientWidth,map.getCanvas().clientHeight],interrupted=false;
+    const resumeDeferred=()=>{
+      const deferred=deferredAcquisition.current;deferredAcquisition.current={ground:false,native:false};
+      // Each source owns its deferred revision. Resuming one must not retire a
+      // different source's still-valid in-flight job for this held footprint.
+      if(deferred.ground)setGroundResume(n=>n+1);
+      if(deferred.native)setNativeResume(n=>n+1);
+    };
     const owned=(event:unknown)=>!!study.current&&(event as {kfmTerrainStudy?:number}|undefined)?.kfmTerrainStudy===study.current.id;
     const start=(event?:unknown)=>{
       pointLayer.current?.invalidate();gridLayer.current?.invalidate();
@@ -61,9 +70,10 @@ export function useKansasLidarView(options:Options){
       if(owned(event)&&!interrupted){startingFootprint=viewportFootprint(map);startingZoom=map.getZoom();startingSize=[map.getCanvas().clientWidth,map.getCanvas().clientHeight];if(spatialLease.current)spatialLease.current=leaseFor(map,spatialLease.current.bounds);return;}
       const next=viewportFootprint(map),canvas=map.getCanvas(),same=sameTerrainFootprint(startingFootprint,next)&&Math.abs(startingZoom-map.getZoom())<1e-7&&startingSize[0]===canvas.clientWidth&&startingSize[1]===canvas.clientHeight;
       startingFootprint=next;startingZoom=map.getZoom();startingSize=[canvas.clientWidth,canvas.clientHeight];interrupted=false;moving.current=false;setNavigating(false);
-      if(same)return;
+      if(same){resumeDeferred();return;}
       const center=map.getCenter();
-      if(spatialLease.current&&terrainLeaseContains(spatialLease.current,{center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight})){setNearbyHeld(true);return;}
+      if(spatialLease.current&&terrainLeaseContains(spatialLease.current,{center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight})){setNearbyHeld(true);resumeDeferred();return;}
+      deferredAcquisition.current={ground:false,native:false};
       study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);readingIntent.current=false;selection.current=null;
       session.cancel();groundSession.cancel();preparer.cancel();setGroundPhase('moving');setResult(null);setReceipt(null);setSelected(null);setDraft('');setPhase('moving');setEpoch(n=>n+1);
     };
@@ -73,17 +83,18 @@ export function useKansasLidarView(options:Options){
     return()=>{map.off('movestart',start);map.off('moveend',end);for(const name of ['dragstart','zoomstart','rotatestart','pitchstart'] as const)map.off(name,gesture);};
   },[options.mapRef,options.styleReady,session,groundSession,preparer]);
   useEffect(()=>{
-    session.cancel();
+    session.cancel();deferredAcquisition.current.native=false;
     if(!visible)return;
     // A basemap replacement suspends its GPU resources, not the scientifically
     // validated study. Reuse exact query-bound data on this same map only; its
     // original cache/source times and stale labels are never renewed here.
     if(!options.styleReady){stylePause.current.native=options.mapRef.current;return;}
-    const pausedMap=stylePause.current.native;stylePause.current.native=null;
+    const pausedMap=stylePause.current.native;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setError('');
     if(!wanted){setResult(null);setReceipt(null);setPhase('idle');return;}
-    if(moving.current){setPhase('moving');return;}
+    if(moving.current){deferredAcquisition.current.native=true;setPhase('moving');return;}
+    stylePause.current.native=null;
     const map=options.mapRef.current;if(!map)return;const query=canonicalLidarView(study.current?.bbox??spatialLease.current?.bounds??viewportFootprint(map),study.current?.zoom??map.getZoom(),[...(options.cellsOn&&mode!=='ground'?[mode]:[]),...(pointsOn?['points']:[])]);
     if(!query){setResult(null);setPhase('outside');return;}
     const cached=validated.current.native;
@@ -93,17 +104,18 @@ export function useKansasLidarView(options:Options){
     setPhase('waiting');const request=session.begin();
     const timer=setTimeout(()=>{setPhase('loading');const bypassCache=refreshCache.current.native;refreshCache.current.native=false;void readKansasLidarView(query,request.signal,r=>{if(request.current()){setReceipt(r);setPhase(r.state);}},{bypassCache}).then(data=>{if(request.current()&&latest.current.mapRef.current===map&&latest.current.active){setResult(data);if(!readingIntent.current)setReadingKind(data.points?'point':'cell');setReceipt(data.receipt);setPhase(data.receipt.state);}}).catch(e=>{if(request.current()){setError(e instanceof Error?e.message:'LiDAR view unavailable');setPhase('unavailable');}});},300);
     return()=>{if(timer)clearTimeout(timer);session.cancel();};
-  },[wanted,mode,pointsOn,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,session,visible]);
+  },[wanted,mode,pointsOn,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,session,visible,nativeResume]);
   useEffect(()=>{
-    groundSession.cancel();
+    groundSession.cancel();deferredAcquisition.current.ground=false;
     if(!visible)return;
     if(!options.styleReady){stylePause.current.ground=options.mapRef.current;return;}
-    const pausedMap=stylePause.current.ground;stylePause.current.ground=null;
+    const pausedMap=stylePause.current.ground;
     // A Ground grid belongs only to the committed current viewport.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setGroundError('');
     if(!options.active||!options.cellsOn||mode!=='ground'){setGroundPhase('idle');return;}
-    if(moving.current){setGroundPhase('moving');return;}
+    if(moving.current){deferredAcquisition.current.ground=true;setGroundPhase('moving');return;}
+    stylePause.current.ground=null;
     const map=options.mapRef.current;if(!map)return;const query=canonicalGroundQuery(study.current?.bbox??spatialLease.current?.bounds??viewportFootprint(map));
     if(!query){setGroundReceipt(null);setGroundPhase('outside');return;}
     const cached=validated.current.ground;
@@ -113,7 +125,7 @@ export function useKansasLidarView(options:Options){
     const publish=(response:GroundReceipt)=>{if(request.current()&&latest.current.mapRef.current===map&&latest.current.active){setGroundReceipt(response);setGroundPhase(response.state);if(response.grid&&!readingIntent.current)setReadingKind('cell');}};
     const timer=setTimeout(()=>{setGroundPhase('loading');const bypassCache=refreshCache.current.ground;refreshCache.current.ground=false;void readKansasGround(query,request.signal,publish,{bypassCache}).then(publish).catch(e=>{if(request.current()){setGroundError(e instanceof Error?e.message:'Ground grid unavailable');setGroundPhase('unavailable');}});},300);
     return()=>{clearTimeout(timer);groundSession.cancel();};
-  },[mode,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,groundSession,visible]);
+  },[mode,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,groundSession,visible,groundResume]);
   const sourceGrid=mode==='ground'?groundReceipt?.grid??null:result?.receipt.query.layers.includes(mode)?result.grid:null;
   const pending=navigating||['moving','waiting','loading','processing','unavailable'].includes(mode==='ground'?groundPhase:phase);
   // Keep one previously prepared footprint through navigation and worker preparation.

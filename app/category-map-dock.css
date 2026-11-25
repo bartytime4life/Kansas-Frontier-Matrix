@@ -263,3 +263,10 @@
 }
 
 .category-map-dock[data-topic=terrain]>header>.category-map-dock-close{margin:0 -4px 0 0;min-width:44px;min-height:44px}
+
+/* The phone action rail already exposes Time. Its collapsed floating clock
+   steps aside only while Terrain tools occupy this same corner; an opened
+   time sweep and every other topic keep their normal controls. */
+@media(max-width:760px){
+ .explorer-shell:has(.category-map-dock[data-topic="terrain"])>.timeline-panel.timeline-calendar .compact-time[data-expanded="false"]>.compact-time-clock-toggle{display:none}
+}
