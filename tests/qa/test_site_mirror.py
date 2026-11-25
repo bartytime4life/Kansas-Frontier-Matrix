@@ -3306,7 +3306,14 @@ def test_web_followups_successor_preserves_web_cleanup_inventory_and_all_holds()
 
 
 WEB_FOLLOWUPS_CHANGED = {
+    "app/api/daily-archive/route.ts",
+    "app/api/data-submissions/[id]/route.ts",
+    "app/api/earth-engine-context/activate/route.ts",
+    "app/api/historical-topo/activate/route.ts",
+    "app/api/historical-topo/overlay/route.ts",
     "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts",
+    "app/api/subsurface/soil/route.ts",
+    "app/chatgpt-auth.ts",
     "app/connection-map.tsx",
     "app/data/land-records/page.tsx",
     "app/data/page.tsx",
@@ -3315,6 +3322,7 @@ WEB_FOLLOWUPS_CHANGED = {
     "app/earth-engine-context/install/installer.tsx",
     "app/earth-engine-display.tsx",
     "app/globals.css",
+    "app/historical-topo-overlay-server.ts",
     "app/history/people-events/page.tsx",
     "app/history/prentis-1909/layout.tsx",
     "app/knowledge/layout.tsx",
@@ -3324,8 +3332,15 @@ WEB_FOLLOWUPS_CHANGED = {
     "app/page.tsx",
     "app/scene-effects.css",
     "app/stewards/page.tsx",
+    "tests/chatgpt-auth-return-path.test.mjs",
+    "tests/daily-archive-auth.test.mjs",
     "tests/download-center.test.mjs",
+    "tests/earth-engine-history-contract.test.mjs",
     "tests/earth-engine-installer-selection.test.mjs",
+    "tests/historical-topo-quota.test.mjs",
+    "tests/historical-topo-routes.test.mjs",
+    "tests/intake-worker.test.mjs",
     "tests/lightning-flash-loop-order.test.mjs",
     "tests/lightning-transport.test.mjs",
+    "tests/subsurface-soil.test.mjs",
 }

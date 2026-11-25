@@ -1195,13 +1195,13 @@
       "state": "identical"
     },
     "app/api/daily-archive/route.ts": {
-      "mirror_sha256": "8b6f1789dc6d2a4459721c812abaccaffa02eadf1af1b44af1f44eb2aa84980c",
+      "mirror_sha256": "7932d3c3206bb08ee7ea1f444eb06723d1755e6e631b41e60a56f0ca9f838935",
       "site_sha256": "8b6f1789dc6d2a4459721c812abaccaffa02eadf1af1b44af1f44eb2aa84980c",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/api/data-submissions/[id]/route.ts": {
       "difference": "Bounded repository evidence integrity, streamed-body and review recovery correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "79d1df8504cace9a3a7b2b256bdb5e661043df3e0df25eaecd49a5750692e202",
+      "mirror_sha256": "22427656fd41276150d7262d2f0faaaebeb47ad5e7469997cec6ce047a826394",
       "site_sha256": "31f363aa55f9c5ada38163d4e260deed926f5213accef8fd0dcd182feef596bb",
       "state": "repository_safety_overlay"
     },
@@ -1217,9 +1217,9 @@
       "state": "identical"
     },
     "app/api/earth-engine-context/activate/route.ts": {
-      "mirror_sha256": "ceef8ee145161cfa406e8323b4bb0a848b6f76caacbe2c23c34a46009b95445a",
+      "mirror_sha256": "5fe066e79bd9427dfad8a2638d453617bd7a0b4e88eed086eb03f922548c2035",
       "site_sha256": "ceef8ee145161cfa406e8323b4bb0a848b6f76caacbe2c23c34a46009b95445a",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/api/earth-engine-context/active/route.ts": {
       "mirror_sha256": "90f65dc1841aa367a6daca02e3af4ad02162a9ef1463d7a12ad55340f0a7245d",
@@ -1420,13 +1420,13 @@
       "state": "identical"
     },
     "app/api/historical-topo/activate/route.ts": {
-      "mirror_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
+      "mirror_sha256": "5943760138c8e3e938dae4225e5b7c74127b8cb8a6d0a0931760b040f04a224a",
       "site_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/api/historical-topo/overlay/route.ts": {
       "difference": "Already merged PR #5400 (3a0c40d8033bb43f432320ef9dcfbded8b9d0000): atomic historical-map acquisition quota, immutable queue and synthetic regression coverage. Repository overlay; review remains pending.",
-      "mirror_sha256": "4a7d594c16feb56ca83c57bde11a42eb7318467453cd3e54fe4e126c5cfaf420",
+      "mirror_sha256": "b596c089c17aa957699d4007c2750925b3794dd0f6a002fd70963977de9608fa",
       "site_sha256": "ef28cf64d37b0c711cc594c5ded23b71771e8d75f913b1e3dc35eee0cda6ad55",
       "state": "inherited_repository_overlay"
     },
@@ -1589,9 +1589,9 @@
       "state": "identical"
     },
     "app/api/subsurface/soil/route.ts": {
-      "mirror_sha256": "7043677957d99f71a8b6ad7f7e9f1648b61c4c6ef4de3d4e7e85b507a9f3dada",
+      "mirror_sha256": "7b69d305daa8f3a0289151d7474d68a82ea7cb7ffe47eccf5994ff601601cab0",
       "site_sha256": "7043677957d99f71a8b6ad7f7e9f1648b61c4c6ef4de3d4e7e85b507a9f3dada",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/api/terrain-tile/route.ts": {
       "mirror_sha256": "e6709538b1acd65bb553318c191fe2179d85de7bdb299be2087fbd8fd5342834",
@@ -1765,9 +1765,9 @@
       "state": "identical"
     },
     "app/chatgpt-auth.ts": {
-      "mirror_sha256": "e436adba76e4227253535a2bd0988003bc4b73dc097593009b93a64b0fecff63",
+      "mirror_sha256": "8c0335aa5f322a85eb90fa409052906b23c2eea0a457591298b564f42b083444",
       "site_sha256": "e436adba76e4227253535a2bd0988003bc4b73dc097593009b93a64b0fecff63",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/connection-map.tsx": {
       "mirror_sha256": "6269d2db93036dd023718f5353870b97b51dfe9476aa1a1e38cf737a4455af9c",
@@ -2538,7 +2538,7 @@
     },
     "app/historical-topo-overlay-server.ts": {
       "difference": "Already merged PR #5400 (3a0c40d8033bb43f432320ef9dcfbded8b9d0000): atomic historical-map acquisition quota, immutable queue and synthetic regression coverage. Repository overlay; review remains pending.",
-      "mirror_sha256": "57f6f59875719c67a656d7022189cd433d0118e30918e80f00e376a337cd3b0f",
+      "mirror_sha256": "5917b2969f102065eab19cc99da90d2e0eba6b6890ee251b47f2322a75dfaa73",
       "site_sha256": "e2cb809d5bb5f28eec28462d0d617948111390b7c97e1fa574fba65f6bd44408",
       "state": "repository_safety_overlay"
     },
@@ -4743,6 +4743,10 @@
       "site_sha256": "4f11e60317e8ac7b387efc54e3d3e69d1a2cf20dc7add20617aed52e3d0032df",
       "state": "identical"
     },
+    "tests/chatgpt-auth-return-path.test.mjs": {
+      "mirror_sha256": "f577de26c8a690485b2c340d3ea26b072bab55e1302588d63106d62ba67adbcb",
+      "state": "repository_only_overlay"
+    },
     "tests/cinematic-scene-effects.test.mjs": {
       "mirror_sha256": "436c608f618924dfb8f0f69b28687cf9e11e5ae5161fb5719d9bf6fd2d18e466",
       "site_sha256": "436c608f618924dfb8f0f69b28687cf9e11e5ae5161fb5719d9bf6fd2d18e466",
@@ -4852,9 +4856,9 @@
       "state": "identical"
     },
     "tests/daily-archive-auth.test.mjs": {
-      "mirror_sha256": "4babafec4b05448a6822e06557fb5c41b2edce53c152f4de2ed880ba25742b60",
+      "mirror_sha256": "4d268e3a279ba8edfa0448ac735451ca08fe9de84256f3b0231c2661da4fdc34",
       "site_sha256": "4babafec4b05448a6822e06557fb5c41b2edce53c152f4de2ed880ba25742b60",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "tests/daily-archive-recovery.test.mjs": {
       "difference": "Repository follow-up byte reconciliation only; no hosted-source equivalence, review acceptance, data activation or publication.",
@@ -4943,9 +4947,9 @@
       "state": "identical"
     },
     "tests/earth-engine-history-contract.test.mjs": {
-      "mirror_sha256": "a1d11c57069fc0f485122f0612a90fcabe43e6b165424ec5d219bf5062c10098",
+      "mirror_sha256": "76994555086b1cdab11461f43a1712c125ec5f4bb77db57a4e068eb9f5891941",
       "site_sha256": "a1d11c57069fc0f485122f0612a90fcabe43e6b165424ec5d219bf5062c10098",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "tests/earth-engine-installer-selection.test.mjs": {
       "mirror_sha256": "594072bfa6ef05cbbd2a50d541993dd7dd99f246cf7d1aa245629cdfed59bf2a",
@@ -5388,13 +5392,13 @@
     },
     "tests/historical-topo-quota.test.mjs": {
       "difference": "Already merged PR #5400 (3a0c40d8033bb43f432320ef9dcfbded8b9d0000): atomic historical-map acquisition quota, immutable queue and synthetic regression coverage. Repository overlay; review remains pending.",
-      "mirror_sha256": "5cfc8cbf2e532254bcb50d4dfb4c312aad257667c8de7ef519ffb3262b8c7324",
+      "mirror_sha256": "89bcefb92fb2e4dcbac53e0989271e9e7c1b8e8444670e97ab82e64804ff7bf0",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
     "tests/historical-topo-routes.test.mjs": {
       "difference": "Already merged PR #5400 (3a0c40d8033bb43f432320ef9dcfbded8b9d0000): atomic historical-map acquisition quota, immutable queue and synthetic regression coverage. Repository overlay; review remains pending.",
-      "mirror_sha256": "9c09ab92e161be63f3dc7d03921f2609b812d5f6f8b1fc59d2416e5932c5a63d",
+      "mirror_sha256": "1b3e9df9b789cb963238e17bdc4e7a08c7de54a7ee7102b1b7ca94b055d90ba6",
       "site_sha256": "69163ebeeddb1f0a78463da660206bc3b6dc0f085f0aa41ff76aacae24145af1",
       "state": "inherited_repository_overlay"
     },
@@ -5455,7 +5459,7 @@
     },
     "tests/intake-worker.test.mjs": {
       "difference": "Bounded repository evidence integrity, streamed-body and review recovery correction only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "5d8d712fdc2e65233a0d00d54a24321eef38defc4d434ee600b08d938f1a20b0",
+      "mirror_sha256": "6c0754687a471b7187627fb467a4e7f0321f26715d92622f55f7b7406659a693",
       "site_sha256": "a72ace9a0f6374bacd384c218b530ad0f45e668b79303dfacba472efdd1d1a64",
       "state": "repository_safety_overlay"
     },
@@ -6087,9 +6091,9 @@
       "state": "repository_safety_overlay"
     },
     "tests/subsurface-soil.test.mjs": {
-      "mirror_sha256": "0501804cdf1b78774b7e540f2a79481ce93a76ddb1c11ff9be29d0db29067f34",
+      "mirror_sha256": "343eab6ce9f7e2d29f8d6c7cb14f570d3dd82a122dc23c820c6fbd3bd585af00",
       "site_sha256": "0501804cdf1b78774b7e540f2a79481ce93a76ddb1c11ff9be29d0db29067f34",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "tests/subsurface-worker.test.mjs": {
       "mirror_sha256": "cca8358b5b43124c9b6962a02cf25467ff938b52e8426397714adbcf21d4bc29",
@@ -6324,13 +6328,13 @@
   "counts": {
     "canonical_document_mappings": 2,
     "canonical_tool_mappings": 2,
-    "identical": 629,
+    "identical": 621,
     "inherited_repository_overlay": 69,
     "merged_water_overlay": 0,
     "missing": 0,
-    "repository_only_overlay": 157,
+    "repository_only_overlay": 158,
     "repository_only_water_overlay": 0,
-    "repository_safety_overlay": 164,
+    "repository_safety_overlay": 172,
     "repository_withheld": 262,
     "source_paths": 867,
     "unexpected_difference": 0
@@ -6566,7 +6570,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "e6a413aeb742c8f835374373d68b7ee0a45a0d1f27ec6a19fa2f12f07bd81fbc",
+  "inventory_sha256": "acb28a2bc6d3f295530499b64b5b27199818f9b1a2c02df79fd3fc2d724c528f",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8754,7 +8758,7 @@
       ]
     }
   },
-  "recorded_at": "2026-11-25T05:54:19.036214+00:00",
+  "recorded_at": "2026-11-25T06:04:55.890734+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "9de4defdf49c71925491a932477d258100fc5ce6",
   "repository_reconciliation": {
@@ -8762,11 +8766,67 @@
     "base_commit": "9de4defdf49c71925491a932477d258100fc5ce6",
     "changes": [
       {
+        "mirror_sha256": "7932d3c3206bb08ee7ea1f444eb06723d1755e6e631b41e60a56f0ca9f838935",
+        "path": "app/api/daily-archive/route.ts",
+        "previous_receipt_sha256": "8b6f1789dc6d2a4459721c812abaccaffa02eadf1af1b44af1f44eb2aa84980c",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "8b6f1789dc6d2a4459721c812abaccaffa02eadf1af1b44af1f44eb2aa84980c",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "22427656fd41276150d7262d2f0faaaebeb47ad5e7469997cec6ce047a826394",
+        "path": "app/api/data-submissions/[id]/route.ts",
+        "previous_receipt_sha256": "79d1df8504cace9a3a7b2b256bdb5e661043df3e0df25eaecd49a5750692e202",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "79d1df8504cace9a3a7b2b256bdb5e661043df3e0df25eaecd49a5750692e202",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "5fe066e79bd9427dfad8a2638d453617bd7a0b4e88eed086eb03f922548c2035",
+        "path": "app/api/earth-engine-context/activate/route.ts",
+        "previous_receipt_sha256": "ceef8ee145161cfa406e8323b4bb0a848b6f76caacbe2c23c34a46009b95445a",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "ceef8ee145161cfa406e8323b4bb0a848b6f76caacbe2c23c34a46009b95445a",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "5943760138c8e3e938dae4225e5b7c74127b8cb8a6d0a0931760b040f04a224a",
+        "path": "app/api/historical-topo/activate/route.ts",
+        "previous_receipt_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "b596c089c17aa957699d4007c2750925b3794dd0f6a002fd70963977de9608fa",
+        "path": "app/api/historical-topo/overlay/route.ts",
+        "previous_receipt_sha256": "4a7d594c16feb56ca83c57bde11a42eb7318467453cd3e54fe4e126c5cfaf420",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "4a7d594c16feb56ca83c57bde11a42eb7318467453cd3e54fe4e126c5cfaf420",
+        "state": "inherited_repository_overlay"
+      },
+      {
         "mirror_sha256": "f665048da8c47c0956f208b28e21070025c1bc51cf9317e57ffec026f3e829f1",
         "path": "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts",
         "previous_receipt_sha256": "0c7936181da752187b7017b18fcc3dbfb00b64a87a32d18d9b42028782590e53",
         "proposed_in_this_change": true,
         "repository_base_sha256": "0c7936181da752187b7017b18fcc3dbfb00b64a87a32d18d9b42028782590e53",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "7b69d305daa8f3a0289151d7474d68a82ea7cb7ffe47eccf5994ff601601cab0",
+        "path": "app/api/subsurface/soil/route.ts",
+        "previous_receipt_sha256": "7043677957d99f71a8b6ad7f7e9f1648b61c4c6ef4de3d4e7e85b507a9f3dada",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "7043677957d99f71a8b6ad7f7e9f1648b61c4c6ef4de3d4e7e85b507a9f3dada",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "8c0335aa5f322a85eb90fa409052906b23c2eea0a457591298b564f42b083444",
+        "path": "app/chatgpt-auth.ts",
+        "previous_receipt_sha256": "e436adba76e4227253535a2bd0988003bc4b73dc097593009b93a64b0fecff63",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "e436adba76e4227253535a2bd0988003bc4b73dc097593009b93a64b0fecff63",
         "state": "repository_safety_overlay"
       },
       {
@@ -8832,6 +8892,14 @@
         "proposed_in_this_change": true,
         "repository_base_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
         "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "5917b2969f102065eab19cc99da90d2e0eba6b6890ee251b47f2322a75dfaa73",
+        "path": "app/historical-topo-overlay-server.ts",
+        "previous_receipt_sha256": "57f6f59875719c67a656d7022189cd433d0118e30918e80f00e376a337cd3b0f",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "57f6f59875719c67a656d7022189cd433d0118e30918e80f00e376a337cd3b0f",
+        "state": "repository_safety_overlay"
       },
       {
         "mirror_sha256": "c597fe8b7f3efb4903bd3e703741d623091e32db0864e75d3b94dbec6c609322",
@@ -8906,11 +8974,35 @@
         "state": "repository_safety_overlay"
       },
       {
+        "mirror_sha256": "f577de26c8a690485b2c340d3ea26b072bab55e1302588d63106d62ba67adbcb",
+        "path": "tests/chatgpt-auth-return-path.test.mjs",
+        "previous_receipt_sha256": null,
+        "proposed_in_this_change": true,
+        "repository_base_sha256": null,
+        "state": "repository_only_overlay"
+      },
+      {
+        "mirror_sha256": "4d268e3a279ba8edfa0448ac735451ca08fe9de84256f3b0231c2661da4fdc34",
+        "path": "tests/daily-archive-auth.test.mjs",
+        "previous_receipt_sha256": "4babafec4b05448a6822e06557fb5c41b2edce53c152f4de2ed880ba25742b60",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "4babafec4b05448a6822e06557fb5c41b2edce53c152f4de2ed880ba25742b60",
+        "state": "repository_safety_overlay"
+      },
+      {
         "mirror_sha256": "1d110d63e69adce39643dfbf38ccef6a31f62e07b7db54862b1e947e4eb3006d",
         "path": "tests/download-center.test.mjs",
         "previous_receipt_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
         "proposed_in_this_change": true,
         "repository_base_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "76994555086b1cdab11461f43a1712c125ec5f4bb77db57a4e068eb9f5891941",
+        "path": "tests/earth-engine-history-contract.test.mjs",
+        "previous_receipt_sha256": "a1d11c57069fc0f485122f0612a90fcabe43e6b165424ec5d219bf5062c10098",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "a1d11c57069fc0f485122f0612a90fcabe43e6b165424ec5d219bf5062c10098",
         "state": "repository_safety_overlay"
       },
       {
@@ -8920,6 +9012,30 @@
         "proposed_in_this_change": true,
         "repository_base_sha256": null,
         "state": "repository_only_overlay"
+      },
+      {
+        "mirror_sha256": "89bcefb92fb2e4dcbac53e0989271e9e7c1b8e8444670e97ab82e64804ff7bf0",
+        "path": "tests/historical-topo-quota.test.mjs",
+        "previous_receipt_sha256": "5cfc8cbf2e532254bcb50d4dfb4c312aad257667c8de7ef519ffb3262b8c7324",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "5cfc8cbf2e532254bcb50d4dfb4c312aad257667c8de7ef519ffb3262b8c7324",
+        "state": "repository_only_overlay"
+      },
+      {
+        "mirror_sha256": "1b3e9df9b789cb963238e17bdc4e7a08c7de54a7ee7102b1b7ca94b055d90ba6",
+        "path": "tests/historical-topo-routes.test.mjs",
+        "previous_receipt_sha256": "9c09ab92e161be63f3dc7d03921f2609b812d5f6f8b1fc59d2416e5932c5a63d",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "9c09ab92e161be63f3dc7d03921f2609b812d5f6f8b1fc59d2416e5932c5a63d",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "6c0754687a471b7187627fb467a4e7f0321f26715d92622f55f7b7406659a693",
+        "path": "tests/intake-worker.test.mjs",
+        "previous_receipt_sha256": "5d8d712fdc2e65233a0d00d54a24321eef38defc4d434ee600b08d938f1a20b0",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "5d8d712fdc2e65233a0d00d54a24321eef38defc4d434ee600b08d938f1a20b0",
+        "state": "repository_safety_overlay"
       },
       {
         "mirror_sha256": "32a4bae4df2381919fcf22d1bed1917d96f9555976244192f768844569192d94",
@@ -8936,6 +9052,14 @@
         "proposed_in_this_change": true,
         "repository_base_sha256": "605ccd242b3cf755ba81633e331882b5035fc7511e57a2445faf7ff8aa440d66",
         "state": "repository_only_overlay"
+      },
+      {
+        "mirror_sha256": "343eab6ce9f7e2d29f8d6c7cb14f570d3dd82a122dc23c820c6fbd3bd585af00",
+        "path": "tests/subsurface-soil.test.mjs",
+        "previous_receipt_sha256": "0501804cdf1b78774b7e540f2a79481ce93a76ddb1c11ff9be29d0db29067f34",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "0501804cdf1b78774b7e540f2a79481ce93a76ddb1c11ff9be29d0db29067f34",
+        "state": "repository_safety_overlay"
       }
     ],
     "restored_recorded_paths": []
@@ -8969,7 +9093,7 @@
   },
   "rollback": {
     "mirror": "Revert the listed Site files and the successor selector/QA together; preserve immutable receipts.",
-    "runtime": "Newest-request guards in the lightning flash loop and Earth Engine installer, a released retry body, an encoded entity id, and input validation ordered before the NOAA frame read. No dependency, saved-schema or operational-store migration. CSS: 209 never-effective overridden declarations and one unused keyframes rule removed. Owner-only installer links hidden from non-owners; metadata for seven pages (three via pass-through layouts).",
+    "runtime": "Newest-request guards in the lightning flash loop and Earth Engine installer, a released retry body, an encoded entity id, and input validation ordered before the NOAA frame read. No dependency, saved-schema or operational-store migration. CSS: 209 never-effective overridden declarations and one unused keyframes rule removed. Owner-only installer links hidden from non-owners; metadata for seven pages (three via pass-through layouts). Request bodies on four routes and the USGS catalog response are read through the bounded readers; malformed JSON is a 400; the sign-in return path rejects normalised protocol-relative paths; the USDA soil fetch does not follow redirects.",
     "site": "No Site synchronization, deployment or publication."
   },
   "security": {
@@ -9002,7 +9126,7 @@
   "source_identity_currentness": "PREDECESSOR_DECLARATION_ONLY; historical Site identity retained without fresh hosted-source readback.",
   "status": "REVIEW_ONLY",
   "validation": {
-    "app_tests": "PASS: 2101 tests (2099 pass, 2 skipped), including lightning-flash-loop-order, earth-engine-installer-selection, lightning-transport and download-center.",
+    "app_tests": "PASS: 2109 tests (2107 pass, 2 skipped), including new regression tests for bounded request bodies, the return-path check, 400s for malformed JSON, manual redirects on the soil fetch and the bounded USGS catalog read.",
     "browser": "PASS: local Playwright sweep of 44 routes shows no new console errors, status changes or overflow; the CSS removal was checked by computed-style diffs (2 before, 3 after runs) and screenshots on 11 routes at 1280x800 and 375x740, with no differences beyond run-to-run animation and live-data noise. A recrawl of 268 internal links finds none broken; seven pages now report their own titles.",
     "focused_tests": "PASS: lightning-flash-loop-order (2), earth-engine-installer-selection (1), lightning-transport (7).",
     "lint": "PASS: 0 errors; 10 inherited warnings.",
