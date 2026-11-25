@@ -168,13 +168,16 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
       if(failed||!map||!gl||!program||!quad||!vao||!buffer||!uniforms||!compositeUniforms)return;
       if(map.getProjection()?.type!=='mercator'){invalidateFrame();return;}
       if(options.opacity===0){ready=false;return;}
+      // Lost contexts return null for GL state. Contain the loss before any
+      // snapshot/cleanup that requires a real viewport or framebuffer.
+      if(gl.isContextLost()){fail();return;}
       // MapLibre 6.9 marks its tracked GL state dirty after every custom layer
       // and restores it before the next draw (webgl/draw/draw_custom.ts).
       // Reading that state back here serializes the browser/GPU on every pan.
       // Preserve only the actual render targets/viewport, plus untracked flags.
       const prior={draw:gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING),read:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),viewport:gl.getParameter(gl.VIEWPORT),scissor:gl.isEnabled(gl.SCISSOR_TEST),dither:gl.isEnabled(gl.DITHER)};
+      if(!prior.viewport||prior.viewport.length!==4){fail();return;}
       try{
-        if(gl.isContextLost())throw Error('Context lost');
         gl.activeTexture(gl.TEXTURE0);
         const ratio=Math.min(1,Math.sqrt((options.framePixelLimit??NATIVE_FRAME_PIXEL_LIMIT)/(gl.drawingBufferWidth*gl.drawingBufferHeight)));
         const w=Math.max(1,Math.floor(gl.drawingBufferWidth*ratio)),h=Math.max(1,Math.floor(gl.drawingBufferHeight*ratio));

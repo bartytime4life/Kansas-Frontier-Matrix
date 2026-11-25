@@ -37,7 +37,9 @@ draw/read framebuffer and viewport (3 reads per frame, previously 21). MapLibre
 6.9.0 marks its managed state dirty after a custom layer; the renderer preserves
 its targets and untracked scissor/dither flags explicitly. Resource teardown,
 color/ID correspondence, vertex budgets and cache invalidation remain bounded.
-This is a state-read reduction, not a claim of a particular device frame rate.
+A lost context is rejected before state reads, so a null viewport cannot cause
+a second exception in the map workspace. This is a state-read reduction, not a
+claim of a particular device frame rate.
 
 The independent 24-bit depth attachment now maps the loaded geometry's depth
 range before converting the translated projection to Float32. This keeps small

@@ -125,3 +125,10 @@ test('independent terrain depth distinguishes centimetre steps at landscape came
  for(const row of [0,1,3])for(let col=0;col<4;col++)assert.equal(tight[col*4+row],raw[col*4+row],'screen position and perspective W are unchanged');
  assert.deepEqual(Array.from(layer.nativeTranslatedMatrix(perspective,[0,0,0],[[-1,-1,-1],[1,1,1]])),Array.from(raw),'bounds crossing the camera retain the original clipping matrix');
 });
+
+test('lost or invalidated GPU state cannot throw a second error into the map workspace',()=>{
+ for(const lost of [true,false]){
+  const g=glHarness(),reports=[],map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){}},p=layer.createNativePointLayer(fixture(),options,message=>reports.push(message));p.onAdd(map,g);g.lost=lost;g.getParameter=()=>null;
+  assert.doesNotThrow(()=>p.render(g,{defaultProjectionData:{mainMatrix:matrix}}));assert.equal(p.failed,true);assert.equal(reports.length,1);assert.equal(p.pick({x:1,y:1}),null);p.onRemove(map,g);assert.equal(g.live.size,0);
+ }
+});
