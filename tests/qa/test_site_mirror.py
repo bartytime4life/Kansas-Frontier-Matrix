@@ -3271,7 +3271,6 @@ def test_web_cleanup_successor_preserves_web_fixes_inventory_and_all_holds():
         WEB_CLEANUP_CHANGED,
         "709332690ad4ebf5db49e0bdb00244bd22969de6",
     )
-    assert TOOL.RECEIPT.name == "site-v268-web-cleanup-overlay-20261124.json"
 
 
 WEB_CLEANUP_CHANGED = {
@@ -3292,4 +3291,26 @@ WEB_CLEANUP_CHANGED = {
     "app/soil-moisture-control.tsx",
     "app/subsurface-model.ts",
     "tests/event-atlas.test.mjs",
+}
+
+
+def test_web_followups_successor_preserves_web_cleanup_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-web-followups-overlay-20261125.json",
+        "site-v268-web-cleanup-overlay-20261124.json",
+        "010617fd8b38213876db1139ef22b4076db1faf22e3ad12bd90a5d6657f796a8",
+        WEB_FOLLOWUPS_CHANGED,
+        "9de4defdf49c71925491a932477d258100fc5ce6",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-web-followups-overlay-20261125.json"
+
+
+WEB_FOLLOWUPS_CHANGED = {
+    "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts",
+    "app/connection-map.tsx",
+    "app/earth-engine-context/install/installer.tsx",
+    "app/lightning-flash-loop.tsx",
+    "tests/earth-engine-installer-selection.test.mjs",
+    "tests/lightning-flash-loop-order.test.mjs",
+    "tests/lightning-transport.test.mjs",
 }
