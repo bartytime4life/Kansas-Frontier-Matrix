@@ -1,7 +1,7 @@
 # Hash-locked build tools for locked packages that pip builds from source.
-# antlr4-python3-runtime 4.9.3 (python-cli.lock) is source-only, and PyYAML 6.0.3
-# (python-test.lock) has no wheel for CPython 3.15. Installing these first and
-# building with --no-build-isolation keeps pip from fetching unhashed build tools.
+# The CLI uses these for source-only antlr4-python3-runtime and for the hashed
+# PyYAML source fallback on targets without a locked wheel. Installing these
+# first and building with --no-build-isolation prevents unhashed build downloads.
 # Source: PyPI release JSON, verified 2026-11-20; every published wheel, no sdists.
 cython==3.3.1 \
     --hash=sha256:08ef3dcd3070959983a15e82bbfd56edb13cbe75b14043665c76ee4425140eaf \

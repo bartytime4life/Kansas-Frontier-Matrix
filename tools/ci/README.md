@@ -194,7 +194,7 @@ advance a lifecycle state.
 
 | Target | Scope | Continuous workflow |
 |---|---|---|
-| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 through 3.14 (binary-only; PyYAML 6.0.3 has no CPython 3.15 wheel) |
+| `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 through 3.15 (binary-only) |
 | `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD` for a retired target |
 | `make site-check` | Mirrored Explorer Site lint, typecheck, build, node tests and local Worker smoke on temporary storage | [explorer-site](../../.github/workflows/explorer-site.yml), on `apps/site/**` changes |
 
@@ -212,18 +212,15 @@ first release with cp315 wheels; 3.11 through 3.14 keep `numpy==2.3.3`. The loca
 NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
 change root runtime dependencies.
 
-`python-build.lock` pins hash-locked, binary-only build tools: setuptools 84.2.1
-and Cython 3.3.1, with every published wheel. They're used where a locked package
-has no wheel and pip builds it from its hashed source:
+Test profiles install `python-test.lock` with hash checking and require wheels
+on every supported interpreter. PyYAML 6.0.4 has matching wheels on the Linux
+x86-64 CPython 3.11–3.15 CI matrix.
 
-- **CLI installs:** `install_kfm_cli.py` always installs the build tools first,
-  because `antlr4-python3-runtime` 4.9.3 is source-only.
-- **Test profiles:** profiles on `python-test.lock` install them first from CPython
-  3.15 (`SOURCE_BUILD_FROM` in `install_python_ci.py`), because PyYAML 6.0.3 has no
-  cp315 wheel. 3.11–3.14 test installs are unchanged.
-
-Either way, the package then installs with `--no-build-isolation`, so pip doesn't
-download unhashed build requirements into an isolated environment.
+The CLI installer first installs hash-locked build tools from `python-build.lock`
+(setuptools 84.2.1 and Cython 3.3.1) using wheels only. It then installs the CLI
+lock with hash checking and `--no-build-isolation`. antlr4-python3-runtime 4.9.3
+is source-only, and the lock also allows the hashed PyYAML source archive for
+targets without a locked wheel.
 
 The optional `intake-browser` profile uses `python-browser.lock`: binary-only,
 hash-pinned Playwright 1.64.1 and its dependencies for CPython 3.11, 3.12 and 3.13.

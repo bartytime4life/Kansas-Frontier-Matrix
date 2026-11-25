@@ -52,6 +52,13 @@ class Tests(unittest.TestCase):
   with tempfile.TemporaryDirectory() as d:
    root=Path(d);p=root/'x.yaml';p.write_text('version: v1\nversion: v2\n');self.assertIn('YAML_DUPLICATE_KEY',codes(v.validate(p,repo_root=root,check_repository=False,check_bindings=False)))
    p.write_text('a: &x {}\nb: *x\n');self.assertIn('YAML_ALIAS_DENIED',codes(v.validate(p,repo_root=root,check_repository=False,check_bindings=False)))
+ def test_inline_yaml_merge_denied(self):
+  with tempfile.TemporaryDirectory() as directory:
+   path = Path(directory) / "seam.yaml"
+   path.write_text("meta: {<<: {lane: hydrology}}\n", encoding="utf-8")
+   value, findings = v.load(path)
+  self.assertIsNone(value)
+  self.assertEqual([v.Finding("YAML_INVALID", "/")], findings)
  def test_repository_root_drift(self):
   x=load()
   with tempfile.TemporaryDirectory() as d:

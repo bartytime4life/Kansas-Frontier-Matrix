@@ -143,6 +143,14 @@ class DomainLaneRegisterTests(unittest.TestCase):
                 ),
             )
 
+    def test_inline_yaml_merge_denied(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "candidate.yaml"
+            path.write_text("meta: {<<: {lane: hydrology}}\n", encoding="utf-8")
+            value, findings = validator.load(path)
+        self.assertIsNone(value)
+        self.assertEqual([validator.Finding("YAML_INVALID", "/")], findings)
+
     def test_yaml_alias_denied(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "candidate.yaml"

@@ -27,12 +27,7 @@ from typing import Any, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LOCK_LIMIT_BYTES = 1_048_576
-# Hash-locked build tools for locks that hold a source-only package on some
-# interpreters. From the listed CPython version, such a lock installs after the
-# build tools and with --no-build-isolation, so pip never fetches unhashed build
-# requirements. PyYAML 6.0.3 publishes no wheel for CPython 3.15.
-BUILD_LOCK = "tools/ci/python-build.lock"
-SOURCE_BUILD_FROM = {"tools/ci/python-test.lock": (3, 15)}
+TEST_LOCK = "tools/ci/python-test.lock"
 MIGRATION_MANIFEST = "tools/ci/python-dependency-lock-migration.json"
 MIGRATION_SCHEMA = "kfm.python-dependency-lock-migration.v1"
 MIGRATION_ID = "scorecard-pinned-dependencies-20260812"
@@ -110,7 +105,7 @@ class InstallProfile:
 
 PROFILES = {
     "all-local-test": InstallProfile(
-        "tools/ci/python-test.lock",
+        TEST_LOCK,
         (
             ".[test]",
             "./packages/connectors-core[test]",
@@ -119,14 +114,14 @@ PROFILES = {
         ),
     ),
     "water-pilot": InstallProfile(
-        "tools/ci/python-test.lock",
+        TEST_LOCK,
         (".[test]", "./packages/connectors-core", "./packages/hashing",
          "./packages/catalog", "./packages/evidence-resolver", "./packages/policy-runtime",
          "./packages/release", "./apps/governed-api"),
     ),
     "audit-tool": InstallProfile("tools/ci/python-audit.lock"),
     "connectors-core": InstallProfile(
-        "tools/ci/python-test.lock", ("./packages/connectors-core",)
+        TEST_LOCK, ("./packages/connectors-core",)
     ),
     "crop-casma-tiles": InstallProfile(
         "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
@@ -139,22 +134,22 @@ PROFILES = {
     "geoparquet-pyarrow-25": InstallProfile(
         "tools/ci/geoparquet-pyarrow-25.lock"
     ),
-    "project-runtime": InstallProfile("tools/ci/python-test.lock", (".",)),
-    "project-test": InstallProfile("tools/ci/python-test.lock", (".[test]",)),
+    "project-runtime": InstallProfile(TEST_LOCK, (".",)),
+    "project-test": InstallProfile(TEST_LOCK, (".[test]",)),
     "project-test-hashing": InstallProfile(
-        "tools/ci/python-test.lock", (".[test]", "./packages/hashing")
+        TEST_LOCK, (".[test]", "./packages/hashing")
     ),
     "project-test-hashing-test": InstallProfile(
-        "tools/ci/python-test.lock", (".[test]", "./packages/hashing[test]")
+        TEST_LOCK, (".[test]", "./packages/hashing[test]")
     ),
     "project-test-schema-registry-test": InstallProfile(
-        "tools/ci/python-test.lock",
+        TEST_LOCK,
         (".[test]", "./packages/schema-registry[test]"),
     ),
     "project-test-wheel": InstallProfile(
-        "tools/ci/python-test.lock", (".[test]",), editable=False
+        TEST_LOCK, (".[test]",), editable=False
     ),
-    "test-dependencies": InstallProfile("tools/ci/python-test.lock"),
+    "test-dependencies": InstallProfile(TEST_LOCK),
 }
 
 
@@ -469,38 +464,10 @@ def _validate_local_specs(profile: InstallProfile) -> None:
             raise InstallConfigurationError("LOCAL_PACKAGE_METADATA_MISSING")
 
 
-def build_tools_command(python: str) -> tuple[str, ...]:
-    """Install the hash-locked, binary-only build tools for source builds."""
-
-    lockfile = _lock_path(InstallProfile(BUILD_LOCK))
-    validate_lockfile(lockfile)
-    return (
-        python,
-        "-m",
-        "pip",
-        "install",
-        "--disable-pip-version-check",
-        "--no-input",
-        "--require-hashes",
-        "--only-binary=:all:",
-        "--requirement",
-        str(lockfile),
-    )
-
-
-def needs_build_tools(
-    profile: InstallProfile, python_version: tuple[int, int] | None = None
-) -> bool:
-    threshold = SOURCE_BUILD_FROM.get(profile.lockfile)
-    version = python_version or tuple(sys.version_info[:2])
-    return threshold is not None and version >= threshold
-
-
 def build_commands(
     profile_name: str,
     *,
     executable: str | None = None,
-    python_version: tuple[int, int] | None = None,
 ) -> tuple[tuple[str, ...], ...]:
     """Return the finite pip command sequence for one named profile."""
 
@@ -525,11 +492,8 @@ def build_commands(
             str(lockfile),
         )
     ]
-    if profile.only_binary:
+    if profile.only_binary or profile.lockfile == TEST_LOCK:
         commands[0] += ("--only-binary=:all:",)
-    if needs_build_tools(profile, python_version):
-        commands[0] += ("--no-build-isolation",)
-        commands.insert(0, build_tools_command(python))
     if profile.local_specs:
         local = [
             python,

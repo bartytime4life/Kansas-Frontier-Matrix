@@ -459,7 +459,7 @@ def _assert_workflow(workflow: dict[str, Any]) -> None:
     assert steps[0]["uses"] == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
     assert steps[0]["with"] == {"persist-credentials": False, "fetch-depth": 0}
     assert set(steps[1]) == {"name", "uses", "with"}
-    assert steps[1]["uses"] == "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
+    assert steps[1]["uses"] == "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     assert steps[1]["with"] == {"python-version": "${{ matrix.python-version }}"}
     assert set(steps[2]) == {"name", "id", "run"}
     assert steps[2]["id"] == "bootstrap"

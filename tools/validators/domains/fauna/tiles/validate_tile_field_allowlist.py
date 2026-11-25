@@ -59,10 +59,13 @@ class InputError(ValueError):
 
 
 class StrictLoader(yaml.SafeLoader):
-    """Safe YAML loader that rejects duplicate mapping keys."""
+    """Safe YAML loader that rejects duplicate and merge keys."""
 
 
 def _construct_mapping(loader: StrictLoader, node: MappingNode, deep: bool = False) -> dict[object, object]:
+    for key_node, _ in node.value:
+        if key_node.tag == "tag:yaml.org,2002:merge":
+            raise InputError("YAML merge keys are unsupported")
     loader.flatten_mapping(node)
     result: dict[object, object] = {}
     for key_node, value_node in node.value:
