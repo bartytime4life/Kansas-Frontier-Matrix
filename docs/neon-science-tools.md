@@ -98,6 +98,40 @@ survey are not independent measurements; quantitative comparison requires
 product, reference/epoch/datum, date, support, quality and co-registration checks.
 No service, account payment or subscription is added by these controls.
 
+## Linked spatial profiles
+
+In the 2D inspector at `/labs/terrain` or `/acquisition#neon-lidar-lab`, select
+a raster sample, then read **Across row** or **Down column**. Both
+profiles use that same sample selection. Plot selection, previous/next controls
+and the keyboard sample control update the existing row/column probe; on the
+Science route the provider RecordLab follows the same controller. Clearing a
+coordinate or replacing/clearing the preview removes the old profile.
+
+The two aligned plots keep different vertical meanings separate: DTM and DSM
+are source elevations on one scale; independent provider CHM and arithmetic
+DSM minus DTM are heights on a second scale. Neither scale changes stored
+values. The profile is a sequence of retained nearest native samples, not a
+measured continuous cross-section. Missing values remain gaps, real zero stays
+zero, and negative or overflowing differences retain their QA state. No slope,
+interpolation, smoothing, datum conversion or gap filling is introduced.
+
+Distances are native projected offsets from the **first retained sample
+center**, west to east along a row or north to south down a column. They are
+not geodesic distances or offsets from the tile boundary. For a grid width
+that does not divide 1000, nearest 1 m centers have slightly unequal intervals;
+plots use these actual centers instead of assuming uniform preview spacing.
+The last sample does not extend to the tile's 1000 m edge. The recorded CRS,
+unknown accuracy and preparation/review limitations still apply.
+
+This inspector also works with an explicitly labelled local prepared or
+synthetic preview. It does not promote either into the provider-only RecordLab
+adapter. It performs no additional request, source acquisition or export and
+starts with no invented terrain. Local analytic/browser fixtures establish
+interaction and arithmetic behavior only; no real NEON package ships with this
+change, and real-data/deployed acceptance remains separate. Product meanings
+are documented in NEON's [elevation quick-start guide](https://data.neonscience.org/api/v0/documents/quick-start-guides/NEON.QSG.DP3.30024.001v1?fallback=html&inline=true)
+and [ecosystem-structure quick-start guide](https://data.neonscience.org/api/v0/documents/quick-start-guides/NEON.QSG.DP3.30015.001v1?fallback=html&inline=true).
+
 ## Shared data contract
 
 `app/neon-lidar-science.ts` exports `createNeonScienceDataset(input)` and

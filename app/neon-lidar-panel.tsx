@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type PointerEvent } from "react";
 import { createAcquisitionSession } from "./acquisition-client";
-import { neonElevationDomain, neonLidarProbe, neonSampleColor, parseNeonLidarPreview, readNeonLidarLocalJson, type NeonLidarMode, type NeonLidarPreview } from "./neon-lidar-preview";
+import { neonElevationDomain, neonLidarProbe, neonLidarProfile, neonSampleColor, parseNeonLidarPreview, readNeonLidarLocalJson, type NeonLidarMode, type NeonLidarProfileAxis, type NeonLidarPreview } from "./neon-lidar-preview";
 import { readNeonLidarPilot, type NeonPilotReceipt } from "./neon-lidar-pilot-client";
 import styles from "./neon-lidar-panel.module.css";
 
@@ -62,6 +62,80 @@ function GridCanvas({ preview, mode, selected, select, descriptionId, hover = tr
     </canvas>
     <span className={styles.north} aria-hidden="true">N ↑</span>
   </div>;
+}
+
+type Profile = NonNullable<ReturnType<typeof neonLidarProfile>>;
+type ProfileKey = "dtm" | "dsm" | "chm" | "surfaceAboveGround";
+type ProfileSeries = { key: ProfileKey; label: string; color: string; shape: "circle" | "diamond" | "square" };
+const ELEVATION_SERIES: ProfileSeries[] = [
+  { key: "dtm", label: "DTM · ground", color: "#8cdee2", shape: "circle" },
+  { key: "dsm", label: "DSM · surface", color: "#f2ce86", shape: "diamond" },
+];
+const HEIGHT_SERIES: ProfileSeries[] = [
+  { key: "chm", label: "Provider CHM", color: "#c5dfa3", shape: "circle" },
+  { key: "surfaceAboveGround", label: "DSM − DTM", color: "#f2ce86", shape: "square" },
+];
+const profileNumber = (value: number) => Math.abs(value) >= 100000 || (value !== 0 && Math.abs(value) < .01) ? value.toExponential(2) : value.toLocaleString("en-US", { maximumFractionDigits: 2 });
+function ProfileMark({ shape, x, y, color, size = 3 }: { shape: ProfileSeries["shape"]; x: number; y: number; color: string; size?: number }) {
+  if (shape === "circle") return <circle cx={x} cy={y} r={size} fill={color} />;
+  if (shape === "diamond") return <path d={`M ${x} ${y-size-1} L ${x+size+1} ${y} L ${x} ${y+size+1} L ${x-size-1} ${y} Z`} fill={color} />;
+  return <rect x={x-size} y={y-size} width={size*2} height={size*2} fill="#0b2634" stroke={color} strokeWidth={1.6} />;
+}
+function ProfilePlot({ profile, selectedIndex, select, title, series, includeZero, id }: {
+  profile: Profile; selectedIndex: number; select: (index: number) => void; title: string; series: ProfileSeries[]; includeZero: boolean; id: string;
+}) {
+  const values = profile.samples.flatMap(sample => series.flatMap(item => sample[item.key] === null ? [] : [sample[item.key] as number]));
+  const domain = values.length ? [Math.min(...values, ...(includeZero ? [0] : [])), Math.max(...values, ...(includeZero ? [0] : []))] : null;
+  const left = "2%", right = "98%", top = 10, bottom = 132, distance = profile.samples.at(-1)?.distance_m ?? 0;
+  const x = (value: number) => `${2+(distance ? value/distance : .5)*96}%`;
+  const y = (value: number) => {
+    if (!domain || domain[0] === domain[1]) return (top+bottom)/2;
+    const span = domain[1]-domain[0];
+    // Dividing before subtraction preserves finite coordinates even for +/-1e308.
+    const fraction = Number.isFinite(span) ? (value-domain[0])/span : (value/2-domain[0]/2)/(domain[1]/2-domain[0]/2);
+    return bottom-Math.max(0,Math.min(1,fraction))*(bottom-top);
+  };
+  function pointer(event: PointerEvent<SVGSVGElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (!rect.width) return;
+    const targetDistance = Math.max(0,Math.min(1,((event.clientX-rect.left)/rect.width-.02)/.96))*distance;
+    let nearest = 0;
+    profile.samples.forEach((sample,index) => { if (Math.abs(sample.distance_m-targetDistance) < Math.abs(profile.samples[nearest].distance_m-targetDistance)) nearest=index; });
+    select(nearest);
+  }
+  return <figure className={styles.profilePlot}>
+    <figcaption><strong>{title}</strong><span>Dynamic profile scale · {includeZero ? "height" : "source elevation"} (m){includeZero ? " · includes zero" : ""}</span></figcaption>
+    <ul className={styles.profileLegend}>{series.map(item => <li key={item.key}><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><ProfileMark shape={item.shape} x={7} y={7} color={item.color} /></svg><span>{item.label}</span><span className={styles.profileMissing}>{profile.samples.filter(sample => sample[item.key] === null).length} missing</span></li>)}</ul>
+    <div className={styles.profileGraph}><div className={styles.profileScale} aria-hidden="true"><span>{domain ? profileNumber(domain[1]) : "—"}</span><span>{domain ? profileNumber(domain[0]) : "—"}</span></div><div className={styles.profileDrawing}><svg width="100%" height="142" className={styles.profileChart} role="img" aria-labelledby={`${id}-title ${id}-description`} onPointerDown={pointer}>
+      <title id={`${id}-title`}>{title}, discrete retained source samples</title>
+      <desc id={`${id}-description`}>{domain ? `Dynamic vertical range ${profileNumber(domain[0])} to ${profileNumber(domain[1])} meters. ` : "No retained values on this profile. "}Horizontal distance is {profileNumber(distance)} projected meters from the first retained source sample center. Points are not interpolated. Use the sample slider or Previous and Next controls to read numeric values in the shared probe.</desc>
+      {[top,(top+bottom)/2,bottom].map((line,index) => <line key={index} x1={left} x2={right} y1={line} y2={line} className={styles.profileGrid} />)}
+      {domain && includeZero && domain[0] !== domain[1] && <line x1={left} x2={right} y1={y(0)} y2={y(0)} className={styles.profileZero} />}
+      <line x1={x(profile.samples[selectedIndex].distance_m)} x2={x(profile.samples[selectedIndex].distance_m)} y1={top-3} y2={bottom+3} className={styles.profileCursor} />
+      {series.map(item => <g key={item.key} data-series={item.key}>{profile.samples.map((sample,index) => sample[item.key] === null ? null : <g key={index} data-sample-index={index}><svg x={x(sample.distance_m)} y={y(sample[item.key] as number)} width={1} height={1} overflow="visible"><ProfileMark shape={item.shape} x={0} y={0} color={item.color} size={index === selectedIndex ? 4.5 : 2.7} /></svg></g>)}</g>)}
+    </svg>{!domain && <p className={styles.profileEmptyText}>No retained values on this profile</p>}<div className={styles.profileDistance} aria-hidden="true"><span>0 m</span><span>{profileNumber(distance)} m</span></div></div></div><p className={styles.profileAxisLabel}>Projected distance from first retained sample center (m)</p>
+  </figure>;
+}
+function SampleProfile({ preview, selected, select, id }: { preview: NeonLidarPreview; selected: { row: number; column: number } | null; select: (selection: { row: number; column: number }) => void; id: string }) {
+  const [axis,setAxis] = useState<NeonLidarProfileAxis>("row");
+  const profile = useMemo(() => selected ? neonLidarProfile(preview,axis,axis === "row" ? selected.row : selected.column) : null, [preview,axis,selected]);
+  const selectedIndex = selected ? axis === "row" ? selected.column : selected.row : 0;
+  function selectIndex(index: number) {
+    if (!profile || !Number.isInteger(index) || index < 0 || index >= profile.samples.length) return;
+    const sample = profile.samples[index]; select({row:sample.row,column:sample.column});
+  }
+  const negative = profile?.samples.filter(sample => sample.differenceIssue === "negative").length ?? 0;
+  const nonfinite = profile?.samples.filter(sample => sample.differenceIssue === "nonfinite").length ?? 0;
+  return <section className={styles.profile} aria-labelledby={`${id}-heading`}>
+    <div className={styles.profileHeading}><div><p className={styles.eyebrow}>LINKED SAMPLE PROFILE</p><h3 id={`${id}-heading`}>Follow a line through the tile</h3></div><div className={styles.profileAxis} role="group" aria-label="Profile direction"><button type="button" aria-pressed={axis === "row"} onClick={() => setAxis("row")}>Across row <span>W → E</span></button><button type="button" aria-pressed={axis === "column"} onClick={() => setAxis("column")}>Down column <span>N → S</span></button></div></div>
+    {!profile ? <p className={styles.profilePrompt}>Choose a valid row and column above to compare retained samples along that line. Clearing either coordinate removes the profile.</p> : <>
+      <div className={styles.profileSelection}><p><strong>{axis === "row" ? "Row" : "Column"} {profile.fixedIndex+1}</strong><span>Selected: row {selected!.row+1}, column {selected!.column+1} · {profileNumber(profile.samples[selectedIndex].distance_m)} m from first center</span></p><span className={styles.profileSampleCount}>{profile.samples.length} retained positions</span></div>
+      <div className={styles.profileNavigator}><button type="button" onClick={() => selectIndex(selectedIndex-1)} disabled={selectedIndex === 0} aria-label="Previous profile sample">← Previous</button><label htmlFor={`${id}-sample`}>Shared sample · {selectedIndex+1} of {profile.samples.length}<input id={`${id}-sample`} type="range" min={1} max={profile.samples.length} step={1} value={selectedIndex+1} aria-valuetext={`Row ${selected!.row+1}, column ${selected!.column+1}, ${profileNumber(profile.samples[selectedIndex].distance_m)} projected meters from first sample center`} onChange={event => selectIndex(Number(event.target.value)-1)} /></label><button type="button" onClick={() => selectIndex(selectedIndex+1)} disabled={selectedIndex === profile.samples.length-1} aria-label="Next profile sample">Next →</button></div>
+      <div className={styles.profilePlots}><ProfilePlot profile={profile} selectedIndex={selectedIndex} select={selectIndex} title="Elevation · ground and surface" series={ELEVATION_SERIES} includeZero={false} id={`${id}-elevation`} /><ProfilePlot profile={profile} selectedIndex={selectedIndex} select={selectIndex} title="Height · canopy and source difference" series={HEIGHT_SERIES} includeZero id={`${id}-height`} /></div>
+      {(negative > 0 || nonfinite > 0) && <p className={styles.warning}>QA retained: {negative} negative DSM − DTM {negative === 1 ? "difference" : "differences"}; {nonfinite} {nonfinite === 1 ? "difference exceeds" : "differences exceed"} numeric limits. Negative values are plotted; nonfinite differences remain missing.</p>}
+      <p className={styles.profileLimits}>Discrete nearest source samples; no interpolation or inferred values between them. Missing values leave gaps; zero remains valid. Elevation and height use separate scales. DSM − DTM includes structures and is distinct from provider CHM. Preview sampling omits detail; source accuracy remains unverified.</p>
+    </>}
+  </section>;
 }
 
 export function useNeonLidarPreview() {
@@ -188,6 +262,7 @@ export function NeonLidarWorkspace({ controller, embedded = false, anchorId }: {
           <p className={styles.precision}>Two decimals express display precision, not measurement accuracy. Sampling omits detail between preview cells.</p>
         </aside>
       </div>
+      <SampleProfile preview={preview} selected={selected} select={selection => setCoordinateDraft({ row: String(selection.row+1), column: String(selection.column+1) })} id={`${id}-profile`} />
       <details className={styles.provenance}>
         <summary>Provenance, reference systems &amp; scientific limits</summary>
         <dl className={styles.metadata}>
