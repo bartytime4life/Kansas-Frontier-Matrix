@@ -13,7 +13,7 @@ import {MAPLIBRE_EARTH_RADIUS_M,TERRAIN_HEIGHT_RAMP_CSS,TERRAIN_RELIEF_RAMP_CSS,
 import {createTerrainPreparationClient} from './terrain-preparation-client';
 import type {PreparedTerrain} from './terrain-preparation-model';
 import {useVisitorTerrainResources} from './visitor-terrain-resources';
-import {terrainViewFootprint,sameTerrainFootprint,terrainInspectionCamera,terrainLeaseContains,terrainPanFootprint,type TerrainViewLease,type TerrainFootprint} from './terrain-camera';
+import {TERRAIN_DETAIL_MAX_ZOOM,terrainViewFootprint,sameTerrainFootprint,terrainInspectionCamera,terrainLeaseContains,terrainPanFootprint,type TerrainViewLease,type TerrainFootprint} from './terrain-camera';
 import styles from './kansas-lidar-controls.module.css';
 type Options={mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;active:boolean;cellsOn:boolean;onCells:(value:boolean)=>void;scale:number;reducedMotion:boolean;onViewMap:()=>void;backdrop?:'relief'|'aerial';onBackdrop?:(value:'relief'|'aerial')=>void;onScale?:(value:number)=>void;onGround:()=>void;onNativeIntent?:()=>void;onSelected?:()=>void};
 export function useKansasLidarView(options:Options){
@@ -202,16 +202,15 @@ export function useKansasLidarView(options:Options){
   function detailHere(){
     const current=latest.current,map=current.mapRef.current;if(!map||!current.active||!current.styleReady)return;
     try{
-      if(!map.getTerrain()||!Number.isFinite(map.getCenterElevation()))throw Error('terrain');
       const center=map.getCenter(),zoom=map.getZoom(),bearing=map.getBearing();if(![center.lng,center.lat,zoom,bearing].every(Number.isFinite))throw Error('camera');
       const b=viewportFootprint(map),radians=Math.PI/180;
       const area=Math.abs((b[2]-b[0])*(b[3]-b[1]))*radians*radians*MAPLIBRE_EARTH_RADIUS_M**2*Math.cos(center.lat*radians);
       // Area scales as 4^-zoom. Aim below the 1 km² native budget with margin
       // for oblique bounds, projection differences and the change to 55° pitch.
       const areaZoom=Number.isFinite(area)&&area>0?zoom+.5*Math.log2(Math.max(1,area/250000)):zoom+1;
-      const targetZoom=Math.min(20,Math.max(17.5,zoom+.5,areaZoom));
+      const targetZoom=Math.min(TERRAIN_DETAIL_MAX_ZOOM,Math.max(17.5,zoom+.5,areaZoom));
       map.easeTo({center:[center.lng,center.lat],zoom:targetZoom,bearing,pitch:55,duration:current.reducedMotion?0:600,essential:false});
-    }catch{setError('Detail zoom needs loaded continuous elevation context. Use Ground, then retry the selected DEM in Continuous Kansas ground model. Coverage and analysis budgets still apply.');}
+    }catch{setError('The current map camera could not zoom to detail. Retry this view; source coverage and analysis limits still apply.');}
   }
   const count=readingKind==='cell'?(grid?grid.width*grid.height:0):result?.points?.points.length??0;
   function choose(value:string,kind:'point'|'cell'=readingKind){readingIntent.current=true;setReadingKind(kind);setDraft(value);const n=/^\d+$/.test(value)?Number(value)-1:-1,limit=kind==='point'?result?.points?.points.length??0:grid?(grid.width*grid.height):0;setSelected(Number.isSafeInteger(n)&&n>=0&&n<limit?{kind,index:n}:null);}
@@ -248,10 +247,11 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
 
   const stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||c.result?.grid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   const phase=c.phase,reason=c.mode==='ground'?c.groundReceipt?.reason:c.receipt?.reason;
-  const nativeState=c.mode==='ground'?null:c.receipt?.layers.find(layer=>layer.kind===c.mode)?.state;
-  const detailRequired=nativeState==='detail-required';
+  const nativeLayer=c.mode==='ground'?null:c.receipt?.layers.find(layer=>layer.kind===c.mode);
+  const nativeState=nativeLayer?.state,detailRequired=nativeState==='detail-required';
+  const nativeMissing=c.cellsOn&&!c.applied.grid&&['detail-required','no-coverage','unavailable'].includes(nativeState??'');
   const spacing=providerGrid?groundCell(providerGrid,Math.floor(providerGrid.width*providerGrid.height/2))?.approximateSpacingM:null;
-  const status=!c.cellsOn?'Clean landscape · no cell overlay':!c.visible?'Paused while this tab is hidden':!c.active?'Open the current Terrain map period':c.navigating?'Navigating · same footprint held':c.transitioning?'Updating detail · previous footprint held':c.nearbyHeld&&c.applied.grid?'Loaded footprint held · pan farther for new terrain':phase==='outside'?'Outside the Kansas data window':detailRequired?'Closer view needed for native detail':nativeState==='no-coverage'?'No supported native cells here':phase==='moving'||phase==='waiting'?'Waiting for the map to settle…':phase==='loading'?'Loading this landscape…':phase==='processing'?'Preparing source data…':c.preparationPhase==='preparing'?'Drawing the landscape…':c.preparationPhase==='unavailable'?'Solid drawing unavailable':c.preparationPhase==='empty'?'No supported solid cells':c.applied.grid?'Landscape ready':reason??'Choose a layer for this map view';
+  const status=!c.cellsOn?'Clean landscape · no cell overlay':!c.visible?'Paused while this tab is hidden':!c.active?'Open the current Terrain map period':c.navigating?'Navigating · same footprint held':c.transitioning?'Updating detail · previous footprint held':c.nearbyHeld&&c.applied.grid?'Loaded footprint held · pan farther for new terrain':phase==='outside'?'Outside the Kansas data window':detailRequired?`${c.mode==='canopy'?'Canopy':'Surface'} cells not loaded · zoom closer`:nativeState==='no-coverage'?'No supported native cells here':phase==='moving'||phase==='waiting'?'Waiting for the map to settle…':phase==='loading'?'Loading this landscape…':phase==='processing'?'Preparing source data…':c.preparationPhase==='preparing'?'Drawing the landscape…':c.preparationPhase==='unavailable'?'Solid drawing unavailable':c.preparationPhase==='empty'?'No supported solid cells':c.applied.grid?'Landscape ready':reason??'Choose a layer for this map view';
   return <section className={styles.panel} aria-label="Kansas LiDAR layers">
     <div className={styles.displayModes} role="group" aria-label="Landscape display">
       <button type="button" aria-pressed={!c.cellsOn&&!c.pointsOn} onClick={c.showBaseLandscape}>Base landscape</button>
@@ -259,7 +259,7 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
     </div>
     <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground'],['surface','Surface'],['canopy','Canopy height']] as const).map(([mode,label])=><button key={mode} type="button" aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}>{label}</button>)}</div>
     {c.cellsOn&&<div className={styles.focusActions}><button className={styles.inspect} type="button" disabled={!c.active||!grid||!c.applied.grid||c.transitioning} onClick={c.inspectLandscape}>Inspect landscape in 3D</button><button type="button" onClick={c.viewMap}>View map</button></div>}
-    <div className={styles.statusStrip} data-ready={c.applied.grid&&!c.transitioning} role="status"><span aria-hidden="true"/><div><strong>{status}</strong><small>{!c.cellsOn?'Detailed base relief stays visible':providerGrid?`USGS 3DEP · ${spacing?spacing.map(v=>Math.round(v)).join(' × ')+' m display cells':'96 × 96 resampled cells'}`:nativeGrid?`${nativeGrid.width} × ${nativeGrid.height} cells · ${nativeGrid.cellSizeM.join(' × ')} m`:'Ground across Kansas · native Surface / Canopy where supported'}</small></div></div>
+    <div className={styles.statusStrip} data-ready={c.applied.grid&&!c.transitioning} role="status"><span aria-hidden="true"/><div><strong>{status}</strong><small>{nativeMissing?'Base landscape shown · '+(nativeLayer?.message??'Complete native support is required.') :!c.cellsOn?'Detailed base relief stays visible':providerGrid?`USGS 3DEP · ${spacing?spacing.map(v=>Math.round(v)).join(' × ')+' m display cells':'96 × 96 resampled cells'}`:nativeGrid?`${nativeGrid.width} × ${nativeGrid.height} cells · ${nativeGrid.cellSizeM.join(' × ')} m`:'Ground across Kansas · native Surface / Canopy where supported'}</small></div></div>
     {detailRequired&&<button className={styles.detailAction} type="button" disabled={!c.active} onClick={c.detailHere}>Zoom for native detail</button>}
     {c.error&&<p className={styles.error} role="alert">{c.error}</p>}{stale&&<p className={styles.notice}>Stale cached result · source times are in Methods.</p>}
     <div className={styles.backdropModes} role="group" aria-label="Landscape backdrop"><button type="button" aria-pressed={c.backdrop==='relief'} onClick={()=>c.setBackdrop('relief')}>Relief</button><button type="button" aria-pressed={c.backdrop==='aerial'} onClick={()=>c.setBackdrop('aerial')}>2024 aerial</button></div>

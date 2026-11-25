@@ -54,3 +54,20 @@ spacing and native source-selection zoom. It no longer substitutes the wider fit
 coarsens the grid. Zoom, resize and explicit Follow/Refresh still acquire from
 the current viewport. The previous geometry stays at its original coordinates
 and cannot supply readings during the handoff; it is never moved to fill gaps.
+
+
+Native-detail repair (2026-11-25): the actual Explorer map now shares the
+zoom-20 ceiling with its detail action. Previously the action requested zoom
+17.5 while MapLibre clamped every request to 16, leaving users at the same
+unsupported footprint. Zooming to detail does not require the independent base
+DEM to be available. Source layers keep their own resolution/zoom limits;
+overzooming the camera does not create finer observations. The compact card
+states when selected native cells are absent and only the base is showing.
+
+For grid-only requests, an incomplete hierarchy now finishes its preflight
+without downloading or decoding unusable partial LAZ files. Source-read failures
+remain `unavailable` and use the existing bounded retry policy; budget limits
+remain `detail-required`. Native support, source masks, transfer/record/time
+limits and optional raw-point behavior are unchanged. This worker change needs
+the existing dev processing actor to receive the updated source separately from
+the GoDaddy application build.

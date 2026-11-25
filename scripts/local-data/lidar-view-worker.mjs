@@ -75,6 +75,20 @@ export async function prepareLidarView(config,input,{python=process.env.KFM_LIDA
    try{const d=await discoverViewNodes(project,viewBounds,{zoom:query.zoom,reader,maxNodes:Math.max(1,Math.floor((128-nodes.length)/(chosen.length-index))),maxRecords:Math.max(1,Math.floor((2000000-nativeCount)/(chosen.length-index)))});nodes.push(...d.nodes);nativeCount+=d.nativeRecords;displayTruncated ||= !d.displayComplete;}catch(e){failures.push(e.message);}
   }
  }
+ // Grid-only jobs cannot use a partial hierarchy. Stop before LAZ downloads
+ // and point decoding; a display subset must never become a scientific raster.
+ // Actual source failures stay unavailable, so the existing bounded retry policy
+ // can retry them instead of permanently caching a misleading detail limit.
+ if(!query.layers.includes('points')&&!analysisComplete){
+  const failed=failures.length>0,state=failed?'unavailable':'detail-required';
+  const message=failed?'Native source files could not be read. Retry this view later; no cells were inferred.':'Complete native support exceeds this view processing budget. Choose a smaller area; no raster was inferred.';
+  view={...view,generatedAt:new Date().toISOString(),reason:failed?message:null,layers:view.layers.map(l=>query.layers.includes(l.kind)&&l.state==='processing'?{...l,state,message}:l)};
+  const requested=view.layers.filter(l=>query.layers.includes(l.kind));view.state=requested.some(l=>l.state==='unavailable')?'unavailable':requested.some(l=>l.state==='detail-required')?'detail-required':'no-coverage';
+  if(!validLidarView(view,query))throw Error('LIDAR_VIEW_INVALID');
+  const viewSha256=atomic(dir,'view.json',view);atomic(dir,'ready.json',{requestKey:key,viewSha256,gridSha256:null,completedAt:new Date().toISOString()});
+  atomic(dir,'processing-receipt.json',{requestKey:key,decodedNativeRecords:0,viewportNativeRecords:0,displayRecords:0,sourceAssets:0,analysisComplete:false,preflightOnly:true,transferBytes:reader.transferBytes,networkReplies:reader.replies,sourceAdmission:false,scientificAccuracyVerified:false});
+  return {requestKey:key,state:view.state,points:0,gridValidCells:{ground:0,surface:0,canopy:0},sourceAssets:0,analysisComplete:false};
+ }
  // Native files remain immutable in the private URL+hash cache. No bulk archive,
  // credentials, source paths or downloads are exposed through the website.
  const assets=[];

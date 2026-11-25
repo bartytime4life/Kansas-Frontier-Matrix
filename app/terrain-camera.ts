@@ -1,4 +1,6 @@
 /** Camera math for a bounded landscape window. Source elevations never change. */
+// Shared with the actual MapLibre constructor: detail actions must be reachable.
+export const TERRAIN_DETAIL_MAX_ZOOM = 20;
 export type TerrainFootprint = readonly [number, number, number, number];
 export type TerrainViewport = Readonly<{center: readonly [number, number]; zoom: number; width: number; height: number}>;
 const DEG = Math.PI / 180;
