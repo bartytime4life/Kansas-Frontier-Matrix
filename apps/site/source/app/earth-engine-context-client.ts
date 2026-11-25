@@ -9,12 +9,15 @@ export function useEarthEngineContext() {
   const [manifests, setManifests] = useState<EarthEngineContextManifest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // 401/403: this visitor is not the owner, so owner-only installer links would 404.
+  const [ownerRequired, setOwnerRequired] = useState(false);
   const [generation, setGeneration] = useState(0);
   const reload = useCallback(() => { setLoading(true); setGeneration((value) => value + 1); }, []);
   useEffect(() => {
     const abort = new AbortController();
     void browserJsonRequest("/api/earth-engine-context/catalog", { signal: abort.signal, maxBytes: EARTH_ENGINE_CATALOG_MAX_BYTES, timeoutMs: 30_000 })
       .then(({ response, body: payload }) => {
+        if (!abort.signal.aborted) setOwnerRequired(response.status === 401 || response.status === 403);
         if (response.status === 401 || response.status === 403) throw new Error("Owner sign-in is required to load reviewed imagery. Local files alone do not establish an activated display set.");
         if (!response.ok) throw new Error("Reviewed snapshots are unavailable.");
         const checked = parseEarthEngineCatalog(payload);
@@ -26,5 +29,5 @@ export function useEarthEngineContext() {
       .finally(() => { if (!abort.signal.aborted) setLoading(false); });
     return () => abort.abort();
   }, [generation]);
-  return { manifest, manifests, loading, error, reload };
+  return { manifest, manifests, loading, error, ownerRequired, reload };
 }

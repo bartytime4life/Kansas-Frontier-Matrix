@@ -215,3 +215,12 @@ test('My library shows completed and partial transfer names, sizes and storage l
  const items=[{key:'map:one',kind:'public-map',title:'Kansas geology file',state:'downloaded',bytes:1200,createdAt:'2026-10-09T12:00:00Z',job:{destination:'/private/download/one'}},{key:'map:two',kind:'public-map',title:'Partial imagery',state:'cancelled',bytes:400,createdAt:'2026-10-09T12:00:00Z',job:{destination:'/private/download/two'}},{key:'map:empty',kind:'public-map',title:'Empty failure',state:'failed',bytes:0,createdAt:'2026-10-09T12:00:00Z',job:{}}];
  const tree=h.render(h.exports.default,{downloads:state,reviewed:{manifests:[],loading:false},items});h.commit();const text=JSON.stringify(tree);assert.match(text,/Kansas geology file/);assert.match(text,/Download completed/);assert.match(text,/Partial download/);assert.match(text,/\/private\/download\/one/);assert.doesNotMatch(text,/Empty failure/);h.dispose();
 });
+
+test('the owner-only map installer link is hidden when the catalog requires owner sign-in',async()=>{
+ const state={status:status(),library:snapshot(),connection:'connected',libraryError:null,refreshLibrary(){}};
+ const h=await componentHarness('app/download-library.tsx',{'next/link':{default:'a'},'./earth-engine-context':{earthEngineSetYear:()=>2024},'./earth-engine-data':{EARTH_ENGINE_DATASETS:[]},'./local-download-client':client,'./downloads/workspace.module.css':css});
+ const installer=reviewed=>{const tree=h.render(h.exports.default,{downloads:state,reviewed:{manifests:[],loading:false,error:null,reload(){},...reviewed}});h.commit();return /earth-engine-context\/install/.test(JSON.stringify(tree));};
+ assert.equal(installer({ownerRequired:false}),true,'owners keep the installer link');
+ assert.equal(installer({ownerRequired:true,error:'Owner sign-in is required to load reviewed imagery.'}),false,'non-owners are not sent to a 404');
+ h.dispose();
+});
