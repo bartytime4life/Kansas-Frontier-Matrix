@@ -24,7 +24,7 @@ test('each topic previews real map renderers and starters, and the idle view is 
   assert.equal(v.topic,topic);
   if(!['flora','fauna','ecology','land','history','evidence','public-safety'].includes(topic)){
    assert.equal(v.basemap,look.basemap);assert.equal(v.scene,look.scene);assert.deepEqual(plain(v.camera),plain(look.camera));assert.equal(v.name,look.name);
-   if(topic==='terrain')assert.deepEqual(plain(v.camera),{center:[-96.585,39.09],zoom:13.2,pitch:68,bearing:-35},'first preview frame is a close window into the continuous terrain, not a subpixel state overview');
+   if(topic==='terrain')assert.deepEqual(plain(v.camera),{center:[-96.585,39.09],zoom:14.3,pitch:52,bearing:-35},'first preview frame shows local landform detail at a readable angle without changing source elevations');
   }else assert.ok(v.key,'the geographic preview retains its short source key');
   for(const id of look.starters.filter(id=>!view.WELCOME_PREVIEW_SKIPPED_STARTERS.has(id)))assert.ok(v.starters.includes(id),`${topic}: the preview retains its own starters`);
   assert.ok(v.starters.length||v.scientificLayers.length||v.scene==='terrain',`${topic}: a scientific layer or real terrain, beyond a plain basemap`);

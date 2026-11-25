@@ -237,3 +237,29 @@
    when measurement/live selectors have higher specificity. */
 .category-map-dock:has([aria-label="Kansas LiDAR layers"]){box-sizing:border-box;--category-dock-height-ceiling:min(60%,max(100px,calc(100% - 200px)))}
 .category-map-dock:has([aria-label="Kansas LiDAR layers"])>header{position:sticky;top:0;z-index:3;min-height:44px;background:#07171a;box-shadow:0 8px 0 #07171a}
+
+.category-map-dock[data-topic=terrain]{width:min(322px,calc(100% - 28px));gap:7px;background:#0a2028f5;border-color:#729b9f88;backdrop-filter:none;overflow-anchor:none}
+.category-map-dock[data-topic=terrain] .category-map-dock-terrain{padding-top:4px;border-top:0;gap:7px}
+.category-map-dock-ground,.category-map-dock-camera{border-top:1px solid #53727d;margin:0;font-size:11px}
+.category-map-dock-ground>summary,.category-map-dock-camera>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;color:#e8d09b;font-size:11px}
+.category-map-dock-ground>summary::before,.category-map-dock-camera>summary::before{content:'›';margin-right:8px;color:#9fc6c9}
+.category-map-dock-ground[open]>summary::before,.category-map-dock-camera[open]>summary::before{content:'⌄'}
+.category-map-dock[data-topic=terrain]>.category-map-dock-lede{display:none}
+.category-map-dock-ground .category-map-dock-reading{font-size:10px}
+.category-map-dock[data-topic=terrain]>.category-map-dock-actions button{font-size:11px}
+
+
+/* Terrain has a true fixed header, not sticky content inside the scroller.
+   Its body clips scrolling controls below the title at every viewport size. */
+.category-map-dock[data-topic=terrain]{grid-template-rows:auto minmax(0,1fr);gap:0;padding:0;overflow:hidden;background:#0a2028}
+.category-map-dock[data-topic=terrain]>header{position:relative;top:auto;z-index:1;min-height:44px;padding:10px 12px 8px 14px;box-sizing:border-box;margin:0;background:#0a2028;box-shadow:none;border-bottom:1px solid #53727d66}
+.category-map-dock[data-topic=terrain]>.category-map-dock-body{display:grid;gap:7px;min-height:0;overflow-y:auto;overscroll-behavior:contain;overflow-anchor:none;scroll-padding-top:8px;padding:8px 12px 12px 14px}
+.category-map-dock[data-topic=terrain] .category-map-dock-body>.category-map-dock-lede{display:none}
+@media(max-width:760px){
+ .category-map-dock[data-topic=terrain]{left:10px;right:10px;width:auto;--category-dock-height-ceiling:min(42%,320px);border-radius:12px 12px 6px 6px}
+ .category-map-dock[data-topic=terrain]>header{padding:5px 10px;min-height:50px}
+ .category-map-dock[data-topic=terrain]>.category-map-dock-body{padding:7px 10px 10px}
+ .category-map-dock[data-topic=terrain] .category-map-dock-swatch{width:26px;height:26px}
+}
+
+.category-map-dock[data-topic=terrain]>header>.category-map-dock-close{margin:0 -4px 0 0;min-width:44px;min-height:44px}
