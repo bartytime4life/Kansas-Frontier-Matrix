@@ -42,3 +42,5 @@
 .panel>details>summary{font-size:11px}
 @media(max-width:700px){.panel .displayModes button{font-size:12px}.panel .focusActions .inspect{font-size:11px}.panel .displayNote{font-size:10px}}
 .backdropModes{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.panel .backdropModes button{font-size:11px;min-height:44px;padding:6px}.panel .finerAction{width:100%;margin-top:6px;font-size:11px;min-height:44px;color:#ecd49a;background:#123944}
+
+.panel h3{font-family:inherit;font-size:11px;font-weight:600;line-height:1.4;letter-spacing:.04em;text-transform:uppercase;color:#a9cbd0;margin:14px 0 7px}.panel h3:first-child{margin-top:0}.panel .layerHelp{font-size:10px;color:#b8cdd2;margin:6px 0 9px}.panel .backdropModes{margin:0 0 12px}

@@ -5,235 +5,87 @@ import {createAcquisitionSession} from './acquisition-client';
 import {readKansasLidarView} from './kansas-lidar-client';
 import {canonicalLidarView,lidarGridCell,type KansasLidarView,type LidarViewReceipt} from './kansas-lidar-view';
 import {createNativePointLayer,NATIVE_LIDAR_LAYER,registerNativeLidarPicker,type NativePointLayer,type NativeLayerOptions} from './native-lidar-layer';
-import {createPreparedLidarGridLayer,KANSAS_LIDAR_GRID_LAYER,terrainGridDomain,type TerrainGrid,type LidarGridMode} from './kansas-lidar-grid-layer';
-import {canonicalGroundQuery,groundCell,groundCorners,type GroundReceipt} from './kansas-ground';
+import {createPreparedLidarGridLayer,KANSAS_LIDAR_GRID_LAYER,terrainGridDomain,type LidarGridMode} from './kansas-lidar-grid-layer';
+import {groundCell,groundCorners} from './kansas-ground';
 import {groundColorValues,terrainColorDomain,terrainStudyJSON,type GroundColor} from './kansas-terrain-analysis';
-import {readKansasGround} from './kansas-ground-client';
-import {MAPLIBRE_EARTH_RADIUS_M,TERRAIN_HEIGHT_RAMP_CSS,TERRAIN_RELIEF_RAMP_CSS,NATIVE_CLASS_COLORS,nativeAttributeDomain,nativePointEligible,nativePointPosition,type NativeColorMode} from './native-lidar';
-import {createTerrainPreparationClient} from './terrain-preparation-client';
-import type {PreparedTerrain} from './terrain-preparation-model';
+import {TERRAIN_HEIGHT_RAMP_CSS,TERRAIN_RELIEF_RAMP_CSS,NATIVE_CLASS_COLORS,nativeAttributeDomain,nativePointEligible,nativePointPosition,type NativeColorMode} from './native-lidar';
+import {useTerrainTileView} from './terrain-tile-view';
 import {useVisitorTerrainResources} from './visitor-terrain-resources';
-import {TERRAIN_DETAIL_MAX_ZOOM,terrainViewFootprint,sameTerrainFootprint,terrainInspectionCamera,terrainLeaseContains,terrainPanFootprint,type TerrainViewLease,type TerrainFootprint} from './terrain-camera';
+import {TERRAIN_DETAIL_MAX_ZOOM,terrainInspectionCamera,type TerrainFootprint} from './terrain-camera';
 import styles from './kansas-lidar-controls.module.css';
 type Options={mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;active:boolean;cellsOn:boolean;onCells:(value:boolean)=>void;scale:number;reducedMotion:boolean;onViewMap:()=>void;backdrop?:'relief'|'aerial';onBackdrop?:(value:'relief'|'aerial')=>void;onScale?:(value:number)=>void;onGround:()=>void;onNativeIntent?:()=>void;onSelected?:()=>void};
 export function useKansasLidarView(options:Options){
-  const [mode,setMode]=useState<LidarGridMode>('ground'),[pointsOn,setPointsOn]=useState(false),[opacity,setOpacity]=useState(100),[pointSize,setPointSize]=useState(3),[color,setColor]=useState<NativeColorMode>('elevation');
-  const [result,setResult]=useState<KansasLidarView|null>(null),[receipt,setReceipt]=useState<LidarViewReceipt|null>(null),[phase,setPhase]=useState('idle'),[error,setError]=useState(''),[epoch,setEpoch]=useState(0),[selected,setSelected]=useState<{kind:'point'|'cell';index:number}|null>(null),[readingKind,setReadingKind]=useState<'point'|'cell'>('point'),[draft,setDraft]=useState(''),[applied,setApplied]=useState({points:false,grid:false});
-  const resources=useVisitorTerrainResources(),markSlow=resources.markSlow;
-  const [visible,setVisible]=useState(true),[preparer]=useState(createTerrainPreparationClient),[prepared,setPrepared]=useState<{grid:TerrainGrid;mode:LidarGridMode;scale:number;color:GroundColor;groundReceipt:GroundReceipt|null;value:PreparedTerrain}|null>(null),[preparationPhase,setPreparationPhase]=useState('idle'),[preparationError,setPreparationError]=useState('');
-  const [navigating,setNavigating]=useState(false),[nearbyHeld,setNearbyHeld]=useState(false);
-  const spatialLease=useRef<TerrainViewLease|null>(null);
-  const riseIntent=useRef(true),previousCellsOn=useRef(options.cellsOn);
-  useLayoutEffect(()=>{if(options.cellsOn&&!previousCellsOn.current)riseIntent.current=true;previousCellsOn.current=options.cellsOn;},[options.cellsOn]);
-  const motionAllowed=!options.reducedMotion&&!resources.lightweight;
-  const handoff=useRef(false),preparationCache=useRef<typeof prepared>(null),refreshCache=useRef({ground:false,native:false});
-  const deferredAcquisition=useRef({ground:false,native:false});
-  const [groundResume,setGroundResume]=useState(0),[nativeResume,setNativeResume]=useState(0);
-  const [gridColor,setGridColor]=useState<GroundColor>('height'),[pinned,setPinned]=useState(false);
-  const study=useRef<{id:number;bbox:[number,number,number,number];zoom:number}|null>(null),studyRevision=useRef(0),readingIntent=useRef(false),studyMap=useRef<MapLibreMap|null>(null);
-  const stylePause=useRef<{ground:MapLibreMap|null;native:MapLibreMap|null}>({ground:null,native:null});
-  const [groundReceipt,setGroundReceipt]=useState<GroundReceipt|null>(null),[groundPhase,setGroundPhase]=useState('idle'),[groundError,setGroundError]=useState('');
-  const validated=useRef({native:result,ground:groundReceipt});
-  useLayoutEffect(()=>{validated.current={native:result,ground:groundReceipt};},[result,groundReceipt]);
-  const [groundSession]=useState(createAcquisitionSession);
-  const [session]=useState(createAcquisitionSession),latest=useRef(options),selection=useRef(selected),moving=useRef(false),pointLayer=useRef<NativePointLayer|null>(null),gridLayer=useRef<NativePointLayer|null>(null);
-  const settings=useRef<NativeLayerOptions>({scale:options.scale,size:pointSize,color,gridColor,selected:null,opacity:opacity/100,framePixelLimit:resources.framePixelLimit,motion:motionAllowed});
-  useLayoutEffect(()=>{latest.current=options;selection.current=selected;settings.current={scale:options.scale,size:pointSize,color,gridColor,selected:selected?.kind==='point'?selected.index:null,opacity:opacity/100,framePixelLimit:resources.framePixelLimit,motion:motionAllowed};},[options,pointSize,color,gridColor,selected,opacity,resources.framePixelLimit,motionAllowed]);
-  useEffect(()=>{const visibility=()=>{if(document.hidden){session.cancel();groundSession.cancel();preparer.cancel();}setVisible(!document.hidden);};visibility();document.addEventListener('visibilitychange',visibility);return()=>{document.removeEventListener('visibilitychange',visibility);preparer.cancel();};},[session,groundSession,preparer]);
-  // An inactive/replaced map cannot retain a study-camera lease.
-  useEffect(()=>{const map=options.mapRef.current;if(!options.active||studyMap.current&&studyMap.current!==map){study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);}studyMap.current=map;},[options.active,options.styleReady,options.mapRef]);
-  function viewportFootprint(map:MapLibreMap):TerrainFootprint {
-    const b=map.getBounds(),center=map.getCenter(),canvas=map.getCanvas();
-    return terrainViewFootprint({center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight},[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()]);
-  }
-  function leaseFor(map:MapLibreMap,bounds:TerrainFootprint,sourceZoom=map.getZoom()):TerrainViewLease {
-    const canvas=map.getCanvas();return {bounds:[...bounds],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight,sourceZoom};
-  }
-  const wanted=options.active&&options.styleReady&&(pointsOn||options.cellsOn&&mode!=='ground');
-  useEffect(()=>{
-    const map=options.mapRef.current;if(!map)return;
-    let startingFootprint=viewportFootprint(map),startingZoom=map.getZoom(),startingSize=[map.getCanvas().clientWidth,map.getCanvas().clientHeight],interrupted=false;
-    const resumeDeferred=()=>{
-      const deferred=deferredAcquisition.current;deferredAcquisition.current={ground:false,native:false};
-      // Each source owns its deferred revision. Resuming one must not retire a
-      // different source's still-valid in-flight job for this held footprint.
-      if(deferred.ground)setGroundResume(n=>n+1);
-      if(deferred.native)setNativeResume(n=>n+1);
-    };
-    const owned=(event:unknown)=>!!study.current&&(event as {kfmTerrainStudy?:number}|undefined)?.kfmTerrainStudy===study.current.id;
-    const start=(event?:unknown)=>{
-      pointLayer.current?.invalidate();gridLayer.current?.invalidate();
-      if(owned(event)&&!interrupted)return;
-      if(moving.current)return;
-      moving.current=true;setNavigating(true);
-      // Orientation is a camera operation, not a new dataset. Keep one held
-      // footprint while moving; picking is blocked until the gesture settles.
-    };
-    const end=(event?:unknown)=>{
-      if(owned(event)&&!interrupted){startingFootprint=viewportFootprint(map);startingZoom=map.getZoom();startingSize=[map.getCanvas().clientWidth,map.getCanvas().clientHeight];if(spatialLease.current)spatialLease.current=leaseFor(map,spatialLease.current.bounds,spatialLease.current.sourceZoom);return;}
-      const next=viewportFootprint(map),canvas=map.getCanvas(),same=sameTerrainFootprint(startingFootprint,next)&&Math.abs(startingZoom-map.getZoom())<1e-7&&startingSize[0]===canvas.clientWidth&&startingSize[1]===canvas.clientHeight;
-      startingFootprint=next;startingZoom=map.getZoom();startingSize=[canvas.clientWidth,canvas.clientHeight];interrupted=false;moving.current=false;setNavigating(false);
-      if(same){resumeDeferred();return;}
-      const center=map.getCenter();
-      if(spatialLease.current&&terrainLeaseContains(spatialLease.current,{center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight})){setNearbyHeld(true);resumeDeferred();return;}
-      deferredAcquisition.current={ground:false,native:false};
-      const panWindow=spatialLease.current&&center.lng>=next[0]&&center.lng<=next[2]&&center.lat>=next[1]&&center.lat<=next[3]&&terrainPanFootprint(spatialLease.current,{center:[center.lng,center.lat],zoom:map.getZoom(),width:canvas.clientWidth,height:canvas.clientHeight});
-      study.current=null;spatialLease.current=panWindow?leaseFor(map,panWindow,spatialLease.current?.sourceZoom):null;setPinned(false);setNearbyHeld(false);readingIntent.current=false;selection.current=null;
-      session.cancel();groundSession.cancel();preparer.cancel();setGroundPhase('moving');setResult(null);setReceipt(null);setSelected(null);setDraft('');setPhase('moving');setEpoch(n=>n+1);
-    };
-    // User gestures can interrupt an owned ease without a second movestart.
-    const gesture=(event:unknown)=>{if((event as {originalEvent?:unknown})?.originalEvent){interrupted=true;start(event);}};
-    map.on('movestart',start);map.on('moveend',end);for(const name of ['dragstart','zoomstart','rotatestart','pitchstart'] as const)map.on(name,gesture);
-    return()=>{map.off('movestart',start);map.off('moveend',end);for(const name of ['dragstart','zoomstart','rotatestart','pitchstart'] as const)map.off(name,gesture);};
-  },[options.mapRef,options.styleReady,session,groundSession,preparer]);
-  useEffect(()=>{
-    session.cancel();deferredAcquisition.current.native=false;
-    if(!visible)return;
-    // A basemap replacement suspends its GPU resources, not the scientifically
-    // validated study. Reuse exact query-bound data on this same map only; its
-    // original cache/source times and stale labels are never renewed here.
-    if(!options.styleReady){stylePause.current.native=options.mapRef.current;return;}
-    const pausedMap=stylePause.current.native;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setError('');
-    if(!wanted){setResult(null);setReceipt(null);setPhase('idle');return;}
-    if(moving.current){deferredAcquisition.current.native=true;setPhase('moving');return;}
-    stylePause.current.native=null;
-    const map=options.mapRef.current;if(!map)return;const query=canonicalLidarView(study.current?.bbox??spatialLease.current?.bounds??viewportFootprint(map),study.current?.zoom??spatialLease.current?.sourceZoom??map.getZoom(),[...(options.cellsOn&&mode!=='ground'?[mode]:[]),...(pointsOn?['points']:[])]);
-    if(!query){setResult(null);setPhase('outside');return;}
-    const cached=validated.current.native;
-    if(pausedMap===map&&cached&&JSON.stringify(cached.receipt.query)===JSON.stringify(query)&&!refreshCache.current.native){setPhase(cached.receipt.state);return;}
-    setResult(null);setReceipt(null);if(selection.current?.kind==='point'){selection.current=null;readingIntent.current=false;setSelected(null);setDraft('');}
-    spatialLease.current=leaseFor(map,query.bbox,query.zoom);
-    setPhase('waiting');const request=session.begin();
-    const timer=setTimeout(()=>{setPhase('loading');const bypassCache=refreshCache.current.native;refreshCache.current.native=false;void readKansasLidarView(query,request.signal,r=>{if(request.current()){setReceipt(r);setPhase(r.state);}},{bypassCache}).then(data=>{if(request.current()&&latest.current.mapRef.current===map&&latest.current.active){setResult(data);if(!readingIntent.current)setReadingKind(data.points?'point':'cell');setReceipt(data.receipt);setPhase(data.receipt.state);}}).catch(e=>{if(request.current()){setError(e instanceof Error?e.message:'LiDAR view unavailable');setPhase('unavailable');}});},300);
-    return()=>{if(timer)clearTimeout(timer);session.cancel();};
-  },[wanted,mode,pointsOn,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,session,visible,nativeResume]);
-  useEffect(()=>{
-    groundSession.cancel();deferredAcquisition.current.ground=false;
-    if(!visible)return;
-    if(!options.styleReady){stylePause.current.ground=options.mapRef.current;return;}
-    const pausedMap=stylePause.current.ground;
-    // A Ground grid belongs only to the committed current viewport.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setGroundError('');
-    if(!options.active||!options.cellsOn||mode!=='ground'){setGroundPhase('idle');return;}
-    if(moving.current){deferredAcquisition.current.ground=true;setGroundPhase('moving');return;}
-    stylePause.current.ground=null;
-    const map=options.mapRef.current;if(!map)return;const query=canonicalGroundQuery(study.current?.bbox??spatialLease.current?.bounds??viewportFootprint(map));
-    if(!query){setGroundReceipt(null);setGroundPhase('outside');return;}
-    const cached=validated.current.ground;
-    if(pausedMap===map&&cached?.grid&&JSON.stringify(cached.query)===JSON.stringify(query)&&!refreshCache.current.ground){setGroundPhase(cached.state);return;}
-    spatialLease.current=leaseFor(map,query.bbox,spatialLease.current?.sourceZoom);
-    setGroundPhase('waiting');const request=groundSession.begin();
-    const publish=(response:GroundReceipt)=>{if(request.current()&&latest.current.mapRef.current===map&&latest.current.active){setGroundReceipt(response);setGroundPhase(response.state);if(response.grid&&!readingIntent.current)setReadingKind('cell');}};
-    const timer=setTimeout(()=>{setGroundPhase('loading');const bypassCache=refreshCache.current.ground;refreshCache.current.ground=false;void readKansasGround(query,request.signal,publish,{bypassCache}).then(publish).catch(e=>{if(request.current()){setGroundError(e instanceof Error?e.message:'Ground grid unavailable');setGroundPhase('unavailable');}});},300);
-    return()=>{clearTimeout(timer);groundSession.cancel();};
-  },[mode,options.cellsOn,epoch,options.mapRef,options.active,options.styleReady,groundSession,visible,groundResume]);
-  const sourceGrid=mode==='ground'?groundReceipt?.grid??null:result?.receipt.query.layers.includes(mode)?result.grid:null;
-  const pending=navigating||['moving','waiting','loading','processing','unavailable'].includes(mode==='ground'?groundPhase:phase);
-  // Keep one previously prepared footprint through navigation and worker preparation.
-  // It is never stretched, relabelled as new coverage, or used to fill unsupported cells.
-  const displayPrepared=prepared?.mode===mode&&prepared.scale===options.scale&&prepared.color===gridColor&&(sourceGrid||pending)?prepared:null;
-  const grid=displayPrepared?.grid??sourceGrid;
-  const transitioning=!!displayPrepared&&(pending||displayPrepared.grid!==sourceGrid);
-  useLayoutEffect(()=>{handoff.current=transitioning;},[transitioning]);
-  const cellsOn=options.cellsOn;
-  const groundAnalysis=displayPrepared?.value.analysis??null;
-  const preparedForRender=cellsOn&&visible&&opacity>0?displayPrepared?.value??null:null;
-  const cellsVisible=opacity>0;
-  useEffect(()=>{
-    preparer.cancel();
-    // This mirrors a new current-viewport preparation job, never a CPU fallback.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPreparationError('');
-    const cached=preparationCache.current,matching=cached?.grid===sourceGrid&&cached.mode===mode&&cached.scale===options.scale&&cached.color===gridColor;
-    if(!matching)preparationCache.current=null;
-    if(!sourceGrid||!cellsOn||!options.active||!options.styleReady||!visible||!cellsVisible){setPreparationPhase(!visible?'paused':'idle');return;}
-    if(matching){setPrepared(cached);setPreparationPhase(cached.value.eligibleCount?'prepared':'empty');return;}
-    setPreparationPhase('preparing');let current=true;
-    const previousAnalysis=cached?.grid===sourceGrid?cached.value.analysis:null;
-    preparer.prepare({grid:sourceGrid,mode,scale:options.scale,color:gridColor,analysis:previousAnalysis},{ready:value=>{if(current){if(previousAnalysis)value={...value,analysis:previousAnalysis};preparationCache.current={grid:sourceGrid,mode,scale:options.scale,color:gridColor,groundReceipt,value};setPrepared(preparationCache.current);setPreparationPhase(value.eligibleCount?'prepared':'empty');}},error:message=>{if(current){setPreparationError(message);setPreparationPhase('unavailable');}},slow:()=>{if(current)markSlow();}});
-    return()=>{current=false;preparer.cancel();};
-  },[sourceGrid,cellsOn,mode,options.scale,gridColor,options.active,options.styleReady,visible,cellsVisible,preparer,markSlow,groundReceipt]);
-  useEffect(()=>{
-    const map=options.mapRef.current;if(!map)return;let disposed=false;
-    const remove=(id:string,ref:RefObject<NativePointLayer|null>)=>{const layer=ref.current;ref.current=null;if(layer&&(map.getLayer(id) as unknown as {implementation?:unknown})?.implementation===layer)try{map.removeLayer(id);}catch{/* Renderer disposal owns final teardown. */}};
-    const clear=()=>{registerNativeLidarPicker(map,null);remove(NATIVE_LIDAR_LAYER,pointLayer);remove(KANSAS_LIDAR_GRID_LAYER,gridLayer);setApplied({points:false,grid:false});};
-    const sync=()=>{if(disposed)return;clear();if(!result&&!preparedForRender||!options.active||!options.styleReady||!visible||!cellsVisible||map.getProjection()?.type!=='mercator')return;
-      try{
-        const report=(kind:'grid'|'points')=>(text:string)=>{if(!disposed){setError(text);setApplied(previous=>({...previous,[kind]:false}));}};
-        if(preparedForRender){if(map.getLayer(KANSAS_LIDAR_GRID_LAYER))throw Error('Analysis layer ID belongs to another resource');gridLayer.current=createPreparedLidarGridLayer(preparedForRender,{...settings.current,selected:selection.current?.kind==='cell'?selection.current.index:null},report('grid'));if(gridLayer.current.eligible>0){map.addLayer(gridLayer.current);if(riseIntent.current){riseIntent.current=false;if(settings.current.motion&&!moving.current&&!handoff.current)gridLayer.current.reveal();}}else gridLayer.current=null;}
-        if(result?.points&&pointsOn){if(map.getLayer(NATIVE_LIDAR_LAYER))throw Error('Native point layer ID belongs to another resource');pointLayer.current=createNativePointLayer(result.points,settings.current,report('points'));if(pointLayer.current.eligible>0)map.addLayer(pointLayer.current);else pointLayer.current=null;}
-        setApplied({grid:!!gridLayer.current&&!gridLayer.current.failed,points:!!pointLayer.current&&!pointLayer.current.failed});
-        registerNativeLidarPicker(map,point=>{if(moving.current||handoff.current)return false;const p=pointLayer.current?.pick(point);if(p!==null&&p!==undefined){readingIntent.current=true;setReadingKind('point');setSelected({kind:'point',index:p});setDraft(String(p+1));latest.current.onSelected?.();return true;}const cell=gridLayer.current?.pick(point);if(cell!==null&&cell!==undefined){readingIntent.current=true;setReadingKind('cell');setSelected({kind:'cell',index:cell});setDraft(String(cell+1));latest.current.onSelected?.();return true;}return false;});
-      }catch(e){clear();setError(e instanceof Error?e.message:'LiDAR rendering unavailable');}
-    };sync();map.on('style.load',sync);const lost=()=>{if(pointLayer.current||gridLayer.current){pointLayer.current?.invalidate();gridLayer.current?.invalidate();registerNativeLidarPicker(map,null);setApplied({points:false,grid:false});setError('Graphics context lost. Refresh this view after map recovery to retry native layers.');}};map.on('webglcontextlost',lost);const invalidate=()=>{pointLayer.current?.invalidate();gridLayer.current?.invalidate();};map.on('resize',invalidate);
-    return()=>{disposed=true;map.off('style.load',sync);map.off('webglcontextlost',lost);map.off('resize',invalidate);clear();};
-  },[result,preparedForRender,pointsOn,options.active,options.styleReady,options.mapRef,visible,cellsVisible]);
-  // Mirror a contained external GPU settings failure into this control only.
+ const [mode,setMode]=useState<LidarGridMode>('ground'),[pointsOn,setPointsOn]=useState(false),[opacity,setOpacity]=useState(100),[pointSize,setPointSize]=useState(3),[color,setColor]=useState<NativeColorMode>('elevation'),[gridColor,setGridColor]=useState<GroundColor>('height');
+ const [rawResult,setRawResult]=useState<KansasLidarView|null>(null),[rawReceipt,setRawReceipt]=useState<LidarViewReceipt|null>(null),[nativePhase,setNativePhase]=useState('idle'),[error,setError]=useState(''),[selected,setSelected]=useState<{kind:'point'|'cell';index:number;tile?:string}|null>(null),[readingKind,setReadingKind]=useState<'point'|'cell'>('cell'),[draft,setDraft]=useState(''),[applied,setApplied]=useState({points:false,grid:false});
+ const resources=useVisitorTerrainResources(),latest=useRef(options),riseIntent=useRef(true),previousCells=useRef(options.cellsOn),[session]=useState(createAcquisitionSession);
+ const tiles=useTerrainTileView({mapRef:options.mapRef,active:options.active,styleReady:options.styleReady,enabled:options.cellsOn,mode,scale:options.scale,color:gridColor,lightweight:resources.lightweight,markSlow:resources.markSlow});
+ const selection=useRef(selected);useLayoutEffect(()=>{selection.current=selected;},[selected]);
+ const pointLayer=useRef<NativePointLayer|null>(null),gridLayer=useRef<NativePointLayer|null>(null),moving=useRef(false),[rawEpoch,setRawEpoch]=useState(0);
+ const motionAllowed=!options.reducedMotion&&!resources.lightweight;
+ useLayoutEffect(()=>{latest.current=options;if(options.cellsOn&&!previousCells.current)riseIntent.current=true;previousCells.current=options.cellsOn;},[options,selected]);
+ const prepared=tiles.display,entries=prepared?.entries??tiles.snapshot.entries.filter(e=>e.grid&&e.tile.key.startsWith(mode+':')),selectedEntry=selected?.kind==='cell'?entries.find(e=>e.tile.key===selected.tile):null,entry=selectedEntry??entries[0]??null;
+ const grid=entry?.grid??null,groundReceipt=entry?.ground??null,receipt=entry?.native?.receipt??rawReceipt,result=entry?.native?{...entry.native,points:rawResult?.points??null}:rawResult;
+ const cellsVisible=opacity>0;
+ const preparedForRender=options.cellsOn&&tiles.visible&&cellsVisible?prepared?.value??null:null;
+ const transitioning=options.cellsOn&&tiles.snapshot.pending>0,phase=tiles.phase;
+ const groundAnalysis=entry?prepared?.value.analyses?.[entries.indexOf(entry)]??null:null;
+ const globalSelected=selected?.kind==='cell'&&preparedForRender?.tiles?preparedForRender.tiles.find(t=>t.key===selected.tile)?.start:null;
+ const settings:NativeLayerOptions=useMemo(()=>({scale:options.scale,size:pointSize,color,gridColor,selected:selected?.kind==='point'?selected.index:null,opacity:opacity/100,framePixelLimit:resources.framePixelLimit,motion:motionAllowed}),[options.scale,pointSize,color,gridColor,selected,opacity,resources.framePixelLimit,motionAllowed]);
+ const settingsRef=useRef(settings);useLayoutEffect(()=>{settingsRef.current=settings;},[settings]);
+ function viewportFootprint(map:MapLibreMap):TerrainFootprint{const b=map.getBounds();return [b.getWest(),b.getSouth(),b.getEast(),b.getNorth()];}
+ useEffect(()=>{const map=options.mapRef.current;if(!map)return;const start=()=>{moving.current=true;pointLayer.current?.invalidate();gridLayer.current?.invalidate();},end=()=>{moving.current=false;setRawEpoch(n=>n+1);};map.on('movestart',start);map.on('moveend',end);return()=>{map.off('movestart',start);map.off('moveend',end);};},[options.mapRef,options.styleReady]);
+ useEffect(()=>{
+  session.cancel();
+  // Mirror this independently owned raw-point reader's external lifecycle.
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(()=>{try{pointLayer.current?.update(settings.current);if(preparedForRender)gridLayer.current?.update({...settings.current,selected:selected?.kind==='cell'?selected.index:null});}catch(e){setError(e instanceof Error?e.message:'LiDAR settings unavailable');}},[options.scale,pointSize,color,gridColor,selected,opacity,preparedForRender,resources.framePixelLimit,motionAllowed]);
-  function inspectLandscape(){
-    const current=latest.current,map=current.mapRef.current;if(!map||!grid||!preparedForRender||!applied.grid||!current.active||!current.styleReady||!visible||handoff.current)return;
-    try{
-      const corners=grid.format==='kfm-3dep-ground-grid-v1'?groundCorners(grid):grid.cornersWgs84,lons=corners.map(p=>p[0]),lats=corners.map(p=>p[1]),bbox:[number,number,number,number]=[Math.min(...lons),Math.min(...lats),Math.max(...lons),Math.max(...lats)];
-      const heights=(mode==='canopy'?grid.ground.map((z,i)=>z!==null&&grid.format==='kfm-lidar-grid-v1'&&grid.canopy[i]!==null&&grid.canopy[i]!>=0?z+grid.canopy[i]!:null):grid.format==='kfm-3dep-ground-grid-v1'?grid.ground:grid[mode]).filter((z):z is number=>z!==null&&Number.isFinite(z));
-      if(!heights.length)throw Error('No supported height cells');
-      const canvas=map.getCanvas();
-      const camera=terrainInspectionCamera({corners,heights,scale:current.scale,width:canvas.clientWidth,height:canvas.clientHeight,bearing:map.getBearing(),fieldOfView:map.getVerticalFieldOfView(),centerElevation:map.getCenterElevation()});
-      const query=mode==='ground'?groundReceipt?.query:result?.receipt.query;
-      map.stop(); // Finish an older owned ease while its original event tag is still current.
-      study.current={id:++studyRevision.current,bbox:[...(query?.bbox??bbox)],zoom:query&&'zoom' in query?query.zoom:map.getZoom()};setPinned(true);setOpacity(100);
-      // MapLibre animates terrain-derived elevation during easeTo. A distant
-      // context reference needs one atomic camera fit so it cannot undo this
-      // source-height target; normal fits retain their smooth transition.
-      map.easeTo({...camera,duration:current.reducedMotion||camera.elevation!==undefined?0:700,essential:false},{kfmTerrainStudy:study.current.id});current.onViewMap();
-    }catch{study.current=null;setPinned(false);setError('This landscape could not be framed. Its source cells and readings are unchanged.');}
-  }
-  function replayRise(){if(!motionAllowed||!visible||!options.active||navigating||transitioning||!applied.grid)return;gridLayer.current?.reveal();}
-  function followMap(){study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);latest.current.mapRef.current?.stop();moving.current=false;readingIntent.current=false;selection.current=null;session.cancel();groundSession.cancel();setSelected(null);setDraft('');setEpoch(n=>n+1);}
-  function visualRelief(){latest.current.onScale?.(3);}
-  function tilt3D(){changeAngle(false);}
-  function lookDown(){changeAngle(true);}
-  function changeAngle(overhead:boolean){
-    const current=latest.current,map=current.mapRef.current;
-    if(!map||!current.active||!current.styleReady)return;
-    try{
-      const center=map.getCenter(),zoom=map.getZoom(),bearing=map.getBearing(),pitch=map.getPitch();
-      if(![center.lng,center.lat,zoom,bearing,pitch].every(Number.isFinite))throw Error('Current map camera is unavailable.');
-      map.easeTo({center:[center.lng,center.lat],zoom,bearing,pitch:overhead?Math.min(pitch,35):52,duration:current.reducedMotion?0:600,essential:false});
-      current.onViewMap();
-    }catch{setError('The map angle could not be changed. Source values and layers are unchanged.');}
-  }
-  function detailHere(){
-    const current=latest.current,map=current.mapRef.current;if(!map||!current.active||!current.styleReady)return;
-    try{
-      const center=map.getCenter(),zoom=map.getZoom(),bearing=map.getBearing();if(![center.lng,center.lat,zoom,bearing].every(Number.isFinite))throw Error('camera');
-      const b=viewportFootprint(map),radians=Math.PI/180;
-      const area=Math.abs((b[2]-b[0])*(b[3]-b[1]))*radians*radians*MAPLIBRE_EARTH_RADIUS_M**2*Math.cos(center.lat*radians);
-      // Area scales as 4^-zoom. Aim below the 1 km² native budget with margin
-      // for oblique bounds, projection differences and the change to 55° pitch.
-      const areaZoom=Number.isFinite(area)&&area>0?zoom+.5*Math.log2(Math.max(1,area/250000)):zoom+1;
-      const targetZoom=Math.min(TERRAIN_DETAIL_MAX_ZOOM,Math.max(17.5,zoom+.5,areaZoom));
-      map.easeTo({center:[center.lng,center.lat],zoom:targetZoom,bearing,pitch:55,duration:current.reducedMotion?0:600,essential:false});
-    }catch{setError('The current map camera could not zoom to detail. Retry this view; source coverage and analysis limits still apply.');}
-  }
-  const count=readingKind==='cell'?(grid?grid.width*grid.height:0):result?.points?.points.length??0;
-  function choose(value:string,kind:'point'|'cell'=readingKind){readingIntent.current=true;setReadingKind(kind);setDraft(value);const n=/^\d+$/.test(value)?Number(value)-1:-1,limit=kind==='point'?result?.points?.points.length??0:grid?(grid.width*grid.height):0;setSelected(Number.isSafeInteger(n)&&n>=0&&n<limit?{kind,index:n}:null);}
-  function setCellsOn(value:boolean){latest.current.onCells(value);if(value){latest.current.onNativeIntent?.();latest.current.onGround();}else{preparer.cancel();groundSession.cancel();session.cancel();readingIntent.current=false;selection.current=null;setSelected(null);setDraft('');}}
-  function showBaseLandscape(){setCellsOn(false);setPointsOn(false);study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);}
-  function selectMode(value:LidarGridMode){if(!latest.current.cellsOn)setCellsOn(true);if(value===mode)return;riseIntent.current=true;setResult(null);setGroundReceipt(null);setPrepared(null);preparationCache.current=null;refreshCache.current={ground:false,native:false};preparer.cancel();readingIntent.current=false;selection.current=null;latest.current.onNativeIntent?.();session.cancel();groundSession.cancel();setSelected(null);setDraft('');setReadingKind('cell');setMode(value);if(value==='ground')latest.current.onGround();}
-  function clear(){spatialLease.current=null;setNearbyHeld(false);latest.current.onCells(false);preparer.cancel();setPrepared(null);preparationCache.current=null;study.current=null;setPinned(false);readingIntent.current=false;selection.current=null;session.cancel();groundSession.cancel();setGroundReceipt(null);setEpoch(v=>v+1);setMode('ground');setPointsOn(false);setResult(null);setReceipt(null);setPhase('idle');setReadingKind('point');setSelected(null);setDraft('');setError('');}
-  return {cellsOn,setCellsOn,showBaseLandscape,motionAllowed,replayRise,transitioning,navigating,nearbyHeld,backdrop:options.backdrop??'relief',setBackdrop:(value:'relief'|'aerial')=>latest.current.onBackdrop?.(value),setScale:(value:number)=>latest.current.onScale?.(value),resources,visible,preparationPhase,preparationError,mode,pinned,inspectLandscape,followMap,visualRelief,groundAnalysis,gridColor,setGridColor,pointsOn,opacity,pointSize,color,result,receipt,grid,groundReceipt:displayPrepared?.groundReceipt??groundReceipt,groundPhase,nativePhase:phase,phase:mode==='ground'?groundPhase:phase,error:[groundError,error,preparationError].filter(Boolean).join(' '),selected,readingKind,draft,applied,active:options.active&&options.styleReady,scale:options.scale,count:count||0,viewMap:()=>latest.current.onViewMap(),lookDown,tilt3D,detailHere,selectMode,togglePoints:()=>{latest.current.onNativeIntent?.();session.cancel();setPointsOn(v=>!v);},setOpacity,setPointSize,setColor,choose,step:(delta:number)=>{const next=selected?Math.max(0,Math.min((count||1)-1,selected.index+delta)):0;choose(String(next+1),readingKind);},retry:()=>{study.current=null;spatialLease.current=null;setPinned(false);setNearbyHeld(false);readingIntent.current=false;selection.current=null;session.cancel();groundSession.cancel();preparer.cancel();setSelected(null);setDraft('');refreshCache.current={ground:mode==='ground',native:wanted};setEpoch(n=>n+1);},clear,clearSelection:()=>{readingIntent.current=true;setSelected(null);setDraft('');}};
+  if(!pointsOn||!options.active||!options.styleReady||!tiles.visible){setRawResult(null);setRawReceipt(null);setNativePhase('idle');return;}
+  const map=options.mapRef.current;if(!map||moving.current)return;const query=canonicalLidarView(viewportFootprint(map),map.getZoom(),['points']);if(!query){setNativePhase('outside');return;}
+  const request=session.begin();if(selection.current?.kind==='point'){setSelected(null);setDraft('');}setNativePhase('loading');setError('');
+  const timer=setTimeout(()=>void readKansasLidarView(query,request.signal,r=>{if(request.current()){setRawReceipt(r);setNativePhase(r.state);}}).then(data=>{if(request.current()&&latest.current.mapRef.current===map){if(selection.current?.kind==='point'){setSelected(null);setDraft('');}setRawResult(data);setRawReceipt(data.receipt);setNativePhase(data.receipt.state);}}).catch(e=>{if(request.current()){setError(e instanceof Error?e.message:'LiDAR view unavailable');setNativePhase('unavailable');}}),300);
+  return()=>{clearTimeout(timer);session.cancel();};
+ },[pointsOn,options.active,options.styleReady,options.mapRef,tiles.visible,rawEpoch,session]);
+ useEffect(()=>{
+  const map=options.mapRef.current;if(!map)return;let disposed=false;
+  const remove=(id:string,ref:RefObject<NativePointLayer|null>)=>{const layer=ref.current;ref.current=null;if(layer&&(map.getLayer(id) as unknown as {implementation?:unknown})?.implementation===layer)try{map.removeLayer(id);}catch{/* Map disposal owns final teardown. */}};
+  const clear=()=>{registerNativeLidarPicker(map,null);remove(NATIVE_LIDAR_LAYER,pointLayer);remove(KANSAS_LIDAR_GRID_LAYER,gridLayer);setApplied({points:false,grid:false});};
+  const sync=()=>{if(disposed)return;clear();if(!options.active||!options.styleReady||!tiles.visible||!cellsVisible||map.getProjection()?.type!=='mercator')return;
+   try{
+    const report=(kind:'grid'|'points')=>(message:string)=>{if(!disposed){setError(message);setApplied(p=>({...p,[kind]:false}));}};
+    if(preparedForRender){if(map.getLayer(KANSAS_LIDAR_GRID_LAYER))throw Error('Analysis layer ID belongs to another resource');gridLayer.current=createPreparedLidarGridLayer(preparedForRender,{...settingsRef.current,selected:null},report('grid'));if(gridLayer.current.eligible>0){map.addLayer(gridLayer.current);if(riseIntent.current){riseIntent.current=false;if(settingsRef.current.motion&&!moving.current)gridLayer.current.reveal();}}else gridLayer.current=null;}
+    if(rawResult?.points&&pointsOn){if(map.getLayer(NATIVE_LIDAR_LAYER))throw Error('Native point layer ID belongs to another resource');pointLayer.current=createNativePointLayer(rawResult.points,settingsRef.current,report('points'));if(pointLayer.current.eligible>0)map.addLayer(pointLayer.current);else pointLayer.current=null;}
+    setApplied({grid:!!gridLayer.current&&!gridLayer.current.failed,points:!!pointLayer.current&&!pointLayer.current.failed});
+    registerNativeLidarPicker(map,point=>{if(moving.current)return false;const p=pointLayer.current?.pick(point);if(p!==null&&p!==undefined){setReadingKind('point');setSelected({kind:'point',index:p});setDraft(String(p+1));latest.current.onSelected?.();return true;}const id=gridLayer.current?.pick(point),range=id===null||id===undefined?null:preparedForRender?.tiles?.find(t=>id>=t.start&&id<t.start+t.count);if(range&&id!==null&&id!==undefined){setReadingKind('cell');setSelected({kind:'cell',index:id-range.start,tile:range.key});setDraft(String(id-range.start+1));latest.current.onSelected?.();return true;}return false;});
+   }catch(e){clear();setError(e instanceof Error?e.message:'LiDAR rendering unavailable');}
+  };sync();map.on('style.load',sync);const lost=()=>{pointLayer.current?.invalidate();gridLayer.current?.invalidate();registerNativeLidarPicker(map,null);setApplied({points:false,grid:false});setError('Graphics context lost. Refresh this view after map recovery to retry native layers.');};map.on('webglcontextlost',lost);
+  return()=>{disposed=true;map.off('style.load',sync);map.off('webglcontextlost',lost);clear();};
+ },[rawResult,preparedForRender,pointsOn,options.active,options.styleReady,options.mapRef,tiles.visible,cellsVisible]);
+ // Mirror a contained external GPU settings failure in this control.
+ // eslint-disable-next-line react-hooks/set-state-in-effect
+ useEffect(()=>{try{pointLayer.current?.update(settingsRef.current);gridLayer.current?.update({...settingsRef.current,selected:globalSelected!==null&&globalSelected!==undefined&&selected?.kind==='cell'?globalSelected+selected.index:null});}catch(e){setError(e instanceof Error?e.message:'Terrain settings unavailable');}},[options.scale,pointSize,color,gridColor,selected,opacity,preparedForRender,globalSelected,resources.framePixelLimit,motionAllowed]);
+ function inspectLandscape(){const current=latest.current,map=current.mapRef.current;if(!map||!current.active||!current.styleReady)return;try{
+  if(!prepared||!applied.grid){changeAngle(false);return;}
+  const corners=prepared.entries.flatMap(e=>{const g=e.grid!;if(g.format==='kfm-3dep-ground-grid-v1'){const c=groundCorners(g);return [c[0],c[g.width],c[g.height*(g.width+1)],c[c.length-1]];}const c=g.cornersWgs84;return [c[0],c[g.width],c[g.height*(g.width+1)],c[c.length-1]];}),heights=prepared.entries.flatMap(e=>{const g=e.grid!;return mode==='canopy'&&g.format==='kfm-lidar-grid-v1'?g.ground.map((z,i)=>z!==null&&g.canopy[i]!==null&&g.canopy[i]!>=0?z+g.canopy[i]!:null):g.format==='kfm-3dep-ground-grid-v1'?g.ground:g[mode];}).filter((v):v is number=>v!==null&&Number.isFinite(v));
+  const canvas=map.getCanvas(),camera=terrainInspectionCamera({corners,heights,scale:current.scale,width:canvas.clientWidth,height:canvas.clientHeight,bearing:map.getBearing(),fieldOfView:map.getVerticalFieldOfView(),centerElevation:map.getCenterElevation()});const center=map.getCenter();map.stop();map.easeTo({...camera,center:[center.lng,center.lat],zoom:map.getZoom(),duration:current.reducedMotion||camera.elevation!==undefined?0:700,essential:false});current.onViewMap();
+ }catch{setError('This landscape could not be framed. Source cells and readings are unchanged.');}}
+ function changeAngle(overhead:boolean){const current=latest.current,map=current.mapRef.current;if(!map||!current.active||!current.styleReady)return;const center=map.getCenter();map.easeTo({center:[center.lng,center.lat],zoom:map.getZoom(),bearing:map.getBearing(),pitch:overhead?35:52,duration:current.reducedMotion?0:600,essential:false});current.onViewMap();}
+ function detailHere(){const current=latest.current,map=current.mapRef.current;if(!map||!current.active||!current.styleReady)return;const center=map.getCenter();map.easeTo({center:[center.lng,center.lat],zoom:Math.min(TERRAIN_DETAIL_MAX_ZOOM,Math.max(17.5,map.getZoom()+1)),bearing:map.getBearing(),pitch:50,duration:current.reducedMotion?0:600,essential:false});}
+ const count=readingKind==='cell'?(grid?grid.width*grid.height:0):rawResult?.points?.points.length??0;
+ function choose(value:string,kind:'point'|'cell'=readingKind){setReadingKind(kind);setDraft(value);const index=/^\d+$/.test(value)?Number(value)-1:-1,limit=kind==='point'?rawResult?.points?.points.length??0:grid?grid.width*grid.height:0;setSelected(Number.isSafeInteger(index)&&index>=0&&index<limit?{kind,index,...(kind==='cell'?{tile:entry?.tile.key}:{})}:null);}
+ function setCellsOn(value:boolean){latest.current.onCells(value);if(value){latest.current.onNativeIntent?.();latest.current.onGround();}setSelected(null);setDraft('');}
+ function showBaseLandscape(){setCellsOn(false);setPointsOn(false);}
+ function selectMode(value:LidarGridMode){if(!latest.current.cellsOn)setCellsOn(true);if(value!==mode){riseIntent.current=true;setMode(value);setSelected(null);setDraft('');setReadingKind('cell');latest.current.onNativeIntent?.();if(value==='ground')latest.current.onGround();}}
+ function retry(){setError('');setSelected(null);setDraft('');tiles.retry();setRawEpoch(n=>n+1);}
+ function clear(){showBaseLandscape();setMode('ground');setSelected(null);setDraft('');setError('');}
+ const tileStatus={loaded:tiles.snapshot.entries.filter(e=>e.grid).length,total:tiles.snapshot.plan.tiles.length,pending:tiles.snapshot.pending,failed:tiles.snapshot.failed,missing:tiles.snapshot.entries.filter(e=>!e.grid&&!e.error).length};
+ return {cellsOn:options.cellsOn,setCellsOn,showBaseLandscape,motionAllowed,replayRise:()=>{if(motionAllowed&&!moving.current)gridLayer.current?.reveal();},transitioning,navigating:tiles.navigating,nearbyHeld:false,pinned:false,followMap:retry,backdrop:options.backdrop??'relief',setBackdrop:(value:'relief'|'aerial')=>latest.current.onBackdrop?.(value),setScale:(value:number)=>latest.current.onScale?.(value),resources,visible:tiles.visible,preparationPhase:tiles.preparationPhase,preparationError:tiles.error,mode,inspectLandscape,visualRelief:()=>latest.current.onScale?.(3),groundAnalysis,gridColor,setGridColor,pointsOn,opacity,pointSize,color,result,receipt,grid,groundReceipt,groundPhase:phase,nativePhase,phase,error:[...new Set([error,tiles.error,...tiles.snapshot.entries.map(e=>e.error)].filter(Boolean))].join(' '),selected: selected?.kind==='cell'&&!selectedEntry?null:selected,readingKind,draft,applied,active:options.active&&options.styleReady,scale:options.scale,count,viewMap:()=>latest.current.onViewMap(),lookDown:()=>changeAngle(true),tilt3D:()=>changeAngle(false),detailHere,selectMode,togglePoints:()=>{latest.current.onNativeIntent?.();setPointsOn(v=>!v);},setOpacity,setPointSize,setColor,choose,step:(delta:number)=>choose(String(selected?Math.max(0,Math.min(Math.max(0,count-1),selected.index+delta))+1:1)),retry,clear,clearSelection:()=>{setSelected(null);setDraft('');},tileStatus,renderedScale:preparedForRender?.settings.scale??null,retryMissing:tiles.retryMissing,displayTiles:entries.length,displayDomain:prepared?.value.domain??null,displayStride:prepared?.value.stride??1};
 }
 export type KansasLidarController=ReturnType<typeof useKansasLidarView>;
 const metres=(v:number|null)=>v===null?'NoData':v.toFixed(3)+' m';
 const modeLabel=(mode:LidarGridMode)=>mode==='ground'?'Ground':mode==='surface'?'Surface':'Canopy height';
 export function TerrainCellsSwitch({controller:c,compact=false}:{controller:KansasLidarController;compact?:boolean}){
  const nativeState=c.mode==='ground'?null:c.receipt?.layers.find(layer=>layer.kind===c.mode)?.state;
- const detailRequired=nativeState==='detail-required';
- const status=!c.active&&c.cellsOn?'Held outside the Present regional map.':!c.cellsOn?(c.pointsOn?'Raw LiDAR points are shown over the base landscape.':'Base landscape visible · LiDAR cells and points are off.'):detailRequired?'Zoom closer for complete native Surface or Canopy support (view at most 1 km²).':c.transitioning?'Updating zoom detail · keeping the previous footprint in place.':c.phase==='outside'?'This view is outside the Kansas data window.':['loading','waiting','moving'].includes(c.phase)?'Loading cells for this map view…':c.phase==='processing'?'Preparing native LiDAR for this view…':nativeState==='no-coverage'?'Native cells are unavailable here. Ground remains available; missing support stays missing.':c.preparationPhase==='preparing'?'Preparing cells on this device…':'Follows your map · click supported cells for unscaled heights.';
+ const detailRequired=c.phase==='detail-required'||nativeState==='detail-required';
+ const status=!c.active&&c.cellsOn?'Held outside the Present regional map.':!c.cellsOn?(c.pointsOn?'Raw LiDAR points are shown over the base landscape.':'Base landscape visible · LiDAR cells and points are off.'):detailRequired?'Zoom closer for complete native Surface or Canopy support (view at most 1 km²).':c.transitioning?'Loading adjoining tiles · loaded source cells remain in place.':c.phase==='outside'?'This view is outside the Kansas data window.':['loading','waiting','moving'].includes(c.phase)?'Loading cells for this map view…':c.phase==='processing'?'Preparing native LiDAR for this view…':nativeState==='no-coverage'?'Native cells are unavailable here. Ground remains available; missing support stays missing.':c.preparationPhase==='preparing'?'Preparing cells on this device…':'Follows your map · click supported cells for unscaled heights.';
  return <section className={styles.layerSwitch} aria-label="3D terrain cells layer">
   <label><input type="checkbox" checked={c.cellsOn} onChange={e=>c.setCellsOn(e.target.checked)}/><span><strong>3D terrain cells</strong><small>Ground · Surface · Canopy height</small></span></label>
   {compact&&c.cellsOn&&<><div className={styles.modes} role="group" aria-label="3D terrain cell layer">{(['ground','surface','canopy'] as const).map(mode=><button key={mode} type="button" aria-pressed={c.mode===mode} onClick={()=>c.selectMode(mode)}>{modeLabel(mode)}</button>)}</div><button type="button" disabled={!c.active} onClick={c.tilt3D}>Tilt to 3D</button></>}
@@ -248,32 +100,36 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
   const domain=useMemo(()=>c.result?.points?nativeAttributeDomain(c.result.points,c.color):null,[c.result,c.color]);
   const presentClasses=useMemo(()=>c.result?.points?[...new Set(c.result.points.points.filter(nativePointEligible).map(p=>p[4]))].sort((a,b)=>a-b):[],[c.result]);
   const analysis=c.groundAnalysis;
-  const gridDomain=useMemo(()=>{if(providerGrid&&c.gridColor!=='height'){return analysis?terrainColorDomain(groundColorValues(providerGrid,c.gridColor,analysis),c.gridColor):null;}return grid?terrainGridDomain(grid,c.mode):null;},[grid,c.mode,providerGrid,c.gridColor,analysis]);
+  const gridDomain=useMemo(()=>{if(c.displayDomain)return c.displayDomain;if(providerGrid&&c.gridColor!=='height'){return analysis?terrainColorDomain(groundColorValues(providerGrid,c.gridColor,analysis),c.gridColor):null;}return grid?terrainGridDomain(grid,c.mode):null;},[grid,c.mode,providerGrid,c.gridColor,analysis,c.displayDomain]);
   const colorTitle=providerGrid&&c.gridColor==='slope'?'Slope':providerGrid&&c.gridColor==='local-relief'?'Local relief':modeLabel(c.mode),colorUnit=providerGrid&&c.gridColor==='slope'?'°':'m';
   function downloadStudy(){if(!c.groundReceipt?.grid||!analysis)return;const blob=new Blob([terrainStudyJSON(c.groundReceipt,analysis??undefined)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='kfm-terrain-study-'+c.groundReceipt.requestKey.slice(0,12)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 
   const stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||c.result?.grid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   const phase=c.phase,reason=c.mode==='ground'?c.groundReceipt?.reason:c.receipt?.reason;
   const nativeLayer=c.mode==='ground'?null:c.receipt?.layers.find(layer=>layer.kind===c.mode);
-  const nativeState=nativeLayer?.state,detailRequired=nativeState==='detail-required';
+  const nativeState=nativeLayer?.state,detailRequired=c.phase==='detail-required'||nativeState==='detail-required';
   const nativeMissing=c.cellsOn&&!c.applied.grid&&['detail-required','no-coverage','unavailable'].includes(nativeState??'');
   const spacing=providerGrid?groundCell(providerGrid,Math.floor(providerGrid.width*providerGrid.height/2))?.approximateSpacingM:null;
-  const status=!c.cellsOn?'Clean landscape · no cell overlay':!c.visible?'Paused while this tab is hidden':!c.active?'Open the current Terrain map period':c.navigating?'Navigating · same footprint held':c.transitioning?'Updating detail · previous footprint held':c.nearbyHeld&&c.applied.grid?'Loaded footprint held · pan farther for new terrain':phase==='outside'?'Outside the Kansas data window':detailRequired?`${c.mode==='canopy'?'Canopy':'Surface'} cells not loaded · zoom closer`:nativeState==='no-coverage'?'No supported native cells here':phase==='moving'||phase==='waiting'?'Waiting for the map to settle…':phase==='loading'?'Loading this landscape…':phase==='processing'?'Preparing source data…':c.preparationPhase==='preparing'?'Drawing the landscape…':c.preparationPhase==='unavailable'?'Solid drawing unavailable':c.preparationPhase==='empty'?'No supported solid cells':c.applied.grid?'Landscape ready':reason??'Choose a layer for this map view';
+  const status=!c.cellsOn?'Clean landscape · no cell overlay':!c.visible?'Paused while this tab is hidden':!c.active?'Open the current Terrain map period':c.navigating?'Navigating · loaded tiles retained':c.transitioning?'Loading adjoining tiles':c.nearbyHeld&&c.applied.grid?'Loaded footprint held · pan farther for new terrain':phase==='outside'?'Outside the Kansas data window':detailRequired?(c.applied.grid?'Some native tiles need a closer view':`${c.mode==='canopy'?'Canopy':'Surface'} cells not loaded · zoom closer`):nativeState==='no-coverage'?'No supported native cells here':phase==='moving'||phase==='waiting'?'Waiting for the map to settle…':phase==='loading'?'Loading this landscape…':phase==='processing'?'Preparing source data…':c.preparationPhase==='preparing'?'Drawing the landscape…':c.preparationPhase==='unavailable'?'Solid drawing unavailable':c.preparationPhase==='empty'?'No supported solid cells':c.applied.grid?'Visible-area tiles ready':reason??'Choose a layer for this map view';
   return <section className={styles.panel} aria-label="Kansas LiDAR layers">
+    <h3>Landscape context</h3><p className={styles.layerHelp}>Relief or aerial stays underneath. Turn the separate 3D cell layer on to inspect measurements.</p>
     <div className={styles.displayModes} role="group" aria-label="Landscape display">
       <button type="button" aria-pressed={!c.cellsOn&&!c.pointsOn} onClick={c.showBaseLandscape}>Base landscape</button>
       <button type="button" aria-pressed={c.cellsOn} disabled={!c.active} onClick={()=>c.setCellsOn(true)}>3D cells</button>
     </div>
-    <div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground'],['surface','Surface'],['canopy','Canopy height']] as const).map(([mode,label])=><button key={mode} type="button" aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}>{label}</button>)}</div>
-    {c.cellsOn&&<div className={styles.focusActions}><button className={styles.inspect} type="button" disabled={!c.active||!grid||!c.applied.grid||c.transitioning} onClick={c.inspectLandscape}>Inspect landscape in 3D</button><button type="button" onClick={c.viewMap}>View map</button></div>}
-    <div className={styles.statusStrip} data-ready={c.applied.grid&&!c.transitioning} role="status"><span aria-hidden="true"/><div><strong>{status}</strong><small>{nativeMissing?'Base landscape shown · '+(nativeLayer?.message??'Complete native support is required.') :!c.cellsOn?'Detailed base relief stays visible':providerGrid?`USGS 3DEP · ${spacing?spacing.map(v=>Math.round(v)).join(' × ')+' m display cells':'96 × 96 resampled cells'}`:nativeGrid?`${nativeGrid.width} × ${nativeGrid.height} cells · ${nativeGrid.cellSizeM.join(' × ')} m`:'Ground across Kansas · native Surface / Canopy where supported'}</small></div></div>
+    <div className={styles.backdropModes} role="group" aria-label="Landscape backdrop"><button type="button" aria-pressed={c.backdrop==='relief'} onClick={()=>c.setBackdrop('relief')}>Relief</button><button type="button" aria-pressed={c.backdrop==='aerial'} onClick={()=>c.setBackdrop('aerial')}>2024 aerial</button></div>
+    <h3>Terrain measurement layer</h3><div className={styles.modes} role="group" aria-label="Terrain layer selection">{([['ground','Ground'],['surface','Surface'],['canopy','Canopy height']] as const).map(([mode,label])=><button key={mode} type="button" aria-pressed={c.cellsOn&&c.mode===mode} disabled={!c.active} onClick={()=>c.selectMode(mode)}>{label}</button>)}</div>
+    <p className={styles.layerHelp}>{c.mode==='ground'?'Ground elevation · bare-earth DEM':c.mode==='surface'?'Surface elevation · ground, vegetation and structures':'Canopy height · classified vegetation above same-survey ground'}</p>
+    {c.cellsOn&&<><h3>View controls</h3><div className={styles.focusActions}><button className={styles.inspect} type="button" disabled={!c.active} onClick={c.inspectLandscape}>Inspect landscape in 3D</button><button type="button" onClick={c.viewMap}>View map</button></div></>}
+    <div className={styles.statusStrip} data-ready={c.applied.grid&&!c.transitioning} data-display-scale={c.applied.grid?c.renderedScale:undefined} role="status"><span aria-hidden="true"/><div><strong>{status}</strong><small>{nativeMissing?'Base landscape shown · '+(nativeLayer?.message??'Complete native support is required.') :!c.cellsOn?'Detailed base relief stays visible':providerGrid?`USGS 3DEP · ${spacing?spacing.map(v=>Math.round(v*c.displayStride)).join(' × ')+' m display cells':'96 × 96 resampled cells'}`:nativeGrid?`${nativeGrid.width} × ${nativeGrid.height} source cells · ${nativeGrid.cellSizeM.map(v=>v.toFixed(2)).join(' × ')} m`:'Ground across Kansas · native Surface / Canopy where supported'}</small></div></div>
+    {c.cellsOn&&<p role="status">{c.tileStatus.loaded} / {c.tileStatus.total} visible-area tiles loaded{c.tileStatus.pending?` · ${c.tileStatus.pending} preparing`:''}{c.tileStatus.failed?` · ${c.tileStatus.failed} unavailable`:''}{c.tileStatus.missing?` · ${c.tileStatus.missing} without complete native support`:''}{c.transitioning&&c.displayTiles?` · ${c.displayTiles} loaded tiles remain visible`:''}. Display LOD {c.displayStride}×; exact source samples, no gap filling.</p>}
+    {c.cellsOn&&c.tileStatus.failed>0&&<button className={styles.detailAction} type="button" onClick={c.retryMissing}>Retry unavailable tiles</button>}
     {c.cellsOn&&c.applied.grid&&<><button type="button" disabled={!c.motionAllowed||!c.active||c.navigating||c.transitioning} onClick={c.replayRise}>Replay landscape rise</button><p className={styles.displayNote}>{c.motionAllowed?'A shared height front reveals the cells; source heights stay unchanged.':'Rise animation off for reduced motion or lightweight rendering.'}</p></>}
     {detailRequired&&<button className={styles.detailAction} type="button" disabled={!c.active} onClick={c.detailHere}>Zoom for native detail</button>}
     {c.error&&<p className={styles.error} role="alert">{c.error}</p>}{stale&&<p className={styles.notice}>Stale cached result · source times are in Methods.</p>}
-    <div className={styles.backdropModes} role="group" aria-label="Landscape backdrop"><button type="button" aria-pressed={c.backdrop==='relief'} onClick={()=>c.setBackdrop('relief')}>Relief</button><button type="button" aria-pressed={c.backdrop==='aerial'} onClick={()=>c.setBackdrop('aerial')}>2024 aerial</button></div>
     {c.cellsOn&&c.mode==='ground'&&<button className={styles.finerAction} type="button" disabled={!c.active} onClick={c.detailHere}>Zoom to finer ground detail ↗</button>}
     {c.cellsOn&&gridDomain&&<div className={styles.legend} data-color={providerGrid?c.gridColor:'height'} aria-label={`${colorTitle} color in ${colorUnit==='°'?'degrees':'unscaled metres'}`}><strong>{colorTitle} · {colorUnit==='°'?'degrees':'unscaled metres'}</strong><i style={{background:providerGrid&&c.gridColor==='local-relief'?TERRAIN_RELIEF_RAMP_CSS:TERRAIN_HEIGHT_RAMP_CSS}}/><span>{gridDomain[0].toFixed(2)} {colorUnit}</span><span>{gridDomain[1].toFixed(2)} {colorUnit}</span></div>}
-    {c.cellsOn&&<p className={styles.displayNote}>{c.scale.toFixed(1)}× visual relief · source readings unscaled{providerGrid?' · resampled, not native LiDAR resolution':''}. {c.transitioning?'Readings pause during handoff.':c.pinned?'Study footprint held. Rotate freely; pan farther or zoom to follow the map.':c.nearbyHeld?'Source cells stay fixed. Refresh to load this exact view.':'Pan or zoom to load another area.'}</p>}
+    {c.cellsOn&&<p className={styles.displayNote}>{c.scale.toFixed(1)}× visual relief · source readings unscaled{providerGrid?' · resampled, not native LiDAR resolution':''}. {c.transitioning?'Loaded tiles remain readable while adjoining tiles arrive.':c.pinned?'Study footprint held. Rotate freely; pan farther or zoom to follow the map.':c.nearbyHeld?'Source cells stay fixed. Refresh to load this exact view.':'Adjoining tiles follow pan and zoom.'}</p>}
     {c.pinned&&<button type="button" onClick={c.followMap}>Follow map</button>}
     {c.cellsOn&&<details className={styles.appearance}><summary>Relief, color &amp; opacity <span>{c.scale.toFixed(1)}×</span></summary>
       <label>Visual relief <output>{c.scale.toFixed(1)}×</output><input aria-label="Cell visual relief" type="range" min="0.5" max="3" step="0.1" value={c.scale} onChange={e=>c.setScale(Number(e.target.value))}/></label>
@@ -283,9 +139,9 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
       <div className={styles.actions}><button type="button" disabled={!c.active} onClick={c.retry}>Refresh this view</button><button type="button" disabled={!c.active} onClick={c.lookDown}>Look down here</button></div>
 
     </details>}
-    {(c.cellsOn&&grid||c.pointsOn&&c.result?.points)&&<div className={styles.reading}><strong>{c.cellsOn?'Click a cell to read its source height':'Click a point to read its source height'}</strong>
+    {(c.cellsOn&&grid||c.pointsOn&&c.result?.points)&&<div className={styles.reading} data-source-key={grid?.requestKey}><strong>{c.cellsOn?'Click a cell to read its source height':'Click a point to read its source height'}</strong>
       {point&&<output>{metres(point[2])}<small>native elevation · unscaled</small></output>}
-      {sample&&<><output>{metres(sample.ground)}<small>Ground elevation · provider DEM · unscaled</small></output><p>Row {sample.row}, column {sample.column} · {sample.approximateSpacingM.map(v=>v.toFixed(1)).join(' × ')} m approximate local display footprint.</p></>}
+      {sample&&<><output>{metres(sample.ground)}<small>Ground elevation · provider DEM · unscaled</small></output><p>Row {sample.row}, column {sample.column} · {sample.approximateSpacingM.map(v=>v.toFixed(1)).join(' × ')} m approximate source-grid spacing. The displayed LOD footprint may be larger.</p></>}
       {sample&&analysis&&<p>Slope {analysis.slope[c.selected!.index]===null?'NoData':analysis.slope[c.selected!.index]!.toFixed(2)+'°'} · local relief {metres(analysis.localRelief[c.selected!.index])}. Windows 3×3 /7×7; unscaled Ground.</p>}
       {cell&&<><output>{metres(cell[c.mode])}<small>{c.mode==='canopy'?'canopy height':'derived surface elevation'} · unscaled</small></output><p>Row {cell.row}, column {cell.column}; ground {metres(cell.ground)}, surface {metres(cell.surface)}, canopy {metres(cell.canopy)}.</p></>}
       {!point&&!cell&&!sample&&<p>No source reading selected. Empty space has no reading.</p>}
@@ -301,16 +157,16 @@ export function KansasLidarLayers({controller:c}:{controller:KansasLidarControll
       {c.result?.points&&<><label>Point color<select value={c.color} onChange={e=>c.setColor(e.target.value as NativeColorMode)}><option value="elevation">Native elevation</option><option value="classification">Classification</option><option value="intensity">Native intensity</option></select></label><label>Point size <output>{c.pointSize}px</output><input aria-label="Native point size" type="range" min="1" max="6" value={c.pointSize} onChange={e=>c.setPointSize(Number(e.target.value))}/></label><p>{c.result.points.points.length.toLocaleString()} source returns · {c.result.points.points.filter(nativePointEligible).length.toLocaleString()} eligible. Synthetic/withheld flags and classes 7/18 noise stay inspectable but are omitted from display. At very close zoom, source heights can lie above the camera. No source RGB is present.</p>{c.color==='classification'&&<ul className={styles.classLegend}>{presentClasses.map(code=><li key={code}><i style={{background:`rgb(${(NATIVE_CLASS_COLORS[code]??[.7,.63,.82]).map(v=>v*255).join(',')})`}}/>{code} · {({0:'Created / unclassified',1:'Unclassified',2:'Ground',3:'Low vegetation',4:'Medium vegetation',5:'High vegetation',6:'Building',9:'Water'} as Record<number,string>)[code]??'Other source class'}</li>)}</ul>}{domain&&c.color!=='classification'&&<div className={styles.legend} data-color={c.color}><i style={c.color==='elevation'?{background:TERRAIN_HEIGHT_RAMP_CSS}:undefined}/><span>{domain[0].toFixed(2)}{c.color==='elevation'?' m':''}</span><span>{domain[1].toFixed(2)}{c.color==='elevation'?' m':''}</span></div>}</>}
       <button type="button" onClick={c.clear}>Clear native layers</button>
     </details>
-    <details className={styles.device}><summary>This device</summary><label>Terrain drawing<select value={c.resources.mode} onChange={e=>c.resources.setMode(e.target.value as 'automatic'|'lightweight')}><option value="automatic">Automatic</option><option value="lightweight">Lightweight</option></select></label><p>{c.resources.lightweight?'Lighter drawing buffer':'Standard drawing buffer'} · same source cells and readings. {c.resources.slow?'Slow preparation was detected; Automatic keeps lighter drawing for this visit.':'Only the current map view is prepared.'} This limit covers the terrain add-on, not the whole map or browser.</p><label className={styles.storage}><input type="checkbox" checked={c.resources.cache.enabled} disabled={!c.resources.cache.available||c.resources.busy} onChange={e=>void c.resources.setStorage(e.target.checked)}/>Use temporary terrain storage</label><p>{(c.resources.cache.usedBytes/1048576).toFixed(1)} of {(c.resources.cache.limitBytes/1048576).toFixed(0)} MiB used · public terrain only. {c.resources.cache.available?'Your browser may remove temporary data.':'Temporary storage is unavailable; the map still works.'}</p><button type="button" disabled={!c.resources.cache.available||c.resources.busy} onClick={()=>void c.resources.clear()}>Clear temporary data</button>{c.resources.error&&<p role="alert">{c.resources.error}</p>}</details>
-    <details><summary>Sources, methods &amp; coverage</summary>
-      {providerGrid&&<><p>96 × 96 resampled Ground cells · mixed source resolution. Display spacing is not native LiDAR resolution. Broad views look flatter at real scale; zoom into a landform for finer display cells.</p><p>Color changes, source height geometry stays unchanged. Horn 3×3 slope uses local WGS84 east/north distances. Local relief subtracts the full 7×7 mean, with a symmetric zero-centered color scale. Missing/edge neighborhoods stay NoData and use neutral color. These are output-grid derivatives, not native survey detail or archaeological evidence.</p><button type="button" onClick={downloadStudy} disabled={!analysis}>Download terrain study JSON</button></>}
-      {c.mode!=='ground'&&<p>Surface and canopy need complete native support in views of at most 1 km². {c.mode==='canopy'?'Only classified vegetation with same-survey ground supports canopy height.':'Surface can include buildings and wires.'} Missing support stays missing.</p>}
+    <details className={styles.device}><summary>This device</summary><label>Terrain drawing<select value={c.resources.mode} onChange={e=>c.resources.setMode(e.target.value as 'automatic'|'lightweight')}><option value="automatic">Automatic</option><option value="lightweight">Lightweight</option></select></label><p>{c.resources.lightweight?'Lighter drawing buffer':'Standard drawing buffer'} · same source cells and readings. {c.resources.slow?'Slow preparation was detected; Automatic keeps lighter drawing for this visit.':'Up to 12 visible-area tiles, or 24 smaller native tiles, share one bounded graphics buffer.'} This limit covers the terrain add-on, not the whole map or browser.</p><label className={styles.storage}><input type="checkbox" checked={c.resources.cache.enabled} disabled={!c.resources.cache.available||c.resources.busy} onChange={e=>void c.resources.setStorage(e.target.checked)}/>Use temporary terrain storage</label><p>{(c.resources.cache.usedBytes/1048576).toFixed(1)} of {(c.resources.cache.limitBytes/1048576).toFixed(0)} MiB used · public terrain only. {c.resources.cache.available?'Your browser may remove temporary data.':'Temporary storage is unavailable; the map still works.'}</p><button type="button" disabled={!c.resources.cache.available||c.resources.busy} onClick={()=>void c.resources.clear()}>Clear temporary data</button>{c.resources.error&&<p role="alert">{c.resources.error}</p>}</details>
+    <details><summary>Sources, methods &amp; coverage</summary><p>These methods and downloads describe the selected source tile. Click another tile to inspect its own source. The common color legend spans the drawn mosaic; source support, dates and resolution can differ between tiles.</p>
+      {providerGrid&&<><p>Each source tile has 96 × 96 resampled Ground cells · mixed source resolution. A shared display budget may show fewer exact samples with larger display footprints; any block containing NoData is omitted. Display spacing is not native LiDAR resolution. Broad views look flatter at real scale; zoom into a landform for finer display cells.</p><p>Color changes, source height geometry stays unchanged. Horn 3×3 slope uses local WGS84 east/north distances. Local relief subtracts the full 7×7 mean, with a symmetric zero-centered color scale. Missing/edge neighborhoods stay NoData and use neutral color. These are output-grid derivatives, not native survey detail or archaeological evidence.</p><button type="button" onClick={downloadStudy} disabled={!analysis}>Download terrain study JSON</button></>}
+      {c.mode!=='ground'&&<p>Surface and canopy use adjoining native tiles, each with complete support in at most 1 km². Wider views ask you to zoom closer. {c.mode==='canopy'?'Only classified vegetation with same-survey ground supports canopy height.':'Surface can include buildings and wires.'} Missing support stays missing.</p>}
       {c.mode==='canopy'&&nativeGrid?.canopy.some(v=>v!==null&&v<0)&&<p>Negative canopy values remain inspectable but are omitted from the solid display.</p>}
       <p>Top illumination uses supported unscaled Horn 3×3 gradients with fixed northwest grid light at 45° (55% ambient + 45% diffuse). Missing neighborhoods use constant ambient color; they are not filled. Native Surface spacing is UTM grid metres. Solid cells and closure walls are display geometry, not surveyed cliffs or subsurface. Canopy tops are same-survey ground + canopy height. Readings remain unscaled; no source elevation is rebased. Layers use their own depth above context; DEM registration is unverified. Independent scientific accuracy, admission and release remain pending.</p>
       {c.groundReceipt&&<p>Ground: {c.groundReceipt.state} · {c.groundReceipt.reason} · transport cache {c.groundReceipt.cache.state} at {c.groundReceipt.cache.at}; generated {c.groundReceipt.generatedAt}. These are not flight dates.</p>}
       {providerGrid&&<><a href={providerGrid.source.requestUrl} target="_blank" rel="noreferrer">USGS 3DEP provider DEM source ↗</a><p>{providerGrid.source.acquisition} · {providerGrid.source.verticalReference}. Retrieved {providerGrid.source.retrievedAt}.</p><p>Nearest-neighbor provider-resampled F32 elevation. EPSG:3857 grid spacing {providerGrid.cellSize3857.map(v=>v.toFixed(2)).join(' × ')} projected metres; not physical ground spacing or native survey resolution. {providerGrid.excludedValues} source values excluded; masked cells remain missing.</p><code>{providerGrid.source.sha256}</code>{providerGrid.method.limitations.map((note,i)=><p key={i}>{note}</p>)}<a href={providerGrid.source.catalog.url} target="_blank" rel="noreferrer">Intersecting catalog candidates · {providerGrid.source.catalog.state} ↗</a><p>Catalog candidates are not per-cell lineage. {providerGrid.source.catalog.complete?'Catalog response complete.':'Catalog response incomplete or unavailable.'} Raw provider date/resolution attributes are retained without inventing flight dates or common metre units.</p>{providerGrid.source.catalog.candidates.map(record=><p key={record.id}>{record.name??`Record ${record.id}`} · acquisition attribute {record.acquisitionDate??'unknown'} · start/end {record.startDate??'unknown'} / {record.endDate??'unknown'} · source {record.source??'unknown'} · DEM type {record.demType??'unknown'} · resolution attributes {record.resolutionX??'unknown'} / {record.resolutionY??'unknown'} · datum {record.verticalDatum??'unknown'}{record.metadataUrl&&<a href={record.metadataUrl} target="_blank" rel="noreferrer">Provider metadata ↗</a>}</p>)}</>}
       {c.receipt&&<><p>Native cache {c.receipt.cache.state} at {c.receipt.cache.at}; generated {c.receipt.generatedAt}. Transport times are separate from acquisition dates.</p><ul className={styles.states}>{c.receipt.layers.map(layer=><li key={layer.kind}><strong>{layer.kind}</strong><span>{layer.state.replaceAll('-',' ')}</span><small>{layer.message} {layer.method}</small></li>)}</ul>{c.receipt.coverage.map((source,i)=><div key={i}><a href={source.eptUrl} target="_blank" rel="noreferrer">{source.project} ↗</a><p>{source.acquisition} · {source.verticalReference}</p><p>{source.qualification}</p></div>)}</>}
-      {nativeGrid&&<><p>Ground: {nativeGrid.method.ground}</p><p>Surface: {nativeGrid.method.surface}</p><p>Canopy: {nativeGrid.method.canopy}</p><p>{nativeGrid.method.support}</p><p>{nativeGrid.width} × {nativeGrid.height} qualified analysis cells · {nativeGrid.cellSizeM.join(' × ')} m.</p>{nativeGrid.method.limitations.map((note,i)=><p key={i}>{note}</p>)}</>}
+      {nativeGrid&&<><p>Ground: {nativeGrid.method.ground}</p><p>Surface: {nativeGrid.method.surface}</p><p>Canopy: {nativeGrid.method.canopy}</p><p>{nativeGrid.method.support}</p><p>{nativeGrid.width} × {nativeGrid.height} qualified analysis cells · {nativeGrid.cellSizeM.map(v=>v.toFixed(2)).join(' × ')} m.</p>{nativeGrid.method.limitations.map((note,i)=><p key={i}>{note}</p>)}</>}
       {(c.result?.points?.manifest.source.assets??nativeGrid?.source.assets??[]).map(source=><p key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.project} · native asset {source.id} ↗</a><code>{source.sha256}</code></p>)}<p>Hashes identify artifacts verified upstream, not cache-enveloped browser response hashes. No layer claims statewide uniform resolution, date, classification or native density.</p><a href="/terrain">Optional Konza 3D source example ↗</a><a href="/labs/terrain">Terrain Science ↗</a>
     </details>
   </section>;
@@ -321,9 +177,9 @@ export function KansasLidarBadge({controller:c,controlsOpen=false}:{controller:K
   const assets=c.result?.points?.manifest.source.assets??[],asset=point?assets[point[9]]:null,source=asset??(c.applied.grid?nativeGrid?.source:null),surveys=[...new Set(assets.map(a=>a.project))],dates=[...new Set(assets.map(a=>a.acquisition))],pointDates=dates.length===1?dates[0]:'mixed acquisition; see source details',stale=c.groundReceipt?.cache.state==='stale'||c.receipt?.cache.state==='stale'||nativeGrid?.cache.state==='stale'||c.result?.points?.chunkCaches.some(cache=>cache.state==='stale');
   return <aside className={styles.badge} aria-label="Kansas LiDAR map identity"><strong>Terrain · {c.applied.grid?modeLabel(c.mode)+' cells · ':''}{c.applied.points?'native points':''}</strong>
     <span>{source?`${asset?'Selected point':'Grid'}: ${source.project} · ${source.acquisition}`:providerGrid?'USGS 3DEP mosaic · '+providerGrid.source.acquisition:`Points: ${surveys.length===1?surveys[0]:surveys.length+' source surveys'} · ${pointDates}`}</span>{c.applied.grid&&c.applied.points&&<span>Points: {surveys.length} source surveys · {pointDates}</span>}
-    <span>{c.scale.toFixed(1)}× display · {c.opacity}% opacity · source values unscaled{providerGrid&&c.gridColor!=='height'?' · color '+c.gridColor:''}</span>{c.transitioning&&<span>Updating view · previous footprint retained; map readings paused</span>}{c.pinned&&<span>Study area pinned · pan farther or zoom to follow map</span>}{c.nearbyHeld&&!c.pinned&&<span>Loaded footprint retained · source cells stay fixed</span>}<span>Coverage-limited · DEM registration unverified{stale?' · stale cache':''}</span>
+    <span>{c.scale.toFixed(1)}× display · {c.opacity}% opacity · source values unscaled{providerGrid&&c.gridColor!=='height'?' · color '+c.gridColor:''}</span>{c.transitioning&&<span>Updating adjoining tiles · loaded source cells remain readable</span>}{c.pinned&&<span>Study area pinned · pan farther or zoom to follow map</span>}{c.nearbyHeld&&!c.pinned&&<span>Loaded footprint retained · source cells stay fixed</span>}<span>Coverage-limited · DEM registration unverified{stale?' · stale cache':''}</span>
     {point&&<b>{point[2].toFixed(3)} m · asset {point[9]} / record {point[10]} · unscaled</b>}
-    {cell&&<b>{modeLabel(c.mode)} {metres(cell[c.mode])} · row {cell.row}, column {cell.column} · unscaled · grid footprint only</b>}
+    {cell&&<b>{modeLabel(c.mode)} {metres(cell[c.mode])} · row {cell.row}, column {cell.column} · unscaled · selected source tile only</b>}
     {sample&&<b>Ground {metres(sample.ground)} · row {sample.row}, column {sample.column} · unscaled · resampled 96²</b>}
   </aside>;
 }
