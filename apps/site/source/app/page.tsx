@@ -17,31 +17,22 @@ import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed,
 import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
-import { GovernedWaterControl } from "./governed-water-control";
-import { GovernedWeatherControl } from "./governed-weather-control";
-import { GovernedSoilControl } from "./governed-soil-control";
-import { GovernedStormEventsControl } from "./governed-storm-events-control";
-import { GovernedEarthquakesControl } from "./governed-earthquakes-control";
-import { AviationControl } from "./aviation-control";
 import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
 import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
 import Link from "next/link";
 import { LocalMapArchiveLoader } from "./local-map-archive-loader";
-import { LocalAtlasControl } from "./local-atlas-control";
 import { localAtlasHit } from "./local-atlas-map";
-import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
 import { officialClusterSummary } from "./context-clusters";
 import { COUNTED_LAYER_IDS, isCountedLayer, recordAt } from "./view-tally";
 import { ViewTallyLine, ViewTallyStatus } from "./view-tally-line";
-import { BlmPlssInspector } from "./blm-plss-inspector";
 import { isBlmPlssLayer } from "./blm-plss-records";
 import { HmsSmokePlayback } from "./hms-smoke-playback-control";
 import { HmsFrameTransitions, hmsFade } from "./hms-smoke-playback";
@@ -67,8 +58,6 @@ import { readFireDay } from "./map-context-cache";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
-import { CropCasmaControl } from "./crop-casma-control";
-import { HistoricalTopoControl } from "./historical-topo-control";
 import { DataNotices, LayerSourceNotices, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
@@ -238,7 +227,6 @@ import {
   normalizePlaceStopName,
   reorderPlaceStops,
 } from "./places-trail";
-import ReportStoryWorkspaces from "./report-story-workspaces";
 import { KDOT_HISTORIC_STATE_MAPS_URL, KDOT_PAST_COUNTY_MAPS_URL, ROAD_MAP_EDITIONS } from "./road-map-editions";
 import { applyRoadStudyLayers, inspectRoadStudyFile as inspectRoadStudyGeoJson, ROAD_STUDY_COLORS, ROAD_STUDY_MAX_LAYERS, type RoadStudyLayer } from "./road-year-study";
 import { buildFireReportContext, nearbyFireContext, type FireReportContext } from "./fire-report-analysis";
@@ -292,7 +280,6 @@ import {
   type OfficialContextState,
 } from "./live-context";
 import { canonicalLightningTime, NOAA_LIGHTNING_LEGEND_URL, type LightningManifest } from "./lightning-data";
-import { LightningFlashLoop } from "./lightning-flash-loop";
 import {
   isNoaaRadarManifest,
   nextNoaaRadarFrameIndex,
@@ -328,10 +315,10 @@ import {
 } from "./streamflow";
 import { riverDrawerObservation } from "./evidence-drawer-observation";
 import { drawerArtifactAttributes, parseUsgsStageDetail, type DrawerAttribute, type UsgsStageDetail } from "./evidence-drawer-data";
-import { HydrologyObservatory,
-  type HydrologyObservatoryState,
-  type HydrologyPlaybackSpeed,
-  type HydrologyRange,
+import type {
+  HydrologyObservatoryState,
+  HydrologyPlaybackSpeed,
+  HydrologyRange,
 } from "./hydrology-observatory";
 import { boundedUtcDay, datedSourceDisplayStatus, earthquakeEventTimes, earthquakesThroughEvent, smokeInitialFrameIndex, smokeValidityTimes, smokeValidAt } from "./source-time";
 import {
@@ -355,6 +342,56 @@ import {
   kansasLocalDayInterval,
   restoreDaylightView,
 } from "./daylight-layer";
+
+/** Code-split a control that is only used after a user opens its panel or layer.
+ * The chunk downloads when the control first renders; its own Suspense boundary
+ * keeps sibling panels mounted while it loads. */
+function deferredControl<P extends object>(load: () => Promise<ComponentType<P>>, fallback: ReactNode = null) {
+  const Control = lazy(async () => ({ default: await load() }));
+  return function DeferredControl(props: P) {
+    return <Suspense fallback={fallback}><Control {...props} /></Suspense>;
+  };
+}
+const loadingStatus = (label: string) => <p role="status">Loading {label}…</p>;
+const ReportStoryWorkspaces = deferredControl(() => import("./report-story-workspaces").then((module) => module.default), loadingStatus("workspace"));
+const LocalAtlasControl = deferredControl(() => import("./local-atlas-control").then((module) => module.LocalAtlasControl), loadingStatus("local atlas"));
+const HistoricalTopoControl = deferredControl(() => import("./historical-topo-control").then((module) => module.HistoricalTopoControl), loadingStatus("historical maps"));
+const HydrologyObservatory = deferredControl(() => import("./hydrology-observatory").then((module) => module.HydrologyObservatory));
+const LightningFlashLoop = deferredControl(() => import("./lightning-flash-loop").then((module) => module.LightningFlashLoop));
+const GovernedWaterControl = deferredControl(() => import("./governed-water-control").then((module) => module.GovernedWaterControl));
+const GovernedWeatherControl = deferredControl(() => import("./governed-weather-control").then((module) => module.GovernedWeatherControl));
+const GovernedSoilControl = deferredControl(() => import("./governed-soil-control").then((module) => module.GovernedSoilControl));
+const GovernedStormEventsControl = deferredControl(() => import("./governed-storm-events-control").then((module) => module.GovernedStormEventsControl));
+const GovernedEarthquakesControl = deferredControl(() => import("./governed-earthquakes-control").then((module) => module.GovernedEarthquakesControl));
+const AviationControl = deferredControl(() => import("./aviation-control").then((module) => module.AviationControl));
+const CropCasmaControl = deferredControl(() => import("./crop-casma-control").then((module) => module.CropCasmaControl));
+const BridgeRecordInspector = deferredControl(() => import("./bridge-record-inspector").then((module) => module.BridgeRecordInspector));
+const BlmPlssInspector = deferredControl(() => import("./blm-plss-inspector").then((module) => module.BlmPlssInspector));
+
+/** A CPU rasterizer (SwiftShader, llvmpipe) redraws the whole map on the main
+ * thread, so continuous ambient repaints there leave the page unresponsive. */
+const softwareWebglRenderer = (map: MapLibreMap) => {
+  try {
+    const gl = map.getCanvas().getContext("webgl2");
+    if (!gl) return false;
+    let renderer = String(gl.getParameter(gl.RENDERER) ?? "");
+    // Chromium masks RENDERER; its unmasked name needs the debug extension.
+    if (/^webkit webgl$/i.test(renderer)) {
+      const debug = gl.getExtension("WEBGL_debug_renderer_info");
+      if (debug) renderer = String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) ?? "");
+    }
+    return /swiftshader|llvmpipe|softpipe|software/i.test(renderer);
+  } catch { return false; }
+};
+
+/** Mount children the first time `when` holds, then keep them mounted so hidden
+ * owners keep their layers, selections and timers. Until then nothing renders,
+ * so a closed catalog downloads, requests and polls nothing for these owners. */
+function MountOnceShown({ when, children }: { when: boolean; children: ReactNode }) {
+  const [shown, setShown] = useState(when);
+  if (when && !shown) setShown(true);
+  return shown || when ? children : null;
+}
 
 const KNOWN_TEMPORAL_FRAMES = new Set<number>([
   ...TIME_STEPS,
@@ -1902,6 +1939,8 @@ export default function Home() {
   const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
   const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
   const shownCatalogIds = new Set(matchingCatalogEntries.map(entry => entry.id));
+  // Mirrors the hidden state of `.layer-catalog-body` inside the left panel.
+  const layerCatalogShown = leftOpen && !sourceStatusOpen && (leftPanelMode === "layers" || leftPanelMode === "live");
   const noaaRadarManifestFresh = noaaRadarManifestIsFresh(noaaRadarManifest, noaaRadarClock);
   const noaaRadarRenderable = Boolean(noaaRadarFrameTime && noaaRadarManifestFresh);
   useEffect(() => {
@@ -6245,19 +6284,24 @@ export default function Home() {
     runMapMutation("Structure presentation update", () => setStructures3DState(setStructureExtrusions(map, structures3DEnabled)));
   }, [runMapMutation, structures3DEnabled, styleReady]);
 
+  // Set once Balanced quality finds this device cannot afford the ambient pulse.
+  const ambientPulseTooSlowRef = useRef(false);
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     let animationFrame = 0;
     let lastFrame = 0;
     const budget = browserRenderBudget(renderQuality);
+    const adaptive = renderQuality === "auto";
+    if (!adaptive) ambientPulseTooSlowRef.current = false;
+    else if (softwareWebglRenderer(map)) ambientPulseTooSlowRef.current = true;
     const liveWaterSelected = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME
       && (officialVisibility["usgs-streamflow"] || officialVisibility["noaa-nwps-gauges"]);
     // Paint animation keeps MapLibre from becoming idle. Let the style and
     // source readiness check finish before starting ambient motion, including
     // after a basemap swap.
     const effectsActive = runtime.kind === "ready" && projection !== "globe" && dynamicEffects && !reducedMotion && !budget.efficient
-      && liveWaterSelected;
+      && liveWaterSelected && !ambientPulseTooSlowRef.current;
 
     // A soft marker halo is presentation only. The provider's observation,
     // forecast, trend, magnitude, and timestamp remain fixed between fetches.
@@ -6276,7 +6320,24 @@ export default function Home() {
       return;
     }
 
+    // Balanced quality is adaptive: if the frames this ambient motion forces are
+    // themselves slower than ~10 fps (software WebGL, a saturated GPU), the pulse
+    // would hold the main thread busy forever. It then settles on its static
+    // look for the session; choosing High detail never downgrades.
+    const frameGaps: number[] = [];
+    let previousTick = 0;
     const renderEffects = (timestamp: number) => {
+      if (adaptive) {
+        // Only frames this loop drives count: user camera moves and hidden tabs do not.
+        if (previousTick && !document.hidden && !map.isMoving()) frameGaps.push(timestamp - previousTick);
+        previousTick = document.hidden || map.isMoving() ? 0 : timestamp;
+        if (frameGaps.length > 20) frameGaps.shift();
+        if (frameGaps.length === 20 && [...frameGaps].sort((a, b) => a - b)[10] > 100) {
+          ambientPulseTooSlowRef.current = true;
+          runMapMutation("Map-effect reset", () => { applyDynamicMapEffects(map, 0, opacity, false); emphasizeWaterStations(0, false); });
+          return;
+        }
+      }
       if (!document.hidden && !map.isMoving() && timestamp - lastFrame >= 80 && styleGenerationReadyRef.current) {
         if (!runMapMutation("Dynamic map effect", () => { applyDynamicMapEffects(map, timestamp, opacity, true); emphasizeWaterStations(timestamp, liveWaterSelected); })) return;
         lastFrame = timestamp;
@@ -9644,8 +9705,8 @@ export default function Home() {
 
                 {source.legend && <p className="reference-layer-legend"><i style={{ backgroundColor: source.color }} aria-hidden="true" />{source.legend}</p>}
                 {(() => { const legend = discoveryLegend(source.id); return legend && <ul className="discovery-legend" aria-label={`${source.shortTitle} legend`}>{legend.map(stop => <li key={stop.label}><i style={{ backgroundColor: stop.color }} aria-hidden="true" />{stop.label}</li>)}</ul>; })()}
-                {isBridgeLayer(source.id) && <BridgeRecordInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} reducedMotion={reducedMotion} />}
-                {isBlmPlssLayer(source.id) && <BlmPlssInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} />}
+                {isBridgeLayer(source.id) && <MountOnceShown when={layerCatalogShown}><BridgeRecordInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} reducedMotion={reducedMotion} /></MountOnceShown>}
+                {isBlmPlssLayer(source.id) && <MountOnceShown when={layerCatalogShown}><BlmPlssInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} /></MountOnceShown>}
                 {GROUNDWATER_MANIFEST.find(item => item.id === source.id)?.legend.map(item => <p className="reference-layer-legend" key={item.value}><i style={{ backgroundColor: item.color }} aria-hidden="true" />{item.label} ft</p>)}
                 {source.id.startsWith("kgs-") && <small>{source.freshness}. {source.cadence}.</small>}
                 {source.legendUrl && <a href={source.legendUrl} target="_blank" rel="noreferrer">Provider legend ↗</a>}
@@ -9729,14 +9790,14 @@ export default function Home() {
               <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
               </div></details>
             </section>
-            <div hidden={!shownCatalogIds.has("reviewed-water")}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></div>
-            <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
-            <div hidden={!shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></div>
-            <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></div>
-            <div hidden={!shownCatalogIds.has("reviewed-earthquakes")}><GovernedEarthquakesControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedEarthquakesSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} onPickingChange={setAviationPicking} inspectRequest={aviationInspect} /></div>
+            <div hidden={!shownCatalogIds.has("reviewed-water")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("reviewed-water")}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></MountOnceShown></div>
+            <div hidden={!shownCatalogIds.has("reviewed-weather")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></MountOnceShown></div>
+            <div hidden={!shownCatalogIds.has("reviewed-soil")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></MountOnceShown></div>
+            <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></MountOnceShown></div>
+            <div hidden={!shownCatalogIds.has("reviewed-earthquakes")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("reviewed-earthquakes")}><GovernedEarthquakesControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedEarthquakesSelected} /></MountOnceShown></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} onPickingChange={setAviationPicking} inspectRequest={aviationInspect} /></MountOnceShown></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
-            <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
+            <div hidden={!shownCatalogIds.has("crop")}><MountOnceShown when={layerCatalogShown && shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></MountOnceShown></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
             <details className="layer-source-diagnostics"><summary>Source status &amp; coverage</summary>
 {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
@@ -9880,7 +9941,7 @@ export default function Home() {
             {reducedMotion && <p className="lightning-motion-note">Reduced motion: autoplay and glow are off. Frame steps remain available.</p>}
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
-          <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
+          <MountOnceShown when={glmFlashesEnabled && glmFlashesAllowed}><LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} /></MountOnceShown>
           <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
           <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM · local Qwen" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
@@ -10125,7 +10186,8 @@ export default function Home() {
 
                 <details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering</summary><div className="explorer-secondary-body">
                 <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />
-                <BasemapCacheControls />
+                {/* Its 10 s companion status poll runs only while this panel is open. */}
+                {mapUtilityOpen && <BasemapCacheControls />}
                 <label className="appearance-basemap">Terrain elevation source<select aria-label="Terrain elevation source" disabled={scenePreset !== "elevation-3d"} value={terrainProvider} onChange={event => chooseTerrainProvider(event.target.value as "mapzen" | "usgs-3dep")}><option value="mapzen">Mapzen · display DEM</option><option value="usgs-3dep">USGS 3DEP · Kansas detail</option></select></label>
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
