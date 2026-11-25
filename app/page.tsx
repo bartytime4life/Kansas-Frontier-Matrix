@@ -5969,11 +5969,20 @@ export default function Home() {
     // Welcome (including nested source notes) releases its background holds
     // before the committed Layers panel receives focus. Cleanup revokes an
     // obsolete opening on Escape, another request, or a return to welcome.
+    const openingFocus = document.activeElement;
     let focusFrame: number | undefined;
     const commitFrame = window.requestAnimationFrame(() => {
       focusFrame = window.requestAnimationFrame(() => {
         const panel = leftPanelRef.current;
         if (!panel) return;
+        const currentFocus = document.activeElement;
+        // A later toolbar action owns its next key. Welcome's own fallback
+        // remains provisional so the requested Layers destination can take over.
+        if (currentFocus && currentFocus !== openingFocus && currentFocus !== document.body
+          && !panel.contains(currentFocus) && !currentFocus.matches?.(".guide-trigger")) {
+          leftPanelFocusSelectorRef.current = null;
+          return;
+        }
         // Map feature inspection shares this committed focus handoff instead of
         // racing the normal panel-opening focus with a second animation frame.
         const inspectionTarget = leftPanelFocusSelectorRef.current

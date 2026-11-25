@@ -69,7 +69,7 @@ effectVisit(ast);
 test('guide Layers and Time enter committed destinations after dismissal, even when the panel was retained',()=>{
   for(const action of ['layers','time'])for(const retained of [false,true]){
     const frames=[],focus=[],state={open:true,time:retained,status:true,starter:false};
-    const body={},document={body,activeElement:{closest:()=>({})},querySelector:selector=>selector==='.living-welcome'?(state.open?{}:null):{focus(){document.activeElement={closest:()=>null};focus.push('guide-trigger');}}};
+    const body={},document={body,activeElement:{closest:()=>({})},querySelector:selector=>selector==='.living-welcome'?(state.open?{}:null):{focus(){document.activeElement={closest:()=>null,matches:selector=>selector==='.guide-trigger'};focus.push('guide-trigger');}}};
     const target={focus(){document.activeElement={closest:()=>null};focus.push(action);}};
     const leftPanelRef={current:retained?{}:null},timelineRef={current:retained?{}:null};
     const route=evaluate(callbacks.get('runExplorerGuideAction'),{
@@ -102,7 +102,7 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
 });
 test('obsolete Layers focus frames are revoked before they can steal a newer welcome opening',()=>{
   const frames=new Map(),focused=[];let id=0;
-  const scope={primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,leftPanelFocusSelectorRef:{current:null},sourceSearchFocusPendingRef:{current:false},leftPanelRef:{current:{}},
+  const scope={primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,leftPanelFocusSelectorRef:{current:null},sourceSearchFocusPendingRef:{current:false},leftPanelRef:{current:{}},document:{activeElement:null},
     window:{requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:key=>frames.delete(key)},visibleFocusableElements:()=>[{focus:()=>focused.push('layers')}]};
   const cleanup=evaluate(leftPanelFocusEffect,scope)();
   const first=[...frames.values()][0];frames.clear();first();assert.equal(frames.size,1);
@@ -153,5 +153,30 @@ test('detailed-help Diagnostics waits through the opening paint and re-enters re
     assert.equal(state.help,false);assert.deepEqual(focus,[]);assert.equal(frames.length,1);
     frames[0]();assert.deepEqual(focus,[]);assert.equal(frames.length,2);
     painted=true;frames[1]();assert.deepEqual(focus,['diagnostics-close']);
+  }
+});
+
+// The Effects keyboard journey exposed an opening frame that could take focus
+// back from a newer toolbar choice before its Enter key arrived. Execute the
+// real two-frame handoff with the choice moving between either frame.
+test('deferred Layers focus respects a newer toolbar choice',()=>{
+  for(const phase of [0,1])for(const inspecting of [false,true]){
+    const frames=[],focused=[],origin={},body={},toolbar={matches:()=>false};
+    const document={body,activeElement:origin};
+    const target={focus:()=>focused.push('layers'),scrollIntoView(){}};
+    const panel={contains:()=>false,querySelector:()=>target};
+    const selector={current:inspecting?'[data-inspection]':null};
+    evaluate(leftPanelFocusEffect,{
+      primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,
+      leftPanelFocusSelectorRef:selector,sourceSearchFocusPendingRef:{current:false},leftPanelRef:{current:panel},
+      document,window:{requestAnimationFrame:fn=>frames.push(fn),cancelAnimationFrame(){}},
+      visibleFocusableElements:()=>[target],
+    })();
+    if(phase===1)frames.shift()();
+    document.activeElement=toolbar;
+    while(frames.length)frames.shift()();
+    assert.deepEqual(focused,[],'a later Effects/search control retains focus');
+    assert.equal(document.activeElement,toolbar);
+    assert.equal(selector.current,null,'the obsolete inspection focus request is consumed');
   }
 });
