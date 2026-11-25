@@ -4,6 +4,10 @@ import { intakeUser } from "../data-intake-server";
 import DataWorkspace from "../data/workspace";
 import { localSignInNotice } from "../local-signin-notice";
 export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "Steward desk · Kansas Frontier Matrix",
+  description: "Review queue for assigned Kansas Frontier Matrix data stewards.",
+};
 export default async function StewardsPage() {
   const notice = await localSignInNotice("/stewards");
   if (notice) return notice;

@@ -3,6 +3,10 @@ import { intakeUser } from "../data-intake-server";
 import DataWorkspace from "./workspace";
 import { localSignInNotice } from "../local-signin-notice";
 export const dynamic = "force-dynamic";
+export const metadata = {
+  title: "Data commons · Kansas Frontier Matrix",
+  description: "Propose Kansas datasets for review and track your submissions.",
+};
 export default async function DataPage({ searchParams }: { searchParams: Promise<{ source?: string }> }) {
   const params = await searchParams;
   const source = typeof params.source === "string" ? params.source : "";

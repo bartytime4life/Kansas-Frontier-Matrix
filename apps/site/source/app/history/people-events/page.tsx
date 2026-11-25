@@ -1,5 +1,9 @@
 import s from "../../downloads/workspace.module.css";
 import h from "../../history-research.module.css";
+export const metadata = {
+  title: "People, events & historical context · Kansas Frontier Matrix",
+  description: "Kansas people and events research catalogue, held pending rights, sensitivity and release review.",
+};
 
 export default function PeopleEventsResearch() {
   return <main className={s.page}><div className={`${s.wrap} ${h.wrap}`}>
