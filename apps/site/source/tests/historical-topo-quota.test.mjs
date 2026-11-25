@@ -26,7 +26,8 @@ const quota = compile((await source("historical-topo-request-quota"))
 const route = await import(compile((await source("api/historical-topo/overlay/route"))
   .replaceAll('"../../../historical-topo-overlay"', JSON.stringify(overlay))
   .replaceAll('"../../../historical-topo-overlay-server"', JSON.stringify(server))
-  .replaceAll('"../../../historical-topo-request-quota"', JSON.stringify(quota))));
+  .replaceAll('"../../../historical-topo-request-quota"', JSON.stringify(quota))
+  .replaceAll('"../../../bounded-json"', JSON.stringify(compile(await source("bounded-json"))))));
 const require = createRequire(import.meta.url), runtimeRequire = createRequire(require.resolve("wrangler"));
 const { Miniflare, convertV4MiniflareOptions } = runtimeRequire("miniflare");
 let runtime, bucket;

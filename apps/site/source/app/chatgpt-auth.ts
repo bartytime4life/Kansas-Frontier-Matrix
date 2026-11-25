@@ -66,6 +66,9 @@ function safeRelativeReturnPath(value: string): string {
     return "/";
   }
   if (url.origin !== "https://app.local") return "/";
+  // Dot segments normalize away ("/.//host" becomes "//host"), so check the
+  // returned path itself: a leading "//" is a protocol-relative off-site URL.
+  if (url.pathname.startsWith("//")) return "/";
   if (isReservedAuthPath(url.pathname)) return "/";
 
   return `${url.pathname}${url.search}${url.hash}`;

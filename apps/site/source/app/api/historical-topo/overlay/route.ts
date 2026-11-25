@@ -1,6 +1,7 @@
+import { readBoundedJson } from "../../../bounded-json";
 import { topoRequestKey } from "../../../historical-topo-overlay";
 import { topoCatalogRequest } from "../../../historical-topo-request-quota";
-import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoJson, topoPrivateHeaders, topoSameOrigin, topoScanId, topoUser, TopoOverlayError } from "../../../historical-topo-overlay-server";
+import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoPrivateHeaders, topoSameOrigin, topoScanId, topoUser, TopoOverlayError } from "../../../historical-topo-overlay-server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
@@ -25,9 +26,9 @@ export async function POST(request: Request) {
   try {
     topoSameOrigin(request); const user = await topoUser();
     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 256) throw new TopoOverlayError("Invalid sheet request.");
-    const raw = await request.arrayBuffer();
-    if (raw.byteLength > 256) throw new TopoOverlayError("Invalid sheet request.");
-    const body = topoJson(raw) as { id?: unknown };
+    // A chunked body has no Content-Length; stop reading at the limit instead of buffering it.
+    let body: { id?: unknown } | null;
+    try { body = await readBoundedJson(request, 256, request.signal) as { id?: unknown } | null; } catch { throw new TopoOverlayError("Invalid sheet request."); }
     if (!body || !Number.isInteger(body.id)) throw new TopoOverlayError("Invalid sheet request.");
     const requester = await topoDigest(new TextEncoder().encode(user.id || user.email.toLowerCase()).buffer as ArrayBuffer);
     const record = await topoCatalogRequest(requester, body.id as number);

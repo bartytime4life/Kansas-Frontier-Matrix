@@ -61,3 +61,12 @@ test("local owner capability supports all reads including held bytes without gra
  await denied(new NextRequest("https://site.example/api/daily-archive",{headers}),401);
  state.env.KFM_ARCHIVE_LOCAL_OWNER_TOKEN=workerToken;await denied(request("?id=capture&action=download","GET",{Authorization:`Bearer ${workerToken}`}),401);
 });
+test("malformed or non-object owner input is a caller error, never a storage failure",async()=>{
+ reset();state.user={id:"owner-id",email:"owner@example.com"};state.env.KFM_ARCHIVE_OWNER_EMAILS="owner@example.com";
+ for(const action of ["review","settings"])for(const body of ["{not json","null","[]","7"]){
+  state.calls=0;
+  const response=await route.POST(new NextRequest(`http://127.0.0.1:4173/api/daily-archive?action=${action}`,{method:"POST",headers:{"X-KFM-Archive-Writer":"daily-v1","Content-Type":"application/json"},body}));
+  assert.equal(response.status,400,`${action} ${body}`);assert.match((await response.json()).error,/JSON object/);
+  assert.equal(state.calls,1,"only the store handle is opened; no review or settings write runs");
+ }
+});

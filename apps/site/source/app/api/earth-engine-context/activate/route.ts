@@ -1,3 +1,4 @@
+import { readBoundedBytes } from "../../../bounded-json";
 import { EARTH_ENGINE_CONTEXT_ACTIVE_KEY, EARTH_ENGINE_CONTEXT_PREFIX, earthEngineSetYear, earthEngineTileKey, earthEngineYearPointerKey, parseEarthEnginePointer } from "../../../earth-engine-context";
 import { EarthEngineContextError, earthEngineBucket, earthEngineDigest, earthEngineFailure, earthEngineManifestForPointer, earthEngineOwner, earthEnginePrivateHeaders, earthEngineReadIndex } from "../../../earth-engine-context-server";
 
@@ -6,8 +7,10 @@ export async function POST(request: Request) {
     await earthEngineOwner();
     if (request.headers.get("origin") !== new URL(request.url).origin) throw new EarthEngineContextError("Open the installer on this Site.", 403);
     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 2048) throw new EarthEngineContextError("Invalid display pointer.", 400);
-    const raw = await request.arrayBuffer();
-    if (raw.byteLength > 2048) throw new EarthEngineContextError("Invalid display pointer.", 400);
+    // A chunked body has no Content-Length; stop reading at the limit instead of buffering it.
+    let raw: ArrayBuffer;
+    try { raw = (await readBoundedBytes(request, 2048, request.signal)).buffer as ArrayBuffer; }
+    catch { throw new EarthEngineContextError("Invalid display pointer.", 400); }
     let value: unknown;
     try { value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)); }
     catch { throw new EarthEngineContextError("Invalid display pointer.", 400); }

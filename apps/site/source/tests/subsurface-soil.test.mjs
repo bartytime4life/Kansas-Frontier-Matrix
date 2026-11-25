@@ -15,6 +15,11 @@ test('USDA rows retain separate components, centimetres, capture time and a part
  globalThis.fetch=async (url,options)=>{sent={url,body:JSON.parse(options.body)};return Response.json({Table:[Array(14).fill('column'),...Array.from({length:100},(_,i)=>['1','a','Mapunit',i%2?'2':'3','Component','50','Yes',String(i),'A','0','30','50','20','30'])]});};
  try{const response=await GET(new Request('https://kfm.example/api/subsurface/soil?lon=-95.25&lat=39'));const data=await response.json();assert.equal(response.status,200);assert.equal(data.rows.length,100);assert.equal(data.partial,true);assert.equal(data.depthUnit,'cm');assert.equal(new Set(data.rows.map(r=>r[3])).size,2);assert.ok(data.retrievedAt);assert.equal(sent.url,'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest');assert.match(sent.body.query,/POINT\(-95.250000 39.000000\)/);}finally{globalThis.fetch=original;}
 });
+test('USDA redirects are not followed off the fixed provider host',async()=>{
+ const original=globalThis.fetch;let sent;
+ globalThis.fetch=async (url,options)=>{sent=options;return new Response(null,{status:302,headers:{Location:'https://elsewhere.example/'}});};
+ try{const response=await GET(new Request('https://kfm.example/api/subsurface/soil?lon=-95&lat=39'));assert.equal(sent.redirect,'manual');assert.equal(response.status,502);}finally{globalThis.fetch=original;}
+});
 test('malformed and oversized soil responses are unavailable, never an inferred empty soil',async()=>{
  const original=globalThis.fetch;
  try{for(const payload of [{Table:[['wrong']]},{Table:Array(102).fill(Array(14).fill('x'))}]){globalThis.fetch=async()=>Response.json(payload);assert.equal((await GET(new Request('https://kfm.example/api/subsurface/soil?lon=-95&lat=39'))).status,502);}globalThis.fetch=async()=>new Response('x'.repeat(300001));assert.equal((await GET(new Request('https://kfm.example/api/subsurface/soil?lon=-95&lat=39'))).status,502);}finally{globalThis.fetch=original;}
