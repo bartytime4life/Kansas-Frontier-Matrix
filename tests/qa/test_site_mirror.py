@@ -3357,5 +3357,7 @@ def test_web_a11y_perf_successor_preserves_web_followups_inventory_and_all_holds
 
 
 WEB_A11Y_PERF_CHANGED = {
+    "app/explorer-guide.tsx",
     "app/page.tsx",
+    "app/scene-effects-controls.tsx",
 }

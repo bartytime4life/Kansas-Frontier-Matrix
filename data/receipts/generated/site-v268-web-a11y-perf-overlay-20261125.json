@@ -2271,9 +2271,9 @@
       "state": "identical"
     },
     "app/explorer-guide.tsx": {
-      "mirror_sha256": "6371641bf1a99e194b9801db4b573ae1d0323a621c77300bd7f7ff67d4569980",
+      "mirror_sha256": "9764d25315c1b53d72602977e218cb52c049b526c5765a144c35e78b17096b02",
       "site_sha256": "6371641bf1a99e194b9801db4b573ae1d0323a621c77300bd7f7ff67d4569980",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/explorer-layer-history.ts": {
       "mirror_sha256": "d0caa05e1499c4a68a01e2b0e3693775e10db7ce653c0fb84d75cbaaa8b14795",
@@ -3090,7 +3090,7 @@
     },
     "app/page.tsx": {
       "difference": "Bounded shared terrain-source integrity, malformed soil-link recovery and NOAA daily-weather qualifier integrity only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "a932453816a015999217de0523ffb0767ff9e7cc5c3253f065bc307032ee4ef1",
+      "mirror_sha256": "2ee24f5c4cc39b8f6b7cecc5769e49e9435c430a8a28c36a3ddaefa121fafe84",
       "site_sha256": "2833eb08843b9fce2ee6bf8ca2903a55f9a3580afd460cf35321642972f27610",
       "state": "inherited_repository_overlay"
     },
@@ -3251,7 +3251,7 @@
     },
     "app/scene-effects-controls.tsx": {
       "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "7a9340ff0652f40ce902914fba957bb1ac08d249f95d79da93a8c11c172e61d3",
+      "mirror_sha256": "a955f6b804cf5eae3f340d3f26ca9595da1817936d34b77cebd2414010130055",
       "site_sha256": "8749c0249275612711cfcec7a43cdaf78d3c01c6290e3eb92f94e93101d5205c",
       "state": "inherited_repository_overlay"
     },
@@ -6328,13 +6328,13 @@
   "counts": {
     "canonical_document_mappings": 2,
     "canonical_tool_mappings": 2,
-    "identical": 621,
+    "identical": 620,
     "inherited_repository_overlay": 69,
     "merged_water_overlay": 0,
     "missing": 0,
     "repository_only_overlay": 158,
     "repository_only_water_overlay": 0,
-    "repository_safety_overlay": 172,
+    "repository_safety_overlay": 173,
     "repository_withheld": 262,
     "source_paths": 867,
     "unexpected_difference": 0
@@ -6570,7 +6570,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "9dcf20804562333b7df9962172a0f9af4e6f686f64df64679ee83786832fea1b",
+  "inventory_sha256": "ad1f16e830aa1c1b34e37b0d0616610658e067b9bcda6d6fa4db8f221588f80f",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8758,7 +8758,7 @@
       ]
     }
   },
-  "recorded_at": "2026-11-25T06:34:40.057509+00:00",
+  "recorded_at": "2026-11-25T07:11:02.138334+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "de7ec1d5aa39b9db46672189986212e5eb0a1026",
   "repository_reconciliation": {
@@ -8766,11 +8766,27 @@
     "base_commit": "de7ec1d5aa39b9db46672189986212e5eb0a1026",
     "changes": [
       {
-        "mirror_sha256": "a932453816a015999217de0523ffb0767ff9e7cc5c3253f065bc307032ee4ef1",
+        "mirror_sha256": "9764d25315c1b53d72602977e218cb52c049b526c5765a144c35e78b17096b02",
+        "path": "app/explorer-guide.tsx",
+        "previous_receipt_sha256": "6371641bf1a99e194b9801db4b573ae1d0323a621c77300bd7f7ff67d4569980",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "6371641bf1a99e194b9801db4b573ae1d0323a621c77300bd7f7ff67d4569980",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "2ee24f5c4cc39b8f6b7cecc5769e49e9435c430a8a28c36a3ddaefa121fafe84",
         "path": "app/page.tsx",
         "previous_receipt_sha256": "fbbdffcd00077e67e54ec7cc66a93ac155c777d7fa55abe7408d4b8864454417",
         "proposed_in_this_change": true,
         "repository_base_sha256": "fbbdffcd00077e67e54ec7cc66a93ac155c777d7fa55abe7408d4b8864454417",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "a955f6b804cf5eae3f340d3f26ca9595da1817936d34b77cebd2414010130055",
+        "path": "app/scene-effects-controls.tsx",
+        "previous_receipt_sha256": "7a9340ff0652f40ce902914fba957bb1ac08d249f95d79da93a8c11c172e61d3",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "7a9340ff0652f40ce902914fba957bb1ac08d249f95d79da93a8c11c172e61d3",
         "state": "inherited_repository_overlay"
       }
     ],
@@ -8805,7 +8821,7 @@
   },
   "rollback": {
     "mirror": "Revert the listed Site files and the successor selector/QA together; preserve immutable receipts.",
-    "runtime": "Panel-only controls load on demand; catalog controls mount on first view; the basemap-cache status poll waits for its panel; under Balanced quality the streamflow halo pulse holds its static look on software WebGL or when its frames run below ~10 fps. No dependency, saved-schema or operational-store migration.",
+    "runtime": "Panel-only controls load on demand; catalog controls mount on first view; the basemap-cache status poll waits for its panel; under Balanced quality the streamflow halo pulse holds its static look on software WebGL or when its frames run below ~10 fps. No dependency, saved-schema or operational-store migration. Accessibility: menu-handled Escape no longer also closes the Evidence Drawer, the quick start listens in capture phase, scene studio passes Escape through, the mobile timeline returns focus to its Time button, and four role/landmark/table/scroll-region markup fixes.",
     "site": "No Site synchronization, deployment or publication."
   },
   "security": {
@@ -8839,7 +8855,7 @@
   "status": "REVIEW_ONLY",
   "validation": {
     "app_tests": "PASS: 2109 tests (2107 pass, 2 skipped).",
-    "browser": "PASS: on / (1440x900, headless Chromium) long tasks 20-30 s after load fell from ~10 s to 0 and map render events while idle from ~7/s to 0; the main page chunk fell from 1,280,977 to 962,728 bytes. Every deferred panel opened without new console errors; a 44-route sweep shows no new errors, status changes or overflow.",
+    "browser": "PASS: on / (1440x900, headless Chromium) long tasks 20-30 s after load fell from ~10 s to 0 and map render events while idle from ~7/s to 0; the main page chunk fell from 1,280,977 to 962,728 bytes. Every deferred panel opened without new console errors; a 44-route sweep shows no new errors, status changes or overflow. axe-core 4.14.1 over 42 routes and 25 panel states on / at two viewports: aria-required-children, scrollable-region-focusable, landmark-no-duplicate-banner and landmark-unique fall to 0 and aria-allowed-role from 20 to 13; Escape from the user-opened quick start returns focus to its button.",
     "focused_tests": "PASS: page.tsx source-regex suites (including the persistent hidden wrapper test) within the full run.",
     "lint": "PASS: 0 errors; 10 inherited warnings.",
     "mirror": "PASS: strict selected successor inventory and immutable predecessor chain; 262 withheld paths remain absent.",
