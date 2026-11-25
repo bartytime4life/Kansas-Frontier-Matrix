@@ -1,8 +1,16 @@
 import type {CustomLayerInterface,CustomRenderMethodInput,Map as MapLibreMap} from './maplibre-seam';
-import {nativeAttributeDomain,nativePointColor,nativePointEligible,nativePointPosition,type NativeColorMode,type NativeDataset} from './native-lidar';
+import {MAPLIBRE_EARTH_RADIUS_M,nativeAttributeDomain,nativePointColor,nativePointEligible,nativePointPosition,type NativeColorMode,type NativeDataset} from './native-lidar';
 export const NATIVE_LIDAR_LAYER='external-native-lidar-points';
 export const NATIVE_FRAME_PIXEL_LIMIT=4_194_304;
-export type NativeLayerOptions={scale:number;size:number;color:NativeColorMode;selected:number|null;opacity?:number;gridColor?:'height'|'slope'|'local-relief';framePixelLimit?:number};
+export type NativeLayerOptions={scale:number;size:number;color:NativeColorMode;selected:number|null;opacity?:number;gridColor?:'height'|'slope'|'local-relief';framePixelLimit?:number;motion?:boolean};
+export const TERRAIN_REVEAL_DURATION_MS=1400;
+/** A shared elevation front: low cells settle while higher cells keep rising.
+ * Presentation only. Packed heights, source IDs and scientific values never move. */
+export function terrainRevealFront(low:number,high:number,elapsed:number):number{
+  const t=Math.max(0,Math.min(1,elapsed/TERRAIN_REVEAL_DURATION_MS));
+  return low+(high-low)*(t*t*(3-2*t));
+}
+const heightUnit=(worldY:number)=>Math.cosh(Math.PI*(1-2*worldY))/(2*Math.PI*MAPLIBRE_EARTH_RADIUS_M);
 export type NativeGeometryBounds=readonly [readonly number[],readonly number[]];
 export function nativeTranslatedMatrix(matrix:ArrayLike<number>,origin:readonly number[],bounds?:NativeGeometryBounds|null):Float32Array{
   // Retain double precision through translation and the depth-range remap.
@@ -34,8 +42,10 @@ export function nativePickPixel(point:{x:number;y:number},cssWidth:number,cssHei
 export const nativeDecodePick=(pixel:ArrayLike<number>,count:number):number|null=>{const id=pixel[0]+pixel[1]*256+pixel[2]*65536-1;return Number.isInteger(id)&&id>=0&&id<count?id:null;};
 const VERTEX=`#version 300 es
 layout(location=0) in vec3 position;layout(location=1) in vec3 color;layout(location=2) in float pointId;
-uniform mat4 matrix;uniform float size;uniform float selected;out vec3 vColor;flat out uint vId;flat out float vSelected;
-void main(){gl_Position=matrix*vec4(position,1.);vId=uint(pointId);vSelected=pointId==selected?1.:0.;gl_PointSize=size+(vSelected>.5?4.:0.);vColor=color;}`;
+uniform mat4 matrix;uniform float size;uniform float selected;uniform bool rising;uniform float frontMetres;uniform float originY;uniform float originZ;uniform float displayScale;out vec3 vColor;flat out uint vId;flat out float vSelected;
+void main(){vec3 p=position;
+if(rising){float e=exp(3.141592653589793*(1.-2.*(position.y+originY)));float unit=(e+1./e)*.5/${2*Math.PI*MAPLIBRE_EARTH_RADIUS_M};p.z=min(position.z,frontMetres*displayScale*unit-originZ);}
+gl_Position=matrix*vec4(p,1.);vId=uint(pointId);vSelected=pointId==selected?1.:0.;gl_PointSize=size+(vSelected>.5?4.:0.);vColor=color;}`;
 const FRAGMENT=`#version 300 es
 precision highp float;precision highp int;in vec3 vColor;flat in uint vId;flat in float vSelected;
 uniform bool circles;layout(location=0) out vec4 color;layout(location=1) out vec4 pickId;
@@ -44,7 +54,7 @@ const QUAD_VERTEX=`#version 300 es
 out vec2 uv;void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.-1.,0.,1.);}`;
 const QUAD_FRAGMENT=`#version 300 es
 precision highp float;in vec2 uv;uniform sampler2D cloud;uniform float opacity;out vec4 color;void main(){color=texture(cloud,uv)*opacity;}`;
-export type NativePointLayer=CustomLayerInterface&{update(options:NativeLayerOptions):void;pick(point:{x:number;y:number}):number|null;invalidate():void;readonly eligible:number;readonly failed:boolean};
+export type NativePointLayer=CustomLayerInterface&{update(options:NativeLayerOptions):void;pick(point:{x:number;y:number}):number|null;invalidate():void;reveal():boolean;readonly revealing:boolean;readonly eligible:number;readonly failed:boolean};
 /** Native point cloud has its own depth buffer. Its color and ID attachments are
  * produced by the SAME rasterization, then composed above map context. Terrain
  * is intentionally not an occluder: registration is unverified, not corrected. */
@@ -56,7 +66,7 @@ export function createNativePointLayer(dataset:NativeDataset,initial:NativeLayer
     dataset.points.forEach((p,id)=>{if(!nativePointEligible(p))return;const pos=nativePointPosition(p,options.scale).mercator,color=nativePointColor(p,options.color,domain),offset=count++*7;packed.set([pos[0]-origin[0],pos[1]-origin[1],pos[2]-origin[2],...color,id+1],offset);});return packed;
   }},initial,report);
 }
-export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLayerOptions,report:(message:string)=>void):NativePointLayer{
+export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLayerOptions,report:(message:string)=>void,clock:()=>number=()=>performance.now()):NativePointLayer{
   let map:MapLibreMap|null=null,gl:WebGL2RenderingContext|null=null;
   let program:WebGLProgram|null=null,quad:WebGLProgram|null=null;
   let vao:WebGLVertexArrayObject|null=null,quadVao:WebGLVertexArrayObject|null=null,buffer:WebGLBuffer|null=null;
@@ -64,7 +74,9 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
   let bounds:NativeGeometryBounds|null=null;
   let width=0,height=0,ready=false,failed=false,dirty=true,options={...initial},count=0;
   const eligible=geometry.eligibleCount,origin=geometry.origin(initial.scale);
-  let uniforms:{matrix:WebGLUniformLocation|null;size:WebGLUniformLocation|null;selected:WebGLUniformLocation|null;circles:WebGLUniformLocation|null}|null=null;
+  let riseStart:number|null=null,riseRequested=false,riseRange:[number,number]|null=null;
+  const finishRise=()=>{riseStart=null;riseRequested=false;};
+  let uniforms:{matrix:WebGLUniformLocation|null;size:WebGLUniformLocation|null;selected:WebGLUniformLocation|null;circles:WebGLUniformLocation|null;rising:WebGLUniformLocation|null;frontMetres:WebGLUniformLocation|null;originY:WebGLUniformLocation|null;originZ:WebGLUniformLocation|null;displayScale:WebGLUniformLocation|null}|null=null;
   let compositeUniforms:{cloud:WebGLUniformLocation|null;opacity:WebGLUniformLocation|null}|null=null,maxPointSize=1;
 
   // A map repaint does not necessarily change this layer. Keep its color and
@@ -75,7 +87,7 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
   const sameMatrix=(matrix:ArrayLike<number>)=>frameMatrix!==null&&matrix.length===16&&frameMatrix.every((v,i)=>v===matrix[i]);
   const fail=()=>{
     if(failed)return;
-    failed=true;invalidateFrame();
+    failed=true;finishRise();invalidateFrame();
     report(geometry.triangles?'Terrain cell rendering is unavailable. Continuous elevation context and source data remain available; refresh this view.':'Native point rendering is unavailable. Continuous terrain and the source data remain available; retry the point view.');
   };
   const compile=(kind:number,source:string)=>{
@@ -129,16 +141,35 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
     const low=[Infinity,Infinity,Infinity],high=[-Infinity,-Infinity,-Infinity];
     for(let i=0;i<packed.length;i+=7)for(let axis=0;axis<3;axis++){low[axis]=Math.min(low[axis],packed[i+axis]);high[axis]=Math.max(high[axis],packed[i+axis]);}
     bounds=packed.length?[low,high]:null;
+    riseRange=null;
+    if(geometry.triangles&&packed.length){
+      let lowM=Infinity,highM=-Infinity;
+      const units=new Map<number,number>();
+      const unitAt=(y:number)=>{let unit=units.get(y);if(unit===undefined){unit=heightUnit(y+origin[1]);units.set(y,unit);}return unit;};
+      for(let i=0;i<packed.length;i+=7){const metres=(packed[i+2]+origin[2])/(options.scale*unitAt(packed[i+1]));lowM=Math.min(lowM,metres);highM=Math.max(highM,metres);}
+      if(Number.isFinite(lowM)&&Number.isFinite(highM)&&highM>lowM){
+        riseRange=[lowM,highM];
+        // The initial common metre plane is slightly curved in Mercator Z.
+        // Include its full footprint in our independent depth range.
+        for(const y of [low[1],high[1]])low[2]=Math.min(low[2],lowM*options.scale*heightUnit(y+origin[1])-origin[2]);
+      }
+    }
     count=packed.length/7;gl!.bindBuffer(gl!.ARRAY_BUFFER,buffer);gl!.bufferData(gl!.ARRAY_BUFFER,packed,gl!.STATIC_DRAW);
     dirty=false;invalidateFrame();
   };
   const layer:NativePointLayer={
     id:geometry.id,type:'custom',renderingMode:'3d',
+    get revealing(){return riseRequested||riseStart!==null;},
+    reveal(){
+      if(!geometry.triangles||!options.motion||failed||!eligible||!map)return false;
+      riseRequested=true;riseStart=null;invalidateFrame();map.triggerRepaint();return true;
+    },
     get eligible(){return eligible;},get failed(){return failed;},
     update(next){
       if(next.framePixelLimit!==undefined&&(!Number.isSafeInteger(next.framePixelLimit)||next.framePixelLimit<65_536||next.framePixelLimit>NATIVE_FRAME_PIXEL_LIMIT))throw Error('Invalid terrain drawing budget');
       if(!Number.isFinite(next.scale)||next.scale<.1||next.scale>5||!Number.isFinite(next.size)||next.size<1||next.size>6||!['elevation','classification','intensity'].includes(next.color)||(next.gridColor!==undefined&&!['height','slope','local-relief'].includes(next.gridColor))||(next.opacity!==undefined&&(!Number.isFinite(next.opacity)||next.opacity<0||next.opacity>1)))throw Error('Invalid point display settings');
       const changedGeometry=next.scale!==options.scale||(geometry.triangles===true?(next.gridColor??'height')!==(options.gridColor??'height'):next.color!==options.color);
+      if((riseRequested||riseStart!==null)&&(changedGeometry||next.motion!==true||next.opacity===0)){finishRise();invalidateFrame();}
       if(changedGeometry||next.selected!==options.selected||(!geometry.triangles&&next.size!==options.size)||next.framePixelLimit!==options.framePixelLimit)invalidateFrame();
       dirty||=changedGeometry;options={...next};
       // Opacity belongs only to composition. A cached ID frame is still exact;
@@ -146,14 +177,14 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
       if(options.opacity===0)ready=false;
       map?.triggerRepaint();
     },
-    invalidate:invalidateFrame,
+    invalidate(){finishRise();invalidateFrame();},
     onAdd(nextMap,context){
       map=nextMap;gl=context;
       const priorVao=gl.getParameter(gl.VERTEX_ARRAY_BINDING),priorBuffer=gl.getParameter(gl.ARRAY_BUFFER_BINDING);
       try{
         if(typeof gl.drawBuffers!=='function')throw Error('WebGL2 required');
         program=link(VERTEX,FRAGMENT);quad=link(QUAD_VERTEX,QUAD_FRAGMENT);
-        uniforms={matrix:gl.getUniformLocation(program,'matrix'),size:gl.getUniformLocation(program,'size'),selected:gl.getUniformLocation(program,'selected'),circles:gl.getUniformLocation(program,'circles')};
+        uniforms={matrix:gl.getUniformLocation(program,'matrix'),size:gl.getUniformLocation(program,'size'),selected:gl.getUniformLocation(program,'selected'),circles:gl.getUniformLocation(program,'circles'),rising:gl.getUniformLocation(program,'rising'),frontMetres:gl.getUniformLocation(program,'frontMetres'),originY:gl.getUniformLocation(program,'originY'),originZ:gl.getUniformLocation(program,'originZ'),displayScale:gl.getUniformLocation(program,'displayScale')};
         compositeUniforms={cloud:gl.getUniformLocation(quad,'cloud'),opacity:gl.getUniformLocation(quad,'opacity')};
         maxPointSize=Number(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)[1]);
         buffer=gl.createBuffer();vao=gl.createVertexArray();quadVao=gl.createVertexArray();
@@ -166,8 +197,8 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
     },
     render(context,input:CustomRenderMethodInput){
       if(failed||!map||!gl||!program||!quad||!vao||!buffer||!uniforms||!compositeUniforms)return;
-      if(map.getProjection()?.type!=='mercator'){invalidateFrame();return;}
-      if(options.opacity===0){ready=false;return;}
+      if(map.getProjection()?.type!=='mercator'){finishRise();invalidateFrame();return;}
+      if(options.opacity===0){finishRise();ready=false;return;}
       // Lost contexts return null for GL state. Contain the loss before any
       // snapshot/cleanup that requires a real viewport or framebuffer.
       if(gl.isContextLost()){fail();return;}
@@ -182,6 +213,11 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
         const ratio=Math.min(1,Math.sqrt((options.framePixelLimit??NATIVE_FRAME_PIXEL_LIMIT)/(gl.drawingBufferWidth*gl.drawingBufferHeight)));
         const w=Math.max(1,Math.floor(gl.drawingBufferWidth*ratio)),h=Math.max(1,Math.floor(gl.drawingBufferHeight*ratio));
         allocate(w,h);if(dirty)upload();
+        const now=riseRequested||riseStart!==null?clock():0;
+        if(riseRequested){riseRequested=false;riseStart=riseRange?now:null;}
+        if(riseStart!==null&&(!riseRange||now-riseStart>=TERRAIN_REVEAL_DURATION_MS)){finishRise();invalidateFrame();}
+        const rising=riseStart!==null&&riseRange!==null;
+        if(rising)invalidateFrame();
         const canvas=map.getCanvas(),cssWidth=canvas.clientWidth||1,cssHeight=canvas.clientHeight||1,matrix=input.defaultProjectionData.mainMatrix;
         if(!frameValid||!sameMatrix(matrix)||frameCssWidth!==cssWidth||frameCssHeight!==cssHeight){
           gl.bindFramebuffer(gl.FRAMEBUFFER,fbo);gl.viewport(0,0,w,h);
@@ -193,6 +229,8 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
           gl.uniform1f(uniforms.size,Math.min(maxPointSize,options.size*w/cssWidth));
           gl.uniform1f(uniforms.selected,options.selected===null?-1:options.selected+1);
           gl.uniform1i(uniforms.circles,geometry.triangles?0:1);
+          gl.uniform1i(uniforms.rising,rising?1:0);
+          if(rising){gl.uniform1f(uniforms.frontMetres,terrainRevealFront(riseRange![0],riseRange![1],now-riseStart!));gl.uniform1f(uniforms.originY,origin[1]);gl.uniform1f(uniforms.originZ,origin[2]);gl.uniform1f(uniforms.displayScale,options.scale);}
           gl.drawArrays(geometry.triangles?gl.TRIANGLES:gl.POINTS,0,count);
           // Copy the matrix. MapLibre can mutate and reuse its own array.
           frameMatrix=Float64Array.from(matrix);frameCssWidth=cssWidth;frameCssHeight=cssHeight;frameValid=true;
@@ -204,7 +242,7 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
         gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendEquationSeparate(gl.FUNC_ADD,gl.FUNC_ADD);
         gl.blendFuncSeparate(gl.ONE,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
         gl.useProgram(quad);gl.bindVertexArray(quadVao);gl.bindTexture(gl.TEXTURE_2D,textures[0]);
-        gl.uniform1i(compositeUniforms.cloud,0);gl.uniform1f(compositeUniforms.opacity,options.opacity??1);gl.drawArrays(gl.TRIANGLES,0,3);ready=true;
+        gl.uniform1i(compositeUniforms.cloud,0);gl.uniform1f(compositeUniforms.opacity,options.opacity??1);gl.drawArrays(gl.TRIANGLES,0,3);ready=!rising;if(rising)map.triggerRepaint();
       }catch{fail();}
       finally{
         gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,prior.draw);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,prior.read);
@@ -226,7 +264,7 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
       finally{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,previous);}
     },
     onRemove(){
-      invalidateFrame();
+      finishRise();invalidateFrame();
       if(gl){disposeFrame();if(program)gl.deleteProgram(program);if(quad)gl.deleteProgram(quad);if(vao)gl.deleteVertexArray(vao);if(quadVao)gl.deleteVertexArray(quadVao);if(buffer)gl.deleteBuffer(buffer);}
       program=null;quad=null;uniforms=null;compositeUniforms=null;vao=null;quadVao=null;buffer=null;gl=null;map=null;
     }

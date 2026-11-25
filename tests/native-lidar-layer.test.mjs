@@ -78,7 +78,7 @@ test('unchanged terrain frames reuse the exact color/ID raster while composing e
  const p=layer.createLidarGeometryLayer(geometry,options,()=>assert.fail('cached renderer failed')),input={defaultProjectionData:{mainMatrix:[...matrix]}};
  const raster=()=>g.log.filter(r=>r[0]==='drawArrays'&&r[1]===g.TRIANGLES&&r[3]===6).length,composite=()=>g.log.filter(r=>r[0]==='drawArrays'&&r[1]===g.TRIANGLES&&r[3]===3).length,uploads=()=>g.log.filter(r=>r[0]==='bufferData').length;
  p.onAdd(map,g);p.render(g,input);
- const lookupCount=g.log.filter(r=>r[0]==='getUniformLocation').length;assert.equal(lookupCount,6);
+ const lookupCount=g.log.filter(r=>r[0]==='getUniformLocation').length;assert.equal(lookupCount,11);
  const prior=new Map(g.params),enabled=new Set(g.enabled);
  for(let i=0;i<100;i++)p.render(g,input);
  assert.equal(raster(),1,'an unchanged landscape needs no repeated raster work');assert.equal(composite(),101,'the cached color is still composed over each new map frame');assert.equal(uploads(),1);assert.equal(g.log.filter(r=>r[0]==='getUniformLocation').length,lookupCount,'uniform lookup is program-lifetime work');assert.equal(p.pick({x:25,y:10}),1,'cached ID attachment retains the actual source cell');
@@ -131,4 +131,26 @@ test('lost or invalidated GPU state cannot throw a second error into the map wor
   const g=glHarness(),reports=[],map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){}},p=layer.createNativePointLayer(fixture(),options,message=>reports.push(message));p.onAdd(map,g);g.lost=lost;g.getParameter=()=>null;
   assert.doesNotThrow(()=>p.render(g,{defaultProjectionData:{mainMatrix:matrix}}));assert.equal(p.failed,true);assert.equal(reports.length,1);assert.equal(p.pick({x:1,y:1}),null);p.onRemove(map,g);assert.equal(g.live.size,0);
  }
+});
+
+
+test('common metre front settles shorter cells first and clamps at the exact source tops',()=>{
+ const {terrainRevealFront:front,TERRAIN_REVEAL_DURATION_MS:duration}=layer;
+ assert.equal(front(300,400,-10),300);assert.equal(front(300,400,0),300);assert.equal(front(300,400,duration/2),350);assert.equal(front(300,400,duration*2),400);
+ let previous=300;for(let elapsed=0;elapsed<=duration;elapsed+=10){const value=front(300,400,elapsed);assert.ok(value>=previous&&value<=400);previous=value;}
+ const tops=[310,350,390],shown=tops.map(top=>Math.min(top,front(300,400,duration/2)));
+ assert.deepEqual(shown,[310,350,350],'settled cells stop; higher cells share the same rising height');
+});
+
+test('GPU rise is bounded, reuses geometry and attachments, suppresses moving picks, and restores the exact cached final frame',()=>{
+ let time=1000,repaints=0;const g=glHarness(),input={defaultProjectionData:{mainMatrix:matrix}},map={getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:50}),triggerRepaint(){repaints++;}},geometry=gridLayer.lidarGridGeometry(kansasFixture().grid,'surface'),settings={...options,motion:true},p=layer.createLidarGeometryLayer(geometry,settings,()=>assert.fail('reveal renderer failed'),()=>time);
+ p.onAdd(map,g);g.pixelId=1;assert.equal(p.reveal(),true);p.render(g,input);assert.equal(p.revealing,true);assert.equal(p.pick({x:10,y:10}),null);
+ const packed=g.log.find(row=>row[0]==='bufferData')[2],before=Buffer.from(packed.buffer).toString('hex'),live=g.live.size,uploads=()=>g.log.filter(row=>row[0]==='bufferData').length;
+ const front=()=>g.log.filter(row=>row[0]==='uniform1f'&&row[1]==='frontMetres').at(-1)[2],low=front();time+=layer.TERRAIN_REVEAL_DURATION_MS/2;p.render(g,input);assert.ok(front()>low);assert.equal(uploads(),1);assert.equal(g.live.size,live);
+ time+=layer.TERRAIN_REVEAL_DURATION_MS/2;p.render(g,input);assert.equal(p.revealing,false);assert.equal(g.log.filter(row=>row[0]==='uniform1i'&&row[1]==='rising').at(-1)[2],0,'completed shader uses original vertex positions');assert.equal(p.pick({x:10,y:10}),0);
+ const draws=g.log.filter(row=>row[0]==='drawArrays').length,settledRepaints=repaints;p.render(g,input);assert.equal(g.log.filter(row=>row[0]==='drawArrays').length,draws+1,'only cached composition remains');assert.equal(repaints,settledRepaints,'no unbounded repaint loop');assert.equal(uploads(),1);assert.equal(Buffer.from(packed.buffer).toString('hex'),before,'source geometry and IDs remain unchanged');
+ assert.equal(p.reveal(),true);p.render(g,input);p.invalidate();p.render(g,input);assert.equal(p.revealing,false,'navigation settles immediately');assert.equal(p.pick({x:10,y:10}),0);
+ p.reveal();p.render(g,input);p.update({...settings,motion:false});p.render(g,input);assert.equal(p.revealing,false);assert.equal(p.reveal(),false,'reduced-motion/lightweight policy cannot replay');assert.equal(uploads(),1);
+ p.update(settings);assert.equal(p.reveal(),true,'motion can be enabled without a new geometry upload');p.render(g,input);p.update({...settings,opacity:0});p.render(g,input);assert.equal(p.revealing,false);assert.equal(p.pick({x:10,y:10}),null);p.onRemove(map,g);assert.equal(g.live.size,0);
+ const points=layer.createNativePointLayer(fixture(),settings,()=>{});points.onAdd(map,g);assert.equal(points.reveal(),false,'raw scientific points are never animated');points.onRemove(map,g);
 });
