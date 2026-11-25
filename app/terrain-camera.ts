@@ -26,7 +26,7 @@ export function sameTerrainFootprint(a: TerrainFootprint, b: TerrainFootprint): 
   return a.every((value, index) => Math.abs(value - b[index]) <= 1e-7);
 }
 
-export type TerrainViewLease = Readonly<{bounds:TerrainFootprint;zoom:number;width:number;height:number}>;
+export type TerrainViewLease = Readonly<{bounds:TerrainFootprint;zoom:number;width:number;height:number;sourceZoom?:number}>;
 /** Keep the acquired window fixed through small cumulative pans. Only its
  * central 65% is a navigation lease; it does not claim the new viewport is
  * covered. Zoom, resize and crossing that core always acquire a new window. */
@@ -36,6 +36,19 @@ export function terrainLeaseContains(lease:TerrainViewLease,view:TerrainViewport
   const [west,south,east,north]=lease.bounds,inset=.175;
   return west<east&&south<north&&view.center[0]>=west+(east-west)*inset&&view.center[0]<=east-(east-west)*inset
     &&view.center[1]>=south+(north-south)*inset&&view.center[1]<=north-(north-south)*inset;
+}
+
+/** Translate a display-scale acquisition window for a pan. In particular, a
+ * fitted camera must not silently turn a detailed study into a coarse grid.
+ * This defines a NEW request; old values are never moved or stretched. Zoom or
+ * resize deliberately returns to viewport-based acquisition. */
+export function terrainPanFootprint(lease:TerrainViewLease,view:TerrainViewport):TerrainFootprint|null {
+  if(![...lease.bounds,lease.zoom,lease.width,lease.height,...view.center,view.zoom,view.width,view.height].every(Number.isFinite)
+    || Math.abs(lease.zoom-view.zoom)>1e-7 || lease.width!==view.width || lease.height!==view.height || Math.abs(view.center[1])>=85) return null;
+  const [west,south,east,north]=lease.bounds;
+  if(west>=east||south>=north)return null;
+  const halfX=(east-west)/2,halfY=(mercatorY(south)-mercatorY(north))/2,y=mercatorY(view.center[1]);
+  return [view.center[0]-halfX,latitudeAt(y+halfY),view.center[0]+halfX,latitudeAt(y-halfY)];
 }
 
 export type TerrainInspection = Readonly<{

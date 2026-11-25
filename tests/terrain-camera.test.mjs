@@ -78,3 +78,11 @@ test('central 65 percent navigation lease stays anchored through cumulative pans
  for(const patch of [{zoom:15.1},{width:1200},{height:800},{center:[-99,38.5]},{center:[-98,38.514]},{center:[NaN,38.5]}])assert.equal(camera.terrainLeaseContains(lease,{...pose,...patch}),false);
  assert.deepEqual(lease,original,'a reuse decision cannot slide or enlarge source coverage');
 });
+
+
+test('pan-window translation preserves Mercator cell spacing and declines genuine zoom/resize changes',()=>{
+ const lease={bounds:[-98.02,38.48,-97.98,38.52],zoom:13,width:1280,height:720},view={center:[-97.7,39.1],zoom:13,width:1280,height:720},source=structuredClone(lease);
+ const next=camera.terrainPanFootprint(lease,view);assert.ok(next);assert.ok(Math.abs((next[0]+next[2])/2-view.center[0])<1e-12);assert.ok(Math.abs((next[2]-next[0])-(lease.bounds[2]-lease.bounds[0]))<1e-12);assert.ok(Math.abs((mercatorY(next[1])-mercatorY(next[3]))-(mercatorY(lease.bounds[1])-mercatorY(lease.bounds[3])))<1e-12);
+ for(const patch of [{zoom:13.1},{width:1000},{height:800},{center:[NaN,38.5]}])assert.equal(camera.terrainPanFootprint(lease,{...view,...patch}),null);
+ assert.deepEqual(lease,source,'translation describes only a new query, never relabels source coordinates');
+});

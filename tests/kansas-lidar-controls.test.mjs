@@ -123,7 +123,7 @@ test('pinned comparison modes reuse study bounds; deliberate navigation, interru
  for(const action of ['navigation','interruption','follow','mode','leave']){const s=await setup();try{let c=s.render();s.tick();s.groundRequests[0].resolve(groundFixture(s.map.bounds).receipt);await settle();c=s.render();s.allowCamera();if(action==='interruption')s.map.deferCameraEnd=true;c.inspectLandscape();c=s.render();assert.equal(c.pinned,true);s.map.bounds=[-99,38,-98,39];
   if(action==='mode'){c.selectMode('surface');c=s.render();s.tick();assert.deepEqual(Array.from(s.requests[0].query.bbox),[-96.588,38.987,-96.584,38.991]);assert.equal(c.pinned,true);}
   else if(action==='leave'){s.props.active=false;c=s.render();assert.equal(c.pinned,false);assert.equal(c.applied.grid,false);}
-  else {s.camera.center=[-98.5,38.5];if(action==='follow')c.followMap();else {s.emit(action==='interruption'?'dragstart':'movestart',action==='interruption'?{originalEvent:{type:'pointermove'}}:{});s.emit('moveend',action==='interruption'?s.map.lastCameraEvent:undefined);}c=s.render();s.tick();assert.equal(c.pinned,false);assert.equal(c.selected,null);assert.ok(c.groundReceipt,'last validated footprint is retained');assert.equal(c.transitioning,true);assert.equal(s.groundRequests[0].signal.aborted,true);assert.deepEqual(Array.from(s.groundRequests[1].query.bbox),Array.from(ground.canonicalGroundQuery(terrainCamera.terrainViewFootprint({center:s.camera.center,zoom:s.camera.zoom,width:1000,height:760},s.map.bounds)).bbox));s.groundRequests[0].resolve(groundFixture().receipt);await settle();c=s.render();assert.equal(c.transitioning,true,'a late old completion cannot end the handoff');}
+  else {s.camera.center=[-98.5,38.5];if(action==='follow')c.followMap();else {s.emit(action==='interruption'?'dragstart':'movestart',action==='interruption'?{originalEvent:{type:'pointermove'}}:{});s.emit('moveend',action==='interruption'?s.map.lastCameraEvent:undefined);}c=s.render();s.tick();assert.equal(c.pinned,false);assert.equal(c.selected,null);assert.ok(c.groundReceipt,'last validated footprint is retained');assert.equal(c.transitioning,true);assert.equal(s.groundRequests[0].signal.aborted,true);const viewNow={center:s.camera.center,zoom:s.camera.zoom,width:1000,height:760},boundsNow=action!=='navigation'?terrainCamera.terrainViewFootprint(viewNow,s.map.bounds):terrainCamera.terrainPanFootprint({bounds:s.groundRequests[0].query.bbox,zoom:s.camera.zoom,width:1000,height:760},viewNow);assert.deepEqual(Array.from(s.groundRequests[1].query.bbox),Array.from(ground.canonicalGroundQuery(boundsNow).bbox));s.groundRequests[0].resolve(groundFixture().receipt);await settle();c=s.render();assert.equal(c.transitioning,true,'a late old completion cannot end the handoff');}
  }finally{s.h.dispose();}}
 });
 
@@ -315,5 +315,27 @@ test('resuming deferred native work does not abort a genuinely reusable pending 
 test('visibility resume during a lease-contained pan starts only the deferred current acquisition at moveend',async()=>{
  const s=await setup();try{
   s.map.bounds=[-96.7,39,-96.4,39.2];let c=s.render();s.tick();const old=s.groundRequests[0],anchor=old.query.bbox;s.emit('movestart');s.camera.center=[s.camera.center[0]+(anchor[2]-anchor[0])*.1,s.camera.center[1]];s.visibility(false);c=s.render();assert.equal(old.signal.aborted,true);s.visibility(true);c=s.render();s.tick();assert.equal(s.groundRequests.length,1);assert.equal(c.phase,'moving');s.emit('moveend');c=s.render();s.tick();assert.equal(s.groundRequests.length,2,'visible current work resumes after the accepted small pan');assert.deepEqual(Array.from(s.groundRequests[1].query.bbox),Array.from(anchor));c=s.render();assert.equal(c.phase,'loading');
+ }finally{s.h.dispose();}
+});
+
+
+test('pan after Fit 3D retains acquired ground resolution rather than replacing it with a coarser fitted-camera grid',async()=>{
+ const s=await setup();try{
+  s.map.bounds=[-96.7,39,-96.4,39.2];let c=s.render();s.tick();const first=s.groundRequests[0],anchor=[...first.query.bbox];first.resolve(groundFixture(anchor).receipt);await settle();c=s.render();s.allowCamera();c.inspectLandscape();c=s.render();const fittedZoom=s.camera.zoom;
+  s.emit('movestart');s.camera.center=[s.camera.center[0]+(anchor[2]-anchor[0])*.6,s.camera.center[1]];s.emit('moveend');c=s.render();s.tick();
+  assert.equal(s.groundRequests.length,2);const next=s.groundRequests[1].query.bbox;
+  assert.ok(Math.abs((next[2]-next[0])-(anchor[2]-anchor[0]))<.000021,'pan preserves the accepted longitude spacing within canonical rounding');
+  assert.ok(Math.abs((next[3]-next[1])-(anchor[3]-anchor[1]))<.000021,'pan preserves accepted latitude spacing within canonical rounding');
+  assert.equal(s.camera.zoom,fittedZoom,'acquisition cannot move the camera');assert.equal(c.pinned,false);assert.equal(c.transitioning,true);
+ }finally{s.h.dispose();}
+});
+
+test('native pan after inspection retains the accepted acquisition zoom along with its source spacing',async()=>{
+ const s=await setup();try{
+  s.camera.center=[-96.586,38.989];const world=512*2**15,mercatorY=latitude=>(1-Math.log(Math.tan(Math.PI/4+latitude*Math.PI/360))/Math.PI)/2;
+  const width=world*.004/(360*.82),height=world*(mercatorY(38.987)-mercatorY(38.991))/.82;s.map.getCanvas=()=>({clientWidth:width,clientHeight:height});
+  let c=s.render();c.selectMode('surface');c=s.render();s.tick();const first=s.requests[0];first.resolve(data(['surface']));await settle();c=s.render();s.allowCamera();c.inspectLandscape();c=s.render();assert.notEqual(s.camera.zoom,first.query.zoom,'inspection camera zoom differs from source selection zoom');
+  s.emit('movestart');s.camera.center=[-96.5845,38.989];s.emit('moveend');c=s.render();s.tick();assert.equal(s.requests.length,2);assert.equal(s.requests[1].query.zoom,first.query.zoom,'inspection does not change the native source selection level');
+  c.selectMode('ground');c=s.render();s.tick();c.selectMode('canopy');c=s.render();s.tick();assert.equal(s.requests.at(-1).query.zoom,first.query.zoom,'switching through Ground retains the acquisition level for native comparison');
  }finally{s.h.dispose();}
 });

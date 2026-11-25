@@ -3,8 +3,29 @@ import {nativeAttributeDomain,nativePointColor,nativePointEligible,nativePointPo
 export const NATIVE_LIDAR_LAYER='external-native-lidar-points';
 export const NATIVE_FRAME_PIXEL_LIMIT=4_194_304;
 export type NativeLayerOptions={scale:number;size:number;color:NativeColorMode;selected:number|null;opacity?:number;gridColor?:'height'|'slope'|'local-relief';framePixelLimit?:number};
-export function nativeTranslatedMatrix(matrix:ArrayLike<number>,origin:readonly number[]):Float32Array{
-  const out=Float32Array.from(matrix);for(let row=0;row<4;row++)out[12+row]=matrix[row]*origin[0]+matrix[4+row]*origin[1]+matrix[8+row]*origin[2]+matrix[12+row];return out;
+export type NativeGeometryBounds=readonly [readonly number[],readonly number[]];
+export function nativeTranslatedMatrix(matrix:ArrayLike<number>,origin:readonly number[],bounds?:NativeGeometryBounds|null):Float32Array{
+  // Retain double precision through translation and the depth-range remap.
+  // XY/W are the original map projection. Only our independent depth buffer
+  // uses a tighter range, avoiding coplanar quantization of small height steps.
+  const out=Float64Array.from(matrix);for(let row=0;row<4;row++)out[12+row]=matrix[row]*origin[0]+matrix[4+row]*origin[1]+matrix[8+row]*origin[2]+matrix[12+row];
+  if(bounds){
+    let low=Infinity,high=-Infinity,front=true;
+    for(let corner=0;corner<8;corner++){
+      const p=[bounds[corner&1][0],bounds[(corner>>1)&1][1],bounds[(corner>>2)&1][2]];
+      const w=out[3]*p[0]+out[7]*p[1]+out[11]*p[2]+out[15];
+      const z=out[2]*p[0]+out[6]*p[1]+out[10]*p[2]+out[14];
+      if(!Number.isFinite(w)||!Number.isFinite(z)||w<=1e-12){front=false;break;}
+      low=Math.min(low,z/w);high=Math.max(high,z/w);
+    }
+    const pad=(high-low)*.01;
+    low=Math.max(-1,low-pad);high=Math.min(1,high+pad);
+    if(front&&Number.isFinite(low)&&Number.isFinite(high)&&high-low>1e-12){
+      const midpoint=(high+low)/2,factor=2/(high-low);
+      for(let col=0;col<4;col++)out[col*4+2]=(out[col*4+2]-midpoint*out[col*4+3])*factor;
+    }
+  }
+  return Float32Array.from(out);
 }
 export function nativePickPixel(point:{x:number;y:number},cssWidth:number,cssHeight:number,width:number,height:number):[number,number]|null{
   if(![point.x,point.y,cssWidth,cssHeight,width,height].every(Number.isFinite)||cssWidth<=0||cssHeight<=0||width<1||height<1||point.x<0||point.y<0||point.x>=cssWidth||point.y>=cssHeight)return null;
@@ -40,6 +61,7 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
   let program:WebGLProgram|null=null,quad:WebGLProgram|null=null;
   let vao:WebGLVertexArrayObject|null=null,quadVao:WebGLVertexArrayObject|null=null,buffer:WebGLBuffer|null=null;
   let fbo:WebGLFramebuffer|null=null,depth:WebGLRenderbuffer|null=null,textures:WebGLTexture[]=[];
+  let bounds:NativeGeometryBounds|null=null;
   let width=0,height=0,ready=false,failed=false,dirty=true,options={...initial},count=0;
   const eligible=geometry.eligibleCount,origin=geometry.origin(initial.scale);
   let uniforms:{matrix:WebGLUniformLocation|null;size:WebGLUniformLocation|null;selected:WebGLUniformLocation|null;circles:WebGLUniformLocation|null}|null=null;
@@ -104,6 +126,9 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
     origin.splice(0,3,...geometry.origin(options.scale));
     const packed=geometry.pack(options),limit=geometry.triangles?geometry.vertexLimit??100_000:100_000;
     if(!Number.isSafeInteger(limit)||limit<1||limit>300_000||packed.length%7!==0||packed.length>limit*7)throw Error('Geometry budget');
+    const low=[Infinity,Infinity,Infinity],high=[-Infinity,-Infinity,-Infinity];
+    for(let i=0;i<packed.length;i+=7)for(let axis=0;axis<3;axis++){low[axis]=Math.min(low[axis],packed[i+axis]);high[axis]=Math.max(high[axis],packed[i+axis]);}
+    bounds=packed.length?[low,high]:null;
     count=packed.length/7;gl!.bindBuffer(gl!.ARRAY_BUFFER,buffer);gl!.bufferData(gl!.ARRAY_BUFFER,packed,gl!.STATIC_DRAW);
     dirty=false;invalidateFrame();
   };
@@ -143,10 +168,17 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
       if(failed||!map||!gl||!program||!quad||!vao||!buffer||!uniforms||!compositeUniforms)return;
       if(map.getProjection()?.type!=='mercator'){invalidateFrame();return;}
       if(options.opacity===0){ready=false;return;}
-      const prior={draw:gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING),read:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),viewport:gl.getParameter(gl.VIEWPORT),program:gl.getParameter(gl.CURRENT_PROGRAM),vao:gl.getParameter(gl.VERTEX_ARRAY_BINDING),buffer:gl.getParameter(gl.ARRAY_BUFFER_BINDING),renderbuffer:gl.getParameter(gl.RENDERBUFFER_BINDING),active:gl.getParameter(gl.ACTIVE_TEXTURE),stencil:gl.isEnabled(gl.STENCIL_TEST),depth:gl.isEnabled(gl.DEPTH_TEST),blend:gl.isEnabled(gl.BLEND),cull:gl.isEnabled(gl.CULL_FACE),scissor:gl.isEnabled(gl.SCISSOR_TEST),depthMask:gl.getParameter(gl.DEPTH_WRITEMASK),depthFunc:gl.getParameter(gl.DEPTH_FUNC),depthRange:gl.getParameter(gl.DEPTH_RANGE),dither:gl.isEnabled(gl.DITHER),colorMask:gl.getParameter(gl.COLOR_WRITEMASK),clear:gl.getParameter(gl.COLOR_CLEAR_VALUE),clearDepth:gl.getParameter(gl.DEPTH_CLEAR_VALUE),equationRGB:gl.getParameter(gl.BLEND_EQUATION_RGB),equationAlpha:gl.getParameter(gl.BLEND_EQUATION_ALPHA),srcRGB:gl.getParameter(gl.BLEND_SRC_RGB),dstRGB:gl.getParameter(gl.BLEND_DST_RGB),srcAlpha:gl.getParameter(gl.BLEND_SRC_ALPHA),dstAlpha:gl.getParameter(gl.BLEND_DST_ALPHA)};
-      gl.activeTexture(gl.TEXTURE0);const oldTexture=gl.getParameter(gl.TEXTURE_BINDING_2D);
+      // Lost contexts return null for GL state. Contain the loss before any
+      // snapshot/cleanup that requires a real viewport or framebuffer.
+      if(gl.isContextLost()){fail();return;}
+      // MapLibre 6.9 marks its tracked GL state dirty after every custom layer
+      // and restores it before the next draw (webgl/draw/draw_custom.ts).
+      // Reading that state back here serializes the browser/GPU on every pan.
+      // Preserve only the actual render targets/viewport, plus untracked flags.
+      const prior={draw:gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING),read:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),viewport:gl.getParameter(gl.VIEWPORT),scissor:gl.isEnabled(gl.SCISSOR_TEST),dither:gl.isEnabled(gl.DITHER)};
+      if(!prior.viewport||prior.viewport.length!==4){fail();return;}
       try{
-        if(gl.isContextLost())throw Error('Context lost');
+        gl.activeTexture(gl.TEXTURE0);
         const ratio=Math.min(1,Math.sqrt((options.framePixelLimit??NATIVE_FRAME_PIXEL_LIMIT)/(gl.drawingBufferWidth*gl.drawingBufferHeight)));
         const w=Math.max(1,Math.floor(gl.drawingBufferWidth*ratio)),h=Math.max(1,Math.floor(gl.drawingBufferHeight*ratio));
         allocate(w,h);if(dirty)upload();
@@ -157,7 +189,7 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
           gl.enable(gl.DEPTH_TEST);gl.depthRange(0,1);gl.depthFunc(gl.LESS);gl.depthMask(true);gl.colorMask(true,true,true,true);
           gl.clearColor(0,0,0,0);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
           gl.useProgram(program);gl.bindVertexArray(vao);
-          gl.uniformMatrix4fv(uniforms.matrix,false,nativeTranslatedMatrix(matrix,origin));
+          gl.uniformMatrix4fv(uniforms.matrix,false,nativeTranslatedMatrix(matrix,origin,bounds));
           gl.uniform1f(uniforms.size,Math.min(maxPointSize,options.size*w/cssWidth));
           gl.uniform1f(uniforms.selected,options.selected===null?-1:options.selected+1);
           gl.uniform1i(uniforms.circles,geometry.triangles?0:1);
@@ -176,13 +208,10 @@ export function createLidarGeometryLayer(geometry:LidarGeometry,initial:NativeLa
       }catch{fail();}
       finally{
         gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,prior.draw);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,prior.read);
-        gl.viewport(...Array.from(prior.viewport) as [number,number,number,number]);gl.bindRenderbuffer(gl.RENDERBUFFER,prior.renderbuffer);
-        gl.bindTexture(gl.TEXTURE_2D,oldTexture);gl.activeTexture(prior.active);gl.useProgram(prior.program);gl.bindVertexArray(prior.vao);gl.bindBuffer(gl.ARRAY_BUFFER,prior.buffer);
-        for(const [flag,on] of [[gl.STENCIL_TEST,prior.stencil],[gl.DEPTH_TEST,prior.depth],[gl.BLEND,prior.blend],[gl.CULL_FACE,prior.cull],[gl.SCISSOR_TEST,prior.scissor]] as const){if(on)gl.enable(flag);else gl.disable(flag);}
-        gl.depthMask(prior.depthMask);gl.depthFunc(prior.depthFunc);gl.depthRange(prior.depthRange[0],prior.depthRange[1]);
+        gl.viewport(...Array.from(prior.viewport) as [number,number,number,number]);
+        gl.bindVertexArray(null);
+        if(prior.scissor)gl.enable(gl.SCISSOR_TEST);else gl.disable(gl.SCISSOR_TEST);
         if(prior.dither)gl.enable(gl.DITHER);else gl.disable(gl.DITHER);
-        gl.colorMask(...Array.from(prior.colorMask) as [boolean,boolean,boolean,boolean]);gl.clearColor(...Array.from(prior.clear) as [number,number,number,number]);gl.clearDepth(prior.clearDepth);
-        gl.blendEquationSeparate(prior.equationRGB,prior.equationAlpha);gl.blendFuncSeparate(prior.srcRGB,prior.dstRGB,prior.srcAlpha,prior.dstAlpha);
       }
     },
     pick(point){
