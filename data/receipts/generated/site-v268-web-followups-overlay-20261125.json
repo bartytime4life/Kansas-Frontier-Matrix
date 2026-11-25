@@ -1907,9 +1907,9 @@
       "state": "identical"
     },
     "app/data/land-records/page.tsx": {
-      "mirror_sha256": "14445196fd82a493bb08c8cdc7aa003a6a1d54a6f52220054b0887496dccacc9",
+      "mirror_sha256": "03b91a6b0cd14b116a57cf5dc88eddd4fa6ac5b912d3fe883b0cd18b79f33d09",
       "site_sha256": "14445196fd82a493bb08c8cdc7aa003a6a1d54a6f52220054b0887496dccacc9",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/data/land-records/workspace.module.css": {
       "mirror_sha256": "ce2ac3bb7266c1c4d4733cbfe3a4fb4e5698d3b835d80d910be20059af257bce",
@@ -1923,9 +1923,9 @@
       "state": "repository_safety_overlay"
     },
     "app/data/page.tsx": {
-      "mirror_sha256": "22300e6a5c29eeb7d358f2453c991444139e3d95320474debcc75c17830c4968",
+      "mirror_sha256": "c23da2b5702b15002368738f1b31ad15ec68ad6f874a3bc6251764e707dd4de5",
       "site_sha256": "22300e6a5c29eeb7d358f2453c991444139e3d95320474debcc75c17830c4968",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/data/workspace.module.css": {
       "mirror_sha256": "e3d26034a994936e04221a5c954eea62d6258f250e6af56806019ec6a808e154",
@@ -1969,9 +1969,9 @@
       "state": "identical"
     },
     "app/download-library.tsx": {
-      "mirror_sha256": "36434ee537d23d811e7ca234ca8dfd2241d11904da134622089c2d3b73bc7e61",
+      "mirror_sha256": "3e7f6ae9b472f04509fd8e87389c19e855eb85f53eeaa8a0efdccb18136781f6",
       "site_sha256": "36434ee537d23d811e7ca234ca8dfd2241d11904da134622089c2d3b73bc7e61",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/download-polling.ts": {
       "mirror_sha256": "e172dce9a2fec551090c608bf08031e0d764516122b4f0fa168c409c7b2f647a",
@@ -2010,9 +2010,9 @@
       "state": "identical"
     },
     "app/earth-engine-context-client.ts": {
-      "mirror_sha256": "89c108dd90565942c5a75f2ad1f8830f35a5373250c8e9c784b2e0455382b5ed",
+      "mirror_sha256": "bd2f6d2993aabe57e4ecce180c86c53112e3ac3fd423b4af79e073e40d2f2a1d",
       "site_sha256": "89c108dd90565942c5a75f2ad1f8830f35a5373250c8e9c784b2e0455382b5ed",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/earth-engine-context-server.ts": {
       "mirror_sha256": "b7c62bb65ed05230efe55f7b5abfe8801e9533187315f564257ebef2e8ec09e7",
@@ -2045,9 +2045,9 @@
       "state": "identical"
     },
     "app/earth-engine-display.tsx": {
-      "mirror_sha256": "b1ac3a05341665f563f8f82dce644fe4cd9c3a153c65a935286c89f4fc184961",
+      "mirror_sha256": "87cf0b22336ea695a8bc36976ed9fa6b65d7cae0b772d03882791ae29d30eea8",
       "site_sha256": "b1ac3a05341665f563f8f82dce644fe4cd9c3a153c65a935286c89f4fc184961",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/earth-engine-downloads.tsx": {
       "mirror_sha256": "5acb3f6a4a762ab17a98d8ca94ce202489bfbf2f1fa8e2b730a548f82d8c792a",
@@ -2586,9 +2586,13 @@
       "state": "inherited_repository_overlay"
     },
     "app/history/people-events/page.tsx": {
-      "mirror_sha256": "4ab6112b6833f80a978a36fed5e150416a186342eb8dbf70daabd8c9bff8739f",
+      "mirror_sha256": "c597fe8b7f3efb4903bd3e703741d623091e32db0864e75d3b94dbec6c609322",
       "site_sha256": "a59846a654990bb88d7a5e74d576f43aa9aa5224fe79202c2557ee7d797e7825",
       "state": "repository_safety_overlay"
+    },
+    "app/history/prentis-1909/layout.tsx": {
+      "mirror_sha256": "3cb1eb849684fa1be5c68ed25cc802dfb198e1886ede6cb8517ae5274b98d32d",
+      "state": "repository_only_overlay"
     },
     "app/history/prentis-1909/page.tsx": {
       "difference": "Bound history OCR and Underground resource reads through headers and body, cancel abandoned streams without waiting for cleanup, and expose local retry while preserving source checksum, limits, scope and privacy.",
@@ -2692,10 +2696,18 @@
       "site_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
       "state": "identical"
     },
+    "app/knowledge/layout.tsx": {
+      "mirror_sha256": "4e1f44606c217e9bb49ebdea60e7046021fe961ce360b94da325c3975c3554ff",
+      "state": "repository_only_overlay"
+    },
     "app/knowledge/page.tsx": {
       "mirror_sha256": "02251bc86c09a60aa84571292ddc28069749717fa7c93cd36cf794912de78fe3",
       "site_sha256": "02251bc86c09a60aa84571292ddc28069749717fa7c93cd36cf794912de78fe3",
       "state": "identical"
+    },
+    "app/knowledge/record/layout.tsx": {
+      "mirror_sha256": "db6ff8d532bfedbc7b74cdc9b91f3192ccf915898a6f90f4842330596d995b69",
+      "state": "repository_only_overlay"
     },
     "app/knowledge/record/page.tsx": {
       "mirror_sha256": "02eab34921e12bbed374cc65a59ddbbf90335879ea99b770f882976ab20f3b90",
@@ -3078,7 +3090,7 @@
     },
     "app/page.tsx": {
       "difference": "Bounded shared terrain-source integrity, malformed soil-link recovery and NOAA daily-weather qualifier integrity only; no hosted equivalence, data activation, acceptance or publication.",
-      "mirror_sha256": "60c2d2c58a1be93a9161b2eee7854619386f01362061a930e4f146598e7e5ce9",
+      "mirror_sha256": "fbbdffcd00077e67e54ec7cc66a93ac155c777d7fa55abe7408d4b8864454417",
       "site_sha256": "2833eb08843b9fce2ee6bf8ca2903a55f9a3580afd460cf35321642972f27610",
       "state": "inherited_repository_overlay"
     },
@@ -3381,9 +3393,9 @@
       "state": "identical"
     },
     "app/stewards/page.tsx": {
-      "mirror_sha256": "69954a9ac7e9149f384235ee13229e57942ba44950ce133fe0457e75e6b77b7a",
+      "mirror_sha256": "748fb8fc62c04cfc80567aa3c189f82222176a9a24d2e57bc64ebd43c637b47e",
       "site_sha256": "69954a9ac7e9149f384235ee13229e57942ba44950ce133fe0457e75e6b77b7a",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "app/storm-events-queue.tsx": {
       "difference": "Repository-only accessibility fix proposed on branch claude/explorer-a11y-landmarks from main@bef673cc4c1694f6bd1628ce7c50b75dddba35d9: labelled generic elements gain the role that makes their accessible name announced, the data-notices button names its counts, and the Observatory storm key is no longer a nested complementary landmark. Recorded bytes only; no Site deployment implied.",
@@ -4885,9 +4897,9 @@
       "state": "repository_only_overlay"
     },
     "tests/download-center.test.mjs": {
-      "mirror_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
+      "mirror_sha256": "1d110d63e69adce39643dfbf38ccef6a31f62e07b7db54862b1e947e4eb3006d",
       "site_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
-      "state": "identical"
+      "state": "repository_safety_overlay"
     },
     "tests/download-focus.test.mjs": {
       "mirror_sha256": "6569b4f835534d22e79135ce4fdc7d1811d07fb5ea87c05b2fb4cd5030997e23",
@@ -6312,13 +6324,13 @@
   "counts": {
     "canonical_document_mappings": 2,
     "canonical_tool_mappings": 2,
-    "identical": 636,
+    "identical": 629,
     "inherited_repository_overlay": 69,
     "merged_water_overlay": 0,
     "missing": 0,
-    "repository_only_overlay": 154,
+    "repository_only_overlay": 157,
     "repository_only_water_overlay": 0,
-    "repository_safety_overlay": 157,
+    "repository_safety_overlay": 164,
     "repository_withheld": 262,
     "source_paths": 867,
     "unexpected_difference": 0
@@ -6554,7 +6566,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "b5a4391cea66234b8ff470ca5b82cd990fb75471ee42b3a1db8d3c9e8bd2976c",
+  "inventory_sha256": "e6a413aeb742c8f835374373d68b7ee0a45a0d1f27ec6a19fa2f12f07bd81fbc",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -8742,7 +8754,7 @@
       ]
     }
   },
-  "recorded_at": "2026-11-25T05:29:20.269607+00:00",
+  "recorded_at": "2026-11-25T05:54:19.036214+00:00",
   "repository_base": "36298642e845274d2d32ebf4a50fe60cd00385cf",
   "repository_reconciled_base": "9de4defdf49c71925491a932477d258100fc5ce6",
   "repository_reconciliation": {
@@ -8766,11 +8778,51 @@
         "state": "repository_safety_overlay"
       },
       {
+        "mirror_sha256": "03b91a6b0cd14b116a57cf5dc88eddd4fa6ac5b912d3fe883b0cd18b79f33d09",
+        "path": "app/data/land-records/page.tsx",
+        "previous_receipt_sha256": "14445196fd82a493bb08c8cdc7aa003a6a1d54a6f52220054b0887496dccacc9",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "14445196fd82a493bb08c8cdc7aa003a6a1d54a6f52220054b0887496dccacc9",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "c23da2b5702b15002368738f1b31ad15ec68ad6f874a3bc6251764e707dd4de5",
+        "path": "app/data/page.tsx",
+        "previous_receipt_sha256": "22300e6a5c29eeb7d358f2453c991444139e3d95320474debcc75c17830c4968",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "22300e6a5c29eeb7d358f2453c991444139e3d95320474debcc75c17830c4968",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "3e7f6ae9b472f04509fd8e87389c19e855eb85f53eeaa8a0efdccb18136781f6",
+        "path": "app/download-library.tsx",
+        "previous_receipt_sha256": "36434ee537d23d811e7ca234ca8dfd2241d11904da134622089c2d3b73bc7e61",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "36434ee537d23d811e7ca234ca8dfd2241d11904da134622089c2d3b73bc7e61",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "bd2f6d2993aabe57e4ecce180c86c53112e3ac3fd423b4af79e073e40d2f2a1d",
+        "path": "app/earth-engine-context-client.ts",
+        "previous_receipt_sha256": "89c108dd90565942c5a75f2ad1f8830f35a5373250c8e9c784b2e0455382b5ed",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "89c108dd90565942c5a75f2ad1f8830f35a5373250c8e9c784b2e0455382b5ed",
+        "state": "repository_safety_overlay"
+      },
+      {
         "mirror_sha256": "1281c5880ecde76fe1bc5887df99b8c1ff00e5901efa7f8db383857353e8c913",
         "path": "app/earth-engine-context/install/installer.tsx",
         "previous_receipt_sha256": "f83d97f9492076f47d11c05f24e537c326de54abd0b5de3e4bf1e33e202d1f5e",
         "proposed_in_this_change": true,
         "repository_base_sha256": "f83d97f9492076f47d11c05f24e537c326de54abd0b5de3e4bf1e33e202d1f5e",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "87cf0b22336ea695a8bc36976ed9fa6b65d7cae0b772d03882791ae29d30eea8",
+        "path": "app/earth-engine-display.tsx",
+        "previous_receipt_sha256": "b1ac3a05341665f563f8f82dce644fe4cd9c3a153c65a935286c89f4fc184961",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "b1ac3a05341665f563f8f82dce644fe4cd9c3a153c65a935286c89f4fc184961",
         "state": "repository_safety_overlay"
       },
       {
@@ -8780,6 +8832,38 @@
         "proposed_in_this_change": true,
         "repository_base_sha256": "0f86e7308aee4316f1aab695092b6eb705a608aaf743b664acbfc08a9b3c4607",
         "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "c597fe8b7f3efb4903bd3e703741d623091e32db0864e75d3b94dbec6c609322",
+        "path": "app/history/people-events/page.tsx",
+        "previous_receipt_sha256": "4ab6112b6833f80a978a36fed5e150416a186342eb8dbf70daabd8c9bff8739f",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "4ab6112b6833f80a978a36fed5e150416a186342eb8dbf70daabd8c9bff8739f",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "3cb1eb849684fa1be5c68ed25cc802dfb198e1886ede6cb8517ae5274b98d32d",
+        "path": "app/history/prentis-1909/layout.tsx",
+        "previous_receipt_sha256": null,
+        "proposed_in_this_change": true,
+        "repository_base_sha256": null,
+        "state": "repository_only_overlay"
+      },
+      {
+        "mirror_sha256": "4e1f44606c217e9bb49ebdea60e7046021fe961ce360b94da325c3975c3554ff",
+        "path": "app/knowledge/layout.tsx",
+        "previous_receipt_sha256": null,
+        "proposed_in_this_change": true,
+        "repository_base_sha256": null,
+        "state": "repository_only_overlay"
+      },
+      {
+        "mirror_sha256": "db6ff8d532bfedbc7b74cdc9b91f3192ccf915898a6f90f4842330596d995b69",
+        "path": "app/knowledge/record/layout.tsx",
+        "previous_receipt_sha256": null,
+        "proposed_in_this_change": true,
+        "repository_base_sha256": null,
+        "state": "repository_only_overlay"
       },
       {
         "mirror_sha256": "2332afbaeff64af78e0b451bd3b0d50d4b00c36b4063f78722dc9afd3f07a990",
@@ -8798,12 +8882,36 @@
         "state": "inherited_repository_overlay"
       },
       {
+        "mirror_sha256": "fbbdffcd00077e67e54ec7cc66a93ac155c777d7fa55abe7408d4b8864454417",
+        "path": "app/page.tsx",
+        "previous_receipt_sha256": "60c2d2c58a1be93a9161b2eee7854619386f01362061a930e4f146598e7e5ce9",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "60c2d2c58a1be93a9161b2eee7854619386f01362061a930e4f146598e7e5ce9",
+        "state": "inherited_repository_overlay"
+      },
+      {
         "mirror_sha256": "3fbdc45622e03ba1b7fc420c4bd3c1dc0fbc5d26eeb7090b1f465bb93e8f7a2b",
         "path": "app/scene-effects.css",
         "previous_receipt_sha256": "6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
         "proposed_in_this_change": true,
         "repository_base_sha256": "6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
         "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "748fb8fc62c04cfc80567aa3c189f82222176a9a24d2e57bc64ebd43c637b47e",
+        "path": "app/stewards/page.tsx",
+        "previous_receipt_sha256": "69954a9ac7e9149f384235ee13229e57942ba44950ce133fe0457e75e6b77b7a",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "69954a9ac7e9149f384235ee13229e57942ba44950ce133fe0457e75e6b77b7a",
+        "state": "repository_safety_overlay"
+      },
+      {
+        "mirror_sha256": "1d110d63e69adce39643dfbf38ccef6a31f62e07b7db54862b1e947e4eb3006d",
+        "path": "tests/download-center.test.mjs",
+        "previous_receipt_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "4aec3fd3172fa932464d9f1f3f36fc9b6f9cf455f1e37f59008a84a1404f5690",
+        "state": "repository_safety_overlay"
       },
       {
         "mirror_sha256": "594072bfa6ef05cbbd2a50d541993dd7dd99f246cf7d1aa245629cdfed59bf2a",
@@ -8861,7 +8969,7 @@
   },
   "rollback": {
     "mirror": "Revert the listed Site files and the successor selector/QA together; preserve immutable receipts.",
-    "runtime": "Newest-request guards in the lightning flash loop and Earth Engine installer, a released retry body, an encoded entity id, and input validation ordered before the NOAA frame read. No dependency, saved-schema or operational-store migration. CSS: 209 never-effective overridden declarations and one unused keyframes rule removed.",
+    "runtime": "Newest-request guards in the lightning flash loop and Earth Engine installer, a released retry body, an encoded entity id, and input validation ordered before the NOAA frame read. No dependency, saved-schema or operational-store migration. CSS: 209 never-effective overridden declarations and one unused keyframes rule removed. Owner-only installer links hidden from non-owners; metadata for seven pages (three via pass-through layouts).",
     "site": "No Site synchronization, deployment or publication."
   },
   "security": {
@@ -8894,8 +9002,8 @@
   "source_identity_currentness": "PREDECESSOR_DECLARATION_ONLY; historical Site identity retained without fresh hosted-source readback.",
   "status": "REVIEW_ONLY",
   "validation": {
-    "app_tests": "PASS: 2100 tests (2098 pass, 2 skipped), including lightning-flash-loop-order, earth-engine-installer-selection and lightning-transport.",
-    "browser": "PASS: local Playwright sweep of 44 routes shows no new console errors, status changes or overflow; the CSS removal was checked by computed-style diffs (2 before, 3 after runs) and screenshots on 11 routes at 1280x800 and 375x740, with no differences beyond run-to-run animation and live-data noise.",
+    "app_tests": "PASS: 2101 tests (2099 pass, 2 skipped), including lightning-flash-loop-order, earth-engine-installer-selection, lightning-transport and download-center.",
+    "browser": "PASS: local Playwright sweep of 44 routes shows no new console errors, status changes or overflow; the CSS removal was checked by computed-style diffs (2 before, 3 after runs) and screenshots on 11 routes at 1280x800 and 375x740, with no differences beyond run-to-run animation and live-data noise. A recrawl of 268 internal links finds none broken; seven pages now report their own titles.",
     "focused_tests": "PASS: lightning-flash-loop-order (2), earth-engine-installer-selection (1), lightning-transport (7).",
     "lint": "PASS: 0 errors; 10 inherited warnings.",
     "mirror": "PASS: strict selected successor inventory and immutable predecessor chain; 262 withheld paths remain absent.",
