@@ -80,7 +80,7 @@ export async function prepareLidarView(config,input,{python=process.env.KFM_LIDA
  // Actual source failures stay unavailable, so the existing bounded retry policy
  // can retry them instead of permanently caching a misleading detail limit.
  if(!query.layers.includes('points')&&!analysisComplete){
-  const failed=failures.length>0,state=failed?'unavailable':'detail-required';
+  const failed=failures.some(code=>code!=='HIERARCHY_BUDGET'),state=failed?'unavailable':'detail-required';
   const message=failed?'Native source files could not be read. Retry this view later; no cells were inferred.':'Complete native support exceeds this view processing budget. Choose a smaller area; no raster was inferred.';
   view={...view,generatedAt:new Date().toISOString(),reason:failed?message:null,layers:view.layers.map(l=>query.layers.includes(l.kind)&&l.state==='processing'?{...l,state,message}:l)};
   const requested=view.layers.filter(l=>query.layers.includes(l.kind));view.state=requested.some(l=>l.state==='unavailable')?'unavailable':requested.some(l=>l.state==='detail-required')?'detail-required':'no-coverage';
