@@ -1,3 +1,4 @@
+import { readBoundedJson } from "../../../bounded-json";
 import { parseTopoOverlayManifest, topoActiveKey, topoManifestKey, topoOverlayPrefix, topoRequestKey, topoTileKey, type TopoActivePointer } from "../../../historical-topo-overlay";
 import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoJson, topoOwner, topoSameOrigin, topoScanId, TopoOverlayError } from "../../../historical-topo-overlay-server";
 export const dynamic = "force-dynamic";
@@ -7,9 +8,10 @@ export async function POST(request: Request) {
     topoSameOrigin(request);
     const user = await topoOwner();
     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 2048) throw new TopoOverlayError("Invalid review record.");
-    const raw = await request.arrayBuffer();
-    if (raw.byteLength > 2048) throw new TopoOverlayError("Invalid review record.");
-    const body = topoJson(raw) as { scanId?: unknown; packageId?: unknown; manifestSha256?: unknown; note?: unknown; rollback?: unknown };
+    // A chunked body has no Content-Length; stop reading at the limit instead of buffering it.
+    let body: { scanId?: unknown; packageId?: unknown; manifestSha256?: unknown; note?: unknown; rollback?: unknown };
+    try { body = await readBoundedJson(request, 2048, request.signal) as typeof body; } catch { throw new TopoOverlayError("Invalid review record."); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new TopoOverlayError("Invalid review record.");
     const scanId = topoScanId(String(body.scanId ?? ""));
     const packageId = body.packageId;
     const hash = body.manifestSha256;

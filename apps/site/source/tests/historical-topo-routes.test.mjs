@@ -8,6 +8,7 @@ const dataUrl = (source, name) => `data:text/javascript;base64,${Buffer.from(ts.
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }, fileName: name,
 }).outputText).toString("base64")}`;
 const overlay = dataUrl(await readFile(new URL("../app/historical-topo-overlay.ts", import.meta.url), "utf8"), "historical-topo-overlay.ts");
+const bounded = dataUrl(await readFile(new URL("../app/bounded-json.ts", import.meta.url), "utf8"), "bounded-json.ts");
 const server = dataUrl(`
   export class TopoOverlayError extends Error { constructor(message, status = 400) { super(message); this.status = status; } }
   export const topoBucket = () => globalThis.__topo.bucket;
@@ -27,6 +28,7 @@ async function route(name) {
   let source = await readFile(new URL(`../app/api/historical-topo/${name}/route.ts`, import.meta.url), "utf8");
   source = source.replaceAll(/"(?:\.\.\/)+historical-topo-overlay"/g, JSON.stringify(overlay));
   source = source.replaceAll(/"(?:\.\.\/)+historical-topo-overlay-server"/g, JSON.stringify(server));
+  source = source.replaceAll(/"(?:\.\.\/)+bounded-json"/g, JSON.stringify(bounded));
   return import(dataUrl(source, name));
 }
 const digest = value => createHash("sha256").update(value).digest("hex");
@@ -133,6 +135,7 @@ test("viewer sheet requests are capped per requester per day", async () => {
   const quota = dataUrl((await readFile(new URL("../app/historical-topo-request-quota.ts", import.meta.url), "utf8"))
     .replace('"./historical-topo-overlay"', JSON.stringify(overlay)).replace('"./historical-topo-overlay-server"', JSON.stringify(stubServer)), "quota.ts");
   routeSource = routeSource.replace('"../../../historical-topo-request-quota"', JSON.stringify(quota));
+  routeSource = routeSource.replace('"../../../bounded-json"', JSON.stringify(bounded));
   const { POST } = await import(dataUrl(routeSource, "overlay-route.ts"));
   const ask = id => POST(new Request("https://site.test/api/historical-topo/overlay", { method: "POST",
     headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body: JSON.stringify({ id }) }));
@@ -143,4 +146,29 @@ test("viewer sheet requests are capped per requester per day", async () => {
   assert.match((await limited.json()).error, /limit/);
   assert.equal(objects.has("historical-topo/v1/requests/200011.json"), false);
   assert.equal(globalThis.__topo.catalogCalls, 10, "duplicates and over-quota requests must not call USGS");
+});
+
+test("viewer requests and owner activation stop reading chunked bodies at their limits; bad JSON is a caller error", async () => {
+  const objects = new Map();
+  globalThis.__topo = { objects, owner: true, bucket: pagedBucket(objects) };
+  const quota = dataUrl("export async function topoCatalogRequest() { throw new Error('quota must not be reached'); }", "quota-stub.ts");
+  const overlayRoute = (await readFile(new URL("../app/api/historical-topo/overlay/route.ts", import.meta.url), "utf8"))
+    .replaceAll(/"(?:\.\.\/)+historical-topo-overlay"/g, JSON.stringify(overlay))
+    .replaceAll(/"(?:\.\.\/)+historical-topo-overlay-server"/g, JSON.stringify(server))
+    .replaceAll(/"(?:\.\.\/)+bounded-json"/g, JSON.stringify(bounded))
+    .replace('"../../../historical-topo-request-quota"', JSON.stringify(quota));
+  const routes = { overlay: (await import(dataUrl(overlayRoute, "overlay-limit.ts"))).POST, activate: (await route("activate")).POST };
+  // No Content-Length: a chunked body must be cut off at the route limit, not buffered whole.
+  const chunked = () => {
+    let pulled = 0; const chunk = new Uint8Array(1 << 20).fill(32);
+    return { pulled: () => pulled, body: new ReadableStream({ pull(controller) { if (pulled >= 64 << 20) return controller.close(); pulled += chunk.byteLength; controller.enqueue(chunk); } }) };
+  };
+  for (const [name, POST] of Object.entries(routes)) {
+    const post = body => POST(new Request(`https://site.test/api/historical-topo/${name}`, { method: "POST", duplex: "half", headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body }));
+    const stream = chunked();
+    assert.equal((await post(stream.body)).status, 400, `${name}: oversized chunked body`);
+    assert.ok(stream.pulled() <= 4 << 20, `${name}: read ${stream.pulled()} bytes of an oversized body`);
+    for (const body of ["{not json", "null", "[]"]) assert.equal((await post(body)).status, 400, `${name}: ${body}`);
+  }
+  assert.equal(objects.size, 0, "rejected bodies write nothing");
 });

@@ -76,7 +76,7 @@ async function harness() {
     "cloudflare:workers": { env: { BUCKET: bucket, KFM_EARTH_ENGINE_OWNER_EMAILS: "owner@example.test" } },
     "./chatgpt-auth": { getChatGPTUser: async () => ({ email: "owner@example.test" }) },
   });
-  const activate = await compile("api/earth-engine-context/activate/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": server });
+  const activate = await compile("api/earth-engine-context/activate/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": server, "../../../bounded-json": await compile("bounded-json") });
   const stage = await compile("api/earth-engine-context/stage/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": server });
   function install(value) {
     const raw = bytes(value); objects.set(context.earthEngineManifestKey(value.setId), raw);
@@ -176,4 +176,15 @@ test("new historical products still require activation and exact tile integrity"
     const corrupt = png.slice(0); new Uint8Array(corrupt)[24] ^= 1; h.objects.set(key, corrupt);
     await assert.rejects(h.server.earthEngineTile(value.setId, id, "0", "0", "0.png"), /failed validation/);
   }
+});
+
+test("activation stops reading a chunked pointer body at 2 KiB instead of buffering it", async () => {
+  const h = await harness();
+  // No Content-Length header: only the streaming read can enforce the limit.
+  let pulled = 0; const chunk = new Uint8Array(1 << 20).fill(32);
+  const body = new ReadableStream({ pull(controller) { if (pulled >= 64 << 20) return controller.close(); pulled += chunk.byteLength; controller.enqueue(chunk); } });
+  const response = await h.activate.POST(new Request("https://kfm.example/api/earth-engine-context/activate", { method: "POST", duplex: "half", headers: { origin: "https://kfm.example", "content-type": "application/json" }, body }));
+  assert.equal(response.status, 400);
+  assert.ok(pulled <= 4 << 20, `read ${pulled} bytes of an oversized pointer body`);
+  assert.equal(h.objects.size, 0, "a rejected pointer writes nothing");
 });

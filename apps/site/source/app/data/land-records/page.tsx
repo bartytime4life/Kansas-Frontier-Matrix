@@ -3,6 +3,10 @@ import { intakeUser } from "../../data-intake-server";
 import { localSignInNotice } from "../../local-signin-notice";
 import LandWorkspace from "./workspace";
 export const dynamic="force-dynamic";
+export const metadata = {
+  title: "Land records · Kansas Frontier Matrix",
+  description: "Private review of historical Kansas land patents, purchases and county sale records with their original evidence.",
+};
 export default async function LandPage({searchParams}:{searchParams:Promise<{submission?:string}>}){
   const notice=await localSignInNotice("/data/land-records");if(notice)return notice;
   await requireChatGPTUser("/data/land-records");const user=await intakeUser(),p=await searchParams;

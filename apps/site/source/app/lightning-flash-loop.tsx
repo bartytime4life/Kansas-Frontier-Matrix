@@ -56,16 +56,18 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   useEffect(() => {
     if (!enabled || sourceMode !== "recent") return;
     const abort = new AbortController();
-    let disposed = false, loaded = false;
+    let disposed = false, loaded = false, latest = 0;
     const refresh = async () => {
       // After the first read, a hidden tab keeps its last snapshot; polling resumes on the next visible tick.
       if (loaded && typeof document !== "undefined" && document.hidden) return;
+      // Only the newest poll may commit: a slow earlier read must not overwrite or fail over a newer one.
+      const request = ++latest;
       setLoadState((current) => current === "ready" ? current : "loading");
       try {
         const response = await fetch(`/api/lightning/flashes?minutes=${windowMinutes}`, { signal: abort.signal, cache: "no-store" });
         const next = await readSuccessfulJson(response, MAX_FLASH_RESPONSE_BYTES, abort.signal) as GlmFlashSnapshot;
         if (next.evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || next.source !== "NOAA_GOES19_GLM_VIA_ATMOSTORM" || next.windowMinutes !== windowMinutes || !Array.isArray(next.flashes) || next.flashes.length > 5_000 || !["ready", "empty", "partial", "stale"].includes(next.state)) throw new Error("Flash response invalid");
-        if (disposed) return;
+        if (disposed || request !== latest) return;
         loaded = true;
         setSnapshot(next);
         const nextBounds = glmFlashPlaybackBounds(next);
@@ -74,7 +76,7 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
         setError("");
         if (next.state === "stale") setPlaying(false);
       } catch {
-        if (disposed || abort.signal.aborted) return;
+        if (disposed || abort.signal.aborted || request !== latest) return;
         setLoadState("error");
         setPlaying(false);
         setError("Observed flashes are unavailable; the last response is withheld from the map.");

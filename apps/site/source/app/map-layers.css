@@ -61,7 +61,7 @@
 .layer-panel .visibility-switch input:checked + span { border-color: #9ce2d9; background: #79c9bf; }
 .layer-panel .visibility-switch input:checked + span::after { transform: translateX(16px); background: #143438; }
 .layer-panel .visibility-switch input:focus-visible + span { outline: 2px solid #edc67b; outline-offset: 3px; }
-.reviewed-imagery-section { margin: 14px 15px; border: 1px solid #365459; border-radius: 10px; background: #112d31; }
+.reviewed-imagery-section { margin: 14px 15px; border: 1px solid #365459; border-radius: 10px; }
 .reviewed-imagery-section { border-color: #547873; background: linear-gradient(145deg, #173b3b, #102c31 72%); }
 .reviewed-imagery-section > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 8px; min-height: 57px; padding: 10px 13px; color: #e9d9ad; list-style: none; cursor: pointer; }
 .reviewed-imagery-section > summary::-webkit-details-marker { display: none; }

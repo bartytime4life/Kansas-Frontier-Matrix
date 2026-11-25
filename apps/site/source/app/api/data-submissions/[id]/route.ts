@@ -1,6 +1,6 @@
 import { MAX_UPLOAD_BYTES, validateReview } from "../../../data-intake";
 import { intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, ownedSubmission, sameOrigin, sha256, submissionReviews } from "../../../data-intake-server";
-import { JsonLimitError, readBoundedBytes } from "../../../bounded-json";
+import { JsonLimitError, readBoundedBytes, readBoundedText } from "../../../bounded-json";
 export const dynamic = "force-dynamic";
 type Context = { params: Promise<{ id: string }> };
 
@@ -37,7 +37,10 @@ export async function PATCH(request: Request, context: Context) {
     if (!user.steward) throw new IntakeError("Only assigned stewards can record a review.", 403);
     const { id } = await context.params; const row = await ownedSubmission(id, user);
     if (Number(request.headers.get("content-length")) > 16_384) throw new IntakeError("Review note is too long.", 413);
-    const bodyText = await request.text(); if (bodyText.length > 16_384) throw new IntakeError("Review note is too long.", 413);
+    // A chunked body has no Content-Length; stop reading at the limit instead of buffering it.
+    let bodyText: string;
+    try { bodyText = await readBoundedText(request, 16_384, request.signal); }
+    catch (error) { if (error instanceof JsonLimitError) throw new IntakeError("Review note is too long.", 413); throw new IntakeError("The review could not be read."); }
     let body; try { body = JSON.parse(bodyText); } catch { throw new IntakeError("The review could not be read."); }
     if (!body || !Number.isInteger(body.version) || body.version !== row.version) throw new IntakeError("Another steward updated this submission. Reload it before reviewing.", 409);
     let review; try { review = validateReview(row, body.status, body.note); } catch (error) { throw new IntakeError((error as Error).message); }

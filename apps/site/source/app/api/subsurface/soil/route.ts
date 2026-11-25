@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 18000);
   const cancel = () => controller.abort(); request.signal.addEventListener("abort", cancel, { once: true });
   try {
-    const response = await fetch("https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ format: "JSON+COLUMNNAME", query }), signal: controller.signal });
+    const response = await fetch("https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ format: "JSON+COLUMNNAME", query }), redirect: "manual", signal: controller.signal });
     if (!response.ok) throw new Error("USDA unavailable");
     const data = await readBoundedJson(response, 300000, controller.signal);
     const table = data && typeof data === "object" && "Table" in data ? data.Table : [];

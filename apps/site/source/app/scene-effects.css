@@ -91,19 +91,17 @@
 /* ---------- Scene effects controls ---------- */
 .scene-effects-controls {
   display: grid;
-  gap: 10px;
   margin: 10px 0;
-  padding: 12px;
   border: 1px solid rgba(224, 186, 109, .24);
   border-radius: var(--kfm-radius-m, 12px);
   background:
     radial-gradient(420px 160px at 100% 0%, rgba(224, 186, 109, .09), transparent 70%),
     linear-gradient(180deg, rgba(14, 31, 49, .7), rgba(8, 20, 33, .7));
 }
-.scene-effects-controls > header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-.scene-effects-controls > header span { font-size: 10.5px; font-weight: 800; letter-spacing: .16em; color: var(--gold, #e0ba6d); }
-.scene-effects-controls > header strong { font-size: 14px; color: var(--ink, #eef3f8); }
-.scene-effects-switches { display: grid; gap: 6px; }
+.scene-effects-controls > header { display: flex; justify-content: space-between; gap: 8px; }
+.scene-effects-controls > header span { font-weight: 800; color: var(--gold, #e0ba6d); }
+.scene-effects-controls > header strong { color: var(--ink, #eef3f8); }
+.scene-effects-switches { display: grid; }
 .scene-effects-switches label {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -168,7 +166,7 @@
 .scene-effects-flyover[aria-pressed="true"] { background: rgba(255, 255, 255, .06); color: var(--ink, #eef3f8); box-shadow: none; }
 .scene-effects-flyover:disabled { opacity: .5; cursor: not-allowed; }
 .scene-effects-flyover:focus-visible { outline: 2px solid var(--gold-soft, #f4dfae); outline-offset: 2px; }
-.scene-effects-controls > p { margin: 0; font-size: 11.5px; color: var(--dim, #8698ab); }
+.scene-effects-controls > p { margin: 0; }
 
 /* ---------- Flyover launcher (Terrain 3D only) ---------- */
 .flyover-launch {
@@ -202,11 +200,9 @@
 /* ---------- Look presets and per-view hints ---------- */
 .scene-effects-controls > header em {
   margin-left: auto;
-  padding: 2px 8px;
   border: 1px solid rgba(121, 198, 226, .35);
   border-radius: 999px;
   color: var(--water, #79c6e2);
-  font-size: 10.5px;
   font-style: normal;
   font-weight: 700;
   letter-spacing: .04em;
@@ -266,7 +262,6 @@
   padding: 10px;
   border: 1px solid var(--line-strong, rgba(196, 216, 236, .22));
   border-radius: var(--kfm-radius-l, 18px);
-  background: var(--kfm-glass);
   backdrop-filter: var(--kfm-glass-blur, blur(18px));
   box-shadow: var(--kfm-shadow-2);
   animation: scene-panel-in 180ms var(--kfm-ease, ease-out);
@@ -325,12 +320,12 @@
 .scene-recipe-grid > button[aria-pressed="true"] .scene-recipe-mark { color: #172433; background: #e0ba6d; border-color: #e0ba6d; }
 .scene-studio-light, .scene-studio-camera { position: relative; min-width: 0; margin: 0; padding: 8px 0 0; border: 0; border-top: 1px solid #aacbdf2b; }
 .scene-studio-light legend, .scene-studio-camera legend { float: left; width: 100%; margin: 0 0 8px; padding: 0; color: #d2e5ed; font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
-.scene-studio-sun { display: flex; align-items: center; gap: 5px; position: absolute; top: 6px; right: 0; font-size: 10px; color: #b9d0dc; cursor: pointer; }
+.scene-studio-sun { display: flex; align-items: center; gap: 5px; position: absolute; right: 0; font-size: 10px; color: #b9d0dc; cursor: pointer; }
 .scene-studio-sun input { margin: 0; accent-color: #e0ba6d; }
 .scene-studio-range { clear: both; display: grid; grid-template-columns: 1fr auto; gap: 4px; min-width: 0; color: #c0d3df; font-size: 11px; }
 .scene-studio-range label { min-width: 0; }
 .scene-studio-range output { color: #eff5f7; font-variant-numeric: tabular-nums; }
-.scene-studio-range input { grid-column: 1 / -1; width: 100%; min-width: 0; height: 18px; margin: 0; accent-color: #d5bb86; cursor: pointer; }
+.scene-studio-range input { grid-column: 1 / -1; width: 100%; min-width: 0; margin: 0; accent-color: #d5bb86; cursor: pointer; }
 .scene-studio-range input:disabled { opacity: .45; cursor: not-allowed; }
 .scene-studio-camera-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); clear: both; gap: 7px 14px; }
 .scene-studio-bearing { grid-column: 1 / -1; }

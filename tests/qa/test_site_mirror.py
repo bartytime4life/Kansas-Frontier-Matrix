@@ -3271,7 +3271,6 @@ def test_web_cleanup_successor_preserves_web_fixes_inventory_and_all_holds():
         WEB_CLEANUP_CHANGED,
         "709332690ad4ebf5db49e0bdb00244bd22969de6",
     )
-    assert TOOL.RECEIPT.name == "site-v268-web-cleanup-overlay-20261124.json"
 
 
 WEB_CLEANUP_CHANGED = {
@@ -3292,4 +3291,56 @@ WEB_CLEANUP_CHANGED = {
     "app/soil-moisture-control.tsx",
     "app/subsurface-model.ts",
     "tests/event-atlas.test.mjs",
+}
+
+
+def test_web_followups_successor_preserves_web_cleanup_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-web-followups-overlay-20261125.json",
+        "site-v268-web-cleanup-overlay-20261124.json",
+        "010617fd8b38213876db1139ef22b4076db1faf22e3ad12bd90a5d6657f796a8",
+        WEB_FOLLOWUPS_CHANGED,
+        "9de4defdf49c71925491a932477d258100fc5ce6",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-web-followups-overlay-20261125.json"
+
+
+WEB_FOLLOWUPS_CHANGED = {
+    "app/api/daily-archive/route.ts",
+    "app/api/data-submissions/[id]/route.ts",
+    "app/api/earth-engine-context/activate/route.ts",
+    "app/api/historical-topo/activate/route.ts",
+    "app/api/historical-topo/overlay/route.ts",
+    "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts",
+    "app/api/subsurface/soil/route.ts",
+    "app/chatgpt-auth.ts",
+    "app/connection-map.tsx",
+    "app/data/land-records/page.tsx",
+    "app/data/page.tsx",
+    "app/download-library.tsx",
+    "app/earth-engine-context-client.ts",
+    "app/earth-engine-context/install/installer.tsx",
+    "app/earth-engine-display.tsx",
+    "app/globals.css",
+    "app/historical-topo-overlay-server.ts",
+    "app/history/people-events/page.tsx",
+    "app/history/prentis-1909/layout.tsx",
+    "app/knowledge/layout.tsx",
+    "app/knowledge/record/layout.tsx",
+    "app/lightning-flash-loop.tsx",
+    "app/map-layers.css",
+    "app/page.tsx",
+    "app/scene-effects.css",
+    "app/stewards/page.tsx",
+    "tests/chatgpt-auth-return-path.test.mjs",
+    "tests/daily-archive-auth.test.mjs",
+    "tests/download-center.test.mjs",
+    "tests/earth-engine-history-contract.test.mjs",
+    "tests/earth-engine-installer-selection.test.mjs",
+    "tests/historical-topo-quota.test.mjs",
+    "tests/historical-topo-routes.test.mjs",
+    "tests/intake-worker.test.mjs",
+    "tests/lightning-flash-loop-order.test.mjs",
+    "tests/lightning-transport.test.mjs",
+    "tests/subsurface-soil.test.mjs",
 }

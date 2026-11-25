@@ -114,3 +114,19 @@ test("lightning transport releases an errored reader and never starts a canceled
   await assert.rejects(fetchLightningPng(url, controller.signal), { name: "AbortError" });
   assert.equal(calls, 1);
 });
+
+test("malformed lightning tile requests are 400s even when NOAA's frame list is unreachable", async () => {
+  let manifestReads = 0;
+  const source = await readFile(new URL("../app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts", import.meta.url), "utf8");
+  const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+  const mod = { exports: {} };
+  const imports = {
+    "../../../../../../../lightning-server": { getLightningManifest: async () => { manifestReads++; throw new Error("NOAA unreachable"); }, fetchLightningPng: async () => { throw new Error("unexpected"); } },
+    "../../../../../../../lightning-data": await compile("lightning-data"),
+  };
+  new Function("require", "module", "exports", "console", output)(name => imports[name], mod, mod.exports, { error() {} });
+  const get = params => mod.exports.GET(new Request("https://app.test/"), { params: Promise.resolve(params) });
+  assert.equal((await get({ frame: "not-a-frame", z: "3", x: "1", y: "1" })).status, 400);
+  assert.equal(manifestReads, 0, "a malformed frame is rejected before the NOAA frame list is read");
+  assert.equal((await get({ frame: "2026-11-24T12:00:00.000Z", z: "3", x: "1", y: "1" })).status, 502, "a well-formed frame still needs NOAA to confirm it");
+});

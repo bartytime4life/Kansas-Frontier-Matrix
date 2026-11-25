@@ -141,6 +141,29 @@ test("original download returns a finite failure for deadline and caller-aborted
   }
 });
 
+test("steward review stops reading a chunked body at 16 KiB before any D1 write", async () => {
+  const writes = [];
+  const server = {
+    IntakeError, intakeHeaders, sameOrigin: () => {}, sha256: async () => "", submissionReviews: async () => [],
+    intakeUser: async () => ({ key: "steward", name: "Steward", steward: true }),
+    ownedSubmission: async () => ({ version: 1, status: "submitted" }),
+    intakeStore: () => ({ db: { prepare: sql => { writes.push(sql); return { bind() { return this; } }; }, batch: async () => { writes.push("batch"); return []; } } }),
+    intakeFailure: error => Response.json({ error: error.message }, { status: error instanceof IntakeError ? error.status : 503, headers: intakeHeaders }),
+  };
+  const validateReview = () => ({ status: "under_review", note: "Inspected the source, terms, units and completeness." });
+  const route = compile("app/api/data-submissions/[id]/route.ts", { "../../../data-intake": { MAX_UPLOAD_BYTES, validateReview }, "../../../data-intake-server": server, "../../../bounded-json": bounded });
+  const id = "12345678-1234-1234-1234-123456789abc";
+  // No Content-Length header: only the streaming read can enforce the limit.
+  let pulled = 0; const chunk = new Uint8Array(1 << 20).fill(32);
+  const body = new ReadableStream({ pull(controller) { if (pulled >= 64 << 20) return controller.close(); pulled += chunk.byteLength; controller.enqueue(chunk); } });
+  const response = await route.PATCH(new Request(`https://site.test/api/data-submissions/${id}`, { method: "PATCH", duplex: "half", headers: { "Content-Type": "application/json" }, body }), { params: Promise.resolve({ id }) });
+  assert.equal(response.status, 413); assert.match((await response.json()).error, /too long/);
+  assert.ok(pulled <= 4 << 20, `read ${pulled} bytes of an oversized review body`);
+  assert.deepEqual(writes, []);
+  const malformed = await route.PATCH(new Request(`https://site.test/api/data-submissions/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: "{not json" }), { params: Promise.resolve({ id }) });
+  assert.equal(malformed.status, 400); assert.deepEqual(writes, []);
+});
+
 test("private intake persists bytes and audit history, scopes reads, and serializes competing reviews", async () => {
   const root = path.resolve("dist/server");
   const files = readdirSync(root, { recursive: true }).filter((p) => p.endsWith(".js"));
