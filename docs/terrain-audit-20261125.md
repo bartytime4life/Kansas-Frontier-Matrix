@@ -16,6 +16,10 @@ During movement, source acquisition holds its queued work while allowing at most
 
 Additional regression cases cover returning to completed settings after canceling an intermediate job, a resource-budget change requiring fresh preparation, and a queued timer firing before React commits movement state. These exercise production hooks and the actual tile store; they do not establish browser frame rates or source accuracy.
 
+## Broader science usability check
+
+The live County Observatory loaded real source records with independent periods and ACS uncertainty. Its Map measure, X/Y measure and ranking selectors used identical labels for absolute and percentage population change. The two shared descriptor labels now explicitly say `(people)` and `(%)`; metric identifiers, calculations, source periods and saved links are unchanged. This is a copy correction, checked through the existing county model suite and the rendered selectors.
+
 ## Opportunities to prioritize next
 
 1. A drawn transect across multiple tiles, with distance, source boundaries and NoData gaps, would make comparison more useful than a single source row. It requires explicit datum/resolution handling; no cross-survey interpolation should be implied.
