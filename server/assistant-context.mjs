@@ -33,11 +33,15 @@ export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>n
   if(!info.isFile()||info.size>limit)fail('CONTEXT_UNAVAILABLE');
   return readFile(file);
  };
- return async context=>{
+ return async (context,{referenceTime}={})=>{
   if(!validAssistantContext(context))fail('INVALID_CONTEXT');
+  // Pin only calendar orientation to the server-owned acceptance time. Source
+  // readers below still resolve their current records on every recheck.
+  const calendar=new Date(referenceTime??now());
+  if(!Number.isFinite(calendar.getTime()))fail('CONTEXT_UNAVAILABLE');
   const surface=assistantSurface(context.surface??'map');
   const frame=(surface?.id==='map'||['reports','stories'].includes(surface?.id??'')?'':'Page '+surface?.title+'. ')
-   +'Server clock date (UTC) '+now().toISOString().slice(0,10)+'. Map display year '+context.frame+' (a selected display frame, not a collection or drilling date); view '+context.view+'. '
+   +'Server clock date (UTC) '+calendar.toISOString().slice(0,10)+(referenceTime===undefined?'':' (question acceptance time)')+'. Map display year '+context.frame+' (a selected display frame, not a collection or drilling date); view '+context.view+'. '
    +(context.filters?'Display filters '+JSON.stringify(context.filters)+'. ':'')
    +(context.comparison?'Comparison frames '+context.comparison.frameA+' and '+context.comparison.frameB+'; matching observations are not established. ':'');
   const layerNames=layers(context.layers).slice(0,8).join(', ');

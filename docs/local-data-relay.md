@@ -400,3 +400,11 @@ moves focus to the newly accepted results unless the reader has moved outside
 the search workspace. Collection-finder parameters and explicit collection/hash
 destinations remain independent. These links preserve a query, not a frozen data
 snapshot: later archive loads may change the matches.
+
+
+AI context keeps its server clock date at question acceptance throughout that
+reply's generation and retention window. A UTC calendar rollover alone therefore
+does not withdraw an otherwise unchanged reply. New questions receive the current
+date. Each recheck still resolves the current source content, release, policy and
+references; changed or unavailable evidence remains withheld. No credential,
+model, queue, time or resource allowance changes are required.

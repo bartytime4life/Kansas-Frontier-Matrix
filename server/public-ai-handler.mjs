@@ -60,9 +60,9 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   return value.evidence.length||value.truncated?{releaseId:value.releaseId,evidence:value.evidence,truncated:Boolean(value.truncated)}:null;
  };
  const contextFingerprint=value=>digest({key:value.key,prompt:value.prompt,sourceSummary:value.sourceSummary,releaseId:value.releaseId,references:value.references});
- const readContext=async selector=>{
+ const readContext=async (selector,referenceTime)=>{
   let timer;try{
-   const value=await Promise.race([reads.run(()=>resolveContext(selector)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('CONTEXT_UNAVAILABLE')),5000);})]);
+   const value=await Promise.race([reads.run(()=>resolveContext(selector,{referenceTime})),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('CONTEXT_UNAVAILABLE')),5000);})]);
    if(!value||!text(value.prompt,2400)||!text(value.label,240)||!text(value.boundary,240))throw new Error('CONTEXT_UNAVAILABLE');
    if(value.sourceSummary!==undefined&&(!text(value.sourceSummary,4096)||isSensitiveQwenQuestion(value.sourceSummary)||localQwenAnswerHasOverPreciseLocation(value.sourceSummary)))throw new Error('CONTEXT_UNAVAILABLE');
    if(value.references!==undefined&&(!Array.isArray(value.references)||value.references.length>4||value.references.some(ref=>{
@@ -74,7 +74,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
  };
  // A resolved catalog record can change or be denied without having a link or
  // release ID. Recheck every resolved context, not just citation-bearing ones.
- const freshContext=async job=>{if(!job.context)return true;try{return contextFingerprint(await readContext(job.contextSelector))===job.contextFingerprint;}catch(error){if(isAiReadPressure(error))throw error;return false;}};
+ const freshContext=async job=>{if(!job.context)return true;try{return contextFingerprint(await readContext(job.contextSelector,job.created))===job.contextFingerprint;}catch(error){if(isAiReadPressure(error))throw error;return false;}};
  const fresh=async job=>{const value=await packet(job.query);return Boolean(value&&digest(value)===job.evidenceDigest);};
  const recheckResult=job=>{
   // Share only overlapping checks, never reuse a previously successful snapshot.
@@ -190,7 +190,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      // its conversation partition separate. Other questions retain source gates.
      const contextSelector=general&&value.context?{...value.context,layers:[],selection:null}:value.context;
      if(!sensitive&&value.context){
-      const context=await readContext(contextSelector);
+      const context=await readContext(contextSelector,job.created);
       if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}
       job.context=context;
       if(protectedContext(job.context.prompt))throw new Error('POLICY_WITHHELD');
