@@ -37,6 +37,7 @@ const load:Loader=async(tile,mode,signal,progress,bypass)=>{
  const q=canonicalLidarView(tile.bounds,tile.zoom,[mode]);if(!q)throw Error('Outside Kansas');const native=await readKansasLidarView(q,signal,r=>progress(r.state),{bypassCache:bypass});if(native.receipt.state==='processing')throw Error('This source tile is still processing. Refresh this view to retry.');return {tile,ground:null,native,grid:native.grid,state:native.receipt.layers.find(l=>l.kind===mode)?.state??native.receipt.state,error:native.receipt.state==='unavailable'?(native.receipt.reason??'Native source tile unavailable'):''};
 };
 /** Two bounded acquisitions, stable keys, 24 in-memory receipts maximum.
+ * Movement holds queued work while bounded in-flight jobs finish into cache.
  * Kept jobs survive overlapping pans. Obsolete and hidden jobs are canceled;
  * late completions cannot resurrect retired coverage. Public disk cache is
  * separately bounded by the existing opt-in 8 MiB cache. */
@@ -47,6 +48,7 @@ export function createTerrainTileStore(notify:(s:TerrainTileSnapshot)=>void,load
  const splits=new Map<string,TerrainTile[]>(),expires=new Map<string,number>(),cache=new Map<string,TerrainTileData>(),active=new Map<string,{abort:AbortController;state:string}>();
  const snapshot=()=>({version,plan,entries:plan.tiles.map(t=>cache.get(t.key)).filter((v):v is TerrainTileData=>!!v),pending:plan.tiles.filter(t=>!cache.has(t.key)).length,failed:plan.tiles.filter(t=>cache.get(t.key)?.error).length});
  const emit=()=>{if(!disposed)notify(snapshot());};
+ const hold=()=>{paused=true;if(retryTimer!==null)clearTimeout(retryTimer);retryTimer=null;};
  const prune=()=>{const wanted=new Set(plan.tiles.map(t=>t.key));for(const key of cache.keys()){if(cache.size<=24)break;if(!wanted.has(key)){cache.delete(key);expires.delete(key);}}};
  function refine(){
   if(mode==='ground')return;
@@ -89,7 +91,7 @@ export function createTerrainTileStore(notify:(s:TerrainTileSnapshot)=>void,load
    }).catch(error=>{if(!disposed&&!job.abort.signal.aborted&&active.get(tile.key)===job)cache.set(tile.key,{tile,grid:null,ground:null,native:null,state:'unavailable',error:error instanceof Error?error.message:'Tile unavailable'});}).finally(()=>{if(active.get(tile.key)!==job)return;active.delete(tile.key);refine();prune();emit();pump();scheduleRecovery();});
   }
  }
- return {snapshot,retryUnavailable,set(next:TerrainTilePlan,nextMode:LidarGridMode,refresh=false){
+ return {snapshot,retryUnavailable,hold,set(next:TerrainTilePlan,nextMode:LidarGridMode,refresh=false){
   if(disposed)return;paused=false;mode=nextMode;plan=next;bypass=refresh;if(refresh)splits.clear();refine();
   const wanted=new Set(plan.tiles.map(t=>t.key));
   for(const [key,job] of active)if(!wanted.has(key)||refresh){active.delete(key);job.abort.abort();}
@@ -97,5 +99,5 @@ export function createTerrainTileStore(notify:(s:TerrainTileSnapshot)=>void,load
   // Reuse only unexpired exact source receipts; no timestamp renewal on a pan.
   for(const key of wanted)if((expires.get(key)??Infinity)<=Date.now()){cache.delete(key);expires.delete(key);}
   prune();emit();pump();scheduleRecovery();
- },pause(){paused=true;if(retryTimer!==null)clearTimeout(retryTimer);retryTimer=null;for(const job of active.values())job.abort.abort();active.clear();},dispose(){disposed=true;if(retryTimer!==null)clearTimeout(retryTimer);retryTimer=null;for(const job of active.values())job.abort.abort();active.clear();cache.clear();expires.clear();splits.clear();}};
+ },pause(){hold();for(const job of active.values())job.abort.abort();active.clear();},dispose(){disposed=true;if(retryTimer!==null)clearTimeout(retryTimer);retryTimer=null;for(const job of active.values())job.abort.abort();active.clear();cache.clear();expires.clear();splits.clear();}};
 }
