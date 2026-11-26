@@ -3461,4 +3461,14 @@ def test_science_compression_successor_preserves_data_and_all_holds():
         {"app/science/snapshot-loader.mjs", "tests/drought-and-soil.test.mjs"},
         "02f2a7c312c449c03e21b8ccaa18f80a99a61d71",
     )
-    assert TOOL.RECEIPT.name == "site-v268-science-compression-overlay-20261126.json"
+
+
+def test_science_deadline_successor_preserves_runtime_data_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-science-test-deadlines-overlay-20261126.json",
+        "site-v268-science-compression-overlay-20261126.json",
+        "1effdf8a2026ee37bb27a0f11a896fcc965a086bed2034dafd1b18cba302751b",
+        {"tests/heat-and-rain.test.mjs", "tests/drought-and-soil.test.mjs"},
+        "7ccf135966acf3deb63220347f3bb87eb033f1d2",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-science-test-deadlines-overlay-20261126.json"
