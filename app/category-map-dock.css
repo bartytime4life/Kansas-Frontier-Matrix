@@ -277,3 +277,9 @@
 @media(max-width:760px){
  .map-stage:not([data-live-dock="true"]):has(.category-map-dock[data-topic=terrain] [data-terrain-transect]) .measurement-readout{display:none}
 }
+
+@media(max-width:760px){
+ /* A completed profile needs its axes and numeric scale in view. Drawing
+    retains the smaller card so the landscape remains available for tracing. */
+ .category-map-dock[data-topic=terrain]:has([data-terrain-transect] figure){--category-dock-height-ceiling:min(60%,380px)}
+}
