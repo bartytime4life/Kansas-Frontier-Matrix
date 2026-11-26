@@ -9679,9 +9679,17 @@ export default function Home() {
     if (now >= interval.startMs && now < interval.endMs) seekDaylight(intervalFractionAtInstant(now, interval));
   };
 
-  // From the category dock the investigation's steps sit in the Scene panel's collapsed
-  // "Terrain tools" section, so open it and bring them into view.
+  // Terrain uses the loaded-tile instrument directly. Other category looks
+  // retain their existing renderer-only investigation in Scene tools.
+  const startSourceTransect = () => {
+    if (!terrainCellsEnabled) kansasLidar.setCellsOn(true);
+    setOfficialWorkspace("terrain"); setCategoryDockTopic("terrain"); setCategoryDockHidden(false);
+    dismissMapUtilityWithoutFocus();
+    toggleMeasure("distance");
+    announce("Draw a cross-section on the map. Finish profile in Terrain tools to read already loaded source tiles; no new profile downloads.");
+  };
   const startCategoryTransect = () => {
+    if (categoryDockTopic === "terrain") { startSourceTransect(); return; }
     startTerrainInvestigation();
     window.requestAnimationFrame(() => {
       const steps = document.querySelector<HTMLElement>(".map-utility-panel .terrain-investigation");
@@ -12522,7 +12530,7 @@ export default function Home() {
             }}
             keys={currentMapKeys}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
-            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} />}
+            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} transect={{line:measurementGeometryMode === "distance" ? measureCoordinatesRef.current : [],drawing:measureMode === "distance",onStart:startSourceTransect,onFinish:finishMeasurement,onUndo:undoMeasurementPoint,onClear:clearMeasurement,redacted:locationCameraRedacted || locationDerivedViewRef.current}} />}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic, officialWorkspace === "all" && welcomeTopics.length > 1 ? welcomeTopics : [activeCategoryMap.topic]) : resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
               state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",
