@@ -3370,10 +3370,41 @@ def test_page_scroll_successor_preserves_web_a11y_perf_inventory_and_all_holds()
         PAGE_SCROLL_CHANGED,
         "1f82ec8b908679ad6e2c102818f7185e0dc9340a",
     )
-    assert TOOL.RECEIPT.name == "site-v268-page-scroll-overlay-20261126.json"
 
 
 PAGE_SCROLL_CHANGED = {
     "app/earth-engine/workspace.module.css",
     "app/globals.css",
+}
+
+
+def test_heat_and_rain_successor_preserves_source_history_and_all_holds():
+    predecessor = ROOT / "data/receipts/generated/site-v268-page-scroll-overlay-20261126.json"
+    _assert_transport_successor(
+        "site-v268-heat-and-rain-overlay-20261126.json",
+        predecessor.name,
+        "49aeed616db60e8f8e6e2a45dc9fcf5952f8b2257dd9cc6280e115311b3f71e8",
+        HEAT_AND_RAIN_CHANGED,
+        "363ab3d86800f966910cdc5ed7168d7be5573e9e",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-heat-and-rain-overlay-20261126.json"
+
+
+HEAT_AND_RAIN_CHANGED = {
+    "app/labs/heat-and-rain/heat-and-rain.jsx",
+    "app/labs/heat-and-rain/page.tsx",
+    "app/labs/heat-and-rain/heat-and-rain.module.css",
+    "app/labs/heat-and-rain/climate-model.mjs",
+    "app/labs/heat-and-rain/snapshot-loader.mjs",
+    "app/labs/heat-and-rain/snapshot-manifest.json",
+    "app/observatory/sources/page.tsx",
+    "app/sitemap.ts",
+    "docs/README.md",
+    "docs/heat-and-rain-lab.md",
+    "public/science-data/daily-climate/usw00013985-d69ba63bc5223929.json",
+    "public/science-data/daily-climate/usw00003928-b945aa52a206ad3f.json",
+    "public/science-data/daily-climate/usw00013996-46bce3b93367f4a5.json",
+    "scripts/prepare-daily-climate.py",
+    "tests/heat-and-rain.test.mjs",
+    "tests/heat-and-rain-ui.test.mjs",
 }

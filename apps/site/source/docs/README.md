@@ -11,6 +11,7 @@ guide, cluster and starter work (November 13–18) is described in the dated not
 
 | Task | Guide |
 |---|---|
+| Count daily heat, frost and rain at three Kansas stations | [Heat & Rain Lab](heat-and-rain-lab.md) · `/labs/heat-and-rain` |
 | Open a ready-made map with an explanation | `/explore` (16 guides) and [older and newer layers together](explorer-old-and-new-data-2026-11-18.md) |
 | Pick a themed starter or a Science lab layer set | [Starters, guides and Science lab links](explorer-old-and-new-data-2026-11-18.md) |
 | Try the storm, rain, land-cover and historic-place layers | [Discovery layers and starters](explorer-discovery-layers-2026-11-13.md) |

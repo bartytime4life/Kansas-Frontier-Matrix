@@ -32,6 +32,7 @@ export default function SourcesPage() {
     <Link href="/observatory">← Event Observatory</Link>
     <h1>Temporal environmental layers for Kansas</h1>
     <p>The Event Observatory connects dated environmental observations and independently dated context on one Kansas map. Historical radar replay is immediately feasible; smoke footprints, streamflow, satellite acquisitions, geology and occurrence records need different time rules. A universal date slider is useful only if it preserves those distinctions.</p>
+    <section aria-labelledby="daily-climate-lab"><h2 id="daily-climate-lab">Turn daily observations into a useful question.</h2><p><Link href="/labs/heat-and-rain">Open the Heat &amp; Rain Lab →</Link> Count hot days, freezing nights and wet days at Dodge City, Wichita or Topeka. Inspect NOAA station records for 2020–2025, see each metric’s coverage and download the qualified observations with their source receipt.</p></section>
     <nav aria-label="Research sections"><a href="#coverage">Coverage</a> · <a href="#grammar">Science grammar</a> · <a href="#time">Time model</a> · <a href="#atmosphere">Radar & smoke</a> · <a href="#earth">Earth & water</a> · <a href="#ecology">Flora & fauna</a> · <a href="#delivery">Delivery boundaries</a> · <a href="#references">References</a></nav>
 
     <h2 id="coverage">Source coverage and implemented carriers</h2>
