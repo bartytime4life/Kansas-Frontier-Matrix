@@ -1,0 +1,80 @@
+{
+  "receipt_id": "genrec-generated-receipt-ledgered-replay-test-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/test_validate_generated_receipt.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/test_validate_generated_receipt.py": "sha256:65a35de9f9633d3c1104b53c9fc35d728c99fc4d8df8a60006fb1ab246a53896"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:be4edae3a712f5aaeb8c69a04561bbf32e86d925623e62103e794583c006d136",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "27676fd1a4: Dependabot bump that moved .github/workflows/wimas-wwc5-aggregate-first-profile.yml off its ledgered current_sha256",
+      "de7ec1d5aa39b9db46672189986212e5eb0a1026: parent of 27676fd1a4, last commit whose workflow bytes match tools/ci/python-dependency-lock-migration.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/test_validate_generated_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "ledgered-transition-replay",
+      "outcome": "PASS",
+      "reason": "test_historical_workflow_receipt_accepts_only_ledgered_transition copies the real genrec-pass2-wimas-wwc5 receipt, its seven artifacts and the migration ledger from de7ec1d5 into a temporary root and validates it in current-tree mode, so the ledger path is still exercised. It asserts the receipt and ledger bytes equal HEAD's."
+    },
+    {
+      "gate": "negative-control",
+      "outcome": "PASS",
+      "reason": "The same test appends one byte to the replayed workflow and requires exactly ARTIFACT_DIGEST_MISMATCH. Current main workflow bytes are also rejected."
+    },
+    {
+      "gate": "focused-suite",
+      "outcome": "PASS",
+      "reason": "Python 3.11 with the project-runtime lock: test_validate_generated_receipt.py 28 tests pass; validate_generated_receipt.py --fixtures passes; make schemas passes."
+    },
+    {
+      "gate": "validator-unchanged",
+      "outcome": "PASS",
+      "reason": "No change to tools/validators/validate_generated_receipt.py, tools/ci/python-dependency-lock-migration.json or any receipt."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation. No independent review performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T17:58:56Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The ledger pins each workflow's migrated hash, so the test failed on main once Dependabot edited the workflow it read live. Whether to refresh the ledger or let git-ref replay honour it stays an owner decision (see PR 6115); this only makes the test independent of later workflow edits."
+}
