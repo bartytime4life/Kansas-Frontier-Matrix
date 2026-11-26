@@ -6,7 +6,7 @@ import { validFireReportContext } from "./fire-report-analysis";
 import { validSubsurfaceContext } from "./subsurface-model";
 import { validResearchContext } from "./research-context";
 
-import {validTerrainReport} from './terrain-report';
+import {validTerrainReport} from "./terrain-report";
 
 export const REPORT_STORAGE_KEY = "kfm-report-draft-v2";
 export const STORY_STORAGE_KEY = "kfm-story-draft-v2";

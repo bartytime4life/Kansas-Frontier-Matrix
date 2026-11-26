@@ -23,7 +23,7 @@ import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } f
 import { researchMarkdown, type ResearchContext } from "./research-context";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 
-import {terrainReportMarkdown,terrainReportMarkup,terrainReportCSV,terrainReportSummary,type TerrainReportContext} from './terrain-report';
+import {terrainReportMarkdown,terrainReportMarkup,terrainReportCSV,terrainReportSummary,type TerrainReportContext} from "./terrain-report";
 
 type WorkspaceMode = "reports" | "stories";
 

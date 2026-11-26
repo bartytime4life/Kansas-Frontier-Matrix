@@ -3,7 +3,7 @@ import { KANSAS_OUTLINE } from "./kansas-orientation";
 import type { EvidenceRecord, MapSnapshot, ReportDraft } from "./workspace-model";
 import type { HistoryResearchCatalog, HistoryResearchRecord } from "./history-research-model";
 
-import {terrainReportMarkup} from './terrain-report';
+import {terrainReportMarkup} from "./terrain-report";
 
 export type ScientificReportLayout = "overview" | "place" | "sources";
 export const reportEscape = (value: unknown) => String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));

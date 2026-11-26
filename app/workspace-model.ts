@@ -131,7 +131,7 @@ export function terrainSnapshotDescription(snapshot: MapSnapshot): string | null
   return `${source} at ${snapshot.terrainExaggeration.toFixed(2)}× vertical display scale; external display context only, not admitted KFM evidence.`;
 }
 
-import {captureTerrainReport,terrainReportSummary,type TerrainReportContext} from './terrain-report';
+import {captureTerrainReport,terrainReportSummary,type TerrainReportContext} from "./terrain-report";
 
 export type ReportDraft = Readonly<{
   id: string;
