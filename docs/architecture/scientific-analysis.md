@@ -227,7 +227,7 @@ holdouts illustrate matching the test to its intended transfer question
 
 | Design choice | Exact teaching protocol |
 |---|---|
-| Target and support | Fictional catchment-average daily mean flow on target day `d`, in `m³/s`; previous-day rainfall rate in `mm/day` |
+| Target and support | Fictional catchment-outlet daily mean flow on target day `d`, in `m³/s`; previous-day catchment-average rainfall rate in `mm/day` |
 | Forecast origin | End of day `d-1`; that day's rainfall and flow are available. No target-day observation is an input. |
 | Fit | Catchment A target days 1-80; ordinary least squares with an intercept and previous-day rain |
 | Time holdout | Catchment A target days 81-120, testing a future period in the same catchment |
