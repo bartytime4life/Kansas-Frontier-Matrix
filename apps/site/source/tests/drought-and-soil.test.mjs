@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash, webcrypto } from 'node:crypto';
+import { createServer } from 'node:http';
+import { gzipSync, brotliCompressSync } from 'node:zlib';
 import { analyseDrought, assessmentDates, droughtCategories, droughtCsv, droughtReceipt, validateDroughtSnapshot } from '../app/labs/county-drought/drought-model.mjs';
 import { analyseSoil, soilReading, soilReadingLabel, soilCsv, soilReceipt, validateSoilSnapshot } from '../app/labs/soil-profile/soil-model.mjs';
 import { loadDroughtSnapshot } from '../app/labs/county-drought/snapshot-loader.mjs';
@@ -145,6 +147,31 @@ test('bounded loaders verify both scientific snapshots before exposing any resul
   assert.equal(d.counties.length, 105);
   const s = await loadSoilSnapshot(soilData[1].descriptor, options(async () => new Response(soilData[1].bytes)));
   assert.equal(s.station.id, '03067');
+});
+
+test('real gzip and Brotli responses verify decoded bytes and still reject changed or incomplete content', async t => {
+  let encoding = 'gzip';
+  let soilBytes = soilData[1].bytes;
+  const server = createServer((request, response) => {
+    const raw = request.url === dm.snapshot.url ? db : soilBytes;
+    const body = encoding === 'gzip' ? gzipSync(raw) : brotliCompressSync(raw);
+    response.writeHead(200, { 'content-type': 'application/json', 'content-encoding': encoding, 'content-length': body.length });
+    response.end(body);
+  });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise(resolve => { server.closeAllConnections(); server.close(resolve); }));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  const compressed = options(url => fetch(origin + url));
+  for (const format of ['gzip', 'br']) {
+    encoding = format;
+    assert.equal((await loadDroughtSnapshot(dm, compressed)).counties.length, 105, format);
+    assert.equal((await loadSoilSnapshot(soilData[1].descriptor, compressed)).station.id, '03067', format);
+    soilBytes = Buffer.from(soilData[1].bytes); soilBytes[100] ^= 1;
+    await assert.rejects(loadSoilSnapshot(soilData[1].descriptor, compressed), /integrity/, format);
+    soilBytes = soilData[1].bytes.subarray(0, 100);
+    await assert.rejects(loadSoilSnapshot(soilData[1].descriptor, compressed), /incomplete/, format);
+    soilBytes = soilData[1].bytes;
+  }
 });
 
 test('non-2xx, truncated, overlong, changed hash, wrong byte header or malformed manifest fail closed', async () => {

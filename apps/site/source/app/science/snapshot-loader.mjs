@@ -26,7 +26,11 @@ export async function loadVerifiedSnapshot(descriptor, validate, { prefix, limit
       if (controller.signal.aborted) throw controller.signal.reason;
       if (!response.ok) throw new Error('The science snapshot could not be read. Please retry.');
       const declared = response.headers.get('content-length');
-      if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > limit || Number(declared) !== descriptor.bytes)) {
+      const encoding = response.headers.get('content-encoding')?.trim().toLowerCase();
+      // Fetch exposes decoded bytes; Content-Length describes the transferred
+      // representation when a host applies gzip or Brotli compression.
+      const identity = !encoding || encoding === 'identity';
+      if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > limit || (identity && Number(declared) !== descriptor.bytes))) {
         throw new Error('The science snapshot size did not match its manifest.');
       }
       if (!response.body) throw new Error('The science snapshot has no body.');

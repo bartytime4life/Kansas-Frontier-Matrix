@@ -3417,7 +3417,6 @@ def test_drought_soil_science_successor_preserves_source_history_and_all_holds()
         DROUGHT_SOIL_SCIENCE_CHANGED,
         "8f455b794cea5c047130e604b942198e598682c5",
     )
-    assert TOOL.RECEIPT.name == "site-v268-drought-soil-science-overlay-20261126.json"
 
 
 DROUGHT_SOIL_SCIENCE_CHANGED = {
@@ -3452,3 +3451,14 @@ DROUGHT_SOIL_SCIENCE_CHANGED = {
     "tests/drought-and-soil.test.mjs",
     "tests/soil-profile-ui.test.mjs",
 }
+
+
+def test_science_compression_successor_preserves_data_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-science-compression-overlay-20261126.json",
+        "site-v268-drought-soil-science-overlay-20261126.json",
+        "b86bb419658de1f63df50bee618357df808f5675be86d02886fee3e33d44b395",
+        {"app/science/snapshot-loader.mjs", "tests/drought-and-soil.test.mjs"},
+        "02f2a7c312c449c03e21b8ccaa18f80a99a61d71",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-science-compression-overlay-20261126.json"
