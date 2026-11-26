@@ -70,6 +70,17 @@ export default function ResearchDiscovery({ sources, instruments, initialState }
       </div>
     </section>
 
+    <section className={styles.section} id="observation-tools" aria-labelledby="observation-tools-title">
+      <div className={styles.observationTools}>
+        <div><p className={styles.eyebrow}>TRY THE OBSERVATIONS · 2020–2025</p><h2 id="observation-tools-title">From a question to a usable record.</h2><p>Explore daily weather, weekly county drought and measured soil depths. Inspect coverage, change the question and download the source-linked observations.</p><Link className={styles.primary} href="/science">Choose a science question <span aria-hidden="true">↗</span></Link><p className={styles.small}>Provider context with its original dates and missing values. Scientific review and KFM dataset admission remain pending.</p></div>
+        <ul className={styles.observationToolLinks}>
+          <li><Link href="/labs/heat-and-rain"><span>Heat &amp; Rain Lab</span><h3>When did heat, frost and rain shape the season?</h3><small>NOAA GHCN-Daily · 3 stations · 2020–2025</small><b aria-hidden="true">↗</b></Link></li>
+          <li><Link href="/labs/county-drought"><span>County Drought Lab</span><h3>How often did drought cover your county?</h3><small>U.S. Drought Monitor · 105 counties · 313 assessments</small><b aria-hidden="true">↗</b></Link></li>
+          <li><Link href="/labs/soil-profile"><span>Soil Profile Lab</span><h3>What changed beneath the surface?</h3><small>NOAA USCRN · 2 stations · 5 measured depths</small><b aria-hidden="true">↗</b></Link></li>
+        </ul>
+      </div>
+    </section>
+
     <section className={styles.section} id="source-catalog" aria-labelledby="catalog-title">
       <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>FIND THE RIGHT INGREDIENTS</p><h2 id="catalog-title">Explore the source catalogue.</h2></div><p>Search across providers, subjects,<br /> source dates and scientific limitations.</p></div>
       <div className={styles.filters}><label className={styles.search}>Search sources<input type="search" value={state.query} maxLength={160} placeholder="Try groundwater, radar, forecast…" onChange={event => filter({ query: event.target.value })} /></label><label>Subject<select value={state.domain} onChange={event => filter({ domain: event.target.value })}><option value="">All subjects</option>{domains.map(domain => <option key={domain}>{domain}</option>)}</select></label><label>Representation<select value={state.kind} onChange={event => filter({ kind: event.target.value })}><option value="">All representations</option>{Object.entries(REPRESENTATIONS).map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label></div>

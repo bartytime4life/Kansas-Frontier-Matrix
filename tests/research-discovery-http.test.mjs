@@ -14,7 +14,8 @@ test('Research Discovery serves through production delivery with working assets,
   assert.match(html, /Research Discovery · Kansas Frontier Matrix/);
   assert.match(html, /rel="canonical" href="https:\/\/kansasfrontiermatrix.com\/research"/);
   for (const text of ['registered map sources', 'Compare before you combine.', 'Prairie science, across scales.', 'EXTERNAL_CONTEXT_ONLY']) assert.ok(html.includes(text), text);
-  for (const href of ['/labs', '/data-library', '/observatory', '/observatory/sources']) assert.ok(html.includes(`href="${href}"`), href);
+  for (const href of ['/labs', '/data-library', '/observatory', '/observatory/sources', '/science', '/labs/heat-and-rain', '/labs/county-drought', '/labs/soil-profile']) assert.ok(html.includes(`href="${href}"`), href);
+  assert.ok(html.includes('id="observation-tools"'), 'science entry remains in the body at phone widths');
   assert.ok(!html.includes('href="/data"'), 'retired public contribution UI is not reintroduced');
   const pilotHref = '/acquisition#neon-lidar-lab';
   assert.ok(html.includes(`href="${pilotHref}"`), 'research readers can reach the working terrain lab');
