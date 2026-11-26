@@ -1,3 +1,4 @@
+import {terrainModules} from './terrain-preparation-harness.mjs';
 import {scientific} from './scientific-report-harness.mjs';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -9,12 +10,12 @@ import {componentHarness,findNode} from './component-harness.mjs';
 const modelSource=await readFile(new URL('../app/workspace-model.ts',import.meta.url),'utf8');
 const model={};
 vm.runInNewContext(ts.transpileModule(modelSource,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{
- exports:model,require:()=>({persistableSubsurface:()=>null,persistableResearch:()=>null}),
+ exports:model,require:n=>n==='./terrain-report'?terrainModules['terrain-report']:({persistableSubsurface:()=>null,persistableResearch:()=>null}),
 });
 const snapshot={id:'captured-map',createdAt:'2026-10-27T15:00:00Z',area:{kind:'viewport',label:'Kansas test view'},camera:{center:[-98,38],zoom:7,bearing:10,pitch:0},representation:'2D',projection:'mercator',basemap:'standard',committedTime:{start:2026,end:2026,label:'2026',mode:'instant'},visibleLayers:[],selection:null,evidenceRefs:[],inspectableFeatureIds:[],inspectableRecordCount:0,sourceBackedCount:0,boundedCount:0,policy:{outcome:'ABSTAIN',reason:'No released evidence',publicEffect:'NONE'}};
 const storage={};
 vm.runInNewContext(ts.transpileModule(await readFile(new URL('../app/workspace-storage.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{
- exports:storage,require:()=>({LAYER_REGISTRY:[],BASEMAPS:{standard:{}},BUILD_UTC_YEAR:2026}),
+ exports:storage,require:n=>n==='./terrain-report'?terrainModules['terrain-report']:({LAYER_REGISTRY:[],BASEMAPS:{standard:{}},BUILD_UTC_YEAR:2026}),
 });
 const {REPORT_STORAGE_KEY:reportKey,STORY_STORAGE_KEY:storyKey}=storage;
 
@@ -32,7 +33,7 @@ async function harness(mode='reports',saved=new Map()){
  const timers=new Map(),events=new Map(),documentEvents=new Map(),writes=[],inside={};let next=0,fail=false;
  const save=(key,value)=>{if(fail)throw new Error('quota');saved.set(key,JSON.parse(value));writes.push({key,value:JSON.parse(value)});};
  const h=await componentHarness(new URL('../app/report-story-workspaces.tsx',import.meta.url),{
-  './scientific-report':scientific,'./workspace-model':model,'./snapshot-map':{default:()=>null},'./assistant-panel':{default:()=>null},
+  './terrain-report':terrainModules['terrain-report'],'./scientific-report':scientific,'./workspace-model':model,'./snapshot-map':{default:()=>null},'./assistant-panel':{default:()=>null},
   './assistant-context':{snapshotAssistantFocus:()=>({})},
   './workspace-storage':{...storage,readDraft:key=>saved.get(key)??null},
   './draft-save-status.module.css':{default:{status:'save-status',header:'save-header'}},
@@ -76,7 +77,7 @@ function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(page)=
 const handlerJs=ts.transpileModule(`return ${handler};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 test('Reports and Stories each restore their own saved snapshot; fresh composition captures the current map',()=>{
  const restored=[],announcements=[],paused=[],report={id:'report-snapshot'},story={id:'story-snapshot'},fresh={id:'fresh-snapshot'};
- const scope={primaryWorkspace:'map',workspaceSnapshot:report,readDraftSnapshot:mode=>mode==='reports'?report:story,captureMapSnapshot:()=>fresh,setWorkspaceSnapshot:x=>restored.push(x),announce:x=>announcements.push(x),persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
+ const scope={setTerrainReportContext(){},primaryWorkspace:'map',workspaceSnapshot:report,readDraftSnapshot:mode=>mode==='reports'?report:story,captureMapSnapshot:()=>fresh,setWorkspaceSnapshot:x=>restored.push(x),announce:x=>announcements.push(x),persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
  for(const key of ['setFireReportContext','setResearchReportContext','setSubsurfaceReportContext','setPrimaryWorkspace','setMapContextOpen','setHelpOpen','setQwenOpen','setChatLayoutSuspended'])scope[key]=()=>{};
  for(const key of ['setPlaying','setStreamflowPlaying','setNoaaRadarPlaying','setLightningPlaying','setDaylightPlayback'])scope[key]=value=>paused.push(value);
  const open=new Function(...Object.keys(scope),handlerJs)(...Object.values(scope));open('reports');open('stories');open('reports',true);
@@ -87,7 +88,7 @@ test('Reports and Stories each restore their own saved snapshot; fresh compositi
 test('reopening an active unsaved workspace never reads stale storage or remounts it; explicit fresh composition still works',()=>{
  for(const mode of ['reports','stories']){
   const changes=[],active={id:'unsaved-active-'+mode},fresh={id:'explicit-fresh-'+mode};let captures=0;
-  const scope={primaryWorkspace:mode,workspaceSnapshot:active,readDraftSnapshot(){throw Error('Must not replace the active editor from storage');},captureMapSnapshot(){captures++;return fresh;},setWorkspaceSnapshot:x=>changes.push(x),announce(){},persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
+  const scope={setTerrainReportContext(){},primaryWorkspace:mode,workspaceSnapshot:active,readDraftSnapshot(){throw Error('Must not replace the active editor from storage');},captureMapSnapshot(){captures++;return fresh;},setWorkspaceSnapshot:x=>changes.push(x),announce(){},persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
   for(const key of ['setFireReportContext','setResearchReportContext','setSubsurfaceReportContext','setPrimaryWorkspace','setMapContextOpen','setHelpOpen','setQwenOpen','setChatLayoutSuspended','setPlaying','setStreamflowPlaying','setNoaaRadarPlaying','setLightningPlaying','setDaylightPlayback'])scope[key]=()=>{};
   const open=new Function(...Object.keys(scope),handlerJs)(...Object.values(scope));
   open(mode);assert.deepEqual(changes,[]);assert.equal(captures,0);
@@ -149,4 +150,16 @@ test('invalid and oversized drafts retain the previous saved copy and show recov
   assert.ok(findNode(p.render(),n=>n.type==='button'&&n.props.children==='Retry saving'));
   p.h.dispose();assert.equal(saved.get(storyKey),previous);
  }
+});
+
+
+test('terrain report draft survives validated storage round trips; private snapshots cannot retain terrain coordinates',()=>{
+ const profile={line:[[-96,39],[-96.99,39]],mode:'ground',length:10,stations:[{distance:0,coordinate:[-96,39],value:345.125,tile:'tile',requestKey:'request',index:0,row:1,column:1,center:[-96,39]},{distance:10,coordinate:[-96.99,39],value:null,tile:null,requestKey:null,index:null,row:null,column:null,center:null}],sources:[{tile:'tile',requestKey:'request',source:'USGS 3DEP',verticalReference:'Unverified',acquisition:'Mixed acquisition',horizontalCrs:'EPSG:3857',spacing:[10,10],spacingUnits:'projected metres',hashes:['a'.repeat(64)],cacheTime:'2026-11-25T00:00:00Z',stale:false}],supported:1,error:null};
+ const context=terrainModules['terrain-report'].captureTerrainReport(profile,1,false,snapshot.createdAt);
+ const draft=model.createReportDraft(snapshot,[],undefined,undefined,undefined,context);
+ assert.ok(draft.terrainContext);assert.match(draft.sections.summary,/1\/2 supported/);assert.equal(draft.includedEvidenceIds.length,0);assert.equal(storage.validReportDraft(JSON.parse(JSON.stringify(draft))),true);
+ const privateSnapshot={...snapshot,camera:{center:'WITHHELD_BROWSER_LOCATION',zoom:'WITHHELD',bearing:'WITHHELD',pitch:'WITHHELD'}};
+ assert.equal(model.createReportDraft(privateSnapshot,[],undefined,undefined,undefined,context).terrainContext,undefined);
+ assert.equal(storage.validReportDraft({...draft,snapshot:privateSnapshot}),false);
+ const corrupted=JSON.parse(JSON.stringify(draft));corrupted.terrainContext.profile.stations[0].value='345';assert.equal(storage.validReportDraft(corrupted),false);
 });

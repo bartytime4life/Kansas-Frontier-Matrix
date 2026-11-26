@@ -299,6 +299,7 @@ import {
 import { PlacesSaveControls, type PlacesControlContext, type PlacesFocusRequest } from "./places-save-controls";
 import placesStyles from "./places-save-controls.module.css";
 import ReportStoryWorkspaces from "./report-story-workspaces";
+import {captureTerrainReport,type TerrainReportContext} from "./terrain-report";
 import { KDOT_HISTORIC_STATE_MAPS_URL, KDOT_PAST_COUNTY_MAPS_URL, ROAD_MAP_EDITIONS } from "./road-map-editions";
 import { applyRoadStudyLayers, inspectRoadStudyFile as inspectRoadStudyGeoJson, ROAD_STUDY_COLORS, ROAD_STUDY_MAX_LAYERS, type RoadStudyLayer } from "./road-year-study";
 import { buildFireReportContext, nearbyFireContext, type FireReportContext } from "./fire-report-analysis";
@@ -1683,6 +1684,7 @@ export default function Home() {
   const [hoverActive, setHoverActive] = useState(false);
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
+  const [terrainReportContext, setTerrainReportContext] = useState<TerrainReportContext | null>(null);
   const [fireReportContext, setFireReportContext] = useState<FireReportContext | null>(null);
   const [researchReportContext, setResearchReportContext] = useState<ResearchContext | null>(null);
   const [undergroundOpen, setUndergroundOpen] = useState(false);
@@ -6230,7 +6232,7 @@ export default function Home() {
   }, [analysisArea, basemap, buildYearCurrent, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, mapViewportBounds, movingWindowFrames, opacity, projection, scenePreset, selected, selectedTimeMismatch, supportedMapContextCount, temporalMode, temporalQuery, temporalStepRule, terrainProvider, verticalExaggeration, view, visibility]);
 
 
-  const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null, subsurface: SubsurfaceContext | null = null) => {
+  const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null, subsurface: SubsurfaceContext | null = null, terrain: TerrainReportContext | null = null) => {
     // A same-mode header action must not replace an unsaved editor with an
     // older stored snapshot. Explicit fresh composition remains intentional.
     if (!freshFromMap && primaryWorkspace === mode && workspaceSnapshot) return;
@@ -6238,6 +6240,7 @@ export default function Home() {
     // initialize a blank draft and overwrite an unrelated saved investigation.
     const savedSnapshot = freshFromMap ? null : readDraftSnapshot(mode);
     setWorkspaceSnapshot(savedSnapshot ?? captureMapSnapshot());
+    setTerrainReportContext(mode === "reports" && !locationCameraRedacted && !locationDerivedViewRef.current ? terrain : null);
     setFireReportContext(mode === "reports" ? fireContext : null);
     setResearchReportContext(mode === "reports" ? persistableResearch(research && { ...research, capturedAt: new Date().toISOString() }, researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
     setSubsurfaceReportContext(mode === "reports" ? persistableSubsurface(subsurface && { ...subsurface, capturedAt: new Date().toISOString() }, subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
@@ -11715,13 +11718,14 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
-        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{(welcomeTopics.includes("terrain")||terrainCellsEnabled)&&<><button type="button" aria-pressed={terrainCellsEnabled} onClick={()=>terrainCellsEnabled?kansasLidar.showBaseLandscape():kansasLidar.setCellsOn(true)}>3D terrain cells · {terrainCellsEnabled?"on":"off"}</button>{terrainCellsEnabled&&<button type="button" disabled={!kansasLidar.active} onClick={kansasLidar.inspectLandscape}>Tilt 3D</button>}<button type="button" onClick={()=>{setOfficialWorkspace("terrain");setCategoryDockTopic("terrain");setCategoryDockHidden(false);}}>Terrain tools</button></>}{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
+        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>{(welcomeTopics.includes("terrain")||terrainCellsEnabled)&&<><button type="button" aria-pressed={terrainCellsEnabled} onClick={()=>terrainCellsEnabled?kansasLidar.showBaseLandscape():kansasLidar.setCellsOn(true)}>3D terrain cells · {terrainCellsEnabled?"on":"off"}</button>{terrainCellsEnabled&&<button type="button" disabled={!kansasLidar.active} onClick={kansasLidar.inspectLandscape}>Tilt 3D</button>}<button type="button" onClick={()=>{setOfficialWorkspace("terrain");setCategoryDockTopic("terrain");setCategoryDockHidden(false);}}>Terrain tools</button></>}{welcomeTopics.includes("aviation")&&<button type="button" className="sky-topic-launch" onClick={openKansasSky}><span aria-hidden="true">✈</span>Explore Kansas Sky</button>}</div> : primaryWorkspace === "map" ? <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} /> : null}
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
         key={`${primaryWorkspace}:${workspaceSnapshot.id}`}
         mode={primaryWorkspace}
         snapshot={workspaceSnapshot}
+        terrainContext={terrainReportContext}
         fireContext={fireReportContext}
         researchContext={researchReportContext}
         subsurfaceContext={subsurfaceReportContext}
@@ -12530,7 +12534,7 @@ export default function Home() {
             }}
             keys={currentMapKeys}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
-            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} transect={{line:measurementGeometryMode === "distance" ? measureCoordinatesRef.current : [],drawing:measureMode === "distance",onStart:startSourceTransect,onFinish:finishMeasurement,onUndo:undoMeasurementPoint,onClear:clearMeasurement,redacted:locationCameraRedacted || locationDerivedViewRef.current}} />}
+            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} transect={{onReport:(profile,pendingTiles)=>{const captured=captureTerrainReport(profile,pendingTiles,locationCameraRedacted || locationDerivedViewRef.current);if(captured)openPrimaryWorkspace("reports",true,null,null,null,captured);},line:measurementGeometryMode === "distance" ? measureCoordinatesRef.current : [],drawing:measureMode === "distance",onStart:startSourceTransect,onFinish:finishMeasurement,onUndo:undoMeasurementPoint,onClear:clearMeasurement,redacted:locationCameraRedacted || locationDerivedViewRef.current}} />}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic, officialWorkspace === "all" && welcomeTopics.length > 1 ? welcomeTopics : [activeCategoryMap.topic]) : resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
               state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",

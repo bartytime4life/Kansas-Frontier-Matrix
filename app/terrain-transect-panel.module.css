@@ -4,3 +4,5 @@
 .panel.panel header{align-items:start}.panel.panel header small{text-transform:none;letter-spacing:normal}.panel.panel .reading>small{text-transform:none;letter-spacing:normal}.panel.panel .stats dd{font-family:inherit}
 
 .panel.panel .actions button:first-child:hover:not(:disabled){background:#f7dea6;color:#112c35;border-color:#f7dea6}
+
+.panel.panel .report{background:#edcd87;color:#112c35;border-color:#e8ce96;font-weight:650}.panel.panel .report:hover:not(:disabled){background:#f7dea6}

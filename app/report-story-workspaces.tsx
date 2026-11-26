@@ -23,12 +23,15 @@ import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } f
 import { researchMarkdown, type ResearchContext } from "./research-context";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 
+import {terrainReportMarkdown,terrainReportMarkup,terrainReportCSV,terrainReportSummary,type TerrainReportContext} from "./terrain-report";
+
 type WorkspaceMode = "reports" | "stories";
 
 type ReportStoryWorkspacesProps = Readonly<{
   mode: WorkspaceMode;
   snapshot: MapSnapshot;
   evidenceRecords: readonly EvidenceRecord[];
+  terrainContext?: TerrainReportContext | null;
   fireContext?: FireReportContext | null;
   researchContext?: ResearchContext | null;
   subsurfaceContext?: SubsurfaceContext | null;
@@ -57,7 +60,7 @@ const downloadText = (fileName: string, text: string, type: string) => {
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 
 const replaceReport = (draft: ReportDraft, patch: Partial<ReportDraft>): ReportDraft => ({
@@ -90,6 +93,7 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
     "**Map attribution:** " + (draft.snapshot.basemap === "standard" || isCategoryBasemapKey(draft.snapshot.basemap) ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
+    ...(draft.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && draft.terrainContext ? ["", terrainReportMarkdown(draft.terrainContext), ""] : []),
     ...(draft.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && draft.subsurfaceContext ? ["", subsurfaceMarkdown(draft.subsurfaceContext), ""] : []),
     ...(draft.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),
     ...(draft.fireContext ? [
@@ -155,6 +159,7 @@ export default function ReportStoryWorkspaces({
   snapshot,
   evidenceRecords,
   fireContext,
+  terrainContext,
   researchContext,
   subsurfaceContext,
   onModeChange,
@@ -171,7 +176,7 @@ export default function ReportStoryWorkspaces({
   const workspaceRef = useRef<HTMLElement>(null);
   const [storageState, setStorageState] = useState<DraftWriteState | "saving">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
-    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined),
+    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined, terrainContext ?? undefined),
   );
   const [story, setStory] = useState<StoryDraft>(() =>
     readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createMapStory(snapshot),
@@ -365,8 +370,8 @@ export default function ReportStoryWorkspaces({
       <header className={`primary-workspace-header ${saveStyles.header}`}>
         <div>
           <span>KANSAS FRONTIER MATRIX · DEVICE-LOCAL WORKSPACE</span>
-          <h1 id="primary-workspace-title" ref={headingRef} tabIndex={-1}>{mode === "reports" ? report.fireContext ? "Fire report builder" : "Evidence report builder" : "Guided story builder"}</h1>
-          <p>{mode === "reports" ? report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the saved map snapshot and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
+          <h1 id="primary-workspace-title" ref={headingRef} tabIndex={-1}>{mode === "reports" ? report.terrainContext ? "Terrain report builder" : report.fireContext ? "Fire report builder" : "Evidence report builder" : "Guided story builder"}</h1>
+          <p>{mode === "reports" ? report.terrainContext ? "Explore the captured terrain profile, edit your interpretation, and export its readings with source limits intact." : report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the saved map snapshot and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
         </div>
         <nav aria-label="Report and story workspaces">
           <button type="button" aria-haspopup="dialog" aria-expanded={assistantOpen} onClick={()=>setAssistantOpen(true)}>Ask AI about this {mode === "reports" ? "report context" : "story context"}</button>
@@ -383,6 +388,7 @@ export default function ReportStoryWorkspaces({
           <div className="report-view-switch"><button type="button" aria-pressed={reportView === "dashboard"} onClick={() => setReportView("dashboard")}>Dashboard</button><button type="button" aria-pressed={reportView === "edit"} onClick={() => setReportView("edit")}>Edit report</button></div>
           <label>Report layout<select value={reportLayout} onChange={event => setReportLayout(event.target.value as ScientificReportLayout)}><option value="overview">Scientific overview</option><option value="place">Place brief</option><option value="sources">Source comparison</option></select></label>
           <button type="button" onClick={() => downloadScientificReport(report.title, reportMarkup)}>Download visual HTML</button>
+          {report.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && report.terrainContext && <details className="report-data-downloads"><summary>Data downloads</summary><div><button type="button" onClick={() => downloadText("kfm-terrain-stations.csv", terrainReportCSV(report.terrainContext!), "text/csv;charset=utf-8")}>Export profile stations · CSV</button><button type="button" onClick={() => exportReport("json")}>Full report · JSON</button><button type="button" onClick={() => exportReport("markdown")}>Report text · Markdown</button></div></details>}
           <a href="/history/people-events">People &amp; events reports ↗</a>
           <p>Free, self-contained download · open it in a browser to print or save as PDF. Layouts use the same captured data; missing observations remain explicit.</p>
         </div>
@@ -409,6 +415,11 @@ export default function ReportStoryWorkspaces({
 
         <main className="report-paper" aria-label="Editable report draft">
           <div className="paper-rule"><span>KFM FIELD NOTE</span><strong>DRAFT</strong></div>
+          {report.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && report.terrainContext && <section className="fire-report-source-card" aria-label="Captured terrain profile">
+            <strong>Terrain · fixed source snapshot</strong><p>{terrainReportSummary(report.terrainContext)}</p>
+            <p>This captured profile stays fixed as the map changes. It is external source context, separate from included evidence.</p>
+            <details><summary>Captured graph, source tiles &amp; readings</summary><div className="scientific-report" dangerouslySetInnerHTML={{__html:terrainReportMarkup(report.terrainContext)}} /></details>
+          </section>}
           {report.subsurfaceContext && <section className="fire-report-source-card" aria-label="Captured underground context">
             <strong>Underground · dated source snapshot</strong><p>Captured {report.subsurfaceContext.capturedAt}. Provider context remains separate from included evidence.</p>
             <img alt="Captured recorded-depth columns, with source gaps retained" style={{ width: "100%" }} src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(sectionSvg(report.subsurfaceContext) ?? "")}`} />
