@@ -3387,7 +3387,6 @@ def test_heat_and_rain_successor_preserves_source_history_and_all_holds():
         HEAT_AND_RAIN_CHANGED,
         "363ab3d86800f966910cdc5ed7168d7be5573e9e",
     )
-    assert TOOL.RECEIPT.name == "site-v268-heat-and-rain-overlay-20261126.json"
 
 
 HEAT_AND_RAIN_CHANGED = {
@@ -3407,4 +3406,49 @@ HEAT_AND_RAIN_CHANGED = {
     "scripts/prepare-daily-climate.py",
     "tests/heat-and-rain.test.mjs",
     "tests/heat-and-rain-ui.test.mjs",
+}
+
+
+def test_drought_soil_science_successor_preserves_source_history_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-drought-soil-science-overlay-20261126.json",
+        "site-v268-heat-and-rain-overlay-20261126.json",
+        "8c120e4011dc386101217d6fe78811be598bcab218babdbd843972e1dee356e6",
+        DROUGHT_SOIL_SCIENCE_CHANGED,
+        "8f455b794cea5c047130e604b942198e598682c5",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-drought-soil-science-overlay-20261126.json"
+
+
+DROUGHT_SOIL_SCIENCE_CHANGED = {
+    "app/labs/county-drought/county-drought.jsx",
+    "app/labs/county-drought/county-drought.module.css",
+    "app/labs/county-drought/drought-model.mjs",
+    "app/labs/county-drought/page.tsx",
+    "app/labs/county-drought/snapshot-loader.mjs",
+    "app/labs/county-drought/snapshot-manifest.json",
+    "app/labs/heat-and-rain/heat-and-rain.jsx",
+    "app/labs/soil-profile/page.tsx",
+    "app/labs/soil-profile/snapshot-loader.mjs",
+    "app/labs/soil-profile/snapshot-manifest.json",
+    "app/labs/soil-profile/soil-model.mjs",
+    "app/labs/soil-profile/soil-profile.jsx",
+    "app/labs/soil-profile/soil-profile.module.css",
+    "app/layer-workspaces.ts",
+    "app/observatory/sources/page.tsx",
+    "app/page.tsx",
+    "app/science/page.tsx",
+    "app/science/science-model.mjs",
+    "app/science/science.module.css",
+    "app/science/snapshot-loader.mjs",
+    "app/sitemap.ts",
+    "docs/README.md",
+    "docs/drought-and-soil-labs.md",
+    "public/science-data/county-drought/kansas-4ca3a97c9d597afe.json",
+    "public/science-data/soil-profile/03067-38078772371cbf34.json",
+    "public/science-data/soil-profile/53974-d7476f6fba73aa93.json",
+    "scripts/prepare-drought-and-soil.py",
+    "tests/county-drought-ui.test.mjs",
+    "tests/drought-and-soil.test.mjs",
+    "tests/soil-profile-ui.test.mjs",
 }

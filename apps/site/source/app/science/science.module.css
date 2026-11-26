@@ -1,0 +1,80 @@
+:global(body):has(.page) { min-width: 0; }
+
+.page { --ink: #f4efdf; --body: #bfd1d2; --muted: #a4bdc1; --night: #081d25; --line: #35545d; --teal: #75d4c8; --amber: #efbd72; min-height: 100vh; padding: 1rem clamp(1rem, 4vw, 3rem) 0; background: var(--night); color: var(--ink); font: 1rem/1.6 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.frame { max-width: 76rem; margin-inline: auto; min-width: 0; }
+.page a { color: #a1e3d9; text-underline-offset: .22em; }
+.page a:hover { color: var(--ink); }
+.page a:focus-visible { outline: 3px solid var(--amber); outline-offset: 4px; }
+.navigation { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .2rem 1rem; font-size: .84rem; }
+.navigation a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration: none; }
+.navigation a:first-child { color: var(--ink); }
+.navigation a:hover { text-decoration: underline; }
+.eyebrow { color: var(--muted); text-transform: uppercase; font-size: .66rem; letter-spacing: .14em; font-weight: 650; }
+.hero { padding-block: clamp(3rem, 7vw, 6rem) 2.5rem; }
+.hero h1 { font: 400 clamp(2.6rem, 6.1vw, 5.6rem)/1.08 Georgia, serif; letter-spacing: -.055em; margin: 1rem 0 0; }
+.hero h1 em { color: var(--teal); font-weight: 400; }
+.hero > p { color: var(--body); font-size: clamp(.95rem, 1.6vw, 1.1rem); line-height: 1.7; max-width: 46rem; margin: 1.4rem 0 0; }
+.heroFacts { display: flex; align-items: baseline; flex-wrap: wrap; gap: .8rem 2.5rem; padding-top: 1.8rem; color: var(--muted); font-size: .76rem; }
+.heroFacts strong { color: var(--ink); font-size: .9rem; font-weight: 550; margin-right: .3rem; }
+.tools { border-top: 1px solid var(--line); }
+.tool { --accent: var(--teal); display: grid; grid-template-columns: 12rem minmax(0, 1fr) 13rem; gap: 2.4rem; padding-block: 2.4rem; border-bottom: 1px solid var(--line); }
+.tool[data-tool=drought] { --accent: var(--amber); }
+.tool[data-tool=soil] { --accent: #bed3a1; }
+.toolScope { border-left: 2px solid var(--accent); padding-left: 1rem; align-self: start; }
+.toolIndex { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: .62rem; }
+.toolScope > strong { display: block; font: 400 4rem/1 Georgia, serif; letter-spacing: -.04em; color: var(--accent); margin-block: .9rem .8rem; }
+.toolScope > strong span { display: block; margin-top: .4rem; font: 500 .77rem/1.5 system-ui, sans-serif; color: var(--ink); letter-spacing: normal; }
+.toolScope > small { display: block; color: var(--muted); font-size: .69rem; line-height: 1.8; }
+.toolContent { min-width: 0; }
+.toolName { color: var(--accent); font-size: .74rem; font-weight: 550; }
+.toolContent h2 { margin: .45rem 0 0; font: 400 clamp(1.7rem, 3.2vw, 2.65rem)/1.15 Georgia, serif; letter-spacing: -.035em; max-width: 35rem; }
+.toolContent p { color: var(--body); margin: .9rem 0 0; font-size: .86rem; line-height: 1.75; max-width: 35rem; }
+.toolContent ul { display: flex; flex-wrap: wrap; gap: .35rem 1.2rem; list-style: none; margin: .9rem 0 0; padding: 0; color: var(--muted); font-size: .67rem; }
+.toolContent li::before { content: "/"; color: var(--accent); margin-right: .4rem; }
+.page .startLink { display: inline-flex; align-items: center; gap: 1rem; min-height: 2.75rem; margin-top: 1.1rem; padding: .45rem .9rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; font-size: .82rem; font-weight: 550; }
+.page .startLink:hover { background: #163942; color: var(--ink); }
+.startLink span { font-size: 1.1rem; }
+.toolNote { padding-top: .1rem; }
+.toolNote > span { color: var(--muted); text-transform: uppercase; letter-spacing: .12em; font-size: .61rem; }
+.toolNote p { color: var(--ink); font: 400 1.14rem/1.5 Georgia, serif; margin: .65rem 0 0; }
+.toolNote small { display: block; margin-top: .9rem; color: var(--muted); font-size: .68rem; line-height: 1.8; }
+.readingNote { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; padding-block: clamp(2.3rem, 5vw, 4rem); border-bottom: 1px solid var(--line); }
+.readingNote h2 { font: 400 clamp(1.8rem, 3.5vw, 2.75rem)/1.15 Georgia, serif; letter-spacing: -.035em; margin: .8rem 0 0; }
+.readingNote p { margin: 0 0 .8rem; color: var(--body); font-size: .83rem; line-height: 1.8; }
+.readingNote a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: .82rem; }
+.footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .3rem 1rem; min-height: 6rem; color: var(--muted); font-size: .72rem; }
+.footer a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+@media (max-width: 64rem) {
+  .tool { grid-template-columns: 10rem minmax(0, 1fr); gap: 1.8rem; }
+  .toolNote { grid-column: 2; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .4rem .9rem; border-top: 1px solid #2a4a54; padding-top: .8rem; }
+  .toolNote p { margin: 0; font-size: 1rem; }
+  .toolNote small { grid-column: 2; margin: 0; }
+}
+@media (max-width: 42rem) {
+  .hero { padding-block: 2.4rem 1.8rem; }
+  .heroFacts { gap: .5rem 1.2rem; }
+  .heroFacts > span:last-child { flex-basis: 100%; }
+  .tool { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-block: 1.7rem; }
+  .toolScope { display: grid; grid-template-columns: 1fr auto; gap: .2rem 1rem; align-items: center; padding-left: .8rem; }
+  .toolScope > strong { grid-row: 1 / span 2; grid-column: 2; display: flex; gap: .6rem; align-items: baseline; margin: 0; font-size: 2.7rem; }
+  .toolScope > strong span { max-width: 5rem; font-size: .65rem; }
+  .toolIndex { align-self: end; }
+  .toolScope > small { align-self: start; font-size: .64rem; }
+  .toolContent h2 { font-size: 2rem; }
+  .toolNote { grid-column: auto; gap: .3rem .6rem; }
+  .toolNote > span { padding-top: .2rem; }
+  .readingNote { grid-template-columns: minmax(0, 1fr); gap: 1.3rem; }
+}
+@media (max-width: 26rem) {
+  .navigation { font-size: .75rem; }
+  .eyebrow { font-size: .59rem; }
+  .hero h1 { font-size: 2.45rem; }
+  .hero > p { font-size: .9rem; }
+  .toolScope { grid-template-columns: minmax(0, 1fr); }
+  .toolScope > strong { grid-row: auto; grid-column: auto; margin-top: .2rem; }
+  .toolScope > small { grid-row: 3; }
+  .toolContent h2 { font-size: 1.8rem; }
+  .toolNote { grid-template-columns: minmax(0, 1fr); }
+  .toolNote small { grid-column: auto; }
+}

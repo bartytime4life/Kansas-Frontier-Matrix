@@ -318,7 +318,7 @@ export default function HeatAndRain({ manifest }) {
   return <main className={styles.page}>
     <div className={styles.frame}>
       <nav className={styles.navigation} aria-label="Science lab navigation">
-        <Link href="/">← KFM Explorer</Link><Link href="/observatory/sources">Research & sources</Link><a href="#climate-evidence">Source & methods ↓</a>
+        <Link href="/">← KFM Explorer</Link><Link href="/science">Science tools</Link><Link href="/observatory/sources">Research & sources</Link><a href="#climate-evidence">Source & methods ↓</a>
       </nav>
       <header className={styles.hero}>
         <div><span className={styles.eyebrow}>Kansas field notebook · 01</span><h1>Heat <span>&</span> Rain Lab</h1><p>Turn daily weather observations into useful questions about growing seasons, heat exposure and water.</p></div>
