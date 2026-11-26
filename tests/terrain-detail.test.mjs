@@ -124,3 +124,10 @@ test('explicit retry clears only the failed DEM latch and accepts its replacemen
  const h=terrainHarness();h.manual('usgs-3dep');h.attach();h.fail();assert.equal(h.terrain,'ERROR');
  h.retryTerrain();h.complete();assert.equal(h.terrain,'READY');assert.equal(h.runtime.kind,'ready');assert.deepEqual(h.errors().failedSourceIds,[]);
 });
+
+test('retry replaces a failed DEM while unrelated display tiles are still loading',()=>{
+ const h=terrainHarness();h.manual('usgs-3dep');h.attach();h.fail();h.scope.map.isStyleLoaded=()=>false;
+ assert.ok(h.scope.failedTerrainSourceRef.current);h.retryTerrain();
+ assert.equal(h.scope.failedTerrainSourceRef.current,null,'the failed source latch must retire before dispatch');
+ assert.match(h.runtime.message,/Retrying USGS 3DEP/);h.complete();assert.equal(h.terrain,'READY');assert.equal(h.runtime.kind,'ready');
+});

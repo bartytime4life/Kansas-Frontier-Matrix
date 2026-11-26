@@ -9772,7 +9772,9 @@ export default function Home() {
 
   const retryTerrain = () => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
+    // Tile settlement is not style-document readiness. A failed source must
+    // remain replaceable while other display tiles are still pending.
+    if (!map || !styleGenerationReadyRef.current) {
       setTerrainState("LOADING");
       setRuntime({ kind: "loading", message: "Waiting for the map style before retrying terrain…" });
       return;
