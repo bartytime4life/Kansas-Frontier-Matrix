@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-maplibre-vitest-boundary-5-1-1-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/maplibre-perf-governance.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:257d35d5dbb60697f0b85d4a4dfa210e222d50638327cca426cddad3b823b1a6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "local Git evidence",
+      "pnpm 11.17.0 frozen-lockfile install",
+      "no-network focused validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:153c2b9b3d6ca40ddc35cb0733affe35cffab1139aa2a2808d88af59dd8710a3",
+      "sha256:2f01917eeb0a470e7ef59c775c16639a514498958620c7487d8701f3159905cd"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "repo:main@1bd4e377",
+      "repo:commit@fa249edb29453f30e43ac91501a231c00b65c0eb",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/45876457418/job/140104658467"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/maplibre-perf-governance.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "dependency-boundary-reconciled",
+      "outcome": "PASS",
+      "reason": "Dependabot commit fa249edb moved packages/maplibre devDependencies and the pnpm importer to vitest 5.1.1. pnpm 11.17.0 install --frozen-lockfile --filter @kfm/maplibre... passed its supply-chain policy, and vitest 5.1.1 ran all 6 package test files (92 tests) green."
+    },
+    {
+      "gate": "gate-negative-then-positive",
+      "outcome": "PASS",
+      "reason": "With reviewed_vitest 5.1.0, the local replay of 'Evaluate governed runtime readiness' exits 1 with the dependency-boundary message, matching hosted CI on main. With 5.1.1, all three run steps of the workflow exit 0. No other gate condition was relaxed."
+    },
+    {
+      "gate": "workflow-security-ratchet",
+      "outcome": "PASS",
+      "reason": "validate_workflow_security.py PASS with zero findings. tests/ci shows the same 5 local-environment failures with and without this change."
+    },
+    {
+      "gate": "receipt-binding-impact",
+      "outcome": "PASS",
+      "reason": "Six existing receipts bind this workflow, and none is replayed by any workflow, Makefile target, test or tool, so no current binding drifts."
+    },
+    {
+      "gate": "hosted-candidate-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted MapLibre perf governance runs after the draft PR is published."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Review and merge remain separate and pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "dependabot-vitest-bump",
+      "validated": true,
+      "evidence_ref": "repo:commit@fa249edb29453f30e43ac91501a231c00b65c0eb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T20:30:00Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "One-line raise of the MapLibre gate's reviewed vitest version, from 5.1.0 to 5.1.1, after the package tests and the frozen install were reconciled. The runtime boundary (maplibre-gl 6.9.0), lock-importer agreement, integrity and other conditions are unchanged. Rollback: revert the line. Not approval or release authority."
+}

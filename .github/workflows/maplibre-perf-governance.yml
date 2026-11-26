@@ -333,7 +333,7 @@ jobs:
               )
           # Reviewed development boundary: one exact vitest, matched in the manifest and the
           # lockfile importer. Raise it only with package tests and installs reconciled.
-          reviewed_vitest = "5.1.0"
+          reviewed_vitest = "5.1.1"
           if dev_dependencies != {"vitest": reviewed_vitest}:
               raise SystemExit(
                   "The reviewed @kfm/maplibre development dependency boundary changed. "
