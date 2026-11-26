@@ -215,7 +215,7 @@ export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly Evid
     updatedAt: snapshot.createdAt,
     snapshot,
     title: terrainContext ? "Kansas terrain investigation" : fireContext ? `${fireContext.title} fire report draft` : snapshot.selection ? `${snapshot.selection.title} evidence note` : "Kansas map investigation",
-    researchQuestion: fireContext ? "What do the selected fire source and its dated context actually report?" : "What does the current map state support, and what remains uncertain?",
+    researchQuestion: terrainContext ? "How does the source-reported height vary along this line, and where are the data gaps?" : fireContext ? "What do the selected fire source and its dated context actually report?" : "What does the current map state support, and what remains uncertain?",
     includedEvidenceIds: included.map((record) => record.id),
     ...(terrainContext ? { terrainContext } : {}),
     ...(fireContext ? { fireContext } : {}),
