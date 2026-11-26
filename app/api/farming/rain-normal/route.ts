@@ -37,16 +37,17 @@ async function seasonFor(station: Station, year: number): Promise<Season> {
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const lon = Number(params.get("lon")), lat = Number(params.get("lat")), year = Number(params.get("year"));
+  const outlook = params.get("outlook") === "1";
   const latestYear = new Date().getUTCFullYear();
-  if ([...params.keys()].some(key => !["lon", "lat", "year"].includes(key)) || params.get("lon") === null || params.get("lat") === null || !inCdlRegion(lon, lat)
-    || !Number.isInteger(year) || year < 2000 || year > latestYear)
+  if ([...params.keys()].some(key => !["lon", "lat", "year", "outlook"].includes(key) || params.getAll(key).length !== 1) || (params.has("outlook") && !outlook) || !params.get("lon")?.trim() || !params.get("lat")?.trim() || !inCdlRegion(lon, lat)
+    || !Number.isInteger(year) || year < 2000 || year > latestYear + (outlook ? 1 : 0))
     return Response.json({ state: "error", message: `Choose a point in or near Kansas and a year from 2000 to ${latestYear}.` }, { status: 400, headers: noStore });
   try {
     const station = nearestStation(await kansasStations(`${year}-04-01`, `${year}-10-31`), lon, lat);
     const retrievedAt = new Date().toISOString();
     if (station === null) return Response.json({ lon, lat, year, retrievedAt, state: "none", station: null, seasonInches: null, seasonDaysMissing: 0, normal: { average: null, years: 0 }, percentOfNormal: null }, { headers: noStore });
-    const current = await seasonFor(station, year);
-    if (current.inches === null) return Response.json({ lon, lat, year, retrievedAt, state: "none", station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 }, seasonInches: null, seasonDaysMissing: current.daysMissing, seasonDaysPending: current.daysPending, seasonTraceDays: 0, normal: { average: null, years: 0 }, percentOfNormal: null }, { headers: noStore });
+    const current = outlook ? null : await seasonFor(station, year);
+    if (current && current.inches === null) return Response.json({ lon, lat, year, retrievedAt, state: "none", station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 }, seasonInches: null, seasonDaysMissing: current.daysMissing, seasonDaysPending: current.daysPending, seasonTraceDays: 0, normal: { average: null, years: 0 }, percentOfNormal: null }, { headers: noStore });
     const prior: YearRain[] = [];
     const years = normalYears(year);
     for (let i = 0; i < years.length; i += READ_AT_ONCE) {
@@ -54,18 +55,22 @@ export async function GET(request: Request) {
         try {
           if (station.archiveBegin! > `${y}-10-31` || (station.archiveEnd !== null && station.archiveEnd! < `${y}-04-01`)) return { year: y, inches: null, daysMissing: 214 };
           const season = await seasonFor(station, y);
-          return { year: y, inches: season.inches, daysMissing: season.daysMissing };
+          return { year: y, inches: season.daysPending === 0 ? season.inches : null, daysMissing: season.daysMissing };
         } catch {
           return { year: y, inches: null, daysMissing: 1 };
         }
       })));
     }
+    if (outlook || !current) return Response.json({
+      lon, lat, year, retrievedAt, station: { id:station.id, name:station.name, km:Math.round(station.km*10)/10 },
+      history:prior.map(row => ({ year:row.year, inches:row.daysMissing === 0 ? row.inches : null })),
+    }, {headers:noStore});
     const normal = rainNormal(prior);
     return Response.json({
       lon, lat, year, retrievedAt, state: "ready",
       station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 },
       seasonInches: current.inches, seasonDaysMissing: current.daysMissing, seasonDaysPending: current.daysPending, seasonTraceDays: current.traceDays, normal,
-      percentOfNormal: current.daysMissing === 0 && current.daysPending === 0 ? percentOfNormal(current.inches, normal.average) : null,
+      percentOfNormal: current.daysMissing === 0 && current.daysPending === 0 && current.inches !== null ? percentOfNormal(current.inches, normal.average) : null,
     }, { headers: noStore });
   } catch {
     return Response.json({ state: "unavailable", message: "The Iowa Environmental Mesonet did not answer for this point. No rain normal is inferred." }, { status: 502, headers: noStore });

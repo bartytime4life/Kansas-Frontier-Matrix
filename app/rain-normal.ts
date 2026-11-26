@@ -73,3 +73,38 @@ export function rainNormalLine(reading: RainNormalReading): string | null {
   const share = reading.percentOfNormal === null || reading.seasonDaysMissing > 0 || (reading.seasonDaysPending ?? 0) > 0 ? "" : ` · ${reading.percentOfNormal}% of earlier-year average`;
   return `${season}${days} · ${reading.normal.years}-year average ${reading.normal.average.toFixed(2)} in${share} · from ${reading.station.name}, ${Math.round(reading.station.km)} km away`;
 }
+
+/** Ten earlier station seasons, in calendar order. Null records a gap or an incomplete season. */
+export type SeasonHistory = Readonly<{
+  year: number; inches: number | null;
+}>;
+export type RainOutlook = Readonly<{
+  year: number; lon: number; lat: number; station: { id:string; name:string; km:number };
+  retrievedAt:string; history: readonly SeasonHistory[];
+}>;
+
+export function validOutlook(value: unknown, lon: number, lat: number, year: number): value is RainOutlook {
+  const v = value as RainOutlook | null;
+  return !!v && v.lon === lon && v.lat === lat && v.year === year && !!v.station &&
+    /^[A-Z0-9]{3,5}$/.test(v.station.id) && typeof v.station.name === "string" && v.station.name.length > 0 &&
+    Number.isFinite(v.station.km) && v.station.km >= 0 && v.station.km <= 150 &&
+    Number.isFinite(Date.parse(v.retrievedAt)) && Array.isArray(v.history) && v.history.length === NORMAL_YEARS &&
+    v.history.every((r,i) => r && r.year === year-NORMAL_YEARS+i &&
+      (r.inches === null || typeof r.inches === "number" && Number.isFinite(r.inches) && r.inches >= 0));
+}
+
+/** Expanding-window hindcast: each test season sees only earlier complete seasons. */
+export function rainBaseline(history: readonly SeasonHistory[]) {
+  const amounts: number[] = [];
+  const errors: number[] = [];
+  const median = (sorted: number[]) => (sorted[Math.floor((sorted.length-1)/2)] + sorted[Math.floor(sorted.length/2)]) / 2;
+  for (const season of history) {
+    if (season.inches === null) continue;
+    if (amounts.length >= NORMAL_MIN_YEARS) errors.push(Math.abs(median(amounts) - season.inches));
+    amounts.push(season.inches);
+    amounts.sort((a,b) => a-b);
+  }
+  if (amounts.length < NORMAL_MIN_YEARS) return null;
+  return { median:median(amounts), min:amounts[0], max:amounts[amounts.length-1], count:amounts.length,
+    hindcasts:errors.length, mae:errors.length ? errors.reduce((sum,x)=>sum+x,0)/errors.length : null };
+}

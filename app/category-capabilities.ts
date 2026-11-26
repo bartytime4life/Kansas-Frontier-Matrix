@@ -23,6 +23,7 @@ export const CATEGORY_TOOL_DETAILS: Readonly<Record<CategoryTool, readonly [stri
   rainfall: ["Rainfall estimates", "MRMS accumulations with product and duration controls; not field measurements."],
   landcover: ["Land-cover classes", "USGS NLCD 2021 classification at 30 m; inspect a point's class."],
   plants: ["Plant-record density", "GBIF annual coarse hexagons; records are not abundance or absence."],
+  "farm-planning": ["Farm planning & markets", "Compare station seasons, inspect Kansas cash bids and calculate per-acre margins."],
   crops: ["Crops, soils & growing season", "USDA crop history, SSURGO soil, growing degree days, frost dates and season rain at a chosen point."],
   legislature: ["District plans", "Kansas Senate/House and U.S. congressional plans with separate dates."],
   tornadoes: ["Tornado record", "Filter reported paths by year and rating; historical reports are incomplete."],

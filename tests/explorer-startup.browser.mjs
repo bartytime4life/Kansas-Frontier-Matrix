@@ -3641,3 +3641,28 @@ for(const [width,height] of [[1440,900],[390,844]])test(`optional chat downloads
  assert.equal(await p.evaluate(`document.querySelector('#qwen-map-panel textarea').value`),'Kansas river terrace notes');
  assert.equal(requests.filter(url=>url===path).length,1,'reopening reuses the same module');
 });
+
+for (const [width,height] of [[1440,900],[393,852]]) {
+  test(`farm planning compares harvests and per-acre cash scenarios at ${width}x${height}`,{timeout:120000},async t=>{
+    const b=await browser(t), p=await pageSession(b,width,height);
+    await p.open('/?motion=off');await readyWelcome(p);
+    await revealControl(p,'.topic-agriculture');
+    await p.evaluate("document.querySelector('.topic-agriculture').focus()");await p.key('Enter','Enter',13);
+    await p.wait("!document.querySelector('.living-welcome') && document.querySelector('.map-topic-edit')?.textContent.includes('Agriculture')",'actual agriculture entry');
+    await openCategoryTool(p,'Farm planning & markets');
+    await droughtEnter(p,'[data-category-tool="farm-planning"]');
+    const fill=async(label,value)=>{
+      const selector=JSON.stringify(label);
+      await p.evaluate(`(()=>{const l=[...document.querySelectorAll('.field-tool label')].find(n=>n.textContent.startsWith(${selector}));const input=l.querySelector('input,textarea');input.scrollIntoView({block:'center'});input.focus();input.select();})()`);
+      await p.call('Input.insertText',{text:value});
+    };
+    await fill('My cash bid','4.5');
+    await droughtEnter(p,'.field-tool details:first-of-type > summary');
+    await fill('Past corn harvests','2019,50\n2020,60\n2021,70\n2022,80\n2023,90\n2024,100');
+    await p.wait("document.querySelector('.field-decisions')?.textContent.includes('2025 yield baseline · 80.0 bu/ac')",'dated yield baseline');
+    await p.evaluate("[...document.querySelectorAll('.field-tool button')].find(n=>n.textContent.includes('Copy baseline')).focus()");await p.key('Enter','Enter',13);
+    await fill('Other costs','320');
+    await p.wait("document.querySelector('.field-decisions')?.textContent.includes('Break-even $4.00/bu') && document.querySelector('.field-tool table tbody tr:nth-child(2)')?.textContent.includes('$40.00')",'cash bid and copied yield update the budget');
+    assert.equal(await p.evaluate("document.querySelector('.field-tool a')?.href"),'https://www.ams.usda.gov/mnreports/ams_2886.pdf');
+  });
+}

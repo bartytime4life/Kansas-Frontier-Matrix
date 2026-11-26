@@ -46,6 +46,7 @@ import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars,
 import { SOIL_API_PATH, soilLine, soilWater, validSoil, type SoilReading } from "./crop-soil";
 import { GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays, type DegreeDaysReading } from "./growing-degree-days";
 import { FROST_API_PATH, frostLine, validFrostDates, type FrostDates } from "./frost-dates";
+import { FieldDecisionTools } from "./field-decision-tools";
 import { RAIN_NORMAL_API_PATH, rainNormalLine, validRainNormal, type RainNormalReading } from "./rain-normal";
 import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, SUN_TIME_NOTE, coordinateLabel, inKansas, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
@@ -12569,6 +12570,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
+            fieldTools={activeCategoryMap.topic === "agriculture" ? <FieldDecisionTools point={cropsOn && cropPoint ? { lon:cropPoint.lon, lat:cropPoint.lat } : null} /> : undefined}
             keys={currentMapKeys}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} transect={{onReport:(profile,pendingTiles)=>{const captured=captureTerrainReport(profile,pendingTiles,locationCameraRedacted || locationDerivedViewRef.current);if(captured)openPrimaryWorkspace("reports",true,null,null,null,captured);},line:measurementGeometryMode === "distance" ? measureCoordinatesRef.current : [],drawing:measureMode === "distance",onStart:startSourceTransect,onFinish:finishMeasurement,onUndo:undoMeasurementPoint,onClear:clearMeasurement,redacted:locationCameraRedacted || locationDerivedViewRef.current}} />}

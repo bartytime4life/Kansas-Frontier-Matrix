@@ -43,6 +43,29 @@ export async function walk(path, prefix = '', skip = () => false) {
 }
 export async function cli(argv, connectionDependencies) {
   const [command, ...args] = argv;
+  if (command === 'market-watch' || command === 'market-listen') {
+    if (args.length !== 1) fail('MARKET_WATCH_USAGE');
+    const { watchMarket, listenMarket } = await import('./market-watch.mjs');
+    const load = () => loadConfig(resolve(args[0]));
+    if (command === 'market-listen') return listenMarket(load,result=>console.log(canonical(result)));
+    return watchMarket(await load());
+  }
+  if (command === 'publish-grain') {
+    if (args.length !== 2 || !/^[a-f0-9]{64}$/.test(args[1])) fail('GRAIN_PUBLISH_USAGE');
+    const { GRAIN_SOURCE, validateGrain } = await import('../../server/grain-market.mjs');
+    const config = uploadsAllowed(await loadConfig(resolve(args[0])));
+    await storageGuard(config);
+    const payload = await readRegular(resolve(config.root,'data/processed',GRAIN_SOURCE,args[1]+'.json'), MAX_PACKAGE);
+    if (sha(payload) !== args[1]) fail('ARTIFACT_INTEGRITY_FAILED');
+    validateGrain(parse(payload));
+    const approval = parse(await readRegular(resolve(config.approvalDirectory,GRAIN_SOURCE+'.json'),32768));
+    const secret = (await readRegular(resolve(process.env.CREDENTIALS_DIRECTORY ?? '/nonexistent','pipeline-worker-key'),128)).toString().trim();
+    const head = await pipelineCall('release',{sourceId:GRAIN_SOURCE},secret);
+    const receipt = await publish({format:'kfm-pc-release-transfer-v1',sourceId:GRAIN_SOURCE,recipeSha256:await recipeDigest(),
+      byteLength:payload.length,payloadSha256:args[1],approval,expectedActive:head.releaseId},payload,secret);
+    await immutable(resolve(config.root,'data/receipts/pipeline/published',receipt.releaseId+'.json'),bytes(receipt));
+    return receipt;
+  }
   if (command === 'county-history') {
     if (args.length !== 2) fail('COUNTY_HISTORY_USAGE_INVALID');
     const { readCountyHistoryReport } = await import('../../server/county-history-candidate.mjs');
@@ -89,7 +112,7 @@ export async function cli(argv, connectionDependencies) {
     return { state: 'created', privateKeyRemainsLocal: true, note: 'Run on the original PC; install only the public key on GoDaddy and the worker.' };
   }
   if (command === 'profile-template') {
-    if (!['usgs-streamflow','nws-alerts','usgs-earthquakes','newberry-county-history','water','weather'].includes(args[0])) fail('SOURCE_NOT_ALLOWED');
+    if (!['usgs-streamflow','nws-alerts','usgs-earthquakes','newberry-county-history','usda-kansas-grain-bids','water','weather'].includes(args[0])) fail('SOURCE_NOT_ALLOWED');
     return { format: 'kfm-pc-release-delegation-v1', id: 'owner-selected-profile-id', sourceId: args[0], recipeSha256: await recipeDigest(), approver: '',
       validFrom: new Date().toISOString(), expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
       rights: 'REVIEW_REQUIRED', sensitivity: 'REVIEW_REQUIRED', sourceRef: '', rightsRef: '', reviewRef: '', releaseProfileRef: '',
@@ -234,6 +257,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   try {
     const result = await cli(process.argv.slice(2));
     console.log(canonical(result));
+    if (process.argv[2] === 'market-watch' && result.state === 'partial') process.exitCode = 2;
     if (process.argv[2] === 'connection' && result.state !== 'connected') process.exitCode = 1;
     if (process.argv[2] === 'county-history' && result.geometryState === 'quarantine') process.exitCode = 2;
   }
