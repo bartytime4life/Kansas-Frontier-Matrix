@@ -48,6 +48,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -62,7 +64,7 @@ jobs:
       - name: Run focused tests
         run: python -m pytest tests/evidence/test_temporal_support_assessment.py -q --strict-config --strict-markers
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-temporal-support-assessment-20260807.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-temporal-support-assessment-20260807.json --repo-root . --artifact-git-ref 3371fe345d34cb3226cde40ecc309d0390c8a874
       - name: Record trust boundary
         if: always()
         run: |

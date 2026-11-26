@@ -31,6 +31,8 @@ jobs:
       - name: Check out bounded fixture profile
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -72,7 +74,8 @@ jobs:
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass1-pmtiles-negative-path-proof-20260808.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 9905c6ac55cadd842f7eefb1edbb3d5abf8d0fb7
 
       - name: Record bounded trust result
         if: always()

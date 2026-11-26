@@ -54,6 +54,8 @@ jobs:
       - name: Check out bounded fixture profile
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -80,6 +82,7 @@ jobs:
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-tile-delivery-strategy-assessment-20260812.json
           --repo-root .
+          --artifact-git-ref 4f46ea1e33157b9a754f7a68774e0f2b23dd3cb5
 
       - name: Record bounded trust result
         if: always()

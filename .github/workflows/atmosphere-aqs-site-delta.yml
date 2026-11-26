@@ -54,6 +54,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -83,7 +85,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-atmosphere-aqs-site-absence-binding-20260807.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 2441c7b72d377e18e131d953f7a9b48796503109
 
       - name: Record trust boundary
         if: always()

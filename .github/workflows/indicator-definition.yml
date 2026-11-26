@@ -58,6 +58,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -76,7 +78,8 @@ jobs:
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-indicator-definition-20260810.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref d3e3ab68b2761485664348bd8423de468d110738
       - name: Record trust boundary
         if: always()
         run: |

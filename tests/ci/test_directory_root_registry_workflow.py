@@ -336,7 +336,7 @@ class DirectoryRootRegistryWorkflowTests(unittest.TestCase):
 
     def test_pinned_runtime_and_existing_bootstrap_without_publish_surfaces(self) -> None:
         python = self.steps["Set up repository Python"]
-        self.assertEqual("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",
+        self.assertEqual("actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
                          python["uses"])
         self.assertEqual("3.11", python["with"]["python-version"])
         self.assertEqual("python tools/ci/install_python_ci.py project-test",

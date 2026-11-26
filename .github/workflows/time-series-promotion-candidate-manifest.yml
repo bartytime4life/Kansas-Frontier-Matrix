@@ -55,6 +55,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -80,7 +82,9 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-pass22-time-series-promotion-candidate-manifest-20260809.json
+            data/receipts/generated/genrec-pass22-time-series-promotion-candidate-manifest-20260809.json \
+            --repo-root . \
+            --artifact-git-ref 8b32a6cfcae2d833cab063bc2c82713b2ae16f54
 
       - name: Record trust boundary
         if: always()

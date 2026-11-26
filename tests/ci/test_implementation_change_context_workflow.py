@@ -67,7 +67,7 @@ def _assert_contract(workflow: dict) -> None:
     steps = job["steps"]
     assert steps[0]["uses"] == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
     assert steps[0]["with"] == {"persist-credentials": False, "fetch-depth": 0}
-    assert steps[1]["uses"] == "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
+    assert steps[1]["uses"] == "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     assert steps[1]["with"]["python-version"] == "3.11"
     for step in steps:
         assert "continue-on-error" not in step and "env" not in step

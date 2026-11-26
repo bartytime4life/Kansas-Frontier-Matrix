@@ -58,6 +58,8 @@ jobs:
       - name: Check out bounded synthetic profile
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -81,6 +83,7 @@ jobs:
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-artifact-delta-receipt-20260806.json
           --repo-root .
+          --artifact-git-ref d1a35e7672b4018ee180fb46bc6cbc41d8dd283e
 
       - name: Record bounded trust result
         if: always()

@@ -56,6 +56,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -90,7 +92,7 @@ jobs:
       - name: Verify generated authoring receipt integrity
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-policy-transform-receipt-20260806.json             --repo-root .
+          python tools/validators/validate_generated_receipt.py             data/receipts/generated/genrec-policy-transform-receipt-20260806.json             --repo-root . --artifact-git-ref d0479dc293e2ab79fe94698e471d3cfe6b4017de
 
       - name: Record trust boundary
         if: always()

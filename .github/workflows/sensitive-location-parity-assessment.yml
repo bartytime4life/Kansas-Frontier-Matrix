@@ -56,6 +56,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -87,7 +89,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-sensitive-location-parity-assessment-20260810.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref e3b0d95f84c7be7b466dbc838a0e9eb04653819e
 
       - name: Record trust boundary
         if: always()

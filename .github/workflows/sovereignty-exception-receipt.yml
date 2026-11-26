@@ -48,6 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
@@ -58,7 +60,7 @@ jobs:
       - name: Run focused deterministic validation
         run: python -m pytest -q tests/validators/test_validate_sovereignty_exception_receipt.py
       - name: Verify generated receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass32-sovereignty-exception-receipt-20260809.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass32-sovereignty-exception-receipt-20260809.json --repo-root . --artifact-git-ref 2b204997f41e88264fa73ce7b1b835d0dc2d1c00
       - name: Record authority boundary
         if: always()
         run: |

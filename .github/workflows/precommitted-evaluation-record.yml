@@ -88,7 +88,7 @@ jobs:
       - name: Verify currentness authoring receipt integrity
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json --repo-root . --artifact-git-ref a3cce14b21dfa141e3f7d07a579e87ebe5b8d90b
 
       - name: Record trust boundary
         if: always()

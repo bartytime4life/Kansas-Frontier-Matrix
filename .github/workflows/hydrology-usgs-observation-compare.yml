@@ -42,6 +42,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -56,4 +58,4 @@ jobs:
         run: python -m unittest discover -s tests/ingest/hydrology_watch -p test_usgs_observation_compare.py -v
 
       - name: Verify generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-usgs-offline-comparison-20261031.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-usgs-offline-comparison-20261031.json --repo-root . --artifact-git-ref f1bac54480f81230ed59c9761913e7a7529d8932

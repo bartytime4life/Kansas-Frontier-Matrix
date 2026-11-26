@@ -51,6 +51,8 @@ jobs:
       - name: Check out reveal-expiry boundaries
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -102,7 +104,8 @@ jobs:
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass32-sensitive-overlay-reveal-expiry-20260810.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref f822be72860c76050f0efcace96ea8c0b08bb265
 
       - name: Record authority boundary
         if: always()

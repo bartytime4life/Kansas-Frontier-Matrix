@@ -58,6 +58,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -108,7 +110,8 @@ jobs:
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-kfm-geo-manifest-validation-20260804.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 86180e81e5eb94c9dd242f704a3729a7270dca37
 
       - name: Record KFMGeoManifest boundary
         if: always()
