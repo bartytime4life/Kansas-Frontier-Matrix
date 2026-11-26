@@ -123,13 +123,64 @@ class GeneratedReceiptValidatorTests(unittest.TestCase):
         )
 
     def test_historical_workflow_receipt_accepts_only_ledgered_transition(self) -> None:
-        receipt = (
-            REPO_ROOT
-            / "data/receipts/generated/"
+        # The ledger pins each workflow's migrated hash, so any later workflow
+        # edit (e.g. a Dependabot pin bump) falls back to a digest mismatch by
+        # design. Replay the real receipt against the tree at the last commit
+        # whose workflow bytes match the ledger, without consulting git-ref
+        # mode, which never reads the ledger.
+        ledgered_commit = "de7ec1d5aa39b9db46672189986212e5eb0a1026"
+        receipt_path = (
+            "data/receipts/generated/"
             "genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json"
         )
-        result = validate_receipt(receipt, repo_root=REPO_ROOT)
+        workflow = ".github/workflows/wimas-wwc5-aggregate-first-profile.yml"
+
+        def show(path: str) -> bytes:
+            result = subprocess.run(
+                ["git", "show", f"{ledgered_commit}:{path}"],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                check=False,
+            )
+            self.assertEqual(
+                0,
+                result.returncode,
+                f"{ledgered_commit} is unavailable; fetch full history "
+                f"(fetch-depth: 0): {result.stderr.decode(errors='replace')}",
+            )
+            return result.stdout
+
+        receipt_bytes = show(receipt_path)
+        artifacts = json.loads(receipt_bytes)["artifact_paths"]
+        self.assertEqual(workflow, artifacts[0])
+        replay_root = self.root / "ledgered-tree"
+        for path in (
+            receipt_path,
+            "tools/ci/python-dependency-lock-migration.json",
+            *artifacts,
+        ):
+            target = replay_root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(receipt_bytes if path == receipt_path else show(path))
+        # The immutable receipt and ledger are unchanged since that commit.
+        for path in (receipt_path, "tools/ci/python-dependency-lock-migration.json"):
+            self.assertEqual(
+                (REPO_ROOT / path).read_bytes(),
+                (replay_root / path).read_bytes(),
+                path,
+            )
+
+        result = validate_receipt(replay_root / receipt_path, repo_root=replay_root)
         self.assertTrue(result.ok, result.findings)
+
+        # Workflow bytes outside the ledgered transition must still be rejected.
+        with (replay_root / workflow).open("ab") as handle:
+            handle.write(b"\n")
+        result = validate_receipt(replay_root / receipt_path, repo_root=replay_root)
+        self.assertFalse(result.ok)
+        self.assertEqual(
+            ["ARTIFACT_DIGEST_MISMATCH"], [finding.code for finding in result.findings]
+        )
 
     def test_pending_receipt_can_be_integrity_valid_without_review_claim(self) -> None:
         result = self._validate()

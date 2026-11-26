@@ -41,9 +41,14 @@ RECEIPT_COMMANDS = (
         "python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-guardrail-independence-20260911.json --artifact-git-ref d2e1cfd782ec190ee7b125f531845655ec28c1d1",
     ),
     (
+        "Replay native-receipt authoring receipt",
+        "native_receipt",
+        "python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-native-receipt-20260911.json --artifact-git-ref 18d70a14073322a579ae9bc55a5dfc45c05c83fb",
+    ),
+    (
         "Validate current guardrail receipt",
         "current_receipt",
-        "python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-native-receipt-20260911.json",
+        "python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-validator-suite-current-binding-20261126.json",
     ),
 )
 
@@ -229,11 +234,23 @@ class ValidatorSuiteGuardrailAttributionTests(unittest.TestCase):
 
     def test_native_receipts_have_distinct_historical_and_current_bindings(self) -> None:
         steps = self._receipt_steps()
-        self.assertEqual(2, len(steps))
+        self.assertEqual(3, len(steps))
         # Native CLI validates ancestor existence and checks original bytes;
         # the current binding must never be hidden behind an historical ref.
-        self.assertIn("--artifact-git-ref", steps[0]["run"])
-        self.assertNotIn("--artifact-git-ref", steps[1]["run"])
+        *historical, current = steps
+        for step in historical:
+            self.assertIn("--artifact-git-ref", step["run"])
+        self.assertNotIn("--artifact-git-ref", current["run"])
+        self.assertEqual("current_receipt", current.get("id"))
+        names = [step.get("name") for step in self.steps]
+        self.assertEqual(
+            sorted(names.index(step["name"]) for step in steps),
+            [names.index(step["name"]) for step in steps],
+        )
+        receipts = [shlex.split(command)[2] for _, _, command in RECEIPT_COMMANDS]
+        self.assertEqual(len(receipts), len(set(receipts)))
+        for receipt in receipts:
+            self.assertTrue((ROOT / receipt).is_file(), receipt)
         summary = next(s for s in self.steps if s.get("name") == "Record aggregate-validator boundary")
         for _, step_id, _ in RECEIPT_COMMANDS:
             self.assertIn("${{ steps." + step_id + ".outcome }}", summary["run"])
