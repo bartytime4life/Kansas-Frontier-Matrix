@@ -26,7 +26,7 @@ status: proposed scientific program; orientation only; independent review pendin
 updated: 2026-11-26
 authority: explanatory orientation; no scientific qualification, policy, or release authority
 source_path: docs/wiki/scientific-methods.md
-evidence_checkpoint: main@01bf54386be6d4c727373726587e32a24a73e6af; analysis-guide@c5db8e392fa5bc39f41bd8ea84aa6a448b3e1969; teaching-run: 2026-11-26 CPython 3.12.14
+evidence_checkpoint: main@01bf54386be6d4c727373726587e32a24a73e6af; analysis-guide@c1e0de90604c0634b30846cad4a222d2c7023f24; teaching-run: 2026-11-26 CPython 3.12.14
 publication_effect: public documentation only; no analytical engine, source admission, deployment, or data release
 -->
 
@@ -43,7 +43,7 @@ The four real-world studies below and application integration remain
 **PROPOSED**. The separate synthetic teaching run is reproducible; an installed
 Science Pack and scientific qualification remain unestablished.
 
-The [repository scientific-analysis guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c5db8e392fa5bc39f41bd8ea84aa6a448b3e1969/docs/architecture/scientific-analysis.md)
+The [repository scientific-analysis guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1e0de90604c0634b30846cad4a222d2c7023f24/docs/architecture/scientific-analysis.md)
 contains the detailed explanations, nine primary references, repository anchors,
 assumptions, and validation limits. It is the maintained explanation; this page
 is its shorter reading path.
@@ -93,7 +93,7 @@ the error model, rather than pick the more attractive number.
 
 ## Run a first comparison
 
-The guide now includes a [complete runnable rainfall/flow example](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c5db8e392fa5bc39f41bd8ea84aa6a448b3e1969/docs/architecture/scientific-analysis.md#run-a-synthetic-rainfallflow-comparison)
+The guide now includes a [complete runnable rainfall/flow example](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1e0de90604c0634b30846cad4a222d2c7023f24/docs/architecture/scientific-analysis.md#run-a-synthetic-rainfallflow-comparison)
 using Python's standard library and invented catchments. It fits 80 target days
 from catchment A, then evaluates 40 future A days and 80 target days from unseen
 catchment B separately. A training-mean comparator accompanies persistence and
@@ -136,7 +136,7 @@ Existing repository candidates provide narrower pieces: precommitted synthetic
 evaluation, proxy-disclosure coherence, and model documentation. They do not
 establish authentic observations, calibrated predictions, or an integrated
 scientific engine. Follow the guide's
-[implementation-boundary table](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c5db8e392fa5bc39f41bd8ea84aa6a448b3e1969/docs/architecture/scientific-analysis.md#existing-repository-anchors-and-their-limits)
+[implementation-boundary table](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/c1e0de90604c0634b30846cad4a222d2c7023f24/docs/architecture/scientific-analysis.md#existing-repository-anchors-and-their-limits)
 before proposing code. AI can assist an investigation; it cannot supply missing
 measurements, independent review, or permission to release.
 

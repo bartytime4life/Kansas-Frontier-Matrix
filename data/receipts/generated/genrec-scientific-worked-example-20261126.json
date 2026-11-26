@@ -6,8 +6,8 @@
     "docs/wiki/scientific-methods.md"
   ],
   "artifact_hashes": {
-    "docs/architecture/scientific-analysis.md": "sha256:a5d3b186f9085886fa3c77019379bf33bd2635f51afafefa5f8a48e0facf599a",
-    "docs/wiki/scientific-methods.md": "sha256:32c09d9f3230a4c7f5415a4588755fabb2b463b559d0d15a4330bc727267f57b"
+    "docs/architecture/scientific-analysis.md": "sha256:d7bb721efac72822e45b0680929df83d3e4e54b1e9559a9e822d5fcf24e7c7c1",
+    "docs/wiki/scientific-methods.md": "sha256:ad2b91341fefaf7d46da5c070af34e0e8abd46fc4182824d7f61715a1e23e35b"
   },
   "model_identity": {
     "provider": "OpenAI",
