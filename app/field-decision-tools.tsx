@@ -10,6 +10,11 @@ import { rainBaseline, validOutlook, type RainOutlook } from "./rain-normal";
 
 const GRAIN_PATH = "/api/curated/usda-kansas-grain-bids";
 const USDA_REPORT = "https://www.ams.usda.gov/mnreports/ams_2886.pdf";
+const futuresReferences: Readonly<Partial<Record<string,string>>> = {
+  Corn: "https://www.cmegroup.com/markets/agriculture/grains/corn",
+  Soybeans: "https://www.cmegroup.com/markets/agriculture/oilseeds/soybean",
+  "Hard red winter wheat": "https://www.cmegroup.com/markets/agriculture/grains/kc-wheat",
+};
 const crops = ["Corn", "Sorghum", "Soybeans", "Hard red winter wheat"];
 type Bid = { crop:string; region:string; low:number; high:number; average:number };
 type Grain = { releaseId:string; reportDate:string; retrievedAt:string; approvalExpiresAt:string; rows:Bid[] };
@@ -89,6 +94,7 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
       <p>USDA AMS · {report.reportDate} · conventional country elevators, current truck delivery. {crop==="Hard red winter wheat"?"Ordinary protein.":""} {Date.now()-Date.parse(report.reportDate)>7*86400000?"Historical report.":""}</p>:
       <p>Reviewed bids unavailable. Use the USDA report or enter a local bid.</p>)}</div>
     <a href={USDA_REPORT} target="_blank" rel="noreferrer">Open USDA’s latest Kansas daily grain report ↗</a>
+    {futuresReferences[crop] && <p><a href={futuresReferences[crop]} target="_blank" rel="noreferrer">View {crop.toLowerCase()} futures on CME ↗</a> · exchange quotes delayed at least 10 minutes. The budget uses a cash bid.</p>}
     {report && <><label>Price source<select value={region} onChange={e=>setRegion(e.target.value)}><option value="">My cash bid</option>{rows.map(r=><option key={r.region} value={r.region}>{r.region} · ${r.average.toFixed(4)}/bu</option>)}</select></label>
       {selected && <p>Reported range ${selected.low.toFixed(4)}–${selected.high.toFixed(4)}/bu. The scenario uses the reported average.</p>}
       <a href={GRAIN_PATH+"?release="+report.releaseId+"&download=1"}>Download the reviewed price data</a></>}

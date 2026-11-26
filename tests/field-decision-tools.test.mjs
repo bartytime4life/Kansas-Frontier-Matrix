@@ -51,3 +51,14 @@ test('watcher rejects unlisted locations, HTML and excessive bodies and preserve
  assert.equal(reportChanges([signal],previous)[0].change,'unchanged');
  assert.equal(reportChanges([{...signal,captureSha256:'b'}],previous)[0].change,'changed');
 });
+
+test('CME destinations match the selected crop and have no sorghum proxy',async()=>{
+ const h=await componentHarness('app/field-decision-tools.tsx',{'./bounded-json':{},'./rain-normal':{},'./yield-history':{},'./moon':{},'./sun-chart':{},'./frost-dates':{}},{},'\nexport {futuresReferences};');
+ assert.deepEqual(Object.entries(h.exports.futuresReferences),[
+  ['Corn','https://www.cmegroup.com/markets/agriculture/grains/corn'],
+  ['Soybeans','https://www.cmegroup.com/markets/agriculture/oilseeds/soybean'],
+  ['Hard red winter wheat','https://www.cmegroup.com/markets/agriculture/grains/kc-wheat'],
+ ]);
+ assert.equal(h.exports.futuresReferences.Sorghum,undefined);
+ h.dispose();
+});
