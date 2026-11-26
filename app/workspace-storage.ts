@@ -6,6 +6,8 @@ import { validFireReportContext } from "./fire-report-analysis";
 import { validSubsurfaceContext } from "./subsurface-model";
 import { validResearchContext } from "./research-context";
 
+import {validTerrainReport} from './terrain-report';
+
 export const REPORT_STORAGE_KEY = "kfm-report-draft-v2";
 export const STORY_STORAGE_KEY = "kfm-story-draft-v2";
 export const MAX_DRAFT_TEXT_LENGTH = 24000;
@@ -66,6 +68,7 @@ export function validMapSnapshot(value: unknown): value is MapSnapshot {
 export function validReportDraft(value: unknown): value is ReportDraft {
   return object(value) && value.status === "DRAFT" && text(value.id) && text(value.title) && text(value.updatedAt) && text(value.researchQuestion)
     && validMapSnapshot(value.snapshot) && strings(value.includedEvidenceIds) && strings(value.generatedFields) && object(value.sections)
+    && (value.terrainContext === undefined || (value.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && validTerrainReport(value.terrainContext)))
     && (value.fireContext === undefined || validFireReportContext(value.fireContext))
     && (value.subsurfaceContext === undefined || (value.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && validSubsurfaceContext(value.subsurfaceContext)))
     && (value.researchContext === undefined || (value.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && validResearchContext(value.researchContext)))

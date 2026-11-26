@@ -4,7 +4,7 @@ import {terrainTransect,transectGeometry,transectJSON,TRANSECT_METHOD,type Trans
 import type {TerrainTileData} from './terrain-viewport-tiles';
 import type {LidarGridMode} from './kansas-lidar-grid-layer';
 import styles from './terrain-transect-panel.module.css';
-export type TerrainTransectDrawing={line:readonly TransectCoordinate[];drawing:boolean;onStart:()=>void;onFinish:()=>void;onUndo:()=>void;onClear:()=>void;redacted:boolean};
+export type TerrainTransectDrawing={onReport?:(profile:import('./terrain-transect').TerrainTransect,pendingTiles:number)=>void;line:readonly TransectCoordinate[];drawing:boolean;onStart:()=>void;onFinish:()=>void;onUndo:()=>void;onClear:()=>void;redacted:boolean};
 const names={ground:'Ground',surface:'Surface',canopy:'Canopy height'};
 const metres=(v:number)=>v>=1000?(v/1000).toFixed(2)+' km':v.toFixed(1)+' m';
 export function TerrainTransectPanel({entries,mode,paused,pending=0,drawing:d}:{entries:readonly TerrainTileData[];mode:LidarGridMode;paused:boolean;pending?:number;drawing:TerrainTransectDrawing}){
@@ -32,8 +32,9 @@ export function TerrainTransectPanel({entries,mode,paused,pending=0,drawing:d}:{
    </svg><div className={styles.range}><span>{profile.supported?geometry.low.toFixed(2)+'–'+geometry.high.toFixed(2)+' m':'No supported source stations'}</span><span>Reference may vary by tile</span></div></figure>
    <label className={styles.scrub}>Read along the line <output>{index+1}/{profile.stations.length}</output><input type="range" min="0" max={profile.stations.length-1} step="1" value={index} aria-label="Explore terrain transect stations" aria-valuetext={`Station ${index+1}, ${sample?.value===null?'no supported height':sample?.value+' source metres'}, ${sample?metres(sample.distance):''} from start`} onChange={e=>setProbe({profile,index:Number(e.target.value)})}/></label>
    {sample&&<div className={styles.reading} aria-live="polite"><strong>{sample.value===null?'No supported height at this station':sample.value.toFixed(3)+' m'}</strong><span>{metres(sample.distance)} from A · {names[mode]}{mode==='canopy'?' above same-survey ground':''}</span><small>Line position: {sample.coordinate.map(v=>v.toFixed(6)).join(', ')}°</small>{source&&<><span>Row {sample.row} · column {sample.column}</span><small>Source cell center: {sample.center?.map(v=>v.toFixed(6)).join(', ')}°</small><details><summary>This station’s source</summary><dl><dt>Source</dt><dd>{source.source}</dd><dt>Vertical reference</dt><dd>{source.verticalReference}</dd><dt>Acquisition</dt><dd>{source.acquisition}</dd><dt>Source-grid spacing</dt><dd>{source.spacing.map(n=>n.toFixed(2)).join(' × ')} · {source.spacingUnits}</dd><dt>Source artifact cache time</dt><dd>{source.cacheTime??'Not supplied'}{source.stale?' · stale cache':''}</dd><dt>Request key</dt><dd>{source.requestKey}</dd></dl></details></>}</div>}
+   {d.onReport&&<button className={`${styles.download} ${styles.report}`} type="button" disabled={paused||d.redacted||!profile.supported} onClick={()=>{if(!paused&&!d.drawing&&!d.redacted&&profile.supported)d.onReport?.(profile,pending);}}>Create terrain report</button>}
    <button className={styles.download} type="button" disabled={paused||d.redacted} onClick={download}>Download profile &amp; sources · JSON</button>
-   {d.redacted&&<p>Download is unavailable while location privacy is active.</p>}
+   {d.redacted&&<p>Reports and downloads are unavailable while location privacy is active.</p>}
    <p className={styles.limit}>Station counts are samples along your line, not coverage percentages. Missing stations stay gaps. Loaded source cells can be finer than the drawn 3D detail. No heights are extrapolated. Profiles follow currently loaded tiles; download to retain these readings.</p>
    <details className={styles.methods}><summary>Distance, sampling &amp; scientific limits</summary><p>{TRANSECT_METHOD}</p></details>
   </>}

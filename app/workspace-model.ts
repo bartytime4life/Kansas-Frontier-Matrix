@@ -131,6 +131,8 @@ export function terrainSnapshotDescription(snapshot: MapSnapshot): string | null
   return `${source} at ${snapshot.terrainExaggeration.toFixed(2)}× vertical display scale; external display context only, not admitted KFM evidence.`;
 }
 
+import {captureTerrainReport,terrainReportSummary,type TerrainReportContext} from './terrain-report';
+
 export type ReportDraft = Readonly<{
   id: string;
   status: "DRAFT";
@@ -139,6 +141,7 @@ export type ReportDraft = Readonly<{
   title: string;
   researchQuestion: string;
   includedEvidenceIds: readonly string[];
+  terrainContext?: TerrainReportContext;
   fireContext?: FireReportContext;
   researchContext?: ResearchContext;
   subsurfaceContext?: SubsurfaceContext;
@@ -200,7 +203,8 @@ export const policyDecisionFromEvidenceState = (state?: EvidenceState): PolicyDe
   return { outcome: "ALLOW", reason: "The bounded demonstration record may be cited within its declared scope.", publicEffect: "DRAFT_ONLY" };
 };
 
-export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[], fireContext?: FireReportContext, research?: ResearchContext, subsurface?: SubsurfaceContext): ReportDraft => {
+export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[], fireContext?: FireReportContext, research?: ResearchContext, subsurface?: SubsurfaceContext, terrain?: TerrainReportContext): ReportDraft => {
+  const terrainContext = terrain && captureTerrainReport(terrain.profile, terrain.pendingTiles, snapshot.camera.center === "WITHHELD_BROWSER_LOCATION", terrain.capturedAt);
   const subsurfaceContext = persistableSubsurface(subsurface ?? null, snapshot.camera.center === "WITHHELD_BROWSER_LOCATION");
   const researchContext = persistableResearch(research ?? null, snapshot.camera.center === "WITHHELD_BROWSER_LOCATION");
   const included = evidence.filter((record) => snapshot.evidenceRefs.includes(record.citation) && record.includedByDefault
@@ -210,17 +214,18 @@ export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly Evid
     status: "DRAFT",
     updatedAt: snapshot.createdAt,
     snapshot,
-    title: fireContext ? `${fireContext.title} fire report draft` : snapshot.selection ? `${snapshot.selection.title} evidence note` : "Kansas map investigation",
+    title: terrainContext ? "Kansas terrain investigation" : fireContext ? `${fireContext.title} fire report draft` : snapshot.selection ? `${snapshot.selection.title} evidence note` : "Kansas map investigation",
     researchQuestion: fireContext ? "What do the selected fire source and its dated context actually report?" : "What does the current map state support, and what remains uncertain?",
     includedEvidenceIds: included.map((record) => record.id),
+    ...(terrainContext ? { terrainContext } : {}),
     ...(fireContext ? { fireContext } : {}),
     ...(researchContext ? { researchContext } : {}),
     ...(subsurfaceContext ? { subsurfaceContext } : {}),
     sections: {
-      summary: fireContext ? `Draft from ${fireContext.kind === "nifc-fire-reports" ? "a NIFC working incident record" : "a NASA thermal detection"}. Check the source record before making any claim.` : "This draft records the current map selection and its evidence posture.",
-      observations: fireContext ? `Provider event/acquisition time: ${fireContext.observedAt ?? "not supplied"}. KFM retrieval time: ${fireContext.retrievedAt ?? "not supplied"}. Feed: ${fireContext.feedState}. Nearby records are comparison context, not an incident match.` : "Visible geometry and proximity are map observations only; they are not proof of a relationship.",
+      summary: terrainContext ? terrainReportSummary(terrainContext) : fireContext ? `Draft from ${fireContext.kind === "nifc-fire-reports" ? "a NIFC working incident record" : "a NASA thermal detection"}. Check the source record before making any claim.` : "This draft records the current map selection and its evidence posture.",
+      observations: terrainContext ? "The profile captures containing source-cell readings along a browser-drawn line. Missing stations remain gaps; different source tiles retain their own vertical references. Pan and layer changes do not modify this captured profile." : fireContext ? `Provider event/acquisition time: ${fireContext.observedAt ?? "not supplied"}. KFM retrieval time: ${fireContext.retrievedAt ?? "not supplied"}. Feed: ${fireContext.feedState}. Nearby records are comparison context, not an incident match.` : "Visible geometry and proximity are map observations only; they are not proof of a relationship.",
       findings: "No consequential finding has been asserted. Add a scoped finding only when the included evidence supports it.",
-      limitations: fireContext ? "NIFC locations are approximate working records; NASA thermal points may be non-wildfire heat sources. News links are research leads, not matched articles. No perimeter, current activity, safety status, or independent corroboration is established." : "Basemap, terrain, synthetic, generalized, stale, held, and denied material remain visibly bounded by their source and policy states.",
+      limitations: terrainContext ? "External source context, not admitted evidence. Source-grid spacing is not a survey-accuracy statement. Line distances are approximate; height interpolation, cross-source slope and gain are not calculated. Display exaggeration is excluded. Acquisition dates and artifact cache times remain separate." : fireContext ? "NIFC locations are approximate working records; NASA thermal points may be non-wildfire heat sources. News links are research leads, not matched articles. No perimeter, current activity, safety status, or independent corroboration is established." : "Basemap, terrain, synthetic, generalized, stale, held, and denied material remain visibly bounded by their source and policy states.",
       openQuestions: "Which source, temporal, spatial, rights, or review gate should be closed next?",
       sources: fireContext ? `${fireContext.sourceUrl}\nhttps://inciweb.wildfire.gov/\nhttps://www.nifc.gov/fire-information\nNo news article has been matched to this selected record.` : included.length
         ? included.map((record) => `${record.citation} — ${record.sourceOrganization}`).join("\n")
