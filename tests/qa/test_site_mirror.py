@@ -3370,10 +3370,95 @@ def test_page_scroll_successor_preserves_web_a11y_perf_inventory_and_all_holds()
         PAGE_SCROLL_CHANGED,
         "1f82ec8b908679ad6e2c102818f7185e0dc9340a",
     )
-    assert TOOL.RECEIPT.name == "site-v268-page-scroll-overlay-20261126.json"
 
 
 PAGE_SCROLL_CHANGED = {
     "app/earth-engine/workspace.module.css",
     "app/globals.css",
 }
+
+
+def test_heat_and_rain_successor_preserves_source_history_and_all_holds():
+    predecessor = ROOT / "data/receipts/generated/site-v268-page-scroll-overlay-20261126.json"
+    _assert_transport_successor(
+        "site-v268-heat-and-rain-overlay-20261126.json",
+        predecessor.name,
+        "49aeed616db60e8f8e6e2a45dc9fcf5952f8b2257dd9cc6280e115311b3f71e8",
+        HEAT_AND_RAIN_CHANGED,
+        "363ab3d86800f966910cdc5ed7168d7be5573e9e",
+    )
+
+
+HEAT_AND_RAIN_CHANGED = {
+    "app/labs/heat-and-rain/heat-and-rain.jsx",
+    "app/labs/heat-and-rain/page.tsx",
+    "app/labs/heat-and-rain/heat-and-rain.module.css",
+    "app/labs/heat-and-rain/climate-model.mjs",
+    "app/labs/heat-and-rain/snapshot-loader.mjs",
+    "app/labs/heat-and-rain/snapshot-manifest.json",
+    "app/observatory/sources/page.tsx",
+    "app/sitemap.ts",
+    "docs/README.md",
+    "docs/heat-and-rain-lab.md",
+    "public/science-data/daily-climate/usw00013985-d69ba63bc5223929.json",
+    "public/science-data/daily-climate/usw00003928-b945aa52a206ad3f.json",
+    "public/science-data/daily-climate/usw00013996-46bce3b93367f4a5.json",
+    "scripts/prepare-daily-climate.py",
+    "tests/heat-and-rain.test.mjs",
+    "tests/heat-and-rain-ui.test.mjs",
+}
+
+
+def test_drought_soil_science_successor_preserves_source_history_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-drought-soil-science-overlay-20261126.json",
+        "site-v268-heat-and-rain-overlay-20261126.json",
+        "8c120e4011dc386101217d6fe78811be598bcab218babdbd843972e1dee356e6",
+        DROUGHT_SOIL_SCIENCE_CHANGED,
+        "8f455b794cea5c047130e604b942198e598682c5",
+    )
+
+
+DROUGHT_SOIL_SCIENCE_CHANGED = {
+    "app/labs/county-drought/county-drought.jsx",
+    "app/labs/county-drought/county-drought.module.css",
+    "app/labs/county-drought/drought-model.mjs",
+    "app/labs/county-drought/page.tsx",
+    "app/labs/county-drought/snapshot-loader.mjs",
+    "app/labs/county-drought/snapshot-manifest.json",
+    "app/labs/heat-and-rain/heat-and-rain.jsx",
+    "app/labs/soil-profile/page.tsx",
+    "app/labs/soil-profile/snapshot-loader.mjs",
+    "app/labs/soil-profile/snapshot-manifest.json",
+    "app/labs/soil-profile/soil-model.mjs",
+    "app/labs/soil-profile/soil-profile.jsx",
+    "app/labs/soil-profile/soil-profile.module.css",
+    "app/layer-workspaces.ts",
+    "app/observatory/sources/page.tsx",
+    "app/page.tsx",
+    "app/science/page.tsx",
+    "app/science/science-model.mjs",
+    "app/science/science.module.css",
+    "app/science/snapshot-loader.mjs",
+    "app/sitemap.ts",
+    "docs/README.md",
+    "docs/drought-and-soil-labs.md",
+    "public/science-data/county-drought/kansas-4ca3a97c9d597afe.json",
+    "public/science-data/soil-profile/03067-38078772371cbf34.json",
+    "public/science-data/soil-profile/53974-d7476f6fba73aa93.json",
+    "scripts/prepare-drought-and-soil.py",
+    "tests/county-drought-ui.test.mjs",
+    "tests/drought-and-soil.test.mjs",
+    "tests/soil-profile-ui.test.mjs",
+}
+
+
+def test_science_compression_successor_preserves_data_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-science-compression-overlay-20261126.json",
+        "site-v268-drought-soil-science-overlay-20261126.json",
+        "b86bb419658de1f63df50bee618357df808f5675be86d02886fee3e33d44b395",
+        {"app/science/snapshot-loader.mjs", "tests/drought-and-soil.test.mjs"},
+        "02f2a7c312c449c03e21b8ccaa18f80a99a61d71",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-science-compression-overlay-20261126.json"
