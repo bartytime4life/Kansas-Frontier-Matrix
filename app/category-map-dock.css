@@ -283,3 +283,19 @@
     retains the smaller card so the landscape remains available for tracing. */
  .category-map-dock[data-topic=terrain]:has([data-terrain-transect] figure){--category-dock-height-ceiling:min(60%,380px)}
 }
+
+.field-decisions { display:grid; gap:.45rem; min-width:0; }
+.field-tool { border:1px solid #547265; border-radius:7px; padding:.45rem .55rem; background:#152a26; color:#edf3e9; font-size:.8rem; }
+.field-tool summary { cursor:pointer; font-weight:650; line-height:1.6; }
+.field-tool p,.field-tool ul { margin:.45rem 0; line-height:1.45; }
+.field-tool ul { padding-inline-start:1rem; }
+.field-tool li { margin:.3rem 0; }
+.field-tool a { color:#afdfcc; text-decoration:underline; overflow-wrap:anywhere; }
+.field-tool label { display:grid; gap:.2rem; min-width:0; margin:.35rem 0; }
+.field-tool input,.field-tool select,.field-tool textarea { box-sizing:border-box; width:100%; min-width:0; padding:.35rem; border:1px solid #7d9789; border-radius:4px; background:#11231e; color:inherit; }
+.field-inputs { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,7.2rem),1fr)); gap:.25rem .5rem; }
+.field-tool table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+.field-tool caption,.field-tool th:first-child { text-align:left; }
+.field-tool th,.field-tool td { padding:.25rem .1rem; text-align:right; border-bottom:1px solid #3e5c50; }
+.field-tool meter { width:100%; max-width:6rem; }
+.field-tool :focus-visible { outline:2px solid #f2cc72; outline-offset:2px; }

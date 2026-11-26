@@ -75,7 +75,7 @@ function dockActionHarness() {
 test('all 22 cards have real discoverable tools or workbenches and every dock tool is indexed', async () => {
   assert.equal(topics.TOPIC_STRUCTURE.length, 22);
   assert.deepEqual(Object.keys(capabilities.CATEGORY_WORKBENCHES).sort(), topics.TOPIC_STRUCTURE.map(t => t.id).sort());
-  const dock = await readFile('app/category-map-dock.tsx', 'utf8');
+  const dock = (await Promise.all(['app/category-map-dock.tsx','app/field-decision-tools.tsx'].map(path=>readFile(path,'utf8')))).join('\n');
   for (const topic of topics.TOPIC_STRUCTURE) {
     const groups = capabilities.categoryCapabilityGroups(topic.id, '');
     assert.equal(groups.length, 1, topic.id);

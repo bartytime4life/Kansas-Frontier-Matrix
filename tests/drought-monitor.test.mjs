@@ -620,7 +620,7 @@ test('Play steps the weeks forward to the newest, from a year back when the newe
  play(tree).props.onClick();
  tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,newest:false,playing:true}});
  assert.equal(play(tree).props.children,'Pause');assert.equal(play(tree).props['aria-pressed'],true);
- assert.equal(findNode(tree,n=>n.type==='p'&&n.props.className==='category-map-dock-reading').props['aria-live'],'off','the reading is not announced every week while playing');
+ assert.equal(findNode(tree,n=>n.type==='p'&&n.props.children===drought.reading).props['aria-live'],'off','the reading is not announced every week while playing');
  const withCounty=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,newest:false,playing:true,counties:{summary:'s',list:[{id:'20187',label:'Stanton'}],picked:'20187',reading:'Stanton County · valid Oct 20, 2026'}}});
  assert.equal(findNode(withCounty,n=>n.type==='div'&&n.props.className==='category-map-dock-quake-event').props['aria-live'],'off','nor the picked county\'s reading');
  const paused=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,counties:{summary:'s',list:[{id:'20187',label:'Stanton'}],picked:'20187',reading:'Stanton County'}}});

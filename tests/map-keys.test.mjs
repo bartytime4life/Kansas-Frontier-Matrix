@@ -174,7 +174,7 @@ test('historical keys contain only checked constituencies, including a dashed st
 });
 
 
-test('the map key is discoverable before instrument controls and absent when no keys are shown', async () => {
+test('the map key is discoverable before instrument controls and explains scale in agriculture and stays hidden on other maps without keys', async () => {
  const h = await componentHarness('app/category-map-dock.tsx', {});
  const base = {look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:1,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,
   onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},
@@ -186,6 +186,11 @@ test('the map key is discoverable before instrument controls and absent when no 
  assert.match(JSON.stringify(disclosure), /Corn/);
  const destinations = []; findNode(tree, n => { if(n === disclosure || n.props?.['data-category-tool'] === 'crops') destinations.push(n); return false; });
  assert.equal(destinations[0], disclosure, 'the key precedes long farming controls');
- assert.equal(findNode(h.render(h.exports.CategoryMapDock, {...base,keys:[]}), n => n.props?.className === 'category-map-dock-map-key'), undefined);
+ const keyWithoutLayers=look=>findNode(h.render(h.exports.CategoryMapDock,{...base,look,keys:[]}),n=>n.props?.className==='category-map-dock-map-key');
+ const fieldKey=JSON.stringify(keyWithoutLayers(base.look));
+ assert.match(fieldKey,/Soil survey values describe a map unit/);
+ assert.match(fieldKey,/Turn on a map layer/);
+ assert.doesNotMatch(fieldKey,/Corn/);
+ assert.equal(keyWithoutLayers(maps.CATEGORY_MAPS.terrain),undefined);
  h.dispose();
 });
