@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-correction-propagation-plan-currentness-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/correction-propagation-plan.yml",
+    "contracts/correction/correction_propagation_plan.md",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json",
+    "tests/validators/test_validate_correction_propagation_plan.py",
+    "tools/validators/correction/validate_correction_propagation_plan.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/correction-propagation-plan.yml": "sha256:516ca7229ca83360034f030257027d2fcee657be00b0902a5a721089ecc0ff0e",
+    "contracts/correction/correction_propagation_plan.md": "sha256:5188f5d3ab431467288782d6c9c10cf0f69ec5f947ade792b9c4b7adfa2cf5ec",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md": "sha256:91da87719d1dfc2528620590240c202febda8e6b950ff41d06b09b6bdfb514ed",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "sha256:cbdd0a2aba38aace292aaf11835777c2cb13ea68dd200b119f4ecced838326d1",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "sha256:ea25d856d5f3aa1021688104482bdd1616fb987318b23ee1293962cb60a385c0",
+    "tests/validators/test_validate_correction_propagation_plan.py": "sha256:227cfaa66de36b573a4977e4b512848853bdb93e82c9c31781a64887aca1a666",
+    "tools/validators/correction/validate_correction_propagation_plan.py": "sha256:98c16d1136e2e0db9784184b4da70a4f779a54010bb9bd37babfeab2035a3230"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/correction-propagation-plan.yml",
+      "3b007883da6998bda26195697f05c8e02b09cef9: its authoring commit of predecessor genrec-correction-propagation-plan-currentness-20261014.json",
+      "data/receipts/generated/genrec-correction-propagation-plan-currentness-20261014.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:7c916c81cf2c0e3f252e7291aa11d945217709f9afc27e5112e2d915cf740b07"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/correction-propagation-plan.yml": "CONFIRMED",
+    "contracts/correction/correction_propagation_plan.md": "CONFIRMED",
+    "docs/intake/exploratory/correction-propagation-plan-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/correction/correction_propagation_plan/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/correction/correction_propagation_plan.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_correction_propagation_plan.py": "CONFIRMED",
+    "tools/validators/correction/validate_correction_propagation_plan.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-correction-propagation-plan-currentness-20261014.json validates unchanged with --artifact-git-ref 3b007883da6998bda26195697f05c8e02b09cef9 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-correction-propagation-plan-currentness-20261014.json@3b007883da6998bda26195697f05c8e02b09cef9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-correction-propagation-plan-currentness-20261014, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/correction-propagation-plan.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 7 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

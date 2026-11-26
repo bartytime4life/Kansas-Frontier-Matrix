@@ -220,6 +220,13 @@ jobs:
             --repo-root . \
             --artifact-git-ref e0dd9f38b69346442cf362426ba452a04e164d00
 
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. Preserve
+          # the v4 mirror-decision binding at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-topology-mirror-decision-context-20261012.json \
+            --repo-root . \
+            --artifact-git-ref e2600cc2ed950277317ad9c898e4dc1649a01cb9
+
       # One successor binds all five integrated current artifacts: v4 renderer,
       # context tests, README, workflow and workflow tests. No historical override.
       # A historical pass alone must never replace candidate-byte integrity.
@@ -227,7 +234,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-topology-mirror-decision-context-20261012.json \
+            data/receipts/generated/genrec-directory-root-registry-setup-python-rebind-20261126.json \
             --repo-root .
 
       - name: Verify tracked worktree stayed unchanged
@@ -242,7 +249,7 @@ jobs:
             echo "### Directory root registry"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Receipt scope: Nine immutable ancestor replays plus one current five-artifact successor binding; execution result is reported above and no receipt is review approval."
+            echo "- Receipt scope: Ten immutable ancestor replays plus one current five-artifact successor binding; execution result is reported above and no receipt is review approval."
             echo "- Scope: schema, adopted-doctrine digest binding, root-class invariants, canonical ordering, and top-level root coverage."
             echo "- Boundary: projection-only; no root creation, activation, write authorization, migration, release, deployment, promotion, or publication."
           } >> "$GITHUB_STEP_SUMMARY"

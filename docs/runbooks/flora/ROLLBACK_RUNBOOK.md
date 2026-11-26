@@ -1060,7 +1060,7 @@ python -m unittest discover \
 python -m unittest -q tests.release.test_synthetic_rollback_rehearsal
 
 python tools/validators/validate_generated_receipt.py \
-  data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json \
+  data/receipts/generated/genrec-rollback-card-contract-current-binding-20261126.json \
   --repo-root .
 
 make workflow-security
@@ -1498,7 +1498,7 @@ Reverting this runbook:
 | Inspect helper options | `python tools/release/rollback_apply.py --help` | **CONFIRMED implemented** | No production authority |
 | Direct synthetic plan | `python tools/release/rollback_apply.py --workspace "$SYNTHETIC_WORKSPACE" --scenario "$SYNTHETIC_SCENARIO" --report "$SYNTHETIC_REPORT"` | **CONFIRMED helper form** | Disposable marked root only |
 | Synthetic apply | Same command plus `--apply` | **RESTRICTED TO SYNTHETIC ROOT** | Writes synthetic alias/correction/invalidation only |
-| Validate binding receipt | `python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json --repo-root .` | **CONFIRMED repository path** | Hash/current-binding evidence only |
+| Validate binding receipt | `python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-rollback-card-contract-current-binding-20261126.json --repo-root .` | **CONFIRMED repository path** | Hash/current-binding evidence only |
 | Workflow security | `make workflow-security` | **Repository-native target** | Does not prove release authority |
 | Generic validator wrapper | `tools/validators/validate_rollback_card.py` | **COMPATIBILITY DELEGATE** | Same bounded validation as canonical CLI; no execution authority |
 | Production rollback pipeline | `pipelines/rollback/main.py` | **PLACEHOLDER / HOLD** | No execution |

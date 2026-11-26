@@ -53,15 +53,20 @@ soil-moisture data.
 ## Current authoring receipt
 
 The workflow validates
-[`genrec-soil-moisture-runtime-proof-artifacts-20261118.json`](../../../../../data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json)
+[`genrec-soil-moisture-runtime-proof-artifacts-20261126.json`](../../../../../data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261126.json)
 against the current workflow and proof artifacts with the repository's native
-generated-receipt validator. It records the predecessor's exact digest and
+generated-receipt validator. It records its predecessors' exact digests and
 pinned repository input; it does not change the validator or bypass integrity.
+
+The [November 18 receipt](../../../../../data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json)
+went stale when Dependabot changed the workflow's `actions/setup-python` pin. It
+stays byte-unchanged and the workflow replays it at its authoring commit
+`e50fc18c67` with `--artifact-git-ref`.
 
 The [August 5 receipt](../../../../../data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20260805.json)
 remains immutable historical provenance. Its old workflow digest does not
-qualify the workflow after the upload-action update. The lineage tests pin that
-receipt's bytes, validate the selected successor, and require a digest mismatch
+qualify the workflow after the upload-action update. The lineage tests pin both
+older receipts' bytes, validate the selected successor, and require a digest mismatch
 when any bound artifact is altered in a temporary copy.
 
 The successor's human review remains pending. Receipt validity establishes

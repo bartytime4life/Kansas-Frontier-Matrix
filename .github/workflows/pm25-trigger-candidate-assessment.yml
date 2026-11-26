@@ -50,6 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
@@ -59,8 +61,19 @@ jobs:
       - run: python tools/ci/install_python_ci.py project-test
       - name: Run focused deterministic validation
         run: python -m pytest -q tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json \
+            --repo-root . \
+            --artifact-git-ref 5b247f8e0ac3759001d31c6fc6793fdba2994421
+
       - name: Verify generated receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20261126.json --repo-root .
       - name: Record authority boundary
         if: always()
         run: |

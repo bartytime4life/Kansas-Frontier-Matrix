@@ -57,6 +57,8 @@ jobs:
       - name: Check out bounded synthetic profile
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -76,10 +78,22 @@ jobs:
         run: python tools/validators/validate_historical_person_place_event_resolution.py --fixtures
 
       - name: Verify generated authoring receipt integrity
-        run: >-
-          python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-historical-person-place-event-resolution-20260806.json
-          --repo-root .
+        shell: bash
+        run: |
+          set -euo pipefail
+          # This receipt's workflow digest was accepted only through the one-time
+          # migration ledger, which Dependabot 27676fd1 made stale. Replay the receipt,
+          # its artifacts and the ledger exactly as they stood at that commit's parent.
+          ref=de7ec1d5aa39b9db46672189986212e5eb0a1026
+          receipt=data/receipts/generated/genrec-historical-person-place-event-resolution-20260806.json
+          root="$RUNNER_TEMP/receipt-replay-genrec-historical-person-place-event-resolution-20260806"
+          rm -rf "$root"
+          mkdir -p "$root"
+          git show "$ref:$receipt" \
+            | python -c 'import json, sys; sys.stdout.write("\0".join(json.load(sys.stdin)["artifact_paths"]))' \
+            | xargs -0 git archive "$ref" -- "$receipt" tools/ci/python-dependency-lock-migration.json \
+            | tar -x -C "$root"
+          python tools/validators/validate_generated_receipt.py "$root/$receipt" --repo-root "$root"
 
       - name: Record bounded trust result
         if: always()

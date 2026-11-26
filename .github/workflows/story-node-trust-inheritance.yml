@@ -50,6 +50,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -72,11 +74,22 @@ jobs:
           set -euo pipefail
           python tools/validators/ui/validate_story_node.py --fixtures
 
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-story-node-trust-inheritance-20260808.json \
+            --repo-root . \
+            --artifact-git-ref 4cc7c4b2e99d3982a6cf31600251dd643c2b370f
+
       - name: Verify current authoring receipt integrity
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-story-node-trust-inheritance-20260808.json \
+            data/receipts/generated/genrec-story-node-trust-inheritance-20261126.json \
             --repo-root .
 
       - name: Record trust boundary

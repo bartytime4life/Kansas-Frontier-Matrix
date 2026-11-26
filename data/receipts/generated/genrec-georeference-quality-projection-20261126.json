@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-georeference-quality-projection-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-georeference-quality-projection.yml",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md",
+    "fixtures/contracts/v1/map/georeference_control_point_set/valid.json",
+    "fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json",
+    "tests/generators/test_project_georeference_transform_quality.py",
+    "tools/generators/project_georeference_transform_quality.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-quality-projection.yml": "sha256:a488b71ab4f14342bee688f6a674cdefeb1c0cbf969a29c254f36df1bc28912d",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "sha256:a93cfd99b3f47c998fbeb4da8c583d0b9a9a84cc158bca0eb97dbdf4c24c3972",
+    "fixtures/contracts/v1/map/georeference_control_point_set/valid.json": "sha256:f3222f0bd904104604f146e381cbf0aef985d02f72652a2a642169b7dcc4974d",
+    "fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json": "sha256:126b52ca5cdcd513bed62c88853a04ff91782f16ef4a4178ec6425412cd8c678",
+    "tests/generators/test_project_georeference_transform_quality.py": "sha256:961341b03886207877a854dd1a6ead39ec1048e2728b57110630e05ed980a067",
+    "tools/generators/project_georeference_transform_quality.py": "sha256:2f71281f9d3916238532494584ee5fe26942bb12e48f4568d146e52a1d0026bf"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/map-georeference-quality-projection.yml",
+      "f9508c7c3071ea8d231018d750f8a2027081d319: its authoring commit of predecessor genrec-georeference-quality-projection-20260810.json",
+      "data/receipts/generated/genrec-georeference-quality-projection-20260810.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:95dba4f0848fa723ab2f02cee02d68486c08d669476afccb9b67bffacf24c692"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-georeference-quality-projection.yml": "CONFIRMED",
+    "docs/intake/exploratory/georeference-control-point-set-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/map/georeference_control_point_set/valid.json": "CONFIRMED",
+    "fixtures/contracts/v1/map/georeference_transform_quality/projection_request.json": "CONFIRMED",
+    "tests/generators/test_project_georeference_transform_quality.py": "CONFIRMED",
+    "tools/generators/project_georeference_transform_quality.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-georeference-quality-projection-20260810.json validates unchanged with --artifact-git-ref f9508c7c3071ea8d231018d750f8a2027081d319 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-georeference-quality-projection-20260810.json@f9508c7c3071ea8d231018d750f8a2027081d319"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-georeference-quality-projection-20260810, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/map-georeference-quality-projection.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 6 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

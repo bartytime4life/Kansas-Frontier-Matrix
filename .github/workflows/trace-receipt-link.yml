@@ -50,6 +50,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -67,10 +69,21 @@ jobs:
             --pattern 'test_validate_trace_receipt_link.py' \
             --verbose
           python tools/validators/validate_trace_receipt_link.py --fixtures
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-trace-receipt-link-20260811.json \
+            --repo-root . \
+            --artifact-git-ref 25a58f324e6ada808714aecdf9e745d139e1b3bc
+
       - name: Verify current stable-packet authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-trace-receipt-link-20260811.json \
+            data/receipts/generated/genrec-trace-receipt-link-20261126.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

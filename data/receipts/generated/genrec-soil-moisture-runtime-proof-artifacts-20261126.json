@@ -1,0 +1,93 @@
+{
+  "receipt_id": "genrec-soil-moisture-runtime-proof-artifacts-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-moisture-runtime-proof.yml",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "sha256:87a4be258134df48b737d9e775dc2836e28dc1686a9e2d59e92cf11cc8dacf0b",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "sha256:cdd3f2d768f553f7fa1a23fd09bb6bd0fd889aa0791f8ec9d0666d34b9942558",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py": "sha256:5ebfc689c19aca451d774165e47be9e6d8d6a194d05799138d08bbe5d500400d",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "sha256:f1c92c8eabdd0c7d35275081dab1d0c33d7e4bf3c5defe8a5059653553e289cf",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py": "sha256:8594430c25638906a563467142ff14012ec7d992c0efbfbeac45e48594e24ec1"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:60e93fe19f4a61ea9cb9bea02b5b104c5e7616b9028200fae6b1e2fb5e5e8c2f",
+      "sha256:9cb4240d165356774dd8d0af0e5fdca46eafdac42365194690266a522975f603"
+    ],
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/soil-moisture-runtime-proof.yml",
+      "e50fc18c6736e9e85d76c8dfcea126135e2ec0c1: its authoring commit of predecessor genrec-soil-moisture-runtime-proof-artifacts-20261118.json",
+      "data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115",
+      "data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20260805.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-moisture-runtime-proof.yml": "CONFIRMED",
+    "tests/runtime_proof/domains/soil/soil_moisture/README.md": "CONFIRMED",
+    "tests/runtime_proof/domains/soil/soil_moisture/emit_runtime_proof_report.py": "CONFIRMED",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_runtime_mapper.py": "CONFIRMED",
+    "tests/runtime_proof/domains/soil/soil_moisture/test_receipt_lineage.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-soil-moisture-runtime-proof-artifacts-20261118.json validates unchanged with --artifact-git-ref e50fc18c6736e9e85d76c8dfcea126135e2ec0c1 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json@e50fc18c6736e9e85d76c8dfcea126135e2ec0c1"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-soil-moisture-runtime-proof-artifacts-20261118, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/soil-moisture-runtime-proof.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 5 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

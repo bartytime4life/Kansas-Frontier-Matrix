@@ -12,6 +12,7 @@ name: map-georeference-control-point-evidence
       - "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md"
       - "data/receipts/generated/genrec-pass18-georeference-control-point-evidence-20260811.json"
       - "data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20260908.json"
+      - "data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20261126.json"
   push:
     branches: [main]
     paths:
@@ -24,6 +25,7 @@ name: map-georeference-control-point-evidence
       - "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md"
       - "data/receipts/generated/genrec-pass18-georeference-control-point-evidence-20260811.json"
       - "data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20260908.json"
+      - "data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20261126.json"
   workflow_dispatch:
 
 permissions:
@@ -66,10 +68,21 @@ jobs:
           data/receipts/generated/genrec-pass18-georeference-control-point-evidence-20260811.json
           --repo-root .
           --artifact-git-ref ded9a9755316fee97827d5d65b8fc26e31c2ae4b
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20260908.json \
+            --repo-root . \
+            --artifact-git-ref e099406eefce84528f439990ce248cfdd2d6906c
+
       - name: Validate currentness authoring receipt integrity
         run: >-
           python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20260908.json
+          data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20261126.json
           --repo-root .
       - name: Record trust boundary
         if: always()

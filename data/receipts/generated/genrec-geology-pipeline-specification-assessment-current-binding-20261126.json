@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-geology-pipeline-specification-assessment-current-binding-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geology-pipeline-specification-assessment.yml",
+    "contracts/domains/geology/geology_pipeline_specification_assessment.md",
+    "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md",
+    "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json",
+    "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json",
+    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py",
+    "tools/validators/validate_geology_pipeline_specification_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geology-pipeline-specification-assessment.yml": "sha256:859cafcb1303d207c5b543eab8f4aff4fa0a924a84b732d3ed568cb943723219",
+    "contracts/domains/geology/geology_pipeline_specification_assessment.md": "sha256:bf2c2a9829eab547a45477b747ad5aeba6a316f7aa6d6c7a9b3117d05cda69dd",
+    "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md": "sha256:befef5654c7e3286f654d608590f61c568bf784a08b26ce9ba3a3a08547cd55e",
+    "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json": "sha256:0909ab2c3ad636be12db61313cdeb084dd285b70473c9c10494884e8a3468e1a",
+    "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json": "sha256:367acea4df49aabea04bd4fdb9a373e25560cf6798c5b31b8bfe0bb420948fcf",
+    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "sha256:888c95672f990f87de1f13b1cd40d1a3b9d5e46e1c40fc010b1ad86bc11975cd",
+    "tools/validators/validate_geology_pipeline_specification_assessment.py": "sha256:48b635f6023a775bf57a6d58ca4237a8d5e9018c292242d2d64e53dbf8b8a11f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/geology-pipeline-specification-assessment.yml",
+      "c2af0db54e1fb3d4a1c55bf4a2ba94c5e734457f: the commit that last rebound it of predecessor genrec-geology-pipeline-specification-assessment-current-binding-20260814.json",
+      "data/receipts/generated/genrec-geology-pipeline-specification-assessment-current-binding-20260814.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:43f3f6dd1dcf1dfe41adc86ea4eb75822f9698104626779110e3cd05ab4a6de2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geology-pipeline-specification-assessment.yml": "CONFIRMED",
+    "contracts/domains/geology/geology_pipeline_specification_assessment.md": "CONFIRMED",
+    "docs/intake/exploratory/geology-pipeline-specification-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/geology/geology_pipeline_specification_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/geology/geology_pipeline_specification_assessment.schema.json": "CONFIRMED",
+    "tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py": "CONFIRMED",
+    "tools/validators/validate_geology_pipeline_specification_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-geology-pipeline-specification-assessment-current-binding-20260814.json validates unchanged with --artifact-git-ref c2af0db54e1fb3d4a1c55bf4a2ba94c5e734457f (the commit that last rebound it, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-geology-pipeline-specification-assessment-current-binding-20260814.json@c2af0db54e1fb3d4a1c55bf4a2ba94c5e734457f"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-geology-pipeline-specification-assessment-current-binding-20260814, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/geology-pipeline-specification-assessment.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 7 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-taxonomic-concept-lineage-contract-currentness-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/taxonomic-concept-lineage.yml",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md",
+    "data/receipts/generated/genrec-taxonomic-concept-lineage-20260805.json",
+    "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json",
+    "tests/validators/test_validate_taxonomic_concept_lineage.py",
+    "tools/validators/validate_taxonomic_concept_lineage.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/taxonomic-concept-lineage.yml": "sha256:af206c0cebb36fa8bade57b1524d101616f364a1fbfbec7367a98702357464e9",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md": "sha256:38d16b50c020255553f45675638dcde773d404e8803d741acdbb348a8aa5ae9e",
+    "data/receipts/generated/genrec-taxonomic-concept-lineage-20260805.json": "sha256:1173dff79794b67d7cc3440ffdefa9f78d22beaab57d479e31120b617d3d132b",
+    "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json": "sha256:964611a2a4b710dad4ae6edac36f857ba53d28f35007915c6d6afeaf3cdab02e",
+    "tests/validators/test_validate_taxonomic_concept_lineage.py": "sha256:a3c6ce9a6463097849774033dcbe566389c705b0732f0ded9f8ea8b3e7ae2dfd",
+    "tools/validators/validate_taxonomic_concept_lineage.py": "sha256:68fc3ecca3bad1f6823c922b5335fd880d5b4ac99b811aa159fe92669503cd9a"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/taxonomic-concept-lineage.yml",
+      "d0b2d868e926a48744be2f1b6451ffe7271b6367: its authoring commit of predecessor genrec-taxonomic-concept-lineage-contract-currentness-20260908.json",
+      "data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20260908.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:1080547ff21e214cd2e635591cf29ac8f9355cdfb3853bd2400426ee65d0d9a8"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/taxonomic-concept-lineage.yml": "CONFIRMED",
+    "contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md": "CONFIRMED",
+    "data/receipts/generated/genrec-taxonomic-concept-lineage-20260805.json": "CONFIRMED",
+    "schemas/contracts/v1/crosswalks/taxonomy/taxonomic_concept_lineage.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_taxonomic_concept_lineage.py": "CONFIRMED",
+    "tools/validators/validate_taxonomic_concept_lineage.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-taxonomic-concept-lineage-contract-currentness-20260908.json validates unchanged with --artifact-git-ref d0b2d868e926a48744be2f1b6451ffe7271b6367 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20260908.json@d0b2d868e926a48744be2f1b6451ffe7271b6367"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-taxonomic-concept-lineage-contract-currentness-20260908, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/taxonomic-concept-lineage.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 6 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

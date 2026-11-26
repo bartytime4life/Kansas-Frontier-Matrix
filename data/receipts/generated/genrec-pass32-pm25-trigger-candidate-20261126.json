@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-pass32-pm25-trigger-candidate-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pm25-trigger-candidate-assessment.yml",
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pm25-trigger-candidate-assessment.yml": "sha256:0f2285e1f6fd6520e7e26e914d4d7d4ba47789d55f0e25102ae8e98f9b73ba9a",
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md": "sha256:dd95b41d80e7d221d9b07b55ff9d7f0e811c3c7e51c129136e17b8adfdbcc60b",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "sha256:3d32d488fea5a584bb9318adddfc1faf396d0eb1e860a2db8d90a90cdd55b981",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "sha256:0ea27e3d1d9477e77e34a676d44cff51d67fddc9beac2322194e8c0589b527af",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "sha256:d0ae4515885f9614d5cf79251ad3525edbf3ee187856c292905359c79572bfa0",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "sha256:071735fb5aa2b43efe53895b144f1213076aab2a6bc6922aedf38ba5aee7579a",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "sha256:9cd95a1cb50d7cc1ac7dc44f31c9b08f70948a07f125878cbb2d20a7ed9c6787"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/pm25-trigger-candidate-assessment.yml",
+      "5b247f8e0ac3759001d31c6fc6793fdba2994421: its authoring commit of predecessor genrec-pass32-pm25-trigger-candidate-20260810.json",
+      "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:9312602aee2ca5477ee60a9233f4a375fdfeb0345192df1f6a0f2c6f98b66802"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pm25-trigger-candidate-assessment.yml": "CONFIRMED",
+    "contracts/domains/atmosphere/pm25_trigger_candidate_assessment.md": "CONFIRMED",
+    "docs/intake/exploratory/pass-32-pm25-trigger-candidate-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json": "CONFIRMED",
+    "tests/domains/atmosphere/test_pm25_trigger_candidate_assessment.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-pass32-pm25-trigger-candidate-20260810.json validates unchanged with --artifact-git-ref 5b247f8e0ac3759001d31c6fc6793fdba2994421 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-pass32-pm25-trigger-candidate-20260810.json@5b247f8e0ac3759001d31c6fc6793fdba2994421"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-pass32-pm25-trigger-candidate-20260810, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/pm25-trigger-candidate-assessment.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 7 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

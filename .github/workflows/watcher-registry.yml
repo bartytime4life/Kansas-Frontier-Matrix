@@ -53,6 +53,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -70,10 +72,21 @@ jobs:
           python -m unittest discover --start-directory tests/validators --pattern 'test_validate_watcher_registry.py' --verbose
           python tools/validators/validate_watcher_registry.py control_plane/watcher_registry.json
           python tools/validators/validate_watcher_registry.py --fixtures
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at the setup-python bump's parent, its last matching commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json \
+            --repo-root . \
+            --artifact-git-ref de7ec1d5aa39b9db46672189986212e5eb0a1026
+
       - name: Validate current pipeline-spec rebind receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20261126.json --repo-root .
       - name: Record trust boundary
         if: always()
         run: |

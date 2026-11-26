@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-map-context-envelope-currentness-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-context-envelope.yml",
+    "contracts/ui/map_context_envelope.md",
+    "contracts/ui/map_context_envelope/README.md",
+    "fixtures/ui/map_context_envelope/README.md",
+    "fixtures/ui/map_context_envelope/base_geography.json",
+    "fixtures/ui/map_context_envelope/base_viewport.json",
+    "fixtures/ui/map_context_envelope/cases.json",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json",
+    "tests/validators/test_validate_map_context_envelope.py",
+    "tools/validators/ui/validate_map_context_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-context-envelope.yml": "sha256:cfff32cbbbf77d92bac5babf126acde7c2378d4d0c07b7d15146b9aeb257966c",
+    "contracts/ui/map_context_envelope.md": "sha256:fcafa9198c88aea360465d74f1f979ba4eaff3180b7eef294e80ec0e1ec63d36",
+    "contracts/ui/map_context_envelope/README.md": "sha256:fb15b13d6fc977f9b123ce2082057d75821f02dbc2d1973b3b8d665834386955",
+    "fixtures/ui/map_context_envelope/README.md": "sha256:ebf3669f27367d64fb68342de9b75da6d530aa336d415c22f160d8ea41e8ab4d",
+    "fixtures/ui/map_context_envelope/base_geography.json": "sha256:986a15c70084d0ddc4e73f49f3839f50fd0bd0918e28de6131661d4e8a35302d",
+    "fixtures/ui/map_context_envelope/base_viewport.json": "sha256:53db2439ff85e9a9cc9c586559e8835f10c1dc6208ef5f779a534814b66c6075",
+    "fixtures/ui/map_context_envelope/cases.json": "sha256:405d58b2f7c9744b42b2f866dec51ae4d66d4c72103ffc2dce0f1c482ecac441",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json": "sha256:1103abf8b330f0ea9eee9a8373cc9992663ba75fd54c05d473d3dcb8055e924d",
+    "tests/validators/test_validate_map_context_envelope.py": "sha256:3e8985eaafa386797b6504b28bf1a801b60f3459e6910a71dc66d0631280ff60",
+    "tools/validators/ui/validate_map_context_envelope.py": "sha256:d7e5dde8ba3de73c5c71d3856dc42125038e4c6ab7cfd32797b819802f7fd85e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/map-context-envelope.yml",
+      "3b007883da6998bda26195697f05c8e02b09cef9: its authoring commit of predecessor genrec-map-context-envelope-currentness-20261014.json",
+      "data/receipts/generated/genrec-map-context-envelope-currentness-20261014.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:1c3e7a78e754636e6de655a973bc74d465e0b643cef9072287a793a7156ca3ea"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-context-envelope.yml": "CONFIRMED",
+    "contracts/ui/map_context_envelope.md": "CONFIRMED",
+    "contracts/ui/map_context_envelope/README.md": "CONFIRMED",
+    "fixtures/ui/map_context_envelope/README.md": "CONFIRMED",
+    "fixtures/ui/map_context_envelope/base_geography.json": "CONFIRMED",
+    "fixtures/ui/map_context_envelope/base_viewport.json": "CONFIRMED",
+    "fixtures/ui/map_context_envelope/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/map_context_envelope.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_map_context_envelope.py": "CONFIRMED",
+    "tools/validators/ui/validate_map_context_envelope.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-map-context-envelope-currentness-20261014.json validates unchanged with --artifact-git-ref 3b007883da6998bda26195697f05c8e02b09cef9 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-map-context-envelope-currentness-20261014.json@3b007883da6998bda26195697f05c8e02b09cef9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-map-context-envelope-currentness-20261014, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/map-context-envelope.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 10 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

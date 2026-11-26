@@ -1,0 +1,93 @@
+{
+  "receipt_id": "genrec-watcher-registry-pipeline-spec-rebind-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/watcher-registry.yml",
+    "control_plane/watcher_registry.json",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json",
+    "pipeline_specs/watchers/plants_drift.yaml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/watcher-registry.yml": "sha256:908bf16e57833cdf8ea5d2238931d45d857216f0a054579a73ee4032d284d1a0",
+    "control_plane/watcher_registry.json": "sha256:4549e07326b1bee587c33d9b8029652fbf3d0e3f847f2866b6d59db0d223d7b0",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "sha256:8ae81b7fec470ebd19a8eb0bde55db547e1e48ba50262ce91fe99aed72236ae3",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "sha256:682b9e4abad25486f84898a13e9caff8424ae0c39584b1b798ea3d6e2354c30a",
+    "pipeline_specs/watchers/plants_drift.yaml": "sha256:313f53d3156ffb3893b8cb63e6c68939bc1b40af7dbf5bd27c9c2fbc6356da6f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/watcher-registry.yml",
+      "de7ec1d5aa39b9db46672189986212e5eb0a1026: 27676fd1's parent of predecessor genrec-watcher-registry-pipeline-spec-rebind-20260830.json",
+      "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:1c706bc38b5e83cd926df083e766eb28811cc59ac6342474b557ba4d3b371fbe"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/watcher-registry.yml": "CONFIRMED",
+    "control_plane/watcher_registry.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/semantic_invalid/semantic_duplicate_watcher.json": "CONFIRMED",
+    "fixtures/contracts/v1/source/watcher_registry/valid/valid_placeholder_registry.json": "CONFIRMED",
+    "pipeline_specs/watchers/plants_drift.yaml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-watcher-registry-pipeline-spec-rebind-20260830.json validates unchanged with --artifact-git-ref de7ec1d5aa39b9db46672189986212e5eb0a1026 (27676fd1's parent, its last matching commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-watcher-registry-pipeline-spec-rebind-20260830.json@de7ec1d5aa39b9db46672189986212e5eb0a1026"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-watcher-registry-pipeline-spec-rebind-20260830, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/watcher-registry.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 5 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

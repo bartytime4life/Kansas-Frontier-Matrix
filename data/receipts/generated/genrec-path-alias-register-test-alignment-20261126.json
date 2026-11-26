@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-path-alias-register-test-alignment-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/path-alias-register.yml",
+    "tests/validators/directory_governance/path_alias_cases_schema.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/path-alias-register.yml": "sha256:73c427a25d104d59d207c27d9d0923ff245feb5cf2c732bdffd4cb266ca7bf2d",
+    "tests/validators/directory_governance/path_alias_cases_schema.py": "sha256:c23031bc989f9ee0b72330631811bc8c86689d59ecaebfd786e0a7c0fad1f20a"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/path-alias-register.yml",
+      "a9b3f002b1e4c55ac69c5bc10fe5daf5cb0c4256: its authoring commit of predecessor genrec-path-alias-register-test-alignment-20260818.json",
+      "data/receipts/generated/genrec-path-alias-register-test-alignment-20260818.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:7fb7cf347a958947d2ffcec301cf68d9beaa8fe4cf6b4258238f1123c8871222"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/path-alias-register.yml": "CONFIRMED",
+    "tests/validators/directory_governance/path_alias_cases_schema.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-path-alias-register-test-alignment-20260818.json validates unchanged with --artifact-git-ref a9b3f002b1e4c55ac69c5bc10fe5daf5cb0c4256 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md#6-migration-plan"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-path-alias-register-test-alignment-20260818.json@a9b3f002b1e4c55ac69c5bc10fe5daf5cb0c4256"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-path-alias-register-test-alignment-20260818, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/path-alias-register.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 2 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

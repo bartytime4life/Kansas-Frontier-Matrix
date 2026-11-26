@@ -58,6 +58,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -107,13 +109,23 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Replay superseded authoring receipt at its authoring commit
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # November 18 receipt stays immutable and replays where it was authored.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json \
+            --repo-root . \
+            --artifact-git-ref e50fc18c6736e9e85d76c8dfcea126135e2ec0c1
+
       - name: Verify current authoring receipt integrity
         run: |
           set -euo pipefail
           # Keep historical receipts immutable; this successor binds the current
           # workflow and proof artifacts without exempting any digest checks.
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261118.json \
+            data/receipts/generated/genrec-soil-moisture-runtime-proof-artifacts-20261126.json \
             --repo-root .
 
       - name: Record trust boundary

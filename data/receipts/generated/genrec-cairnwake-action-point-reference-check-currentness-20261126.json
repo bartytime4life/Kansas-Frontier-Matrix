@@ -1,0 +1,102 @@
+{
+  "receipt_id": "genrec-cairnwake-action-point-reference-check-currentness-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/action-point-reference-check.yml",
+    "contracts/validation/action_point_reference_check.md",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json",
+    "tests/validators/test_validate_action_point_reference_check.py",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py",
+    "tools/validators/validate_action_point_reference_check.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/action-point-reference-check.yml": "sha256:d9f8b9f17d8933a2fed157ea849c0edbcc862cf97c9992d349bc0512624f6600",
+    "contracts/validation/action_point_reference_check.md": "sha256:84358dd99016cc0ae3949f54e47e312faf3d2c72f2c826b36506539d504d76f7",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:9d6750874c8b6b59da74004a043e1b09cdafc6d4bc362a3001061ace57d84b8e",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "sha256:d78638bcae29d53a94ed100d1391ec7fe40f54b0bc922bb75a505e3412509642",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "sha256:5614f5830b7c01c8f13deb4394ee081224fae461b65c774dcae10c904aaa388b",
+    "tests/validators/test_validate_action_point_reference_check.py": "sha256:6627460970f8d682269b668b33cdf88084d23c15820659cfc783150fc73454bb",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "sha256:f2ffc72ac7e5f262cc83344c0475fa9f8e73ab7b2de2c6784e62a8ac98f85103",
+    "tools/validators/validate_action_point_reference_check.py": "sha256:0e88068d1ad334d5cfbe343a7d99240ea7e1aa16c2dfbb9f0b2463d8afa973b8"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/action-point-reference-check.yml",
+      "3b007883da6998bda26195697f05c8e02b09cef9: its authoring commit of predecessor genrec-cairnwake-action-point-reference-check-currentness-20261014.json",
+      "data/receipts/generated/genrec-cairnwake-action-point-reference-check-currentness-20261014.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:98cb505e65cc76dcd969c6ff7cb48b705ffce5e09e64152bbd79ed31a008cdc9"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/action-point-reference-check.yml": "CONFIRMED",
+    "contracts/validation/action_point_reference_check.md": "CONFIRMED",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_action_point_reference_check.py": "CONFIRMED",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "CONFIRMED",
+    "tools/validators/validate_action_point_reference_check.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-cairnwake-action-point-reference-check-currentness-20261014.json validates unchanged with --artifact-git-ref 3b007883da6998bda26195697f05c8e02b09cef9 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-cairnwake-action-point-reference-check-currentness-20261014.json@3b007883da6998bda26195697f05c8e02b09cef9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-cairnwake-action-point-reference-check-currentness-20261014, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/action-point-reference-check.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 8 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

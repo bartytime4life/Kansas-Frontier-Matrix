@@ -1,0 +1,79 @@
+{
+  "receipt_id": "genrec-promotion-receipt-current-binding-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/promotion-receipt.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/promotion-receipt.yml": "sha256:01a8ebe53e8b0e8fcc33d10cd5731da281a62f28281236abec60f17d0b2a05dc"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/promotion-receipt.yml",
+      "58cb0da4ddb1fc167fb8ef4d28f4b5bc03b3d98c: its authoring commit of predecessor genrec-promotion-receipt-current-binding-20260815.json",
+      "data/receipts/generated/genrec-promotion-receipt-current-binding-20260815.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:40615435e8dd025561238b8c694b3ec4a87e4ef4a24806e280d12d804cd8564e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/promotion-receipt.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-promotion-receipt-current-binding-20260815.json validates unchanged with --artifact-git-ref 58cb0da4ddb1fc167fb8ef4d28f4b5bc03b3d98c (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-promotion-receipt-current-binding-20260815.json@58cb0da4ddb1fc167fb8ef4d28f4b5bc03b3d98c"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-promotion-receipt-current-binding-20260815, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/promotion-receipt.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 1 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

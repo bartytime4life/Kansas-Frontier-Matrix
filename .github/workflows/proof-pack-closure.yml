@@ -49,6 +49,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -79,10 +81,21 @@ jobs:
           cmp /tmp/proof-pack.json \
             fixtures/contracts/v1/evidence/proof_pack/valid/valid_release_support.json
 
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-proof-pack-closure-current-binding-20260815.json \
+            --repo-root . \
+            --artifact-git-ref 509aea2c889e243604ae28b0c183efd0af39b026
+
       - name: Verify ProofPack current-binding receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-proof-pack-closure-current-binding-20260815.json \
+            data/receipts/generated/genrec-proof-pack-closure-current-binding-20261126.json \
             --repo-root .
 
       - name: Record trust boundary
