@@ -2,3 +2,5 @@
 @media(max-width:480px){.panel button{font-size:14px}.scrub input{min-height:48px}.stats dd{font-size:17px}}
 
 .panel.panel header{align-items:start}.panel.panel header small{text-transform:none;letter-spacing:normal}.panel.panel .reading>small{text-transform:none;letter-spacing:normal}.panel.panel .stats dd{font-family:inherit}
+
+.panel.panel .actions button:first-child:hover:not(:disabled){background:#f7dea6;color:#112c35;border-color:#f7dea6}
