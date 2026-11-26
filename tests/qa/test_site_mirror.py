@@ -3353,11 +3353,27 @@ def test_web_a11y_perf_successor_preserves_web_followups_inventory_and_all_holds
         WEB_A11Y_PERF_CHANGED,
         "de7ec1d5aa39b9db46672189986212e5eb0a1026",
     )
-    assert TOOL.RECEIPT.name == "site-v268-web-a11y-perf-overlay-20261125.json"
 
 
 WEB_A11Y_PERF_CHANGED = {
     "app/explorer-guide.tsx",
     "app/page.tsx",
     "app/scene-effects-controls.tsx",
+}
+
+
+def test_page_scroll_successor_preserves_web_a11y_perf_inventory_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-page-scroll-overlay-20261126.json",
+        "site-v268-web-a11y-perf-overlay-20261125.json",
+        "c0c163b418a17fa60417d15646668af73a66d6bccbb4b058da20885f153d5852",
+        PAGE_SCROLL_CHANGED,
+        "1f82ec8b908679ad6e2c102818f7185e0dc9340a",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-page-scroll-overlay-20261126.json"
+
+
+PAGE_SCROLL_CHANGED = {
+    "app/earth-engine/workspace.module.css",
+    "app/globals.css",
 }
