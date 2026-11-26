@@ -247,8 +247,7 @@ governed-api-image-receipt:
 	@set -eu; bound=0; \
 	echo 'Head-bound check: one receipt must be VALID; superseded receipts report INVALID here by design.'; \
 	for receipt in data/receipts/generated/genrec-governed-api-*.json; do \
-		grep -q '"infra/docker/Dockerfile.governed-api"' "$$receipt" || continue; \
-		grep -q '"infra/docker/README.md"' "$$receipt" || continue; \
+		python -c 'import json, sys; paths = set(json.load(open(sys.argv[1], encoding="utf-8")).get("artifact_paths") or ()); sys.exit(0 if {"infra/docker/Dockerfile.governed-api", "infra/docker/README.md"} <= paths else 1)' "$$receipt" 2>/dev/null || continue; \
 		if $(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py "$$receipt" --repo-root .; then bound=1; fi; \
 	done; \
 	if [ "$$bound" -ne 1 ]; then \

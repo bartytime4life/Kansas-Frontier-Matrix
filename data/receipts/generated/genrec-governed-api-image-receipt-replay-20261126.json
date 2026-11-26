@@ -7,7 +7,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/infra-compose-smoke.yml": "sha256:45df065eb7c2548ab72b9c69314eec400685047b87a8d07bca76df696b8295a6",
-    "Makefile": "sha256:af0f75312ade5ee21db271296cc1d2b4d71bd967a92466210f8557fc0471ebfe"
+    "Makefile": "sha256:8a5f4bf91d1660d8e7e437364cfdf364c6c0bc59e26819cac39ea13e80c6f9b9"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -61,6 +61,11 @@
       "gate": "replay-target-merge-order",
       "outcome": "PASS",
       "reason": "With open PR 6116's Dockerfile, README and libzstd receipt applied on this tree as a scratch overlay, the target passed through that receipt while this successor still replayed at 83ae60e3. Overlay removed; tree restored byte-identical."
+    },
+    {
+      "gate": "replay-target-selector-binding",
+      "outcome": "PASS",
+      "reason": "Head-bound candidates are selected by parsed artifact_paths, not text search. A scratch decoy receipt that validated and named both image files only in attached_docs kept the target green on a drifted Dockerfile before this change, and fails it after. Decoy removed."
     },
     {
       "gate": "workflow-security-ratchet",
