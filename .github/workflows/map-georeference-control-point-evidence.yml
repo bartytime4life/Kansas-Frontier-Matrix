@@ -71,7 +71,6 @@ jobs:
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-georeference-control-point-evidence-contract-currentness-20260908.json
           --repo-root .
-          --artifact-git-ref e099406eefce84528f439990ce248cfdd2d6906c
       - name: Record trust boundary
         if: always()
         run: |

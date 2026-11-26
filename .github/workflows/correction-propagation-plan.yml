@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: {persist-credentials: false, fetch-depth: 0}
+        with: {persist-credentials: false}
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: {python-version: "3.11", cache: pip, cache-dependency-path: pyproject.toml}
       - run: python tools/ci/install_python_ci.py project-test
@@ -23,6 +23,6 @@ jobs:
           python -m py_compile tools/validators/correction/validate_correction_propagation_plan.py tests/validators/test_validate_correction_propagation_plan.py
           python -m unittest tests.validators.test_validate_correction_propagation_plan -v
           python tools/validators/correction/validate_correction_propagation_plan.py --fixtures
-      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-correction-propagation-plan-currentness-20261014.json --repo-root . --artifact-git-ref 3b007883da6998bda26195697f05c8e02b09cef9
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-correction-propagation-plan-currentness-20261014.json --repo-root .
       - if: always()
         run: echo "Fixture-only correction dependency inventory; no cache, alias, release, or publication mutation." >> "$GITHUB_STEP_SUMMARY"

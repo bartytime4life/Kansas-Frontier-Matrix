@@ -55,6 +55,6 @@ jobs:
           python tools/validators/receipts/validate_redaction_receipt.py --fixtures
       # Each immutable receipt is checked against the bytes it was issued for.
       - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-redaction-receipt-v1-20260809.json --repo-root . --artifact-git-ref f8162518295dc18b7f2524ea61b44b8d698b4ec2
-      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-redaction-receipt-v1-input-hardening-20261018.json --repo-root . --artifact-git-ref 5fd9d1aa66f222530e063d07c4402dc242b01617
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-redaction-receipt-v1-input-hardening-20261018.json --repo-root .
       - if: always()
         run: echo "Fixture-only receipt-shape validation; no restricted input access, policy execution, release, or publication." >> "$GITHUB_STEP_SUMMARY"
