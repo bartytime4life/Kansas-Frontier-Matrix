@@ -95,3 +95,27 @@ test('the daylight panel adds the Moon: tonight, the strip of evenings, and the 
  assert.equal((JSON.stringify(figure).match(/"data-date"/g)||[]).length,30);
  assert.match(page,/moon: sunYearMoon,/);assert.match(page,/reading: moonReading\(sunToday, sunYearPlace\.lat, sunYearPlace\.lon\)/);
 });
+
+test('field almanac groups phases by Central month and only displays the selected point and crop year',async()=>{
+ const h=await componentHarness('app/field-decision-tools.tsx',{
+  './moon':moon,'./sun-chart':sun,'./yield-history':{},'./bounded-json':{},'./rain-normal':{},
+  './frost-dates':{frostLine:()=> 'Salina, 10 km away'},
+ },{},'\nexport {FieldAlmanac};');
+ const {almanacPhases,FieldAlmanac}=h.exports;
+ const phases=almanacPhases('2026-10');
+ assert.ok(phases.length>=3 && phases.length<=5);
+ for(const day of phases){
+  const civilDate=new Date(day.at+sun.centralOffset(day.at)*60000).toISOString();
+  assert.match(civilDate,/^2026-10-/);
+ }
+ const full=phases.find(p=>p.kind==='full');
+ assert.equal(new Date(full.at+sun.centralOffset(full.at)*60000).toISOString().slice(0,10),'2026-10-25');
+ for(const invalid of ['','2026-13','2004-12','2051-01'])assert.equal(almanacPhases(invalid).length,0);
+ const observation={lon:-97.6,lat:38.8,year:2024,state:'ready',data:{}};
+ const reading=(point,year,frost)=>findNode(h.render(FieldAlmanac,{point,year,frost}),n=>n.props?.role==='status').props.children;
+ assert.match(reading({lon:-97.6000002,lat:38.8},2024,observation),/Salina/);
+ assert.match(reading({lon:-98,lat:38.8},2024,observation),/unavailable/);
+ assert.match(reading({lon:-97.6,lat:38.8},2025,observation),/unavailable/);
+ assert.match(reading(null,2024,observation),/Select a crop point/);
+ h.dispose();
+});

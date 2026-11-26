@@ -130,3 +130,21 @@ test('comparison validation refuses nonfinite, inconsistent and incomplete perce
  for(const change of [{seasonInches:Infinity},{seasonInches:-1},{seasonDaysMissing:215},{seasonDaysMissing:1},{seasonDaysPending:1},{seasonTraceDays:215},{normal:{average:20,years:4}},{station:null},{retrievedAt:'invalid'}]) assert.equal(rn.validRainNormal({...r,...change},r.lon,r.lat,r.year),false,JSON.stringify(change));
  assert.equal(rn.validRainNormal({...r,seasonDaysPending:1,percentOfNormal:null},r.lon,r.lat,r.year),true);
 });
+
+test('historic outlook uses only the ten preceding station years and flags gaps',async()=>{
+ const route=await loadRoute(), original=globalThis.fetch, calls=[];
+ try {
+  globalThis.fetch=async input=>{
+    if(String(input).includes('geojson')) return json(STATIONS);
+    const year=Number(new URL(input).searchParams.get('year1')); calls.push(year);
+    return year===2004?new Response('down',{status:503}):text(season(year,year===2003?0:0.1));
+  };
+  const resp=await route.GET(new Request('https://kfm.test/api/farming/rain-normal?lon=-97.6&lat=38.8&year=2009&outlook=1'));
+  const data=await resp.json(); assert.equal(resp.status,200); assert.equal(rn.validOutlook(data,-97.6,38.8,2009),true);
+  assert.deepEqual(calls,rn.normalYears(2009)); assert.equal(data.history.find(r=>r.year===2003).inches,0);
+  assert.equal(data.history.find(r=>r.year===2004).inches,null);
+  assert.equal(rn.validOutlook({...data,history:data.history.toReversed()},-97.6,38.8,2009),false);
+  assert.deepEqual(rn.rainBaseline(data.history),{median:21.4,min:0,max:21.4,count:9,hindcasts:4,mae:0});
+  assert.equal(rn.rainBaseline(data.history.slice(0,4)),null);
+ } finally {globalThis.fetch=original;}
+});

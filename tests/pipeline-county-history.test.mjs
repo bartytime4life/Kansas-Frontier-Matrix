@@ -143,3 +143,18 @@ test('real statehood qualification traverses normalize/sign/commit/read/client g
  assert.equal(client.reviewedFeatureList(COUNTY_SOURCE_ID,parsed.data,107).length,50);
  for(const f of parsed.data.features){const source=packet.records.find(r=>r.institutionSourceId===f.properties.institutionSourceId);const raw=packet.data.features.find(r=>r.properties.institutionSourceId===source.institutionSourceId);assert.deepEqual(f.geometry,raw.geometry);assert.equal(f.properties.citation,source.citation);}
 });
+
+test('Kansas bids require a matching signed profile, checked payload and active release',async t=>{
+ const {GRAIN_SOURCE,GRAIN_URL}=await import('../server/grain-market.mjs');
+ const h=await harness(t);
+ const p={format:'kfm-kansas-grain-bids-v1',sourceId:GRAIN_SOURCE,sourceUrl:GRAIN_URL,reportDate:new Date(now-86400000).toISOString().slice(0,10),
+  captureSha256:'a'.repeat(64),retrievedAt:new Date(now).toISOString(),unit:'USD/bu',rows:[{crop:'Corn',region:'Central',low:3,high:4,average:3.5}]};
+ const approval=h.approval({sourceId:GRAIN_SOURCE});
+ const transfer=h.manifest(p,{sourceId:GRAIN_SOURCE,approval});
+ const before=await publicContext(GRAIN_SOURCE,{store:h.store,environment:h.env,now});assert.equal(before.state,'withheld');
+ const receipt=await publish(transfer,Buffer.from(canonical(p)),h.secret,{fetcher:h.fetcher,now});
+ const result=await publicContext(GRAIN_SOURCE,{store:h.store,environment:h.env,now},receipt.releaseId);
+ assert.deepEqual(result.rows,p.rows);assert.equal(result.reportDate,p.reportDate);assert.equal(result.state,'available');
+ assert.equal(sha(await publicArtifact(GRAIN_SOURCE,{store:h.store,environment:h.env,now},receipt.releaseId)),transfer.payloadSha256);
+ await assert.rejects(publicContext(GRAIN_SOURCE,{store:h.store,environment:{...h.env,KFM_PIPELINE_REVOKED_PROFILES:approval.profile.id},now}),/REVOKED/);
+});

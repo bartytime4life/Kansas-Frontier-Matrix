@@ -78,14 +78,16 @@ export function useKansasLidarView(options:Options){
   const map=options.mapRef.current;if(!map)return;let disposed=false;
   const remove=(id:string,ref:RefObject<NativePointLayer|null>)=>{const layer=ref.current;ref.current=null;if(layer&&(map.getLayer(id) as unknown as {implementation?:unknown})?.implementation===layer)try{map.removeLayer(id);}catch{/* Map disposal owns final teardown. */}};
   const clear=()=>{registerNativeLidarPicker(map,null);remove(NATIVE_LIDAR_LAYER,pointLayer);remove(KANSAS_LIDAR_GRID_LAYER,gridLayer);setApplied({points:false,grid:false});};
-  const sync=()=>{if(disposed)return;clear();if(!options.active||!options.styleReady||!tiles.visible||!cellsVisible||map.getProjection()?.type!=='mercator')return;
+  const sync=()=>{if(disposed)return;clear();if(!options.active||!options.styleReady||!tiles.visible||!cellsVisible)return;
    try{
+    // MapLibre can remove the style before React receives the context-loss update.
+    if(map.getProjection()?.type!=='mercator')return;
     const report=(kind:'grid'|'points')=>(message:string)=>{if(!disposed){setError(message);setApplied(p=>({...p,[kind]:false}));}};
     if(preparedForRender){if(map.getLayer(KANSAS_LIDAR_GRID_LAYER))throw Error('Analysis layer ID belongs to another resource');gridLayer.current=createPreparedLidarGridLayer(preparedForRender,{...settingsRef.current,selected:null},report('grid'));if(gridLayer.current.eligible>0){map.addLayer(gridLayer.current,map.getLayer('kfm-measure-fill')?'kfm-measure-fill':undefined);if(riseIntent.current){riseIntent.current=false;if(settingsRef.current.motion&&!moving.current)gridLayer.current.reveal();}}else gridLayer.current=null;}
     if(rawResult?.points&&pointsOn){if(map.getLayer(NATIVE_LIDAR_LAYER))throw Error('Native point layer ID belongs to another resource');pointLayer.current=createNativePointLayer(rawResult.points,settingsRef.current,report('points'));if(pointLayer.current.eligible>0)map.addLayer(pointLayer.current,map.getLayer('kfm-measure-fill')?'kfm-measure-fill':undefined);else pointLayer.current=null;}
     setApplied({grid:!!gridLayer.current&&!gridLayer.current.failed,points:!!pointLayer.current&&!pointLayer.current.failed});
     registerNativeLidarPicker(map,point=>{if(moving.current)return false;const p=pointLayer.current?.pick(point);if(p!==null&&p!==undefined){setReadingKind('point');setSelected({kind:'point',index:p});setDraft(String(p+1));latest.current.onSelected?.();return true;}const id=gridLayer.current?.pick(point),range=id===null||id===undefined?null:preparedForRender?.tiles?.find(t=>id>=t.start&&id<t.start+t.count);if(range&&id!==null&&id!==undefined){setReadingKind('cell');setSelected({kind:'cell',index:id-range.start,tile:range.key,source:prepared?.entries.find(e=>e.tile.key===range.key)?.grid??undefined});setDraft(String(id-range.start+1));latest.current.onSelected?.();return true;}return false;});
-   }catch(e){clear();setError(e instanceof Error?e.message:'LiDAR rendering unavailable');}
+   }catch(e){clear();if(map.getStyle())setError(e instanceof Error?e.message:'LiDAR rendering unavailable');}
   };sync();map.on('style.load',sync);const lost=()=>{pointLayer.current?.invalidate();gridLayer.current?.invalidate();registerNativeLidarPicker(map,null);setApplied({points:false,grid:false});setError('Graphics context lost. Refresh this view after map recovery to retry native layers.');};map.on('webglcontextlost',lost);
   return()=>{disposed=true;map.off('style.load',sync);map.off('webglcontextlost',lost);clear();};
  },[rawResult,preparedForRender,prepared?.entries,pointsOn,options.active,options.styleReady,options.mapRef,tiles.visible,cellsVisible]);

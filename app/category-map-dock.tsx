@@ -104,7 +104,7 @@ export const renderMapKeys = (keys: readonly MapKey[]) => (
       </div>
 );
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, terrainSource, onTerrainProvider, onTerrainPlace, onTerrainRetry, sourceCatalog, lidarLayers, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, populationChange, quakes, onQuakes, onQuakeYear, onQuakeMonth, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, fieldTools, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, terrainSource, onTerrainProvider, onTerrainPlace, onTerrainRetry, sourceCatalog, lidarLayers, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, populationChange, quakes, onQuakes, onQuakeYear, onQuakeMonth, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -113,6 +113,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   look: CategoryMap;
   /** Tool navigation keeps a different existing basemap instead of claiming this preset is displayed. */
   currentMapOnly?: boolean;
+  fieldTools?: ReactNode;
   mode: CategoryScene;
   depth: number;
   azimuth: number;
@@ -499,10 +500,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       {sourceCatalog}
       </details>
     </section>}
-    {keys && keys.length > 0 && <details className="category-map-dock-map-key">
+    {(look.topic === "agriculture" || Boolean(keys?.length)) && <details className="category-map-dock-map-key">
       <summary>Map key <span>Colors &amp; symbols</span></summary>
-      {renderMapKeys(keys)}
+      {look.topic === "agriculture" && <p className="category-map-dock-reading">Crop colors identify satellite classes for the selected year. Soil survey values describe a map unit. SMAP estimates moisture over about 9 km. Station rain is measured at the named airport.</p>}
+      {keys?.length ? renderMapKeys(keys) : <p className="category-map-dock-reading">Turn on a map layer to see its colors, symbols and units.</p>}
     </details>}
+    {look.topic === "agriculture" && fieldTools}
     {look.topic === "government" && civic && <section className="category-map-dock-layer-set" aria-label="Kansas congressional districts">
       <strong>U.S. House · {civic.congress ? `Congress ${civic.congress}` : "history"}</strong>
       <small>{civic.day ? `${civic.day} · congressional term, not election date` : "Choose a Congress or a supported calendar date"}</small>

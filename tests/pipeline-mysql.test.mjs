@@ -23,7 +23,7 @@ test('MySQL: the start-time schema step holds other tables until a backup assert
   assert.equal(Number(n), 0, 'a held run creates nothing');
   const backed = { ...environment, KFM_PIPELINE_DATABASE_BACKUP_VERIFIED: 'true' };
   const applied = await applyPipelineSchema({ environment: backed, poolOptions });
-  assert.deepEqual([applied.state, applied.pipelineTables, applied.schemaVersion, applied.paused, applied.heads], ['applied', 5, 1, true, 6]);
+  assert.deepEqual([applied.state, applied.pipelineTables, applied.schemaVersion, applied.paused, applied.heads], ['applied', 5, 1, true, 7]);
   assert.equal((await applyPipelineSchema({ environment: backed, poolOptions })).state, 'already-applied');
   assert.equal((await bootstrap.query(`SELECT value FROM ${database}.unrelated_sentinel`))[0][0].value, 42);
 });
@@ -72,8 +72,8 @@ test('MySQL: restore pre-county backup, preserve populated heads/control/history
   const oldSql = await readFile(new URL('./fixtures/pipeline/pre-county-schema.sql', import.meta.url), 'utf8');
   const sql = await readFile(new URL('../server/pipeline-schema.sql', import.meta.url), 'utf8');
   assert.equal(sha(oldSql), '5c5049c2c1a9c932b928c96bdb2195114f0e7a8f2df84b6c6f38b61597c254f5');
-  // This cutover only adds one source head. If a later migration changes more, review this rehearsal explicitly.
-  assert.equal(sql.replace(",('newberry-county-history')", ''), oldSql);
+  // The county and grain cutovers add only empty source heads to the pinned backup.
+  assert.equal(sql.replace(",('newberry-county-history')", '').replace(",('usda-kansas-grain-bids')", ''), oldSql);
   const tables = ['kfm_pipeline_control', 'kfm_pipeline_nonces', 'kfm_pipeline_releases', 'kfm_pipeline_heads', 'kfm_pipeline_events', 'unrelated_sentinel'];
   const create = async suffix => {
     const db = 'kfm_county_restore_' + process.pid + '_' + suffix;
@@ -114,13 +114,15 @@ test('MySQL: restore pre-county backup, preserve populated heads/control/history
     assert.deepEqual(await snapshot(), before, 'pre-cutover backup restores all fixture schema and rows');
     await apply(sql); await apply(sql);
     const after = await snapshot(), expected = structuredClone(before);
-    expected.kfm_pipeline_heads.rows.push({ source_id: 'newberry-county-history', release_id: null, previous_id: null, revision: 0 });
+    for (const source_id of ['newberry-county-history', 'usda-kansas-grain-bids']) {
+      expected.kfm_pipeline_heads.rows.push({ source_id, release_id: null, previous_id: null, revision: 0 });
+    }
     expected.kfm_pipeline_heads.rows.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
-    assert.deepEqual(after, expected, 'only the empty county head is added; pause/resume state is preserved');
+    assert.deepEqual(after, expected, 'only empty county and grain heads are added; pause/resume state is preserved');
     const postDump = backup(restored), postRestore = await create('post_' + Number(paused));
     docker('mysql', [postRestore], postDump); await use(postRestore);
     assert.deepEqual(await snapshot(), after, 'post-cutover backup preserves additive row and all original history');
     t.diagnostic(JSON.stringify({ paused, serverVersion: (await connection.query('SELECT VERSION() AS version'))[0][0].version,
-      migrationSha256: sha(sql), backupSha256: sha(dump), restoredBackupSha256: sha(postDump), oldHeadCount: 5, newHeadCount: 6 }));
+      migrationSha256: sha(sql), backupSha256: sha(dump), restoredBackupSha256: sha(postDump), oldHeadCount: 5, newHeadCount: 7 }));
   }
 });

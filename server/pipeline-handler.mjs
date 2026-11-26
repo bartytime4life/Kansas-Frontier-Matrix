@@ -1,3 +1,4 @@
+import { GRAIN_SOURCE, validateGrain } from './grain-market.mjs';
 import { COUNTY_SOURCE_ID, validateCountyRelease } from './county-history-release.mjs';
 import { createPublicKey, verify } from 'node:crypto';
 import { ArtifactFiles } from './pipeline-files.mjs';
@@ -60,7 +61,8 @@ export async function handlePipeline(request, { store, environment = process.env
         if (['water','weather'].includes(r.sourceId)) {
           if (!validateGoverned) fail('GOVERNED_VALIDATOR_REQUIRED');
           await validateGoverned(r.sourceId, r.projection, now);
-        } else if (r.sourceId === COUNTY_SOURCE_ID) validateCountyRelease(r.projection);
+        } else if (r.sourceId === GRAIN_SOURCE) validateGrain(r.projection);
+        else if (r.sourceId === COUNTY_SOURCE_ID) validateCountyRelease(r.projection);
         else validateContext(r.projection);
         return reply(await store.rollback(r.id, digest(command.expectedActive), sha(canonical(command)), now));
       }
@@ -114,6 +116,12 @@ export async function handlePipeline(request, { store, environment = process.env
       if (['water','weather'].includes(r.sourceId)) {
         if (!validateGoverned) fail('GOVERNED_VALIDATOR_REQUIRED');
         await validateGoverned(r.sourceId, product, committedAt);
+      } else if (r.sourceId === GRAIN_SOURCE) {
+        const p = validateGrain(product);
+        const age = committedAt - timestamp(p.retrievedAt);
+        if (age < -60000 || age > 7200000) fail('CAPTURE_TIME_INVALID');
+        const last = (await store.active(GRAIN_SOURCE))?.projection;
+        if (last && (last.reportDate > p.reportDate || last.retrievedAt > p.retrievedAt)) fail('OLDER_CAPTURE_HELD');
       } else if (r.sourceId === COUNTY_SOURCE_ID) {
         validateCountyRelease(product);
         const prepared = timestamp(product.preparedAt);
@@ -132,12 +140,14 @@ export async function handlePipeline(request, { store, environment = process.env
 /** @param {string} sourceId @param {{store: any, environment?: any, now?: number}} options @param {string|null} [releaseId] */
 export async function publicContext(sourceId, { store, environment = process.env, now = Date.now() }, releaseId = null) {
   source(sourceId);
-  if (!['usgs-streamflow','nws-alerts','usgs-earthquakes',COUNTY_SOURCE_ID].includes(sourceId)) fail('SOURCE_NOT_ALLOWED', 400);
+  if (!['usgs-streamflow','nws-alerts','usgs-earthquakes',COUNTY_SOURCE_ID,GRAIN_SOURCE].includes(sourceId)) fail('SOURCE_NOT_ALLOWED', 400);
   const r = releaseId ? await store.release(digest(releaseId)) : await store.active(sourceId);
   if (!r || r.state !== 'COMMITTED' || r.sourceId !== sourceId || !r.projection) return { state: 'withheld', reason: 'NO_APPROVED_RELEASE', sourceId };
   if (r.manifest.sourceId !== sourceId) fail('RELEASE_SOURCE_MISMATCH');
   approval(r.manifest, environment, now);
   if (sha(canonical(r.projection)) !== r.manifest.payloadSha256) fail('PROJECTION_INTEGRITY_FAILED');
+  if (sourceId === GRAIN_SOURCE) return { ...validateGrain(r.projection), state:'available', releaseId:r.id,
+    payloadSha256:r.manifest.payloadSha256, approvalExpiresAt:r.manifest.approval.profile.expiresAt };
   const p = sourceId === COUNTY_SOURCE_ID ? validateCountyRelease(r.projection) : validateContext(r.projection);
   if (p.sourceId !== sourceId) fail('RELEASE_SOURCE_MISMATCH');
   const features = p.data.features.map(f => sourceId === 'nws-alerts' ? { ...f, properties: { ...f.properties, expired: timestamp(f.properties.expires) <= now } } : f);
