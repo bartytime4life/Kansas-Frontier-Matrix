@@ -141,7 +141,7 @@ test('CSV and analysis receipts retain raw qualification, settings and original/
   assert.throws(() => soilReceipt(b, soilData[0].descriptor));
 });
 
-const options = fetchImpl => ({ fetchImpl, cryptoImpl: webcrypto, timeoutMs: 2000 });
+const options = fetchImpl => ({ fetchImpl, cryptoImpl: webcrypto });
 test('bounded loaders verify both scientific snapshots before exposing any result', async () => {
   const d = await loadDroughtSnapshot(dm, options(async () => new Response(db)));
   assert.equal(d.counties.length, 105);

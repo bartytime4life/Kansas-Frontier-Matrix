@@ -97,7 +97,7 @@ test('CSV and JSON receipts preserve qualification, units, source identity and e
   assert.equal(receipt.scope, 'provider-context'); assert.throws(() => climateReceipt(a, manifest.stations[0]));
 });
 
-const loaderOptions = fetchImpl => ({ fetchImpl, cryptoImpl: webcrypto, timeoutMs: 50 });
+const loaderOptions = fetchImpl => ({ fetchImpl, cryptoImpl: webcrypto });
 test('loader verifies exact source snapshot bytes before returning data', async () => {
   const result = await loadClimateSnapshot(descriptor, loaderOptions(async () => new Response(bytes)));
   assert.equal(result.station.id, descriptor.id);
@@ -113,10 +113,11 @@ test('loader rejects non-2xx, truncated, overlong and hash-tampered replies', as
 });
 
 test('loader times out stalled headers and body even when a transport ignores AbortSignal', async () => {
-  await assert.rejects(loadClimateSnapshot(descriptor, loaderOptions(() => new Promise(() => {}))), /timed out/);
+  const fast = fetchImpl => ({ ...loaderOptions(fetchImpl), timeoutMs: 50 });
+  await assert.rejects(loadClimateSnapshot(descriptor, fast(() => new Promise(() => {}))), /timed out/);
   let cancelled = false;
   const stream = new ReadableStream({ start(controller) { controller.enqueue(new Uint8Array([123])); }, cancel() { cancelled = true; } });
-  await assert.rejects(loadClimateSnapshot(descriptor, loaderOptions(async () => new Response(stream))), /timed out/);
+  await assert.rejects(loadClimateSnapshot(descriptor, fast(async () => new Response(stream))), /timed out/);
   assert.equal(cancelled, true);
 });
 
