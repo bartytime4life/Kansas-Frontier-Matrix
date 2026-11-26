@@ -2,11 +2,11 @@
 doc_id: kfm://doc/architecture/scientific-analysis
 title: Scientific Analysis - Questions, Methods, and Validation
 type: architecture
-version: v0.1.0
+version: v0.2.0
 status: proposed; explanatory design guide; review required
 owners: ["@bartytime4life"]
 created: 2026-10-29
-updated: 2026-10-29
+updated: 2026-11-26
 policy_label: public
 owning_root: docs/
 responsibility: Explain how scientific study design, uncertainty, and validation can connect KFM domains without creating a second contract or policy authority.
@@ -31,7 +31,9 @@ installed Science Pack, a qualified model, admitted observations, or an analysis
 
 **Evidence checkpoint:** repository `main@01bf54386be6d4c727373726587e32a24a73e6af`,
 inspected October 29, 2026. External references below explain methods; their
-inclusion is not KFM adoption or software conformance.
+inclusion is not KFM adoption or software conformance. The November 26 worked
+example below has its own execution boundary; the October interface inventory
+remains historical and is not requalified by running a documentation snippet.
 
 ## Begin with a question that could be wrong
 
@@ -207,24 +209,151 @@ policy, receipt family, or release gate.
 
 ## A practical next experiment
 
-Start with a synthetic, public-safe rainfall/flow benchmark. Before execution,
-write down the target and support, candidate method, baseline, split rules,
-metrics, rejection criteria, uncertainty assumptions, and exclusions. Lock the
-final holdout and record any later deviations. Report negative results and
-missing coverage as carefully as favorable results.
+### Run a synthetic rainfall/flow comparison
 
-A useful review packet would link exact source inputs and rights decisions,
-configuration and dependency identity, transformations, split membership,
-evaluation outputs, limitations, qualified review, and the applicable
-correction/rollback path. A reproducible result can still be scientifically
-wrong; a scientifically useful candidate still needs KFM's existing governance
-before public release. AI may help draft a hypothesis or explain a result, but
+**CONFIRMED teaching calculation; PROPOSED use with real Kansas observations.**
+This standard-library example turns the study-design advice into a repeatable
+comparison. All values and catchment names are invented. The generator is an
+arbitrary linear relationship with small noise, deliberately favorable to a
+linear predictor within catchment A; catchment B has a different level and
+response. It does not simulate a watershed, conserve water, represent Kansas,
+or provide an independent test of a discovered hydrological relationship.
+
+The choices below are fixed in the example. The author knows the generator;
+this is not an independently witnessed precommit or a blind scientific trial.
+The straight-line fit follows [NIST least squares](#reference-s9); the separate
+holdouts illustrate matching the test to its intended transfer question
+([S4](#reference-s4)).
+
+| Design choice | Exact teaching protocol |
+|---|---|
+| Target and support | Fictional catchment-average daily mean flow on target day `d`, in `m³/s`; previous-day rainfall rate in `mm/day` |
+| Forecast origin | End of day `d-1`; that day's rainfall and flow are available. No target-day observation is an input. |
+| Fit | Catchment A target days 1-80; ordinary least squares with an intercept and previous-day rain |
+| Time holdout | Catchment A target days 81-120, testing a future period in the same catchment |
+| Catchment holdout | Catchment B target days 1-80, testing an unseen catchment in the training period; B days 81-120 are unused |
+| Comparators | Persistence uses the preceding flow at each origin, including B's own observed history; training mean uses A's fit rows only. These have different information requirements. |
+| Metrics | MAE, RMSE, and mean signed error, all in `m³/s`; positive signed error means overprediction |
+| Tuning | None. No refit, clipping, seed search, or method selection after reading either holdout |
+| Teaching decision rule | Claim successful transfer only if candidate RMSE beats persistence on **both** holdouts. This is a toy comparison rule, not a scientific significance test or KFM release gate. |
+
+The first time-holdout row can use A day 80's flow as a predictor because it is
+known at that forecast origin. Target-row IDs are disjoint; legitimate shared
+boundary history is not a promise that all predictor values are disjoint.
+An actual seasonal baseline needs a declared season and adequate history; this
+120-day toy uses a training-mean baseline and makes no seasonal-skill claim.
+
+Run the complete block in a shell with Python 3.12 or later. It prints a table,
+uses no third-party packages, reads no files, makes no network requests, and
+writes no artifacts:
+
+```bash
+python3 - <<'PY'
+from collections import namedtuple
+from math import sqrt
+from random import Random
+from statistics import fmean
+
+Row = namedtuple('Row', 'site day rain previous observed')
+
+
+def catchment(site, seed, level, response):
+    rng, previous, rows = Random(seed), level, []
+    for day in range(1, 121):
+        rain = 12 * rng.random()  # Previous day's synthetic rain, mm/day.
+        observed = level + response * rain + 0.4 * (rng.random() - 0.5)
+        rows.append(Row(site, day, rain, previous, observed))
+        previous = observed
+    return rows
+
+
+def fit(rows):
+    xbar, ybar = fmean(r.rain for r in rows), fmean(r.observed for r in rows)
+    sxx = sum((r.rain - xbar) ** 2 for r in rows)
+    assert sxx > 0
+    slope = sum((r.rain - xbar) * (r.observed - ybar) for r in rows) / sxx
+    return ybar - slope * xbar, slope
+
+
+a = catchment('A', 20261126, 8.0, 1.5)
+b = catchment('B', 20261127, 20.0, 0.2)
+train = a[:80]  # Target days 1-80 in catchment A only.
+evaluations = [('future-A', a[80:]), ('unseen-B', b[:80])]
+train_ids = {(r.site, r.day) for r in train}
+assert all(r.site == 'A' and r.day <= 80 for r in train)
+for _, rows in evaluations:
+    assert rows and not (train_ids & {(r.site, r.day) for r in rows})
+
+intercept, slope = fit(train)
+training_mean = fmean(r.observed for r in train)
+methods = [
+    ('persistence', lambda r: r.previous),
+    ('train-mean', lambda r: training_mean),
+    ('rain-linear', lambda r: intercept + slope * r.rain),
+]
+print('evaluation   n method          MAE    RMSE    bias  (m^3/s)')
+for name, rows in evaluations:
+    for method, predict in methods:
+        errors = [predict(r) - r.observed for r in rows]
+        mae = fmean(abs(e) for e in errors)
+        rmse = sqrt(fmean(e * e for e in errors))
+        bias = fmean(errors)  # Positive means overprediction.
+        print(f'{name:10} {len(rows):3d} {method:12} {mae:7.3f} {rmse:7.3f} {bias:7.3f}')
+PY
+```
+
+A documentation execution on November 26, 2026 with CPython 3.12.14 produced:
+
+```text
+evaluation   n method          MAE    RMSE    bias  (m^3/s)
+future-A    40 persistence    5.995   7.290  -0.032
+future-A    40 train-mean     5.090   5.776  -1.190
+future-A    40 rain-linear    0.099   0.112  -0.018
+unseen-B    80 persistence    0.837   1.053  -0.027
+unseen-B    80 train-mean     4.435   4.504  -4.435
+unseen-B    80 rain-linear    5.104   6.318  -3.924
+```
+
+The candidate has small future-A error under its favorable generating mechanism,
+but fails the stated transfer rule on unseen-B: RMSE `6.318 m³/s` exceeds
+persistence's `1.053 m³/s`. Report that failure alongside the favorable result.
+The hand-built change in level/response demonstrates one way transfer can fail;
+it does not diagnose a real catchment. Do not pool these two holdouts into one
+score or turn the descriptive errors into calibrated uncertainty, significance,
+flood safety, causal land-use effects, or operational forecast accuracy.
+
+### Challenge the recipe before using observations
+
+Check the evaluation machinery separately from the scientific result:
+
+- Recompute the printed metrics from the residuals. Prediction and truth must
+  stay paired by catchment and target day; unequal sample counts remain visible.
+- Fit again after replacing held-out outcome labels with impossible sentinels;
+  fitted coefficients must be unchanged. For the sequential persistence test,
+  keep previously observed flow fixed: it is allowed information at each origin.
+  This is an audit intervention, not a physically consistent replacement dataset.
+- Keep the negative catchment result. Changing the generator, split, seed, model,
+  or thresholds after inspection creates another exploratory run; record that
+  change and require new, untouched evaluation evidence for confirmation.
+
+These checks establish only the bounded calculation and information separation.
+They do not implement or verify KFM's commit/reveal records, evidence resolution,
+model contracts, scientific qualification, or release controls. The source/rights,
+measurement support, missingness, dependence, uncertainty, and independent review
+needed for a real study remain **NEEDS VERIFICATION**.
+
+A useful real-study review packet would link exact source inputs and rights
+decisions, configuration and dependency identity, transformations, split
+membership, evaluation outputs, limitations, qualified review, and the applicable
+correction/rollback path. Reproducibility can expose a mistake without making a
+scientific conclusion correct. AI may help draft a hypothesis or explain a result;
 it cannot supply missing measurements or serve as independent review.
 
 ## Primary references
 
-These references were checked October 29, 2026. They support the methods above,
-not claims of KFM adoption, runtime operation, or qualification.
+S1-S8 were originally checked October 29, 2026. S4 was revisited and S9 checked
+November 26, 2026 for the worked example. They support the methods above, not
+claims of KFM adoption, runtime operation, or qualification.
 
 <a id="reference-s1"></a>
 
@@ -257,6 +386,10 @@ not claims of KFM adoption, runtime operation, or qualification.
 <a id="reference-s8"></a>
 
 - **S8:** NIST/SEMATECH, [What is experimental design?](https://www.itl.nist.gov/div898/handbook/pri/section1/pri11.htm) and its linked design guidance. Planned factors, responses, and experiments.
+
+<a id="reference-s9"></a>
+
+- **S9:** NIST/SEMATECH, [Least Squares](https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd431.htm), section 4.4.3.1. Straight-line coefficient estimators used in the synthetic worked example; no hydrological-validity claim.
 
 ## Placement and change boundary
 
