@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-governed-api-libzstd-0474b798fc81",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "infra/docker/Dockerfile.governed-api",
+    "infra/docker/README.md"
+  ],
+  "artifact_hashes": {
+    "infra/docker/Dockerfile.governed-api": "sha256:0474b798fc81c6b6ee7f1b966d4525eaf00bdee71ef205991c78422cb5a2406d",
+    "infra/docker/README.md": "sha256:c26d6e508b527d1cc64d2d3b78a6186175fdb79057f59e21281f69fb8bc337e3"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code",
+    "version": "Exact model version not recorded by emitter"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "Docker Hub tag metadata",
+      "disposable Docker build",
+      "no-network focused validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:180fac95e54eda61674ece69faed1398a31c7f9dc4927b430a6d9d2115102767",
+      "sha256:e5085e16f41ce4d34252229fd266be9e725ece2867c1c34f418c7721acc26d40",
+      "sha256:311358678e67a93cd8ec114e39ad0aa741b1dcfcd0f5f2c6fe5d95b3bbfbaa32"
+    ],
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "repo:main@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "data/receipts/generated/genrec-governed-api-zlib-4376678cb83d.json",
+      "https://lists.debian.org/debian-security-announce/2026/msg00579.html",
+      "https://security-tracker.debian.org/tracker/CVE-2026-124851"
+    ]
+  },
+  "truth_labels": {
+    "infra/docker/Dockerfile.governed-api": "PROPOSED",
+    "infra/docker/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "base-image-bump-considered",
+      "outcome": "PASS",
+      "reason": "Both the pinned python:3.14.10-slim-trixie digest 9aaa4740 and the newest digest 22eafb37 (pushed 2026-11-24) ship libzstd1 1.5.7+dfsg-1, so no base bump repairs CVE-2026-124851. The pinned base digest is unchanged."
+    },
+    {
+      "gate": "disposable-container-build",
+      "outcome": "PASS",
+      "reason": "At main 83ae60e3 the candidate apt layer built unmodified and installed libzstd1 1.5.7+dfsg-1+deb13u1 from trixie-security. The pip layer needed a local-only BuildKit secret for the sandbox TLS proxy CA. The secret leaves no file in the image. Final UID 10001 and a zstd compress/decompress round trip passed."
+    },
+    {
+      "gate": "fail-closed-package-floor",
+      "outcome": "PASS",
+      "reason": "The extracted dpkg floor rejects 1.5.7+dfsg-1 and an empty version, accepts 1.5.7+dfsg-1+deb13u1 and later revisions, and rejects the unupgraded base package."
+    },
+    {
+      "gate": "local-trivy-scan",
+      "outcome": "SKIPPED",
+      "reason": "A local Trivy run was not permitted in the emitting sandbox. The hosted security workflow container-scan is the scan evidence for this change."
+    },
+    {
+      "gate": "focused-current-base-validation",
+      "outcome": "PASS",
+      "reason": "tests/infra unittest methods and diff whitespace checks passed on the candidate tree."
+    },
+    {
+      "gate": "hosted-candidate-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted candidate execution begins after branch and draft PR publication."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Owner requested a draft PR. Formal PR review, merge, release and deployment remain separate and pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "debian-dsa-6657-1",
+      "validated": true,
+      "evidence_ref": "https://lists.debian.org/debian-security-announce/2026/msg00579.html"
+    },
+    {
+      "id": "debian-cve-124851",
+      "validated": true,
+      "evidence_ref": "https://security-tracker.debian.org/tracker/CVE-2026-124851"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T18:00:00Z",
+  "emitter": "Claude Code",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor provenance for the two-file libzstd1 package-floor addition. It does not edit genrec-governed-api-zlib-4376678cb83d, which binds earlier bytes. Contract hash binds the checked-in AI build operating contract, not prompt contents. Evidence hashes bind the source patch, the base-image libzstd1 query (identical for both digests) and the candidate dpkg inventory, all kept outside the repository. No Trivy ignore entry, baseline, severity threshold or ignore-unfixed setting was changed. This receipt does not approve the change, is not a governed PolicyDecision or release authority, and does not prove application security."
+}
