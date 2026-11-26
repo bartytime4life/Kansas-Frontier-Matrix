@@ -3,11 +3,12 @@ import { setTimeout as pause } from 'node:timers/promises';
 import { captureRequest, fetchCapture } from '../../server/ingestion-sources.mjs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-const extractText = promisify(execFile);
 import { resolve } from 'node:path';
 import { canonical, sha, fail } from '../../server/pipeline-contract.mjs';
-import { immutable, storageGuard } from '../../server/pipeline-files.mjs';
+import { immutable, readRegular, storageGuard } from '../../server/pipeline-files.mjs';
 import { GRAIN_SOURCE, GRAIN_URL, parseGrainReport } from '../../server/grain-market.mjs';
+
+const extractText = promisify(execFile);
 
 export const reports = Object.freeze([
   { id:GRAIN_SOURCE, url:GRAIN_URL, kind:'pdf' },
@@ -39,6 +40,20 @@ export async function captureReport(source, fetcher = fetch) {
   return body;
 }
 
+export async function grainFromCapture(root, digest, retrievedAt) {
+  if (typeof digest !== 'string' || !/^[a-f0-9]{64}$/.test(digest)) fail('DIGEST_INVALID');
+  const raw = resolve(root,'data/quarantine',GRAIN_SOURCE,'objects/sha256',digest,'payload');
+  const original = await readRegular(raw,limit);
+  if (sha(original) !== digest) fail('ARTIFACT_INTEGRITY_FAILED');
+  let text;
+  try {
+    const result = await extractText('pdftotext',['-layout',raw,'-'],{encoding:'utf8',timeout:8000,maxBuffer:512*1024});
+    text = result.stdout;
+  } catch { fail('GRAIN_TEXT_EXTRACTION_FAILED'); }
+  if (sha(await readRegular(raw,limit)) !== digest) fail('ARTIFACT_INTEGRITY_FAILED');
+  return parseGrainReport(text,digest,retrievedAt);
+}
+
 export async function watchMarket(config, { fetcher = fetch, guard = storageGuard, clock = () => new Date() } = {}) {
   const outcomes = [];
   for (const source of reports) {
@@ -53,12 +68,7 @@ export async function watchMarket(config, { fetcher = fetch, guard = storageGuar
       const receiptBytes = Buffer.from(canonical(receipt));
       await immutable(resolve(config.root,'data/receipts/ingest/pc-pipeline',sha(receiptBytes)+'.json'),receiptBytes);
       if (source.id !== GRAIN_SOURCE) { outcomes.push({...receipt,state:'captured'}); continue; }
-      let text;
-      try {
-        const result = await extractText('pdftotext',['-layout',rawPath,'-'],{encoding:'utf8',timeout:8000,maxBuffer:512*1024});
-        text = result.stdout;
-      } catch { fail('GRAIN_TEXT_EXTRACTION_FAILED'); }
-      const product = parseGrainReport(text,captureSha256,retrievedAt);
+      const product = await grainFromCapture(config.root,captureSha256,retrievedAt);
       const payload = Buffer.from(canonical(product)), digest = sha(payload);
       await immutable(resolve(config.root,'data/processed',source.id,digest+'.json'),payload);
       outcomes.push({...receipt,state:'candidate-only',reportDate:product.reportDate,rows:product.rows.length,payloadSha256:digest});

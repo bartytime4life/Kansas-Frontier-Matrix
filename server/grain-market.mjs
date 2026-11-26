@@ -13,8 +13,8 @@ const price = v => typeof v === 'number' && Number.isFinite(v) && v > 0 && v < 1
 export function validateGrain(p) {
   if (!exact(p,'format sourceId sourceUrl captureSha256 reportDate retrievedAt unit rows') ||
       p.format !== 'kfm-kansas-grain-bids-v1' || p.sourceId !== GRAIN_SOURCE || p.sourceUrl !== GRAIN_URL ||
-      !/^[a-f0-9]{64}$/.test(p.captureSha256) || p.unit !== 'USD/bu' ||
-      !/^\d{4}-\d\d-\d\d$/.test(p.reportDate) || !Number.isFinite(Date.parse(p.reportDate)) ||
+      typeof p.captureSha256 !== 'string' || !/^[a-f0-9]{64}$/.test(p.captureSha256) || p.unit !== 'USD/bu' ||
+      typeof p.reportDate !== 'string' || !/^\d{4}-\d\d-\d\d$/.test(p.reportDate) || !Number.isFinite(Date.parse(p.reportDate)) ||
       new Date(p.reportDate).toISOString().slice(0,10) !== p.reportDate ||
       typeof p.retrievedAt !== 'string' || !Number.isFinite(Date.parse(p.retrievedAt)) ||
       new Date(p.retrievedAt).toISOString() !== p.retrievedAt || p.reportDate > p.retrievedAt.slice(0,10) ||

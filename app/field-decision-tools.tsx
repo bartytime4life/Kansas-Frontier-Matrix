@@ -64,6 +64,7 @@ export function farmBudget(yieldText:string, bidText:string, costs:readonly stri
 function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:string)=>void}) {
   const [crop,setCrop]=useState(crops[0]), [region,setRegion]=useState(""), [manual,setManual]=useState("");
   const yieldEstimate=yieldHistory(harvests,new Date().getUTCFullYear());
+  const [inputPrices,setInputPrices]=useState(["","","",""]);
   const [yieldText,setYield]=useState(""), [costs,setCosts]=useState(["0","0","0",""]);
   const [query,setQuery]=useState(0), [expiryTick,setExpiryTick]=useState(0);
   const grain=useSource(query ? GRAIN_PATH : null,validGrain,query,12000);
@@ -98,6 +99,15 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
         <p>Mean of the five preceding harvests. {yieldEstimate.trials ? `Across ${yieldEstimate.trials} earlier test seasons, mean absolute error was ${yieldEstimate.mae!.toFixed(1)} bu/ac. Using the previous harvest alone gave ${yieldEstimate.previousMae!.toFixed(1)} bu/ac.` : "More observations are needed to measure historical error."}</p>
         <button type="button" onClick={()=>setYield(String(Number(yieldEstimate.value.toFixed(2))))}>Copy baseline into expected yield</button></>:
         <p>Enter at least five consecutive final harvest years. Each year must be unique.</p>}</div>
+    </details>
+    <details><summary>Convert fuel and fertilizer to cost per acre</summary>
+      <div className="field-inputs">{["Diesel ($/gal)","Diesel use (gal/ac)","Fertilizer ($/US short ton)","Product applied (lb/ac)"].map((label,i)=><label key={label}>{label}<input type="number" min="0" step="any" value={inputPrices[i]} onChange={e=>{const value=e.target.value;setInputPrices(old=>old.map((n,j)=>i===j?value:n));}}/></label>)}</div>
+      {["fuel","fertilizer"].map((kind,i)=>{
+        const price=decimal(inputPrices[i*2]), quantity=decimal(inputPrices[i*2+1]);
+        const perAcre=price!==null && quantity!==null?price*quantity/(i===0?1:2000):null;
+        return <button key={kind} type="button" disabled={perAcre===null || perAcre>1000000} onClick={()=>{if(perAcre!==null)setCosts(old=>old.map((n,j)=>j===i?perAcre.toFixed(2):n));}}>
+          {perAcre===null?"Enter "+kind+" price and usage":"Use "+usd.format(perAcre)+"/ac for "+kind}</button>;
+      })}
     </details>
     <div className="field-inputs"><label>Expected yield (bu/ac)<input type="number" min="0" step="any" value={yieldText} onChange={e=>setYield(e.target.value)}/></label>
     {["Fuel ($/ac)","Fertilizer ($/ac)","Insurance premium ($/ac)","Other costs ($/ac)"].map((label,i)=><label key={label}>{label}<input type="number" min="0" step="any" value={costs[i]} onChange={e=>{const value=e.target.value;setCosts(old=>old.map((n,j)=>j===i?value:n));}}/></label>)}</div>

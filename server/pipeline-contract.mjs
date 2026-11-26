@@ -43,7 +43,7 @@ export function verifyProfile(signed, publicKey, { now = Date.now(), recipe = ''
   } catch { fail('APPROVAL_INVALID', 403); }
 }
 export async function recipeDigest() {
-  const files = ['pipeline-contract.mjs', 'pipeline-normalize.mjs', 'ingestion-sources.mjs', 'county-history-candidate.mjs', 'county-history-release.mjs', 'grain-market.mjs'];
+  const files = ['pipeline-contract.mjs', 'pipeline-normalize.mjs', 'ingestion-sources.mjs', 'county-history-candidate.mjs', 'county-history-release.mjs', 'grain-market.mjs', '../scripts/pc-pipeline/market-watch.mjs'];
   const entries = await Promise.all(files.map(async name => [name, sha(await readFile(new URL(name, import.meta.url)))]));
   return sha(canonical(entries));
 }

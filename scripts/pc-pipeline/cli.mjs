@@ -57,10 +57,20 @@ export async function cli(argv, connectionDependencies) {
     await storageGuard(config);
     const payload = await readRegular(resolve(config.root,'data/processed',GRAIN_SOURCE,args[1]+'.json'), MAX_PACKAGE);
     if (sha(payload) !== args[1]) fail('ARTIFACT_INTEGRITY_FAILED');
-    validateGrain(parse(payload));
+    const candidate = validateGrain(parse(payload));
+    const { grainFromCapture } = await import('./market-watch.mjs');
+    const replay = await grainFromCapture(config.root,candidate.captureSha256,candidate.retrievedAt);
+    if (canonical(replay) !== payload.toString('utf8')) fail('GRAIN_REPLAY_MISMATCH');
     const approval = parse(await readRegular(resolve(config.approvalDirectory,GRAIN_SOURCE+'.json'),32768));
     const secret = (await readRegular(resolve(process.env.CREDENTIALS_DIRECTORY ?? '/nonexistent','pipeline-worker-key'),128)).toString().trim();
     const head = await pipelineCall('release',{sourceId:GRAIN_SOURCE},secret);
+    if (head.releaseId) {
+      const existing = await pipelineCall('release',{releaseId:head.releaseId},secret);
+      if (existing.active === true && existing.state === 'COMMITTED' && existing.releaseId === head.releaseId && existing.payloadSha256 === args[1]) {
+        await immutable(resolve(config.root,'data/receipts/pipeline/published',existing.releaseId+'.json'),bytes(existing));
+        return existing;
+      }
+    }
     const receipt = await publish({format:'kfm-pc-release-transfer-v1',sourceId:GRAIN_SOURCE,recipeSha256:await recipeDigest(),
       byteLength:payload.length,payloadSha256:args[1],approval,expectedActive:head.releaseId},payload,secret);
     await immutable(resolve(config.root,'data/receipts/pipeline/published',receipt.releaseId+'.json'),bytes(receipt));
