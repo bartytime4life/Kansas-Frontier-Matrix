@@ -69,7 +69,7 @@ normalized-summary-check:
 	$(KFM_VALIDATION_ENV) python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
 	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/policy/test_preflight_summary_consistency.py tests/policy/test_normalized_summary_consumer_readiness.py tests/policy/test_run_doctrine_artifact_preflight.py tests/policy/test_preflight_summary_schema_contract.py tests/source/test_doctrine_artifact_preflight_summary_schema.py tests/ci/test_normalized_summary_workflow.py
 
-.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci
+.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report governed-api-image-receipt policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci
 
 help:
 	@echo "KFM repository targets"
@@ -95,6 +95,7 @@ help:
 	@echo "  control-plane-registry-packet Validate the seven MRTS-02 registry projections"
 	@echo "  trust-spine-fixture-slice Validate the synthetic MRTS-05 cross-family flow"
 	@echo "  ci-conformance-report Validate the deterministic blocked MRTS-06 handoff"
+	@echo "  governed-api-image-receipt Replay the governed-api review-image receipts against their bound bytes"
 	@echo "  hazards-validate      Run bounded synthetic USDM materiality validation"
 	@echo "  governed-api-smoke    Run governed API tests"
 	@echo "  governed-api-verify   Run governed API tests and enforce its import boundary"
@@ -232,6 +233,27 @@ ci-conformance-report:
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-ci-conformance-report-successor-20261008.json --repo-root . --artifact-git-ref 19ce0b5250f18b396dbd71b1861ddd89607beec3
 	$(KFM_VALIDATION_ENV) python tools/validators/governance/validate_ci_conformance_report.py artifacts/qa/validation/milestone-1/ci_conformance_report_2026-11-18.json
 	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-ci-conformance-report-successor-20261118.json --repo-root . --artifact-git-ref b7d2be1b2f23bd97be879bca94520c419b080720
+
+# Hash-bound replay of the governed-api review-image receipts. Generated receipts
+# are immutable: each one replays at a commit that holds its bound bytes. The last
+# step requires that some genrec-governed-api-*.json receipt binding both files
+# matches the current Dockerfile.governed-api and README.md, so a base-digest bump
+# or any other byte change fails until a successor receipt is added. When a
+# successor lands, pin the receipt it replaces here with --artifact-git-ref.
+# Never edit a committed receipt.
+governed-api-image-receipt:
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-governed-api-zlib-4376678cb83d.json --repo-root . --artifact-git-ref e7a2ad3fc5c9d5cbe297a70a2e6c7daba2f7bcbd
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-governed-api-base-digest-ee3a584172be.json --repo-root . --artifact-git-ref 83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22
+	@set -eu; bound=0; \
+	echo 'Head-bound check: one receipt must be VALID; superseded receipts report INVALID here by design.'; \
+	for receipt in data/receipts/generated/genrec-governed-api-*.json; do \
+		python -c 'import json, sys; paths = set(json.load(open(sys.argv[1], encoding="utf-8")).get("artifact_paths") or ()); sys.exit(0 if {"infra/docker/Dockerfile.governed-api", "infra/docker/README.md"} <= paths else 1)' "$$receipt" 2>/dev/null || continue; \
+		if $(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py "$$receipt" --repo-root .; then bound=1; fi; \
+	done; \
+	if [ "$$bound" -ne 1 ]; then \
+		echo "GOVERNED_API_IMAGE_RECEIPT_MISSING: no generated receipt binds the current infra/docker/Dockerfile.governed-api and README.md bytes; add a successor receipt" >&2; \
+		exit 1; \
+	fi
 
 hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose

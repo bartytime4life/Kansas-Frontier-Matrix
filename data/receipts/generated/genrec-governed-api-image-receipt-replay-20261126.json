@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-governed-api-image-receipt-replay-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/infra-compose-smoke.yml",
+    "Makefile"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/infra-compose-smoke.yml": "sha256:45df065eb7c2548ab72b9c69314eec400685047b87a8d07bca76df696b8295a6",
+    "Makefile": "sha256:8a5f4bf91d1660d8e7e437364cfdf364c6c0bc59e26819cac39ea13e80c6f9b9"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "local Git evidence",
+      "no-network focused validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:4d7cbb0ffd3980c9e90441238178e54f9a65a0889e05a1573eef25fda8da0183",
+      "sha256:f1913c3fe8b3d96f9673ea6343b6ac70a78cbd6785055dc604cd9b4a15a14ef5"
+    ],
+    "attached_docs": [
+      "data/receipts/generated/README.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "repo:main@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "repo:commit@de55d3286a2d42605d40c8cb4759707232dfcda1",
+      "repo:.github/workflows/operational-trust-rollup.yml@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/6116@ba9030e94d9d7aa105dca25cb99bd286e18a0c3b"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/infra-compose-smoke.yml": "PROPOSED",
+    "Makefile": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "replay-target-positive",
+      "outcome": "PASS",
+      "reason": "make governed-api-image-receipt: predecessor valid at e7a2ad3f, successor genrec-governed-api-base-digest-ee3a584172be valid at main 83ae60e3, and the head-bound discovery step finds that successor valid against the current Dockerfile and README bytes."
+    },
+    {
+      "gate": "replay-target-negative",
+      "outcome": "PASS",
+      "reason": "With one FROM-digest byte changed in a scratch edit, no receipt bound the bytes and the target exited nonzero with GOVERNED_API_IMAGE_RECEIPT_MISSING; the file was restored byte-identical."
+    },
+    {
+      "gate": "replay-target-merge-order",
+      "outcome": "PASS",
+      "reason": "With open PR 6116's Dockerfile, README and libzstd receipt applied on this tree as a scratch overlay, the target passed through that receipt while this successor still replayed at 83ae60e3. Overlay removed; tree restored byte-identical."
+    },
+    {
+      "gate": "replay-target-selector-binding",
+      "outcome": "PASS",
+      "reason": "Head-bound candidates are selected by parsed artifact_paths, not text search. A scratch decoy receipt that validated and named both image files only in attached_docs kept the target green on a drifted Dockerfile before this change, and fails it after. Decoy removed."
+    },
+    {
+      "gate": "workflow-security-ratchet",
+      "outcome": "PASS",
+      "reason": "tools/validators/governance/validate_workflow_security.py PASS with zero findings, drift or baselined warnings; new job uses pinned checkout and setup-python, persist-credentials false, contents read only."
+    },
+    {
+      "gate": "focused-ci-tests",
+      "outcome": "PASS",
+      "reason": "tests/ci: 238 passed, 8 failed with and without this change; the same 8 fail on untouched main 83ae60e3 (migration-history and proof-slice tests), none touch this diff. YAML parses, make help lists the target, git diff --check clean."
+    },
+    {
+      "gate": "hosted-candidate-checks",
+      "outcome": "SKIPPED",
+      "reason": "The new review-image-receipt job first runs on the draft PR; no exact-head hosted result exists when this receipt is written."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Owner requested an optional replay and a draft PR. Review and merge remain separate and pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "successor-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-governed-api-base-digest-ee3a584172be.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T18:30:00Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Provenance for the replay wiring only: a Makefile target and an infra-compose-smoke job that runs it on infra/docker, Makefile and governed-api receipt changes. Head binding is discovered, not hard-coded, so either merge order with PR 6116 works. Intended effect: a future Dependabot base-digest PR goes red until a successor receipt is added. This receipt binds frequently edited files and is not replayed head-bound; replay it pinned to its merge-time commit. Rollback: revert the two hunks."
+}

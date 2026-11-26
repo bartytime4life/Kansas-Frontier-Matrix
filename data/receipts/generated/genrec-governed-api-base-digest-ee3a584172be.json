@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-governed-api-base-digest-ee3a584172be",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "infra/docker/Dockerfile.governed-api",
+    "infra/docker/README.md"
+  ],
+  "artifact_hashes": {
+    "infra/docker/Dockerfile.governed-api": "sha256:ee3a584172beec63edd216fd4c051f2d0fc53074361f9e60109247b276fe1d7d",
+    "infra/docker/README.md": "sha256:1f0258db433819d6af2da3ef3a4f4995286bf2e8639e19591133a2214060b0dc"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "local Git evidence",
+      "disposable Docker 29.9.3 build",
+      "no-network focused validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:26414449837d918ba261f36dd7589b5a605197e9a64d1f243750357bba1ae9f2",
+      "sha256:3eb4de26d460b432fdb7285b04353923938a4d18ca81581c3901fd8630771298",
+      "sha256:e3e4bc4e7bc9eae115e0dd93dd290604cb807defba8f10e305f8399aa4d69643"
+    ],
+    "attached_docs": [
+      "data/receipts/generated/README.md",
+      "data/receipts/generated/genrec-governed-api-zlib-4376678cb83d.json",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "infra/docker/README.md"
+    ],
+    "evidence_refs": [
+      "repo:main@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "repo:commit@de55d3286a2d42605d40c8cb4759707232dfcda1",
+      "repo:commit@e7a2ad3fc5c9d5cbe297a70a2e6c7daba2f7bcbd",
+      "repo:data/receipts/generated/genrec-governed-api-zlib-4376678cb83d.json@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "docker.io/library/python:3.14.10-slim-trixie@sha256:9aaa474097d094040649f2162a627c0049b408f52138d980916788d80f04802f"
+    ]
+  },
+  "truth_labels": {
+    "infra/docker/Dockerfile.governed-api": "PROPOSED",
+    "infra/docker/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-receipt-replay",
+      "outcome": "PASS",
+      "reason": "genrec-governed-api-zlib-4376678cb83d validates with --artifact-git-ref e7a2ad3fc5c9d5cbe297a70a2e6c7daba2f7bcbd and fails ARTIFACT_DIGEST_MISMATCH at /artifact_paths/0 against main 83ae60e3. Predecessor left byte-identical; this receipt succeeds it."
+    },
+    {
+      "gate": "successor-byte-scope",
+      "outcome": "PASS",
+      "reason": "Between e7a2ad3f and main 83ae60e3 the only infra/docker change is Dependabot commit de55d328 replacing the FROM digest 3cabfd7d... with 9aaa4740.... README bytes are unchanged (sha256 1f0258db...). This receipt authors no Dockerfile or README bytes; it records the Dependabot bytes as reviewed for build evidence."
+    },
+    {
+      "gate": "disposable-container-build-and-scan",
+      "outcome": "SKIPPED",
+      "reason": "Scan not run: Trivy is not installed here and fetching the Trivy 0.73.0 release binary was refused by this session's permission policy. The predecessor's PASS scanned the 3cabfd7d base and is not carried forward. The hosted security/container-scan job must scan the 9aaa4740 base."
+    },
+    {
+      "gate": "disposable-container-build",
+      "outcome": "PASS",
+      "reason": "Unmodified Dockerfile at 9aaa4740 completed the apt upgrade and package-floor layer, then failed only at pip: this sandbox's TLS-intercepting egress proxy CA is untrusted inside containers. Rebuilt via a sandbox-only --build-context base override adding that CA and PIP_CERT; all Dockerfile steps passed. Override is not in the repository."
+    },
+    {
+      "gate": "fail-closed-package-floor",
+      "outcome": "PASS",
+      "reason": "All nine floors held in the unmodified build. The 9aaa4740 base already ships every floored version except zlib1g (1:1.3.dfsg+really1.3.1-1+b1), so the zlib floor still binds. Negative build omitting zlib1g from the upgrade list failed at the zlib1g comparison (exit 1)."
+    },
+    {
+      "gate": "legitimate-container-controls",
+      "outcome": "PASS",
+      "reason": "Built image: UID/GID 10001, WORKDIR /app, zlib and gzip roundtrips, libz.so.1 linkage, zlib1g 1:1.3.dfsg+really1.3.1-1+deb13u1, OpenSSL 3.5.9, pip and ensurepip absent, lock removed, setuptools 82.0.1, wheel 0.46.3, packaging 26.3. Review-image evidence only."
+    },
+    {
+      "gate": "focused-current-base-validation",
+      "outcome": "PASS",
+      "reason": "On main 83ae60e3: all three tests/infra unittest methods passed, Compose configuration rendering passed, README relative links resolve, and git diff --check is clean."
+    },
+    {
+      "gate": "hosted-candidate-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted infra-compose-smoke and security runs start after branch and draft PR publication; no exact-head hosted result exists when this receipt is written."
+    },
+    {
+      "gate": "full-repository-suite",
+      "outcome": "SKIPPED",
+      "reason": "Bounded receipt succession for one Dependabot digest bump; repository-wide suite not run. No receipt, baseline or security gate was relaxed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Owner requested a successor receipt and a draft PR. Review, merge, release and deployment remain separate and pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-governed-api-zlib-4376678cb83d.json@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22"
+    },
+    {
+      "id": "dependabot-base-digest-bump",
+      "validated": true,
+      "evidence_ref": "repo:commit@de55d3286a2d42605d40c8cb4759707232dfcda1"
+    },
+    {
+      "id": "debian-zlib-advisory",
+      "validated": false,
+      "evidence_ref": "https://lists.debian.org/debian-security-announce/2026/msg00532.html"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T18:06:28Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor to genrec-governed-api-zlib-4376678cb83d, which stays immutable and replays at e7a2ad3f. This receipt binds the Dependabot base-digest bytes from de55d328; it authored neither file. make governed-api-image-receipt replays it at main 83ae60e3 and fails when no receipt binds the current bytes. Evidence hashes are session-local build, CA-override build and negative build logs, not retained. The Debian advisory was not re-fetched. Scan evidence is pending, not inherited. Not approval, a PolicyDecision, release authority, or proof of image security."
+}
