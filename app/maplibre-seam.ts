@@ -10,8 +10,10 @@ let cacheProtocolInstalled = false;
 export const loadMapLibre = async (): Promise<MapLibreModule> => {
   const runtime = await import("maplibre-gl");
   const { basemapCacheProtocol } = await import("./basemap-cache");
+  const { demTileProtocol } = await import("./dem-request-pool");
   if (!cacheProtocolInstalled) {
     installMapProtocol(runtime, "kfm-basemap", basemapCacheProtocol);
+    installMapProtocol(runtime, "kfm-dem", demTileProtocol);
     cacheProtocolInstalled = true;
   }
   return runtime;

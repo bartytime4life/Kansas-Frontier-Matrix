@@ -153,7 +153,7 @@ import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth
 import { useEarthEngineContext } from "./earth-engine-context-client";
 import { EARTH_ENGINE_CONTEXT_LAYERS } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
-import { classifyBasemapError, createBasemapHealth } from "./basemap-health";
+import { classifyBasemapError, createBasemapHealth, isMapRequestCancelled } from "./basemap-health";
 import { installBasemapDiagnostics } from "./basemap-diagnostics";
 import { browserRenderBudget, controlOwnsMapSourceErrors, createMapStyleReadyCheck, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import { webgl2Available } from "./webgl-support";
@@ -1425,6 +1425,7 @@ export default function Home() {
   // once, and `byHand` leaves a visitor's own choice of DEM alone.
   const terrainDetailRef = useRef({ auto: false, failed: false, byHand: false });
   const terrainDetailFallbackRef = useRef<(() => void) | null>(null);
+  const retireTerrainFailureRef = useRef<(() => void) | null>(null);
   const attachedTerrainProviderRef = useRef<TerrainProvider | null>(null);
   const setTerrainPresentation = (map: MapLibreMap, enabled: boolean, scale: number) => {
     const provider = terrainProviderRef.current;
@@ -6851,6 +6852,14 @@ export default function Home() {
         const basemapHealth = createBasemapHealth();
         basemapHealth.beginStyle();
         basemapHealthRef.current = basemapHealth;
+        retireTerrainFailureRef.current = () => {
+          failedTerrainSourceRef.current = null;
+          failedSourceIds.delete(TERRAIN_SOURCE_ID);
+          if (degradedReason?.startsWith("Terrain DEM is unavailable")) {
+            degradedReason = null;
+            if (failedSourceIds.size === 0 && runtimeError === mapRuntimeErrorCode("event", TERRAIN_SOURCE_ID)) runtimeError = null;
+          }
+        };
         const initialView = pendingViewRef.current ?? KANSAS_VIEW;
         const renderBudget = browserRenderBudget();
         const map = new mapLibre.Map({ transformRequest: basemapCacheRequest,
@@ -7567,6 +7576,7 @@ export default function Home() {
         });
         map.on("error", (event) => {
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
+          if (isMapRequestCancelled(event)) return;
           // Soil moisture, Crop-CASMA, Earth Engine, and device GeoPDF controls
           // report their own partial state; their tiles must not fail the map.
           if (controlOwnsMapSourceErrors(sourceId)) return;
@@ -7581,6 +7591,16 @@ export default function Home() {
             ? { sourceId, sourceInstance: basemapSource, sourceSpec: basemapSource?.serialize() ?? basemapStyle.sources[sourceId], event } : null;
           const basemapKind = basemapInput ? classifyBasemapError(basemapInput) : null;
           if (basemapKind === "stale" || basemapKind === "cancelled") return;
+          if (sourceId === BASEMAP_RELIEF_DEM_SOURCE_ID && scenePresetRef.current === "elevation-3d") {
+            const tiles = (basemapInput?.sourceSpec as { tiles?: string[] } | undefined)?.tiles?.[0];
+            if (tiles && tiles !== terrainSourceFor(terrainProviderRef.current).tileTemplate) return;
+            if ((basemapKind === "tile" || basemapKind === "source") && terrainProviderRef.current === "usgs-3dep"
+              && terrainDetailRef.current.auto && !terrainDetailRef.current.failed) {
+              terrainDetailRef.current = { ...terrainDetailRef.current, auto: false, failed: true };
+              terrainDetailFallbackRef.current?.();
+              return;
+            }
+          }
           if (VECTOR_BASEMAPS.has(basemapRef.current) && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext), styleDocumentLoadedRef.current)) {
             styleFallbackAttempted = true;
             runtimeError = null;
@@ -7744,7 +7764,7 @@ export default function Home() {
             setTerrainState("READY");
             failedSourceIds.delete(TERRAIN_SOURCE_ID);
             if (terrainRetryTimer !== null) { window.clearTimeout(terrainRetryTimer); terrainRetryTimer = null; }
-            if (degradedReason?.startsWith("Terrain DEM is unavailable")) { degradedReason = null; runtimeError = null; }
+            retireTerrainFailureRef.current?.();
           }
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
@@ -7843,6 +7863,7 @@ export default function Home() {
       stopStormDeskProbe();
       stopBasemapDiagnostics();
       basemapHealthRef.current = null;
+      retireTerrainFailureRef.current = null;
       stopStyleReadyCheck();
       mapRef.current?.remove();
       mapRef.current = null;
@@ -9751,11 +9772,14 @@ export default function Home() {
 
   const retryTerrain = () => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) {
+    // Tile settlement is not style-document readiness. A failed source must
+    // remain replaceable while other display tiles are still pending.
+    if (!map || !styleGenerationReadyRef.current) {
       setTerrainState("LOADING");
       setRuntime({ kind: "loading", message: "Waiting for the map style before retrying terrain…" });
       return;
     }
+    retireTerrainFailureRef.current?.();
     // Retry uses the same complete teardown as a 3D → 2D transition so a
     // failed tile manager cannot be reused by the new terrain presentation.
     setTerrainPresentation(map, false, 1);
@@ -9768,6 +9792,7 @@ export default function Home() {
   };
 
   const chooseTerrainProvider = (provider: TerrainProvider) => {
+    retireTerrainFailureRef.current?.();
     terrainProviderRef.current = provider;
     attachedTerrainProviderRef.current = null;
     setTerrainElevationReading(null);
@@ -9787,22 +9812,31 @@ export default function Home() {
       announce("USGS 3DEP elevation did not load here; the Mapzen display DEM is back, overzoomed beyond zoom 11");
     };
   });
-  // Past zoom 11.5 in 3D over Kansas the display DEM is only overzoomed; the live
-  // USGS 3DEP mosaic carries the finer relief.
-  const wantsTerrainDetail = scenePreset === "elevation-3d" && terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM + 0.5
+  // Use the continuous display DEM for wide views and 3DEP for settled close
+  // views. Hysteresis avoids source churn at the detail threshold. Explicit
+  // provider choices remain pinned; a category preset is an automatic choice.
+  const wantsTerrainDetail = scenePreset === "elevation-3d" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM + 0.5
     && view.center[0] >= -102.1 && view.center[0] <= -94.5 && view.center[1] >= 36.9 && view.center[1] <= 40.1;
   useEffect(() => {
     const detail = terrainDetailRef.current;
-    if (!wantsTerrainDetail || detail.byHand || detail.failed) return;
+    if (detail.byHand) return;
+    const wide = scenePreset !== "elevation-3d" || view.zoom <= TERRARIUM_RENDER_MAX_ZOOM - 0.5
+      || view.center[0] < -102.1 || view.center[0] > -94.5 || view.center[1] < 36.9 || view.center[1] > 40.1;
+    if (!wide && (!wantsTerrainDetail || detail.failed || terrainProvider !== "mapzen")) return;
     const timer = window.setTimeout(() => {
-      terrainDetailRef.current = { ...terrainDetailRef.current, auto: true };
-      chooseTerrainProvider("usgs-3dep");
-      announce("Close view: loading USGS 3DEP elevation for finer relief");
+      if (wide) {
+        terrainDetailRef.current = { ...terrainDetailRef.current, auto: false, failed: false };
+        if (terrainProviderRef.current === "usgs-3dep") chooseTerrainProvider("mapzen");
+      } else {
+        terrainDetailRef.current = { ...terrainDetailRef.current, auto: true };
+        chooseTerrainProvider("usgs-3dep");
+        announce("Close view: loading USGS 3DEP elevation for finer relief");
+      }
     }, 0);
     return () => window.clearTimeout(timer);
   // chooseTerrainProvider only sets state and refs; announce is stable.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wantsTerrainDetail, announce]);
+  }, [wantsTerrainDetail, terrainProvider, scenePreset, view.zoom, view.center, announce]);
 
   const applyTerrainLook = (look: "natural" | "topographic" | "buildings") => {
     const nextBasemap: BasemapKey = look === "natural" ? "imagery" : look === "topographic" ? "topo" : "standard";
@@ -11356,7 +11390,10 @@ export default function Home() {
     if (mapRef.current?.isStyleLoaded()) updateImportPreviewSource(mapRef.current, null);
     setEarthEngineDisplay(current => ({ ...current, visible: {} }));
     setUndergroundOpen(false);
-    if (look.terrainProvider) chooseTerrainProviderByHand(look.terrainProvider);
+    if (look.terrainProvider) {
+      terrainDetailRef.current = { auto: look.terrainProvider === "usgs-3dep", failed: false, byHand: false };
+      chooseTerrainProvider(look.terrainProvider);
+    }
     activateMapRepresentation(look.scene);
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
@@ -11638,7 +11675,7 @@ export default function Home() {
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
               <button className="map-dock-action" type="button" aria-pressed={timelineOpen} aria-controls="compact-time-settings" aria-expanded={primaryWorkspace === "map" && guideOpen === false && timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
               <button className="map-dock-action" type="button" data-category-dock-return onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
-        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunAt, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
+        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: styleReady && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={styleReady && maplibreProbe.canvasReady && maplibreProbe.interactionsReady} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunAt, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
                 <summary aria-label="Map views and controls" onClick={() => setGuideOpen(false)}>Map <small className="map-dock-current-view">{undergroundOpen ? "Underground" : mapUtilityOpen && mapUtilityView === "compare" ? "Compare A/B" : mapRepresentationLabel}</small><span aria-hidden="true">⌄</span></summary>
@@ -12932,7 +12969,7 @@ export default function Home() {
                   <button type="button" aria-label="Underground recorded layers" aria-pressed={undergroundOpen} onClick={() => { toggleUnderground(); setUndergroundFocusRequest((request) => request + 1); }}><span>↓</span><strong>Underground</strong><small>Recorded logs, cores &amp; aquifers</small></button>
                 </section>
 
-                <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunAt, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: styleReady && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={styleReady && maplibreProbe.canvasReady && maplibreProbe.interactionsReady} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunAt, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering</summary><div className="explorer-secondary-body">
                 <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />

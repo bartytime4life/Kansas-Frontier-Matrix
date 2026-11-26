@@ -7,12 +7,14 @@ import {existsSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 const source=await readFile('app/basemap-cache.ts','utf8');
 const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+const poolExports={};vm.runInNewContext(ts.transpileModule(await readFile('app/dem-request-pool.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:poolExports,URL,fetch,AbortSignal,DOMException,location:{origin:'https://kfm.test'}});
 const url='https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/8/97/58';
 const status={schema:'kfm-basemap-cache/v1',limitBytes:10_000_000_000,usedBytes:4096,destination:'/pc/basemap-cache',sessionToken:'a'.repeat(43),job:{state:'idle'}};
-function harness(fetch){const exports={},saved=new Map();vm.runInNewContext(code,{exports,URL,Date,fetch,AbortSignal,DOMException,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)}});return exports;}
+function harness(fetch){const exports={},saved=new Map();vm.runInNewContext(code,{exports,URL,Date,fetch,AbortSignal,DOMException,location:{origin:'https://kfm.test'},require:name=>{assert.equal(name,'./dem-request-pool');return poolExports;},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)}});return exports;}
 test('only allowed basemap tiles use the local transport; observation and evidence URLs stay exact',()=>{
  const m=harness();
  for(const u of ['/api/fire?day=2026-10-08','https://gibs.earthdata.nasa.gov/fire/2026-10-08.png','https://nowcoast.noaa.gov/wms?TIME=2026-10-08T12:02:00Z','/earth-engine/2023/1.png','https://tile.openstreetmap.org/8/1/2.png','https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/8/1/2',url+'?TIME=2020',url.replace('https:','http:'),url.replace('nationalmap.gov','nationalmap.gov.evil')]) assert.equal(m.basemapCacheRequest(u,'Tile').url,u);
+ assert.match(m.basemapCacheRequest('/api/3dep-dem-tile?v=2&z=13&x=1900&y=3120','Tile').url,/^kfm-dem:/);assert.equal(m.basemapCacheRequest('/api/3dep-dem-tile?v=2&z=13&x=1900&y=3120','Source').url,'/api/3dep-dem-tile?v=2&z=13&x=1900&y=3120');
  assert.match(m.basemapCacheRequest(url,'Tile').url,/^kfm-basemap:/);assert.equal(m.basemapCacheRequest(url,'Source').url,url);
  assert.equal(m.cacheableBasemap('https://tiles.openfreemap.org/planet/20261004_113936_pt/8/2/3.pbf'),true);
 });

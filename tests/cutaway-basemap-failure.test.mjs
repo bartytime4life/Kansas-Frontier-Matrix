@@ -14,7 +14,7 @@ const code=ts.transpileModule(`exports.handle=${handler}`,{compilerOptions:{modu
 test('a selected aerial tile failure leaves cutaway controls usable with explicit missing coverage',()=>{
  const states=[],exports={};const sourceId='kansas-ng911-2024';
  const spec={type:'raster',tiles:['https://example.invalid/{z}/{x}/{y}.png']},rendererSource={serialize:()=>spec};
- vm.runInNewContext(code,{...performanceModule,...healthModule,exports,basemapHealth:healthModule.createBasemapHealth(),map:{getSource:()=>rendererSource},basemapRef:{current:'kansas-aerial'},VECTOR_BASEMAPS:new Set(['standard','aviation-chart','civic']),BASEMAPS:{'kansas-aerial':{style:{sources:{[sourceId]:spec}}}},LAYER_REGISTRY:[],OFFICIAL_CONTEXT_BY_SOURCE_ID:{},officialContextForMapSource:()=>undefined,degradedReason:null,setRuntime:state=>states.push(state)});
+ vm.runInNewContext(code,{...performanceModule,...healthModule,exports,BASEMAP_RELIEF_DEM_SOURCE_ID:"basemap-relief-dem",basemapHealth:healthModule.createBasemapHealth(),map:{getSource:()=>rendererSource},basemapRef:{current:'kansas-aerial'},VECTOR_BASEMAPS:new Set(['standard','aviation-chart','civic']),BASEMAPS:{'kansas-aerial':{style:{sources:{[sourceId]:spec}}}},LAYER_REGISTRY:[],OFFICIAL_CONTEXT_BY_SOURCE_ID:{},officialContextForMapSource:()=>undefined,degradedReason:null,setRuntime:state=>states.push(state)});
  exports.handle({sourceId,source:spec,tile:{state:'errored',tileID:{canonical:{z:6,x:14,y:24}}},error:new Error('private provider URL must never enter UI')});
  assert.equal(states[0].kind,'degraded');assert.match(states[0].message,/Gaps are unknown/);assert.match(states[0].message,/controls and records remain available/);assert.doesNotMatch(states[0].message,/private provider/);
 });

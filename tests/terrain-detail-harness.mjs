@@ -9,7 +9,7 @@ const ast = ts.createSourceFile('page.tsx', page, ts.ScriptTarget.ES2022, true, 
 const callbacks = {}, declarations = {};
 let detailEffect, fallbackEffect;
 function visit(node) {
-  if (ts.isVariableDeclaration(node) && ['chooseTerrainProvider', 'chooseTerrainProviderByHand', 'wantsTerrainDetail', 'setTerrainPresentation'].includes(node.name.getText(ast))) {
+  if (ts.isVariableDeclaration(node) && ['chooseTerrainProvider', 'chooseTerrainProviderByHand', 'wantsTerrainDetail', 'setTerrainPresentation', 'retryTerrain'].includes(node.name.getText(ast))) {
     declarations[node.name.getText(ast)] = `const ${node.getText(ast)};`;
   }
   if (ts.isCallExpression(node) && node.expression.getText(ast) === 'map.on' && ['error', 'sourcedata', 'idle'].includes(node.arguments[0]?.text)) {
@@ -18,9 +18,10 @@ function visit(node) {
   }
   if (ts.isCallExpression(node) && node.expression.getText(ast) === 'useEffect') {
     const body = node.arguments[0]?.getText(ast) ?? '';
-    if (body.includes('if (!wantsTerrainDetail')) detailEffect = body;
+    if (body.includes('const wide = scenePreset')) detailEffect = body;
     if (body.includes('terrainDetailFallbackRef.current =')) fallbackEffect = body;
   }
+  if (ts.isExpressionStatement(node) && node.expression.getText(ast).startsWith('retireTerrainFailureRef.current = () =>')) declarations.retireTerrainFailure = node.getText(ast);
   ts.forEachChild(node, visit);
 }
 visit(ast);
@@ -35,7 +36,7 @@ export function terrainHarness() {
   const sourceFor = provider => ({ tileTemplate: templates[provider] });
   const terrainId = 'kfm-terrain-dem',reliefId='basemap-relief-dem';
   const map = {
-    getSource: id => h.sources.get(id), isSourceLoaded: () => h.loaded,
+    isStyleLoaded:()=>true,getSource: id => h.sources.get(id), isSourceLoaded: () => h.loaded,
     getTerrain: () => ({ source: terrainId }),
     getLayer: () => undefined, refreshTiles: () => {},
     // The settled view the idle handler reads for basemap health; derived from the harness camera.
@@ -44,14 +45,14 @@ export function terrainHarness() {
   };
   const set = field => value => { h[field] = typeof value === 'function' ? value(h[field]) : value; };
   const scope = {
-    basemapHealth: basemapModule.createBasemapHealth(), nativeTerrainHiddenRef:ref(false), BASEMAP_RELIEF_DEM_SOURCE_ID:reliefId, topographicOverlayRef:ref(false),setTopographicOverlay:()=>{},applyTerrainReliefStyle:()=>{},applyTopographicRasterDepth:()=>{},atmospherePresetRef:ref('clear'),lightAzimuthRef:ref(235), classifyBasemapError: basemapModule.classifyBasemapError,
+    basemapHealth: basemapModule.createBasemapHealth(), nativeTerrainHiddenRef:ref(false), BASEMAP_RELIEF_DEM_SOURCE_ID:reliefId, topographicOverlayRef:ref(false),setTopographicOverlay:()=>{},applyTerrainReliefStyle:()=>{},applyTopographicRasterDepth:()=>{},atmospherePresetRef:ref('clear'),lightAzimuthRef:ref(235), classifyBasemapError: basemapModule.classifyBasemapError,isMapRequestCancelled:basemapModule.isMapRequestCancelled,retireTerrainFailureRef:ref(null),
     map, mapRef: ref(map), terrainProviderRef: ref(h.provider), attachedTerrainProviderRef: ref(h.provider),
     terrainDetailRef: ref({ auto: false, failed: false, byHand: false }), terrainDetailFallbackRef: ref(null),
     failedTerrainSourceRef: ref(null), scenePresetRef: ref(h.scene), mapMutationErrorRef: ref(null),
     TERRAIN_SOURCE_ID: terrainId, TERRAIN_HILLSHADE_LAYER_ID:'kfm-terrain-hillshade', TERRAIN_HILLSHADE_SOURCE_ID: 'kfm-terrain-hillshade-dem', TERRAIN_COLOR_SOURCE_ID: 'kfm-terrain-color-dem',
     terrainSourceFor: sourceFor, terrainPresentationSourceMatches: (_map, source) => h.sources.get(terrainId)?.serialize().tiles[0] === source.tileTemplate,
     setTerrainState: set('terrain'), setTerrainProvider: set('provider'), setRuntime: set('runtime'), setMaplibreProbe: set('probe'),
-    setTerrainElevationReading: () => {}, setTerrainElevationUnavailable: () => {},
+    setTerrainElevationReading: () => {}, setTerrainElevationUnavailable: () => {}, setTerrainHeightOverlay:()=>{},verticalExaggerationRef:ref(2.5),
     announce: value => h.announcements.push(value), controlOwnsMapSourceErrors: () => false,
     mapRuntimeErrorCode: (_kind, id) => `MAP_SOURCE_ERROR:${id ?? 'runtime'}`, LAYER_REGISTRY: [{ id: 'catalog', sourceId: 'catalog-source' }],
     officialContextForMapSource: () => undefined, VECTOR_BASEMAPS: new Set(), basemapRef: ref('local'), BASEMAPS: { local: { style: { sources: {[reliefId]:{type:'raster-dem',tiles:[templates.mapzen]},'other-basemap':{type:'raster',tiles:['https://example.test/other/{z}/{x}/{y}']}} } } },
@@ -74,13 +75,15 @@ export function terrainHarness() {
   const code = compile(`
     let runtimeError = null, degradedReason = null, styleFallbackAttempted = false, terrainRetryTimer = null, terrainRetryCount = 0;
     const failedSourceIds = new Set();
+    ${declarations.retireTerrainFailure}
     ${declarations.setTerrainPresentation}
     ${declarations.chooseTerrainProvider}
     ${declarations.chooseTerrainProviderByHand}
+    ${declarations.retryTerrain}
     (${fallbackEffect})();
     return {
       error: ${callbacks.error}, sourceData: ${callbacks.sourcedata}, idle: ${callbacks.idle},
-      manual: chooseTerrainProviderByHand,applyPresentation:setTerrainPresentation,
+      manual: chooseTerrainProviderByHand,retryTerrain,applyPresentation:setTerrainPresentation,
       settled(scenePreset, terrainProvider, view) { ${declarations.wantsTerrainDetail} return (${detailEffect})(); },
       errors: () => ({ runtimeError, degradedReason, failedSourceIds: [...failedSourceIds] }),
     };

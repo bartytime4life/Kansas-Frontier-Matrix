@@ -1,3 +1,4 @@
+import { demTileRequest } from "./dem-request-pool";
 import type { MapOptions, RequestParameters } from "./maplibre-seam";
 
 export const BASEMAP_CACHE_ORIGIN = "http://127.0.0.1:8770";
@@ -58,7 +59,7 @@ export async function basemapCacheAction(action: "overview" | "cancel"): Promise
 }
 
 // A transport hook leaves source URLs, imagery dates, attribution and copied styles intact.
-export const basemapCacheRequest: NonNullable<MapOptions["transformRequest"]> = (url, kind) => ({ url: kind === "Tile" && cacheableBasemap(url) ? `kfm-basemap://${encodeURIComponent(url)}` : url });
+export const basemapCacheRequest: NonNullable<MapOptions["transformRequest"]> = (url, kind) => ({ url: kind === "Tile" && cacheableBasemap(url) ? `kfm-basemap://${encodeURIComponent(url)}` : kind === "Tile" ? demTileRequest(url).url : url });
 
 export async function basemapCacheProtocol(request: RequestParameters, controller: AbortController): Promise<{ data: ArrayBuffer }> {
   const url = decodeURIComponent(request.url.slice("kfm-basemap://".length));
