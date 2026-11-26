@@ -44,13 +44,18 @@ export function basemapTileInView(key: string, view: BasemapView): boolean {
 export type BasemapHealthInput = { sourceId: string; sourceInstance?: object; sourceSpec: unknown; event: unknown };
 export type BasemapErrorKind = "tile" | "source" | "stale" | "cancelled" | "unrelated";
 
+/** Navigation cancels are transport state, never evidence of a provider gap. */
+export function isMapRequestCancelled(event: unknown): boolean {
+  return record(record(event)?.error)?.name === "AbortError";
+}
+
 export function classifyBasemapError(input: BasemapHealthInput): BasemapErrorKind {
   const event = record(input.event), source = record(input.sourceSpec);
   const current = basemapSourceIdentity(source), origin = basemapSourceIdentity(event?.source);
   // Missing provenance is unknown, not proof of a stale event.
   if (current && origin && current !== origin) return "stale";
   if (!source || !tiled.has(String(source.type))) return "unrelated";
-  if (record(event?.error)?.name === "AbortError") return "cancelled";
+  if (isMapRequestCancelled(input.event)) return "cancelled";
   return basemapTileKey(event) ? "tile" : "source";
 }
 

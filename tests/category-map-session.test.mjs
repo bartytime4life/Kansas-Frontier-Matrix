@@ -112,10 +112,10 @@ test("combined card setup enables the union and removes deselected topic layers"
   assert.ok(h.calls.some(([name, on]) => name === "toggleDaylightVisibility" && on === true));
 });
 
-test("only a primary Terrain category explicitly selects USGS; unrelated primary categories preserve the current provider",()=>{
+test("Terrain presets use automatic USGS detail; unrelated primary categories preserve the current provider",()=>{
  const h=session();
- h.open('water');assert.equal(h.calls.some(([name])=>name==='chooseTerrainProviderByHand'),false);
- h.open('terrain');assert.deepEqual(h.calls.filter(([name])=>name==='chooseTerrainProviderByHand'),[['chooseTerrainProviderByHand','usgs-3dep']]);
- h.open('aviation');h.open('water',['water','terrain']);assert.equal(h.calls.filter(([name])=>name==='chooseTerrainProviderByHand').length,1);
- h.open('terrain',['terrain','water']);assert.equal(h.calls.filter(([name])=>name==='chooseTerrainProviderByHand').length,2);
+ h.open('water');assert.equal(h.calls.some(([name])=>name==='chooseTerrainProvider'),false);
+ h.open('terrain');assert.equal(h.refs.terrainDetailRef.current.byHand,false);assert.equal(h.refs.terrainDetailRef.current.auto,true);assert.deepEqual(h.calls.filter(([name])=>name==='chooseTerrainProvider'),[['chooseTerrainProvider','usgs-3dep']]);
+ h.open('aviation');h.open('water',['water','terrain']);assert.equal(h.calls.filter(([name])=>name==='chooseTerrainProvider').length,1);
+ h.open('terrain',['terrain','water']);assert.equal(h.calls.filter(([name])=>name==='chooseTerrainProvider').length,2);
 });

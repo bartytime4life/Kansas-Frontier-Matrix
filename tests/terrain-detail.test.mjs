@@ -79,7 +79,7 @@ test('a genuine Mapzen failure after fallback is still a provider failure', () =
 test('provider replacement retires only abandoned relief failures and recovers the actual runtime callback closure',()=>{
  for(const manual of [false,true]){
   const h=manual?terrainHarness():automatic();if(manual)h.manual('usgs-3dep');const old=h.attach();
-  h.fail(h.sources.get('basemap-relief-dem').serialize(),'basemap-relief-dem');assert.ok(h.scope.basemapHealth.warning());
+  h.fail(h.sources.get('basemap-relief-dem').serialize(),'basemap-relief-dem');if(manual)assert.ok(h.scope.basemapHealth.warning());else assert.equal(h.provider,'mapzen','the automatic relief source initiates the same fallback');
   if(manual)h.manual('mapzen');else h.fail(old);
   h.attach();h.complete();assert.equal(h.scope.basemapHealth.warning(),null);assert.equal(h.runtime.kind,'ready');h.fail(old);h.idle();assert.equal(h.runtime.kind,'ready','late old DEM error cannot relatch recovery');
  }
@@ -94,4 +94,33 @@ test('new provider and unrelated basemap failures survive retirement of the aban
 test('late terrain shadow/color events are identity guarded; handled optional failures do not poison runtime readiness',()=>{
  const h=automatic(),old=h.attach();h.fail();h.attach();h.complete();
  for(const id of [h.scope.TERRAIN_HILLSHADE_SOURCE_ID,h.scope.TERRAIN_COLOR_SOURCE_ID]){h.fail(old,id);h.idle();assert.equal(h.runtime.kind,'ready');h.fail(h.sources.get(id).serialize(),id);h.idle();assert.equal(h.runtime.kind,'ready','optional shading failure is local to its display control');}
+});
+
+
+test('automatic close-wide-close navigation restores detail without pinning the category preset',()=>{
+ const h=automatic();h.attach();h.complete();
+ h.view.zoom=11;h.settle();h.flushSwitch();assert.equal(h.provider,'usgs-3dep','hysteresis retains detail');
+ h.view.zoom=10;h.settle();h.flushSwitch();assert.equal(h.provider,'mapzen');h.attach();h.complete();assert.equal(h.runtime.kind,'ready');
+ h.view.zoom=12;h.settle();h.flushSwitch();assert.equal(h.provider,'usgs-3dep');h.attach();h.complete();assert.equal(h.runtime.kind,'ready');
+});
+test('wide navigation permits one new detail attempt while a stationary source gap never loops',()=>{
+ const h=automatic();h.attach();h.fail();h.attach();h.complete();h.settle();h.flushSwitch();assert.equal(h.provider,'mapzen');
+ h.view.zoom=10;h.settle();h.flushSwitch();h.view.zoom=12;h.settle();h.flushSwitch();assert.equal(h.provider,'usgs-3dep');
+});
+test('cancellation of any owned terrain source never becomes a map outage',()=>{
+ for(const sourceId of ['kfm-terrain-dem','kfm-terrain-hillshade-dem','kfm-terrain-color-dem','basemap-relief-dem']){
+  const h=automatic();h.attach();h.error({sourceId,error:{name:'AbortError'}});h.complete();assert.equal(h.terrain,'READY');assert.equal(h.runtime.kind,'ready');assert.equal(h.provider,'usgs-3dep');
+ }
+});
+test('replacing a failed manual DEM retires its failure without hiding an unrelated failure',()=>{
+ for(const unrelated of [false,true]){
+  const h=terrainHarness();h.manual('usgs-3dep');h.attach();h.fail();if(unrelated)h.error({sourceId:'catalog-source'});
+  h.manual('mapzen');h.attach();h.complete();assert.equal(h.terrain,'READY');assert.equal(h.runtime.kind,unrelated?'degraded':'ready');
+  assert.deepEqual(h.errors().failedSourceIds,unrelated?['catalog-source']:[]);
+ }
+});
+
+test('explicit retry clears only the failed DEM latch and accepts its replacement source',()=>{
+ const h=terrainHarness();h.manual('usgs-3dep');h.attach();h.fail();assert.equal(h.terrain,'ERROR');
+ h.retryTerrain();h.complete();assert.equal(h.terrain,'READY');assert.equal(h.runtime.kind,'ready');assert.deepEqual(h.errors().failedSourceIds,[]);
 });

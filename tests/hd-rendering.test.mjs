@@ -52,8 +52,9 @@ test('the local styles carry real shaded relief, so no map sits on an empty colo
 });
 
 test('close 3D views over Kansas move to the USGS 3DEP mosaic once, fall back once, and never override a choice made by hand',()=>{
- assert.match(page,/const wantsTerrainDetail = scenePreset === "elevation-3d" && terrainProvider === "mapzen" && view\.zoom > TERRARIUM_RENDER_MAX_ZOOM \+ 0\.5\s*&& view\.center\[0\] >= -102\.1 && view\.center\[0\] <= -94\.5 && view\.center\[1\] >= 36\.9 && view\.center\[1\] <= 40\.1;/,'only past the display DEM cap, only over Kansas');
- assert.match(page,/if \(!wantsTerrainDetail \|\| detail\.byHand \|\| detail\.failed\) return;/);
+ assert.match(page,/const wantsTerrainDetail = scenePreset === "elevation-3d" && view\.zoom > TERRARIUM_RENDER_MAX_ZOOM \+ 0\.5\s*&& view\.center\[0\] >= -102\.1 && view\.center\[0\] <= -94\.5 && view\.center\[1\] >= 36\.9 && view\.center\[1\] <= 40\.1;/,'only past the display DEM cap, only over Kansas');
+ assert.match(page,/if \(detail\.byHand\) return;/);
+ assert.match(page,/!wantsTerrainDetail \|\| detail\.failed \|\| terrainProvider !== "mapzen"/);
  assert.match(page,/terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: true \};\s*chooseTerrainProvider\("usgs-3dep"\);/);
  // A failed automatic switch goes back to the display DEM instead of leaving the map degraded.
  assert.match(page,/if \(sourceId === TERRAIN_SOURCE_ID && terrainDetailRef\.current\.auto && !terrainDetailRef\.current\.failed\) \{[\s\S]{0,140}terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: false, failed: true \};\s*terrainDetailFallbackRef\.current\?\.\(\);/);

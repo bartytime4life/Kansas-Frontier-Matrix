@@ -50,7 +50,7 @@ function harness(basemap='aviation-chart') {
     cancelHoverSample(){},setHoverSummary(){},setHoverActive(){},syncTerrainRasterView(){},setTerrainState(){},
     setNoaaRadarFrameLoadState(){},setTerrainElevationReading(){},setTerrainElevationUnavailable(){},setPlaying(){},setStyleReady(){},
     setOfficialStates(){},setMaplibreProbe(){},setSourceStates(){},setSourceActivity(){},
-    failedSourceIds:new Set(),TERRAIN_SOURCE_ID:'terrain-test',TERRAIN_HILLSHADE_SOURCE_ID:'hill-test',TERRAIN_COLOR_SOURCE_ID:'color-test',
+    failedSourceIds:new Set(),BASEMAP_RELIEF_DEM_SOURCE_ID:'basemap-relief-dem',TERRAIN_SOURCE_ID:'terrain-test',TERRAIN_HILLSHADE_SOURCE_ID:'hill-test',TERRAIN_COLOR_SOURCE_ID:'color-test',
     window:{clearTimeout(){}},version:'6.9.0',projectionRef:{current:'mercator'},
     setRuntime(value){states.push(typeof value==='function'?value(states.at(-1)):value);},
     sameValues:(a,b)=>JSON.stringify(a)===JSON.stringify(b),
