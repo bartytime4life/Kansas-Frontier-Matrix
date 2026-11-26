@@ -54,6 +54,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -77,10 +79,21 @@ jobs:
           python tools/generators/action_point_reference_check/build_action_point_reference_check.py --case valid-match
           python tools/validators/validate_action_point_reference_check.py --fixtures
 
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-cairnwake-action-point-reference-check-currentness-20261014.json \
+            --repo-root . \
+            --artifact-git-ref 3b007883da6998bda26195697f05c8e02b09cef9
+
       - name: Verify generated authoring receipt integrity
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-action-point-reference-check-currentness-20261014.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-cairnwake-action-point-reference-check-currentness-20261126.json --repo-root .
 
       - name: Record trust boundary
         if: always()

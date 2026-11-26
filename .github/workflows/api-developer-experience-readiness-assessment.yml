@@ -50,6 +50,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -68,7 +70,7 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-api-developer-experience-readiness-20260811.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-api-developer-experience-readiness-20260811.json --repo-root . --artifact-git-ref eb69b33cf1fda417407acf6b4af161ac64e12308
       - name: Record authority boundary
         if: always()
         run: |

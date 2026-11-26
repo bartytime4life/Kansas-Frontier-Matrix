@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-story-node-trust-inheritance-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/story-node-trust-inheritance.yml",
+    "contracts/ui/story_node.md",
+    "fixtures/ui/story_node/README.md",
+    "fixtures/ui/story_node/expected_findings_manifest.json",
+    "fixtures/ui/story_node/semantic_invalid/blocked-support-leak.json",
+    "fixtures/ui/story_node/semantic_invalid/corrected-without-correction-ref.json",
+    "fixtures/ui/story_node/semantic_invalid/error-support-leak.json",
+    "fixtures/ui/story_node/semantic_invalid/ready-missing-evidence.json",
+    "fixtures/ui/story_node/semantic_invalid/ready-unreleased.json",
+    "fixtures/ui/story_node/semantic_invalid/rights-unresolved-answer.json",
+    "fixtures/ui/story_node/semantic_invalid/state-outcome-mismatch.json",
+    "fixtures/ui/story_node/semantic_invalid/superseded-without-correction.json",
+    "fixtures/ui/story_node/semantic_invalid/supersession-self-reference.json",
+    "fixtures/ui/story_node/valid/abstained-missing-evidence.json",
+    "fixtures/ui/story_node/valid/blocked-rights.json",
+    "fixtures/ui/story_node/valid/error-upstream.json",
+    "fixtures/ui/story_node/valid/partial-stale.json",
+    "fixtures/ui/story_node/valid/ready-corrected.json",
+    "fixtures/ui/story_node/valid/ready-released.json",
+    "fixtures/ui/story_node/valid/superseded-replaced.json",
+    "schemas/contracts/v1/ui/story_node.schema.json",
+    "tests/validators/test_validate_story_node.py",
+    "tools/validators/ui/validate_story_node.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/story-node-trust-inheritance.yml": "sha256:6727e29d131b03a01c9951e43aaa619b2dd78a568c521af3242b7010c111f71a",
+    "contracts/ui/story_node.md": "sha256:7d70887ce6f3d2aac70f09f573bf216b14de84adf5899d825bf0e91f197f7f4a",
+    "fixtures/ui/story_node/README.md": "sha256:fd7179ed4686d6aa457c88314065d81e26d233b0251d9fce8cb201c1333424b3",
+    "fixtures/ui/story_node/expected_findings_manifest.json": "sha256:d3c5eca30e1674b96c10c8743650ce882e2c06dcf98eb0f89be8774ad7a1a034",
+    "fixtures/ui/story_node/semantic_invalid/blocked-support-leak.json": "sha256:27dbebf201d4bc92c102eca9c46987321c7f5e7ac144aacb9d3df3d9225f883a",
+    "fixtures/ui/story_node/semantic_invalid/corrected-without-correction-ref.json": "sha256:24a770ab7439f97c4e91cc2a928ee68253de2f66064aaa5495a429ef60a69bd1",
+    "fixtures/ui/story_node/semantic_invalid/error-support-leak.json": "sha256:6f590423de2d1f5bb37deff019deeba2b80553d55763dcb0a73dcff29ebbf0cf",
+    "fixtures/ui/story_node/semantic_invalid/ready-missing-evidence.json": "sha256:45c6af2af1ab668be1e75c673ead77f36ea84169adb748a49a7e4bff246b6792",
+    "fixtures/ui/story_node/semantic_invalid/ready-unreleased.json": "sha256:5b0823c870a1cefad303e012b668b00e1132ba27212f23ef1b3dac254a0a0191",
+    "fixtures/ui/story_node/semantic_invalid/rights-unresolved-answer.json": "sha256:559e1dd06aad275b3002cf8b84258dd7f5c8ca7f8c1ff14502d5d5c877a84d52",
+    "fixtures/ui/story_node/semantic_invalid/state-outcome-mismatch.json": "sha256:76f625766cd76ec27f3d6e34b2ded7d7aa9a0906b7d749ba9e3b829955a098a8",
+    "fixtures/ui/story_node/semantic_invalid/superseded-without-correction.json": "sha256:8670ef1a2dec4e2f44ec68b3d264165665ba055a1669cef3fe360c70cd4b67c9",
+    "fixtures/ui/story_node/semantic_invalid/supersession-self-reference.json": "sha256:da9f080443694c806887ba4305e53edd7422aae0ee776c08c1e17ce3d2c96263",
+    "fixtures/ui/story_node/valid/abstained-missing-evidence.json": "sha256:735c4ebc52f3fa22c92863789b9b567c9953eaf4f34c59b4e8396afb916be430",
+    "fixtures/ui/story_node/valid/blocked-rights.json": "sha256:338707d262270c42a43bf7365cd5d73ca6485bc6260e5947959a975bf18e45a9",
+    "fixtures/ui/story_node/valid/error-upstream.json": "sha256:b6d4d0505c1d3e80166018daa015eda9498ee8726b3c74d9c2ac3052ad3fe6f6",
+    "fixtures/ui/story_node/valid/partial-stale.json": "sha256:f6362438f7650d28d08356bcea2f8dbe7c8fe1e923ff888cf8b1648e32e9a5da",
+    "fixtures/ui/story_node/valid/ready-corrected.json": "sha256:e74a54fa2777cd351eae67175ae6ceabc28d407d6cf11d26fffc0bb49d218bbc",
+    "fixtures/ui/story_node/valid/ready-released.json": "sha256:392941e8977974fe9d4806fbfc4ac2dd19c379528310fe7b89bffc98691af520",
+    "fixtures/ui/story_node/valid/superseded-replaced.json": "sha256:b0e5d9cb681bf7f3daf0f7fa21274b49592f5af04710f0a6b87f013e27a24b56",
+    "schemas/contracts/v1/ui/story_node.schema.json": "sha256:2d4d245f3b33c9c2d01da0752bae59942bdd77ce74187c6c6b106d87e3b48741",
+    "tests/validators/test_validate_story_node.py": "sha256:c3fcbd258de5b8cefc03d9a179bc17433363651a9fa820a65374f0585d8dc181",
+    "tools/validators/ui/validate_story_node.py": "sha256:ed0262731ca676d6c6784e497e537070c566d98dd32de2e624a28809d53b6c4b"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/story-node-trust-inheritance.yml",
+      "4cc7c4b2e99d3982a6cf31600251dd643c2b370f: its authoring commit of predecessor genrec-story-node-trust-inheritance-20260808.json",
+      "data/receipts/generated/genrec-story-node-trust-inheritance-20260808.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:9fecf69ff8291fbbca29d1d5571c0ef7f7302107ea70c987069c838f274e3f90"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/story-node-trust-inheritance.yml": "CONFIRMED",
+    "contracts/ui/story_node.md": "CONFIRMED",
+    "fixtures/ui/story_node/README.md": "CONFIRMED",
+    "fixtures/ui/story_node/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/blocked-support-leak.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/corrected-without-correction-ref.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/error-support-leak.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/ready-missing-evidence.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/ready-unreleased.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/rights-unresolved-answer.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/state-outcome-mismatch.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/superseded-without-correction.json": "CONFIRMED",
+    "fixtures/ui/story_node/semantic_invalid/supersession-self-reference.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/abstained-missing-evidence.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/blocked-rights.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/error-upstream.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/partial-stale.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/ready-corrected.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/ready-released.json": "CONFIRMED",
+    "fixtures/ui/story_node/valid/superseded-replaced.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/story_node.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_story_node.py": "CONFIRMED",
+    "tools/validators/ui/validate_story_node.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-story-node-trust-inheritance-20260808.json validates unchanged with --artifact-git-ref 4cc7c4b2e99d3982a6cf31600251dd643c2b370f (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-story-node-trust-inheritance-20260808.json@4cc7c4b2e99d3982a6cf31600251dd643c2b370f"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-story-node-trust-inheritance-20260808, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/story-node-trust-inheritance.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 23 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

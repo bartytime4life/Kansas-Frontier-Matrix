@@ -96,7 +96,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-evidence-drawer-public-safe-output-20260827.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 7aaa565d11fba68d327a4a1443538355fab1c306
 
       - name: Record governance boundary
         if: always()

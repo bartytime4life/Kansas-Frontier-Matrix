@@ -486,7 +486,7 @@ python -m unittest discover \
   --verbose
 python tools/validators/release/validate_rollback_card.py --fixtures
 python tools/validators/validate_generated_receipt.py \
-  data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json \
+  data/receipts/generated/genrec-rollback-card-contract-current-binding-20261126.json \
   --repo-root .
 ```
 

@@ -42,7 +42,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: {persist-credentials: false}
+        with: {persist-credentials: false, fetch-depth: 0}
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: {python-version: "3.11", cache: pip, cache-dependency-path: pyproject.toml}
       - run: python tools/ci/install_python_ci.py project-test
@@ -50,6 +50,6 @@ jobs:
           python -m py_compile tools/validators/governance/validate_terminal_state_assessment.py tests/validators/test_validate_terminal_state_assessment.py
           python -m unittest tests.validators.test_validate_terminal_state_assessment -v
           python tools/validators/governance/validate_terminal_state_assessment.py --fixtures
-      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-terminal-state-assessment-20260808.json --repo-root .
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-terminal-state-assessment-20260808.json --repo-root . --artifact-git-ref bc155ed5ff942ec34a11faa3f15a6210e2ec5e2e
       - if: always()
         run: echo "Terminal-state assessment is fixture-only incident classification; it performs no PR or settings mutation." >> "$GITHUB_STEP_SUMMARY"

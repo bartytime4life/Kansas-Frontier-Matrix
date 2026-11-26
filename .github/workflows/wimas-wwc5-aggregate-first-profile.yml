@@ -48,6 +48,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -62,7 +64,7 @@ jobs:
       - name: Replay fixture outcomes
         run: python tools/validators/validate_wimas_wwc5_aggregate_first_profile.py --fixtures
       - name: Verify generated receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass2-wimas-wwc5-aggregate-first-profile-20260808.json --repo-root . --artifact-git-ref 4ef3ded6c7ac50745e3846c85143bd5c699dd875
       - name: Record authority boundary
         if: always()
         run: |

@@ -51,7 +51,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out tested revision without persisted credentials
-        uses: actions/checkout@7a0b5fcfe1d29c9f9e132f32f527efe6e8f3b911 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -88,7 +88,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-withdrawal-notice-workflow-20260823.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 6dfcd8895f86b9840821224860fafa3e56a501b5
 
       - name: Record validation boundary
         if: always()

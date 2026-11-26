@@ -55,6 +55,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -79,7 +81,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass7-ai-output-artifact-20260808.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 4054ee3a5479a8d821fdb901e3a37ad18d613eec
       - name: Record trust boundary
         if: always()
         run: |

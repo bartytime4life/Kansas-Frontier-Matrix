@@ -17,6 +17,7 @@ name: implementation-change-context
       - "data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json"
       - "tests/ci/test_implementation_change_context_workflow.py"
       - "data/receipts/generated/genrec-implementation-change-context-history-20260911.json"
+      - "data/receipts/generated/genrec-implementation-change-context-setup-python-rebind-20261126.json"
   push:
     branches: [main]
     paths:
@@ -34,6 +35,7 @@ name: implementation-change-context
       - "data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json"
       - "tests/ci/test_implementation_change_context_workflow.py"
       - "data/receipts/generated/genrec-implementation-change-context-history-20260911.json"
+      - "data/receipts/generated/genrec-implementation-change-context-setup-python-rebind-20261126.json"
   workflow_dispatch:
 
 permissions:
@@ -101,8 +103,14 @@ jobs:
             data/receipts/generated/genrec-governance-workflow-security-readme-current-state-20260831.json \
             --repo-root . \
             --artifact-git-ref f520c20c06cdbb5de000877979070023f688abb0
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. Retain the
+          # September history binding at its authoring commit; a successor binds today.
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-implementation-change-context-history-20260911.json \
+            --repo-root . \
+            --artifact-git-ref c10298325e5830e188c86b8d3d806f4d8c601b7d
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-implementation-change-context-setup-python-rebind-20261126.json \
             --repo-root .
 
       - name: Record trust boundary

@@ -74,6 +74,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -97,6 +99,8 @@ jobs:
         run: >-
           python tools/validators/validate_generated_receipt.py
           data/receipts/generated/genrec-citation-validation-report-closure-20260810.json
+          --repo-root .
+          --artifact-git-ref c4633654586a83dea647b83974797e39d6d6f360
 
       - name: Record boundary
         if: always()

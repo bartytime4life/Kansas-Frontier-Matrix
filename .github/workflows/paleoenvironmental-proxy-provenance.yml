@@ -55,6 +55,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -78,7 +80,7 @@ jobs:
         run: python tools/validators/evidence/validate_paleoenvironmental_proxy_provenance.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-paleoenvironmental-proxy-provenance-20260809.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-paleoenvironmental-proxy-provenance-20260809.json --repo-root . --artifact-git-ref e56d975c7a4f3b626248ec20831e5c058f64dc37
 
       - name: Record trust boundary
         if: always()

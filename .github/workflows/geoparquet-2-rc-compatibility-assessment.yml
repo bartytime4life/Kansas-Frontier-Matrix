@@ -47,6 +47,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -64,7 +66,8 @@ jobs:
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref ffe88ea565e31c390e9e5ce6f4c07ae34f7ec17e
       - name: Record trust boundary
         if: always()
         run: |

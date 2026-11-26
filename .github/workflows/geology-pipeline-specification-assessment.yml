@@ -50,6 +50,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -65,10 +67,21 @@ jobs:
           python -m py_compile tools/validators/validate_geology_pipeline_specification_assessment.py tests/validators/domains/geology/test_validate_geology_pipeline_specification_assessment.py
           python -m unittest tests.validators.domains.geology.test_validate_geology_pipeline_specification_assessment --verbose
           python tools/validators/validate_geology_pipeline_specification_assessment.py --fixtures
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at the commit that last rebound it.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-geology-pipeline-specification-assessment-current-binding-20260814.json \
+            --repo-root . \
+            --artifact-git-ref c2af0db54e1fb3d4a1c55bf4a2ba94c5e734457f
+
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geology-pipeline-specification-assessment-current-binding-20260814.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geology-pipeline-specification-assessment-current-binding-20261126.json --repo-root .
       - name: Record authority boundary
         if: always()
         run: |

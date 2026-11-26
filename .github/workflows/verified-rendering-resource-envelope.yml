@@ -27,6 +27,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
@@ -41,4 +43,4 @@ jobs:
       - name: Replay exact fixture cases
         run: python tools/validators/runtime/validate_verified_rendering_resource_envelope.py --fixtures
       - name: Validate generated receipt hashes
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-verified-rendering-resource-envelope-20260809.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-verified-rendering-resource-envelope-20260809.json --repo-root . --artifact-git-ref d4a3dc6b70f957b765657f83bdf21db301b0ada1

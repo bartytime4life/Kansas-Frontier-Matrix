@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-contract-precommitted-evaluation-record-currentness-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/precommitted-evaluation-record.yml",
+    "contracts/validation/precommitted_evaluation_record.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/precommitted-evaluation-record.yml": "sha256:26f87b5176aa880d8bd6eea0e00d6b8475d60c4770525fed8404e707ffe92338",
+    "contracts/validation/precommitted_evaluation_record.md": "sha256:0e1d46d051738210b315dfece2e206482434af4a40666730808d18ab09e5eef6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/precommitted-evaluation-record.yml",
+      "a3cce14b21dfa141e3f7d07a579e87ebe5b8d90b: its authoring commit of predecessor genrec-contract-precommitted-evaluation-record-currentness-20260906.json",
+      "data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:eb8f359f684341438322d67203d73cb24d9fd8413b4ccbe46eadc831e0be5577"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/precommitted-evaluation-record.yml": "CONFIRMED",
+    "contracts/validation/precommitted_evaluation_record.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-contract-precommitted-evaluation-record-currentness-20260906.json validates unchanged with --artifact-git-ref a3cce14b21dfa141e3f7d07a579e87ebe5b8d90b (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-contract-precommitted-evaluation-record-currentness-20260906.json@a3cce14b21dfa141e3f7d07a579e87ebe5b8d90b"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-contract-precommitted-evaluation-record-currentness-20260906, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/precommitted-evaluation-record.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 2 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

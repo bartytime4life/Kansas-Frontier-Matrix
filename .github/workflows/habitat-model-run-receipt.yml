@@ -24,6 +24,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
@@ -46,7 +48,8 @@ jobs:
           python tools/validators/domains/habitat/validate_model_run_receipt.py --fixtures
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-habitat-model-run-receipt-20260810.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref e40e6645e2e59ca364357ff56174b49bde7e3a0b
 
       - name: Record authority boundary
         run: |

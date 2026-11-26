@@ -47,6 +47,8 @@ jobs:
       - name: Check out tested revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -62,4 +64,4 @@ jobs:
       - name: Replay exact fixture outcomes
         run: python tools/validators/validate_missing_value_filter_receipt.py --fixtures
       - name: Validate generated receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-missing-value-filter-receipt-20260810.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass18-missing-value-filter-receipt-20260810.json --repo-root . --artifact-git-ref ed66bca0128acfaff8a360e1c8bf3d883361b44b

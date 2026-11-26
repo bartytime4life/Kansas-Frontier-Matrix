@@ -55,6 +55,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -78,7 +80,7 @@ jobs:
         run: python tools/validators/governance/validate_graph_migration_declaration.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-graph-migration-declaration-20260809.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-graph-migration-declaration-20260809.json --repo-root . --artifact-git-ref f5f0e5c02424fa2036038c8e4a3fe89f627305f7
 
       - name: Record trust boundary
         if: always()

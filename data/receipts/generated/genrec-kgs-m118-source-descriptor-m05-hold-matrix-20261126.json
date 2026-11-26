@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-kgs-m118-source-descriptor-m05-hold-matrix-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/kgs-m118-source-descriptor.yml",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md",
+    "tests/schemas/test_kgs_m118_source_descriptor.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/kgs-m118-source-descriptor.yml": "sha256:319134ba971e1f3d4bae1eefa4f991ac27655693ddeea57edbfa1426553f6814",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json": "sha256:ad899cafaf5c334e85602d11647686071ed7c20e7cd932d182a2cc5f6c8e23cf",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md": "sha256:739b41fba541300bd8ef0b3cb89ce8c7ab4e2a725bea2cbc62b8f91ab54f3d0d",
+    "tests/schemas/test_kgs_m118_source_descriptor.py": "sha256:77e83315d7007e1756d8cfe537e1e7bf40f1ef68b8f1edbb5268f05165aaabe7"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/kgs-m118-source-descriptor.yml",
+      "2f1102e9349599792560911266901a644c398257: its authoring commit of predecessor genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825.json",
+      "data/receipts/generated/genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:1289f41471a36222a2fab1fc2abf8067cf746e8353ef402914c20e406b20f617"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/kgs-m118-source-descriptor.yml": "CONFIRMED",
+    "data/registry/sources/geology/kgs-m118-surficial-geology.source.json": "CONFIRMED",
+    "docs/intake/exploratory/kgs-m118-source-descriptor-source-map.md": "CONFIRMED",
+    "tests/schemas/test_kgs_m118_source_descriptor.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825.json validates unchanged with --artifact-git-ref 2f1102e9349599792560911266901a644c398257 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825.json@2f1102e9349599792560911266901a644c398257"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-kgs-m118-source-descriptor-m05-hold-matrix-20260825, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/kgs-m118-source-descriptor.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 4 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

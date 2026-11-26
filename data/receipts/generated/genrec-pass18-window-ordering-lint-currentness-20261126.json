@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-pass18-window-ordering-lint-currentness-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/window-ordering-lint-profile.yml",
+    "contracts/validation/window_ordering_lint_profile.md",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json",
+    "tests/validators/test_validate_window_ordering_lint_profile.py",
+    "tools/validators/validate_window_ordering_lint_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/window-ordering-lint-profile.yml": "sha256:37dae15c9c6f37b2492e531c0089e61d72d2c2c3bc8f530fc9eac104f99b16f8",
+    "contracts/validation/window_ordering_lint_profile.md": "sha256:c18e5590013186107054d716ec8a6769888137aadfe9b179bfb1a56c015169e1",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "sha256:624f3485db5ef89de39a0ef11dfed8ac859b2d540aae836fce4526c843857543",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "sha256:4a1ffb395f1bd73a394d517fa5b148e7e15dc8a0e2ddee86bd3f457f5dc874a5",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "sha256:27dfddf65887f2be3eb9b2dfba97dc03bb1c48b10dbc70a1ef76a65c3c5c248a",
+    "tests/validators/test_validate_window_ordering_lint_profile.py": "sha256:b88b4a5288db086c5231ff7bd92493a9c2bd1a1855c40640d03f19649887c4f8",
+    "tools/validators/validate_window_ordering_lint_profile.py": "sha256:317c45a68fed8ad4a4b3d7503f18bfabc0937c5a0fac7e733d8845b24be06c7e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/window-ordering-lint-profile.yml",
+      "3b007883da6998bda26195697f05c8e02b09cef9: its authoring commit of predecessor genrec-pass18-window-ordering-lint-currentness-20261014.json",
+      "data/receipts/generated/genrec-pass18-window-ordering-lint-currentness-20261014.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:0adc58fea7dc59a0fc3c4980011ba0ef09f4036ee4e601ffb8b9472aecb24127"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/window-ordering-lint-profile.yml": "CONFIRMED",
+    "contracts/validation/window_ordering_lint_profile.md": "CONFIRMED",
+    "docs/intake/exploratory/pass-18-window-ordering-lint-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/validation/window_ordering_lint_profile/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/window_ordering_lint_profile.schema.json": "CONFIRMED",
+    "tests/validators/test_validate_window_ordering_lint_profile.py": "CONFIRMED",
+    "tools/validators/validate_window_ordering_lint_profile.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-pass18-window-ordering-lint-currentness-20261014.json validates unchanged with --artifact-git-ref 3b007883da6998bda26195697f05c8e02b09cef9 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-pass18-window-ordering-lint-currentness-20261014.json@3b007883da6998bda26195697f05c8e02b09cef9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-pass18-window-ordering-lint-currentness-20261014, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/window-ordering-lint-profile.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 7 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

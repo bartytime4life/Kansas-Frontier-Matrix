@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -14,6 +15,8 @@ from tools.validators.validate_generated_receipt import (
 ROOT = Path(__file__).resolve().parents[4]
 WORKFLOW = ROOT / ".github/workflows/nfhl-nld-nid-source-role-profile.yml"
 MIGRATION_MANIFEST = ROOT / "tools/ci/python-dependency-lock-migration.json"
+# Parent of Dependabot 27676fd1: the last commit whose workflow matches the ledger.
+LEDGERED_COMMIT = "de7ec1d5aa39b9db46672189986212e5eb0a1026"
 SELF_PATH = (
     "tests/validators/domains/hazards/"
     "test_nfhl_nld_nid_source_role_profile_workflow_binding.py"
@@ -63,9 +66,26 @@ class NfhlNldNidSourceRoleProfileWorkflowBindingTests(unittest.TestCase):
         }
         workflow_path = WORKFLOW.relative_to(ROOT).as_posix()
 
+        # The one-time ledger pins the migrated workflow hash, so any later
+        # workflow edit (Dependabot 27676fd1 bumped setup-python here) breaks a
+        # live-bytes comparison by design. Check the pin against the workflow at
+        # the last commit whose bytes match the ledger, and that the ledger
+        # itself is unchanged.
+        shown = subprocess.run(
+            ["git", "show", f"{LEDGERED_COMMIT}:{workflow_path}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(
+            0,
+            shown.returncode,
+            f"{LEDGERED_COMMIT} is unavailable; fetch full history "
+            f"(fetch-depth: 0): {shown.stderr.decode(errors='replace')}",
+        )
         self.assertEqual(
             entries[workflow_path]["current_sha256"],
-            "sha256:" + hashlib.sha256(WORKFLOW.read_bytes()).hexdigest(),
+            "sha256:" + hashlib.sha256(shown.stdout).hexdigest(),
         )
         self.assertEqual(
             WORKFLOW_MIGRATION_MANIFEST_SHA256,

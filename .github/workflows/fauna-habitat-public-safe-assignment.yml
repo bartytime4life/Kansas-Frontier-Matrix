@@ -85,10 +85,21 @@ jobs:
           data/receipts/generated/genrec-fauna-habitat-public-safe-assignment-20260814.json
           --repo-root .
           --artifact-git-ref 03138e81f19b801cf6d16d767a4c0e01ab36d717
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-fauna-habitat-public-safe-assignment-contract-20260908.json \
+            --repo-root . \
+            --artifact-git-ref 259e14e7463374b421093de4e15d28fc5b09ad78
+
       - name: Validate current contract and workflow receipt
         run: >-
           python tools/validators/validate_generated_receipt.py
-          data/receipts/generated/genrec-fauna-habitat-public-safe-assignment-contract-20260908.json
+          data/receipts/generated/genrec-fauna-habitat-public-safe-assignment-contract-20261126.json
           --repo-root .
       - name: Record trust boundary
         if: always()

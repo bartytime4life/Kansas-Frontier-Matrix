@@ -1,0 +1,82 @@
+{
+  "receipt_id": "genrec-rollback-card-contract-current-binding-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/rollback-card.yml",
+    "contracts/release/rollback_card.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/rollback-card.yml": "sha256:97b07dc08f461b089a3976d37a2a753412dedc9fb40ee205c891318db8829242",
+    "contracts/release/rollback_card.md": "sha256:257a533baad0bb29f8fab8b907fa9216096620c64f529171c9333efed372c985"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/rollback-card.yml",
+      "0f6cc64c87d0292774f21381bd12ce6a46f9f1a9: the commit that last rebound it of predecessor genrec-rollback-card-contract-current-binding-20260815.json",
+      "data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:9a3dcbac254c4860a61256e852f6677aae8feed2557d28e3ab872a9d3b9586ef"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/rollback-card.yml": "CONFIRMED",
+    "contracts/release/rollback_card.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-rollback-card-contract-current-binding-20260815.json validates unchanged with --artifact-git-ref 0f6cc64c87d0292774f21381bd12ce6a46f9f1a9 (the commit that last rebound it, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-rollback-card-contract-current-binding-20260815.json@0f6cc64c87d0292774f21381bd12ce6a46f9f1a9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-rollback-card-contract-current-binding-20260815, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/rollback-card.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 2 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

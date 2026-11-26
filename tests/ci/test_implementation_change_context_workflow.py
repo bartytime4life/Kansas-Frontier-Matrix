@@ -15,12 +15,14 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ".github/workflows/implementation-change-context.yml"
 TEST = "tests/ci/test_implementation_change_context_workflow.py"
 RECEIPTS = "data/receipts/generated/"
-CURRENT = RECEIPTS + "genrec-implementation-change-context-history-20260911.json"
+CURRENT = RECEIPTS + "genrec-implementation-change-context-setup-python-rebind-20261126.json"
 HISTORICAL = (
     (RECEIPTS + "genrec-implementation-change-context-20260806.json",
      "8b3b45fddc9c2bd9f49c26822cd6554d04eb5c66"),
     (RECEIPTS + "genrec-governance-workflow-security-readme-current-state-20260831.json",
      "f520c20c06cdbb5de000877979070023f688abb0"),
+    (RECEIPTS + "genrec-implementation-change-context-history-20260911.json",
+     "c10298325e5830e188c86b8d3d806f4d8c601b7d"),
 )
 VALIDATOR = "tools/validators/validate_generated_receipt.py"
 INSTALL = "Install declared test dependencies"
@@ -67,7 +69,7 @@ def _assert_contract(workflow: dict) -> None:
     steps = job["steps"]
     assert steps[0]["uses"] == "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
     assert steps[0]["with"] == {"persist-credentials": False, "fetch-depth": 0}
-    assert steps[1]["uses"] == "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97"
+    assert steps[1]["uses"] == "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     assert steps[1]["with"]["python-version"] == "3.11"
     for step in steps:
         assert "continue-on-error" not in step and "env" not in step
@@ -99,7 +101,7 @@ def test_workflow_preserves_historical_and_current_integrity() -> None:
     _assert_contract(_workflow())
 
 
-@pytest.mark.parametrize("index", range(2))
+@pytest.mark.parametrize("index", range(len(HISTORICAL)))
 @pytest.mark.parametrize("replacement", (None, "main", "f520c20", "0" * 40))
 def test_missing_or_unreviewed_historical_pin_is_rejected(index, replacement) -> None:
     workflow = _workflow()

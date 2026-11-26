@@ -46,6 +46,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -62,10 +64,21 @@ jobs:
             --start-directory tests/validators \
             --pattern 'test_validate_taxonomic_concept_lineage.py' \
             --verbose
+      - name: Replay superseded receipt at its bound commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Dependabot 27676fd1 changed this workflow's setup-python pin. The
+          # superseded receipt stays immutable and replays at its authoring commit.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20260908.json \
+            --repo-root . \
+            --artifact-git-ref d0b2d868e926a48744be2f1b6451ffe7271b6367
+
       - name: Verify current packet receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20260908.json \
+            data/receipts/generated/genrec-taxonomic-concept-lineage-contract-currentness-20261126.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

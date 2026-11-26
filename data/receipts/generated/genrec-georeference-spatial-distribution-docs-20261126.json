@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-georeference-spatial-distribution-docs-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-georeference-spatial-distribution.yml",
+    "contracts/map/georeference_spatial_distribution.md",
+    "docs/intake/exploratory/georeference-spatial-distribution-source-map.md",
+    "fixtures/contracts/v1/map/georeference_spatial_distribution/cases.json",
+    "schemas/contracts/v1/map/georeference_spatial_distribution.schema.json",
+    "tests/map/test_georeference_spatial_distribution.py",
+    "tools/validators/map/validate_georeference_spatial_distribution.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-spatial-distribution.yml": "sha256:7bd2306bb29785616a42f667c67c4d26d5c03e5a2d5e68e914e4364595544d1b",
+    "contracts/map/georeference_spatial_distribution.md": "sha256:55d72156894e8ac2fcc84f58994e5d34e6e2d6996cf8f6ccbcfda8b7d43beb1c",
+    "docs/intake/exploratory/georeference-spatial-distribution-source-map.md": "sha256:1d1d01980d8148c315444b1eb1311592cc8bb6695056280068b8d2b19bba01b4",
+    "fixtures/contracts/v1/map/georeference_spatial_distribution/cases.json": "sha256:b8798d64550b63c195e44d3c126ba06b9e54e5d73c0b25f4d52feef2a50ec4e3",
+    "schemas/contracts/v1/map/georeference_spatial_distribution.schema.json": "sha256:9eee92c56fb21a138c9c314c538fa0c1982edf6fe4eeca827eabc126a9b3b0d7",
+    "tests/map/test_georeference_spatial_distribution.py": "sha256:bfb09df6ed29d6c37c3e9be99435c76d4d2f6de68a694979243f8492788aa989",
+    "tools/validators/map/validate_georeference_spatial_distribution.py": "sha256:b4ef1a495fc979adc3d2be16a9cec4d3c9e696968bbd23a59cfd7fc047e01077"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:801246cbebac62ba40a36e120071612c105ba32f8c4f96b83d0d056a5972ac18",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed actions/setup-python in .github/workflows/map-georeference-spatial-distribution.yml",
+      "eab8da64b99f4c19ac3c27e92d6bdcabb69b36e6: its authoring commit of predecessor genrec-georeference-spatial-distribution-docs-20260908.json",
+      "data/receipts/generated/genrec-georeference-spatial-distribution-docs-20260908.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ],
+    "evidence_hashes": [
+      "sha256:9088068b4b5483aa05df2f44ed43ba4ae43dd856f0ea2de0e54ffc886552263a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-georeference-spatial-distribution.yml": "CONFIRMED",
+    "contracts/map/georeference_spatial_distribution.md": "CONFIRMED",
+    "docs/intake/exploratory/georeference-spatial-distribution-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/map/georeference_spatial_distribution/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/map/georeference_spatial_distribution.schema.json": "CONFIRMED",
+    "tests/map/test_georeference_spatial_distribution.py": "CONFIRMED",
+    "tools/validators/map/validate_georeference_spatial_distribution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-georeference-spatial-distribution-docs-20260908.json validates unchanged with --artifact-git-ref eab8da64b99f4c19ac3c27e92d6bdcabb69b36e6 (its authoring commit, an ancestor of HEAD). It was not edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push. No independent review performed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@0f51adba9719bf0d5e3ee162f66df7ed7b31a4ab"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-georeference-spatial-distribution-docs-20260908.json@eab8da64b99f4c19ac3c27e92d6bdcabb69b36e6"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T19:28:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 6115,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-georeference-spatial-distribution-docs-20260908, whose workflow hash went stale when Dependabot 27676fd1 bumped actions/setup-python in .github/workflows/map-georeference-spatial-distribution.yml. The predecessor stays byte-unchanged and moves to a historical replay; this receipt takes over the current binding of the same 7 artifact paths. Action pins, permissions, triggers, job names and validators are otherwise unchanged."
+}

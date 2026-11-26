@@ -56,6 +56,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -115,7 +117,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-source-native-quality-translation-20260805.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 27f722bffdcdee03f8ace9c4e49d15bd5fc91ab6
 
       - name: Record validation boundary
         if: always()

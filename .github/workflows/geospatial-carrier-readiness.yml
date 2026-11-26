@@ -49,6 +49,8 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
       - name: Set up repository Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
@@ -63,7 +65,7 @@ jobs:
       - name: Run exact case polarity
         run: python tools/validators/release/validate_geospatial_carrier_readiness.py --cases
       - name: Verify generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geoparquet-layout-profile-20260809.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geoparquet-layout-profile-20260809.json --repo-root . --artifact-git-ref eb0349517952c6b4a4b75b539581cd44b9577c00
       - name: Record trust boundary
         if: always()
         run: |
