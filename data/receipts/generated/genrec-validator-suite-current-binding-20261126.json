@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-validator-suite-current-binding-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/validator-suite.yml",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/validator-suite.yml": "sha256:391da5838e2b67dba56bf23b5fd31c44b446cee84d82c403974c91efaa87008a",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "sha256:cebf871c1b81e8ee4c69266e598995ea86b3ef2b41d65174c7ad177f1ed99fe4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:be4edae3a712f5aaeb8c69a04561bbf32e86d925623e62103e794583c006d136",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22",
+      "27676fd1a4: Dependabot actions-minor-patch bump that changed both actions/setup-python pins in .github/workflows/validator-suite.yml",
+      "18d70a14073322a579ae9bc55a5dfc45c05c83fb: authoring commit of predecessor genrec-validator-suite-native-receipt-20260911.json",
+      "data/receipts/generated/genrec-validator-suite-native-receipt-20260911.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6115"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/validator-suite.yml": "CONFIRMED",
+    "tests/validators/governance/test_validator_suite_guardrail_attribution.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-replay",
+      "outcome": "PASS",
+      "reason": "genrec-validator-suite-native-receipt-20260911.json validates unchanged with --artifact-git-ref 18d70a14073322a579ae9bc55a5dfc45c05c83fb (its authoring commit, an ancestor of HEAD); genrec-validator-suite-guardrail-independence-20260911.json still validates at d2e1cfd782ec190ee7b125f531845655ec28c1d1. Neither receipt was edited."
+    },
+    {
+      "gate": "current-binding",
+      "outcome": "PASS",
+      "reason": "This receipt validates against the working-tree bytes with no --artifact-git-ref, as the current step requires."
+    },
+    {
+      "gate": "focused-workflow-tests",
+      "outcome": "PASS",
+      "reason": "python -m unittest tests.validators.governance.test_validator_suite_guardrail_attribution: 10 tests pass. The current-binding test now requires every historical step to pin a ref, the last step to be current_receipt without one, distinct receipt paths and existing receipt files."
+    },
+    {
+      "gate": "negative-controls",
+      "outcome": "PASS",
+      "reason": "The focused tests fail when the current step gains --artifact-git-ref, when it points back at the superseded native receipt, or when the native replay drops its ref."
+    },
+    {
+      "gate": "workflow-security-and-docs-structure",
+      "outcome": "PASS",
+      "reason": "make workflow-security PASS (509 workflows, 0 new drift); make docs-critical-structure 0 findings."
+    },
+    {
+      "gate": "hosted-ci-and-review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation. No independent review performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-receipt-cli",
+      "validated": true,
+      "evidence_ref": "tools/validators/validate_generated_receipt.py@83ae60e3e9fbea9867ab9ee1f4150aeac9c15e22"
+    },
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-validator-suite-native-receipt-20260911.json@18d70a14073322a579ae9bc55a5dfc45c05c83fb"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-26T17:53:04Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-validator-suite-native-receipt-20260911, whose workflow hash went stale when Dependabot bumped actions/setup-python. The predecessor stays byte-unchanged and moves to a historical replay at its authoring commit; this receipt takes over the current binding. Action pins, permissions, triggers, job names, validators and baselines are unchanged."
+}

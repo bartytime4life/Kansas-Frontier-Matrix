@@ -36,6 +36,17 @@ package or unavailable security update fails the build. The Python base digest,
 APT signature checks, bootstrap retry restriction, and scan thresholds remain
 unchanged.
 
+The bounded upgrade also includes `libzstd1`, with a build-time minimum of
+`1.5.7+dfsg-1+deb13u1`. Debian's
+[DSA-6657-1](https://lists.debian.org/debian-security-announce/2026/msg00579.html)
+fixes [CVE-2026-124851](https://security-tracker.debian.org/tracker/CVE-2026-124851)
+in that trixie security update. A base-image bump was checked first and does not
+repair it: on 2026-11-26 the newest `python:3.14.10-slim-trixie` digest
+(`sha256:22eafb37…`) still ships the vulnerable `1.5.7+dfsg-1`. The floor is a
+minimum, not an exact pin, so a later Debian security revision still builds while
+a stale package or missing security update fails the build. No Trivy ignore entry
+or threshold change was added.
+
 Trivy's displayed title is not package-attribution evidence by itself. For the
 2026-11-09 findings, its JSON identifies the Debian `zlib1g` package and Debian
 Security Tracker source; CVE-2026-76844 has an unrelated webpack title but a zlib
