@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-scientific-worked-example-20261126",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/scientific-analysis.md",
+    "docs/wiki/scientific-methods.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/scientific-analysis.md": "sha256:a5d3b186f9085886fa3c77019379bf33bd2635f51afafefa5f8a48e0facf599a",
+    "docs/wiki/scientific-methods.md": "sha256:32c09d9f3230a4c7f5415a4588755fabb2b463b559d0d15a4330bc727267f57b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "UNKNOWN - exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:02d484435df7b32bbd8552d7e59817ec28e946efdfb5cbb9d44a3a6024fac3bb",
+  "parameters": {
+    "temperature": null,
+    "seed": null,
+    "tools_enabled": [
+      "local Git and documentation validators",
+      "PowerShell Wiki transport contract probes",
+      "primary-source web research",
+      "standard-library Python example execution and independent Decimal audit"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:docs/doctrine/directory-rules.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "repo:docs/wiki/README.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "repo:docs/architecture/scientific-analysis.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "repo:tools/docs/wiki/sync_kfm_github_wiki.ps1@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "https://onlinelibrary.wiley.com/doi/full/10.1111/ecog.02881",
+      "https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd431.htm"
+    ],
+    "evidence_hashes": []
+  },
+  "truth_labels": {
+    "docs/architecture/scientific-analysis.md": "CONFIRMED",
+    "docs/wiki/scientific-methods.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "placement-and-overlap",
+      "outcome": "PASS",
+      "reason": "Existing explanatory and Wiki source paths under docs/ plus this existing generated-receipt lane under data/. Accepted ADR-0029 and adopted Directory Rules inspected; bounded current open PR searches found no scientific-analysis/Scientific Methods/rainfall overlap. Original Directory Rules.pdf was absent from supplied sources; adopted repository authority used."
+    },
+    {
+      "gate": "documented-command-and-output",
+      "outcome": "PASS",
+      "reason": "Extracted complete shell block from the authored guide and executed with CPython 3.12.14. Printed output exactly matches the six documented method/holdout rows. No external packages, files, network or output artifacts used by the snippet."
+    },
+    {
+      "gate": "independent-arithmetic-and-information-separation",
+      "outcome": "PASS",
+      "reason": "Independent Decimal coefficient calculation and all six MAE/RMSE/bias rows match documented rounding. Fit uses 80 A target rows, excludes 40 future-A and 80 unseen-B evaluation outcomes, and coefficients are invariant when heldout target labels change. Previous observed flow remains allowed persistence input. The constructed B transfer failure is retained, not changed to a passing scientific result."
+    },
+    {
+      "gate": "changed-document-metadata-and-links",
+      "outcome": "PASS",
+      "reason": "Both updated pages pass required metadata with warnings promoted to errors. Offline link checker passes 2 documents and 26 local targets; 19 external targets are classified unverified. Structured-validation and NIST least-squares primary sources were independently inspected on the web."
+    },
+    {
+      "gate": "wiki-transport-contract",
+      "outcome": "PASS",
+      "reason": "Nine focused tests pass on Python 3.12.14, including executable PowerShell link conversion and canonical/historical source mapping."
+    },
+    {
+      "gate": "repository-topology-ratchet",
+      "outcome": "PASS",
+      "reason": "Current 20-rule topology validator exited 0 using the exact base as trusted baseline; inherited warnings remain baselined. No placement authority changed."
+    },
+    {
+      "gate": "real-world-scientific-qualification-and-application",
+      "outcome": "SKIPPED",
+      "reason": "Only an explicitly constructed teaching calculation was executed. No Kansas observations, scientific field study, source admission, application runtime, calibrated model, independent scientific review or deployment is established."
+    },
+    {
+      "gate": "hosted-ci-and-native-wiki-publication",
+      "outcome": "SKIPPED",
+      "reason": "Not executed at authoring-receipt creation. Draft delivery, merge, exact-source Wiki dry-run and native publication remain distinct events; report actual later results independently."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "scientific-example-ref-1",
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "validated": true
+    },
+    {
+      "id": "scientific-example-ref-2",
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "validated": true
+    },
+    {
+      "id": "scientific-example-ref-3",
+      "evidence_ref": "repo:docs/wiki/README.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "validated": true
+    },
+    {
+      "id": "scientific-example-ref-4",
+      "evidence_ref": "repo:docs/architecture/scientific-analysis.md@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "validated": true
+    },
+    {
+      "id": "scientific-example-ref-5",
+      "evidence_ref": "repo:tools/docs/wiki/sync_kfm_github_wiki.ps1@1a0f6513f1573bae48d1738d6d93f4bb7208c507",
+      "validated": true
+    },
+    {
+      "id": "scientific-example-ref-6",
+      "evidence_ref": "https://onlinelibrary.wiley.com/doi/full/10.1111/ecog.02881",
+      "validated": true
+    },
+    {
+      "id": "scientific-example-ref-7",
+      "evidence_ref": "https://www.itl.nist.gov/div898/handbook/pmd/section4/pmd431.htm",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-26T21:40:14Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "pr_number": null,
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only; CONFIRMED labels apply to authored teaching explanations and bounded computation, not implementation or scientific qualification. Existing October interface inventory remains historical. All observations and catchments are invented; no private locations, personal source details or live data. Native Wiki is a later source-managed projection. Human review, merge and publication are not granted by this receipt. Revert the complete PR as one bounded rollback."
+}
