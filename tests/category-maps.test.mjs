@@ -340,7 +340,7 @@ test('the field and survey maps start a polygon measurement from their dock',asy
  assert.match(page,/measuringArea=\{measureMode === "area"\} onMeasureArea=\{\(\) => beginMapMeasurement\("area"\)\}/,'the Map menu\'s own Polygon entry');
  const css=await readFile('app/category-map-dock.css','utf8');
  assert.match(css,/\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{bottom:calc\(76px/,'the dock lifts above the readout along the bottom edge');
- assert.match(css,/@media\(max-width:760px\)\{\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{display:none\}\}/,'on a phone it steps aside so the map can be tapped');
+ assert.match(css,/@media\(max-width:760px\)\{\.map-stage:has\(\.measurement-readout\) \.category-map-dock:not\(\[data-topic=terrain\]\)\{display:none\}\}/,'other phone docks step aside; Terrain keeps its source profile controls');
 });
 
 test('the storm desk opens and closes the live radar loop from its dock, clear of the loop panel',async()=>{

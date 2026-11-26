@@ -19,15 +19,16 @@ function dockStyle(context){
    }
   }
   for(const selector of rule.selectors){
-   if(!/(?:^|\s)\.category-map-dock(?::has\(\[aria-label="Kansas LiDAR layers"\]\))?$/.test(selector))continue;
+   if(!/(?:^|\s)\.category-map-dock(?::has\(\[aria-label="Kansas LiDAR layers"\]\))?(?::not\(\[data-topic=terrain\]\))?$/.test(selector))continue;
    if(selector.includes('Kansas LiDAR layers')&&!context.native)continue;
+   if(selector.includes(':not([data-topic=terrain])')&&context.topic==='terrain')continue;
    if(selector.includes('.measurement-readout')&&!context.measurement)continue;
    if(selector.includes('[data-live-dock="true"]')&&!context.live)continue;
    if(selector.includes('.hydrology-observatory')&&!context.hydrology)continue;
    if(selector.includes('.glm-flash-studio')&&!context.glm)continue;
    // All matching selectors use classes/attributes; :has itself contributes no
    // specificity, while its argument does. Fail on an unsupported selector.
-   assert.match(selector,/^(?:\.map-stage(?:\[data-live-dock="true"\])?(?::has\(\.[\w-]+\))? )?\.category-map-dock(?::has\(\[aria-label="Kansas LiDAR layers"\]\))?$/);
+   assert.match(selector,/^(?:\.map-stage(?:\[data-live-dock="true"\])?(?::has\(\.[\w-]+\))? )?\.category-map-dock(?::has\(\[aria-label="Kansas LiDAR layers"\]\))?(?::not\(\[data-topic=terrain\]\))?$/);
    const specificity=(selector.match(/\.[\w-]+|\[[^\]]+\]/g)??[]).length;
    relevant.forEach(decl=>{
     const weight=[Number(Boolean(decl.important)),specificity,++order],old=declarations.get(decl.prop);
@@ -86,10 +87,12 @@ test('other topic docks preserve their existing desktop/mobile height and bottom
  }
 });
 
-test('native ceiling does not expose docks hidden for phone measurements or taller live instruments',()=>{
+test('other topic docks still yield to phone measurements and taller live instruments',()=>{
  for(const native of [false,true]){
   const normal={...base,width:390,native},style=dockStyle(normal);
   assert.notEqual(style.display,'none');assert.equal(pixels(style['max-height'],style,normal),native?540:748);
   for(const flags of [{width:390,measurement:true},{width:390,live:true},{live:true,hydrology:true},{live:true,glm:true}])assert.equal(dockStyle({...base,native,...flags}).display,'none');
  }
 });
+
+test('a phone terrain cross-section remains visible while other topic measurement docks still step aside',()=>{const c={...base,width:375,height:667,measurement:true,topic:'terrain'};assert.notEqual(dockStyle(c).display,'none');assert.equal(dockStyle({...c,topic:'land'}).display,'none');assert.equal(dockStyle({...c,live:true}).display,'none','a live instrument retains its existing priority');});
