@@ -8,7 +8,7 @@ import {reports,captureReport,reportChanges} from '../scripts/pc-pipeline/market
 
 const code=ts.transpileModule(await readFile('app/yield-history.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {yieldHistory,pairedSeasons}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
-const {exports:{farmBudget}}=await componentHarness('app/field-decision-tools.tsx',{'./bounded-json':{},'./rain-normal':{},'./yield-history':{}});
+const {exports:{farmBudget}}=await componentHarness('app/field-decision-tools.tsx',{'./bounded-json':{},'./rain-normal':{},'./yield-history':{},'./moon':{},'./sun-chart':{},'./frost-dates':{}});
 test('farm budget handles crop failure, entered zero, empty or negative costs and the selected cash price',()=>{
  const b=farmBudget('100','4.5',['20','80','10','250']);
  assert.equal(b.breakEven,3.6);assert.deepEqual(Array.from(b.rows,row=>row.margin),[0,90,180]);

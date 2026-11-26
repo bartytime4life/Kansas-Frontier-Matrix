@@ -3664,5 +3664,14 @@ for (const [width,height] of [[1440,900],[393,852]]) {
     await fill('Other costs','320');
     await p.wait("document.querySelector('.field-decisions')?.textContent.includes('Break-even $4.00/bu') && document.querySelector('.field-tool table tbody tr:nth-child(2)')?.textContent.includes('$40.00')",'cash bid and copied yield update the budget');
     assert.equal(await p.evaluate("document.querySelector('.field-tool a')?.href"),'https://www.ams.usda.gov/mnreports/ams_2886.pdf');
+    await openCategoryTool(p,'Farmers’ Almanac & frost dates');
+    await droughtEnter(p,'[data-category-tool="field-almanac"]');
+    const almanac = "document.querySelector('[data-category-tool=field-almanac]').parentElement";
+    await p.wait(almanac+".querySelectorAll('tbody time').length>=3",'calendar renders local astronomical dates');
+    assert.deepEqual(await p.evaluate("Array.from("+almanac+".querySelectorAll('a'),a=>[a.href,a.target,a.rel])"),[
+      ['https://www.farmersalmanac.com/average-frost-dates#:~:text=Kansas','_blank','noreferrer'],
+      ['https://www.farmersalmanac.com/calendar/gardening','_blank','noreferrer'],
+    ]);
+    assert.equal(await p.evaluate(almanac+".querySelector('[role=status]').textContent"),'Select a crop point to see the nearby station’s freeze dates.');
   });
 }

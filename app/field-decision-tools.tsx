@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { readBoundedJson } from "./bounded-json";
+import { phasesAfter, PHASE_NAMES } from "./moon";
+import { centralOffset } from "./sun-chart";
+import { frostLine, type FrostDates } from "./frost-dates";
 import { pairedSeasons, yieldHistory } from "./yield-history";
 import { rainBaseline, validOutlook, type RainOutlook } from "./rain-normal";
 
@@ -161,7 +164,52 @@ function StationOutlook({point,harvests}:{point:Point|null;harvests:string}) {
   </details>;
 }
 
-export function FieldDecisionTools({point}:{point:Point|null}) {
+type FieldFrost = Readonly<{ lon:number; lat:number; year:number; state:"ready"|"loading"|"failed"|"none"; data:FrostDates|null }>;
+const chicagoDay = (ms:number) => new Date(ms + centralOffset(ms)*60_000).toISOString().slice(0,10);
+const phaseDate = new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",month:"short",day:"numeric"});
+
+export function almanacPhases(month:string) {
+  if (!/^\d{4}-(?:0[1-9]|1[0-2])$/.test(month) || month < "2005-01" || month > "2050-12") return [];
+  const start = Date.parse(month+"-01T00:00:00Z");
+  return phasesAfter(start,6).filter(phase=>chicagoDay(phase.at).startsWith(month));
+}
+
+function FieldAlmanac({point,year,frost}:{point:Point|null;year:number;frost:FieldFrost|null}) {
+  const [month,setMonth]=useState("");
+  const [opened,setOpened]=useState(false);
+  const phases=opened ? almanacPhases(month) : [];
+  const selected=point && frost && frost.year===year && frost.lon===Number(point.lon.toFixed(5)) && frost.lat===Number(point.lat.toFixed(5)) ? frost : null;
+  let stationReading="Select a crop point to see the nearby station’s freeze dates.";
+  if (point) {
+    if (!selected || selected.state==="failed") stationReading="Station freeze observations are unavailable for this point and year.";
+    else if (selected.state==="loading") stationReading="Reading the selected station…";
+    else if (selected.state==="none") stationReading="No Kansas airport station within range.";
+    else stationReading=(selected.data && frostLine(selected.data)) || "Station freeze observations unavailable.";
+  }
+  return <details className="field-tool" onToggle={event=>{
+    const open=event.currentTarget.open;
+    if (open && !opened && !month) setMonth(chicagoDay(Date.now()).slice(0,7));
+    setOpened(open);
+  }}>
+    <summary data-category-tool="field-almanac">Farmers’ Almanac &amp; frost dates</summary>
+    <p><strong>Observed freeze · {year}</strong></p><p role="status">{stationReading}</p>
+    <p>Compare the station’s 32°F threshold with typical city frost dates. A field can freeze earlier or later.</p>
+    <ul>
+      <li><a href="https://www.farmersalmanac.com/average-frost-dates#:~:text=Kansas" target="_blank" rel="noreferrer">Farmers’ Almanac frost chart ↗</a> · choose Kansas for the five listed cities.</li>
+      <li><a href="https://www.farmersalmanac.com/calendar/gardening" target="_blank" rel="noreferrer">Free planting calendar preview ↗</a> · the publisher’s traditional lunar calendar applies across growing zones.</li>
+    </ul>
+    <label>Moon phase month<input type="month" min="2005-01" max="2050-12" value={month} onChange={e=>setMonth(e.target.value)}/></label>
+    {phases.length>0 ? <table><caption>KFM astronomical phases · Central time</caption><thead><tr><th scope="col">Phase</th><th scope="col">Date</th></tr></thead>
+      <tbody>{phases.map(phase=><tr key={phase.at}><th scope="row">{PHASE_NAMES[phase.kind]}</th><td><time dateTime={chicagoDay(phase.at)}>{phaseDate.format(phase.at)}</time></td></tr>)}</tbody></table> :
+      <p>Choose a month from 2005 through 2050.</p>}
+  </details>;
+}
+
+export function FieldDecisionTools({point,year,frost}:{point:Point|null;year:number;frost:FieldFrost|null}) {
   const [harvests,setHarvests]=useState("");
-  return <section className="field-decisions" aria-label="Farm planning"><MarketBudget harvests={harvests} setHarvests={setHarvests}/><StationOutlook key={point?point.lon+","+point.lat:"no-point"} point={point} harvests={harvests}/></section>;
+  return <section className="field-decisions" aria-label="Farm planning">
+    <MarketBudget harvests={harvests} setHarvests={setHarvests}/>
+    <StationOutlook key={point?point.lon+","+point.lat:"no-point"} point={point} harvests={harvests}/>
+    <FieldAlmanac point={point} year={year} frost={frost}/>
+  </section>;
 }
