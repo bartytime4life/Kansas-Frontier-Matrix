@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
+import ScienceNav from "../science-nav";
 import { buildScienceComparison } from "./comparison-model.mjs";
 import { comparisonCsv, comparisonExportFilename, comparisonJson } from "./comparison-report.mjs";
 import { comparisonLabPath, comparisonPath, comparisonSelection, comparisonYears } from "./comparison-selection.mjs";
@@ -43,7 +44,7 @@ function downloadText(value: string, type: string, filename: string) {
   }
 }
 
-export default function ScienceComparison() {
+export default function ScienceComparison({ children }: { children?: ReactNode } = {}) {
   const search = useSyncExternalStore(subscribeLocation, clientSearch, serverSearch);
   const { year, compareYear } = comparisonSelection(search);
   const [attempt, setAttempt] = useState(0);
@@ -105,6 +106,8 @@ export default function ScienceComparison() {
   }
 
   return <>
+    <ScienceNav active="comparison" selection={{ year, compareYear }} sourceHref="#comparison-interpretation" sourceLabel="Reading the sources ↓" />
+    {children}
     <section className={styles.controls} aria-label="Comparison settings">
       <label className={styles.control}>Reference year<select value={year} onChange={event => {
         const next = Number(event.target.value);

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import ScienceNav from "../../science/science-nav";
 import { analyseAir, airCsv, airReceipt, CATEGORIES, YEARS } from "./air-model.mjs";
 import { loadAirSnapshot } from "./snapshot-loader.mjs";
 import styles from "./daily-air-quality.module.css";
@@ -223,7 +224,7 @@ export default function DailyAirQuality({ manifest }) {
   }
 
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science lab navigation"><Link href="/science">← Science tools</Link><Link href="/labs">Full research atlas</Link><Link href="/research">Source discovery</Link><a href="#air-evidence">Source &amp; methods ↓</a></nav>
+    <ScienceNav active="air" selection={selection} sourceHref="#air-evidence" sourceLabel="Source & methods ↓" extraLinks={[{ href: "/labs", label: "Research atlas ↗" }, { href: "/research", label: "Source discovery ↗" }]} />
     <header className={styles.hero}><div><span className={styles.eyebrow}>Kansas field notebook / Daily Air Quality Lab</span><h1>When did<br /><em>the air change?</em></h1><p>Read daily EPA county AQI, then inspect the pollutant and monitor record that defined it. A historical record of reported air, one date at a time.</p></div><div className={styles.scope}><span className={styles.badge}><i />EPA AirData · 2020–2025</span><strong>{manifest.counties.length}<span>reporting counties / 105 Kansas counties</span></strong><span>{number(descriptor.records)} reported county-days<br />Coverage varies by county and date</span></div></header>
     <p className={styles.scopeNote}>Each county-day is the highest reported monitor AQI in that county. It does not describe every location or individual exposure. <a href="https://www.airnow.gov/" target="_blank" rel="noreferrer">Current air quality: AirNow ↗</a></p>
 

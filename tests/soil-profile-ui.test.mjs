@@ -10,7 +10,8 @@ const route = new URL("../app/labs/soil-profile/", import.meta.url);
 const manifest = JSON.parse(await readFile(new URL("snapshot-manifest.json", route), "utf8"));
 const source = (await readFile(new URL("soil-profile.jsx", route), "utf8"))
   .replace('import styles from "./soil-profile.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
-  .replace('import Link from "next/link";', 'const Link = "a";');
+  .replace('import Link from "next/link";', 'const Link = "a";')
+  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;');
 let javascript = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
   fileName: "soil-profile.jsx",
