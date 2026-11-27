@@ -21,6 +21,7 @@
 .tool[data-tool=drought] { --accent: var(--amber); }
 .tool[data-tool=soil] { --accent: #bed3a1; }
 .tool[data-tool=air] { --accent: #c7d8e7; }
+.tool[data-tool=sunlight] { --accent: #e2c17c; }
 .toolScope { border-left: 2px solid var(--accent); padding-left: 1rem; align-self: start; }
 .toolIndex { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: .62rem; }
 .toolScope > strong { display: block; font: 400 4rem/1 Georgia, serif; letter-spacing: -.04em; color: var(--accent); margin-block: .9rem .8rem; }

@@ -14,6 +14,7 @@ guide, cluster and starter work (November 13–18) is described in the dated not
 | Count daily heat, frost and rain at three Kansas stations | [Heat & Rain Lab](heat-and-rain-lab.md) · `/labs/heat-and-rain` |
 | Compare county drought history and measured soil depths | [County Drought & Soil Profile Labs](drought-and-soil-labs.md) · `/science` |
 | Inspect daily county AQI, calendar gaps and the defining source record | [Daily Air Quality Lab](daily-air-quality-lab.md) · `/labs/daily-air-quality` |
+| Compare daily modeled sunlight and clear-sky references across Kansas | [Sunlight & Sky Lab](sunlight-and-sky-lab.md) · `/labs/sunlight-and-sky` |
 | Open a ready-made map with an explanation | `/explore` (16 guides) and [older and newer layers together](explorer-old-and-new-data-2026-11-18.md) |
 | Pick a themed starter or a Science lab layer set | [Starters, guides and Science lab links](explorer-old-and-new-data-2026-11-18.md) |
 | Try the storm, rain, land-cover and historic-place layers | [Discovery layers and starters](explorer-discovery-layers-2026-11-13.md) |
