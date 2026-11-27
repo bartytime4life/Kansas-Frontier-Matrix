@@ -1,14 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-sources-readme
 title: docs/sources/ — Human Source Governance and Catalog Documentation
-type: readme; directory-readme; source-guidance-index; documentation-lane-boundary
-version: v1.1
-prior_version: v1
+type: readme
+document_roles: directory-readme; source-guidance-index; documentation-lane-boundary
+version: v1.2
+prior_version: v1.1
 status: active; repository-grounded; documentation-only; mixed-maturity; source-admission-authority-held
 owners:
   - "@bartytime4life — verified CODEOWNERS review route; source, rights, policy, and independent stewardship assignments NEEDS VERIFICATION"
 created: 2026-05-08
-updated: 2026-08-14
+updated: 2026-11-27
 policy_label: repository-facing
 current_path: docs/sources/README.md
 owning_root: docs/
@@ -18,7 +19,8 @@ responsibility: >-
   source-to-catalog documentation without taking over semantic contracts,
   machine schemas, policy, source registries, connectors, receipts, lifecycle
   data, release decisions, or public delivery.
-truth_posture: >-
+truth_posture: "CONFIRMED bounded November 27 source-family review, three scoped approved pilot descriptors and accepted ADR-0044/45/46; August 14 evidence remains historical below / PARTIAL seven-family acceptance / UNKNOWN complete active-source inventory, unresolved rights and operational consumer closure"
+historical_truth_posture: >-
   CONFIRMED current path, direct-child inventory, adopted Directory Rules,
   current documentation companions, SourceDescriptor validation surfaces,
   empty source-authority register, registry-package placeholder state, and
@@ -40,6 +42,11 @@ canonical_relationship: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
+  base_commit: 9c7ab6014ed568dc51794b3e27c1cf18bf02f11d
+  scope: bounded seven-family matrix and navigation; no source or release decision
+historical_evidence_snapshot:
+  repository: bartytime4life/Kansas-Frontier-Matrix
+  base_ref: main
   base_commit: cbee7add137b9738b3d123b17d41ac3d44d9745b
   target_prior_blob: 389ca581b4ad0bfd906b58d158c21add764e153e
   docs_root_readme_blob: 1f8bac189dac1d01c1185e8b4fb8e25efd11d09f
@@ -59,6 +66,7 @@ evidence_snapshot:
   connectors_readme_blob: a28336f6c15e0234241a7844e5683a52c2fd5024
   source_descriptor_workflow_blob: 6d3f900efcddc17d24a528a92190544fc350b63b
 related:
+  - docs/sources/western-kansas-source-family-matrix.md
   - docs/README.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -98,7 +106,8 @@ notes:
   - "The machine source-authority register exists but has zero entries at the pinned snapshot."
   - "This revision retires the prior README's unsupported no-mounted-repo and canonical-seven claims without deciding the unresolved source-role vocabulary."
 supersedes:
-  - "v1 at the same path"
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9c7ab6014ed568dc51794b3e27c1cf18bf02f11d/docs/sources/README.md
+prior_supersedes_note: "v1 at the same path; retained as historical documentation lineage"
 superseded_by: []
 [/KFM_META_BLOCK_V2] -->
 
@@ -111,7 +120,7 @@ superseded_by: []
 
 [![status: active docs lane](https://img.shields.io/badge/status-active%20docs%20lane-1a7f37?style=flat-square)](#status)
 [![authority: documentation only](https://img.shields.io/badge/authority-documentation%20only-1f6feb?style=flat-square)](#authority-level)
-[![direct children: 7](https://img.shields.io/badge/direct%20children-7-8250df?style=flat-square)](#current-direct-child-map)
+[![direct children: 8](https://img.shields.io/badge/direct%20children-8-8250df?style=flat-square)](#current-direct-child-map)
 [![source register: 0 entries](https://img.shields.io/badge/source%20register-0%20entries-b42318?style=flat-square)](#status)
 [![admission ADR: proposed](https://img.shields.io/badge/ADR--0017-proposed-d4a72c?style=flat-square)](#adrs)
 [![public effect: none](https://img.shields.io/badge/public%20effect-none-6e7781?style=flat-square)](#outputs)
@@ -136,6 +145,23 @@ superseded_by: []
 <a id="purpose"></a>
 
 ## Purpose
+
+### November 27 source-review currentness
+
+The [Western Kansas source-family matrix](western-kansas-source-family-matrix.md)
+records a new bounded review at
+`main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d`, after the synthetic drought
+rehearsal. It distinguishes three scoped approved pilot descriptors from
+unadmitted products, proposal placeholders and unresolved aliases, and dates
+the publisher metadata/terms review. The central authority projection remains
+empty; that does not erase later source-specific accepted ADRs and their
+descriptor/gate scopes. The matrix creates no admission or activation decision.
+
+The August 14 inventory and generic admission-gap statements below retain
+their original snapshot scope. They must not be reused as blanket current
+claims that no source-specific admission or self-release decision exists.
+ADR-0044, ADR-0045 and ADR-0046 govern their bounded water, weather and soil
+profiles; they do not extend to every product from the same publishers.
 
 At `main@cbee7add137b9738b3d123b17d41ac3d44d9745b`, `docs/sources/` is a real, populated documentation lane. It contains six direct files and one direct child directory. Its job is to help humans understand and review:
 
@@ -237,12 +263,14 @@ docs/sources/
 ├── README.md
 ├── RIGHTS_GUIDANCE.md
 ├── SOURCE_DESCRIPTOR_STANDARD.md
+├── western-kansas-source-family-matrix.md
 ├── catalog/
 └── source-roles.md
 ```
 
 | Direct child | Current role | Current posture |
 |---|---|---|
+| [Western Kansas source-family matrix](western-kansas-source-family-matrix.md) | Dated review of the seven drought/hydrology families, scoped registry evidence, publisher facts and next admission proof | November 27 bounded guidance; three existing pilot scopes distinguished from unresolved families; no new source decision |
 | [`ADMISSION_PROCESS.md`](./ADMISSION_PROCESS.md) | Human description of the pre-RAW admission membrane and staged gate sequence | Draft standard; authority remains subordinate to ADRs, contracts, schemas, policy, and review |
 | [`CITATION_GUIDANCE.md`](./CITATION_GUIDANCE.md) | Cite-or-abstain behavior and downstream citation obligations | Draft standard; some vocabulary and path claims require reconciliation |
 | [`RIGHTS_GUIDANCE.md`](./RIGHTS_GUIDANCE.md) | Human rights, terms, attribution, redistribution, privacy, sovereignty, and sensitivity guidance | Draft and stale in places; not a source-specific rights decision |
@@ -885,6 +913,10 @@ Unknowns narrow claims and block higher-risk transitions. They do not authorize 
 
 ## Last reviewed
 
+**Latest bounded update: November 27, 2026**, for the source-family matrix,
+source-specific decision currentness and navigation. This does not re-review
+every generic source-governance statement. The older review record follows.
+
 - **Date:** 2026-08-14
 - **Base:** `main@cbee7add137b9738b3d123b17d41ac3d44d9745b`
 - **Prior target blob:** `389ca581b4ad0bfd906b58d158c21add764e153e`
@@ -909,6 +941,13 @@ Re-review when:
 Review is event- and risk-based. This README does not create a calendar-only approval rule.
 
 ### Change history
+
+#### v1.2 — 2026-11-27
+
+- added the dated Western Kansas source-family review and direct-child route;
+- distinguished later scoped approved descriptors/ADRs from the retained August
+  14 generic snapshot without extending any source or release authority;
+- preserved historical metadata and bound the predecessor documentation link.
 
 #### v1.1 — 2026-08-14
 

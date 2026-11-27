@@ -1,0 +1,253 @@
+{
+  "receipt_id": "genrec-source-family-matrix-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/registers/milestone-progress-2026-10-08.md",
+    "docs/sources/README.md",
+    "docs/sources/western-kansas-source-family-matrix.md"
+  ],
+  "artifact_hashes": {
+    "docs/registers/milestone-progress-2026-10-08.md": "sha256:ed3e3f11e1c9c29e149b3e7fedd5a29be579a3724afb8ca4d927663bb1ec1091",
+    "docs/sources/README.md": "sha256:88c82756950ee17a1e50ee6b8855b00edb1bfd1fadea4f073bd438b0f4bf8c21",
+    "docs/sources/western-kansas-source-family-matrix.md": "sha256:521df3b0579a81d8be5c234a23fa8a452ff7e67ac9c2bc9976f097593b7f1966"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact serving build not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:7ddcc32632aa2fad1dd8900ab32a0dbc891806e55dd7e5ba4018c042f89e0e9b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Git/source inspection",
+      "GitHub issue/PR/workflow readback",
+      "official publisher documentation research",
+      "native hash-locked project-test profile",
+      "no-network proof and documentation QA"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a3a67a2e974048f5416794ff2e38f2f81ef58fa615d40227d056030443a4f6cd",
+      "sha256:1be558d8ee31770bd30e6c4f5f77fede9c87d96d097a620431777c93d2f0ce6c",
+      "sha256:adad42db1532c02be24edb2771f2d4db06bceecf6801f5324e39511b6a53cad5",
+      "sha256:57d9430bc1a8d7c5f8eb2e7cf8658ca5515ba324460b53d8f8415f76d1a47651",
+      "sha256:f034ccadb179ace0003bdb71fa52d187ee13432061832c4819bde725e9bd8226",
+      "sha256:30c0b04e4c762e35cbcfce7b7f2ab79d0507923d4e56c3dec54e749f61ec87ae",
+      "sha256:6e8f24cc2fee98bc5b67c4ffff86c5b624ec16ba2f30af9d1b24d3c64cb61167",
+      "sha256:df81e2bfe8ffe474de06dd0a7e277cd7133617f4861ad39d311d32b2f5c903ee",
+      "sha256:fe2a72d54b4c7668b3a1b7140fced57e67f7265449d6cb81300ec35c2ddb2fc2",
+      "sha256:7c9deace335744b099b205c36f0ca300d1dfe1fef58c0cc7827bb5c0a08749c4",
+      "sha256:8a8b9db6c068cbe62814c152246d7fc9c1dc552bce79b541d6b2c9dd8cc4dfd4",
+      "sha256:64d14fe72303252c07d776659ff7cfc35d66d48ed5a103b34254f0f062728b24",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3af8e54f774d5d11cd7b8006a31e3514ddb697b849ee75e51d4e888e29e09c59",
+      "sha256:620f1af3084a5f63f13fc5a89e8fb926810529215a49adced4515b804ea008e2",
+      "sha256:b2f991d7da91c525b3a37d0aae0c58464353ab4ccaf3717e74138d8991e6340a",
+      "sha256:1907fdf395e626000a79827fde7049ddd41b10d7c2cdfe91af3a41a1d3265db1",
+      "sha256:6b62b92f3ce03844e1cfd5e69314415d1851bcbf75c049ef2acaed609d149bc6"
+    ],
+    "evidence_refs": [
+      "repo:main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/hydrology/usgs_nwis.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/atmosphere/noaa_ghcnd.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/soil/noaa-uscrn.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/agriculture/noaa-uscrn.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/soil/nasa-smap.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/agriculture/nasa-smap.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/agriculture/nasa_smap.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/agriculture/nass_quickstats.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/agriculture/nass_crop_progress.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/agriculture/usda-nass.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/hydrology/usgs_wbd.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:data/registry/sources/hydrology/wbd.source.yaml@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:docs/doctrine/directory-rules.md@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:docs/adr/ADR-0044-owner-self-release-for-admitted-public-water-data.md@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:docs/adr/ADR-0045-owner-self-release-for-admitted-public-weather-data.md@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:docs/adr/ADR-0046-owner-self-release-for-admitted-public-soil-data.md@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "repo:contracts/source/source_rights_currentness_assessment.md@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "https://droughtmonitor.unl.edu/About/Permission.aspx",
+      "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "https://drought.unl.edu/Education/Tutorials/Usdm/Section-Six.aspx",
+      "https://api.waterdata.usgs.gov/docs/ogcapi/migration/",
+      "https://waterdata.usgs.gov/provisional-data-statement/",
+      "https://waterdata.usgs.gov/blog/api-waterservices-decom/",
+      "https://geohydro.kgs.ku.edu/geohydro/wizard/wizardfgdc.html",
+      "https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt",
+      "https://www.cpc.ncep.noaa.gov/products/Drought/eddi/",
+      "https://www.ncei.noaa.gov/access/crn/products.html",
+      "https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/README.txt",
+      "https://nsidc.org/data/spl4smgp/versions/8",
+      "https://www.nass.usda.gov/Quick_Stats/",
+      "https://www.nass.usda.gov/surveys/guide-to-nass-surveys/crop-progress-and-condition",
+      "https://www.nass.usda.gov/About_NASS/Confidentiality_Pledge/",
+      "https://www.usgs.gov/faqs/how-can-i-find-huc-hydrologic-unit-code-a-stream-how-can-i-find-namelocation-a-stream-using",
+      "https://www.usgs.gov/ngp-standards-and-specifications/watershed-boundary-dataset-wbd-data-dictionary",
+      "https://www.usgs.gov/national-hydrography/access-national-hydrography-products",
+      "repo:schemas/contracts/v1/source/source_descriptor.schema.json@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d"
+    ]
+  },
+  "truth_labels": {
+    "docs/registers/milestone-progress-2026-10-08.md": "PROPOSED",
+    "docs/sources/README.md": "PROPOSED",
+    "docs/sources/western-kansas-source-family-matrix.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository_health_scan",
+      "outcome": "PASS",
+      "reason": "29-entry registry; topology 0 invariant/new/stale, 83 retained warnings; scaffold 700 markers with no new/resolved entries; gap scan 0 structured parse errors and test-package shadows; historical completion projection 949 markers / 747 entries."
+    },
+    {
+      "gate": "admitted_descriptor_shape",
+      "outcome": "PASS",
+      "reason": "Existing Hydrology, Atmosphere and Soil validator entrypoints accept the three reviewed approved pilot descriptors. Shape acceptance is not a fresh rights/admission decision."
+    },
+    {
+      "gate": "rights_currentness_fixture_polarity",
+      "outcome": "PASS",
+      "reason": "Existing fixture-only rights/currentness matrix returns its exact expected bounded outcomes; no live assessment or source activation."
+    },
+    {
+      "gate": "guarded_drought_forecast_consumer_regressions",
+      "outcome": "PASS",
+      "reason": "58 tests and 14 subtests pass in a fresh native project-test environment with the Python process network guard."
+    },
+    {
+      "gate": "publisher_documentation_review",
+      "outcome": "PASS",
+      "reason": "Official publisher metadata/permission/product pages read November 27; historical metadata dates and unaccepted terms remain explicit. No dataset payload was captured; no rights verification timestamp or decision was renewed."
+    },
+    {
+      "gate": "changed_documentation",
+      "outcome": "PASS",
+      "reason": "150 local targets resolve; all 3 metadata blocks valid with retained nesting warnings; critical structure PASS; committed metadata and document-graph ratchets have 0 failure findings. Freshness scan is advisory WARN (61 findings), not renewed review of every document. Existing multi-role type and predecessor-link metadata in the touched index corrected, preserving history."
+    },
+    {
+      "gate": "exact_base_hosted_readback",
+      "outcome": "PASS",
+      "reason": "75 push workflows at exact base: 73 success, 1 skipped APIsec, 1 failed GDAL image-acquisition probe; failure is covered by existing PR #6150. Full Python 3.12 root tree: 10728 passes, 44 skips, 7611 passing subtests, 2 warnings, followed by out-of-tree suites. These are exact-base observations, not candidate CI."
+    },
+    {
+      "gate": "exact_candidate_hosted_and_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Not observed at authoring; human source/rights acceptance remains separate and pending. No ready, approval, merge, source, release or publication action."
+    },
+    {
+      "gate": "new_unit_tests_and_full_local_hook_sweep",
+      "outcome": "SKIPPED",
+      "reason": "No production behavior changes; no new tests added for this reversible documentation slice. Targeted existing consumers and document checks are proportionate; full exact-base hosted suite was read separately."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "publisher-1",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/About/Permission.aspx"
+    },
+    {
+      "id": "publisher-2",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+    },
+    {
+      "id": "publisher-3",
+      "validated": true,
+      "evidence_ref": "https://drought.unl.edu/Education/Tutorials/Usdm/Section-Six.aspx"
+    },
+    {
+      "id": "publisher-4",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/docs/ogcapi/migration/"
+    },
+    {
+      "id": "publisher-5",
+      "validated": true,
+      "evidence_ref": "https://waterdata.usgs.gov/provisional-data-statement/"
+    },
+    {
+      "id": "publisher-6",
+      "validated": true,
+      "evidence_ref": "https://waterdata.usgs.gov/blog/api-waterservices-decom/"
+    },
+    {
+      "id": "publisher-7",
+      "validated": true,
+      "evidence_ref": "https://geohydro.kgs.ku.edu/geohydro/wizard/wizardfgdc.html"
+    },
+    {
+      "id": "publisher-8",
+      "validated": true,
+      "evidence_ref": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt"
+    },
+    {
+      "id": "publisher-9",
+      "validated": true,
+      "evidence_ref": "https://www.cpc.ncep.noaa.gov/products/Drought/eddi/"
+    },
+    {
+      "id": "publisher-10",
+      "validated": true,
+      "evidence_ref": "https://www.ncei.noaa.gov/access/crn/products.html"
+    },
+    {
+      "id": "publisher-11",
+      "validated": true,
+      "evidence_ref": "https://www.ncei.noaa.gov/pub/data/uscrn/products/daily01/README.txt"
+    },
+    {
+      "id": "publisher-12",
+      "validated": true,
+      "evidence_ref": "https://nsidc.org/data/spl4smgp/versions/8"
+    },
+    {
+      "id": "publisher-13",
+      "validated": true,
+      "evidence_ref": "https://www.nass.usda.gov/Quick_Stats/"
+    },
+    {
+      "id": "publisher-14",
+      "validated": true,
+      "evidence_ref": "https://www.nass.usda.gov/surveys/guide-to-nass-surveys/crop-progress-and-condition"
+    },
+    {
+      "id": "publisher-15",
+      "validated": true,
+      "evidence_ref": "https://www.nass.usda.gov/About_NASS/Confidentiality_Pledge/"
+    },
+    {
+      "id": "publisher-16",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/faqs/how-can-i-find-huc-hydrologic-unit-code-a-stream-how-can-i-find-namelocation-a-stream-using"
+    },
+    {
+      "id": "publisher-17",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/ngp-standards-and-specifications/watershed-boundary-dataset-wbd-data-dictionary"
+    },
+    {
+      "id": "publisher-18",
+      "validated": true,
+      "evidence_ref": "https://www.usgs.gov/national-hydrography/access-national-hydrography-products"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T21:54:32.825084Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only review; citation validated flags mean publisher metadata/link readback, not rights, admission or legal approval. Existing source records, accepted ADRs, policy, machine registers, historical receipts, catalog and baselines are unchanged. The source-family review is bounded and does not re-adjudicate local SQL/archive feed authorizations, admit USDM or another product, retrieve observation data, change settings/schedules, release, deploy or publish. M22/#2899/#3393 remain partial."
+}
