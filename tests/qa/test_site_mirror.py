@@ -3681,3 +3681,30 @@ def test_unified_science_labs_successor_preserves_capture_and_release_boundaries
         },
         "06a43eed78c5db79aa4dacd1c91977ab449c8dac",
     )
+
+
+def test_science_reports_and_archive_readiness_preserve_source_holds():
+    _assert_transport_successor(
+        "site-v268-science-reports-archive-readiness-overlay-20261127.json",
+        "site-v268-unified-science-labs-overlay-20261127.json",
+        "b84292087364064fe797ec0997b165935085bb02abbd80fb93c24ea9b77bf8c6",
+        {
+            "app/labs/heat-and-rain/climate-model.mjs",
+            "app/labs/heat-and-rain/heat-and-rain.jsx",
+            "app/labs/heat-and-rain/heat-and-rain.module.css",
+            "app/science/compare/comparison-view.tsx",
+            "app/science/compare/comparison.module.css",
+            "app/science/page.tsx",
+            "app/science/science-data-coverage.jsx",
+            "app/science/science-directory.mjs",
+            "app/science/science.module.css",
+            "docs/daily-archive.md",
+            "scripts/archive-access.mjs",
+            "scripts/capture-daily-archive.mjs",
+            "tests/archive-access.test.mjs",
+            "tests/heat-and-rain-ui.test.mjs",
+            "tests/heat-and-rain.test.mjs",
+            "tests/science-comparison-view.test.mjs",
+        },
+        "a727f167ae19da1fdafcbe6d3c77dedf80a55866",
+    )

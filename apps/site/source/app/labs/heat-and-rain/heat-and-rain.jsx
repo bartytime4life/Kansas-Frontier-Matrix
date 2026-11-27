@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import Link from "next/link";
 import ScienceNav from "../../science/science-nav";
 import { loadClimateSnapshot } from "./snapshot-loader.mjs";
-import { analyseClimate, climateCsv, climateReceipt, readingLabel } from "./climate-model.mjs";
+import { analyseClimate, analyseCornHeat, climateCsv, climateReceipt, cornHeatCsv, CORN_HEAT_METHOD, readingLabel, validCornWindow } from "./climate-model.mjs";
 import styles from "./heat-and-rain.module.css";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -25,13 +25,16 @@ const validNumber = (raw, minimum, maximum, fallback, integer = false) => {
 export function climateSelection(manifest, search = "") {
   const query = new URLSearchParams(search);
   const defaultStation = manifest.stations.find((station) => /WICHITA/i.test(station.name)) ?? manifest.stations[0];
+  const year = validNumber(query.get("year"), 2020, 2025, 2025, true);
+  const cornFrom = query.get("cornFrom"), cornTo = query.get("cornTo");
   return {
     station: manifest.stations.some((station) => station.id === query.get("station")) ? query.get("station") : defaultStation.id,
-    year: validNumber(query.get("year"), 2020, 2025, 2025, true),
+    year,
     month: validNumber(query.get("month"), 0, 12, 0, true),
     units: query.get("units") === "imperial" ? "imperial" : "metric",
     heat: validNumber(query.get("heat"), -60, 60, 32.2),
     wet: validNumber(query.get("wet"), 0.1, 500, 1),
+    ...(validCornWindow(year, cornFrom, cornTo) ? { cornFrom, cornTo } : {}),
   };
 }
 
@@ -40,6 +43,10 @@ export function climateLink(href, selection) {
   url.search = "";
   url.hash = "";
   for (const key of ["station", "year", "month", "units", "heat", "wet"]) url.searchParams.set(key, String(selection[key]));
+  if (validCornWindow(selection.year, selection.cornFrom, selection.cornTo)) {
+    url.searchParams.set("cornFrom", selection.cornFrom);
+    url.searchParams.set("cornTo", selection.cornTo);
+  }
   return url.toString();
 }
 
@@ -243,6 +250,56 @@ export function ClimateDayInspector({ days, selectedIndex, units, onSelectDate }
   </div>;
 }
 
+export function CornHeatPanel({ analysis, units, onApply, onDownload, downloadError }) {
+  const [error, setError] = useState("");
+  const { year, from, to, expected, paired, degreeDaysC, monthly } = analysis;
+  const unit = units === "imperial" ? "°F·days" : "°C·days";
+  const degrees = value => number(units === "imperial" ? value * 9 / 5 : value, 2);
+  const high = Math.max(1, ...monthly.map(month => month.degreeDaysC ?? 0));
+  function apply(event) {
+    event.preventDefault();
+    const { cornFrom, cornTo } = event.currentTarget.elements;
+    if (!validCornWindow(year, cornFrom.value, cornTo.value)) {
+      setError("Choose a start and end date in the station year, with the start on or before the end.");
+      return;
+    }
+    setError("");
+    onApply({ cornFrom: cornFrom.value, cornTo: cornTo.value });
+  }
+
+  return <section className={styles.cornHeat} aria-labelledby="corn-heat-heading">
+    <div className={styles.sectionHeader}><div>
+      <h3 id="corn-heat-heading">Corn growing degree days</h3>
+      <p>Measure how much heat accumulated between two dates at this weather station in {year}.</p>
+    </div><button type="button" onClick={onDownload}>Download corn GDD CSV ↓</button></div>
+    <form className={styles.cornWindow} onSubmit={apply}>
+      <label>Start date<input key={from} name="cornFrom" type="date" min={`${year}-01-01`} max={`${year}-12-31`} defaultValue={from} required /></label>
+      <label>End date<input key={to} name="cornTo" type="date" min={`${year}-01-01`} max={`${year}-12-31`} defaultValue={to} required /></label>
+      <button type="submit">Calculate heat</button>
+      {error && <p className={styles.errorText} role="alert">{error}</p>}
+    </form>
+    {downloadError && <p className={styles.errorText} role="alert">{downloadError}</p>}
+    <p className={styles.cornTotal} role="status">
+      {degreeDaysC === null ? <strong>Growing degree days unavailable</strong> : <strong>{degrees(degreeDaysC)} {unit} · {paired === expected ? "window total" : "observed subtotal"}</strong>}
+      <span>{paired} of {expected} days had both temperatures. {expected - paired} missing or withheld.</span>
+    </p>
+    <table className={styles.cornTable}>
+      <caption>Heat accumulated within the selected dates</caption>
+      <thead><tr><th scope="col">Month</th><th scope="col">GDD ({unit})</th><th scope="col">Paired days</th></tr></thead>
+      <tbody>{monthly.map(month => <tr key={month.month}>
+        <th scope="row">{MONTHS[Number(month.month.slice(5)) - 1]}</th>
+        <td>{month.degreeDaysC === null ? "Unavailable" : <>
+          <span>{degrees(month.degreeDaysC)}{month.paired < month.expected ? " subtotal" : ""}</span>
+          <span aria-hidden="true" className={styles.cornBar}><i style={{ width: `${month.degreeDaysC / high * 100}%` }} /></span>
+        </>}</td>
+        <td>{month.paired}/{month.expected}</td>
+      </tr>)}</tbody>
+    </table>
+    <p className={styles.coverageNote}>The calculation limits both daily temperatures to 50–86 °F (10–30 °C), averages them, then subtracts the 50 °F (10 °C) base. Days with either temperature missing or withheld add no estimate. Station heat describes the selected dates. Crop stages also depend on planting date, hybrid, and field conditions.</p>
+    <a href={CORN_HEAT_METHOD.documentation} target="_blank" rel="noreferrer">Kansas Mesonet degree-day method ↗</a>
+  </section>;
+}
+
 export default function HeatAndRain({ manifest }) {
   const search = useSyncExternalStore(subscribeLocation, locationSearch, serverSearch);
   const selection = useMemo(() => climateSelection(manifest, search), [manifest, search]);
@@ -255,7 +312,7 @@ export default function HeatAndRain({ manifest }) {
   const [recordsPage, setRecordsPage] = useState({ key: "", page: 0 });
   const [shareStatus, setShareStatus] = useState("");
   const [shareFallback, setShareFallback] = useState("");
-  const [exportError, setExportError] = useState("");
+  const [exportError, setExportError] = useState(null);
   const shareId = useRef(0);
 
   useEffect(() => {
@@ -272,6 +329,9 @@ export default function HeatAndRain({ manifest }) {
   const currentResult = result?.stationId === selection.station ? result : null;
   const snapshot = currentResult?.snapshot ?? null;
   const analysis = useMemo(() => snapshot ? analyseClimate(snapshot, { year: selection.year, month: selection.month, heatC: selection.heat, wetMm: selection.wet }) : null, [snapshot, selection.year, selection.month, selection.heat, selection.wet]);
+  const cornFrom = selection.cornFrom ?? `${selection.year}-04-01`;
+  const cornTo = selection.cornTo ?? `${selection.year}-10-31`;
+  const cornHeat = useMemo(() => snapshot ? analyseCornHeat(snapshot, { year: selection.year, from: cornFrom, to: cornTo }) : null, [snapshot, selection.year, cornFrom, cornTo]);
   const days = analysis?.days ?? [];
   const selectedIndex = Math.max(0, days.findIndex((day) => day.date === selectedDate));
   const analysisKey = `${selection.station}:${selection.year}:${selection.month}`;
@@ -287,7 +347,7 @@ export default function HeatAndRain({ manifest }) {
     shareId.current += 1;
     setShareStatus("");
     setShareFallback("");
-    setExportError("");
+    setExportError(null);
     window.history.replaceState(window.history.state, "", climateLink(window.location.href, next));
     window.dispatchEvent(new Event(LOCATION_EVENT));
   }
@@ -305,14 +365,15 @@ export default function HeatAndRain({ manifest }) {
   }
 
   function exportAnalysis(kind) {
-    if (!analysis || !snapshot || !days.length) return;
+    if (!analysis || !snapshot || !days.length || (kind === "corn" && !cornHeat)) return;
     try {
       const filename = `kfm-${selection.station}-${selection.year}${selection.month ? `-${String(selection.month).padStart(2, "0")}` : ""}`;
       if (kind === "csv") downloadText(climateCsv(analysis, selection.units), "text/csv;charset=utf-8", `${filename}.csv`);
+      else if (kind === "corn") downloadText(cornHeatCsv(cornHeat, descriptor), "text/csv;charset=utf-8", `kfm-${selection.station}-corn-gdd-${cornFrom}-to-${cornTo}.csv`);
       else downloadText(`${JSON.stringify(climateReceipt(analysis, descriptor, selection.units), null, 2)}\n`, "application/json", `${filename}-receipt.json`);
-      setExportError("");
+      setExportError(null);
     } catch {
-      setExportError("This browser could not create the download. Try again or open the original NOAA source below.");
+      setExportError({ kind, text: "This browser could not create the download. Try again or open the original NOAA source below." });
     }
   }
 
@@ -350,6 +411,7 @@ export default function HeatAndRain({ manifest }) {
             <ClimateDayInspector days={days} selectedIndex={selectedIndex} units={selection.units} onSelectDate={setSelectedDate} />
           </>}
 
+          {cornHeat && <CornHeatPanel analysis={cornHeat} units={selection.units} onApply={updateSelection} onDownload={() => exportAnalysis("corn")} downloadError={exportError?.kind === "corn" ? exportError.text : null} />}
           <section className={styles.monthly} aria-labelledby="climate-monthly-heading"><div className={styles.sectionHeader}><div><h3 id="climate-monthly-heading">The year, month by month.</h3><p>Select a month to focus the plot and headline readings.</p></div>{selection.month !== 0 && <button type="button" onClick={() => updateSelection({ month: 0 })}>Show full year</button>}</div>
             <div className={styles.tableScroll} role="region" aria-label="Monthly climate summary, horizontally scrollable" tabIndex={0}><table className={styles.monthTable}><caption>{descriptor.name} · {selection.year}. Support beneath each value is valid days / expected days for that measurement.</caption><thead><tr><th scope="col">Month</th><th scope="col">Hot days</th><th scope="col">Days at or below freezing</th><th scope="col">Wet days</th><th scope="col">Quantified precipitation ({rainUnit(selection.units)})</th></tr></thead><tbody>{analysis.monthly.map((month) => <tr key={month.month} data-selected={selection.month === month.month}><th scope="row"><button type="button" aria-pressed={selection.month === month.month} onClick={() => updateSelection({ month: month.month })}>{MONTHS[month.month - 1]}<span aria-hidden="true">↗</span></button></th><td>{month.valid.tmax ? number(month.hotDays) : "—"}<small>{month.valid.tmax}/{month.expected} valid</small></td><td>{month.valid.tmin ? number(month.frostDays) : "—"}<small>{month.valid.tmin}/{month.expected} valid</small></td><td>{month.valid.prcp ? number(month.wetDays) : "—"}<small>{month.valid.prcp}/{month.expected} quantified</small></td><td>{month.rainMm === null ? "—" : number(rain(month.rainMm, selection.units), selection.units === "imperial" ? 2 : 1)}<small>{month.valid.prcp}/{month.expected} quantified · {month.traceDays} trace</small></td></tr>)}</tbody></table></div>
           </section>
@@ -361,7 +423,7 @@ export default function HeatAndRain({ manifest }) {
       <section className={styles.evidence} id="climate-evidence" aria-labelledby="climate-evidence-heading">
         <div className={styles.sectionHeader}><div><span className={styles.eyebrow}>03 / Take the evidence with you</span><h2 id="climate-evidence-heading">Useful science keeps its source.</h2></div><span className={styles.evidenceTag}>Provider context</span></div>
         <div className={styles.downloads}><button type="button" disabled={!analysis || !days.length} onClick={() => exportAnalysis("csv")}>Download daily CSV ↓</button><button type="button" disabled={!analysis || !days.length} onClick={() => exportAnalysis("receipt")}>Download analysis receipt ↓</button><a href={descriptor.source.url} target="_blank" rel="noreferrer">Original NOAA source ↗</a></div><p className={styles.downloadNote}>The provider’s source file may update. Your receipt identifies the version captured for this snapshot.</p>
-        {exportError && <p className={styles.errorText} role="alert">{exportError}</p>}
+        {exportError && exportError.kind !== "corn" && <p className={styles.errorText} role="alert">{exportError.text}</p>}
         <div className={styles.evidenceGrid}><div><h3>A station record, in its place.</h3><dl className={styles.sourceFacts}><div><dt>Station</dt><dd>{descriptor.name} · {descriptor.id}</dd></div><div><dt>Coordinates</dt><dd>{number(descriptor.latitude, 4)}°, {number(descriptor.longitude, 4)}° · elevation {number(descriptor.elevationM, 1)} m</dd></div><div><dt>Provider</dt><dd>{manifest.provider}</dd></div><div><dt>Source captured</dt><dd><time dateTime={descriptor.source.capturedAt}>{captureLabel(descriptor.source.capturedAt)}</time></dd></div><div><dt>Snapshot scope</dt><dd>{manifest.period.from} through {manifest.period.to}</dd></div></dl></div><div className={styles.limitations}><h3>Read the boundaries.</h3><p>These are observations at individual stations. They are not county averages, gridded estimates, forecasts or a complete picture of conditions between stations.</p><p>Six years support exploration of these observations; they do not establish a climate normal or a climate trend. This snapshot is provider context and has not been admitted as a KFM dataset.</p><p>Dates follow NOAA’s observation-day convention. A reported day may differ from a midnight-to-midnight local calendar day; observation time is not inferred here.</p></div></div>
         <details className={styles.methods}><summary>Measurement rules, flags & file integrity</summary><div className={styles.methodsBody}><p>NOAA stores TMAX and TMIN in tenths of °C and PRCP in tenths of mm. Values shown here are converted to your selected units. A nonblank quality flag withholds a value from analysis. Missing values stay missing. A trace flag means precipitation was observed without a quantified amount, so traces are counted separately.</p><p>Hot days use TMAX at or above your heat threshold. Days at or below freezing use TMIN at or below 0 °C. The daily minimum alone cannot tell when it occurred or whether frost formed. Wet days use quantified PRCP at or above your wet threshold. Each measurement has its own valid-day denominator. Partial PRCP periods flagged A, C or E are visible in source records and excluded from daily totals and counts.</p><p>The CSV carries daily values, raw flags, source hash and analysis settings. The JSON receipt records the selection, settings, coverage and provenance for this analysis.</p><a href={manifest.documentation} target="_blank" rel="noreferrer">Read NOAA’s GHCN-Daily documentation ↗</a><dl className={styles.hashes}><div><dt>Station snapshot SHA-256</dt><dd><code>{descriptor.sha256}</code></dd></div><div><dt>Captured original source SHA-256</dt><dd><code>{descriptor.source.sha256}</code></dd></div></dl><p>These SHA-256 values were calculated for the captured files; they are not provider-issued checksums. The selected snapshot is checked before observations are shown.</p></div></details>
         <footer className={styles.footer}><span>Kansas Frontier Matrix · Science tools</span><Link href="/observatory/sources">Keep exploring the sources ↗</Link></footer>
