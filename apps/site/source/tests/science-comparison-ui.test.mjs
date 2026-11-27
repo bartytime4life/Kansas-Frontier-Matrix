@@ -34,6 +34,7 @@ async function comparisonHarness(t, search = '') {
   };
   const navigator = { clipboard: { async writeText(value) { clipboard.push(value); } } };
   const harness = await componentHarness('app/science/compare/comparison-client.tsx', {
+    '../science-nav': { default: 'science-nav' },
     'next/link': { default: 'a' },
     './comparison-model.mjs': { buildScienceComparison: (_snapshots, selection) => ({ selection }) },
     './comparison-report.mjs': {

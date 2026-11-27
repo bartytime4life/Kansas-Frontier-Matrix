@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import ScienceNav from "../../science/science-nav";
 import { loadSoilSnapshot } from "./snapshot-loader.mjs";
 import { analyseSoil, soilCsv, soilReceipt, soilReadingLabel } from "./soil-model.mjs";
 import styles from "./soil-profile.module.css";
@@ -263,7 +264,7 @@ export default function SoilProfile({ manifest }) {
   }
 
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science lab navigation"><Link href="/">← KFM Explorer</Link><Link href="/science">Science tools</Link><Link href="/observatory/sources">Research & sources</Link><a href="#soil-evidence">Source & methods ↓</a></nav>
+    <ScienceNav active="soil" selection={selection} sourceHref="#soil-evidence" sourceLabel="Source & methods ↓" extraLinks={[{ href: "/observatory/sources", label: "Research & sources ↗" }]} />
     <header className={styles.hero}><div><span className={styles.eyebrow}>Kansas field notebook / Soil Profile Lab</span><h1>What changes<br /><em>beneath the surface?</em></h1><p>Follow daily moisture and temperature at five measured depths. Start with a season, then inspect one day in the soil.</p></div><div className={styles.scope}><span className={styles.badge}><i />NOAA USCRN observations</span><strong>5 → 100 <span>cm</span></strong><span>2 Kansas stations · 2020–2025<br />Five depths · daily averages</span></div></header>
 
     <section className={styles.setup} aria-labelledby="soil-setup-heading"><div className={styles.sectionHeader}><div><span className={styles.eyebrow}>01 / Choose your observations</span><h2 id="soil-setup-heading">A place, a season, a depth.</h2></div><button type="button" className={styles.shareButton} onClick={copyLink}>Copy analysis link ↗</button></div><div className={styles.selects}>

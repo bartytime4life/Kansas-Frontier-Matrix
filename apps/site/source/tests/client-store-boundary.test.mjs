@@ -7,7 +7,7 @@ import ts from "typescript";
 
 const appRoot = fileURLToPath(new URL("../app/", import.meta.url));
 const sourceRoot = path.dirname(appRoot);
-const codeExtensions = [".ts", ".tsx", ".js", ".mjs"];
+const codeExtensions = [".ts", ".tsx", ".js", ".jsx", ".mjs"];
 const serverModule = /(?:^|\/)(?:db\.[cm]?[jt]s|[^/]+-server\.[cm]?[jt]sx?|route\.[cm]?[jt]s)$/;
 
 async function codeFiles(directory) {
@@ -22,7 +22,8 @@ async function codeFiles(directory) {
 
 function parsed(file, source) {
   return ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true,
-    file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    file.endsWith(".tsx") ? ts.ScriptKind.TSX : file.endsWith(".jsx") ? ts.ScriptKind.JSX
+      : /\.[cm]?js$/.test(file) ? ts.ScriptKind.JS : ts.ScriptKind.TS);
 }
 
 function runtimeImports(tree) {
@@ -61,6 +62,9 @@ test("boundary scan follows runtime imports and ignores type-only imports", () =
   ].join("\n"));
   assert.deepEqual(runtimeImports(tree), ["./db", "./other", "./dynamic"]);
   assert.throws(() => runtimeImports(parsed("fixture.ts", "void import(target);")), /literal module path/);
+  const jsx = parsed("fixture.jsx", 'import { value } from "./value"; const panel = <div>{import("./chart")}</div>;');
+  assert.equal(jsx.parseDiagnostics.length, 0, "JSX must be parsed as JSX before scanning imports");
+  assert.deepEqual(runtimeImports(jsx), ["./value", "./chart"]);
   for (const file of ["/site/db.ts", "/site/app/governed-water-server.ts", "/site/app/api/governed/v1/route.ts"]) {
     assert.match(file, serverModule);
   }

@@ -12,7 +12,8 @@ const manifest = JSON.parse(await readFile(new URL("snapshot-manifest.json", rou
 const snapshot = model.validateAirSnapshot(JSON.parse(await readFile(new URL(`../public${manifest.snapshot.url}`, import.meta.url), "utf8")), manifest);
 const source = (await readFile(new URL("daily-air-quality.jsx", route), "utf8"))
   .replace('import styles from "./daily-air-quality.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
-  .replace('import Link from "next/link";', 'const Link = "a";');
+  .replace('import Link from "next/link";', 'const Link = "a";')
+  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;');
 let javascript = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX }, fileName: "daily-air-quality.jsx" }).outputText;
 for (const name of ["react", "react/jsx-runtime"]) javascript = javascript.replaceAll(`from "${name}"`, `from ${JSON.stringify(import.meta.resolve(name))}`);
 for (const name of ["air-model.mjs", "snapshot-loader.mjs"]) javascript = javascript.replaceAll(`from "./${name}"`, `from ${JSON.stringify(new URL(name, route).href)}`);
@@ -158,7 +159,7 @@ function viewHarness(loader, initial = "https://example.test/labs/daily-air-qual
   const window = { location: { href: current.href, search: current.search }, history: { state: null, pushState(_state, _unused, href) { pushed.push(href); window.location.href = href; window.location.search = new URL(href).search; } }, dispatchEvent() {}, addEventListener() {}, removeEventListener() {} };
   class ViewURL extends URL { static createObjectURL(blob) { blobs.push(blob); return "blob:test"; } static revokeObjectURL() {} }
   return componentHarness("app/labs/daily-air-quality/daily-air-quality.jsx", {
-    "next/link": { default: "a" }, "./air-model.mjs": model, "./snapshot-loader.mjs": { loadAirSnapshot: loader }, "./daily-air-quality.module.css": { default: styles },
+    "../../science/science-nav": { default: "science-nav" }, "next/link": { default: "a" }, "./air-model.mjs": model, "./snapshot-loader.mjs": { loadAirSnapshot: loader }, "./daily-air-quality.module.css": { default: styles },
   }, { URLSearchParams, URL: ViewURL, Blob, window, navigator: {}, document: { body: { appendChild() {} }, createElement() { return { click() { downloads.push(this.download); }, remove() {} }; } }, setTimeout(fn) { fn(); return 0; } }).then((harness) => ({ ...harness, window, pushed, blobs, downloads }));
 }
 

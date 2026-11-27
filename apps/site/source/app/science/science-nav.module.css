@@ -1,0 +1,24 @@
+.nav { box-sizing: border-box; min-width: 0; padding: .85rem 1rem .65rem; border: 1px solid #35565e; background: #0d2831; color: #f3efdf; font: .8rem/1.45 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.row { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem 1.8rem; }
+.nav .row a, .nav .subrow a { color: #b4e9d8; text-decoration: none; min-height: 2.75rem; display: inline-flex; align-items: center; gap: .4rem; }
+.nav .row a:hover, .nav .subrow a:hover { color: #fff; text-decoration: underline; text-underline-offset: .22em; }
+.nav .row :is(a, select):focus-visible, .nav .subrow a:focus-visible { outline: 3px solid #f0c889; outline-offset: 3px; }
+.nav .row .brand { gap: .7rem; color: #f3efdf; flex: 0 0 auto; line-height: 1.2; }
+.brand > span:first-child { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border: 1px solid #759d95; font: 400 .9rem/1 Georgia, serif; }
+.brand > span:last-child { font-size: .83rem; font-weight: 650; }
+.nav .brand small { font-weight: 400; color: #b6ccc6; font-size: .66rem; }
+.switcher { display: flex; align-items: end; gap: .5rem; flex: 1 1 15rem; min-width: 0; max-width: 27rem; }
+.nav .switcher label { display: grid; gap: .3rem; flex: 1 1 auto; min-width: 0; color: #c2d3cf; font-size: .67rem; }
+.nav .switcher select { min-height: 2.75rem; min-width: 0; width: 100%; box-sizing: border-box; padding: .55rem 1.8rem .55rem .7rem; border: 1px solid #66867f; border-radius: .15rem; color: #f5f1e5; background: #12323a; font: 400 .83rem/1.4 system-ui, sans-serif; color-scheme: dark; }
+.nav .row .open { align-items: center; justify-content: center; gap: .6rem; padding: .4rem .75rem; box-sizing: border-box; background: #a8e4d1; color: #123c39; font-weight: 650; border: 1px solid #a8e4d1; border-radius: .15rem; }
+.nav .row .open:hover { color: #102e2c; background: #d3f9e8; text-decoration: none; }
+.links { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem 1.2rem; margin-left: auto; font-size: .75rem; }
+.nav .row .custom { color: #f1d19e; }
+.nav a[aria-current=page] { text-decoration: underline; text-underline-offset: .25em; }
+.subrow { border-top: 1px solid #31515a; margin-top: .7rem; padding-top: .35rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .1rem 1rem; align-items: center; }
+.subrow > div { display: flex; flex-wrap: wrap; gap: 0 1rem; font-size: .71rem; }
+.subrow a { min-height: 2.75rem; }
+.nav .subrow .current { color: #a7bfb9; font-size: .64rem; }
+.nav .subrow p { flex: 0 1 25rem; margin: .3rem 0; color: #b6ccc6; font-size: .65rem; }
+@media (max-width: 46rem) { .row { gap: .7rem 1rem; } .links { flex-basis: 100%; margin-left: 0; justify-content: space-between; border-top: 1px solid #31515a; padding-top: .2rem; } .subrow { margin-top: .2rem; } .nav .subrow p { flex-basis: 100%; margin-bottom: .2rem; } }
+@media (max-width: 28rem) { .nav { padding-inline: .75rem; } .brand { flex-basis: 100%; } .switcher { flex-basis: 100%; max-width: none; } .links { gap: .2rem .7rem; } .subrow > div { gap: 0 .8rem; } }
