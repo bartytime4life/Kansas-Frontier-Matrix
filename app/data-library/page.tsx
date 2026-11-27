@@ -10,6 +10,7 @@ import CollectionMetadataPanel from '../collection-metadata-panel';
 import {labUrl} from '../collection-metadata';
 import {collectionLocation,matchingCollections,comparisonKey,pinComparison,comparisonFields,comparisonValue,comparisonExport,COMPARISON_LIMIT,type ComparedRecord} from './collection-browser';
 import browserStyles from './collection-browser.module.css';
+import {bindCollectionScrollBoundary} from './scroll-boundary';
 
 function RecordField({value,id,database,record,field}:{value:unknown;id:string;database:string;record:string;field:string}){
  const [part,setPart]=useState<ArchiveAnswer|null>(null),[message,setMessage]=useState(''),[busy,setBusy]=useState(false);
@@ -44,6 +45,8 @@ export default function DataLibrary(){
  const [fresh,setFresh]=useState<CatalogFreshness|null>(null),[checkingCatalog,setCheckingCatalog]=useState(true);
  const request=useRef<AbortController|null>(null),generation=useRef(0);
  const finder=useRef<HTMLInputElement>(null),collectionHeading=useRef<HTMLHeadingElement>(null);
+ const libraryScroll=useRef<HTMLElement>(null),collectionScroll=useRef<HTMLDivElement>(null);
+ useEffect(()=>{if(libraryScroll.current&&collectionScroll.current)return bindCollectionScrollBoundary(collectionScroll.current,libraryScroll.current);},[]);
  const collection=recoveredCollection(id);
  const matching=matchingCollections(RECOVERED_COLLECTIONS.map(c=>({...c,topics:recoveredTopics(c.id)})),search,mappedOnly),hasFilters=Boolean(search.trim()||mappedOnly);
  function syncLocation(nextId=id,find=search,mapped=mappedOnly){
@@ -99,7 +102,7 @@ export default function DataLibrary(){
   const a=document.createElement('a');a.href=url;a.download='kfm-archive-comparison.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
  function download(){if(!answer)return;const url=URL.createObjectURL(new Blob([JSON.stringify(answer,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`${id}-page-${page}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
- return <main className={styles.library} tabIndex={0} aria-labelledby="data-library-heading">
+ return <main ref={libraryScroll} className={styles.library} tabIndex={0} aria-labelledby="data-library-heading">
   <header><Link href="/?panel=layers">← Back to the map</Link> · <Link href="/data-lab">Record lab &amp; research stories →</Link><span>KANSAS FRONTIER MATRIX</span><h1 id="data-library-heading">Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
   <div className={styles.summary}>
    <strong>{RECOVERED_COLLECTIONS.length} record collections</strong>
@@ -117,7 +120,7 @@ export default function DataLibrary(){
      <p className={browserStyles.hint}>Search names, topics, sources and field names. Record availability is checked when you read a collection.</p>
     </div>
     <p id="collection-results-summary" role="status" aria-live="polite" aria-atomic="true">{matching.length} of {RECOVERED_COLLECTIONS.length} collections</p>
-    <div className={styles.results}>{matching.map(c=>{const through=loadedThrough(collectionFreshness(c.id));return <button type="button" key={c.id} aria-pressed={c.id===id} onClick={()=>choose(c.id)}><strong>{c.title}</strong><small>{c.geometry?'Records + map geometry':'Records & reference tables'} · {c.database==='bulk'?'bulk archive':'observation archive'}{through?` · loaded ${through}`:''}</small></button>;})}</div>
+    <div ref={collectionScroll} className={styles.results}>{matching.map(c=>{const through=loadedThrough(collectionFreshness(c.id));return <button type="button" key={c.id} aria-pressed={c.id===id} onClick={()=>choose(c.id)}><strong>{c.title}</strong><small>{c.geometry?'Records + map geometry':'Records & reference tables'} · {c.database==='bulk'?'bulk archive':'observation archive'}{through?` · loaded ${through}`:''}</small></button>;})}</div>
     {!matching.length&&<div className={browserStyles.empty}><strong>No matching collections</strong><p>{mappedOnly?'Try fewer words or include collections without map geometry.':'Try fewer words, a source family or a field name.'}{collection?' Your collection choice and map selection are unchanged.':''}</p><button type="button" onClick={clearFilters}>Show all collections</button></div>}
    </section>
    <section className={styles.content} aria-label="Collection records">
