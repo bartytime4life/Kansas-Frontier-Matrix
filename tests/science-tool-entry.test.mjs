@@ -123,7 +123,7 @@ test('Research Discovery composes statewide pathways with direct science links a
 });
 
 test('only the new science pages opt into document scrolling and fluid narrow sizing', async () => {
-  for (const file of ['app/science/science.module.css', ...ids.map((id) => `app/labs/${id}/${id}.module.css`)]) {
+  for (const file of ['app/science/science.module.css', 'app/labs/earthquakes/earthquake.module.css', ...ids.map((id) => `app/labs/${id}/${id}.module.css`)]) {
     const source = await readFile(file, 'utf8');
     assert.match(source, /:global\(body\):has\(\.page\)\s*\{[^}]*min-width:\s*0;[^}]*overflow:\s*auto;/, file);
     assert.doesNotMatch(source, /:global\(body\)\s*\{/, 'body scroll behavior remains conditional on this page');

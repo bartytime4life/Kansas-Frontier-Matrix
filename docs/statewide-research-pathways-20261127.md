@@ -19,7 +19,7 @@ Research atlas link back to these pathways.
 | Water & watersheds | River Flow, County Drought, Water Chemistry | Three gauges, 105 counties and one chemistry station are different samples. |
 | Weather, climate & air | Heat & Rain, Daily Air Quality, Sunlight & Sky | Three stations, 12 reporting counties over the period and three modeled points. |
 | Agriculture & soils | Soil Profile, Farm season, Grain markets & freight | Two soil stations, five depths and separate scenarios/market reports. |
-| Geology & terrain | Shaking Ground, Terrain & elevation, Geology & subsurface | Catalog events around Kansas and source-specific display context. |
+| Geology & terrain | Earthquake Catalog, Terrain & elevation, Geology & subsurface | Catalog events around Kansas and source-specific display context. |
 | Land cover & ecosystems | Flora/fauna Observatory, Ecology & land cover, Konza case study | Occurrence aggregates and mapped areas are not a reviewed statewide species inventory. |
 | History & cultural landscapes | Boom & Ghost Towns, Fort Larned, Newspaper Pulse | Selected Douglas County, Fort Larned and Abilene records. |
 | Infrastructure & energy | Built Kansas, Energy Shift, Then & Now | Repeated inventory records, overlapping energy series and one aerial comparison. |
@@ -43,7 +43,7 @@ Production build, TypeScript, changed-area ESLint and whitespace checks pass.
 All 18 focused model, discovery and production HTTP tests pass. They check the
 eight-subject graph, real public snapshot routes, existing source IDs, coverage
 manifests, scientific boundaries and every named tool/fragment over loopback
-HTTP. The final full Node 24.11.1 suite passes: **3,902 passed, 25 skipped,
+HTTP. The initial feature’s final full Node 24.11.1 suite passes: **3,902 passed, 25 skipped,
 zero failures** (3,927 total). Its first run caught an outdated component test;
 the repair now composes the real pathway component and verifies the direct
 science links, visible scopes and closed Konza case. The full suite was repeated
@@ -56,7 +56,7 @@ and Back/Forward. It writes fresh pathway/comparison screenshots to the existing
 workspace artifact. Browser CI and visual readback are separate from local Node
 and HTTP checks; no rendered result is asserted before that run completes.
 
-Application inputs contain 1,573 files with digest
+The initial feature’s application inputs contain 1,573 files with digest
 `sha256:b39aeff08214fa3d4c054bb46946ba8ff061a82ed9dc73134214ca524238c7ec`.
 This excludes build bytes, data, settings and release authority. The observed
 public app now reports the preceding source-access improvement’s 1,570-file digest
@@ -95,3 +95,51 @@ history assertions remain. Failures now retain target/hit/focus/scroll geometry
 and a screenshot. The generic drought helper and deadlines are unchanged. This
 is a browser acceptance correction pending a fresh CI run, not a claim that the
 first failure was a validated product defect or a passing mobile result.
+
+## Reconcile the newer hosted tools
+
+The owner’s intervening earthquake and water-quality merges advance the hosted
+source to `51cfb8a87c9dfee3abdae2eb82df06e71885f784`. The integrated candidate
+preserves all of that work and replaces only the Geology pathway’s older Shaking
+Ground modal entry with the new `/labs/earthquakes` workspace. It uses the same
+public, integrity-checked USGS snapshot; no new dataset or relay is introduced.
+
+The Earthquake Catalog Lab compares complete four-year periods from 2010 through
+2025, changes the minimum magnitude, maps recorded epicenters, exposes the
+reported depths and source records, and exports selected records. Source-query
+coverage through part of 2026 is separate from those complete comparison periods.
+Neighboring-state coverage, variable detection and magnitude types, estimated
+depths, and the absence of causal or predictive conclusions remain explicit.
+The source-context comparison and the terrain limits are retained.
+
+Production build, TypeScript, changed-area lint and the combined full Node suite
+pass: **3,921 passed, 25 skipped, zero failures** (3,946 total). The pathway test
+binds the comparison span to the actual period definitions and bundled snapshot
+coverage. Production HTTP checks resolve every pathway destination including the
+new Earthquake Catalog route. The refreshed local preview uses this combined
+source. The explicit browser suite also follows the Geology link, requires real
+period summaries and epicenters, and changes the magnitude threshold through
+native keyboard input. Exact-head rendered acceptance remains separate.
+
+The integrated candidate has 1,580 application inputs and digest
+`sha256:b35ab548d640846e5ca60842340512038a2ef985c3151a0939a417c9aaa63e61`.
+This is an application-input comparison, not deployed build-byte identity,
+scientific release or public delivery. Prior receipts and the first browser
+failure remain intact; the integration successor covers the updated artifacts.
+
+The complete Node suite was repeated after correcting the Earthquake Lab’s
+scrolling boundary, with the same 3,921 passes and zero failures. Its page had
+inherited the global body scroll lock; a conditional body selector now enables
+fluid width and native page scrolling only while that lab is mounted, following
+the established science-page pattern. The source regression includes this lab.
+
+The frame-only browser follow-up at `b4d8ed380dc16ab1e9e0b3e873717d3e70604fd3`
+still failed mobile target reveal after fragment focus. Its geometry diagnostics
+showed offscreen targets below a focused card, not an overlay or page-width
+failure. Both failed runs remain intact. The final Research reveal uses bounded
+native wheel input for pointer targets and native control focus before keyboard
+Enter. Every original viewport/hit/touch, anchor, source-selection and history
+assertion and deadline remains. The Earthquake handoff additionally requires
+native wheel movement, source-derived summaries, actually painted epicenters and
+native magnitude changes. Complete rendered acceptance still requires the final
+exact-head CI result; a test correction alone is not browser proof.

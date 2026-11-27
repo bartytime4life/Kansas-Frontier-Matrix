@@ -1,0 +1,107 @@
+{
+  "receipt_id": "kfm-statewide-research-integration-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/labs/earthquakes/earthquake.module.css",
+    "app/research/pathways.ts",
+    "docs/statewide-research-pathways-20261127.md",
+    "tests/explorer-startup.browser.mjs",
+    "tests/research-pathways.test.mjs",
+    "tests/science-tool-entry.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/labs/earthquakes/earthquake.module.css": "sha256:977f8e7295abb8421dc95975fa6a7416f6fc31cc6209280b15d61e5ba51763cf",
+    "app/research/pathways.ts": "sha256:d0abf92cb2ec3269e2a84a2d5ffcd87afbc0e32bca224ec623cdad3ea2ed8adc",
+    "docs/statewide-research-pathways-20261127.md": "sha256:96940fed0b4a90b1735ad72e35aa3089be676f7b02ba7c24953f01aa821c3c4c",
+    "tests/explorer-startup.browser.mjs": "sha256:de10c6fec538261f87de60dec994008c1d2a791b7004860c6356a2a72599a00c",
+    "tests/research-pathways.test.mjs": "sha256:a3cd70a50e6e391260dd4236c472cedb0dc8554c09b21bd35f9607eab4811bf6",
+    "tests/science-tool-entry.test.mjs": "sha256:1d7996e426cd2d957229e439a68dbf03a39c74f9cea045b2510ca1ff76c6afa4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:dc372219c12b6ee66705783016ea2facee0f344f17cc29d7be68299e7e19b50b",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "TinyFish",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/labs/earthquakes/earthquake.module.css",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/research/pathways.ts",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:docs/statewide-research-pathways-20261127.md",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:tests/explorer-startup.browser.mjs",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:tests/research-pathways.test.mjs",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:tests/science-tool-entry.test.mjs",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/labs/earthquakes/catalog-model.mjs",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/labs/earthquakes/EarthquakeLab.jsx",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/labs/public-snapshots.mjs",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/globals.css",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/46073067075/job/140754337651"
+    ],
+    "evidence_hashes": [
+      "sha256:17a6af8b0c5db8614c6a554503d43d4bfe7986fd50ee6ced807f35f1a0b4658f",
+      "sha256:3176880cf50fdf9ff984d14038227c4880f4688fce98105823c37adcf6947603",
+      "sha256:64df4112c3e346ae525ad29ab9265b62030253029288f833ba6472762b26f37a",
+      "sha256:413fcfbbbc1ae3d2663a0d5fa9b195e95f83c5e8bf3ff236d59e16a455993499",
+      "sha256:bbec433b8b2e78a2f4ff595b3f7ab33fb1aed58e94fb20901ead32500f47aa4c",
+      "sha256:e366a5ebfddc88bbcc2378d39527856fb511c164eb3af7b269ef871f46e6a605",
+      "sha256:a8c35b4f1598f8e7d3ad0b1ec9aff21086382bbc4079172c5e5c07c0c3548a8b",
+      "sha256:e4a6615cee83aceaf7ade8f3d8649d50674b4ddd4b840c08af0454bc21f90077",
+      "sha256:03088004012f7cc984c5e7f49cdd8c54228d7dd4a7c86576ea20597cf252c05a",
+      "sha256:ed31a10ff186cce689c94b16bd90a66b44e62d25dbcecfe6763f8be4a74eab19"
+    ]
+  },
+  "truth_labels": {
+    "app/labs/earthquakes/earthquake.module.css": "CONFIRMED",
+    "app/research/pathways.ts": "CONFIRMED",
+    "docs/statewide-research-pathways-20261127.md": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "CONFIRMED",
+    "tests/research-pathways.test.mjs": "CONFIRMED",
+    "tests/science-tool-entry.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Integrated production build, TypeScript, changed-area lint, browser syntax and whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full Node 24.11.1 suite repeated after Earthquake page-scroll fix: 3921 passed,25 skipped,zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent source/scientific and browser assertion review",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Earlier desktop Research browser journey",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Earlier mobile Research target reveal after fragment focus, including frame-only follow-up",
+      "outcome": "FAIL",
+      "reason": "Diagnostics show links below viewport while focused fragment card stays at top. Native wheel/focus correction and original strict hit assertions are retained for fresh acceptance."
+    },
+    {
+      "gate": "Final exact-head integrated browser journeys and public delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring. Native Earthquake scrolling, real source-bound counts/map, magnitude control and three-size Research interactions are encoded but not yet claimed passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T22:08:01.215124+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor coverage for six artifacts; earlier receipts and failing runs remain intact. Preserves the owner’s newer earthquake/water-quality merges. Application has1580 inputs with digest sha256:b35ab548d640846e5ca60842340512038a2ef985c3151a0939a417c9aaa63e61. No new dataset, source admission, settings, relay, DNS or original Sites synchronization; application-input parity does not establish scientific release or publication."
+}
