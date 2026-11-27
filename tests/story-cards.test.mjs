@@ -19,9 +19,9 @@ const validRail = () => ({ format: 'kfm-story-bundle-v1', story: 'iron-horse', v
   data: {years:[1861],states:['Kansas'],names:['Example'],gauges:[56.5],grid:{origin:[-103,36],unit:.001},
     lines:[[0,0,0,0,1,[1000,2000,1,1]]],milesByYear:[{year:1861,kansasTotal:1}],counts:{segments:1},limits:['Synthetic test only']} });
 
-test('the registry lists 31 stories with unique ids, known groups and complete copy', () => {
-  assert.equal(STORIES.length, 31);
-  assert.equal(new Set(STORIES.map(story => story.id)).size, 31);
+test('the registry lists 32 stories with unique ids, known groups and complete copy', () => {
+  assert.equal(STORIES.length, 32);
+  assert.equal(new Set(STORIES.map(story => story.id)).size, 32);
   for (const story of STORIES) {
     assert.match(story.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert.ok(STORY_GROUPS.includes(story.group), `${story.id} group`);
@@ -57,6 +57,7 @@ test('implemented instruments are lazy and planned stories cannot load a pretend
     ['county-drought', '/labs/county-drought', null],
     ['soil-profile', '/labs/soil-profile', null],
     ['daily-air-quality', '/labs/daily-air-quality', null],
+    ['sunlight-and-sky', '/labs/sunlight-and-sky', null],
     ['neon-terrain', '/labs/terrain', null],
     ['kansas-then-and-now', '/labs/then-now', null],
     ['drought-replay-2012', '/labs/drought-replay', null],
