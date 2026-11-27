@@ -4,6 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import ts from "typescript";
 import { PUBLIC_LAB_SNAPSHOTS } from "../app/labs/public-snapshots.mjs";
+import { PERIODS } from "../app/labs/earthquakes/catalog-model.mjs";
 
 // Join the real source registry without starting the application or contacting providers.
 const modules = new Map();
@@ -132,7 +133,11 @@ test("stated laboratory coverage remains tied to the shipping source manifests",
   assert.ok(tool("/labs/daily-air-quality").scope.includes(String(air.counties.length)));
   assert.equal(PUBLIC_LAB_SNAPSHOTS["built-kansas"].records, 24877);
   assert.ok(tool("/labs?story=built-kansas").scope.includes(new Intl.NumberFormat("en-US").format(PUBLIC_LAB_SNAPSHOTS["built-kansas"].records)));
-  for (const id of ["shaking-ground", "energy-shift", "census-mosaic"]) {
+  const earthquake = PUBLIC_LAB_SNAPSHOTS["shaking-ground"];
+  assert.ok(PERIODS.every(period => period.end - period.start === 3));
+  assert.ok(PERIODS.every(period => period.start >= earthquake.observed.from && period.end < earthquake.observed.to));
+  assert.ok(tool("/labs/earthquakes").scope.includes(`${Math.min(...PERIODS.map(period => period.start))}–${Math.max(...PERIODS.map(period => period.end))}`));
+  for (const id of ["energy-shift", "census-mosaic"]) {
     const snapshot = PUBLIC_LAB_SNAPSHOTS[id];
     assert.ok(tool(`/labs?story=${id}`).scope.includes(`${snapshot.observed.from}–${snapshot.observed.to}`), id);
   }

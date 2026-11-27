@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdtemp, readFile, readdir, rm, mkdir, writeFile, appendFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -16,6 +17,7 @@ import { welcomeAttributionBrowserFixtures } from './welcome-attribution-browser
 import { droughtBrowserFixtures } from './drought-browser-fixtures.mjs';
 import ts from 'typescript';
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
+import { PUBLIC_LAB_SNAPSHOTS } from '../app/labs/public-snapshots.mjs';
 
 // Bind acceptance to the existing navigation contract, not a second tile list.
 const taxonomy = {};
@@ -3830,11 +3832,21 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
       await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `${name}-${width}x${height}.png`), Buffer.from(shot.data, 'base64'));
     };
     const reveal = async selector => {
-      // Let native fragment scrolling finish before revealing the next control,
-      // then let layout settle again. Pointer acceptance must not depend on
-      // pre-focusing its target; the same viewport and hit checks still apply.
-      await p.evaluate(`(async()=>{const settle=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));await settle();const node=document.querySelector(${JSON.stringify(selector)});node.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});await settle();})()`);
+      // Native fragment focus can retain its scroll position until user input.
+      // Reveal pointer targets with actual wheel input at the passive margin,
+      // without focusing them or changing the page's geometry or scroll rules.
+      const settle = () => p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
       try {
+        await settle();
+        for (let step = 0; step < 40; step++) {
+          const position = await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect();return r?{top:r.top,bottom:r.bottom,height:r.height,viewport:innerHeight}:null;})()`);
+          if (!position || !position.height || (position.top >= 0 && position.bottom <= position.viewport + 1)) break;
+          const distance = position.top + position.height / 2 - position.viewport / 2;
+          const deltaY = Math.sign(distance) * Math.min(Math.max(Math.abs(distance), 40), Math.max(240, Math.min(position.viewport, 800)));
+          await p.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 8, y: height / 2 });
+          await p.call('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 8, y: height / 2, deltaX: 0, deltaY });
+          await settle();
+        }
         await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect();return r&&r.width>0&&r.height>0&&r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'uncovered Research pathway target: '+selector);
       } catch (error) {
         const geometry = await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),hit=r?document.elementFromPoint(r.left+r.width/2,r.top+r.height/2):null,ancestors=[];for(let parent=node?.parentElement;parent;parent=parent.parentElement){const style=getComputedStyle(parent);ancestors.push({tag:parent.tagName,id:parent.id,className:parent.className,rect:parent.getBoundingClientRect().toJSON(),scrollTop:parent.scrollTop,scrollLeft:parent.scrollLeft,scrollWidth:parent.scrollWidth,scrollHeight:parent.scrollHeight,clientWidth:parent.clientWidth,clientHeight:parent.clientHeight,overflowX:style.overflowX,overflowY:style.overflowY});}return {selector:${JSON.stringify(selector)},url:location.href,viewport:{width:innerWidth,height:innerHeight,scrollX,scrollY},target:r?.toJSON(),hit:hit?.outerHTML.slice(0,500),active:document.activeElement?.outerHTML.slice(0,500),ancestors};})()`);
@@ -3853,8 +3865,9 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
       return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
     };
     const enter = async selector => {
+      // Native focus scrolls a keyboard target into view, as Tab navigation does.
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
       await reveal(selector);
-      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus({preventScroll:true})`);
       await p.key('Enter', 'Enter', 13);
     };
     const click = async selector => {
@@ -3951,6 +3964,53 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
     await p.evaluate('history.back()');
     await p.wait(`location.href===${JSON.stringify(shared)} && document.querySelector(${JSON.stringify(search)})?.value==='water'`, 'a second Back preserves the search and selection');
     await assertSelection(selected);
+
+    // Follow Geology into the real, hash-verified public earthquake snapshot.
+    // Expected readings come from the shipping records, not invented fixtures.
+    const quakeTool = pathways.find(pathway => pathway.id === 'geology').tools.find(entry => entry.href === '/labs/earthquakes');
+    assert.ok(quakeTool, 'Geology exposes the working Earthquake Catalog Lab');
+    const snapshot = PUBLIC_LAB_SNAPSHOTS['shaking-ground'];
+    const bytes = await readFile(new URL(`../public${snapshot.path}`, import.meta.url));
+    assert.equal(bytes.byteLength, snapshot.bytes);
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), snapshot.sha256);
+    const quakeBundle = JSON.parse(bytes);
+    assert.equal(quakeBundle.data.records.length, snapshot.records);
+    const periods = [{ start: 2014, end: 2017, label: '2014–2017' }, { start: 2022, end: 2025, label: '2022–2025' }];
+    const expectedQuakes = minimum => periods.map(period => {
+      const records = quakeBundle.data.records.filter(record => record.year >= period.start && record.year <= period.end && Number.isFinite(record.magnitude) && record.magnitude >= minimum && Number.isFinite(record.latitude) && Number.isFinite(record.longitude));
+      return { period: period.label, count: records.length, rate: records.length / 4, years: Array.from({ length: 4 }, (_, index) => records.filter(record => record.year === period.start + index).length) };
+    });
+    const assertQuakes = async minimum => {
+      const actual = await p.evaluate(`(() => {const number=text=>Number(text.replaceAll(',',''));return [...document.querySelectorAll('article[data-period]')].map(article=>({period:article.querySelector('h3').textContent,count:Number(article.querySelector('p:nth-of-type(2)').textContent.split(' ')[0].replaceAll(',','')),rate:number(article.querySelector('p strong').textContent),years:[...article.querySelectorAll('dl dd')].map(cell=>number(cell.textContent))}));})()`);
+      assert.deepEqual(actual, expectedQuakes(minimum), 'period summaries retain the exact selected counts, rates and years from the shipping snapshot');
+      assert.equal(await noPageOverflow(), true, 'the earthquake tool and its tables stay inside the viewport');
+    };
+    await click(link('geology', quakeTool.href));
+    await p.wait(`location.pathname==='/labs/earthquakes' && document.querySelectorAll('article[data-period]').length===2 && document.querySelector('canvas[aria-label^="Historical earthquake epicenters"]') && document.querySelector('#quake-threshold')?.value==='2.5'`, 'the Geology tool loads two complete historical periods and their actual source map');
+
+    // Verify visitor scrolling before any programmatic reveal on this route.
+    const scrollPosition = `Math.max(scrollY,document.documentElement.scrollTop,document.body.scrollTop,document.querySelector('main').scrollTop)`;
+    const beforeWheel = await p.evaluate(scrollPosition);
+    await p.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 8, y: height / 2 });
+    await p.call('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 8, y: height / 2, deltaX: 0, deltaY: 240 });
+    await p.wait(`${scrollPosition}>${beforeWheel}+10`, 'a native wheel scroll advances the earthquake page at its passive margin');
+    assert.deepEqual(await p.evaluate(`[...document.querySelectorAll('[aria-labelledby="compare-title"] select')].map(select=>select.value)`), ['2014', '2022']);
+    assert.equal(await p.evaluate(`document.querySelector('#quake-threshold').getAttribute('aria-valuetext')`), 'Magnitude 2.5 or greater');
+    assert.equal(await p.evaluate(`[...document.querySelectorAll('[aria-labelledby="catalog-method"] a')].some(anchor=>anchor.href===${JSON.stringify(quakeBundle.data.sourceSnapshot.url)})`), true, 'the visible method links to the original USGS source query');
+    await assertQuakes(2.5);
+    const map = '[aria-labelledby="catalog-map"] canvas[role="img"]';
+    await p.evaluate(`document.querySelector(${JSON.stringify(map)}).scrollIntoView({block:'center',behavior:'instant'})`);
+    await p.wait(`(()=>{const canvas=document.querySelector(${JSON.stringify(map)}),context=canvas?.getContext('2d');if(!context||!canvas.width||!canvas.height)return false;const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;for(let index=0;index<pixels.length;index+=4)if(pixels[index+3]>0&&pixels[index]>pixels[index+1]&&pixels[index+1]>pixels[index+2])return true;return false;})()`, 'the real historical map paints warm first-period epicenter symbols');
+    await capture('research-earthquake-map', '[aria-labelledby="catalog-map"]');
+    await capture('research-earthquake', '[aria-labelledby="compare-title"]');
+    await reveal('#quake-threshold');
+    await p.evaluate(`document.querySelector('#quake-threshold').focus({preventScroll:true})`);
+    await p.key('End', 'End', 35);
+    await p.wait(`document.querySelector('#quake-threshold')?.value==='5' && document.querySelector('#quake-threshold').getAttribute('aria-valuetext')==='Magnitude 5.0 or greater' && new URLSearchParams(location.search).get('mag')==='5'`, 'native range End raises the inclusive magnitude threshold to five');
+    await assertQuakes(5);
+    await p.key('ArrowLeft', 'ArrowLeft', 37);
+    await p.wait(`document.querySelector('#quake-threshold')?.value==='4.9' && new URLSearchParams(location.search).get('mag')==='4.9'`, 'the native range also lowers the threshold by its declared step');
+    await assertQuakes(4.9);
   });
 }
 

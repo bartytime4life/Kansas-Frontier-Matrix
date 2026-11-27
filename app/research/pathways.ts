@@ -61,12 +61,12 @@ export const RESEARCH_PATHWAYS: readonly ResearchPathway[] = [
     summary: "Explore earthquake records, elevation context and mapped subsurface references while preserving their different scales.",
     scope: "Earthquakes around Kansas · statewide terrain and subsurface display context",
     tools: [
-      { label: "Shaking Ground", href: "/labs?story=shaking-ground", scope: "Magnitude 1 and larger catalog events around Kansas · 2010–2026 snapshot." },
+      { label: "Earthquake Catalog Lab", href: "/labs/earthquakes", scope: "Four-year comparisons within 2010–2025 · M ≥1 USGS snapshot around Kansas." },
       { label: "Terrain & elevation", href: "/topics#terrain", scope: "Kansas map controls for elevation, slope and hillshade; acquisition dates vary by source." },
       { label: "Geology & subsurface", href: "/topics#geology", scope: "KGS well, core and resource map references; query completeness and source dates vary." },
     ],
     sourceIds: ["usgs-earthquakes", "usgs-3dep-hillshade", "usgs-3dep-slope"],
-    boundary: "The earthquake query includes nearby states; detection varies and an event does not establish cause. Hillshade and slope images are display context, not numerical terrain measurements, surveyed work units or certified accuracy.",
+    boundary: "The snapshot includes nearby states; catalog detection varies. Magnitude types vary and reported depths are estimates; counts do not establish cause or predict shaking. Hillshade and slope images are display context, not numerical terrain measurements, surveyed work units or certified accuracy.",
     connections: ["water", "infrastructure"], topicHref: "/topics#geology",
   },
   {
