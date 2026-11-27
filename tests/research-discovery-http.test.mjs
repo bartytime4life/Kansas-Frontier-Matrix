@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { startProdServer } from 'vinext/server/prod-server';
 import { installPublicDelivery } from '../server/browser-headers.mjs';
+import { readFile } from 'node:fs/promises';
+import ts from 'typescript';
+const pathwayJavascript = ts.transpileModule(await readFile('app/research/pathways.ts', 'utf8'), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const {RESEARCH_PATHWAYS,pathwayComparisonHref} = await import(`data:text/javascript;base64,${Buffer.from(pathwayJavascript).toString('base64')}`);
 
 test('Research Discovery serves through production delivery with working assets, entry points and canonical identity', async t => {
   const {server, port} = await startProdServer({port:0, host:'127.0.0.1', outDir:'dist'});
@@ -13,7 +17,7 @@ test('Research Discovery serves through production delivery with working assets,
   const html = await response.text();
   assert.match(html, /Research Discovery · Kansas Frontier Matrix/);
   assert.match(html, /rel="canonical" href="https:\/\/kansasfrontiermatrix.com\/research"/);
-  for (const text of ['registered map sources', 'Compare before you combine.', 'Prairie science, across scales.', 'EXTERNAL_CONTEXT_ONLY']) assert.ok(html.includes(text), text);
+  for (const text of ['registered map sources', 'Compare before you combine.', 'Explore Kansas, across disciplines.', 'EXTERNAL_CONTEXT_ONLY']) assert.ok(html.includes(text), text);
   for (const href of ['/labs', '/data-library', '/observatory', '/observatory/sources', '/science', '/labs/heat-and-rain', '/labs/county-drought', '/labs/soil-profile', '/labs/daily-air-quality', '/labs/sunlight-and-sky']) assert.ok(html.includes(`href="${href}"`), href);
   assert.ok(html.includes('id="observation-tools"'), 'science entry remains in the body at phone widths');
   assert.ok(!html.includes('href="/data"'), 'retired public contribution UI is not reintroduced');
@@ -81,4 +85,40 @@ test('research cards expose registered data access and readable reuse credits wi
   const selectedHtml = await selected.text();
   assert.ok(selectedHtml.includes('Attribution &amp; reuse'));
   assert.ok(selectedHtml.includes('href="/civic-history-license.txt"'));
+});
+
+
+test('statewide pathways expose real tool routes and fragments with equal subject coverage before the case study', async t => {
+  const {server, port} = await startProdServer({port:0, host:'127.0.0.1', outDir:'dist'});
+  installPublicDelivery(server);
+  t.after(() => new Promise(resolve => { server.closeAllConnections(); server.close(resolve); }));
+  const origin = `http://127.0.0.1:${port}`;
+  const html = await (await fetch(origin + '/research')).text();
+  const escape = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;');
+  assert.deepEqual([...html.matchAll(/data-research-pathway="([^"]+)"/g)].map(match => match[1]), RESEARCH_PATHWAYS.map(pathway => pathway.id));
+  assert.ok(html.indexOf('id="research-pathways"') < html.indexOf('id="terrain-pilot-title"'), 'all subjects lead the optional Konza example');
+  assert.match(html, /<details[^>]*><summary id="terrain-pilot-title">Konza Prairie/);
+  assert.ok(html.includes('One 1 km KONZ tile'));
+  assert.ok(html.includes('Provider canopy is distinct from surface minus ground'));
+  const responses = new Map();
+  async function route(href) {
+    const url = new URL(href, origin);
+    const path = url.pathname + url.search;
+    if (!responses.has(path)) {
+      const response = await fetch(origin + path);
+      assert.equal(response.status, 200, href);
+      responses.set(path, await response.text());
+    }
+    if (url.hash) assert.ok(responses.get(path).includes(`id="${url.hash.slice(1)}"`), `real target for ${href}`);
+  }
+  for (const pathway of RESEARCH_PATHWAYS) {
+    assert.ok(html.includes(escape(pathway.scope)), pathway.id + ' scope remains visible');
+    assert.ok(html.includes(escape(pathway.boundary)), pathway.id + ' limits remain visible');
+    assert.ok(html.includes(`href="${escape(pathwayComparisonHref(pathway))}"`), pathway.id + ' comparison');
+    for (const tool of pathway.tools) {
+      assert.ok(html.includes(`href="${escape(tool.href)}"`), tool.label);
+      await route(tool.href);
+    }
+    await route(pathway.topicHref);
+  }
 });

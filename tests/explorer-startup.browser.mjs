@@ -25,6 +25,14 @@ new Function('exports', ts.transpileModule(await readFile('app/layer-workspaces.
 const welcomeTopics = taxonomy.TOPIC_STRUCTURE.map(({ id, title, facets, limitation }) => ({ id, title, facets, limitation }));
 assert.equal(welcomeTopics.length, 22, 'the shared taxonomy includes Flora, Fauna and crime, justice & public safety');
 
+// Bind pathway acceptance to the published local tool/source contract. This
+// module contains data and pure URL helpers; provider requests remain isolated.
+const researchPathways = {};
+new Function('exports', ts.transpileModule(await readFile('app/research/pathways.ts', 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText)(researchPathways);
+assert.deepEqual(researchPathways.RESEARCH_PATHWAYS.map(pathway => pathway.id), ['water', 'weather', 'agriculture', 'geology', 'ecology', 'history', 'infrastructure', 'communities']);
+
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');
   await p.wait(`document.querySelector('.living-welcome')?.dataset.carousel===String(matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)').matches)`, 'responsive chooser settles before input coordinates are measured');
@@ -3803,6 +3811,118 @@ for (const [width,height] of [[1440,900],[393,852]]) {
       ['https://www.farmersalmanac.com/calendar/gardening','_blank','noreferrer'],
     ]);
     assert.equal(await p.evaluate(almanac+".querySelector('[role=status]').textContent"),'Select a crop point to see the nearby station’s freeze dates.');
+  });
+}
+
+for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
+  test(`research pathways stay usable across subjects and browser history at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t, 'default');
+    const p = await pageSession(b, width, height);
+    const pathways = researchPathways.RESEARCH_PATHWAYS;
+    const card = id => `#research-pathways article[data-research-pathway="${id}"]`;
+    const link = (id, href) => `${card(id)} a[href=${JSON.stringify(href)}]`;
+    const noPageOverflow = () => p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1 && document.querySelector('main').scrollWidth<=document.querySelector('main').clientWidth+1`);
+    const capture = async (name, selector) => {
+      if (!process.env.KFM_WORKSPACE_SCREENSHOTS) return;
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'start',inline:'nearest',behavior:'instant'})`);
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+      const shot = await p.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `${name}-${width}x${height}.png`), Buffer.from(shot.data, 'base64'));
+    };
+    const click = async selector => {
+      const point = await droughtPoint(p, selector);
+      for (const type of ['mousePressed', 'mouseReleased']) await p.call('Input.dispatchMouseEvent', {
+        type, x: point.x, y: point.y, button: 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: 1,
+      });
+    };
+    const assertSelection = async pathway => {
+      const selected = pathway.sourceIds.join(',');
+      await p.wait(`location.pathname==='/research' && new URLSearchParams(location.search).get('compare')===${JSON.stringify(selected)} && !!document.querySelector('[aria-label="Selected source comparison"]')`, 'the selected pathway restores its exact registered sources');
+      const comparison = await p.evaluate(`(() => {const region=document.querySelector('[aria-label="Selected source comparison"]'),rows=[...region.querySelectorAll('tbody tr')],values=label=>rows.find(row=>row.querySelector('th')?.textContent===label)?.querySelectorAll('td');return {columns:region.querySelectorAll('thead th').length-1,limits:[...values('Scientific limits')??[]].map(cell=>cell.textContent),dates:[...values('Time & freshness')??[]].map(cell=>cell.textContent),attribution:[...values('Attribution & reuse')??[]].map(cell=>cell.textContent),map:[...document.querySelectorAll('#comparison a')].find(anchor=>anchor.textContent.includes('Explore selected sources on the map'))?.getAttribute('href')};})()`);
+      assert.equal(comparison.columns, pathway.sourceIds.length, 'the comparison contains only this pathway\'s sources');
+      assert.equal(comparison.limits.length, pathway.sourceIds.length);
+      assert.equal(comparison.dates.length, pathway.sourceIds.length);
+      assert.equal(comparison.attribution.length, pathway.sourceIds.length);
+      assert.ok(comparison.limits.every(value => value.trim().length >= 40), 'every source retains its scientific limitations');
+      assert.ok(comparison.dates.every(value => value.trim().length > 0), 'every source retains its own clock');
+      assert.ok(comparison.attribution.every(value => value.trim().length > 0), 'every source retains its reuse credit');
+      const map = new URL(comparison.map, origin);
+      assert.deepEqual(map.searchParams.get('ctx').split(','), pathway.sourceIds, 'map handoff retains exactly the selected source IDs');
+      assert.equal(map.searchParams.get('layerView'), 'selected');
+      assert.equal(await noPageOverflow(), true, 'wide source comparisons scroll inside their own region');
+    };
+
+    await p.call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    await p.call('Page.navigate', { url: new URL('/research#research-pathways', origin).href });
+    await p.wait(`document.querySelector('#research-pathways-title')?.textContent==='Explore Kansas, across disciplines.' && document.querySelectorAll('#research-pathways article[data-research-pathway]').length===8`, 'all eight research subjects render');
+    assert.deepEqual(await p.evaluate(`[...document.querySelectorAll('#research-pathways article[data-research-pathway]')].map(article=>article.dataset.researchPathway)`), pathways.map(pathway => pathway.id));
+    assert.equal(await noPageOverflow(), true, 'the Research page stays inside the viewport');
+    for (const pathway of pathways) {
+      const actual = await p.evaluate(`(() => {const article=document.querySelector(${JSON.stringify(card(pathway.id))}),visible=[...article.querySelectorAll('p')].filter(node=>node.checkVisibility()).map(node=>node.textContent).join(' ');return {title:article.querySelector('h3')?.textContent,focusable:article.getAttribute('tabindex'),visible,tools:[...article.querySelectorAll('ul[aria-label] a')].map(anchor=>anchor.getAttribute('href')),comparison:article.querySelector('details a')?.getAttribute('href')};})()`);
+      assert.equal(actual.title, pathway.title);
+      assert.equal(actual.focusable, '-1', 'subject and related links have a focusable destination');
+      assert.ok(actual.visible.includes(pathway.scope), `${pathway.id} keeps its geographic and temporal scope visible`);
+      assert.ok(actual.visible.includes(pathway.boundary), `${pathway.id} keeps its scientific boundary visible`);
+      assert.deepEqual(actual.tools, pathway.tools.map(tool => tool.href));
+      assert.equal(actual.comparison, researchPathways.pathwayComparisonHref(pathway));
+      for (const tool of pathway.tools) {
+        const selector = link(pathway.id, tool.href);
+        await droughtPoint(p, selector);
+        assert.equal(await p.evaluate(`(() => {const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return r.width>=44&&r.height>=44;})()`), true, `${pathway.id} tool meets the touch target`);
+      }
+      await droughtPoint(p, `${card(pathway.id)} details > summary`);
+    }
+    await capture('research-pathways', '#research-pathways');
+
+    // Native subject and related links move keyboard focus as well as scrolling.
+    await droughtEnter(p, '[aria-label="Research subjects"] a[href="#research-ecology"]');
+    await p.wait(`location.hash==='#research-ecology' && document.activeElement?.id==='research-ecology'`, 'subject navigation focuses its visible research card');
+    const ecology = pathways.find(pathway => pathway.id === 'ecology');
+    const related = ecology.connections[0];
+    await droughtEnter(p, link('ecology', '#research-' + related));
+    await p.wait(`location.hash===${JSON.stringify('#research-' + related)} && document.activeElement?.id===${JSON.stringify('research-' + related)}`, 'a cross-discipline connection focuses its real destination');
+
+    for (const id of ['water', 'infrastructure']) {
+      const pathway = pathways.find(item => item.id === id);
+      const summary = `${card(id)} details > summary`;
+      await droughtEnter(p, summary);
+      await p.wait(`document.querySelector(${JSON.stringify(card(id) + ' details')}).open`, 'native source context opens');
+      await click(link(id, researchPathways.pathwayComparisonHref(pathway)));
+      await assertSelection(pathway);
+    }
+
+    const selected = pathways.find(pathway => pathway.id === 'infrastructure');
+    const search = '#source-catalog input[type="search"]';
+    await droughtPoint(p, search);
+    await p.evaluate(`document.querySelector(${JSON.stringify(search)}).focus()`);
+    await p.call('Input.insertText', { text: 'water' });
+    await p.wait(`new URLSearchParams(location.search).get('q')==='water'`, 'native search updates the shareable Research URL');
+    const shared = await p.evaluate('location.href');
+    await p.call('Page.reload');
+    await p.wait(`document.querySelector(${JSON.stringify(search)})?.value==='water'`, 'a shared reload restores the search field');
+    await assertSelection(selected);
+    await capture('research-comparison', '#comparison');
+
+    // Follow a real local tool, then reuse the prior Research history entry.
+    const tool = selected.tools[0];
+    const destination = new URL(tool.href, origin);
+    const storyId = destination.searchParams.get('story');
+    const destinationReady = `location.pathname===${JSON.stringify(destination.pathname)} && location.search===${JSON.stringify(destination.search)} && ${storyId ? `!!document.querySelector(${JSON.stringify('.story-lab[data-story="' + storyId + '"] #story-lab-title')})` : "!!document.querySelector('main')"}`;
+    const selector = link(selected.id, tool.href);
+    await p.key('Tab', 'Tab', 9);
+    await droughtPoint(p, selector);
+    await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus({preventScroll:true})`);
+    assert.equal(await p.evaluate(`document.activeElement?.matches(${JSON.stringify(selector + ':focus-visible')})`), true, 'the named tool has visible keyboard focus');
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(destinationReady, 'the named local tool opens through its real link');
+    await p.evaluate('history.back()');
+    await p.wait(`location.href===${JSON.stringify(shared)} && document.querySelector(${JSON.stringify(search)})?.value==='water'`, 'Back restores the existing shared Research state');
+    await assertSelection(selected);
+    await p.evaluate('history.forward()');
+    await p.wait(destinationReady, 'Forward returns to the same local tool');
+    await p.evaluate('history.back()');
+    await p.wait(`location.href===${JSON.stringify(shared)} && document.querySelector(${JSON.stringify(search)})?.value==='water'`, 'a second Back preserves the search and selection');
+    await assertSelection(selected);
   });
 }
 

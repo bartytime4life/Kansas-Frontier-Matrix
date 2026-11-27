@@ -1,0 +1,44 @@
+.section { max-width: 1296px; margin: auto; padding: 64px 40px 0; }
+.heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 24px; }
+.eyebrow { margin: 0 0 10px; color: var(--gold); font-size: 10px; font-weight: 650; letter-spacing: .15em; }
+.heading h2 { margin: 0; font: 400 clamp(28px, 3vw, 38px)/1.15 Georgia, serif; letter-spacing: -.025em; }
+.heading > p { max-width: 320px; margin: 0; color: var(--muted); font-size: 12px; }
+.subjects { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.section .subjects a { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: 6px; color: var(--muted); font-size: 11px; text-decoration: none; }
+.section .subjects a:hover { color: var(--gold-soft); border-color: var(--gold); }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.card { min-width: 0; padding: 28px; border: 1px solid var(--line-strong); border-top: 2px solid var(--water); border-radius: 8px; background: var(--panel); scroll-margin-top: 24px; overflow-wrap: anywhere; }
+.card:target { border-top-color: var(--gold); }
+.card h3 { margin: 0 0 15px; color: var(--water); font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.card .question { margin: 0 0 14px; font: 400 clamp(23px, 2.3vw, 30px)/1.22 Georgia, serif; letter-spacing: -.02em; text-wrap: balance; }
+.summary { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+.scope { margin: 0 0 20px; color: var(--muted); font-size: 11px; }
+.scope strong, .boundary strong { display: block; margin-bottom: 4px; color: var(--gold-soft); font-size: 10px; font-weight: 600; }
+.tools { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.tools li { margin: 0; border-bottom: 1px solid var(--line-strong); }
+.tools a { display: block; min-height: 44px; padding: 14px 0; text-decoration: none; }
+.toolTitle { display: flex; justify-content: space-between; gap: 16px; color: var(--gold-soft); font-size: 13px; font-weight: 600; }
+.toolTitle > span { flex-shrink: 0; font-weight: 400; }
+.toolScope { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.tools a:hover .toolTitle { text-decoration: underline; text-underline-offset: 4px; }
+.boundary { margin: 20px 0 10px; color: var(--muted); font-size: 12px; }
+.context { border-bottom: 1px solid var(--line-strong); }
+.context summary { display: flex; align-items: center; gap: 10px; min-height: 44px; color: var(--water); font-size: 11px; cursor: pointer; list-style: none; }
+.context summary::-webkit-details-marker { display: none; }
+.context summary::before { content: "+"; font-size: 16px; }
+.context[open] summary::before { content: "−"; }
+.context p { margin: 0 0 12px; color: var(--muted); font-size: 11px; }
+.contextLinks { display: flex; flex-wrap: wrap; column-gap: 24px; margin-bottom: 8px; }
+.section .contextLinks a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--gold-soft); font-size: 11px; }
+.connections { margin-top: 20px; }
+.connections p { margin: 0 0 5px; color: var(--muted); font-size: 10px; }
+.connections > div { display: flex; flex-wrap: wrap; column-gap: 24px; }
+.section .connections a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--water); font-size: 11px; }
+.section .connections .topicLink { color: var(--muted); }
+.directoryLinks { display: flex; align-items: center; flex-wrap: wrap; gap: 0 28px; margin-top: 24px; padding: 16px 0; border-top: 1px solid var(--line-strong); }
+.directoryLinks p { margin: 0; color: var(--muted); font-size: 12px; }
+.section .directoryLinks a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--gold-soft); font-size: 12px; }
+.section :is(a, summary):focus-visible, .card:focus { outline: 2px solid var(--gold-soft); outline-offset: 4px; }
+@media (max-width: 1000px) { .heading { align-items: start; flex-direction: column; gap: 14px; } .heading > p { max-width: 620px; } .card { padding: 24px; } }
+@media (max-width: 720px) { .section { padding: 40px 20px 0; } .heading h2 { font-size: 30px; } .subjects { gap: 6px; margin-bottom: 20px; } .section .subjects a { padding: 9px 11px; } .grid { grid-template-columns: minmax(0, 1fr); gap: 16px; } .card { padding: 24px 20px; } .card .question { font-size: 27px; } .directoryLinks { align-items: start; column-gap: 24px; } .directoryLinks p { flex-basis: 100%; margin-bottom: 8px; } }
+@media (prefers-reduced-motion: reduce) { .section { scroll-behavior: auto; } }
