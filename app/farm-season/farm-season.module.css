@@ -1,0 +1,94 @@
+:global(body):has(.page) { min-width: 0; overflow: auto; }
+
+.page {
+  --background: #081d25;
+  --panel: #102a32;
+  --ink: #f4efdf;
+  --copy: #bfd1d2;
+  --accent: #91dfd0;
+  --line: #496a72;
+  min-height: 100vh;
+  padding: 1rem clamp(1rem, 4vw, 3rem) 3rem;
+  background: var(--background);
+  color: var(--ink);
+  font: 1rem/1.65 system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.frame { max-width: 72rem; margin-inline: auto; }
+.page a { color: var(--accent); text-underline-offset: .2em; }
+.page a:hover { color: var(--ink); }
+.page :focus-visible { outline: 3px solid #efbd72; outline-offset: 3px; }
+.page p, .page small { color: var(--copy); }
+.nav, .sourceLinks { display: flex; flex-wrap: wrap; gap: .25rem 1.2rem; }
+.nav a, .sourceLinks a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+.hero { padding-block: clamp(1.6rem, 4vw, 3.6rem) 1.6rem; }
+.hero h1 {
+  max-width: 50rem;
+  margin: 0;
+  font: 400 clamp(2.3rem, 6vw, 4.7rem)/1.08 Georgia, serif;
+  letter-spacing: -.05em;
+}
+.hero p { max-width: 42rem; margin: .75rem 0; }
+.note { font-size: .85rem; }
+
+.scenarios, .calendar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.page h2 { margin: 0; font: 400 clamp(1.65rem, 3vw, 2.25rem)/1.2 Georgia, serif; }
+.page h3 { margin-block: 0 .35rem; font-size: 1.03rem; }
+.panel p { margin: .65rem 0; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 1rem; width: 100%; margin-block: .75rem 1rem; }
+.field { display: flex; flex-direction: column; gap: .3rem; font-weight: 600; }
+.field small { min-width: 0; font-size: .79rem; font-weight: 400; }
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid #709198;
+  border-radius: .3rem;
+  padding: .5rem;
+  background: var(--background);
+  color: var(--ink);
+  font: inherit;
+}
+.panel button {
+  min-height: 2.75rem;
+  margin-top: auto;
+  padding: .5rem .85rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--background);
+  border-radius: .3rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+.panel button:hover { background: var(--ink); }
+.results { width: 100%; }
+.results dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin: .75rem 0; }
+.results dl div { padding-top: .5rem; border-top: 1px solid var(--line); }
+.results dt { color: var(--copy); font-size: .79rem; }
+.results dd { overflow-wrap: anywhere; margin: 0; color: var(--accent); font-weight: 650; }
+
+.section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.calendar article { padding-block: .8rem; }
+.calendar p { margin: 0 0 .35rem; }
+.sources { display: grid; gap: .85rem; margin-bottom: 0; }
+.sources div { padding-block: .6rem; }
+.sources dt { font-weight: 650; }
+.sources dd { color: var(--copy); margin-inline-start: 0; }
+
+@media (max-width: 48rem) {
+  .scenarios { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 30rem) {
+  .calendar, .fields { grid-template-columns: minmax(0, 1fr); }
+}
