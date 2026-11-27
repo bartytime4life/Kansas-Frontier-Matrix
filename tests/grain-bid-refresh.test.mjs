@@ -46,7 +46,11 @@ async function market(t) {
     harness.commit();
     return tree;
   }
-  function toggle(open) { render().props.onToggle({ currentTarget: { open } }); return render(); }
+  function toggle(open) {
+    const details = { open };
+    render().props.onToggle({ target: details, currentTarget: details });
+    return render();
+  }
   function hasRelease(tree) {
     return Boolean(findNode(tree, node => node.type === "a" && node.props.children === "Download the reviewed price data"));
   }
@@ -126,4 +130,13 @@ test("suspends hidden and closed bids, aborts in-flight reads, and verifies agai
   view.window.dispatchEvent(new Event("pageshow"));
   assert.equal(view.hasRelease(view.render()), false);
   assert.equal(view.calls.length, 5);
+});
+
+test("opening or closing a nested tool preserves the current reviewed bid", async t => {
+  const view = await market(t);
+  for (const open of [true, false]) {
+    view.render().props.onToggle({ target: { open }, currentTarget: { open: true } });
+    assert.equal(view.hasRelease(view.render()), true);
+    assert.equal(view.calls.length, 1);
+  }
 });

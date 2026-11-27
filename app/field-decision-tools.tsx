@@ -118,6 +118,7 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
   const selected=rows.find(r=>r.region===region);
   const budget=farmBudget(yieldText,region ? String(selected?.average ?? "") : manual,costs);
   return <details className="field-tool" onToggle={e=>{
+    if (e.target!==e.currentTarget) return;
     const next=e.currentTarget.open;
     setOpen(next);
     if (next) {
