@@ -29,6 +29,32 @@ test('NOAA scale, genuine zero, trace and qualification have distinct meanings',
   assert.throws(() => climateReading(['0', '', '', 'W'], 'prcp'));
 });
 
+test('partial GHCN precipitation periods preserve raw readings without counting as completed days', () => {
+  for (const flag of ['A', 'C', 'E']) {
+    for (const amount of [0, 125]) {
+      const reading = climateReading(raw(amount, flag), 'prcp');
+      assert.equal(reading.state, 'partial-period');
+      assert.equal(reading.value, null);
+      assert.equal(reading.raw, amount);
+      assert.equal(reading.measurementFlag, flag);
+      assert.match(readingLabel(reading, 'prcp'), /partial precipitation period/);
+    }
+    assert.equal(climateReading(raw(125, flag, 'X'), 'prcp').state, 'quality-withheld');
+  }
+  for (const flag of ['B', 'D', 'F', 'G']) assert.equal(climateReading(raw(125, flag), 'prcp').value, 12.5);
+  const s = copy();
+  s.records = s.records.map(row => ({ ...row, prcp: null }));
+  s.records[0].prcp = raw(125, 'A');
+  s.records[1].prcp = raw(40, 'D');
+  const analysis = analyseClimate(s, { year: 2020, month: 1, wetMm: 1 });
+  assert.equal(analysis.valid.prcp, 1);
+  assert.equal(analysis.wetDays, 1);
+  assert.equal(analysis.rainMm, 4);
+  assert.equal(analysis.partialPrecipitationDays, 1);
+  assert.match(climateCsv(analysis), /,partial-period,125,A,,W,/);
+  assert.equal(climateReceipt(analysis, descriptor).support.partialPrecipitationDays, 1);
+});
+
 test('all shipped station calendars, source identity and hashes are checked', async () => {
   assert.equal(manifest.scope, 'provider-context');
   for (const item of manifest.stations) {
@@ -87,6 +113,7 @@ test('CSV and JSON receipts preserve qualification, units, source identity and e
   const a = analyseClimate(s, { year: 2020, month: 1, heatC: 35, wetMm: 2.54 });
   const csv = climateCsv(a, 'imperial');
   assert.match(csv, /tmax_F/); assert.match(csv, /prcp_in/); assert.match(csv, /trace,0,T,,W/);
+  assert.match(csv, /PRCP is liquid-equivalent precipitation/);
   assert.match(csv, new RegExp(descriptor.source.sha256));
   assert.equal(csv.split('\r\n').length, 33);
   assert.equal(readingLabel(climateReading(raw(254), 'prcp'), 'prcp', 'imperial'), '1.00 in');
@@ -94,6 +121,8 @@ test('CSV and JSON receipts preserve qualification, units, source identity and e
   assert.equal(readingLabel(climateReading(raw(0, 'T'), 'prcp'), 'prcp'), 'Trace (unquantified)');
   const receipt = climateReceipt(a, descriptor, 'imperial');
   assert.equal(receipt.selection.wetMm, 2.54); assert.equal(receipt.snapshot.sha256, descriptor.sha256);
+  assert.match(receipt.method, /can include melted snow/);
+  assert.ok(receipt.limitations.some(s => /occurrence of frost/.test(s)));
   assert.equal(receipt.scope, 'provider-context'); assert.throws(() => climateReceipt(a, manifest.stations[0]));
 });
 

@@ -63,6 +63,8 @@ test('missing assessments break runs; runs touching missing or window boundaries
   assert.equal(a.primary.valid, 3); assert.equal(a.primary.thresholdWeeks, 2);
   assert.deepEqual(a.primary.longestRun, { count: 2, from: '2020-01-07', to: '2020-01-14', leftBoundary: 'window', rightBoundary: 'missing' });
   assert.equal(a.primary.weeks[2].share, null);
+  assert.equal(a.primary.weeks[2].through, null);
+  assert.match(droughtCsv(a), /^"20055","Finney County","2020-01-21",,"missing",/m);
   county.values.fill(null);
   county.values[county.values.length - 1] = [0, 100, 100, 50, 0, 0];
   a = analyseDrought(s);
@@ -129,16 +131,28 @@ test('CSV and analysis receipts retain raw qualification, settings and original/
   const d = droughtCsv(a);
   assert.equal(d.split('\r\n').length, 106);
   assert.match(d, /only_d0_percent/); assert.match(d, /"D2\+","50"/);
+  assert.ok(d.split('\r\n')[0].endsWith('"statistics_type","source_captured_at","source_bytes","source_attribution"'));
+  assert.ok(d.split('\r\n')[1].endsWith(`"${dm.sources[5].capturedAt}","${dm.sources[5].bytes}","${dm.attribution}"`));
   const receipt = droughtReceipt(a, dm.snapshot);
   assert.equal(receipt.displaySnapshot.sha256, dm.snapshot.sha256); assert.equal(receipt.ranking.length, 105);
-  assert.equal(receipt.sourceAdmission, 'PENDING');
+  assert.equal(receipt.sourceAdmission, 'PENDING'); assert.match(receipt.csvDateConvention, /provider validity interval/);
   const b = analyseSoil(oakley, { month: 1, depth: 100 });
-  const c = soilCsv(b);
+  const c = soilCsv(b, sm.citation);
   assert.equal(c.split('\r\n').length, 157);
   assert.match(c, /"-99.000",,"missing"/); assert.match(c, new RegExp(b.sources[5].sha256));
-  const sr = soilReceipt(b, soilData[1].descriptor);
+  assert.ok(c.split('\r\n')[0].endsWith('"source_sha256","source_captured_at","source_bytes","source_citation"'));
+  assert.ok(c.split('\r\n')[1].endsWith(`"${b.sources[5].capturedAt}","${b.sources[5].bytes}","${sm.citation}"`));
+  const sr = soilReceipt(b, soilData[1].descriptor, sm.citation);
   assert.equal(sr.settings.depth, 100); assert.equal(sr.depths.length, 5); assert.equal(sr.releaseState, 'UNRELEASED');
-  assert.throws(() => soilReceipt(b, soilData[0].descriptor));
+  assert.equal(sr.citation, sm.citation);
+  assert.throws(() => soilReceipt(b, soilData[0].descriptor, sm.citation));
+});
+
+test('drought export keeps the provider interval across New Year and labels exceptional drought D4', () => {
+  const export2024 = droughtCsv(analyseDrought(drought, { fromYear: 2024, toYear: 2024, level: 4 }));
+  const lastWeek = export2024.split('\r\n').find(line => line.startsWith('"20055","Finney County","2024-12-31","2025-01-06","reported"'));
+  assert.match(lastWeek, /"D4","50"/);
+  assert.ok(lastWeek.includes(`"${dm.sources[4].sha256}"`));
 });
 
 const options = fetchImpl => ({ fetchImpl, cryptoImpl: webcrypto });

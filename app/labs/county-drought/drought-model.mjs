@@ -45,9 +45,9 @@ export function validateDroughtSnapshot(snapshot, manifest) {
 function countySummary(county, dates, indexes, settings) {
   const weeks = indexes.map(index => {
     const values = county.values[index];
-    const through = new Date(`${dates[index]}T00:00:00Z`);
-    through.setUTCDate(through.getUTCDate() + 6);
-    return { date: dates[index], through: iso(through), none: values?.[0] ?? null, shares: values?.slice(1) ?? null,
+    // The source parser checks that each reported row's ValidEnd is ValidStart plus six days.
+    const through = values ? iso(new Date(Date.parse(`${dates[index]}T00:00:00Z`) + 6 * 86400000)) : null;
+    return { date: dates[index], through, none: values?.[0] ?? null, shares: values?.slice(1) ?? null,
       categories: droughtCategories(values), dsci: values ? round(values.slice(1).reduce((a, b) => a + b, 0)) : null,
       share: values?.[settings.level + 1] ?? null, meets: values ? values[settings.level + 1] >= settings.threshold : null, missing: !values };
   });
@@ -130,12 +130,12 @@ export function droughtCsv(analysis) {
   const s = analysis.settings;
   const rows = [['county_fips', 'county_name', 'assessment_date', 'valid_through', 'state', 'none_percent', 'd0_plus_percent', 'd1_plus_percent', 'd2_plus_percent', 'd3_plus_percent', 'd4_percent',
     'only_none_percent', 'only_d0_percent', 'only_d1_percent', 'only_d2_percent', 'only_d3_percent', 'only_d4_percent', 'dsci_points', 'selected_level', 'area_threshold_percent', 'meets_threshold',
-    'from_year', 'to_year', 'comparison_fips', 'source_url', 'source_sha256', 'statistics_type']];
+    'from_year', 'to_year', 'comparison_fips', 'source_url', 'source_sha256', 'statistics_type', 'source_captured_at', 'source_bytes', 'source_attribution']];
   for (const county of [analysis.primary, analysis.comparison]) for (const week of county.weeks) {
     const source = yearSource(analysis.sources, week.date);
     rows.push([county.id, county.name, week.date, week.through, week.missing ? 'missing' : 'reported', week.none,
-      ...(week.shares ?? Array(5).fill(null)), ...(week.categories ?? Array(6).fill(null)), week.dsci, `D${s.level}+`, s.threshold, week.meets,
-      s.fromYear, s.toYear, s.compareId, source.url, source.sha256, 1]);
+      ...(week.shares ?? Array(5).fill(null)), ...(week.categories ?? Array(6).fill(null)), week.dsci, s.level === 4 ? 'D4' : `D${s.level}+`, s.threshold, week.meets,
+      s.fromYear, s.toYear, s.compareId, source.url, source.sha256, 1, source.capturedAt, source.bytes, analysis.attribution]);
   }
   return csv(rows);
 }
@@ -146,5 +146,6 @@ export function droughtReceipt(analysis, descriptor) {
     primary: summary(analysis.primary), comparison: summary(analysis.comparison), ranking: analysis.ranking,
     displaySnapshot: { url: descriptor.url, sha256: descriptor.sha256, bytes: descriptor.bytes }, sources: analysis.sources,
     attribution: analysis.attribution, method: 'Cumulative county-area percentages; DSCI=sum(D0..D4), 0–500. Threshold counts are Tuesday assessments, not physical drought days. Missing assessments break runs; window and missing boundaries censor observed runs.',
+    csvDateConvention: 'For reported assessments, assessment_date and valid_through are the provider validity interval start (Tuesday) and end (Monday). The interval does not specify publication time or physical drought duration. Missing assessments have no valid_through value.',
     reviewState: 'PENDING', sourceAdmission: 'PENDING', releaseState: 'UNRELEASED' };
 }
