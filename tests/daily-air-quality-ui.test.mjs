@@ -127,6 +127,19 @@ test("the timeline leaves real report gaps and retains isolated zero-valued obse
   assert.match(html, /inclusive AQI threshold of 101/);
 });
 
+test("phone axes use HTML text at the same projected ticks without changing the daily trace", () => {
+  const html = render(ui.AirTimeline, { analysis: baseline, selectedIndex: 0 });
+  const path = ui.airSeriesPath(baseline.days, (index) => 54 + index / (baseline.days.length - 1) * 904, (value) => 242 - value / 200 * 214);
+  assert.ok(html.includes(`class="aqiLine" d="${path}"`), "the original daily trace and gaps are unchanged");
+  assert.match(html, /preserveAspectRatio="none"/);
+  const yAxis = html.match(/class="mobileYAxis" aria-hidden="true">([\s\S]*?)<\/div>/)?.[1];
+  const xAxis = html.match(/class="mobileXAxis" aria-hidden="true">([\s\S]*?)<\/div>/)?.[1];
+  assert.ok(yAxis && xAxis, "phone labels are independent of the SVG's scale");
+  assert.match(yAxis, />AQI<\/span>/);
+  for (const tick of [0, 40, 80, 120, 160, 200]) assert.ok(yAxis.includes(`>${tick}</span>`));
+  for (const date of ["Jan 1", "Mar 1", "May 1", "Jul 1", "Sep 1", "Nov 1"]) assert.ok(xAxis.includes(`>${date}</span>`));
+});
+
 test("initial rendering is a true loading state with disabled exports and all six original sources", () => {
   const html = render(ui.default, { manifest });
   assert.match(html, /Reading the county AQI observations/);
@@ -135,7 +148,7 @@ test("initial rendering is a true loading state with disabled exports and all si
   assert.match(html, /<button[^>]*disabled=""[^>]*>Download analysis receipt/);
   assert.doesNotMatch(html, /class="metrics"/);
   for (const source of manifest.sources) { assert.ok(html.includes(source.url)); assert.ok(html.includes(source.sha256)); }
-  assert.match(html, /href="\/labs\?story=air-and-health"/);
+  assert.match(html, /href="\/labs\/heat-and-rain"/);
   assert.match(html, /href="https:\/\/www.airnow.gov\/"/);
   assert.match(html, /Scientific review and dataset admission remain pending/);
 });

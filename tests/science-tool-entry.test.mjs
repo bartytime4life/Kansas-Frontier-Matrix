@@ -36,6 +36,9 @@ test('observation tools are direct guided routes and preserve the independent pu
   }
   assert.equal(storyById('drought-replay-2012').href, '/labs/drought-replay');
   assert.equal(storyById('water-chemistry').href, '/labs/water-chemistry');
+  assert.equal(storyById('air-and-health').status, 'ready');
+  assert.equal(storyById('air-and-health').relatedLab.href, '/labs/daily-air-quality');
+  assert.ok(Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, 'air-and-health'), 'the annual air story keeps its existing public snapshot');
 });
 
 test('the hosted atlas renders observation questions as links instead of opening a modal loader', async () => {

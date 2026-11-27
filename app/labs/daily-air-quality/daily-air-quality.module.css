@@ -73,7 +73,9 @@
 .emptyState p { font-size: .85rem; }
 .timeline { margin: 1.6rem 0 0; }
 .timeline figcaption p { font-size: .8rem; }
-.timeline svg { width: 100%; height: auto; margin-top: .6rem; overflow: visible; }
+.timelineCanvas { position: relative; margin-top: .6rem; }
+.timeline svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mobileYAxis, .mobileXAxis { display: none; }
 .gridLine { stroke: #36505a; stroke-width: 1; }
 .axisText { fill: #bfd1d2; font: 12px system-ui, sans-serif; }
 .missingMark { stroke: #94a9af; stroke-width: 1.7; }
@@ -258,7 +260,16 @@
   .metrics .supportValue strong { font-size: 2.1rem; }
   .metrics small { font-size: .65rem; }
   .timeline { margin-top: 1.3rem; }
+  .timelineCanvas { margin-left: 1rem; }
   .timeline svg { min-height: 10rem; }
+  .timeline .axisText { display: none; }
+  .mobileYAxis, .mobileXAxis { display: contents; }
+  .mobileYAxis > span, .mobileXAxis > span { position: absolute; color: var(--body); font: 12px/1.1 system-ui, sans-serif; white-space: nowrap; pointer-events: none; }
+  .mobileYAxis > span { transform: translate(-100%, -50%); padding-right: 7px; }
+  .mobileYAxis > .mobileAxisUnit { top: 0; left: 0; transform: none; font-size: 11px; padding-right: 0; }
+  .mobileXAxis > span { transform: translate(-50%, -50%); }
+  .mobileXAxis > span[data-align=start] { transform: translateY(-50%); }
+  .mobileXAxis > span[data-align=end] { transform: translate(-100%, -50%); }
   .plotKey { gap: .35rem 1rem; font-size: .67rem; }
   .inspector { padding: 1rem .8rem; }
   .dateControls { gap: .35rem; }

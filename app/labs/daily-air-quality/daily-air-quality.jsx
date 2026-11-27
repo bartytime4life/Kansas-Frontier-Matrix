@@ -108,7 +108,7 @@ export function AirTimeline({ analysis, selectedIndex }) {
   }, []);
   return <figure className={styles.timeline}>
     <figcaption><h3>The daily record, with its gaps.</h3><p>One value is the county’s highest reported monitor AQI for that date.</p></figcaption>
-    <svg viewBox={`0 0 ${PLOT.width} ${PLOT.height}`} role="img" aria-labelledby="air-timeline-title air-timeline-description">
+    <div className={styles.timelineCanvas}><svg viewBox={`0 0 ${PLOT.width} ${PLOT.height}`} preserveAspectRatio="none" role="img" aria-labelledby="air-timeline-title air-timeline-description">
       <title id="air-timeline-title">{`${analysis.county.name} daily AQI, ${analysis.period.from} through ${analysis.period.to}`}</title>
       <desc id="air-timeline-description">{analysis.reported} reported days and {analysis.missing} dates without a report. Missing dates break the line. The dashed reference marks the inclusive AQI threshold of {analysis.settings.threshold}. Use the date inspector or calendar buttons for exact daily source values.</desc>
       {ticks.map((tick) => <g key={tick}><line className={styles.gridLine} x1={PLOT.left} x2={PLOT.width - PLOT.right} y1={y(tick)} y2={y(tick)} /><text className={styles.axisText} x={PLOT.left - 10} y={y(tick) + 4} textAnchor="end">{number(tick)}</text></g>)}
@@ -120,7 +120,7 @@ export function AirTimeline({ analysis, selectedIndex }) {
       {day && <line className={styles.inspectionLine} x1={x(selectedIndex)} x2={x(selectedIndex)} y1={PLOT.top} y2={bottom} />}
       {day && !day.missing && <circle className={styles.inspectedPoint} cx={x(selectedIndex)} cy={y(day.aqi)} r={5} style={{ fill: color(day.category) }} />}
       {xTicks.map((index) => <text key={index} className={styles.axisText} x={x(index)} y={bottom + 35} textAnchor={index === 0 ? "start" : index === days.length - 1 ? "end" : "middle"}>{dateLabel(days[index].date, true)}</text>)}
-    </svg>
+    </svg><div className={styles.mobileYAxis} aria-hidden="true"><span className={styles.mobileAxisUnit}>AQI</span>{ticks.map((tick) => <span key={tick} style={{ top: `${y(tick) / PLOT.height * 100}%`, left: `${PLOT.left / PLOT.width * 100}%` }}>{number(tick)}</span>)}</div><div className={styles.mobileXAxis} aria-hidden="true">{xTicks.map((index) => <span key={index} style={{ left: `${x(index) / PLOT.width * 100}%`, top: `${(bottom + 35) / PLOT.height * 100}%` }} data-align={index === 0 ? "start" : index === days.length - 1 ? "end" : "middle"}>{dateLabel(days[index].date, true)}</span>)}</div></div>
     <div className={styles.plotKey}><span><i className={styles.lineKey} />Reported daily AQI</span><span><i className={styles.thresholdKey} />Threshold ≥ {analysis.settings.threshold}</span><span><i className={styles.gapKey} />No report leaves a gap</span></div>
   </figure>;
 }
