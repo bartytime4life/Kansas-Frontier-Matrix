@@ -294,6 +294,7 @@
 .field-tool label { display:grid; gap:.2rem; min-width:0; margin:.35rem 0; }
 .field-tool input,.field-tool select,.field-tool textarea { box-sizing:border-box; width:100%; min-width:0; padding:.35rem; border:1px solid #7d9789; border-radius:4px; background:#11231e; color:inherit; }
 .field-inputs { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,7.2rem),1fr)); gap:.25rem .5rem; }
+.field-delivery-offer { min-width:0; margin:.5rem 0; padding:.3rem .45rem; border:1px solid #547265; border-radius:4px; }
 .field-tool table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
 .field-tool caption,.field-tool th:first-child { text-align:left; }
 .field-tool th,.field-tool td { padding:.25rem .1rem; text-align:right; border-bottom:1px solid #3e5c50; }
