@@ -1477,11 +1477,36 @@ At a selected crop point, compare a target April–October season with the ten p
 
 **Farmers’ Almanac and frost dates.** Agriculture instruments open a seasonal calendar with the observed spring and fall freezes for the selected crop point and year. KFM reuses the station observation already requested for that selection. The publisher’s [Kansas city frost chart](https://www.farmersalmanac.com/average-frost-dates) and [public planting calendar preview](https://www.farmersalmanac.com/calendar/gardening) open in a separate tab. No farm coordinates or inputs are sent to the publisher. Readers can choose a month from 2005 through 2050 to see principal lunar phases computed by KFM’s existing astronomical model in Central time. Publisher material stays on its own site. Lunar tradition has no role in the yield, rainfall or margin estimates.
 
+**Grain Markets & Freight.** The Agriculture & Soils topic and field instrument link to
+the standalone market view at `/science/wheat-trade`, alongside the Science entry.
+Load reviewed prices to pick the active or an earlier released report. The release
+menu uses KFM publication times. The source panel shows the USDA report date and uses
+the existing release-specific download. The north-up grid depicts USDA reporting
+names, with gaps visible for crops that lack a regional bid. Its cells have no county
+or elevator geometry. A regional average can populate the budget. The two-offer
+calculator accepts private local quotes and per-bushel delivery charges. For basis and
+the original bid specifications, consult the USDA archive. The freight timeline below
+retains the Kansas–Gulf wheat and Panama case studies and source publication cutoffs.
+
 ### Operator capture and review
 
 The existing PC kit gains two optional commands. Run `node scripts/pc-pipeline/cli.mjs market-watch CONFIG` for one private poll or `node scripts/pc-pipeline/cli.mjs market-listen CONFIG` for a foreground six-hour loop. CONFIG is the existing validated pipeline configuration. The host needs Poppler's pdftotext executable for price extraction. The loop reports baseline, changed, unchanged or held for each source. Restarting establishes a fresh in-memory baseline. A changed report hash can indicate a correction or formatting change and warrants review. NWS comparison uses alert identity, type and clocks. Alerts that start and end between polls can be missed.
 
 The watcher requests only the fixed USDA grain and Illinois input-cost PDFs, the EIA Midwest diesel workbook and the existing bounded Kansas NWS alert endpoint. It preserves original bytes by digest in the existing private quarantine lane and capture receipts in the ingress receipts lane. A parsed final USDA cash report produces a candidate in the existing processed lane. Source failure leaves other successful inputs available. EIA, fertilizer and alerts are capture-only in this listener. The normal NWS lane retains its existing publication controls.
+
+Add `--supply-chain` after CONFIG to either market command to check the USDA
+[freight indicator workbook](https://www.ams.usda.gov/services/transportation-analysis/gtr-datasets)
+and the [Federal Register](https://www.federalregister.gov/reader-aids/developer-resources/rest-api)
+index for the Office of the U.S. Trade Representative. The workbook signal is a
+byte change. The notice signal is a stable digest of matching titles within the
+most recent 50 published USTR entries. Each candidate includes its document
+number, publication date, document type and official GovInfo PDF link. The
+window can miss related notices issued by other agencies or with generic titles.
+Apply the source text and subsequent amendments before assessing scope,
+effective dates, or Kansas impact. New captures and receipts stay in the
+existing private acquisition lifecycle. The commands remain foreground and
+operator-initiated with the existing storage guard. The added acquisition path
+does not change the signed grain processing recipe.
 
 For a separately reviewed grain candidate the operator can use the existing profile-template and approval process for `usda-kansas-grain-bids`, then `node scripts/pc-pipeline/cli.mjs publish-grain CONFIG PAYLOAD_SHA256`. The operator command re-extracts the matching private PDF and compares its canonical projection before transfer. The transfer checks the exact payload, profile, storage identity, publication mode and expected active release. The public API applies the existing revocation, integrity, download and rollback gates. An operator must apply the additive SQL release-head seed through the existing schema procedure before the first publication. This changes the shared recipe digest. New transfers for existing sources require profiles for the new digest after rollout. Existing signed releases keep their read-time approval and integrity checks. The code patch supplies no approval, installs no timer and contains no harvested production data.
 

@@ -3,7 +3,7 @@ import { mkdir, copyFile, chmod } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const KIT_FILES = Object.freeze(['server/ingestion-sources.mjs','server/pipeline-contract.mjs','server/pipeline-normalize.mjs','server/pipeline-files.mjs','server/pipeline-auth.mjs','server/county-history-candidate.mjs','server/county-history-release.mjs','server/grain-market.mjs','scripts/pc-pipeline/market-watch.mjs',
+export const KIT_FILES = Object.freeze(['server/ingestion-sources.mjs','server/pipeline-contract.mjs','server/pipeline-normalize.mjs','server/pipeline-files.mjs','server/pipeline-auth.mjs','server/county-history-candidate.mjs','server/county-history-release.mjs','server/grain-market.mjs','scripts/pc-pipeline/market-watch.mjs','scripts/pc-pipeline/supply-chain-watch.mjs',
   'app/pipeline-catalog.mjs','scripts/pc-pipeline/config.mjs','scripts/pc-pipeline/capture.mjs','scripts/pc-pipeline/health.mjs','scripts/pc-pipeline/revalidate.mjs',
   'scripts/pc-pipeline/journal.mjs','scripts/pc-pipeline/publisher.mjs','scripts/pc-pipeline/worker.mjs','scripts/pc-pipeline/cli.mjs','scripts/pc-pipeline/connection.mjs',
   'scripts/pc-pipeline/copy.mjs','scripts/pc-pipeline/ftps.mjs','scripts/pc-pipeline/storage-policy.mjs','scripts/pc-pipeline/backup-layout.mjs','scripts/pc-pipeline/storage-health.mjs']);

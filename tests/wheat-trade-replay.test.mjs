@@ -37,3 +37,19 @@ test("signed spread changes are exact cents and unavailable values do not become
     assert.equal(compareSpreads(invalid, "0"), null, invalid);
   }
 });
+
+test("built market route links Agriculture & soils to reviewed bids and keeps the freight replay", async () => {
+  const { default: handler } = await import("../dist/server/index.js");
+  const topics = await handler(new Request("https://kansasfrontiermatrix.com/topics"));
+  assert.equal(topics.status, 200);
+  assert.match(await topics.text(), /href="\/science\/wheat-trade"[^>]*>Grain markets/);
+
+  const market = await handler(new Request("https://kansasfrontiermatrix.com/science/wheat-trade"));
+  assert.equal(market.status, 200);
+  const html = await market.text();
+  for (const label of ["Kansas grain markets and freight", "Load reviewed Kansas bids",
+    "Compare two delivery offers", "Replay the reporting timeline", "Kansas crop progress and condition"]) {
+    assert.ok(html.includes(label), label);
+  }
+  assert.match(html, /href="https:\/\/kansasfrontiermatrix\.com\/science\/wheat-trade"/);
+});

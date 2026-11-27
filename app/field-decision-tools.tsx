@@ -17,8 +17,10 @@ const futuresReferences: Readonly<Partial<Record<string,string>>> = {
   "Hard red winter wheat": "https://www.cmegroup.com/markets/agriculture/grains/kc-wheat",
 };
 const crops = ["Corn", "Sorghum", "Soybeans", "Hard red winter wheat"];
+const grainRegions = ["Northwest", "North", "Northeast", "West", "Central", "East", "Southwest", "South", "Southeast"];
 type Bid = { crop:string; region:string; low:number; high:number; average:number };
 type Grain = { releaseId:string; reportDate:string; retrievedAt:string; approvalExpiresAt:string; rows:Bid[] };
+type GrainReleaseHistory = { items: { releaseId:string; publishedAt:string }[] };
 type Point = { lon:number; lat:number };
 const usd = new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
 
@@ -32,8 +34,18 @@ function validGrain(value: unknown): value is Grain {
     Date.parse(v.retrievedAt) <= Date.now()+60000 && Date.parse(v.approvalExpiresAt) > Date.now() &&
     Array.isArray(v.rows) && v.rows.length > 0 && v.rows.length <= 36 &&
     new Set(v.rows.map(r=>r?.crop+"/"+r?.region)).size === v.rows.length &&
-    v.rows.every(r => r && crops.includes(r.crop) && /^(Northwest|North|Northeast|West|Central|East|Southwest|South|Southeast)$/.test(r.region) &&
+    v.rows.every(r => r && crops.includes(r.crop) && grainRegions.includes(r.region) &&
       [r.low,r.high,r.average].every(n=>typeof n==="number" && Number.isFinite(n) && n>0 && n<1000) && r.low<=r.average && r.average<=r.high);
+}
+
+function validGrainReleaseHistory(value: unknown): value is GrainReleaseHistory {
+  const v = value as GrainReleaseHistory & { sourceId?:string; limit?:number };
+  return v?.sourceId === "usda-kansas-grain-bids" && v.limit === 20 &&
+    Array.isArray(v.items) && v.items.length <= 20 &&
+    new Set(v.items.map(item => item?.releaseId)).size === v.items.length &&
+    v.items.every(item => item && typeof item.releaseId === "string" && /^[a-f0-9]{64}$/.test(item.releaseId) &&
+      typeof item.publishedAt === "string" && Number.isFinite(Date.parse(item.publishedAt)) &&
+      new Date(item.publishedAt).toISOString() === item.publishedAt);
 }
 
 function useSource<T>(url:string | null, validate:(value:unknown)=>value is T, refresh:number, deadline:number) {
@@ -141,19 +153,50 @@ function DeliveredBidComparison({ crop }: { crop: string }) {
   </details>;
 }
 
-function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:string)=>void}) {
-  const [crop,setCrop]=useState(crops[0]), [region,setRegion]=useState(""), [manual,setManual]=useState("");
+function BidRegionGrid({ rows, region, onPick }: {
+  rows: Bid[];
+  region: string;
+  onPick: (region: string) => void;
+}) {
+  const bidsByRegion = new Map(rows.map(row => [row.region, row]));
+  return <fieldset className="grain-region-map">
+    <legend>Kansas bid regions · north at top</legend>
+    <p>Schematic of USDA reporting areas. Prices are regional averages in dollars per bushel. Shaded cells have no reported bid for this crop.</p>
+    <ul>
+      {grainRegions.map(name => {
+        const bid = bidsByRegion.get(name);
+        return <li key={name}>{bid
+          ? <button type="button" aria-pressed={region === name} onClick={() => onPick(name)}>
+            <span>{name}</span><strong>{bidCurrency.format(bid.average)}</strong>
+          </button>
+          : <div><span>{name}</span><small>No bid</small></div>}</li>;
+      })}
+    </ul>
+  </fieldset>;
+}
+
+export function GrainMarketBudget() {
+  const [harvests, setHarvests] = useState("");
+  return <MarketBudget harvests={harvests} setHarvests={setHarvests} standalone />;
+}
+
+function MarketBudget({harvests,setHarvests,standalone=false}:{harvests:string;setHarvests:(s:string)=>void;standalone?:boolean}) {
+  const [crop,setCrop]=useState(standalone ? "Hard red winter wheat" : crops[0]), [region,setRegion]=useState(""), [manual,setManual]=useState("");
   const yieldEstimate=yieldHistory(harvests,new Date().getUTCFullYear());
   const [inputPrices,setInputPrices]=useState(["","","",""]);
   const [yieldText,setYield]=useState(""), [costs,setCosts]=useState(["0","0","0",""]);
   const [query,setQuery]=useState(0), [clock,setClock]=useState(0);
-  const [open,setOpen]=useState(false), [visible,setVisible]=useState(true);
+  const [releaseId, setReleaseId] = useState("");
+  const [open,setOpen]=useState(standalone), [visible,setVisible]=useState(true);
   const refresh=useCallback((activate=false)=>{
     setClock(Date.now());
     setQuery(n=>activate || n>0?n+1:n);
   },[]);
   const watching=query>0 && open && visible;
-  const grain=useSource(watching ? GRAIN_PATH : null,validGrain,query,12000);
+  const bidUrl = releaseId ? `${GRAIN_PATH}?release=${releaseId}` : GRAIN_PATH;
+  const grain = useSource(watching ? bidUrl : null,
+    (value): value is Grain => validGrain(value) && (!releaseId || value.releaseId === releaseId), query, 12000);
+  const history = useSource(standalone && watching ? GRAIN_PATH + "/history" : null, validGrainReleaseHistory, query, 12000);
   useEffect(()=>{
     if (!open) return;
     const resume=()=>{
@@ -188,22 +231,32 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
   const rows=report?.rows.filter(r=>r.crop===crop) ?? [];
   const selected=rows.find(r=>r.region===region);
   const budget=farmBudget(yieldText,region ? String(selected?.average ?? "") : manual,costs);
-  return <details className="field-tool" onToggle={e=>{
-    if (e.target!==e.currentTarget) return;
-    const next=e.currentTarget.open;
-    setOpen(next);
-    if (next) {
-      setVisible(document.visibilityState==="visible");
-      refresh();
-    }
-  }}><summary data-category-tool="farm-planning">Cash bids &amp; break-even</summary>
+  const contents = <>
     <label>Crop<select value={crop} onChange={e=>{setCrop(e.target.value);setRegion("");setManual("");setHarvests("");setYield("");}}>{crops.map(c=><option key={c}>{c}</option>)}</select></label>
     <button type="button" className="category-map-dock-tool" onClick={()=>refresh(true)}>{query?"Refresh reviewed bids":"Load reviewed Kansas bids"}</button>
     <div role="status">{watching && (grain===undefined?"Checking the release…":report?
       <p>USDA AMS · {report.reportDate} · conventional country elevators, current truck delivery. {crop==="Hard red winter wheat"?"Ordinary protein.":""} {clock-Date.parse(report.reportDate)>7*86400000?"Historical report.":""}</p>:
       <p>Reviewed bids unavailable. Use the USDA report or enter a local bid.</p>)}</div>
     <a href={USDA_REPORT} target="_blank" rel="noreferrer">Open USDA’s latest Kansas daily grain report ↗</a>
+    {standalone && <p><a href="https://mymarketnews.ams.usda.gov/node/9580">Find the original report by date in the USDA archive</a></p>}
+    {!standalone && <p><a href="/science/wheat-trade">Open Kansas grain markets &amp; freight</a></p>}
     {futuresReferences[crop] && <p><a href={futuresReferences[crop]} target="_blank" rel="noreferrer">View {crop.toLowerCase()} futures on CME ↗</a> · exchange quotes delayed at least 10 minutes. The budget uses a cash bid.</p>}
+    {standalone && watching && <>
+      <label>Reviewed release<select value={releaseId} onChange={event => {
+        setReleaseId(event.target.value);
+        setRegion("");
+        refresh();
+      }}>
+        <option value="">Active release</option>
+        {releaseId && !history?.items.some(item => item.releaseId === releaseId) &&
+          <option value={releaseId}>Previously selected release</option>}
+        {history?.items.map(item => <option key={item.releaseId} value={item.releaseId}>
+          Published {item.publishedAt.slice(0, 16).replace("T", " ")} UTC · {item.releaseId.slice(0, 8)}
+        </option>)}
+      </select></label>
+      <p>{history === undefined ? "Checking earlier releases…" : history === null ? "Release history is unavailable." : history.items.length === 0 ? "No earlier reviewed releases are listed." : "Publication time identifies the KFM release. The USDA report date appears with its bids."}</p>
+    </>}
+    {standalone && report && <BidRegionGrid rows={rows} region={region} onPick={setRegion} />}
     {report && <><label>Price source<select value={region} onChange={e=>setRegion(e.target.value)}><option value="">My cash bid</option>{rows.map(r=><option key={r.region} value={r.region}>{r.region} · ${r.average.toFixed(4)}/bu</option>)}</select></label>
       {selected && <p>Reported range ${selected.low.toFixed(4)}–${selected.high.toFixed(4)}/bu. The scenario uses the reported average.</p>}
       <a href={GRAIN_PATH+"?release="+report.releaseId+"&download=1"}>Download the reviewed price data</a></>}
@@ -246,7 +299,17 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
         ["Kansas road conditions and detours · KDOT KanDrive","https://www.ksdot.gov/travel/travel-conditions/kandrive"],
       ].map(([label,href])=><li key={href}><a href={href} target="_blank" rel="noreferrer">{label} ↗</a></li>)}</ul>
     </details>
-  </details>;
+  </>;
+  if (standalone) return contents;
+  return <details className="field-tool" onToggle={e=>{
+    if (e.target!==e.currentTarget) return;
+    const next=e.currentTarget.open;
+    setOpen(next);
+    if (next) {
+      setVisible(document.visibilityState==="visible");
+      refresh();
+    }
+  }}><summary data-category-tool="farm-planning">Cash bids &amp; break-even</summary>{contents}</details>;
 }
 
 function StationOutlook({point,harvests}:{point:Point|null;harvests:string}) {

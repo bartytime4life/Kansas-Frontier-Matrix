@@ -49,3 +49,25 @@
 @media (max-width: 34rem) {
   .timeline li { grid-template-columns: minmax(0, 1fr); }
 }
+
+.market label { display: grid; gap: .35rem; max-width: 36rem; margin: .7rem 0; min-width: 0; }
+.market button { min-height: 2.75rem; padding: .45rem .75rem; border: 1px solid #66818a; border-radius: .25rem; background: #163941; color: var(--ink); font: inherit; cursor: pointer; }
+.market button:hover { background: #215360; }
+.market button:disabled { opacity: .65; cursor: default; }
+.market :is(button, summary, textarea):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.market details { border: 1px solid var(--line); border-radius: .3rem; padding: .65rem .85rem; margin: .85rem 0; }
+.market details summary { min-height: 2.75rem; padding-block: .5rem; cursor: pointer; }
+.market textarea { width: 100%; min-width: 0; padding: .5rem; color: var(--ink); background: #102e37; font: inherit; }
+.market table { width: 100%; max-width: 36rem; border-collapse: collapse; }
+.market :is(caption, th, td) { padding: .35rem .25rem; text-align: left; }
+.market :is(th, td) { border-bottom: 1px solid var(--line); }
+.market :global(.field-inputs) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: .3rem .85rem; max-width: 52rem; }
+.market :global(.field-delivery-offer) { min-width: 0; margin-block: .8rem; border: 1px solid var(--line); }
+
+.market :global(.grain-region-map) { min-width: 0; max-width: 42rem; padding: .6rem; margin-block: 1.2rem; border: 1px solid var(--line); }
+.market :global(.grain-region-map) legend { padding-inline: .35rem; color: var(--accent); }
+.market :global(.grain-region-map) p { margin: 0 .2rem .7rem; color: var(--body); font-size: .9rem; }
+.market :global(.grain-region-map) ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .35rem; list-style: none; padding: 0; margin: 0; }
+.market :global(.grain-region-map) li > * { display: grid; align-content: center; width: 100%; min-height: 4.55rem; padding: .35rem .2rem; text-align: center; overflow-wrap: anywhere; font-size: clamp(.76rem, 2.5vw, .98rem); }
+.market :global(.grain-region-map) li > div { background: #14252c; border: 1px dashed #66818a; color: var(--body); }
+.market :global(.grain-region-map) button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #081d25; }

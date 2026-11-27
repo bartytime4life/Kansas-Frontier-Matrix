@@ -82,6 +82,26 @@ export const sourceGuides = [
     description: "Check export commitments, reported shipments and trade data separately. Match commodity, destination and marketing year before comparing.",
   },
   {
+    title: "Kansas road conditions and detours",
+    href: "https://www.ksdot.gov/travel/travel-conditions/kandrive",
+    description: "Inspect current road closures and restrictions before comparing your own truck delivery costs.",
+  },
+  {
+    title: "Kansas crop progress and condition",
+    href: "https://www.nass.usda.gov/Statistics_by_State/Kansas/Publications/Crop_Progress_and_Condition/",
+    description: "Compare the report week with harvest progress. State estimates describe the season at statewide scale.",
+  },
+  {
+    title: "Midwest diesel history",
+    href: "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?f=W&n=PET&s=EMD_EPD2D_PTE_R20_DPG",
+    description: "Use the weekly regional series as context. Enter your own hauling charge in the calculator.",
+  },
+  {
+    title: "U.S. trade notices in the Federal Register",
+    href: "https://www.federalregister.gov/agencies/trade-representative-office-of-united-states",
+    description: "Read the notice and linked official PDF for product scope, publication date and effective dates. Check subsequent amendments.",
+  },
+  {
     title: "USDA FGIS grain inspection reports",
     href: "https://fgisonline.ams.usda.gov/exportgrainreport/",
     description: "Check grain inspected for export by date, commodity and port. Inspections also have a separate reporting window from cash-market observations.",
