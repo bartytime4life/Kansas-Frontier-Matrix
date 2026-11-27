@@ -30,7 +30,48 @@ type ComparisonReport = {
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 const formatNumber = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
+const formatDifference = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2, signDisplay: "exceptZero" });
 const formatValue = (value: number | null) => value === null ? "Unavailable" : formatNumber.format(value);
+
+const coverageLabels = { complete: "Full", partial: "Partial", missing: "Missing" };
+
+function pairCoverage({ selected, comparison }: YearPair) {
+  if (selected.value === null || comparison.value === null) return "missing";
+  return selected.valid === selected.expected && comparison.valid === comparison.expected ? "complete" : "partial";
+}
+
+function Difference({ pair, unit }: { pair: YearPair; unit: string }) {
+  if (pair.selected.value === null || pair.comparison.value === null) return <span>Missing value</span>;
+  if (pairCoverage(pair) !== "complete") return <span>Partial coverage</span>;
+  return <strong>{formatDifference.format(pair.selected.value - pair.comparison.value)} {unit === "%" ? "percentage points" : unit}</strong>;
+}
+
+function CoverageOverview({ series }: { series: ComparisonReport["series"] }) {
+  return <section className={styles.coverage} aria-labelledby="comparison-coverage">
+    <h3 id="comparison-coverage">Coverage across both years</h3>
+    <p>Full months have values on every expected provider date in both years. Partial months have gaps. Missing means at least one year has no value for the month.</p>
+    <ul className={styles.coverageMetrics} role="list">
+      {series.map(metric => {
+        const completeCount = metric.monthly.filter(pair => pairCoverage(pair) === "complete").length;
+        return <li key={metric.id}>
+          <div className={styles.coverageLabel}>
+            <a href={`#comparison-${metric.id}`}>{metric.label}</a>
+            <span>{completeCount} of {metric.monthly.length} months full in both years</span>
+          </div>
+          <ul className={styles.coverageMonths} aria-label={`${metric.label} coverage by month`} role="list">
+            {metric.monthly.map(pair => {
+              const coverage = pairCoverage(pair);
+              const month = monthNames[pair.month - 1];
+              return <li key={pair.month} data-coverage={coverage}>
+                <abbr title={month}>{month.slice(0, 3)}</abbr> <span>{coverageLabels[coverage]}</span>
+              </li>;
+            })}
+          </ul>
+        </li>;
+      })}
+    </ul>
+  </section>;
+}
 
 function displayScale(metric: ComparisonMetric) {
   if (metric.unit === "%") return 100;
@@ -91,17 +132,19 @@ function MetricPanel({ metric, year, compareYear, place }: { metric: ComparisonM
       <YearSummary value={metric.annual.selected} year={year} metric={metric} role="selected" />
       <YearSummary value={metric.annual.comparison} year={compareYear} metric={metric} role="comparison" />
     </dl>
+    <p className={styles.annualChange}>Change from {compareYear} to {year} <Difference pair={metric.annual} unit={metric.unit} /></p>
     <MonthlyChart metric={metric} />
     <details className={styles.monthlyDetails}>
       <summary>Monthly values and coverage</summary>
       <table>
-        <caption>{metric.label} in {metric.unit}, with coverage by month. Values are rounded to at most two decimal places.</caption>
-        <thead><tr><th scope="col">Month</th><th scope="col">{year}</th><th scope="col">{compareYear}</th></tr></thead>
-        <tbody>{metric.monthly.map(({ month, selected, comparison }) => (
-          <tr key={month}>
-            <th scope="row">{monthNames[month - 1]}</th>
-            <TableValue value={selected} supportUnit={metric.supportUnit} />
-            <TableValue value={comparison} supportUnit={metric.supportUnit} />
+        <caption>{metric.label} in {metric.unit}. Change is {year} minus {compareYear} for months with full coverage. Values are rounded to at most two decimal places.</caption>
+        <thead><tr><th scope="col">Month</th><th scope="col">{year}</th><th scope="col">{compareYear}</th><th scope="col">Change</th></tr></thead>
+        <tbody>{metric.monthly.map(pair => (
+          <tr key={pair.month}>
+            <th scope="row">{monthNames[pair.month - 1]}</th>
+            <TableValue value={pair.selected} supportUnit={metric.supportUnit} />
+            <TableValue value={pair.comparison} supportUnit={metric.supportUnit} />
+            <td><Difference pair={pair} unit={metric.unit} /></td>
           </tr>
         ))}</tbody>
       </table>
@@ -131,7 +174,7 @@ export default function ComparisonView({ report }: { report: ComparisonReport })
     <header className={styles.resultsHeader}>
       <div>
         <h2 id="comparison-results">{report.location.name}</h2>
-        <p>Each chart shares one scale across the two years. Coverage shows how many days or assessments support each value.</p>
+        <p>Each chart shares one scale across the two years. Changes use complete periods for each metric. The number of days or assessments in a complete period can vary by year.</p>
       </div>
       <ul className={styles.legend} aria-label="Chart key">
         <li><i className={styles.key} data-year-role="selected" aria-hidden="true" />{year}</li>
@@ -140,6 +183,7 @@ export default function ComparisonView({ report }: { report: ComparisonReport })
         <li><i className={styles.missingKey} aria-hidden="true" />Unavailable</li>
       </ul>
     </header>
+    <CoverageOverview series={report.series} />
     <div className={styles.metrics}>{report.series.map((metric) => <MetricPanel
       key={metric.id} metric={metric} year={year} compareYear={compareYear} place={report.location.id} />)}</div>
   </section>;

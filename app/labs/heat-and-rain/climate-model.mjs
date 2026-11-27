@@ -84,6 +84,57 @@ export function analyseClimate(snapshot, { year = 2025, month = 0, heatC = 32.2,
     days, monthly, ...summary(days, heatC, wetMm) };
 }
 
+export const CORN_HEAT_METHOD = Object.freeze({
+  id: 'kfm.corn-growing-degree-days/v1',
+  baseC: 10,
+  capC: 30,
+  documentation: 'https://mesonet.k-state.edu/agriculture/degreedays/',
+});
+
+export function validCornWindow(year, from, to) {
+  if (!Number.isInteger(year) || year < 2020 || year > 2025) return false;
+  const isDate = (value) => {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || !value.startsWith(`${year}-`)) return false;
+    const time = Date.parse(value);
+    return Number.isFinite(time) && new Date(time).toISOString().slice(0, 10) === value;
+  };
+  return isDate(from) && isDate(to) && from <= to;
+}
+
+export function analyseCornHeat(snapshot, { year, from, to }) {
+  if (!validCornWindow(year, from, to)) throw new Error('Choose a valid start and end date in the selected year.');
+  const { baseC, capC } = CORN_HEAT_METHOD;
+  const floor = baseC * 10, cap = capC * 10;
+  const clamp = (reading) => Math.min(cap, Math.max(floor, reading.raw));
+  const days = [];
+  const months = new Map();
+  let paired = 0, sum = 0;
+  for (const row of snapshot.records) {
+    if (row.date < from || row.date > to) continue;
+    const { date, tmax, tmin } = dayReadings(row);
+    // Keep integer half-tenths of a degree day until the final conversion.
+    const amount = tmax.value !== null && tmin.value !== null ? clamp(tmax) + clamp(tmin) - 2 * floor : null;
+    const month = date.slice(0, 7);
+    const group = months.get(month) ?? { month, expected: 0, paired: 0, sum: 0 };
+    group.expected++;
+    if (amount !== null) {
+      group.paired++;
+      group.sum += amount;
+      paired++;
+      sum += amount;
+    }
+    months.set(month, group);
+    days.push({ date, tmax, tmin, degreeDaysC: amount === null ? null : amount / 20 });
+  }
+  const firstDay = Date.parse(from);
+  const expected = (Date.parse(to) - firstDay) / DAY + 1;
+  if (days.length !== expected || days.some(({ date }, index) => Date.parse(date) !== firstDay + index * DAY)) {
+    throw new Error('The corn heat calendar is incomplete.');
+  }
+  return { station: snapshot.station, source: snapshot.source, year, from, to, expected, paired, degreeDaysC: paired ? sum / 20 : null, days,
+    monthly: Array.from(months.values(), ({ month, expected, paired, sum }) => ({ month, expected, paired, degreeDaysC: paired ? sum / 20 : null })) };
+}
+
 const STATES = Object.freeze({ missing: 'Missing', trace: 'Trace (unquantified)', 'quality-withheld': 'Withheld: NOAA quality flag',
   'missing-presumed-zero': 'Missing, presumed zero', 'precipitation-noted': 'Precipitation noted, amount unresolved',
   'precipitation-not-reported': 'Precipitation not reported', 'partial-period': 'Withheld: partial precipitation period', unqualified: 'Unqualified reading',
@@ -114,6 +165,22 @@ export function climateCsv(analysis, units = 'metric') {
       return [converted === null ? null : Number(converted.toFixed(8)), reading.state, reading.raw, reading.measurementFlag, reading.qualityFlag, reading.sourceFlag]; }),
     analysis.source.url, analysis.source.sha256, analysis.source.capturedAt, 'Station observation-day provider context; PRCP is liquid-equivalent precipitation; trace unquantified; partial periods withheld; no filled days']);
   return [names, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
+}
+
+export function cornHeatCsv(analysis, descriptor) {
+  if (descriptor.id !== analysis.station.id || !same(descriptor.source, analysis.source)) throw new Error('The export must match the current station.');
+  const { id, baseC, capC, documentation } = CORN_HEAT_METHOD;
+  const columns = ['station_id', 'station_name', 'date', 'window_from', 'window_to',
+    ...['tmax', 'tmin'].flatMap(element => ['C', 'state', 'raw_tenths', 'mflag', 'qflag', 'sflag'].map(field => `${element}_${field}`)),
+    'corn_degree_days_C', 'corn_degree_days_F',
+    'method_id', 'base_C', 'cap_C', 'method_url', 'source_url', 'source_sha256', 'captured_at', 'snapshot_url', 'snapshot_sha256'];
+  const rows = analysis.days.map(({ date, tmax, tmin, degreeDaysC }) => [
+    analysis.station.id, analysis.station.name, date, analysis.from, analysis.to,
+    ...[tmax, tmin].flatMap(reading => [reading.value, reading.state, reading.raw, reading.measurementFlag, reading.qualityFlag, reading.sourceFlag]),
+    degreeDaysC, degreeDaysC === null ? null : Number((degreeDaysC * 9 / 5).toFixed(3)),
+    id, baseC, capC, documentation, analysis.source.url, analysis.source.sha256, analysis.source.capturedAt, descriptor.url, descriptor.sha256,
+  ]);
+  return [columns, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
 }
 
 export function climateReceipt(analysis, descriptor, units = 'metric') {

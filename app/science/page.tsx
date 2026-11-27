@@ -7,6 +7,7 @@ import sunlight from "../labs/sunlight-and-sky/snapshot-manifest.json";
 import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
 import { atlasScienceDirectory } from "./atlas-directory.mjs";
 import { nativeScienceDirectory } from "./science-directory.mjs";
+import ScienceDataCoverage from "./science-data-coverage";
 import ScienceLauncher from "./science-launcher";
 import styles from "./science.module.css";
 
@@ -17,11 +18,13 @@ export const metadata = {
 };
 
 export default function SciencePage() {
-  const entries = atlasScienceDirectory(nativeScienceDirectory({ climate, drought, soil, air, sunlight }));
+  const manifests = { climate, drought, soil, air, sunlight };
+  const entries = atlasScienceDirectory(nativeScienceDirectory(manifests));
   return <main className={styles.page}><div className={styles.frame}>
     <nav className={styles.navigation} aria-label="Science and Labs navigation">
       <Link href="/">← KFM Explorer</Link>
       <a href="#find-a-lab">Find a lab</a>
+      <a href="#data-coverage">Data coverage</a>
       <Link href="/labs#research-labs">Research atlas</Link>
       <Link href="/research">Data sources</Link>
     </nav>
@@ -35,6 +38,7 @@ export default function SciencePage() {
       </div>
     </header>
     <ScienceLauncher entries={entries} />
+    <ScienceDataCoverage manifests={manifests} />
     <section className={styles.reading} aria-labelledby="science-reading-heading">
       <div><h2 id="science-reading-heading">Work with the evidence</h2><p>Open a lab to inspect its source, date range, and gaps. Use the research notebook to save a view or return to an investigation on this device.</p></div>
       <Link href="/labs/notebook">Research notebook ↗</Link>

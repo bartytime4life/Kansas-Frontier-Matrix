@@ -56,3 +56,14 @@
   .filters label:first-child { grid-column: 1 / -1; }
   .cards { grid-template-columns: minmax(0, 1fr); }
 }
+
+.coverage { padding-block: 1.5rem; border-bottom: 1px solid var(--line); scroll-margin-top: 1rem; }
+.coverage h2 { margin: 0; font: 400 clamp(1.55rem, 3.5vw, 2.15rem)/1.13 Georgia, serif; }
+.coverage > p { max-width: 48rem; color: var(--body); }
+.coverageCards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .65rem; }
+.coverageCards li { padding: .65rem .75rem; border: 1px solid var(--line); border-radius: .24rem; overflow-wrap: anywhere; }
+.coverageCards h3, .coverageCards p, .coverageCards dl, .coverageCards dd { margin: 0; }
+.coverageCards p, .coverageCards dt { color: var(--body); font-size: .83rem; }
+.coverageCards dl { margin-block: .5rem; }
+.coverageCards dd + dt { margin-top: .35rem; }
+.coverageCards a { display: inline-flex; align-items: center; min-height: 2.75rem; }

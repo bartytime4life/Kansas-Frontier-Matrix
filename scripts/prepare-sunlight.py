@@ -219,10 +219,10 @@ def build(sources):
     return outputs, manifest
 
 
-def prepare(folder):
+def prepare(folder, output_root=ROOT):
     outputs, manifest = build(verified_sources(folder))
-    targets = [(ROOT / "public" / url.lstrip("/"), raw) for url, raw in outputs]
-    targets.append((ROOT / "app/labs/sunlight-and-sky/snapshot-manifest.json", encoded(manifest)))
+    targets = [(output_root / "public" / url.lstrip("/"), raw) for url, raw in outputs]
+    targets.append((output_root / "app/labs/sunlight-and-sky/snapshot-manifest.json", encoded(manifest)))
     # Validate every response before changing derived artifacts. Preserve old
     # content-hashed display files; original source captures are never replaced.
     for path, raw in targets:
