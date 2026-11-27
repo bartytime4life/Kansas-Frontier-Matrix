@@ -9,7 +9,7 @@ run outside the pipeline lock; only database writes take it. The 85 GB aggregate
 
     python -m tools.local_data.sql_feeds --root STORE --db observations.sqlite \
         [--tiger kansas-tiger-2025.gpkg] [--nwm-gpkg kansas-nwm.gpkg] [--lock pipeline.lock] \
-        [--bulk-db kfm-bulk.sqlite] run FEED | status | snapshot --dest DIR [--keep 2] [--lock-held] \
+        [--bulk-db kfm-bulk.sqlite] run FEED | status | recovery-report | snapshot --dest DIR [--keep 2] [--lock-held] \
         | snapshot-check --dest DIR
 
 Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm; and, from 2026-11-02,
@@ -35,11 +35,15 @@ import json
 import os
 from pathlib import Path
 import sqlite3
+import stat
 import sys
+import tempfile
 import time
 from typing import Callable
 import urllib.error
 import urllib.request
+
+from tools.local_data.file_io import fsync_directory
 
 CAP = None   # the owner, 2026-11-02: "ignore all data caps and floors". Set a byte count to bring the ceiling back.
 RESERVE = 5_000_000_000
@@ -374,35 +378,85 @@ def store_raw(ctx: Context, feed: str, name: str, body: bytes | Path, *, url: st
     receipt_path = ctx.root / "data/receipts/ingest/sql-feeds" / feed / (name + ".json")
     is_file = isinstance(body, Path)
     digest, size = (file_sha256(body), body.stat().st_size) if is_file else (sha256(body), len(body))
-    if path.exists():
-        if (file_sha256(path) if is_file else sha256(path.read_bytes())) != digest:
-            raise FeedError(f"RAW_OBJECT_CHANGED {name}")
-        if is_file:
-            body.unlink()
-        return path, digest
-    if original is not None:
-        original = ({"sha256": file_sha256(original), "bytes": original.stat().st_size} if isinstance(original, Path)
-                    else {"sha256": sha256(original), "bytes": len(original)})
-    receipt = {"format": "kfm-sql-feed-receipt-v1", "feed": feed, "path": str(path.relative_to(ctx.root)), "sha256": digest,
-               "bytes": size, "source_url": url, "retrieved_at": ctx.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
-               "last_modified": fetched.last_modified if fetched else None, "etag": fetched.etag if fetched else None,
-               **({"original": {**original, "kept": False}} if original is not None else {}),
-               **(extra or {})}
-    for target, data in ((path, body), (receipt_path, (json.dumps(receipt, indent=1, sort_keys=True) + "\n").encode())):
-        target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        temp = target.with_name(target.name + ".part")
-        if isinstance(data, Path):
-            os.replace(data, temp)
-            with open(temp, "rb") as handle:
-                os.fsync(handle.fileno())
-        else:
-            with open(temp, "wb") as handle:
+    identity = {"format": "kfm-sql-feed-receipt-v1", "feed": feed, "path": str(path.relative_to(ctx.root)),
+                "sha256": digest, "bytes": size}
+    recovered = _check_feed_raw(path, name, size, digest)
+    has_receipt = _check_feed_receipt(receipt_path, identity)
+    if not recovered:
+        try:
+            _publish_feed_object(path, body)
+        except FileExistsError:
+            if not _check_feed_raw(path, name, size, digest):
+                raise FeedError(f"RAW_OBJECT_CHANGED {name}") from None
+            recovered = True
+    if not has_receipt:
+        receipt = {**(extra or {}), **identity, "source_url": url,
+                   "retrieved_at": ctx.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                   "last_modified": fetched.last_modified if fetched else None, "etag": fetched.etag if fetched else None}
+        if recovered:
+            receipt["receipt_recovered"] = True
+        if original is not None:
+            content = ({"sha256": file_sha256(original), "bytes": original.stat().st_size} if isinstance(original, Path)
+                       else {"sha256": sha256(original), "bytes": len(original)})
+            receipt["original"] = {**content, "kept": False}
+        try:
+            _publish_feed_object(receipt_path, (json.dumps(receipt, indent=1, sort_keys=True) + "\n").encode())
+        except FileExistsError:
+            if not _check_feed_receipt(receipt_path, identity):
+                raise FeedError("RAW_RECEIPT_CHANGED") from None
+    if is_file and body.resolve() != path.resolve():
+        body.unlink()
+    return path, digest
+
+
+def _check_feed_raw(path: Path, name: str, size: int, digest: str) -> bool:
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return False
+    if not stat.S_ISREG(info.st_mode) or info.st_size != size or file_sha256(path) != digest:
+        raise FeedError(f"RAW_OBJECT_CHANGED {name}")
+    return True
+
+
+def _check_feed_receipt(path: Path, identity: dict) -> bool:
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return False
+    try:
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("not an ordinary receipt file")
+        receipt = json.loads(path.read_bytes())
+        if not isinstance(receipt, dict) or any(
+            type(receipt.get(key)) is not type(value) or receipt[key] != value for key, value in identity.items()
+        ):
+            raise ValueError("receipt identity mismatch")
+    except (OSError, ValueError) as error:
+        raise FeedError("RAW_RECEIPT_CHANGED") from error
+    return True
+
+
+def _publish_feed_object(target: Path, data: bytes | Path) -> None:
+    """Make a fully written file visible without replacing an existing generation."""
+    target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if isinstance(data, Path):
+        os.chmod(data, 0o600)
+        with data.open("rb") as handle:
+            os.fsync(handle.fileno())
+        os.link(data, target)
+    else:
+        fd, name = tempfile.mkstemp(prefix=".feed-part-", dir=target.parent)
+        temporary = Path(name)
+        try:
+            with os.fdopen(fd, "wb") as handle:
                 handle.write(data)
                 handle.flush()
                 os.fsync(handle.fileno())
-        os.chmod(temp, 0o600)
-        os.replace(temp, target)
-    return path, digest
+            os.link(temporary, target)
+        finally:
+            temporary.unlink(missing_ok=True)
+    fsync_directory(target.parent)
 
 
 def receipt_for(ctx: Context, path: Path) -> dict:
@@ -601,6 +655,13 @@ def main(argv=None) -> int:
     run = sub.add_parser("run")
     run.add_argument("feed", choices=sorted(FEEDS))
     sub.add_parser("status")
+    from tools.local_data import sql_feed_recovery
+
+    recovery = sub.add_parser("recovery-report", help="Report feed attempts and checkpoint freshness from journal messages on stdin")
+    recovery.add_argument("--feed", action="append", choices=sorted(FEEDS), help="Feed to monitor; repeat to select several")
+    recovery.add_argument("--max-age-hours", type=sql_feed_recovery.positive_hours)
+    recovery.add_argument("--run-timeout-hours", type=sql_feed_recovery.positive_hours, default=8)
+    recovery.add_argument("--hold-age-hours", type=sql_feed_recovery.positive_hours, default=24)
     snap = sub.add_parser("snapshot", help="Verified copy of the database on the backup volume, keeping the newest --keep")
     snap.add_argument("--dest", type=Path, required=True)
     snap.add_argument("--keep", type=int, default=2)
@@ -610,6 +671,14 @@ def main(argv=None) -> int:
     spatial = sub.add_parser("spatial", help="Build or check the R-tree sidecars of every geometry table (sql_spatial.py)")
     spatial.add_argument("action", choices=["build", "check"])
     spatial.add_argument("--table", help="One table instead of all")
+    metadata = sub.add_parser("review-metadata", help="Index exact completed feed receipts and draft private metadata")
+    metadata.add_argument("--database", choices=("observations", "bulk"), default="observations")
+    metadata.add_argument("--limit", type=int, default=5, help="Maximum new evidence records and new drafts per run (1–50 each)")
+    metadata.add_argument("--since", metavar="UTC_TIMESTAMP", help="Oldest eligible receipt retrieval time")
+    metadata.add_argument("--source-sha256", help="Process one exact source file")
+    metadata.add_argument("--retry-held", action="store_true", help="Recheck a held source after repair; requires --source-sha256")
+    metadata.add_argument("--qwen-model", help="Installed local Qwen model for optional private annotation drafts")
+    metadata.add_argument("--qwen-digest", help="Full pinned digest of the installed model")
     args = parser.parse_args(argv)
     os.umask(0o077)
     bulk = args.command == "run" and args.feed in BULK_FEEDS
@@ -624,6 +693,18 @@ def main(argv=None) -> int:
         result = status(ctx)
         if ctx.bulk_db and ctx.bulk_db.is_file():
             result["bulk"] = status(Context(root=ctx.root, db_path=ctx.bulk_db))
+        print(json.dumps(result, indent=1, sort_keys=True))
+        return 0
+    if args.command == "recovery-report":
+        try:
+            result = sql_feed_recovery.report(
+                sys.stdin.buffer, selected=args.feed or sql_feed_recovery.DAILY_LAB_FEEDS, observations=args.db,
+                bulk=args.bulk_db, bulk_feeds=BULK_FEEDS, now=ctx.now(), max_age_hours=args.max_age_hours,
+                run_timeout_hours=args.run_timeout_hours, hold_age_hours=args.hold_age_hours,
+            )
+        except ValueError as error:
+            print(f"Cannot read feed recovery evidence: {error}", file=sys.stderr)
+            return 2
         print(json.dumps(result, indent=1, sort_keys=True))
         return 0
     if args.command == "spatial":
@@ -680,15 +761,41 @@ def main(argv=None) -> int:
             ctx.note("snapshot_failed", command=args.command, reason="SNAPSHOT_RETAINED_MISMATCH " + result["retained_mismatch"])
             return 1
         return 0
+    if args.command == "review-metadata":
+        from tools.local_data import ai_acceptance, sql_feed_metadata
+
+        if args.database == "bulk":
+            if args.bulk_db is None:
+                parser.error("review-metadata --database bulk requires --bulk-db")
+            ctx.db_path = args.bulk_db
+        if bool(args.qwen_model) != bool(args.qwen_digest):
+            parser.error("--qwen-model and --qwen-digest must be supplied together")
+        try:
+            client = ai_acceptance.Qwen(args.qwen_model, args.qwen_digest) if args.qwen_model else None
+            result = sql_feed_metadata.review_metadata(ctx, limit=args.limit, since=args.since, source_sha=args.source_sha256,
+                                                       retry_held=args.retry_held, client=client)
+        except (ValueError, OSError, sqlite3.Error, FeedError) as error:
+            reason = str(error) if isinstance(error, (ValueError, FeedError)) else "SQL_METADATA_DATABASE_UNAVAILABLE"
+            ctx.note("sql_metadata_failed", database=args.database, reason=reason)
+            return 1
+        ctx.note("sql_metadata_done", database=args.database, **result)
+        return int(bool(result.get("model_pause") or result["evidence_held"] or result["draft_held"]))
     started = time.monotonic()
+    started_at = ctx.now().isoformat(timespec="microseconds").replace("+00:00", "Z")
+    ctx.note("feed_started", feed=args.feed, started_at=started_at)
     try:
         if bulk:
             init_bulk(ctx)
         summary = resolve(args.feed)(ctx)
     except FeedError as error:
-        ctx.note("feed_failed", feed=args.feed, reason=str(error), seconds=round(time.monotonic() - started))
+        ctx.note("feed_failed", feed=args.feed, started_at=started_at, reason=str(error),
+                 seconds=round(time.monotonic() - started))
         return 1
-    ctx.note("feed_done", feed=args.feed, seconds=round(time.monotonic() - started), **(summary or {}))
+    except Exception:
+        ctx.note("feed_failed", feed=args.feed, started_at=started_at, reason="UNEXPECTED_FEED_ERROR",
+                 seconds=round(time.monotonic() - started))
+        raise
+    ctx.note("feed_done", feed=args.feed, started_at=started_at, seconds=round(time.monotonic() - started), **(summary or {}))
     # The geometry tables' R-tree sidecars follow the rows just written (sql_spatial.py); a failure here is
     # noted and leaves the feed's own result standing.
     from tools.local_data import sql_spatial

@@ -127,6 +127,65 @@ class CoreTests(FeedCase):
         with self.assertRaisesRegex(core.FeedError, "RAW_NAME_UNSAFE"):
             core.store_raw(self.ctx, "demo", "../escape", b"x", url="u")
 
+    def test_replays_raw_write_interrupted_before_receipt(self):
+        raw = self.root / "data/raw/sql-feeds/demo/example.txt"
+        receipt_path = self.root / "data/receipts/ingest/sql-feeds/demo/example.txt.json"
+        publish = core._publish_feed_object
+
+        def fail_receipt(path, data):
+            if path == receipt_path:
+                raise OSError("simulated interruption")
+            publish(path, data)
+
+        with patch.object(core, "_publish_feed_object", side_effect=fail_receipt):
+            with self.assertRaisesRegex(OSError, "interruption"):
+                core.store_raw(self.ctx, "demo", "example.txt", b"kansas", url="https://provider/initial")
+        raw_inode = raw.stat().st_ino
+        self.assertFalse(receipt_path.exists())
+        for incompatible in (b"kansas plus", b"nevada"):
+            with self.assertRaisesRegex(core.FeedError, "RAW_OBJECT_CHANGED"):
+                core.store_raw(self.ctx, "demo", "example.txt", incompatible, url="https://provider/wrong")
+            self.assertFalse(receipt_path.exists())
+
+        repeat = core.temp_path(self.ctx, "repeat.txt")
+        repeat.write_bytes(b"kansas")
+        fetched = core.Fetched("https://provider/repeated", b"", "Tue, 03 Nov 2026 15:30:00 GMT", '"edition-2"')
+        path, digest = core.store_raw(self.ctx, "demo", "example.txt", repeat, url=fetched.url, fetched=fetched,
+                                      original=b"kansas and more", extra={"sha256": "wrong",
+                                      "source_url": "https://untrusted.example", "bytes": 1})
+        self.assertEqual((path, path.stat().st_ino, digest, repeat.exists()), (raw, raw_inode, core.sha256(b"kansas"), False))
+        saved = receipt_path.read_bytes()
+        receipt = json.loads(saved)
+        self.assertEqual((receipt["sha256"], receipt["bytes"], receipt["source_url"]), (digest, 6, fetched.url))
+        self.assertEqual((receipt["last_modified"], receipt["etag"]), (fetched.last_modified, fetched.etag))
+        self.assertEqual(receipt["original"], {"sha256": core.sha256(b"kansas and more"), "bytes": 15, "kept": False})
+        self.assertTrue(receipt["receipt_recovered"])
+        core.store_raw(self.ctx, "demo", "example.txt", b"kansas", url="https://provider/later")
+        self.assertEqual(receipt_path.read_bytes(), saved)
+        mismatched = json.dumps(receipt | {"bytes": 7}).encode()
+        receipt_path.write_bytes(mismatched)
+        with self.assertRaisesRegex(core.FeedError, "RAW_RECEIPT_CHANGED"):
+            core.store_raw(self.ctx, "demo", "example.txt", b"kansas", url="https://provider/later")
+        self.assertEqual(receipt_path.read_bytes(), mismatched)
+
+    def test_raw_retry_preserves_receipt_that_won_a_concurrent_publish(self):
+        raw = self.root / "data/raw/sql-feeds/demo/concurrent.txt"
+        raw.parent.mkdir(parents=True)
+        raw.write_bytes(b"kansas")
+        receipt_path = self.root / "data/receipts/ingest/sql-feeds/demo/concurrent.txt.json"
+        publish = core._publish_feed_object
+
+        def concurrent_receipt(path, data):
+            self.assertEqual(path, receipt_path)
+            winner = json.loads(data) | {"source_url": "https://provider/winner"}
+            publish(path, json.dumps(winner).encode())
+            publish(path, data)
+
+        with patch.object(core, "_publish_feed_object", side_effect=concurrent_receipt):
+            path, _ = core.store_raw(self.ctx, "demo", "concurrent.txt", b"kansas", url="https://provider/loser")
+        self.assertEqual(raw.read_bytes(), b"kansas")
+        self.assertEqual(core.receipt_for(self.ctx, path)["source_url"], "https://provider/winner")
+
     def test_a_source_loads_once_and_a_failed_load_leaves_nothing(self):
         db = core.open_db(self.ctx)
         path, digest = core.store_raw(self.ctx, "demo", "x.txt", b"x", url="u")
