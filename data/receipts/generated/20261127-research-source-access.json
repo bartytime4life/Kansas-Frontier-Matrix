@@ -1,0 +1,104 @@
+{
+  "receipt_id": "kfm-research-source-access-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/research/discovery.ts",
+    "app/research/research.module.css",
+    "app/research/workspace.tsx",
+    "docs/research-discovery-20261123.md",
+    "tests/research-discovery-http.test.mjs",
+    "tests/research-discovery.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/research/discovery.ts": "sha256:4f0342ea5b64508be898fdb737b635e3aecd0db20eb1dfa35faff90dee0813ea",
+    "app/research/research.module.css": "sha256:8f16e1b83894cc16401d2e3847ce224e98439d3bbf451cdd8b8fda0defce3168",
+    "app/research/workspace.tsx": "sha256:72b0374586a112d98d31e9bef11d3b533872d612343e717f2fd7baaf7521219e",
+    "docs/research-discovery-20261123.md": "sha256:2e5c3282e9890760540da99464039618eae0bc96c978e8ede2b60ee05d18085f",
+    "tests/research-discovery-http.test.mjs": "sha256:225709a63abc8c628622b40f7b781a7c069c45d2c63d84923905aff8fefc5a48",
+    "tests/research-discovery.test.mjs": "sha256:4bc7b24b4d541afa2a37410da1beb57c0646792e752a8a7f6ccad4c8100591da"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:00926fe67a6f88b1f468e9104a98b293f19debeb22d9a7d58dd3bd094a380b5c",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "TinyFish",
+      "cua_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:91475ab9000f689af86d6ed8956af7bf11362c4b:app/research/discovery.ts",
+      "repo:91475ab9000f689af86d6ed8956af7bf11362c4b:app/research/research.module.css",
+      "repo:91475ab9000f689af86d6ed8956af7bf11362c4b:app/research/workspace.tsx",
+      "repo:91475ab9000f689af86d6ed8956af7bf11362c4b:docs/research-discovery-20261123.md",
+      "repo:91475ab9000f689af86d6ed8956af7bf11362c4b:tests/research-discovery-http.test.mjs",
+      "repo:91475ab9000f689af86d6ed8956af7bf11362c4b:tests/research-discovery.test.mjs",
+      "https://kansasfrontiermatrix.com/research",
+      "https://kansasfrontiermatrix.com/api/build"
+    ],
+    "evidence_hashes": [
+      "sha256:3a7d547a450f51379f3ff8a83168d58b7ed33465f59d04384f98b9295b4673f2",
+      "sha256:336141999a17446aa81bf83b8a99f79e27da73b8379078cb280db3fe60809758",
+      "sha256:fcbcce05b7d3f053522c5b0e8e84c0331f1ee7a51c655dc20a5f9ddaa3827f92",
+      "sha256:cb242808b776c7bf7ee5224a02d0e9ff8a34185a0e23f33dc3997614410f4d67",
+      "sha256:07b9a91ab8a2afef891911fae0b0a0e8ebcf0f06ccf8aecdf886236604f4c3dc",
+      "sha256:570a8c5d428c77db126768a73a27d67ebac962afac3aaee9e9fcf5ac3b045f5a"
+    ]
+  },
+  "truth_labels": {
+    "app/research/discovery.ts": "CONFIRMED",
+    "app/research/research.module.css": "CONFIRMED",
+    "app/research/workspace.tsx": "CONFIRMED",
+    "docs/research-discovery-20261123.md": "CONFIRMED",
+    "tests/research-discovery-http.test.mjs": "CONFIRMED",
+    "tests/research-discovery.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build, TypeScript, changed-area lint and whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "12 focused research unit and production HTTP tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full Node 24.11.1 suite: 3896 passed, 25 skipped, zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Current public application-input parity with hosted base: 1570 inputs and sha256:686a790b2f0e9e4688c44bb89275e2596e6761f4211d43b89c5b45aeadb71624",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Running local preview serves readable credits and direct registered data access via HTTP",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Fresh visual and responsive acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Chrome attachment requires a desktop network policy; in-app browser unavailable. No screenshot claimed."
+    },
+    {
+      "gate": "Candidate hosted CI, review and publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring; local and current-base public evidence do not establish candidate delivery."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T21:18:15.427519+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor coverage for Research artifacts; previous receipts remain intact. No source registry, dataset admission, provider refresh, credentials, routing, settings or publication changes. Link labels and dates remain from the existing source registry."
+}

@@ -56,3 +56,44 @@ Hosted run `45252651884` passed the full Node suite but failed the unchanged Riv
 The More menu now has a viewport-based maximum height, vertical scrolling and contained overscroll. Its opaque surface avoids a backdrop-filter containing block that would clip the nested fixed Compose panel. At 568×320, the menu fits y=55–305; Status is natively clickable after menu scrolling, and the Compose card fits y=62–310 with its center painted and controls reachable. No browser assertion or deadline changed.
 
 Production rebuild and 78 focused navigation/research unit/HTTP tests passed. The complete local Node 22.23.3 suite was repeated after the final CSS: 3,337 passed, 25 skipped, zero failures. Final-head hosted CI remains a separate pending gate; the earlier failing run is retained as failure evidence.
+
+
+## Source access and readable credits — 2026-11-27
+
+Fresh repository readback found the NEON handoff merged in PR #6074 and its
+exact-head CI completed successfully. The public Research page includes both the
+NEON entry and the newer observation/science tools. This increment starts at
+hosted head `91475ab9000f689af86d6ed8956af7bf11362c4b`; it preserves those newer
+features and the separate original checkout.
+
+Every source card now exposes the existing registered data/download destination
+and its original descriptive label. Users can inspect data without selecting a
+comparison first. Map, provider and data links have source-specific accessible
+names; data links occupy their own wrapping row. The comparison adds an
+attribution/reuse row alongside the existing dates, cadence and scientific limits.
+
+Provider and license credits use React text and validated links. Only the
+registry's simple quoted `a href` markup becomes a link. Unsupported markup stays
+inert text; executable, credential-bearing, protocol-relative and HTTP credit
+links do not become active links. This is a deliberately limited renderer for
+current registry credits, not a general HTML interpreter. Registry metadata,
+source counts, release status and provider refresh behavior are unchanged.
+
+Production build, TypeScript, changed-area lint and all 12 focused unit/HTTP
+checks passed on Node 24.11.1. HTTP checks verify readable OSM/ODbL credits, the
+real generalized-data link without comparison, accessible names and the civic
+license in comparison. No provider payload is requested by those tests.
+Chrome attachment still requires a desktop network policy, and the in-app
+browser is unavailable in this session. New visual/responsive acceptance and
+publication remain separate checks; no fresh screenshot is claimed.
+
+
+The complete local Node 24.11.1 suite passed: **3,896 passed, 25 skipped, zero
+failures** (3,921 total). Fresh public `/api/build` reported 1,570 application
+inputs with digest `sha256:686a790b2f0e9e4688c44bb89275e2596e6761f4211d43b89c5b45aeadb71624`,
+matching the current hosted base's committed inputs. The public response still
+reports a null source commit and `WORKTREE_MODIFIED`; the match establishes
+application-input parity, not deployed Git, build-byte or release identity.
+The new change's input digest is
+`sha256:d3a8be869a7b8aac8d52bd5196441c5596a052e98e2d62516845250c4b70a03a`.
+Its publication and hosted CI remain separate from the completed local checks.

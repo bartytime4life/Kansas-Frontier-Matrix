@@ -56,3 +56,29 @@ test('production research deep links retain only known comparison IDs and keep s
   assert.ok(!invalidHtml.includes('aria-label="Selected source comparison"'));
   assert.ok(!invalidHtml.includes('<img src=x onerror=alert(1)>'));
 });
+
+
+test('research cards expose registered data access and readable reuse credits without comparison', async t => {
+  const {server, port} = await startProdServer({port:0, host:'127.0.0.1', outDir:'dist'});
+  installPublicDelivery(server);
+  t.after(() => new Promise(resolve => { server.closeAllConnections(); server.close(resolve); }));
+  const origin = `http://127.0.0.1:${port}`;
+  const response = await fetch(origin + '/research?q=DeFlock');
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const credit = html.match(/<dt>Attribution<\/dt><dd>([\s\S]*?)<\/dd>/)?.[1];
+  assert.ok(credit, 'the visible card retains its attribution');
+  assert.ok(credit.includes('href="https://www.openstreetmap.org/copyright"'));
+  assert.ok(credit.includes('href="https://opendatacommons.org/licenses/odbl/1-0/"'));
+  assert.ok(credit.includes('OpenStreetMap contributors'));
+  assert.ok(!credit.includes('&lt;a'), 'credits render as text and safe links, not raw HTML');
+  assert.match(html, /href="\/api\/live-context\?feed=deflock-alpr" aria-label="Generalized report cells · ODbL 1.0: DeFlock · reported ALPR areas"/);
+  assert.ok(html.includes('aria-label="Open on map: DeFlock · reported ALPR areas"'));
+  assert.ok(html.includes('aria-label="Provider: DeFlock · reported ALPR areas"'));
+  assert.ok(!html.includes('aria-label="Selected source comparison"'), 'data access needs no comparison selection');
+
+  const selected = await fetch(origin + '/research?compare=census-congress-119');
+  const selectedHtml = await selected.text();
+  assert.ok(selectedHtml.includes('Attribution &amp; reuse'));
+  assert.ok(selectedHtml.includes('href="/civic-history-license.txt"'));
+});

@@ -1,14 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { ScienceEventSpec } from "../science-events";
 import { SCIENCE_SUPPORT_LABELS } from "../science-events";
-import { INVESTIGATIONS, RESEARCH_FRONTIER, RESEARCH_READING, REPRESENTATIONS, discoveryParams, discoverySearch, readDiscoveryState, sourceMapHref, type DiscoverySource, type DiscoveryState } from "./discovery";
+import { INVESTIGATIONS, RESEARCH_FRONTIER, RESEARCH_READING, REPRESENTATIONS, discoveryAttribution, discoveryParams, discoverySearch, readDiscoveryState, sourceMapHref, type DiscoverySource, type DiscoveryState } from "./discovery";
 import styles from "./research.module.css";
 
 const PAGE_SIZE = 9;
 const external = { target: "_blank", rel: "noreferrer" } as const;
+
+function SourceAttribution({ value }: { value: string }) {
+  return <span className={styles.attribution}>{discoveryAttribution(value).map((part, index) => part.href
+    ? <a key={index} href={part.href} {...external}>{part.text}</a>
+    : <Fragment key={index}>{part.text}</Fragment>)}</span>;
+}
 
 export default function ResearchDiscovery({ sources, instruments, initialState }: { sources: DiscoverySource[]; instruments: readonly ScienceEventSpec[]; initialState: DiscoveryState }) {
   const [state, setState] = useState(initialState);
@@ -90,8 +96,8 @@ export default function ResearchDiscovery({ sources, instruments, initialState }
       <div className={styles.sourceGrid}>{results.slice(0, visibleCount).map(source => <article className={styles.source} key={source.id}>
         <div className={styles.sourceTop}><span>{source.domain}</span><button type="button" aria-pressed={state.compare.includes(source.id)} aria-label={`${state.compare.includes(source.id) ? "Remove" : "Compare"} ${source.shortTitle}`} disabled={state.compare.length === 3 && !state.compare.includes(source.id)} onClick={() => toggle(source.id)}>{state.compare.includes(source.id) ? "✓ Selected" : "+ Compare"}</button></div>
         <h3>{source.shortTitle}</h3><p className={styles.publisher}>{source.organization}</p><span className={styles.badge}>{REPRESENTATIONS[source.kind]}</span><p>{source.freshness}</p>
-        <details><summary>Source details & limitations</summary><dl><dt>Update rhythm</dt><dd>{source.cadence}</dd><dt>What this cannot establish</dt><dd>{source.boundary}</dd><dt>When data is missing</dt><dd>{source.fallback}</dd><dt>Attribution</dt><dd>{source.attribution}</dd></dl>{source.minDisplayZoom !== undefined && <p>Map detail begins at zoom {source.minDisplayZoom}.</p>}<p>External provider context · {source.evidenceRole}</p></details>
-        <div className={styles.sourceActions}><a href={source.mapHref}>Open on map <span aria-hidden="true">↗</span></a><a href={source.sourceHref} {...external}>Provider <span aria-hidden="true">↗</span></a></div>
+        <details><summary>Source details & limitations</summary><dl><dt>Update rhythm</dt><dd>{source.cadence}</dd><dt>What this cannot establish</dt><dd>{source.boundary}</dd><dt>When data is missing</dt><dd>{source.fallback}</dd><dt>Attribution</dt><dd><SourceAttribution value={source.attribution} /></dd></dl>{source.minDisplayZoom !== undefined && <p>Map detail begins at zoom {source.minDisplayZoom}.</p>}<p>External provider context · {source.evidenceRole}</p></details>
+        <div className={styles.sourceActions}><a href={source.mapHref} aria-label={`Open on map: ${source.shortTitle}`}>Open on map <span aria-hidden="true">↗</span></a><a href={source.sourceHref} aria-label={`Provider: ${source.shortTitle}`} {...external}>Provider <span aria-hidden="true">↗</span></a>{source.downloadHref && source.downloadLabel && <a className={styles.downloadLink} href={source.downloadHref} aria-label={`${source.downloadLabel}: ${source.shortTitle}`} {...external}>{source.downloadLabel} <span aria-hidden="true">↗</span></a>}</div>
       </article>)}</div>
       {!results.length && <div className={styles.empty}><h3>No sources match these filters.</h3><p>Try a broader term, another subject, or clear the filters.</p><button onClick={() => filter({ query: "", domain: "", kind: "" })}>Show all sources</button></div>}
       {results.length > visibleCount && <button className={styles.more} onClick={() => setVisibleCount(count => count + PAGE_SIZE)}>Show more sources ({results.length - visibleCount} remaining)</button>}
@@ -101,7 +107,7 @@ export default function ResearchDiscovery({ sources, instruments, initialState }
       <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>PUT THE DETAILS SIDE BY SIDE</p><h2 id="comparison-title">Compare before you combine.</h2></div>{selected.length > 0 && <button onClick={() => { filter({ compare: [] }); setMessage("Comparison cleared."); }}>Clear comparison</button>}</div>
       <p className={styles.comparisonIntro}>Choose up to three sources. Check their clocks, representation and limitations before treating them as compatible inputs.</p><p className={styles.liveMessage} role="status">{message}</p>
       {selected.length ? <><div className={styles.tableWrap} tabIndex={0} role="region" aria-label="Selected source comparison"><table><caption>Source descriptions only. Runtime health, exact units and spatial or temporal compatibility must be checked in the source records.</caption><thead><tr><th scope="col">Compare</th>{selected.map(source => <th scope="col" key={source.id}>{source.shortTitle}<button aria-label={`Remove ${source.shortTitle} from comparison`} onClick={() => toggle(source.id)}>Remove</button></th>)}</tr></thead><tbody>{([
-        ["Provider", (source: DiscoverySource) => source.organization], ["Representation", (source: DiscoverySource) => REPRESENTATIONS[source.kind]], ["Time & freshness", (source: DiscoverySource) => source.freshness], ["Update rhythm", (source: DiscoverySource) => source.cadence], ["Scientific limits", (source: DiscoverySource) => source.boundary], ["Missing data", (source: DiscoverySource) => source.fallback],
+        ["Provider", (source: DiscoverySource) => source.organization], ["Representation", (source: DiscoverySource) => REPRESENTATIONS[source.kind]], ["Time & freshness", (source: DiscoverySource) => source.freshness], ["Update rhythm", (source: DiscoverySource) => source.cadence], ["Scientific limits", (source: DiscoverySource) => source.boundary], ["Missing data", (source: DiscoverySource) => source.fallback], ["Attribution & reuse", (source: DiscoverySource) => <SourceAttribution value={source.attribution} />],
       ] as const).map(([label, value]) => <tr key={label}><th scope="row">{label}</th>{selected.map(source => <td key={source.id}>{value(source)}</td>)}</tr>)}<tr><th scope="row">Original source</th>{selected.map(source => <td key={source.id}><a href={source.sourceHref} {...external}>Inspect provider ↗</a>{source.downloadHref && <a href={source.downloadHref} {...external}>{source.downloadLabel} ↗</a>}</td>)}</tr></tbody></table></div><a className={styles.primary} href={sourceMapHref(selected.map(source => source.id))}>Explore selected sources on the map ↗</a><p className={styles.small}>Map services can be unavailable or require a closer zoom. A shared map is a starting point for investigation; it does not establish causation or a reviewed analysis.</p></> : <div className={styles.empty}><span aria-hidden="true">＋</span><h3>Bring a few sources together.</h3><p>Use “Compare” on a source, or choose a guided investigation above.</p><a href="#source-catalog">Browse the catalogue ↑</a></div>}
     </section>
 
