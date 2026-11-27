@@ -21,6 +21,7 @@ const QUESTIONS = [
   ['heat-and-rain', 'When did heat, frost and rain shape the season?', '3 stations · 2020–2025 · daily weather observations'],
   ['county-drought', 'How often did drought cover your county?', '105 counties · 313 weekly assessments · 2020–2025'],
   ['soil-profile', 'What changed beneath the surface?', '2 stations · 5 measured depths · daily soil moisture & temperature'],
+  ['daily-air-quality', 'When did the air change?', '12 reporting counties · EPA daily AQI · 2020–2025'],
   ['climate-stripes', 'How has Kansas warmed?', 'Since 1895 · 10 areas · temperature, rain & drought'],
   ['census-mosaic', 'Which counties are changing?', '105 counties · population, births & migration'],
   ['river-memory', 'When did the rivers surge?', '3 gauges · daily flow · compare the record'],

@@ -20,6 +20,7 @@
 .tool { --accent: var(--teal); display: grid; grid-template-columns: 12rem minmax(0, 1fr) 13rem; gap: 2.4rem; padding-block: 2.4rem; border-bottom: 1px solid var(--line); }
 .tool[data-tool=drought] { --accent: var(--amber); }
 .tool[data-tool=soil] { --accent: #bed3a1; }
+.tool[data-tool=air] { --accent: #c7d8e7; }
 .toolScope { border-left: 2px solid var(--accent); padding-left: 1rem; align-self: start; }
 .toolIndex { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: .62rem; }
 .toolScope > strong { display: block; font: 400 4rem/1 Georgia, serif; letter-spacing: -.04em; color: var(--accent); margin-block: .9rem .8rem; }

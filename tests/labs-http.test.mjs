@@ -17,7 +17,7 @@ test('production atlas serves its assets and retains the story publication bound
   const html = await response.text();
   for (const text of ['Ask more of the record.', 'County Observatory', 'Signal Studio', 'Climate Stripes', 'Research instruments', 'Source observatory', 'Return to the Kansas map']) assert.ok(html.includes(text), text);
   assert.ok(html.includes('Open labs with data ('));
-  for (const href of ['/science', '/labs/heat-and-rain', '/labs/county-drought', '/labs/soil-profile']) assert.ok(html.includes(`href="${href}"`), href);
+  for (const href of ['/science', '/labs/heat-and-rain', '/labs/county-drought', '/labs/soil-profile', '/labs/daily-air-quality']) assert.ok(html.includes(`href="${href}"`), href);
   assert.ok(html.includes('These open labs include public records from NOAA'));
   assert.ok(!html.includes('kfm-story-bundle-v1'), 'no private snapshot is embedded in the HTML');
   assert.ok(!html.includes('127.0.0.1:4360'), 'no owner-PC address is a public dependency');

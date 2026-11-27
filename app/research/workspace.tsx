@@ -72,11 +72,12 @@ export default function ResearchDiscovery({ sources, instruments, initialState }
 
     <section className={styles.section} id="observation-tools" aria-labelledby="observation-tools-title">
       <div className={styles.observationTools}>
-        <div><p className={styles.eyebrow}>TRY THE OBSERVATIONS · 2020–2025</p><h2 id="observation-tools-title">From a question to a usable record.</h2><p>Explore daily weather, weekly county drought and measured soil depths. Inspect coverage, change the question and download the source-linked observations.</p><Link className={styles.primary} href="/science">Choose a science question <span aria-hidden="true">↗</span></Link><p className={styles.small}>Provider context with its original dates and missing values. Scientific review and KFM dataset admission remain pending.</p></div>
+        <div><p className={styles.eyebrow}>TRY THE OBSERVATIONS · 2020–2025</p><h2 id="observation-tools-title">From a question to a usable record.</h2><p>Explore daily weather, weekly county drought, measured soil depths and daily county air quality. Inspect coverage, change the question and download the source-linked observations.</p><Link className={styles.primary} href="/science">Choose a science question <span aria-hidden="true">↗</span></Link><p className={styles.small}>Provider context with its original dates and missing values. Scientific review and KFM dataset admission remain pending.</p></div>
         <ul className={styles.observationToolLinks}>
           <li><Link href="/labs/heat-and-rain"><span>Heat &amp; Rain Lab</span><h3>When did heat, frost and rain shape the season?</h3><small>NOAA GHCN-Daily · 3 stations · 2020–2025</small><b aria-hidden="true">↗</b></Link></li>
           <li><Link href="/labs/county-drought"><span>County Drought Lab</span><h3>How often did drought cover your county?</h3><small>U.S. Drought Monitor · 105 counties · 313 assessments</small><b aria-hidden="true">↗</b></Link></li>
           <li><Link href="/labs/soil-profile"><span>Soil Profile Lab</span><h3>What changed beneath the surface?</h3><small>NOAA USCRN · 2 stations · 5 measured depths</small><b aria-hidden="true">↗</b></Link></li>
+          <li><Link href="/labs/daily-air-quality"><span>Daily Air Quality Lab</span><h3>When did the air change?</h3><small>EPA AirData · 12 reporting counties · 2020–2025</small><b aria-hidden="true">↗</b></Link></li>
         </ul>
       </div>
     </section>
