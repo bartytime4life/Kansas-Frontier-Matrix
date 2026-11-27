@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-python-profile-reconciliation-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/domains/soil/crop_casma_tiles/README.md",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
+    "tests/ci/test_install_python_ci.py",
+    "tools/ci/README.md",
+    "tools/ci/install_python_ci.py",
+    "tools/ci/python-test.lock"
+  ],
+  "artifact_hashes": {
+    "pipelines/domains/soil/crop_casma_tiles/README.md": "sha256:96cc4f50270f8d559270a26b7918909bb64075a4291316896ad02890d10e6dd9",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock": "sha256:189363133d6c68b2b9912557a8c6516361a0da4dae7af5561cb3a4e943480fc8",
+    "tests/ci/test_install_python_ci.py": "sha256:3d376d7294ab0ba06ad19a1d0a415d26bee2c0d70a792bd9c447506b63d9f84c",
+    "tools/ci/README.md": "sha256:587770d95e5ce9f3011e38cdd0104ece43ad47acaeda032b237a4df6185df8b3",
+    "tools/ci/install_python_ci.py": "sha256:1195be27741bdca1317ff9e66aec8678a41bdb3697fa2e97bc49ac41caecd671",
+    "tools/ci/python-test.lock": "sha256:00bd13d062024b15d3fd81bb5e415b7b52f75f7a174b95948d2a6de3a46cd68d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Exact runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "pinned repository inspection",
+      "official PyPI release metadata",
+      "uv 0.11.16 dependency resolution without builds",
+      "isolated hash-locked Python 3.12 and 3.14 installs",
+      "synthetic offline tests and package builds"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:02d3102fe56e3deefd9c75982046607864db0487b854e611e6c43edd6a2235a4",
+      "sha256:aba0f7c78f0d63e00c028731c72c2316e9a2b9a9705f6a103d8520d5fc32c473",
+      "sha256:575c0e02a7cfbe2fa76db80d2ff8ff5f84402cb618d0223b70728bad2cb96217",
+      "sha256:575c0e02a7cfbe2fa76db80d2ff8ff5f84402cb618d0223b70728bad2cb96217",
+      "sha256:308ffdcf0938d5cf374909aff206847d84e1fe505bbcdf7f5526a3118f04c585",
+      "sha256:5a211f3e212ed44487f18f6c46198e1ac75d9ffcb6949bc4cfbaee0d1770a60d"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_refs": [
+      "repo:main@4d6f6970ae2d79392f99f5ce44e0c22712730a91",
+      "https://pypi.org/pypi/numpy/2.5.5/json",
+      "https://pypi.org/pypi/hatchling/1.33.0/json"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/domains/soil/crop_casma_tiles/README.md": "PROPOSED",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock": "PROPOSED",
+    "tests/ci/test_install_python_ci.py": "PROPOSED",
+    "tools/ci/README.md": "PROPOSED",
+    "tools/ci/install_python_ci.py": "PROPOSED",
+    "tools/ci/python-test.lock": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "input-lock-reconciliation",
+      "outcome": "PASS",
+      "reason": "Tile lock regeneration changes only NumPy 2.5.4 to 2.5.5, preserving all other package blocks; the shared test lock changes only Hatchling 1.32.0 to 1.33.0 and its two official release hashes. No unrelated lock or migration ledger changed."
+    },
+    {
+      "gate": "pre-install-drift-denial",
+      "outcome": "PASS",
+      "reason": "28 installer tests pass on Python 3.12 and 3.14, including mismatch denial before subprocess execution, direct-pin normalization, missing/unpinned/duplicate inputs, invalid build metadata and unrelated-profile isolation."
+    },
+    {
+      "gate": "actual-locked-toolchain",
+      "outcome": "PASS",
+      "reason": "Fresh disposable hash-locked binary installs on Python 3.12.3 and 3.14.4 contain NumPy 2.5.5 and Hatchling 1.33.0. pip check passes; pipeline-core wheels build and install with no index, dependency resolution or build isolation; their synthetic imported-stage smoke holds release_authorized false."
+    },
+    {
+      "gate": "synthetic-compatibility-and-packaging",
+      "outcome": "PASS",
+      "reason": "Each interpreter passes two CropCASMA tests, two historical-topographic tile tests and 176 pipeline-core/NLCD/root-distribution tests. Real root wheel, sdist, rebuild, canary exclusions, and ordinary/editable target installs pass with Hatchling 1.33.0. Initial nine failures per interpreter were missing files in the sparse checkout; unchanged tests pass after those existing CLI/Mesonet files were materialized."
+    },
+    {
+      "gate": "broader-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not locally executed on Python 3.11, 3.13 or 3.15 or as a full repository suite. Exact-head hosted CI remains a separate result after draft publication."
+    },
+    {
+      "gate": "human-review-and-release",
+      "outcome": "SKIPPED",
+      "reason": "Review pending. No merge, installed-PC/native/hosted-runtime change, source admission, real provider capture, release, deployment or publication authorized by these results."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "numpy-2.5.5-artifacts",
+      "validated": true,
+      "evidence_ref": "https://pypi.org/pypi/numpy/2.5.5/json"
+    },
+    {
+      "id": "hatchling-1.33.0-artifacts",
+      "validated": true,
+      "evidence_ref": "https://pypi.org/pypi/hatchling/1.33.0/json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T20:42:10.837334+00:00",
+  "emitter": "Codex interactive dependency-profile reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This additive authoring receipt binds six existing implementation/lock/test/documentation paths. It is not data lineage, a PolicyDecision, review approval or publication authority. Historical receipts and the immutable dependency migration ledger are preserved. The candidate was rebased from a727f167 to 4d6f6970 across disjoint Site/SQL-feed changes; final validation and GitHub source readback remain separately recorded."
+}
