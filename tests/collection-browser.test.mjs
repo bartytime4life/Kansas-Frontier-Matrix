@@ -39,7 +39,7 @@ test('collection URLs preserve text search, years, anchors and unrelated paramet
  assert.equal(new URL(model.collectionLocation('?q=tornado','','','name',false),'https://example.test').searchParams.has('collection'),false);
 });
 
-async function fixture({search='',hash='#collections',historyFails=false}={}){
+async function fixture({search='',hash='#collections',historyFails=false,scrollElements=null,bindBoundary=()=>()=>{}}={}){
  const calls=[],pending=[],focus=[],updates=[],startup=[],recordTimers=[],location={search,hash};
  const history={state:{router:'retained'},replaceState(state,_unused,url){
   if(historyFails)throw new Error('History unavailable');
@@ -50,11 +50,12 @@ async function fixture({search='',hash='#collections',historyFails=false}={}){
   '../collection-metadata-panel':{default:'collection-metadata-panel'},'../collection-metadata':metadata,
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise(resolve=>pending.push(resolve));},rowLabel:row=>row.values.name,textValue:String},
   './search':{default:'archive-search'},'./freshness':{fetchCatalogFreshness:async()=>null,loadedThrough:()=>null,freshnessLine:()=>''},
-  './collection-browser':model,'./library.module.css':css,'./collection-browser.module.css':css,
+  './collection-browser':model,'./scroll-boundary':{bindCollectionScrollBoundary:bindBoundary},'./library.module.css':css,'./collection-browser.module.css':css,
  },{URLSearchParams,location,history,setTimeout:(fn,ms)=>ms===0?(startup.push(fn),0):ms===25000?(recordTimers.push(fn),{recordTimer:true}):setTimeout(fn,ms),clearTimeout:token=>{if(!token?.recordTimer)clearTimeout(token);}});
  const dispose=h.dispose;h.dispose=()=>{dispose();for(const resolve of pending)resolve(answer);};
  const render=()=>{
   const tree=h.render(h.exports.default,{});
+  if(scrollElements){findNode(tree,n=>n.type==='main').props.ref.current=scrollElements.page;findNode(tree,n=>n.props?.className==='results').props.ref.current=scrollElements.list;}
   input(tree).props.ref.current={focus:()=>focus.push('finder')};
   const title=heading(tree);if(title)title.props.ref.current={focus:()=>focus.push(title.props.children),scrollIntoView(){}};
   findNode(tree,n=>n.props?.id==='archive-comparison-heading').props.ref.current={focus:()=>focus.push('comparison')};
@@ -69,6 +70,14 @@ async function fixture({search='',hash='#collections',historyFails=false}={}){
   async answer(value=answer){pending.shift()(value);await settle();tree=render();},
  };
 }
+
+test('collection boundary handling attaches to the actual list and page refs and cleans up on disposal',async()=>{
+ const page={},list={},calls=[];let removed=0;
+ const f=await fixture({scrollElements:{page,list},bindBoundary:(inner,outer)=>{calls.push([inner,outer]);return()=>{removed++;};}});
+ try{assert.equal(calls.length,1);assert.equal(calls[0][0],list);assert.equal(calls[0][1],page);f.refresh();assert.equal(calls.length,1,'rerendering the list does not duplicate native listeners');}
+ finally{f.h.dispose();}
+ assert.equal(removed,1);
+});
 
 test('choosing a collection focuses its committed heading and preserves history state and search context',async()=>{
  const f=await fixture({search:'?q=tornado&source=texts&from=1890&to=1900'});try{
@@ -157,7 +166,7 @@ async function fieldFixture(){
   'next/link':{default:'a'},'../recovered-collections':library,
   '../collection-metadata-panel':{default:'collection-metadata-panel'},'../collection-metadata':metadata,
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise((resolve,reject)=>pending.push({resolve,reject}));},rowLabel:()=>'',textValue:String},
-  './search':{default:'archive-search'},'./freshness':{},'./collection-browser':model,'./library.module.css':css,'./collection-browser.module.css':css,
+  './search':{default:'archive-search'},'./freshness':{},'./collection-browser':model,'./scroll-boundary':{bindCollectionScrollBoundary:()=>()=>{}},'./library.module.css':css,'./collection-browser.module.css':css,
  },{setTimeout:(fn,ms)=>{assert.equal(ms,25000);const timer={fn,cleared:false};timers.push(timer);return timer;},clearTimeout:timer=>{timer.cleared=true;}},'\nexport {RecordField};');
  const props={value:{longField:true,preview:'Recorded preview'},id:'bulk-newspaper-pages',database:'bulk',record:'synthetic-1',field:'text'};
  let tree;

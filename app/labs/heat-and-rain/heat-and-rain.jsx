@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import ScienceNav from "../../science/science-nav";
 import { loadClimateSnapshot } from "./snapshot-loader.mjs";
 import { analyseClimate, climateCsv, climateReceipt, readingLabel } from "./climate-model.mjs";
 import styles from "./heat-and-rain.module.css";
@@ -317,9 +318,7 @@ export default function HeatAndRain({ manifest }) {
 
   return <main className={styles.page}>
     <div className={styles.frame}>
-      <nav className={styles.navigation} aria-label="Science lab navigation">
-        <Link href="/">← KFM Explorer</Link><Link href="/science">Science tools</Link><Link href="/observatory/sources">Research & sources</Link><a href="#climate-evidence">Source & methods ↓</a>
-      </nav>
+      <ScienceNav active="weather" selection={selection} sourceHref="#climate-evidence" sourceLabel="Source & methods ↓" extraLinks={[{ href: "/observatory/sources", label: "Research & sources ↗" }]} />
       <header className={styles.hero}>
         <div><span className={styles.eyebrow}>Kansas field notebook · 01</span><h1>Heat <span>&</span> Rain Lab</h1><p>Turn daily weather observations into useful questions about growing seasons, heat exposure and water.</p></div>
         <div className={styles.scope}><span className={styles.badge}><i />NOAA station snapshots</span><strong>2020–2025</strong><span>{manifest.stations.length} Kansas stations · daily observations</span></div>

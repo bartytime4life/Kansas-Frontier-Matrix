@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { PUBLIC_SITE_ORIGIN } from "../../crawler-discovery";
 import ScienceComparison from "./comparison-client";
 import styles from "./comparison.module.css";
@@ -11,11 +10,10 @@ export const metadata = {
 
 export default function ScienceComparisonPage() {
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Comparison navigation"><Link href="/science">← Science tools</Link><Link href="/">KFM Explorer ↗</Link></nav>
-    <header className={styles.hero}>
+
+    <ScienceComparison><header className={styles.hero}>
       <h1>Compare Topeka science years</h1>
       <p>Put Topeka and Shawnee County on the same monthly timeline. Compare two years of precipitation, drought, reported air quality and modeled sunlight from 2020–2025.</p>
-    </header>
-    <ScienceComparison />
+    </header></ScienceComparison>
   </div></main>;
 }

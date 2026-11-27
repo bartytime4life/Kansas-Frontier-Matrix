@@ -12,7 +12,8 @@ const snapshot = validateDroughtSnapshot(JSON.parse(await readFile(new URL(`../p
 const analysis = analyseDrought(snapshot);
 const source = (await readFile(new URL("county-drought.jsx", route), "utf8"))
   .replace('import styles from "./county-drought.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
-  .replace('import Link from "next/link";', 'const Link = "a";');
+  .replace('import Link from "next/link";', 'const Link = "a";')
+  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;');
 
 function compile(source, fileName) {
   let javascript = ts.transpileModule(source, {
@@ -189,6 +190,8 @@ test("science entry offers five real routes and uses actual manifest scope count
   const sunlight = JSON.parse(await readFile(new URL("../labs/sunlight-and-sky/snapshot-manifest.json", scienceRoute), "utf8"));
   const hubSource = (await readFile(new URL("page.tsx", scienceRoute), "utf8"))
     .replace('import Link from "next/link";', 'const Link = "a";')
+  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;')
+    .replace('import ScienceLauncher from "./science-launcher";', 'const ScienceLauncher = () => null;')
     .replace('import styles from "./science.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
     .replace('import climate from "../labs/heat-and-rain/snapshot-manifest.json";', `const climate = ${JSON.stringify(climate)};`)
     .replace('import drought from "../labs/county-drought/snapshot-manifest.json";', `const drought = ${JSON.stringify(manifest)};`)

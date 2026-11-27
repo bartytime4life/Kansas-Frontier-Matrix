@@ -55,6 +55,7 @@ export default function AboutPage() {
       <Link href="/research">Research Discovery</Link>
       <Link href="/">Open the map</Link>
       <Link href="/privacy">Privacy + contact</Link>
+      <Link href="/science/services">Custom science work</Link>
     </nav>
 
     <main className="about-content" id="about-main" tabIndex={-1}>
