@@ -44,6 +44,22 @@ smaller image does not. The immutable image reference binds the selected
 distribution and its layers, but does not authenticate a production deployment
 or admit GDAL as a KFM runtime dependency.
 
+Image acquisition has at most three attempts against that same digest and
+platform. Each Docker pull has a 120-second subprocess limit; only that limit
+or Docker's `Client.Timeout exceeded while awaiting headers` transport error
+permits another attempt, with delays of two then four seconds. Other pull
+errors stop immediately. Exhaustion remains `ERROR / GDAL_IMAGE_UNAVAILABLE`
+and a nonzero command exit; no acquisition error is converted to a supported
+consumer result.
+
+The output directory retains each attempt's stdout/stderr and a
+`gdal-image-pull-attempts.json` log index with command, timeout, exit status,
+retry decision and content hashes. The existing summary log names describe
+the final attempt. This acquisition log is diagnostic evidence, not a new
+result schema or release receipt. Image authentication, version, driver and
+consumer checks run only after acquisition and are never retried. The existing
+workflow job limit, immutable image identity and finite result schema remain.
+
 ## Executed checks
 
 The repository runner:

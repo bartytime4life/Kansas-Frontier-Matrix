@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-geoparquet-2-rc-gdal-consumer-acquisition-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py"
+  ],
+  "artifact_hashes": {
+    "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md": "sha256:42d808b361e6b5f624d9955a1adabaf06e7a5e03c8c68d39a319eb0871d06349",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "sha256:4ce674e76eece72811f013ffe8df03f36c9f0d2db3ae9419449573d3eabe8b5c",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "sha256:8719cda3d8b608371e6bee4ce2fdacb819429dec0e697c3602806919861fb9bb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Exact runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:132696c8db1b904c885d88c155ef9bdbde62b937c949ae1140b53c27296cb129",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "pinned repository and existing CI inspection",
+      "isolated synthetic subprocess and carrier tests",
+      "hash-locked existing PyArrow profile installation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:04502bf315d5ef4f3f0e0815d06e5523f68ac939f5e91d9b5186e140e20046f6",
+      "sha256:0f71b6231bd648d298e72ac49cb073af606bacda29570c8c65e9cfcf223fb8dc",
+      "sha256:2c3a0a2ac2192891d7c0d197c6461de4001a35a138e6ef78c7fa1774b2302fb5",
+      "sha256:a0a6b84f3d02ada72ffab1cce29a6ca660ee156d31132113d3ce071ca61cf2f8",
+      "sha256:e64c0c23c68686195634031690a087936159d1f27a04a9d13eb2c82e480a01df"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md"
+    ],
+    "evidence_refs": [
+      "repo:main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/46070150980/job/140744876075"
+    ]
+  },
+  "truth_labels": {
+    "contracts/release/geoparquet_2_rc_gdal_consumer_probe.md": "PROPOSED",
+    "tests/release/test_geoparquet_2_rc_gdal_consumer_probe.py": "PROPOSED",
+    "tools/experiments/geoparquet/run_gdal_3_13_2_consumer_probe.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "existing-failure-diagnosis",
+      "outcome": "PASS",
+      "reason": "Existing merge-head job and retained packet record a Docker GHCR response-header connection timeout before any GDAL consumer command. The authored head separately passed 156 checks with three skips. No provider-wide outage or NumPy/Hatchling regression is inferred."
+    },
+    {
+      "gate": "bounded-acquisition-recovery",
+      "outcome": "PASS",
+      "reason": "Eighteen focused probe tests and four subtests pass on Python 3.12.3 and 3.14.4. Three behavior regressions fail against the unchanged baseline runner. Tests cover three-attempt exhaustion, first-time success, transport recovery with retained hashes, local subprocess deadline, permanent-error denial and no retry of identity or semantic failures."
+    },
+    {
+      "gate": "synthetic-carrier-compatibility",
+      "outcome": "PASS",
+      "reason": "Combined source/consumer selection passes 24 tests and four subtests under Python 3.12 with the existing hash-locked PyArrow 25.0.0 wheel. No actual local Docker pull or container execution occurred."
+    },
+    {
+      "gate": "hosted-recovery",
+      "outcome": "SKIPPED",
+      "reason": "New exact-head CI is a separate result after draft creation. Original failed run is preserved and not rerun. No live GHCR recovery, real GDAL execution, provider data, deployment, publication, admission or human acceptance is established."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merge-head-gdal-acquisition-timeout",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/46070150980/job/140744876075"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T21:36:36.857070+00:00",
+  "emitter": "Codex interactive existing-work follow-up",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive authoring receipt for three existing responsibility-owned paths. Original failed CI packet, historical receipts and all consumer assertions remain. Same immutable image and platform; only acquisition timeout recovery is added. Image authentication and consumer execution are not retried. Review pending; no merge or release authority."
+}

@@ -8,6 +8,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -27,6 +28,8 @@ IMAGE_REFERENCE = (
     "ghcr.io/osgeo/gdal:alpine-normal-3.13.2@" + IMAGE_INDEX_SHA256
 )
 IMAGE_PLATFORM = "linux/amd64"
+IMAGE_PULL_TIMEOUT_SECONDS = 120
+IMAGE_PULL_RETRY_DELAYS_SECONDS = (2, 4)
 PYARROW_WHEEL_SHA256 = (
     "sha256:5d1dbf24e151042f2fa3c129563f65d66674128868496fb008c4272b16bdf778"
 )
@@ -114,7 +117,9 @@ def _source(root: Path, manifest_path: Path) -> dict[str, Any]:
     return manifest
 
 
-def _run(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
+def _run(
+    command: Sequence[str], *, timeout: int | None = None
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         list(command),
         check=False,
@@ -122,11 +127,73 @@ def _run(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
         text=True,
         encoding="utf-8",
         errors="replace",
+        timeout=timeout,
     )
 
 
 def _write_log(output: Path, name: str, value: str) -> None:
     (output / name).write_text(value, encoding="utf-8")
+
+
+def _timeout_text(value: str | bytes | None) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
+def _pull_image(output: Path) -> subprocess.CompletedProcess[str]:
+    """Retry only transport timeouts while retaining every acquisition attempt."""
+    command = ["docker", "pull", "--platform", IMAGE_PLATFORM, IMAGE_REFERENCE]
+    attempts = []
+    for index in range(len(IMAGE_PULL_RETRY_DELAYS_SECONDS) + 1):
+        timed_out = False
+        try:
+            completed = _run(command, timeout=IMAGE_PULL_TIMEOUT_SECONDS)
+        except subprocess.TimeoutExpired as error:
+            timed_out = True
+            completed = subprocess.CompletedProcess(
+                command,
+                124,
+                _timeout_text(error.stdout),
+                _timeout_text(error.stderr)
+                + f"\nImage acquisition exceeded {IMAGE_PULL_TIMEOUT_SECONDS} seconds.\n",
+            )
+        retryable = completed.returncode != 0 and (
+            timed_out
+            or "Client.Timeout exceeded while awaiting headers" in completed.stderr
+        )
+        retry = retryable and index < len(IMAGE_PULL_RETRY_DELAYS_SECONDS)
+        prefix = f"gdal-image-pull.attempt-{index + 1}"
+        _write_log(output, prefix + ".stdout.txt", completed.stdout)
+        _write_log(output, prefix + ".stderr.txt", completed.stderr)
+        attempts.append(
+            {
+                "attempt": index + 1,
+                "command": command,
+                "timeout_seconds": IMAGE_PULL_TIMEOUT_SECONDS,
+                "returncode": completed.returncode,
+                "timed_out": timed_out,
+                "retryable": retryable,
+                "retry_scheduled": retry,
+                "retry_delay_seconds": IMAGE_PULL_RETRY_DELAYS_SECONDS[index] if retry else 0,
+                "stdout_path": prefix + ".stdout.txt",
+                "stdout_sha256": _sha256_bytes(completed.stdout.encode("utf-8")),
+                "stderr_path": prefix + ".stderr.txt",
+                "stderr_sha256": _sha256_bytes(completed.stderr.encode("utf-8")),
+            }
+        )
+        _write_log(
+            output,
+            "gdal-image-pull-attempts.json",
+            json.dumps(attempts, indent=2, sort_keys=True) + "\n",
+        )
+        # Keep the existing summary log names for the final acquisition result.
+        _write_log(output, "gdal-image-pull.stdout.txt", completed.stdout)
+        _write_log(output, "gdal-image-pull.stderr.txt", completed.stderr)
+        if not retry:
+            return completed
+        time.sleep(IMAGE_PULL_RETRY_DELAYS_SECONDS[index])
+    raise AssertionError("image acquisition must return a bounded result")
 
 
 def _docker_run(root: Path) -> list[str]:
@@ -284,9 +351,7 @@ def run(root: Path, manifest_path: Path, output: Path) -> dict[str, Any]:
     entries = source["carriers"]
 
     pull_command = ["docker", "pull", "--platform", IMAGE_PLATFORM, IMAGE_REFERENCE]
-    pull = _run(pull_command)
-    _write_log(output, "gdal-image-pull.stdout.txt", pull.stdout)
-    _write_log(output, "gdal-image-pull.stderr.txt", pull.stderr)
+    pull = _pull_image(output)
     if pull.returncode:
         for key, entry in entries.items():
             result["carriers"][key] = _empty_carrier(entry, pull_command, pull.stderr)
