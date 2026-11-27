@@ -9,22 +9,36 @@ const text = node => typeof node === "string" || typeof node === "number" ? Stri
 const named = (tree, name) => findNode(tree, node => node.props?.name === name);
 const button = (tree, label) => findNode(tree, node => node.type === "button" && text(node).startsWith(label));
 
-test("the question launcher opens native year selectors while explaining tool-specific coverage", async t => {
+test("the science directory filters by a question or source and opens the selected year", async t => {
+  const directory = await import("../app/science/science-directory.mjs");
+  const entries = [
+    { id: "weather", label: "Heat & Rain", href: "/labs/heat-and-rain", topic: "Weather & climate", question: "Compare daily temperatures and precipitation.", coverage: "3 stations", source: "NOAA", kind: "Lab", native: true },
+    { id: "drought", label: "County Drought", href: "/labs/county-drought", topic: "Water & land", question: "Inspect drought area.", coverage: "105 counties", source: "U.S. Drought Monitor", kind: "Lab", native: true },
+  ];
   const h = await componentHarness("app/science/science-launcher.jsx", {
-    "next/link": { default: "a" }, "./science-handoff.mjs": handoff, "./science.module.css": { default: styles },
+    "next/link": { default: "a" }, "./science-handoff.mjs": handoff, "./science-directory.mjs": directory,
+    "./science.module.css": { default: styles },
   });
   t.after(() => h.dispose());
-  let tree = h.render(h.exports.default);
-  assert.ok(findNode(tree, node => node.props?.href === "/labs/heat-and-rain?year=2025"));
-  findNode(tree, node => node.type === "select" && node.props.value === "weather").props.onChange({ target: { value: "drought" } });
-  findNode(tree, node => node.type === "select" && node.props.value === 2025).props.onChange({ target: { value: "2022" } });
-  tree = h.render(h.exports.default);
+  let tree = h.render(h.exports.default, { entries });
+  assert.ok(findNode(tree, node => node.props?.href === "/labs/heat-and-rain"));
+  assert.ok(findNode(tree, node => node.props?.href === "/labs/county-drought"));
+  const query = () => findNode(tree, node => node.type === "input" && node.props.type === "search");
+  query().props.onChange({ target: { value: "Drought, 105" } });
+  tree = h.render(h.exports.default, { entries });
+  assert.equal(findNode(tree, node => node.props?.href === "/labs/heat-and-rain"), undefined);
+  assert.match(text(tree), /1 result.*105 counties.*U.S. Drought Monitor/);
+  const year = findNode(tree, node => node.type === "select" && text(node).includes("Default year"));
+  year.props.onChange({ target: { value: "2022" } });
+  tree = h.render(h.exports.default, { entries });
   assert.ok(findNode(tree, node => node.props?.href === "/labs/county-drought?from=2022&to=2022"));
-  assert.match(text(tree), /105 Kansas counties/);
-  assert.match(text(tree), /Choose the place/);
-  assert.match(text(tree), /Locations are not matched across tools/);
-  findNode(tree, node => node.type === "select" && node.props.value === "drought").props.onChange({ target: { value: "comparison" } });
-  assert.ok(findNode(h.render(h.exports.default), node => node.props?.href === "/science/compare?year=2022&compare=2025"));
+  query().props.onChange({ target: { value: "No matching record" } });
+  tree = h.render(h.exports.default, { entries });
+  assert.match(text(tree), /0 results.*Try another word/);
+  button(tree, "Clear filters").props.onClick();
+  tree = h.render(h.exports.default, { entries });
+  assert.equal(query().props.value, "");
+  assert.match(text(tree), /2 results/);
 });
 
 async function navHarness(t) {

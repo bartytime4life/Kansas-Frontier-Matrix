@@ -32,7 +32,10 @@ const metric = {
     comparison: i === 0 ? covered(null, 0, 31) : covered(5, 30, 31),
   })),
 };
-const report = { selection: { year: 2024, compareYear: 2023 }, series: [metric] };
+const report = {
+  location: { id: "topeka", name: "Topeka and Shawnee County" },
+  selection: { year: 2024, compareYear: 2023 }, series: [metric],
+};
 const rendered = renderToStaticMarkup(createElement(ComparisonView, { report }));
 
 test("comparison graph shares metric scale and distinguishes a reported zero from missing data", () => {
@@ -52,5 +55,10 @@ test("native month rows preserve year, value and support, with original provider
   assert.match(rendered, /Original provider file · 2024/);
   assert.match(rendered, /Captured 2026-11-25/);
   assert.match(rendered, /Topeka · station/);
+  assert.match(rendered, /Topeka and Shawnee County/);
   assert.match(rendered, /href="\/labs\/heat-and-rain\?station=USW00013996&amp;year=2024"/);
+  const wichita = renderToStaticMarkup(createElement(ComparisonView, {
+    report: { ...report, location: { id: "wichita", name: "Wichita and Sedgwick County" } },
+  }));
+  assert.match(wichita, /href="\/labs\/heat-and-rain\?station=USW00003928&amp;year=2024"/);
 });

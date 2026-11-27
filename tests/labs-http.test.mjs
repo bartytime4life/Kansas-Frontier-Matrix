@@ -15,8 +15,13 @@ test('production atlas serves its assets and retains the story publication bound
   const response = await fetch(origin + '/labs?story=climate-stripes');
   assert.equal(response.status, 200);
   const html = await response.text();
-  for (const text of ['Ask more of the record.', 'County Observatory', 'Signal Studio', 'Climate Stripes', 'Research instruments', 'Source observatory', 'Return to the Kansas map']) assert.ok(html.includes(text), text);
+  for (const text of ['Research atlas', 'County Observatory', 'Signal Studio', 'Climate Stripes', 'Research instruments', 'Source observatory', 'Return to the Kansas map']) assert.ok(html.includes(text), text);
   assert.ok(html.includes('Open labs with data ('));
+  assert.match(html, /id="research-labs"/);
+  assert.match(html, /value="bundled">Bundled snapshots/);
+  assert.match(html, /href="\/science"[^>]*>← Science &amp; Labs/);
+  assert.ok(html.indexOf('Search research labs') < html.indexOf('Preview County Observatory and Signal Studio'));
+  assert.doesNotMatch(html, /Kansas county population preview|KANSAS \/ NOAA COMPLETE-YEAR RECORD|source-data preview/);
   for (const href of ['/science', '/labs/heat-and-rain', '/labs/county-drought', '/labs/soil-profile', '/labs/daily-air-quality', '/labs/sunlight-and-sky']) assert.ok(html.includes(`href="${href}"`), href);
   assert.ok(html.includes('These open labs include public records from NOAA'));
   assert.ok(!html.includes('kfm-story-bundle-v1'), 'no private snapshot is embedded in the HTML');

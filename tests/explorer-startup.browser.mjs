@@ -3785,6 +3785,42 @@ for (const [width,height] of [[1440,900],[393,852]]) {
   });
 }
 
+for (const [width, height] of [[1440, 900], [320, 720]]) {
+  test(`science navigation is direct from welcome and Explorer on ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t, 'default');
+    const p = await pageSession(b, width, height);
+    const verifyScience = () => p.wait(`location.pathname==='/science' && document.querySelector('main h1')?.textContent.includes('Science & Labs')`, 'Science & Labs directory opened');
+    const openScience = async selector => {
+      await droughtPoint(p, selector);
+      await p.key('Tab', 'Tab', 9);
+      await p.evaluate(`document.querySelector('${selector}').focus({preventScroll:true})`);
+      assert.equal(await p.evaluate(`document.activeElement?.matches('${selector}:focus-visible')`), true, 'the direct entry has visible keyboard focus');
+      await p.key('Enter', 'Enter', 13);
+      await verifyScience();
+    };
+    await p.open('/?motion=off');
+    await readyWelcome(p);
+    await revealControl(p, '.welcome-science-entry');
+    await openScience('.welcome-science-entry');
+
+    await p.open('/?motion=off', '1');
+    const entry = width < 761 ? '.mobile-science-entry' : '.explorer-science-entry';
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('${entry}')?.getBoundingClientRect().width>=44`, 'an undismissed Explorer entry meets the touch target');
+    if (width < 761) {
+      const actions = await p.evaluate(`[...document.querySelector('.map-mobile-actions').children].map(action=>action.getBoundingClientRect().width)`);
+      assert.ok(actions.every(size => size >= 44), 'compact navigation keeps every action at least 44px wide');
+    }
+    await openScience(entry);
+
+    const search = `[...document.querySelectorAll('input[type="search"]')].find(input=>input.getAttribute('aria-label')==='Search Science & Labs'||[...input.labels].some(label=>label.textContent.trim()==='Search Science & Labs'))`;
+    await p.wait(search, 'the Science & Labs search field has its visible label');
+    await p.evaluate(`(() => {const field=${search};field.scrollIntoView({block:'center'});field.focus();})()`);
+    await p.call('Input.insertText', { text: 'river flow' });
+    await p.wait(`[...document.querySelectorAll('main a')].some(link=>link.checkVisibility()&&/river flow/i.test(link.textContent))`, 'search exposes a visible River Flow tool link');
+    assert.equal(await p.evaluate(`document.documentElement.scrollWidth > innerWidth + 1`), false, 'the directory stays inside the viewport');
+  });
+}
+
 for (const [width, height] of [[1440, 900], [393, 852]]) {
   test(`science comparison loads verified data and exports on ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t, 'default');
@@ -3829,5 +3865,13 @@ for (const [width, height] of [[1440, 900], [393, 852]]) {
     assert.deepEqual(report?.selection, { year: 2025, compareYear: 2022 });
     assert.equal(report.series.length, 4);
     assert.ok(report.series.every(metric => /^[a-f0-9]{64}$/.test(metric.display.sha256)));
+
+    const place = `[...document.querySelectorAll('section[aria-label="Comparison settings"] select')].find(select=>select.labels[0]?.textContent.startsWith('Comparison area'))`;
+    await p.evaluate(`(() => {const field=${place};field.value='wichita';field.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    await p.wait(`location.search.includes('place=wichita') && document.querySelector('#comparison-results') && document.querySelector('article[aria-labelledby="comparison-air"] footer a')?.getAttribute('href')==='/labs/daily-air-quality?county=20173&year=2025'`, 'the Wichita report links to Sedgwick County observations');
+    assert.equal(requests.length - reads, 2, 'a new area only reads its two location-specific snapshots');
+    await p.evaluate(`history.back()`);
+    await p.wait(`!location.search.includes('place=') && (${place}).value==='topeka' && document.querySelector('article[aria-labelledby="comparison-air"] footer a')?.getAttribute('href')==='/labs/daily-air-quality?county=20177&year=2025'`, 'Back restores the previously verified area');
+    assert.equal(requests.length - reads, 2, 'Back reuses the previous location snapshots');
   });
 }

@@ -43,13 +43,13 @@ export function atlasCoverage(bundle) {
   return first === last ? first : `${first}–${last}`;
 }
 
-export function matchesAtlasStory(story, { query = '', group = 'All', availability = 'all', states = {} } = {}) {
+export function matchesAtlasStory(story, { query = '', group = 'All', availability = 'all' } = {}) {
   const terms = query.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
   const text = [story.title, story.kicker, story.summary, story.group, ...(story.sources || [])].join(' ').toLocaleLowerCase();
   if (terms.some(term => !text.includes(term))) return false;
   if (group !== 'All' && story.group !== group) return false;
   if (availability === 'available' && story.status !== 'guided' && !Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, story.id)) return false;
-  if (availability === 'ready' && (story.status !== 'ready' || states[story.id] !== 'ready')) return false;
+  if (availability === 'bundled' && !Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, story.id)) return false;
   if (availability === 'planned' && story.status !== 'planned') return false;
   return true;
 }

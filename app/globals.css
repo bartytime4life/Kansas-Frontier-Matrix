@@ -4834,6 +4834,13 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .atlas-studio .qwen-header-entry { flex:none; }
 .atlas-studio .topbar .atlas-scope-strip { flex-wrap:nowrap;gap:8px; }
 .atlas-studio .topbar .welcome-header-find { flex:none; }
+.atlas-studio .top-actions > .explorer-science-entry {
+  min-height:44px;height:44px;white-space:nowrap;padding-inline:12px;
+  border-color:#6e9ea0;background:#12363d;color:#e0f9f3;
+}
+.atlas-studio .top-actions > .explorer-science-entry:hover,
+.atlas-studio .map-mobile-actions > .mobile-science-entry:hover { border-color:#b0e7dc;background:#205058; }
+.atlas-studio :is(.explorer-science-entry,.mobile-science-entry):focus-visible { outline:2px solid #f4d198;outline-offset:2px; }
 .qwen-header-entry .qwen-launch-mark { display:grid;place-items:center; }
 .explorer-startup-cover { position:fixed;inset:var(--topbar) 0 0;z-index:219;display:grid;place-items:center;background:#081c29;color:#c7dce4;font-size:14px; }
 .atlas-studio[data-startup="pending"] .explorer-shell { visibility:hidden; }
@@ -4850,6 +4857,8 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 @media(max-width:760px){
  .atlas-studio{--topbar:126px}
  .atlas-studio .topbar{grid-template-rows:54px 72px;column-gap:5px;padding-inline:8px}
+ .atlas-studio .top-actions > .explorer-science-entry{display:none}
+ .atlas-studio .map-mobile-actions > .mobile-science-entry{border-color:#6e9ea0;background:#12363d;color:#e0f9f3;font-size:11px}
  .atlas-studio .qwen-header-entry{font-size:12px;gap:6px}
  .atlas-studio .qwen-header-label{display:inline}
  .atlas-studio .qwen-header-name{display:none}

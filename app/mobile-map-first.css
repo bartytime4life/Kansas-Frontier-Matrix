@@ -6,7 +6,7 @@
  .atlas-studio .topbar { height:54px; min-height:54px; grid-template-rows:54px; grid-template-areas:"search map actions"; }
  .atlas-studio .topbar > .welcome-feature-guide,
  .atlas-studio .topbar > .map-topic-bar { display:none; }
- .map-mobile-actions { grid-template-columns:repeat(4,minmax(0,1fr)); padding:4px; gap:4px; }
+ .map-mobile-actions { grid-template-columns:repeat(5,minmax(0,1fr)); padding:4px; gap:4px; }
  .map-mobile-actions button { min-height:44px; padding:5px; }
  .explorer-shell[data-left="true"] .map-mobile-actions { visibility:hidden; }
  .explorer-shell[data-inspector] > .layer-panel:is([data-panel-mode="layers"],[data-panel-mode="live"]) {
