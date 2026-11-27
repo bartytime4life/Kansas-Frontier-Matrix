@@ -1,0 +1,51 @@
+:global(body):has(.page) { min-width: 0; overflow: auto; }
+
+.page {
+  --ink: #f4efdf;
+  --body: #c3d2d0;
+  --line: #37545a;
+  --accent: #efd196;
+  --link: #a1e3d9;
+  min-height: 100vh;
+  padding: 1rem clamp(1rem, 4vw, 3rem) 3rem;
+  background: #081d25;
+  color: var(--ink);
+  font: 1rem/1.6 system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.frame { max-width: 66rem; margin-inline: auto; }
+.page a { color: var(--link); text-underline-offset: .2em; overflow-wrap: anywhere; }
+.page a:hover { color: var(--ink); }
+.page :is(a, input, select):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.navigation { display: flex; flex-wrap: wrap; gap: .35rem 1.5rem; }
+.navigation a { min-height: 2.75rem; display: inline-flex; align-items: center; }
+.header { padding-block: clamp(1.7rem, 5vw, 4rem) 2rem; }
+.header h1 { margin: 0; font: 400 clamp(2.15rem, 5.4vw, 4.5rem)/1.08 Georgia, serif; letter-spacing: -.035em; }
+.header p, .section > p { max-width: 45rem; color: var(--body); }
+.section { border-top: 1px solid var(--line); padding-block: 2rem; }
+.section h2 { margin: 0 0 1rem; font: 400 clamp(1.55rem, 3vw, 2.35rem)/1.15 Georgia, serif; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: .8rem 1.2rem; max-width: 45rem; }
+.controls label, .report { display: grid; gap: .35rem; font-size: .88rem; min-width: 0; }
+.page :is(select, input) { width: 100%; min-width: 0; min-height: 2.75rem; padding: .45rem .62rem; border: 1px solid #66818a; border-radius: .2rem; color: var(--ink); background: #102e37; font: inherit; color-scheme: dark; }
+.page input::placeholder { color: #a7c0c0; }
+.report { max-width: 20rem; margin-bottom: .8rem; }
+.status { font-size: .89rem; }
+.timeline, .guides { list-style: none; padding: 0; margin: 0; }
+.timeline li { display: grid; grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr); gap: .6rem 1.5rem; border-bottom: 1px solid var(--line); padding-block: 1.1rem; }
+.timeline li:last-child { border-bottom: 0; padding-bottom: 0; }
+.timeline h3 { margin: 0; font-size: 1.05rem; }
+.timeline p, .guides p { margin: .3rem 0; color: var(--body); }
+.kind { color: var(--accent); font-size: .84rem; }
+.timeline .date { font-size: .78rem; }
+.comparison { margin-top: 1rem; padding: 1rem; border: 1px solid var(--line); }
+.comparison p { color: var(--body); margin: 0 0 .85rem; max-width: 46rem; }
+.comparison p:last-child { margin: 0; }
+.comparison .result { margin-top: .85rem; }
+.result strong { color: var(--accent); margin-inline-start: .3rem; }
+.guides { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: .8rem 1.5rem; }
+.guides li { border-top: 1px solid var(--line); padding-top: .8rem; }
+
+@media (max-width: 34rem) {
+  .timeline li { grid-template-columns: minmax(0, 1fr); }
+}

@@ -19,7 +19,7 @@ export default function SciencePage() {
   const climateRecords = climate.stations.reduce((sum, station) => sum + station.records, 0);
   const soilRecords = soil.stations.reduce((sum, station) => sum + station.records, 0);
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science navigation"><Link href="/">← KFM Explorer</Link><Link href="/labs">Full research atlas</Link><Link href="/research">Source discovery ↗</Link></nav>
+    <nav className={styles.navigation} aria-label="Science navigation"><Link href="/">← KFM Explorer</Link><Link href="/labs">Full research atlas</Link><Link href="/science/wheat-trade">Wheat trade &amp; freight</Link><Link href="/research">Source discovery ↗</Link></nav>
     <header className={styles.hero}><span className={styles.eyebrow}>Kansas Frontier Matrix / Science tools</span><h1>Ask a Kansas question.<br /><em>Start with the data.</em></h1><p>Explore measured weather and soil, county drought and air quality, or modeled daily sunlight. Five tools put the data, the question and the source in one place.</p><div className={styles.heroFacts}><span><strong>05</strong> working tools</span><span><strong>{period(climate.period)}</strong> data window</span><span>Source files & reproducible downloads included</span></div></header>
 
     <section className={styles.tools} aria-label="Choose a science question">
