@@ -1,0 +1,97 @@
+.page {
+  --text: #f5ebde;
+  --quiet: #c6d6e0;
+  --amber: #eeb477;
+  --ice: #a5d9dc;
+  --edge: #426479;
+  --panel: #142c3f;
+  min-height: 100vh;
+  padding: clamp(1rem, 4vw, 3rem) 1rem 4rem;
+  background: #0d1f2d;
+  color: var(--text);
+  color-scheme: dark;
+  font: 1rem/1.55 system-ui, sans-serif;
+}
+
+.frame { max-width: 68rem; margin-inline: auto; }
+.page h1, .page h2 { font-family: Georgia, serif; font-weight: 400; text-wrap: balance; }
+.page h2 { font-size: clamp(1.5rem, 3.7vw, 2.25rem); line-height: 1.17; margin: 0; }
+.page p { margin: .5rem 0 0; color: var(--quiet); }
+.page a { color: #b5e4e5; text-underline-offset: .18em; }
+.page :is(a, button, select, input, [tabindex]):focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+.nav { display: flex; flex-wrap: wrap; gap: 0 1.2rem; font-size: .94rem; }
+.nav a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.hero { padding-block: clamp(1.25rem, 4vw, 2.75rem) clamp(1.35rem, 3.5vw, 2.2rem); }
+.hero h1 { margin: 0; font-size: clamp(2.75rem, 7vw, 5.1rem); line-height: .99; letter-spacing: -.04em; }
+.hero p { margin-top: .95rem; max-width: 49rem; font-size: clamp(1rem, 2.5vw, 1.19rem); }
+
+.card { padding-block: clamp(1.35rem, 3.3vw, 2.2rem); border-top: 1px solid var(--edge); min-width: 0; }
+.card > p { max-width: 55rem; }
+.page label { display: grid; gap: .35rem; color: var(--quiet); font-size: .89rem; font-weight: 650; }
+.page :is(button, select) { min-height: 2.75rem; border: 1px solid #799aab; border-radius: .35rem; padding: .5rem .72rem; background: var(--panel); color: var(--text); font: 1rem/1.2 system-ui, sans-serif; }
+.page select { width: 100%; min-width: 0; }
+.page button { cursor: pointer; }
+.page button:hover:not(:disabled) { border-color: var(--ice); background: #24465a; }
+.page button:disabled { opacity: .6; cursor: default; }
+.setup { display: grid; grid-template-columns: 1fr 1fr 1.65fr; gap: .8rem 1.05rem; margin-block: 1rem; align-items: end; }
+.setup label { min-width: 0; }
+.range label { display: flex; justify-content: space-between; gap: .7rem; }
+.range strong { color: var(--amber); white-space: nowrap; }
+.range input { display: block; width: 100%; min-height: 2.75rem; margin: .35rem 0 0; accent-color: var(--amber); cursor: pointer; }
+.summaries { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.page [data-period="0"] { --series: var(--amber); }
+.page [data-period="1"] { --series: var(--ice); }
+.summary { min-width: 0; padding: .85rem 1rem; background: var(--panel); border: 1px solid var(--edge); border-top: 3px solid var(--series); border-radius: .35rem; }
+.summary h3 { color: var(--series); margin: 0; font: 1.3rem/1.22 Georgia, serif; }
+.summary p { font-size: .89rem; margin-top: .35rem; }
+.summary .rate strong { color: var(--text); font-size: clamp(1.5rem, 4vw, 2.1rem); font-variant-numeric: tabular-nums; }
+.years { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: .25rem; margin-block: .75rem .55rem; font-size: .86rem; }
+.years div { border-top: 1px solid var(--edge); padding-top: .35rem; }
+.years dt { color: var(--quiet); }
+.years dd { margin: .2rem 0 0; font-weight: 680; }
+.notice { padding: .7rem .95rem; border-left: 3px solid var(--amber); background: var(--panel); }
+
+.chart { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: .85rem; }
+.chart th:first-child { width: 5rem; }
+.chart th, .chart td { padding: .38rem .6rem; text-align: left; border-bottom: 1px solid #42647992; }
+.chart th { color: var(--quiet); font-size: .9rem; }
+.chart th:first-child { padding-inline-start: 0; }
+.chart button { width: 100%; min-height: 2.75rem; padding-inline: .2rem; font-size: .91rem; white-space: nowrap; }
+.chart button[aria-pressed=true] { border-color: var(--amber); color: var(--amber); background: #2a352e; }
+.barTrack { display: inline-block; vertical-align: middle; width: calc(100% - 4.6rem); min-width: 0; height: .69rem; border-radius: .15rem; background: #224053; }
+.barTrack i { display: block; height: 100%; border-radius: inherit; background: var(--series); }
+.barTrack[data-period="1"] i { background: repeating-linear-gradient(125deg, var(--series) 0 4px, #4d7d8b 4px 6px); }
+.barValue { margin-left: .5rem; white-space: nowrap; font-size: .91rem; font-variant-numeric: tabular-nums; }
+.page .caption { font-size: .88rem; }
+
+.sectionIntro { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: end; gap: .85rem 1rem; }
+.sectionIntro label { min-width: min(12rem, 100%); }
+.map { margin-block: 1rem .5rem; border: 1px solid var(--edge); background: #0b2431; border-radius: .45rem; }
+.legend { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; padding: .8rem .8rem 0; margin: 0; list-style: none; font-size: .88rem; }
+.legend li { display: inline-flex; align-items: center; gap: .4rem; }
+.legend i { width: .65rem; height: .65rem; background: var(--series); }
+.legend i[data-period="0"] { border-radius: 50%; }
+.legend i[data-period="boundary"] { width: .95rem; border: 1px dashed #a2b7c1; }
+.canvas { display: block; width: 100%; height: clamp(11.5rem, 52vw, 24rem); }
+.page .located { padding: .65rem .85rem; margin: 0; border-top: 1px solid var(--edge); }
+
+.tableChoice { margin-block: .9rem .65rem; max-width: 17rem; }
+.tableScroll { max-width: 100%; overflow: auto; }
+.records { border-collapse: collapse; width: 100%; min-width: 39rem; font-size: .89rem; }
+.records th, .records td { padding: .45rem .6rem; border-bottom: 1px solid var(--edge); vertical-align: middle; text-align: left; }
+.records th[scope="row"] { font-weight: 600; }
+.records td:nth-child(2) { white-space: nowrap; }
+.records small { display: block; color: var(--quiet); }
+.records thead { background: var(--panel); }
+.pager { display: flex; align-items: center; gap: .65rem; margin-top: .85rem; font-size: .88rem; }
+
+@media (max-width: 38rem) {
+  .setup { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .range { grid-column: 1 / -1; }
+  .summaries { grid-template-columns: minmax(0, 1fr); }
+  .chart th:first-child { width: 3.7rem; }
+  .chart th, .chart td { padding-inline: .36rem; }
+  .barTrack { display: block; width: 100%; margin-bottom: .21rem; }
+  .barValue { margin: 0; }
+}

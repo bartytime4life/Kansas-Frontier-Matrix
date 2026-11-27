@@ -28,6 +28,7 @@ const QUESTIONS = [
   ['river-flow', 'How often did the rivers run high?', 'River Flow Lab · gauge comparison and daily records'],
   ['tornado-tracks', 'Where have tornadoes traveled?', 'Since 1950 · tracks, ratings & reported impacts'],
   ['shaking-ground', 'Where has the ground shaken?', 'Since 2010 · magnitude, depth & source records'],
+  ['earthquake-catalog', 'How often did earthquakes of different sizes occur?', 'Compare time periods, magnitude thresholds, and epicenters'],
   ['built-kansas', 'What carries Kansas?', 'Bridge inventory · age, traffic, dimensions & condition'],
   ['energy-shift', 'How has our energy changed?', 'Annual energy series · sources, sectors & the long view'],
   ['air-and-health', 'What is in the air?', 'County air quality · monitored days & annual AQI'],
