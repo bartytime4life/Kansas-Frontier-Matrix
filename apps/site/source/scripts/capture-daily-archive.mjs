@@ -3,24 +3,53 @@ import { realpathSync } from "node:fs";
 import { createHash } from "node:crypto";
 /** Sequential, restart-safe daily runner. Hosted access stays in memory/stdin. */
 import { pathToFileURL } from "node:url";
-import { readArchiveAccess } from "./archive-access.mjs";
+import { initializeArchiveAccess, readArchiveAccess } from "./archive-access.mjs";
 const feeds = ["census-counties","usgs-streamflow","usgs-earthquakes","nws-alerts","noaa-hms-smoke","nasa-gibs-fire-points","nifc-fire-reports","raspberry-shake-stations","fema-disaster-declarations"];
 const hostedOrigin = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site";
+const defaultLocalOrigin = "http://127.0.0.1:4173";
+const localOrigin = /^http:\/\/127\.0\.0\.1:(?:[1-9][0-9]{3,4})$/;
 // A separate archive capability reproducible by the existing cloud task from
 // supported Sites service access, without saving a secret in its prompt/source.
 export const hostedArchiveWorkerToken = token => createHash("sha256").update("kfm-daily-archive-worker/v1\0").update(token).digest("hex");
-export async function captureDaily(origin = "http://127.0.0.1:4173", token = null, request = fetch, workerToken = null) {
-  if (origin !== hostedOrigin && !/^http:\/\/127\.0\.0\.1:(?:[1-9][0-9]{3,4})$/.test(origin)) throw new Error("UNSUPPORTED_ARCHIVE_ORIGIN");
+
+function archiveHeaders(workerToken, token = null) {
+  if (typeof workerToken !== "string" || !/^[A-Za-z0-9_-]{43,128}$/.test(workerToken)) throw new Error("ARCHIVE_WORKER_ACCESS_REQUIRED");
+  return { "X-KFM-Archive-Writer": "daily-v1", "Authorization": `Bearer ${workerToken}`, ...(token ? { "OAI-Sites-Authorization": `Bearer ${token}` } : {}) };
+}
+
+async function readArchiveStatus(origin, headers, request) {
+  let response;
+  try {
+    response = await request(`${origin}/api/daily-archive?action=status`, { headers, redirect: "error", signal: AbortSignal.timeout(30000) });
+  } catch {
+    throw new Error("ARCHIVE_STATUS_REQUEST_FAILED");
+  }
+  if (origin !== hostedOrigin && [401, 403].includes(response.status)) throw new Error("ARCHIVE_WORKER_ACCESS_REJECTED");
+  if (!response.ok) throw new Error(`ARCHIVE_UNAVAILABLE_HTTP_${response.status}`);
+  let status;
+  try { status = await response.json(); }
+  catch { throw new Error("ARCHIVE_STATUS_INVALID"); }
+  if (typeof status?.storage?.paused !== "boolean") throw new Error("ARCHIVE_STATUS_INVALID");
+  return status;
+}
+
+/** Confirm the running local archive accepts the worker credential without a capture. */
+export async function checkDailyArchive(origin = defaultLocalOrigin, request = fetch, workerToken = null) {
+  if (!localOrigin.test(origin)) throw new Error("UNSUPPORTED_ARCHIVE_ORIGIN");
+  const status = await readArchiveStatus(origin, archiveHeaders(workerToken), request);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(status.day) || !Array.isArray(status.entries)) throw new Error("ARCHIVE_STATUS_INVALID");
+  return { outcome: status.storage.paused ? "paused" : "ready" };
+}
+
+export async function captureDaily(origin = defaultLocalOrigin, token = null, request = fetch, workerToken = null) {
+  if (origin !== hostedOrigin && !localOrigin.test(origin)) throw new Error("UNSUPPORTED_ARCHIVE_ORIGIN");
   if (origin === hostedOrigin && !token) throw new Error("HOSTED_SERVICE_ACCESS_REQUIRED");
   if (origin !== hostedOrigin && token) throw new Error("DO_NOT_SEND_HOSTED_ACCESS_TO_LOCAL_RUNTIME");
   if (origin === hostedOrigin && workerToken === null && typeof token === "string") workerToken = hostedArchiveWorkerToken(token);
-  if (typeof workerToken !== "string" || !/^[A-Za-z0-9_-]{43,128}$/.test(workerToken)) throw new Error("ARCHIVE_WORKER_ACCESS_REQUIRED");
-  const headers = { "X-KFM-Archive-Writer": "daily-v1", "Authorization": `Bearer ${workerToken}`, ...(token ? { "OAI-Sites-Authorization": `Bearer ${token}` } : {}) };
+  const headers = archiveHeaders(workerToken, token);
   const results = [];
   // Read pause/budget first; failure cannot be mistaken for an empty archive.
-  const read = await request(`${origin}/api/daily-archive?action=status`, {headers,redirect:"error",signal:AbortSignal.timeout(30000)});
-  if(!read.ok) throw new Error(`ARCHIVE_UNAVAILABLE_HTTP_${read.status}`);
-  const before = await read.json();
+  const before = await readArchiveStatus(origin, headers, request);
   if(before.storage.paused) return {outcome:"paused",results};
   for (const feed of feeds) {
     try {
@@ -45,13 +74,29 @@ export async function captureDaily(origin = "http://127.0.0.1:4173", token = nul
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   try {
-    const args=process.argv.slice(2);let origin="http://127.0.0.1:4173";let token=null;let workerToken=null;
-    if(args.length===2&&args[0]==="--origin") origin=args[1];
-    else if(args.length===1&&args[0]==="--hosted-stdin") {
-      origin=hostedOrigin;let input="";for await(const chunk of process.stdin){input+=chunk;if(input.length>4096)throw new Error("INPUT_LIMIT");}const access=JSON.parse(input);token=access.token;workerToken=access.workerToken;
-      if(typeof token!=="string"||!token||/[\r\n]/.test(token))throw new Error("INVALID_SERVICE_ACCESS");
-    } else if(args.length) throw new Error("USAGE: --origin http://127.0.0.1:PORT or --hosted-stdin");
-    if(origin!==hostedOrigin) workerToken=readArchiveAccess()?.workerToken;
-    const result=await captureDaily(origin,token,fetch,workerToken);console.log(JSON.stringify(result));if(result.outcome==="incomplete")process.exitCode=result.results.every(item=>item.ok)?2:1;
-  } catch(error) { console.error(JSON.stringify({outcome:"failed",reason:/^[A-Z0-9_: ./-]+$/.test(error.message)?error.message:"DAILY_CAPTURE_FAILED"}));process.exitCode=1; }
+    const args = process.argv.slice(2);
+    if (args.length === 1 && args[0] === "--init-access") {
+      console.log(JSON.stringify({ outcome: initializeArchiveAccess() }));
+    } else {
+      const check = args[0] === "--check";
+      if (check) args.shift();
+      let origin = defaultLocalOrigin;
+      let token = null;
+      let workerToken = null;
+      if (args.length === 2 && args[0] === "--origin") origin = args[1];
+      else if (!check && args.length === 1 && args[0] === "--hosted-stdin") {
+        origin=hostedOrigin;let input="";for await(const chunk of process.stdin){input+=chunk;if(input.length>4096)throw new Error("INPUT_LIMIT");}const access=JSON.parse(input);token=access.token;workerToken=access.workerToken;
+        if(typeof token!=="string"||!token||/[\r\n]/.test(token))throw new Error("INVALID_SERVICE_ACCESS");
+      } else if (args.length) throw new Error("USAGE");
+      if (origin !== hostedOrigin) {
+        if (!localOrigin.test(origin)) throw new Error("UNSUPPORTED_ARCHIVE_ORIGIN");
+        const access = readArchiveAccess();
+        if (!access) throw new Error("ARCHIVE_ACCESS_FILE_MISSING");
+        workerToken = access.workerToken;
+      }
+      const result = check ? await checkDailyArchive(origin, fetch, workerToken) : await captureDaily(origin, token, fetch, workerToken);
+      console.log(JSON.stringify(result));
+      if (result.outcome === "incomplete") process.exitCode = result.results.every(item => item.ok) ? 2 : 1;
+    }
+  } catch(error) { console.error(JSON.stringify({outcome:"failed",reason:/^[A-Z][A-Z0-9_]{1,63}$/.test(error.message)?error.message:"DAILY_CAPTURE_FAILED"}));process.exitCode=1; }
 }

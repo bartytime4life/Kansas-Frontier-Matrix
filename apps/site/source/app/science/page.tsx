@@ -5,6 +5,7 @@ import soil from "../labs/soil-profile/snapshot-manifest.json";
 import air from "../labs/daily-air-quality/snapshot-manifest.json";
 import sunlight from "../labs/sunlight-and-sky/snapshot-manifest.json";
 import { nativeScienceDirectory } from "./science-directory.mjs";
+import ScienceDataCoverage from "./science-data-coverage";
 import ScienceLauncher from "./science-launcher";
 import styles from "./science.module.css";
 
@@ -14,11 +15,13 @@ export const metadata = {
 };
 
 export default function SciencePage() {
-  const entries = nativeScienceDirectory({ climate, drought, soil, air, sunlight });
+  const manifests = { climate, drought, soil, air, sunlight };
+  const entries = nativeScienceDirectory(manifests);
   return <main className={styles.page}><div className={styles.frame}>
     <nav className={styles.navigation} aria-label="Science and Labs navigation">
       <Link href="/">← KFM Explorer</Link>
       <a href="#find-a-lab">Find a lab</a>
+      <a href="#data-coverage">Data coverage</a>
       <Link href="/observatory/sources">Data sources</Link>
     </nav>
     <header className={styles.hero}>
@@ -29,6 +32,7 @@ export default function SciencePage() {
       </div>
     </header>
     <ScienceLauncher entries={entries} />
+    <ScienceDataCoverage manifests={manifests} />
     <section className={styles.reading} aria-labelledby="science-reading-heading">
       <div><h2 id="science-reading-heading">Work with the evidence</h2><p>Open a lab to inspect its source, date range, and gaps. The year comparison gives each measurement its own chart and exports the records and source details together.</p></div>
       <Link href="/observatory/sources">Explore data sources ↗</Link>

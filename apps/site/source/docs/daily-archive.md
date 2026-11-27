@@ -84,13 +84,40 @@ settings require a signed-in owner listed in `KFM_ARCHIVE_OWNER_IDS` or
 require same-origin checks and `X-KFM-Archive-Writer: daily-v1`; that public marker
 is only a CSRF defense. No CORS is granted. Keep the existing owner-private audience.
 
-For local hosting, create `~/.config/kfm/daily-archive-access` as an owner-only
-regular file (mode 0600) containing `{ "ownerToken": "…", "workerToken": "…" }`.
-Generate each value independently from 32 cryptographically random bytes,
-encoded as base64url (43 characters); the values must differ. The launcher and
-scheduled runner read this same file without printing it. Restart the launcher
-after changing credentials. Missing configuration leaves archive access closed;
-other local features still work. The existing timer needs no credential in argv.
+Run the read-only preflight on the local Explorer computer.
+
+```sh
+node scripts/capture-daily-archive.mjs --check
+```
+
+The result is `ready` only after the running local worker authorizes a status
+read. `paused` confirms access while capture remains paused by the owner.
+
+| Result | Recovery |
+| --- | --- |
+| `ARCHIVE_ACCESS_FILE_MISSING` or the older `ARCHIVE_WORKER_ACCESS_REQUIRED` journal error | Initialize local access, then restart the Explorer service. |
+| `ARCHIVE_ACCESS_FILE_INVALID` or `ARCHIVE_ACCESS_FILE_UNSAFE` | Inspect the existing file locally before repairing its mode or replacing invalid contents. Setup preserves it for review. |
+| `ARCHIVE_ACCESS_DIRECTORY_UNSAFE` | Check that `~/.config` and `~/.config/kfm` are owned by the Explorer user, use real directories and are writable only by that user. |
+| `ARCHIVE_WORKER_ACCESS_REJECTED` | Check that the running Explorer uses the same account and credential file. Restart it after provisioning or rotation. |
+| `ARCHIVE_STATUS_REQUEST_FAILED`, `ARCHIVE_STATUS_INVALID` or HTTP 503 | Check the local Explorer service journal, listener and archive storage bindings before retrying. |
+
+Opt in to initializing access from the same user account that runs Explorer.
+
+```sh
+node scripts/capture-daily-archive.mjs --init-access
+systemctl --user restart kfm-explorer-local.service
+node scripts/capture-daily-archive.mjs --check
+```
+
+Setup creates `~/.config/kfm/daily-archive-access` as an owner-only regular file
+(mode 0600) with distinct owner and worker credentials, each generated from
+32 cryptographically random bytes. A valid existing pair is reused. The
+launcher and scheduled runner share the file and keep both credentials out of
+arguments and logs. When the check reports `ready`, use
+`systemctl --user start kfm-daily-archive.service` for a same-day retry and
+`journalctl --user -u kfm-daily-archive.service -n 20` to confirm capture
+readback. Missed past days remain visible as missing.
+
 Enter the owner token in the local archive page's access field. It stays only in
 page memory, and downloads send it in a header. Reloading closes access. The
 worker token grants capture/status only. Loopback placement grants no authority.

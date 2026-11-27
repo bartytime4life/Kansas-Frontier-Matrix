@@ -62,3 +62,28 @@ test("native month rows preserve year, value and support, with original provider
   }));
   assert.match(wichita, /href="\/labs\/heat-and-rain\?station=USW00003928&amp;year=2024"/);
 });
+
+test("the report shows signed differences only where both years have full provider coverage", () => {
+  const drought = {
+    ...metric, id: "drought", label: "Peak severe drought coverage", unit: "%", supportUnit: "assessments",
+    annual: { selected: covered(20, 53, 53), comparison: covered(35, 52, 52) },
+    monthly: [
+      { month: 1, selected: covered(0, 5, 5), comparison: covered(0, 4, 4) },
+      { month: 2, selected: covered(20, 4, 4), comparison: covered(15, 5, 5) },
+      { month: 3, selected: covered(10, 4, 5), comparison: covered(15, 5, 5) },
+      { month: 4, selected: covered(10, 5, 5), comparison: covered(null, 0, 5) },
+    ],
+  };
+  const combined = renderToStaticMarkup(createElement(ComparisonView, { report: { ...report, series: [metric, drought] } }));
+  assert.match(combined, /Coverage across both years/);
+  assert.match(combined, /<a href="#comparison-drought">Peak severe drought coverage<\/a><span>2 of 4 months full in both years/);
+  assert.match(combined, /data-coverage="complete"><abbr title="January">Jan<\/abbr> <span>Full/);
+  assert.match(combined, /data-coverage="partial"><abbr title="March">Mar<\/abbr> <span>Partial/);
+  assert.match(combined, /data-coverage="missing"><abbr title="April">Apr<\/abbr> <span>Missing/);
+  assert.match(combined, /Change from 2023 to 2024 <strong>-15 percentage points<\/strong>/);
+  assert.match(combined, /<strong>0 percentage points<\/strong>/);
+  assert.match(combined, /<strong>\+5 percentage points<\/strong>/);
+  assert.match(combined, /Change from 2023 to 2024 <span>Partial coverage<\/span>/);
+  assert.match(combined, /<td><span>Partial coverage<\/span><\/td>/);
+  assert.match(combined, /<td><span>Missing value<\/span><\/td>/);
+});
