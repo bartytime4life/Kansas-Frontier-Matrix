@@ -399,6 +399,14 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
     await p.wait(`!document.querySelector('dialog[open]') && document.activeElement?.textContent==='Ask KFM for search terms'`, 'closing the dialog restores focus');
 
     await p.evaluate(`(() => {
+      window.__kfmArchiveScroll=[];
+      for(const type of ['wheel','touchstart','touchmove','touchend','scroll'])document.addEventListener(type,event=>{
+        if(type==='scroll' && !event.target.matches?.('main[aria-labelledby="data-library-heading"], [aria-label="Find a collection"]>div:last-child'))return;
+        const entry={type,at:performance.now(),target:event.target.tagName+'.'+event.target.className,deltaY:event.deltaY,deltaMode:event.deltaMode,y:event.touches?.[0]?.clientY};
+        queueMicrotask(()=>{entry.prevented=event.defaultPrevented;entry.main=${library}.scrollTop;entry.list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement.scrollTop;window.__kfmArchiveScroll.push(entry);if(window.__kfmArchiveScroll.length>30)window.__kfmArchiveScroll.shift();});
+      },{capture:true,passive:true});
+    })()`);
+    await p.evaluate(`(() => {
       ${library}.focus({preventScroll:true});
       const list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement;
       list.scrollIntoView({block:'center',behavior:'instant'});
@@ -421,7 +429,16 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
       x:point.x,y:point.y,xDistance:0,yDistance:-230,speed:800,
       gestureSourceType:width<600?'touch':'mouse',preventFling:true,
     });
-    await p.wait(`${library}.scrollTop > ${point.top}+20`, 'input at the collection list boundary scrolls the page');
+    try {
+      await p.wait(`${library}.scrollTop > ${point.top}+20`, 'input at the collection list boundary scrolls the page');
+    } catch(error) {
+      const diagnostics=await p.evaluate(`(() => {
+        const main=${library},list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement;
+        const ancestors=[];for(let node=list;node;node=node.parentElement){const s=getComputedStyle(node);ancestors.push({tag:node.tagName,class:node.className,top:node.scrollTop,max:node.scrollHeight-node.clientHeight,overflow:s.overflowY,overscroll:s.overscrollBehaviorY,touch:s.touchAction,rect:node.getBoundingClientRect().toJSON()});}
+        return {before:${JSON.stringify(point)},after:main.scrollTop,list:list.scrollTop,hit:document.elementFromPoint(${point.x},${point.y})?.outerHTML.slice(0,300),ancestors,viewport:{width:innerWidth,height:innerHeight,scale:visualViewport.scale,offsetTop:visualViewport.offsetTop},modal:!!document.querySelector('dialog[open],main[inert]'),events:window.__kfmArchiveScroll};
+      })()`);
+      throw new Error(error.message+'; boundary diagnostics: '+JSON.stringify(diagnostics),{cause:error});
+    }
     await p.evaluate(`${library}.focus({preventScroll:true})`);
     await p.key('Home','Home',36);
     await p.wait(`${library}.scrollTop===0`, 'keyboard scrolling returns to the page header');
