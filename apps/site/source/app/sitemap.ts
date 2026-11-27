@@ -4,7 +4,7 @@ import { PUBLIC_SITE_ORIGIN } from "./site-identity";
 
 /** Public entry pages only. Owner tools, APIs and signed-in workspaces are never listed. */
 export const SITEMAP_PATHS: readonly string[] = Object.freeze([
-  "/", "/explore", ...LANDING_GUIDES.map(guide => `/explore/${guide.slug}`), "/topics", "/about", "/observatory", "/observatory/sources", "/science", "/labs/heat-and-rain", "/labs/county-drought", "/labs/soil-profile", "/almanacs",
+  "/", "/explore", ...LANDING_GUIDES.map(guide => `/explore/${guide.slug}`), "/topics", "/about", "/observatory", "/observatory/sources", "/science", "/labs/heat-and-rain", "/labs/county-drought", "/labs/soil-profile", "/labs/daily-air-quality", "/almanacs",
 ]);
 
 export default function sitemap(): MetadataRoute.Sitemap {

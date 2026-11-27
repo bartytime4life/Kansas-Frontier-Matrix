@@ -137,22 +137,26 @@ test("loading and retry states keep comparison exports and share unavailable unt
   assert.match(errorHtml, /Retry drought snapshot/);
 });
 
-test("science entry offers three real routes and uses actual manifest scope counts", async () => {
+test("science entry offers four real routes and uses actual manifest scope counts", async () => {
   const scienceRoute = new URL("../app/science/", import.meta.url);
   const climate = JSON.parse(await readFile(new URL("../labs/heat-and-rain/snapshot-manifest.json", scienceRoute), "utf8"));
   const soil = JSON.parse(await readFile(new URL("../labs/soil-profile/snapshot-manifest.json", scienceRoute), "utf8"));
+  const air = JSON.parse(await readFile(new URL("../labs/daily-air-quality/snapshot-manifest.json", scienceRoute), "utf8"));
   const hubSource = (await readFile(new URL("page.tsx", scienceRoute), "utf8"))
     .replace('import Link from "next/link";', 'const Link = "a";')
     .replace('import styles from "./science.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
     .replace('import climate from "../labs/heat-and-rain/snapshot-manifest.json";', `const climate = ${JSON.stringify(climate)};`)
     .replace('import drought from "../labs/county-drought/snapshot-manifest.json";', `const drought = ${JSON.stringify(manifest)};`)
-    .replace('import soil from "../labs/soil-profile/snapshot-manifest.json";', `const soil = ${JSON.stringify(soil)};`);
+    .replace('import soil from "../labs/soil-profile/snapshot-manifest.json";', `const soil = ${JSON.stringify(soil)};`)
+    .replace('import air from "../labs/daily-air-quality/snapshot-manifest.json";', `const air = ${JSON.stringify(air)};`);
   const hub = await compile(hubSource, "page.tsx");
   const html = render(hub.default);
-  for (const route of ["heat-and-rain", "county-drought", "soil-profile"]) assert.ok(html.includes(`href="/labs/${route}"`));
+  for (const route of ["heat-and-rain", "county-drought", "soil-profile", "daily-air-quality"]) assert.ok(html.includes(`href="/labs/${route}"`));
   assert.ok(html.includes(String(manifest.counties.length)));
   assert.ok(html.includes(String(manifest.snapshot.weeks)));
   assert.ok(html.includes(String(soil.depthsCm.length)));
+  assert.ok(html.includes(`${air.counties.length}<span>reporting counties / 105`));
+  assert.ok(html.includes(air.snapshot.records.toLocaleString("en-US")));
   assert.ok(html.includes("not counts of valid measurements"));
   assert.doesNotMatch(html, /coming soon|unavailable|\/labs"/i);
 });

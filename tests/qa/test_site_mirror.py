@@ -3471,4 +3471,35 @@ def test_science_deadline_successor_preserves_runtime_data_and_all_holds():
         {"tests/heat-and-rain.test.mjs", "tests/drought-and-soil.test.mjs"},
         "7ccf135966acf3deb63220347f3bb87eb033f1d2",
     )
-    assert TOOL.RECEIPT.name == "site-v268-science-test-deadlines-overlay-20261126.json"
+
+
+def test_daily_air_quality_successor_preserves_scientific_states_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-daily-air-quality-overlay-20261126.json",
+        "site-v268-science-test-deadlines-overlay-20261126.json",
+        "41a1f7c165cce5c1a8bea94372352aa08b9fe2d68484c5c9fc787bdf098dc119",
+        DAILY_AIR_QUALITY_CHANGED,
+        "54973bc72508f0fe5d4d249458c566ea93c54f2f",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-daily-air-quality-overlay-20261126.json"
+    manifest = json.loads((TOOL.DESTINATION / "app/labs/daily-air-quality/snapshot-manifest.json").read_text())
+    assert manifest["review"] == manifest["admission"] == "PENDING"
+    assert manifest["release"] == "UNRELEASED"
+
+
+DAILY_AIR_QUALITY_CHANGED = {
+    "app/labs/daily-air-quality/air-model.mjs",
+    "app/labs/daily-air-quality/daily-air-quality.jsx",
+    "app/labs/daily-air-quality/daily-air-quality.module.css",
+    "app/labs/daily-air-quality/page.tsx",
+    "app/labs/daily-air-quality/snapshot-loader.mjs",
+    "app/labs/daily-air-quality/snapshot-manifest.json",
+    "app/layer-workspaces.ts", "app/page.tsx", "app/science/page.tsx",
+    "app/science/science.module.css", "app/sitemap.ts",
+    "docs/daily-air-quality-lab.md",
+    "public/science-data/daily-air-quality/kansas-b571e1266c363d9d.json",
+    "scripts/prepare-daily-air-quality.py", "tests/county-drought-ui.test.mjs",
+    "tests/daily-air-quality-ui.test.mjs", "tests/daily-air-quality.test.mjs",
+    "tests/sitemap-robots.test.mjs", "tests/test_daily_air_quality_display.py",
+    "tests/topic-organization.test.mjs",
+}
