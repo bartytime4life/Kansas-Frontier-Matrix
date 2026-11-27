@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { readBoundedJson } from "./bounded-json";
 import { phasesAfter, PHASE_NAMES } from "./moon";
 import { centralOffset } from "./sun-chart";
@@ -10,6 +10,7 @@ import { rainBaseline, validOutlook, type RainOutlook } from "./rain-normal";
 
 const GRAIN_PATH = "/api/curated/usda-kansas-grain-bids";
 const USDA_REPORT = "https://www.ams.usda.gov/mnreports/ams_2886.pdf";
+const GRAIN_RECHECK_MS = 60_000;
 const futuresReferences: Readonly<Partial<Record<string,string>>> = {
   Corn: "https://www.cmegroup.com/markets/agriculture/grains/corn",
   Soybeans: "https://www.cmegroup.com/markets/agriculture/oilseeds/soybean",
@@ -145,24 +146,61 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
   const yieldEstimate=yieldHistory(harvests,new Date().getUTCFullYear());
   const [inputPrices,setInputPrices]=useState(["","","",""]);
   const [yieldText,setYield]=useState(""), [costs,setCosts]=useState(["0","0","0",""]);
-  const [query,setQuery]=useState(0), [expiryTick,setExpiryTick]=useState(0);
-  const grain=useSource(query ? GRAIN_PATH : null,validGrain,query,12000);
+  const [query,setQuery]=useState(0), [clock,setClock]=useState(0);
+  const [open,setOpen]=useState(false), [visible,setVisible]=useState(true);
+  const refresh=useCallback((activate=false)=>{
+    setClock(Date.now());
+    setQuery(n=>activate || n>0?n+1:n);
+  },[]);
+  const watching=query>0 && open && visible;
+  const grain=useSource(watching ? GRAIN_PATH : null,validGrain,query,12000);
+  useEffect(()=>{
+    if (!open) return;
+    const resume=()=>{
+      const foreground=document.visibilityState==="visible";
+      setVisible(foreground);
+      if (foreground) refresh();
+    };
+    const suspend=()=>setVisible(false);
+    document.addEventListener("visibilitychange",resume);
+    window.addEventListener("pageshow",resume);
+    window.addEventListener("pagehide",suspend);
+    return ()=>{
+      document.removeEventListener("visibilitychange",resume);
+      window.removeEventListener("pageshow",resume);
+      window.removeEventListener("pagehide",suspend);
+    };
+  },[open,refresh]);
+  useEffect(()=>{
+    if (!watching || grain===undefined) return;
+    const timer=setTimeout(refresh,GRAIN_RECHECK_MS);
+    return ()=>clearTimeout(timer);
+  },[watching,grain,query,refresh]);
   useEffect(()=>{
     if (!grain) return;
-    const left=Date.parse(grain.approvalExpiresAt)-Date.now();
-    if (left<=0) return;
-    const timer=setTimeout(()=>setExpiryTick(n=>n+1),Math.min(left+1,2147483647));
+    const expiry=Date.parse(grain.approvalExpiresAt);
+    if (clock>=expiry) return;
+    const remaining=expiry-Date.now();
+    const timer=setTimeout(()=>setClock(Date.now()),Math.min(Math.max(0,remaining)+1,2147483647));
     return ()=>clearTimeout(timer);
-  },[grain,expiryTick]);
-  const report=grain && Date.parse(grain.approvalExpiresAt)>Date.now()?grain:null;
+  },[grain,clock]);
+  const report=grain && Date.parse(grain.approvalExpiresAt)>clock?grain:null;
   const rows=report?.rows.filter(r=>r.crop===crop) ?? [];
   const selected=rows.find(r=>r.region===region);
   const budget=farmBudget(yieldText,region ? String(selected?.average ?? "") : manual,costs);
-  return <details className="field-tool"><summary data-category-tool="farm-planning">Cash bids &amp; break-even</summary>
+  return <details className="field-tool" onToggle={e=>{
+    if (e.target!==e.currentTarget) return;
+    const next=e.currentTarget.open;
+    setOpen(next);
+    if (next) {
+      setVisible(document.visibilityState==="visible");
+      refresh();
+    }
+  }}><summary data-category-tool="farm-planning">Cash bids &amp; break-even</summary>
     <label>Crop<select value={crop} onChange={e=>{setCrop(e.target.value);setRegion("");setManual("");setHarvests("");setYield("");}}>{crops.map(c=><option key={c}>{c}</option>)}</select></label>
-    <button type="button" className="category-map-dock-tool" onClick={()=>setQuery(n=>n+1)}>{query?"Refresh reviewed bids":"Load reviewed Kansas bids"}</button>
-    <div role="status">{query>0 && (grain===undefined?"Checking the release…":report?
-      <p>USDA AMS · {report.reportDate} · conventional country elevators, current truck delivery. {crop==="Hard red winter wheat"?"Ordinary protein.":""} {Date.now()-Date.parse(report.reportDate)>7*86400000?"Historical report.":""}</p>:
+    <button type="button" className="category-map-dock-tool" onClick={()=>refresh(true)}>{query?"Refresh reviewed bids":"Load reviewed Kansas bids"}</button>
+    <div role="status">{watching && (grain===undefined?"Checking the release…":report?
+      <p>USDA AMS · {report.reportDate} · conventional country elevators, current truck delivery. {crop==="Hard red winter wheat"?"Ordinary protein.":""} {clock-Date.parse(report.reportDate)>7*86400000?"Historical report.":""}</p>:
       <p>Reviewed bids unavailable. Use the USDA report or enter a local bid.</p>)}</div>
     <a href={USDA_REPORT} target="_blank" rel="noreferrer">Open USDA’s latest Kansas daily grain report ↗</a>
     {futuresReferences[crop] && <p><a href={futuresReferences[crop]} target="_blank" rel="noreferrer">View {crop.toLowerCase()} futures on CME ↗</a> · exchange quotes delayed at least 10 minutes. The budget uses a cash bid.</p>}
