@@ -295,6 +295,52 @@ As inspected on November 17, 2026, the launcher selects
 
 Every other feed uses only the standard library.
 
+### Index daily source metadata and prepare Qwen drafts
+
+`review-metadata` runs separately from downloads. It reads completed, current
+`kfm-sql-feed-receipt-v1` records in one selected database. It matches each
+database receipt to the retained receipt and independently checks the local
+file's exact bytes and SHA-256. Older records with other receipt formats,
+including the separate hourly capture format, are outside this lane. Loading,
+superseded and incomplete source records remain in their original workflows.
+
+Run once on dev with the installed launcher after promoting a release that
+includes the worker. Use the actual first receipt time wanted for the cutoff.
+Keep the cutoff fixed while catching up so an outage cannot age out queued work.
+
+```bash
+pc-pipeline-data/runtime/sql-feed.sh review-metadata \
+  --since "$KFM_METADATA_SINCE_UTC" --limit 5
+```
+
+`KFM_METADATA_SINCE_UTC` uses `YYYY-MM-DDTHH:MM:SSZ`. The observations database
+is the default. Use `--database bulk` for the separately configured bulk
+database. `--limit` bounds each stage (evidence indexing and drafting) per run.
+Repeated runs progress through the eligible sources and leave completed entries
+in place. Each evidence record distinguishes retrieval, any provider-declared
+edition or observation window, and the rows actually loaded. The full source
+URL remains in the original receipt. The metadata projection records its host.
+
+Add `--qwen-model "$KFM_QWEN_MODEL" --qwen-digest "$KFM_QWEN_DIGEST"` to
+draft titles, descriptions and subject domains. Qwen sees a small set of
+provenance facts and no file contents, query credentials or local file paths.
+KFM validates draft shape and evidence IDs before a fixed SQL writer stores the
+draft and its evidence, model, prompt and response fingerprints. The ordinary
+feed loader controls record insertion. A receipt, metadata entry and AI draft
+each retain their own scope. Publication and rights decisions remain under
+their existing reviews.
+
+Choose a daily dev timer window away from backup and heavier feed writes after
+one bounded acceptance run. Read `sql_metadata_done` for verified, drafted and
+held counts; `sql_metadata_hold` identifies the affected source hash and reason.
+A model outage returns a failed run while keeping indexed evidence available
+for the next invocation. For a receipt, byte or draft hold, diagnose the stated
+reason and run the same command with `--source-sha256 "$KFM_SOURCE_SHA256"
+--retry-held` after correction. This rechecks only the original completed object.
+Keep the ordinary feed recovery and promotion procedures for failed downloads,
+outstanding reviews and publication. The command requires one explicitly
+configured existing database and installs no timer.
+
 ### Updating an existing pinned release
 
 The November 17 updates used an archive of the approved merged commit's complete
@@ -465,8 +511,43 @@ switch it back to WAL on their next open.
 
 ## Failure and recovery
 
+### Read the recovery report on dev
+
+From the pipeline PC workspace, pass recent service messages to the installed
+launcher. The command reads current SQLite checkpoints and prints a private JSON
+report. It never fetches a provider, writes observation rows, or promotes a hold.
+
+```bash
+set -o pipefail
+journalctl --user -u 'kfm-sql-feed@*' --since '3 days ago' --no-pager -o cat |
+  pc-pipeline-data/runtime/sql-feed.sh recovery-report
+```
+
+The default selection covers daily science feeds and hourly captures, with
+freshness thresholds of 36 and three hours, respectively. Use
+`--feed FEED` repeatedly for another group. For a weekly feed, extend both the
+journal lookback and expected interval, for example `--since '10 days ago'`
+and `recovery-report --feed storm-events --max-age-hours 192`. Use a journal
+window longer than the freshness and hold thresholds. The report bounds journal
+input and returns a nonzero exit code for unreadable input sizes.
+
+| Report state | Operator action |
+|---|---|
+| `missing-evidence` or `overdue` | Check the installed timer, service result, and journal retention on dev. Absence of a journal entry does not prove a timer ran. |
+| `in-progress` or `missing-terminal-event` | Check the service before retrying. New releases record a start for each invocation; the default missing-terminal threshold is eight hours. |
+| `retryable-failure` | Check the provider's retry window or the pipeline lock, then allow the next timer to resume. For a time-sensitive manual retry, confirm the service is idle and start the installed service once. |
+| `review-required` | Examine the original journal reason and retain the source receipt and SQLite checkpoint. Fix schema, mount, permissions, or checksum issues before any retry. |
+| Held captures | Check the exact blockers in the intake review queue. A stalled hold indicates repeated non-empty queue observations over the hold window. A stale observation lacks recent evidence. Neither identifies a particular file as stalled. |
+
+`last_completed_at` is a successful execution, which can legitimately find no
+new provider files. `last_sql_checkpoint_at` is the feed's stored processing
+checkpoint where available. To verify the data itself, compare the corresponding
+source receipt and observation date. Check public snapshot publication
+separately. Use the installed launcher only after its release contains this
+command.
+
 Handled feed errors log `feed_failed` with a fixed reason. Unexpected exceptions
-may instead leave a traceback and a nonzero systemd service result; inspect both
+also leave a traceback and a nonzero systemd service result; inspect both
 the journal and terminal result. A failed run retains completed source transactions
 and saved progress. The in-flight load transaction rolls back, and a later
 scheduled run resumes from the retained checkpoints. Common reasons:
@@ -490,7 +571,11 @@ Partial runs recover without stalling or skipping:
   recorded in `seen`, so the year stops being due.
 
 Raw copies and receipts are immutable, and a kept copy is byte-identical when
-rebuilt from the same download. A load can be repeated from them by deleting its
+rebuilt from the same download. If a run stops between saving the raw copy and
+its receipt, a repeat download recreates the missing receipt only after its
+byte count and SHA-256 match the kept copy. The recovered receipt records the
+repeat download's provenance and has `receipt_recovered: true`. An existing
+receipt is kept byte for byte. A load can be repeated from them by deleting its
 `kfm_sql_sources` row and its data rows in one transaction.
 
 ## Verification
