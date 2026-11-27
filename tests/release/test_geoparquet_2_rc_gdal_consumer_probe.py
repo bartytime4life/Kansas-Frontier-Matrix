@@ -3,9 +3,13 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import call, patch
+
+from tools.experiments.geoparquet import run_gdal_3_13_2_consumer_probe as probe
 
 from tools.experiments.geoparquet.run_gdal_3_13_2_consumer_probe import (
     COORDINATES,
@@ -290,6 +294,162 @@ class GeoParquet2RcGdalConsumerProbeTests(unittest.TestCase):
         self.assertEqual(result.outcome, "ERROR")
         self.assertIn("GOVERNANCE_BOUNDARY_VIOLATION", result.reason_codes)
         self.assertIn("DECLARED_OUTCOME_MISMATCH", result.reason_codes)
+
+
+class GdalImageAcquisitionTests(unittest.TestCase):
+    header_timeout = (
+        'Error response from daemon: Get "https://ghcr.io/v2/": '
+        "net/http: request canceled while waiting for connection "
+        "(Client.Timeout exceeded while awaiting headers)\n"
+    )
+
+    def setUp(self) -> None:
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        self.command = ["docker", "pull", "--platform", IMAGE_PLATFORM, IMAGE_REFERENCE]
+
+    def completed(self, code: int = 0, stderr: str = "", stdout: str = ""):
+        return subprocess.CompletedProcess(self.command, code, stdout, stderr)
+
+    def attempts(self):
+        return json.loads((self.root / "gdal-image-pull-attempts.json").read_text())
+
+    def test_command_deadline_terminates_a_synthetic_child(self) -> None:
+        with self.assertRaises(subprocess.TimeoutExpired):
+            probe._run([sys.executable, "-c", "import time; time.sleep(3)"], timeout=1)
+
+    def test_success_needs_one_bounded_attempt(self) -> None:
+        with patch.object(probe, "_run", return_value=self.completed()) as execute:
+            with patch("time.sleep") as sleep:
+                result = probe._pull_image(self.root)
+        self.assertEqual(result.returncode, 0)
+        execute.assert_called_once_with(self.command, timeout=120)
+        sleep.assert_not_called()
+        self.assertEqual(len(self.attempts()), 1)
+        self.assertFalse(self.attempts()[0]["retry_scheduled"])
+
+    def test_header_timeout_recovers_without_erasing_original_logs(self) -> None:
+        results = [self.completed(1, self.header_timeout), self.completed(stdout="acquired")]
+        with patch.object(probe, "_run", side_effect=results) as execute:
+            with patch("time.sleep") as sleep:
+                result = probe._pull_image(self.root)
+        self.assertEqual(result.returncode, 0)
+        self.assertEqual(execute.call_args_list, [call(self.command, timeout=120)] * 2)
+        sleep.assert_called_once_with(2)
+        attempts = self.attempts()
+        self.assertEqual([a["returncode"] for a in attempts], [1, 0])
+        self.assertEqual([a["retry_scheduled"] for a in attempts], [True, False])
+        for attempt in attempts:
+            for stream in ("stdout", "stderr"):
+                path = self.root / attempt[stream + "_path"]
+                self.assertEqual(_digest(path), attempt[stream + "_sha256"])
+        self.assertEqual(
+            (self.root / attempts[0]["stderr_path"]).read_text(), self.header_timeout
+        )
+        self.assertEqual((self.root / "gdal-image-pull.stdout.txt").read_text(), "acquired")
+        self.assertEqual((self.root / "gdal-image-pull.stderr.txt").read_text(), "")
+
+    def test_repeated_transport_timeouts_stop_after_three_attempts(self) -> None:
+        with patch.object(
+            probe, "_run", return_value=self.completed(1, self.header_timeout)
+        ) as execute:
+            with patch("time.sleep") as sleep:
+                result = probe._pull_image(self.root)
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(execute.call_count, 3)
+        self.assertEqual(sleep.call_args_list, [call(2), call(4)])
+        self.assertEqual(len(self.attempts()), 3)
+        self.assertFalse(self.attempts()[-1]["retry_scheduled"])
+
+    def test_subprocess_timeout_retains_partial_output_before_recovery(self) -> None:
+        timeout = subprocess.TimeoutExpired(
+            self.command, 120, output=b"partial\xff", stderr=b"slow"
+        )
+        with patch.object(probe, "_run", side_effect=[timeout, self.completed()]):
+            with patch("time.sleep"):
+                result = probe._pull_image(self.root)
+        self.assertEqual(result.returncode, 0)
+        first = self.attempts()[0]
+        self.assertEqual(first["returncode"], 124)
+        self.assertTrue(first["timed_out"])
+        self.assertEqual((self.root / first["stdout_path"]).read_text(), "partial\ufffd")
+        self.assertIn(
+            "exceeded 120 seconds", (self.root / first["stderr_path"]).read_text()
+        )
+
+    def test_non_timeout_errors_stop_without_retry(self) -> None:
+        for message in ("unauthorized", "manifest unknown", "digest mismatch", "unknown error"):
+            with self.subTest(message=message):
+                with patch.object(
+                    probe, "_run", return_value=self.completed(1, message)
+                ) as execute:
+                    with patch("time.sleep") as sleep:
+                        result = probe._pull_image(self.root)
+                self.assertEqual(result.returncode, 1)
+                execute.assert_called_once_with(self.command, timeout=120)
+                sleep.assert_not_called()
+                self.assertFalse(self.attempts()[0]["retryable"])
+
+    def test_acquisition_exhaustion_stays_error_and_nonzero_cli_exit(self) -> None:
+        _write_packet(self.root)
+        output = self.root / "consumer"
+        with patch.object(
+            probe, "_run", return_value=self.completed(1, self.header_timeout)
+        ) as execute:
+            with patch("time.sleep"), patch("builtins.print"):
+                status = probe.main([
+                    "--root", str(self.root), "--manifest", str(self.root / "manifest.json"),
+                    "--output", str(output),
+                ])
+        self.assertEqual(status, 1)
+        self.assertEqual(execute.call_count, 3)
+        result = json.loads((output / "manifest.json").read_text())
+        self.assertEqual(result["outcome"], "ERROR")
+        self.assertEqual(result["reason_codes"], ["GDAL_IMAGE_UNAVAILABLE"])
+        self.assertEqual(result["checks"]["gdal_distribution_authenticated"], "ERROR")
+        self.assertTrue(all(value is False for value in result["governance"].values()))
+
+    def test_recovered_pull_does_not_retry_image_identity_mismatch(self) -> None:
+        _write_packet(self.root)
+        bad_identity = self.completed(
+            stdout=json.dumps([
+                {"Id": "sha256:" + "1" * 64, "Architecture": "arm64", "Os": "linux"}
+            ])
+        )
+        with patch.object(
+            probe, "_run",
+            side_effect=[self.completed(1, self.header_timeout), self.completed(), bad_identity],
+        ) as execute:
+            with patch("time.sleep") as sleep:
+                result = probe.run(self.root, self.root / "manifest.json", self.root / "consumer")
+        self.assertEqual(result["outcome"], "ERROR")
+        self.assertEqual(result["reason_codes"], ["GDAL_IMAGE_IDENTITY_MISMATCH"])
+        self.assertEqual(execute.call_count, 3)
+        sleep.assert_called_once_with(2)
+
+    def test_recovered_pull_does_not_retry_semantic_failure(self) -> None:
+        _write_packet(self.root)
+        image = {
+            "Id": "sha256:" + "1" * 64,
+            "Architecture": "amd64",
+            "Os": "linux",
+            "RepoDigests": ["ghcr.io/osgeo/gdal@" + IMAGE_INDEX_SHA256],
+        }
+        results = [
+            self.completed(1, self.header_timeout), self.completed(),
+            self.completed(stdout=json.dumps([image])), self.completed(stdout="GDAL 3.13.2"),
+            self.completed(stdout="Parquet -vector-"),
+            self.completed(stdout='{"type":"FeatureCollection","features":[]}'),
+            self.completed(stdout='{"type":"FeatureCollection","features":[]}'),
+        ]
+        with patch.object(probe, "_run", side_effect=results) as execute:
+            with patch("time.sleep") as sleep:
+                result = probe.run(self.root, self.root / "manifest.json", self.root / "consumer")
+        self.assertEqual(result["outcome"], "FAIL")
+        self.assertEqual(result["checks"]["pyarrow_to_gdal_consumer_read"], "FAIL")
+        self.assertEqual(execute.call_count, 7)
+        sleep.assert_called_once_with(2)
 
 
 if __name__ == "__main__":
