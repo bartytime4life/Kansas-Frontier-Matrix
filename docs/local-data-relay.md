@@ -408,3 +408,39 @@ does not withdraw an otherwise unchanged reply. New questions receive the curren
 date. Each recheck still resolves the current source content, release, policy and
 references; changed or unavailable evidence remains withheld. No credential,
 model, queue, time or resource allowance changes are required.
+
+
+## Nearby page payloads (2026-11-27)
+
+Nearby archive queries now select, sort and paginate packed spatial record IDs
+before fetching the full record columns. The inner selector retains the source
+row existence join and optional name filter, so orphan sidecar IDs do not consume
+page slots. The outer primary-key join loads only the selected page's payloads.
+Record identities stay inside SQLite, including packed IDs above JavaScript's
+safe integer range. Original row order, values, provenance and long-field handling
+remain unchanged.
+
+This bounds full-row projection to returned records rather than intermediate
+entries in SQLite's top-N sorter. The 200-row page limit, 5,000 offset limit,
+10,000 count cap, spatial/freshness guards, signed transport and deadlines are
+unchanged. No index or data migration is needed. Nameless totals still count
+sidecar entries, including orphans, while named totals keep the existing row join.
+This count behavior is preserved deliberately; totals are not silently redefined.
+
+A bounded read-only bridge comparison returned identical full rows: a 50-row
+page at offset 50 took about 2.15 s before and 58 ms with identity pagination in
+one native run. A two-row first page changed only slightly (about 30 to 28 ms).
+In a later alternating-order, fully warm run, both queries were much faster:
+about 36.5–37.7 ms before and 33.8–35.5 ms after. Initial sequential timing can
+include cache-warming effects. These are workload-specific observations, not a
+controlled cold-cache or disk-contention speedup; the earlier 7.5-second public
+timeout was not reproduced. Tests count
+payload evaluations directly, including offsets, names, empty pages, orphan IDs
+and packed identities above the JavaScript safe range.
+
+The dev gateway may carry a derivative of its exact installed release with only
+`near.mjs` changed. Preserve every other installed file, its custom gateway entry,
+all environment overlays and the worker runtime. Bind the complete derivative
+file map explicitly; do not claim its digest follows an unknown historical
+bundler. Keep the previous release and executable overrides for rollback. This
+source change does not publish the hosted application or admit additional data.

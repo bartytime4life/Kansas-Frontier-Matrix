@@ -1,0 +1,102 @@
+{
+  "receipt_id": "kfm-near-query-pagination-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/local-data/near.mjs",
+    "tests/local-data-near.test.mjs",
+    "docs/local-data-relay.md"
+  ],
+  "artifact_hashes": {
+    "scripts/local-data/near.mjs": "sha256:1e3d2007c1905c76d20b9355cfa2ed2c1585ea2ed1e89ebebcb531b6ea4a51bc",
+    "tests/local-data-near.test.mjs": "sha256:b2fa9e397a5a5d6d65eb2fb6d33fc2e8cca30ff1cc82a6e6968ebbbfb2e59fbd",
+    "docs/local-data-relay.md": "sha256:fd67e4e3a810cb97485f8f47f9d87c8fa5bd04bb101b7fb99172f9882c1158e7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:4f47ae8d6d4cbce1e6c867f1f108c6fa76da15f1deefd1737106e57d0cf9bbc0",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "web",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6582f021f28d53432c4dd826332ead6de5923ad40e28c2ff50abad68d3e7b06c",
+      "sha256:7f157400c3511491abf4ecf9506ed434c2b22e19c536e0ba14ebf6af6359d573",
+      "sha256:6fd12aae2e954d23608b31c6a34b1237a824ba93e8a6444bbd132f9e2aa227d6",
+      "sha256:10310bf5ddc830f355128108ee2ce96fc046f5a04ab70db3da9ba03119189bf8"
+    ],
+    "evidence_refs": [
+      "https://www.sqlite.org/optoverview.html",
+      "https://www.sqlite.org/eqp.html",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:scripts/local-data/near.mjs"
+    ]
+  },
+  "truth_labels": {
+    "scripts/local-data/near.mjs": "CONFIRMED",
+    "tests/local-data-near.test.mjs": "CONFIRMED",
+    "docs/local-data-relay.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "58 local-data tests including9near-query cases and deterministic page-only payload evaluations",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Bounds/ordering/name/orphan/large-packed-ID/source-provenance and read-only behavior checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Read-only native bridge comparisons preserve complete returned records; count/order caps unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Staged41-file derivative differs only in near.mjs; signed candidate queries equal read-only expected rows, unsigned401 and oversized400 retained",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent code review, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full-site build/suite, hosted checks, human review and native activation",
+      "outcome": "SKIPPED",
+      "reason": "Scoped native .mjs query change; local-data suite and signed candidate exercise changed path. Source record generated before any operational activation, which requires its own exact release readback. No hosted application publication performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "SQLite subquery flattening and deferred work",
+      "validated": true,
+      "evidence_ref": "https://www.sqlite.org/optoverview.html"
+    },
+    {
+      "id": "SQLite query plan interpretation",
+      "validated": true,
+      "evidence_ref": "https://www.sqlite.org/eqp.html"
+    },
+    {
+      "id": "Pinned former reader",
+      "validated": true,
+      "evidence_ref": "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:scripts/local-data/near.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T22:11:30.255359+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Identity-first page selection retains the source existence/name join, then projects only final page payloads. Old SQLite top-N already skipped some losing rows; no claim that it projected every candidate. Deterministic tests prove fewer payload evaluations, not a timing threshold. Initial sequential native comparisons showed large improvements; alternating fully warm reads were only slightly faster (about36.5\u201337.7ms before,33.8\u201335.5ms after), so cache/order effects remain explicit. Historic7499ms disk-contention incident was not reproduced and complete timeout resolution is not claimed. All query/API/time/size/cap/security/source-admission contracts remain unchanged; no database or index write is needed. Candidate gateway uses exact installed files with one code overlay and an explicitly new canonical manifest, not a recreated unknown legacy digest algorithm. Local activation, hosted checks, review and deployment remain separate from this authorship/integrity record."
+}
