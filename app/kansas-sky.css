@@ -91,4 +91,4 @@
 .map-topic-bar>.sky-topic-launch{border-color:#c4a66f;background:#29424a;color:#ffe0a1;font-weight:600}.map-topic-bar>.sky-topic-launch span{font-size:16px}
 @media(max-width:760px){.sky-find-aircraft{min-height:36px;width:100%;justify-content:center}}
 
-@media(max-width:760px){.map-mobile-actions[data-sky=true]{grid-template-columns:repeat(5,minmax(0,1fr))}.map-mobile-actions .sky-mobile-launch{color:#ffe0a1;border-color:#c4a66f;background:#29424a}}
+@media(max-width:760px){.map-mobile-actions[data-sky=true]{grid-template-columns:repeat(6,minmax(0,1fr))}.map-mobile-actions .sky-mobile-launch{color:#ffe0a1;border-color:#c4a66f;background:#29424a}}

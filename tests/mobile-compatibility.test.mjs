@@ -19,6 +19,8 @@ test("mobile map keeps one header row with named menus and reachable map actions
   assert.ok(mobileActions, "the compact action bar is present");
   for (const label of ["Map layers", "Topics", "Time", "Style"]) assert.match(mobileActions, new RegExp(`>${label}(?:\\s|<|\\{)`));
   assert.match(mobileActions, /aria-label="Explore Kansas Sky" onClick=\{openKansasSky\}>Aircraft<\/button>/);
+  assert.match(mobileActions, /<Link className="mobile-science-entry" href="\/science" prefetch=\{false\}>Science &amp; Labs<\/Link>/);
+  assert.match(page, /<div className="top-actions">\s*<Link className="explorer-science-entry" href="\/science" prefetch=\{false\}>Science &amp; Labs<\/Link>/);
   assert.match(page, /openAtlasPanel\("places"/);
   assert.match(page, /aria-label="Source status and data quality"/);
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);

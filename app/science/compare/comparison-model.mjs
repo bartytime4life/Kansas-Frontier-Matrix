@@ -3,11 +3,9 @@ import { analyseClimate } from '../../labs/heat-and-rain/climate-model.mjs';
 import { analyseDrought } from '../../labs/county-drought/drought-model.mjs';
 import { analyseSunlight } from '../../labs/sunlight-and-sky/sunlight-model.mjs';
 import { sameSource, YEARS } from '../science-model.mjs';
+import { comparisonPlace, DEFAULT_COMPARISON_PLACE } from './comparison-places.mjs';
 
 export const COMPARISON_YEARS = YEARS;
-export const TOPEKA_COMPARISON = Object.freeze({
-  id: 'topeka', name: 'Topeka and Shawnee County', climateId: 'USW00013996', countyId: '20177', sunlightId: 'topeka',
-});
 
 export const COMPARISON_METRICS = Object.freeze([
   Object.freeze({ id: 'climate', label: 'Reported precipitation', unit: 'mm', kind: 'observed', supportUnit: 'days',
@@ -62,8 +60,11 @@ function compareMetric(metric, metadata, annual, monthly) {
 }
 
 /** Build a read-only report from objects returned by the labs' verified snapshot loaders. */
-export function buildScienceComparison({ climate, drought, air, sunlight }, { year = 2025, compareYear = 2024 } = {}, descriptors) {
-  const { climateId, countyId, sunlightId, id, name } = TOPEKA_COMPARISON;
+export function buildScienceComparison({ climate, drought, air, sunlight },
+  { year = 2025, compareYear = 2024, place = DEFAULT_COMPARISON_PLACE } = {}, descriptors) {
+  const area = comparisonPlace(place);
+  if (!area) throw new Error('Choose a supported Kansas comparison area.');
+  const { climateId, countyId, sunlightId, id, name } = area;
   if (!COMPARISON_YEARS.includes(year) || !COMPARISON_YEARS.includes(compareYear) || year === compareYear) {
     throw new Error('Choose two different calendar years from 2020 through 2025.');
   }
@@ -72,7 +73,7 @@ export function buildScienceComparison({ climate, drought, air, sunlight }, { ye
       descriptors.sunlight?.id !== sunlightId || drought?.attribution !== descriptors.drought?.attribution ||
       !drought?.sources || drought.sources.length !== COMPARISON_YEARS.length ||
       !drought.sources.every((source, index) => sameSource(source, descriptors.drought?.sources?.[index]))) {
-    throw new Error('Use the verified Topeka and Shawnee County source snapshots.');
+    throw new Error('Use the verified source snapshots for the selected comparison area.');
   }
   const years = [year, compareYear];
   const weather = years.map(y => analyseClimate(climate, { year: y }));

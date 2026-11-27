@@ -5,6 +5,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import { analyseDrought, validateDroughtSnapshot, winterWheatSeason } from "../app/labs/county-drought/drought-model.mjs";
+import * as model from "../app/labs/county-drought/drought-model.mjs";
+import { componentHarness, findNode, settle } from "./component-harness.mjs";
 
 const route = new URL("../app/labs/county-drought/", import.meta.url);
 const manifest = JSON.parse(await readFile(new URL("snapshot-manifest.json", route), "utf8"));
@@ -56,6 +58,62 @@ test("area thresholds preserve source precision without silently rounding accept
   for (const value of [0, 0.0000001, 0.001, 12.345, 100.01, NaN, Infinity]) assert.equal(ui.validDroughtThreshold(value), false);
   const selection = ui.droughtSelection(manifest, "?threshold=12.34");
   assert.deepEqual(ui.droughtSelection(manifest, new URL(ui.droughtLink("https://example.test/labs/county-drought", selection)).search), selection);
+});
+
+test("a copied drought view carries only a Tuesday assessment within its selected years", () => {
+  const search = "?county=20177&compare=20055&from=2024&to=2024&date=2024-06-04";
+  const selection = ui.droughtSelection(manifest, search);
+  const link = new URL(ui.droughtLink("https://example.test/labs/county-drought", selection));
+  assert.equal(link.searchParams.get("date"), "2024-06-04");
+  assert.equal(ui.droughtSelection(manifest, link.search).date, "2024-06-04");
+  for (const date of ["2024-06-05", "2023-06-06", "2024-02-30", "2024-06-04&date=2024-06-11"]) {
+    assert.equal(ui.droughtSelection(manifest, search.replace("2024-06-04", date)).date, undefined);
+  }
+  assert.equal(new URL(ui.droughtLink("https://example.test/labs/county-drought", { ...selection, fromYear: 2025, toYear: 2025 })).searchParams.has("date"), false);
+});
+
+test("assessment stepping, copying, and Back preserve the inspected week without rerunning the analysis", async t => {
+  const entries = ["https://example.test/labs/county-drought?from=2024&to=2024&date=2024-06-04"];
+  const window = new EventTarget();
+  window.location = new URL(entries[0]);
+  window.history = {
+    state: null,
+    pushState(_state, _title, href) { entries.push(href); window.location = new URL(href); },
+    replaceState(_state, _title, href) { entries[entries.length - 1] = href; window.location = new URL(href); },
+  };
+  let analyses = 0, shared;
+  const harness = await componentHarness("app/labs/county-drought/county-drought.jsx", {
+    "next/link": { default: "a" },
+    "../../science/science-nav": { default: "science-nav" },
+    "./snapshot-loader.mjs": { loadDroughtSnapshot: async () => snapshot },
+    "./drought-model.mjs": { ...model, analyseDrought(...args) { analyses += 1; return analyseDrought(...args); } },
+    "./county-drought.module.css": { default: {} },
+  }, { window, URLSearchParams, navigator: { clipboard: { async writeText(href) { shared = href; } } } });
+  t.after(() => harness.dispose());
+  function draw() { const tree = harness.render(harness.exports.default, { manifest }); harness.commit(); return tree; }
+  function inspector(tree) { return findNode(tree, node => node.type === harness.exports.DroughtInspector).props; }
+  function inspected(tree) { const panel = inspector(tree); return panel.analysis.primary.weeks[panel.selectedIndex].date; }
+  draw(); await settle();
+  assert.equal(inspected(draw()), "2024-06-04");
+  inspector(draw()).onSelectDate("2024-06-11");
+  const next = draw();
+  assert.equal(inspected(next), "2024-06-11");
+  assert.equal(analyses, 1);
+  assert.equal(entries.length, 1);
+  const share = findNode(next, node => node.type === "button" && node.props.children === "Copy comparison link ↗");
+  await share.props.onClick();
+  assert.equal(new URL(shared).searchParams.get("date"), "2024-06-11");
+
+  const county = findNode(next, node => node.type === "select" && node.props.value === "20055");
+  county.props.onChange({ currentTarget: { value: "20177" } });
+  const changed = draw();
+  assert.equal(inspector(changed).analysis.primary.id, "20177");
+  assert.equal(inspected(changed), "2024-06-11");
+  assert.equal(entries.length, 2);
+  window.location = new URL(entries[0]);
+  window.dispatchEvent(new Event("popstate"));
+  assert.equal(inspector(draw()).analysis.primary.id, "20055");
+  assert.equal(inspected(draw()), "2024-06-11");
 });
 
 test("comparison metrics render actual county support and distinguish the DSCI scale", () => {
@@ -182,38 +240,21 @@ test("winter wheat panel exposes distinct harvest years, reported support and of
   assert.doesNotMatch(waiting, /Peak D2\+ county area/);
 });
 
-test("science entry offers five real routes and uses actual manifest scope counts", async () => {
-  const scienceRoute = new URL("../app/science/", import.meta.url);
-  const climate = JSON.parse(await readFile(new URL("../labs/heat-and-rain/snapshot-manifest.json", scienceRoute), "utf8"));
-  const soil = JSON.parse(await readFile(new URL("../labs/soil-profile/snapshot-manifest.json", scienceRoute), "utf8"));
-  const air = JSON.parse(await readFile(new URL("../labs/daily-air-quality/snapshot-manifest.json", scienceRoute), "utf8"));
-  const sunlight = JSON.parse(await readFile(new URL("../labs/sunlight-and-sky/snapshot-manifest.json", scienceRoute), "utf8"));
-  const hubSource = (await readFile(new URL("page.tsx", scienceRoute), "utf8"))
-    .replace('import Link from "next/link";', 'const Link = "a";')
-  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;')
-    .replace('import ScienceLauncher from "./science-launcher";', 'const ScienceLauncher = () => null;')
-    .replace('import styles from "./science.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
-    .replace('import climate from "../labs/heat-and-rain/snapshot-manifest.json";', `const climate = ${JSON.stringify(climate)};`)
-    .replace('import drought from "../labs/county-drought/snapshot-manifest.json";', `const drought = ${JSON.stringify(manifest)};`)
-    .replace('import soil from "../labs/soil-profile/snapshot-manifest.json";', `const soil = ${JSON.stringify(soil)};`)
-    .replace('import air from "../labs/daily-air-quality/snapshot-manifest.json";', `const air = ${JSON.stringify(air)};`)
-    .replace('import sunlight from "../labs/sunlight-and-sky/snapshot-manifest.json";', `const sunlight = ${JSON.stringify(sunlight)};`);
-  const hub = await compile(hubSource, "page.tsx");
-  const html = render(hub.default);
-  for (const route of ["heat-and-rain", "county-drought", "soil-profile", "daily-air-quality", "sunlight-and-sky"]) assert.ok(html.includes(`href="/labs/${route}"`));
-  assert.ok(html.includes(String(manifest.counties.length)));
-  assert.ok(html.includes(String(manifest.snapshot.weeks)));
-  assert.ok(html.includes(String(soil.depthsCm.length)));
-  assert.ok(html.includes(`${air.counties.length}<span>reporting counties / 105`));
-  assert.ok(html.includes(air.snapshot.records.toLocaleString("en-US")));
-  assert.ok(html.includes("not counts of valid measurements"));
-  assert.ok(html.includes("6,576 point dates"));
-  assert.ok(html.includes("Satellite-derived model estimates"));
-  assert.doesNotMatch(html, /Start with the observations|Four tools/);
-  assert.doesNotMatch(html, /coming soon|unavailable/i);
-  const tools = [...html.matchAll(/<article\b[^>]*>([\s\S]*?)<\/article>/g)];
-  assert.equal(tools.length, 5);
-  for (const [, tool] of tools) assert.doesNotMatch(tool, /href="\/labs"/);
-  assert.match(html, /href="\/labs">Full research atlas/);
-  assert.match(html, /href="\/research">Source discovery/);
+test("science directory exposes the five lab routes and real manifest coverage", async () => {
+  const dir = new URL("../app/science/", import.meta.url);
+  const { nativeScienceDirectory } = await import(new URL("science-directory.mjs", dir));
+  const index = async (lab) => JSON.parse(await readFile(new URL(`../labs/${lab}/snapshot-manifest.json`, dir), "utf8"));
+  const [climate, drought, soil, air, sunlight] = await Promise.all(["heat-and-rain", "county-drought", "soil-profile", "daily-air-quality", "sunlight-and-sky"].map(index));
+  const tools = nativeScienceDirectory({ climate, drought, soil, air, sunlight });
+  for (const lab of ["heat-and-rain", "county-drought", "soil-profile", "daily-air-quality", "sunlight-and-sky"]) {
+    assert.ok(tools.some(tool => tool.href === `/labs/${lab}`));
+    const page = await readFile(new URL(`../labs/${lab}/page.tsx`, dir), "utf8");
+    assert.match(page, /export default/);
+  }
+  assert.ok(tools.some(tool => tool.href === "/science/compare"));
+  assert.match(tools.find(tool => tool.id === "drought").coverage, new RegExp(`${drought.counties.length} counties.*${drought.snapshot.weeks} weekly assessments`));
+  assert.match(tools.find(tool => tool.id === "soil").coverage, new RegExp(`${soil.depthsCm.length} depths`));
+  assert.match(tools.find(tool => tool.id === "air").coverage, new RegExp(`${air.counties.length} reporting counties`));
+  assert.match(tools.find(tool => tool.id === "sunlight").coverage, new RegExp(`${sunlight.points.length} query points`));
+  assert.match(await readFile(new URL("page.tsx", dir), "utf8"), /<ScienceLauncher entries=\{entries\}/);
 });

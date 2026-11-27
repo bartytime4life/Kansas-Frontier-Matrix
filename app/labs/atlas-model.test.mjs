@@ -6,9 +6,12 @@ const stories = [
   { id: 'river-memory', title: 'River Memory', kicker: 'Water', summary: 'Streamflow observations', group: 'Living record', sources: ['USGS'], status: 'ready' },
   { id: 'species', title: 'Species', kicker: 'Life', group: 'Data to come', sources: ['GBIF'], status: 'planned' },
 ];
-test('availability uses a fetched snapshot rather than implementation status', () => {
-  assert.equal(matchesAtlasStory(stories[0], { availability: 'ready' }), false);
-  assert.equal(matchesAtlasStory(stories[0], { availability: 'ready', states: { 'river-memory': 'ready' } }), true);
+test('bundled availability is discoverable before a preview fetches', () => {
+  const guided = { id: 'heat-and-rain', status: 'guided', title: 'Heat and Rain' };
+  assert.equal(matchesAtlasStory(stories[0], { availability: 'bundled' }), true);
+  assert.equal(matchesAtlasStory(guided, { availability: 'available' }), true);
+  assert.equal(matchesAtlasStory(guided, { availability: 'bundled' }), false);
+  assert.equal(matchesAtlasStory(stories[1], { availability: 'bundled' }), false);
   assert.equal(atlasStatus(stories[0], 'waiting').tone, 'waiting');
   assert.equal(atlasStatus(stories[1], 'ready').tone, 'planned');
 });

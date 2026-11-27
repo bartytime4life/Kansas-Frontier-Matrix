@@ -2,15 +2,36 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { SCIENCE_TOOLS, SCIENCE_YEARS, scienceToolPath } from "./science-handoff.mjs";
+import { SCIENCE_YEARS } from "./science-handoff.mjs";
+import { directoryEntryPath, filterScienceDirectory } from "./science-directory.mjs";
 import styles from "./science.module.css";
 
-export default function ScienceLauncher() {
-  const [toolId, setToolId] = useState("weather");
-  const [year, setYear] = useState(2025);
-  const tool = SCIENCE_TOOLS.find(option => option.id === toolId);
-  return <section className={styles.launcher} aria-labelledby="science-launcher-heading">
-    <div className={styles.launcherIntro}><span className={styles.eyebrow}>Start in seconds / keep the source</span><h2 id="science-launcher-heading">What would you<br /><em>like to understand?</em></h2><p>A question and a year are enough to begin. Choose the place and fine-tune the view inside the tool.</p></div>
-    <div className={styles.launcherControls}><label>Choose your question<select value={toolId} onChange={event => setToolId(event.target.value)}>{SCIENCE_TOOLS.map(option => <option key={option.id} value={option.id}>{option.question}</option>)}</select></label><div className={styles.launcherAction}><label>Explore year<select value={year} onChange={event => setYear(Number(event.target.value))}>{SCIENCE_YEARS.map(option => <option key={option}>{option}</option>)}</select></label><Link className={styles.launchButton} href={scienceToolPath(toolId, year)}>Open {tool.label} <span aria-hidden="true">↗</span></Link></div><p className={styles.launcherSupport} aria-live="polite"><strong>{tool.label}</strong> · {tool.support}</p><p className={styles.launcherNote}>Each source has its own geography and clock. Locations are not matched across tools.</p></div>
+export default function ScienceLauncher({ entries }) {
+  const [query, setQuery] = useState("");
+  const [topic, setTopic] = useState("");
+  const [year, setYear] = useState("");
+  const topics = [...new Set(entries.map(entry => entry.topic))];
+  const results = filterScienceDirectory(entries, query, topic);
+
+  return <section className={styles.directory} id="find-a-lab" aria-labelledby="science-launcher-heading">
+    <h2 id="science-launcher-heading">Find a lab or report</h2>
+    <div className={styles.filters}>
+      <label>Search Science &amp; Labs<input type="search" value={query} maxLength={120} onChange={event => setQuery(event.target.value)} placeholder="Try drought, river flow, or NASA" /></label>
+      <label>Topic<select value={topic} onChange={event => setTopic(event.target.value)}><option value="">All topics</option>{topics.map(item => <option key={item}>{item}</option>)}</select></label>
+      <label>Starting year<select value={year} onChange={event => setYear(event.target.value)}><option value="">Default year</option>{SCIENCE_YEARS.map(option => <option key={option}>{option}</option>)}</select></label>
+    </div>
+    <div className={styles.resultsHeader}>
+      <p role="status">{results.length} {results.length === 1 ? "result" : "results"}{year && " · Year applies to the dated science labs and year comparison."}</p>
+      {(query || topic || year) && <button type="button" onClick={() => { setQuery(""); setTopic(""); setYear(""); }}>Clear filters</button>}
+    </div>
+    {results.length ? <ul className={styles.cards}>{results.map(entry => <li key={entry.id}>
+      <article>
+        <p className={styles.cardType}>{entry.kind} · {entry.topic}</p>
+        <h3><Link href={directoryEntryPath(entry, year ? Number(year) : null)} prefetch={false}>{entry.label} <span aria-hidden="true">↗</span></Link></h3>
+        <p>{entry.question}</p>
+        <p className={styles.cardCoverage}>{entry.coverage}</p>
+        <p className={styles.cardSource}>{entry.source}</p>
+      </article>
+    </li>)}</ul> : <p>Try another word or change the topic. Search checks titles, subjects, and source names.</p>}
   </section>;
 }

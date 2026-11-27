@@ -68,6 +68,7 @@ test("quick start routes only to existing controls and tolerates blocked storage
   const page = await read("app/page.tsx");
   const welcome = await read("app/living-welcome/welcome.jsx");
   assert.match(welcome, /role="dialog" aria-modal="false"/);
+  assert.match(welcome, /<a className="welcome-science-entry" href="\/science">Science &amp; Labs<\/a>\s*<details className="welcome-preferences">/);
   assert.match(welcome, /root\.current\?\.contains\(event\.target\)/, "Escape only closes when focus is inside the retained welcome or its dialog");
   assert.doesNotMatch(guide, /fetch\(|import\(.*api/);
   assert.match(page, /<ExplorerGuide open=\{guideOpen === true && primaryWorkspace === "map"\}/);

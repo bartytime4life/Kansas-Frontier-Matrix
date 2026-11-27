@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import Link from "next/link";
 import ScienceNav from "../../science/science-nav";
 import { loadDroughtSnapshot } from "./snapshot-loader.mjs";
-import { analyseDrought, droughtCsv, droughtReceipt, winterWheatSeason, WINTER_WHEAT_HARVEST_YEARS } from "./drought-model.mjs";
+import { analyseDrought, droughtCsv, droughtReceipt, isDroughtAssessmentDate, winterWheatSeason, WINTER_WHEAT_HARVEST_YEARS } from "./drought-model.mjs";
 import styles from "./county-drought.module.css";
 
 const LOCATION_EVENT = "kfm-drought-selection";
@@ -40,7 +40,9 @@ export function droughtSelection(manifest, search = "") {
   if (fromYear > toYear) { fromYear = 2020; toYear = 2025; }
   const proposedThreshold = boundedNumber(query.get("threshold"), 0.01, 100, 50);
   const threshold = validDroughtThreshold(proposedThreshold) ? proposedThreshold : 50;
-  return { countyId, compareId, fromYear, toYear, level: boundedNumber(query.get("level"), 1, 4, 2, true), threshold };
+  const dates = query.getAll("date");
+  const inspection = dates.length === 1 && isDroughtAssessmentDate(dates[0], fromYear, toYear) ? { date: dates[0] } : {};
+  return { countyId, compareId, fromYear, toYear, level: boundedNumber(query.get("level"), 1, 4, 2, true), threshold, ...inspection };
 }
 
 export function droughtLink(href, selection) {
@@ -49,6 +51,7 @@ export function droughtLink(href, selection) {
   url.hash = "";
   const entries = { county: selection.countyId, compare: selection.compareId, from: selection.fromYear, to: selection.toYear, level: selection.level, threshold: selection.threshold };
   for (const [key, value] of Object.entries(entries)) url.searchParams.set(key, String(value));
+  if (isDroughtAssessmentDate(selection.date, selection.fromYear, selection.toYear)) url.searchParams.set("date", selection.date);
   return url.toString();
 }
 
@@ -255,7 +258,6 @@ export default function CountyDrought({ manifest }) {
   const [retry, setRetry] = useState(0);
   const requestId = useRef(0);
   const shareId = useRef(0);
-  const [selectedDate, setSelectedDate] = useState("");
   const [rankPage, setRankPage] = useState({ key: "", page: 0 });
   const [shareStatus, setShareStatus] = useState("");
   const [shareFallback, setShareFallback] = useState("");
@@ -274,17 +276,30 @@ export default function CountyDrought({ manifest }) {
 
   const currentResult = result?.snapshotHash === manifest.snapshot.sha256 ? result : null;
   const snapshot = currentResult?.snapshot ?? null;
-  const analysis = useMemo(() => snapshot ? analyseDrought(snapshot, selection) : null, [snapshot, selection]);
+  const { countyId, compareId, fromYear, toYear, level, threshold } = selection;
+  const analysis = useMemo(() => snapshot ? analyseDrought(snapshot, { countyId, compareId, fromYear, toYear, level, threshold }) : null, [snapshot, countyId, compareId, fromYear, toYear, level, threshold]);
   const primary = manifest.counties.find((county) => county.id === selection.countyId);
   const comparison = manifest.counties.find((county) => county.id === selection.compareId);
   const weeks = analysis?.primary.weeks ?? [];
-  const foundWeek = weeks.findIndex((week) => week.date === selectedDate);
+  const foundWeek = weeks.findIndex((week) => week.date === selection.date);
   const selectedIndex = foundWeek >= 0 ? foundWeek : weeks.length - 1;
+  const inspectedDate = weeks[selectedIndex]?.date ?? selection.date;
   const rankKey = `${selection.fromYear}:${selection.toYear}:${selection.level}:${selection.threshold}`;
   const pageCount = Math.ceil((analysis?.ranking.length ?? 0) / PAGE_SIZE);
   const currentPage = rankPage.key === rankKey ? Math.min(rankPage.page, Math.max(0, pageCount - 1)) : 0;
   const rankings = analysis?.ranking.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE) ?? [];
   const loading = !currentResult;
+
+  function updateLocation(next, method) {
+    const href = droughtLink(window.location.href, next);
+    if (href === window.location.href) return;
+    shareId.current += 1;
+    setShareStatus("");
+    setShareFallback("");
+    setExportError("");
+    window.history[method](window.history.state, "", href);
+    window.dispatchEvent(new Event(LOCATION_EVENT));
+  }
 
   function updateSelection(patch) {
     const next = { ...selection, ...patch };
@@ -293,17 +308,16 @@ export default function CountyDrought({ manifest }) {
       if (patch.fromYear !== undefined) next.toYear = next.fromYear;
       else next.fromYear = next.toYear;
     }
-    shareId.current += 1;
-    setShareStatus("");
-    setShareFallback("");
-    setExportError("");
-    window.history.replaceState(window.history.state, "", droughtLink(window.location.href, next));
-    window.dispatchEvent(new Event(LOCATION_EVENT));
+    updateLocation({ ...next, date: inspectedDate }, "pushState");
+  }
+
+  function inspectDate(date) {
+    updateLocation({ ...selection, date }, "replaceState");
   }
 
   async function copyLink() {
     if (!analysis) return;
-    const link = droughtLink(window.location.href, selection);
+    const link = droughtLink(window.location.href, { ...selection, date: inspectedDate });
     const id = ++shareId.current;
     try {
       if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
@@ -325,7 +339,7 @@ export default function CountyDrought({ manifest }) {
   }
 
   return <main className={styles.page}><div className={styles.frame}>
-    <ScienceNav active="drought" selection={selection} sourceHref="#drought-evidence" sourceLabel="Source & meaning ↓" extraLinks={[{ href: "#winter-wheat-replay", label: "Winter wheat replay ↓" }, { href: "/observatory/sources", label: "Research & sources ↗" }]} />
+    <ScienceNav active="drought" selection={{ ...selection, date: inspectedDate }} sourceHref="#drought-evidence" sourceLabel="Source & meaning ↓" extraLinks={[{ href: "#winter-wheat-replay", label: "Winter wheat replay ↓" }, { href: "/observatory/sources", label: "Research & sources ↗" }]} />
     <header className={styles.hero}><div><span className={styles.eyebrow}>Kansas field notebook / County Drought Lab</span><h1>How often did drought<br className={styles.heroBreak} /> cover your county?</h1><p>Compare the reach, severity and observed runs of drought, one weekly assessment at a time.</p></div><div className={styles.scope}><span className={styles.badge}><i />U.S. Drought Monitor</span><strong>{manifest.period.from.slice(0, 4)}–{manifest.period.to.slice(0, 4)}</strong><span>{manifest.counties.length} counties · {manifest.snapshot.weeks} Tuesday assessments</span></div></header>
 
     <section className={styles.setup} aria-labelledby="drought-setup-heading"><div className={styles.sectionHeading}><h2 id="drought-setup-heading">Put two counties side by side.</h2><button type="button" className={styles.shareButton} disabled={!analysis} onClick={copyLink}>Copy comparison link ↗</button></div><div className={styles.controls}>
@@ -341,7 +355,7 @@ export default function CountyDrought({ manifest }) {
       {loading && <DroughtLoadState />}{currentResult?.error && <DroughtLoadState error={currentResult.error} onRetry={() => { setResult(null); setRetry((value) => value + 1); }} />}
       {analysis && <><DroughtMetrics analysis={analysis} /><p className={styles.metricNote}>“Weeks” means Tuesday assessments, with reported coverage shown for each county. DSCI combines all drought categories into a 0–500 index; it is separate from your selected severity.</p>
         {[analysis.primary, analysis.comparison].filter((county) => county.longestRun.count && (county.longestRun.leftBoundary || county.longestRun.rightBoundary)).map((county) => <p className={styles.runNotice} key={county.id}><strong>{county.name}:</strong> {droughtRunNote(county.longestRun)}</p>)}
-        {!weeks.length ? <div className={styles.emptyState} role="status"><h3>No assessments in this window.</h3><p>Choose another year range. Empty observations are never replaced with drought-free values.</p></div> : <><div className={styles.chartIntro}><h3>Follow drought’s footprint through time.</h3><p>Lines show cumulative {severityName(selection.level)} area. The strip below separates every category without double counting.</p></div><DroughtChart analysis={analysis} selectedIndex={selectedIndex} /><DroughtInspector analysis={analysis} selectedIndex={selectedIndex} onSelectDate={setSelectedDate} /></>}
+        {!weeks.length ? <div className={styles.emptyState} role="status"><h3>No assessments in this window.</h3><p>Choose another year range. Empty observations are never replaced with drought-free values.</p></div> : <><div className={styles.chartIntro}><h3>Follow drought’s footprint through time.</h3><p>Lines show cumulative {severityName(selection.level)} area. The strip below separates every category without double counting.</p></div><DroughtChart analysis={analysis} selectedIndex={selectedIndex} /><DroughtInspector analysis={analysis} selectedIndex={selectedIndex} onSelectDate={inspectDate} /></>}
         <section className={styles.ranking} aria-labelledby="drought-ranking-heading"><div className={styles.sectionHeading}><div><h3 id="drought-ranking-heading">Every county. The same question.</h3><p>{manifest.counties.length} counties ranked by qualifying assessments, then peak area. Select a county to make it your primary comparison.</p></div></div><div className={styles.rankScroll} role="region" aria-label="All Kansas county rankings, horizontally and vertically scrollable" tabIndex={0}><table><caption>{severityName(selection.level)} area ≥ {thresholdText(selection.threshold)}% · {selection.fromYear}–{selection.toYear}</caption><thead><tr><th scope="col">County</th><th scope="col">Threshold weeks</th><th scope="col">Longest run</th><th scope="col">Peak area</th><th scope="col">Mean DSCI</th><th scope="col">Reported coverage</th></tr></thead><tbody>{rankings.map((county, index) => <tr key={county.id} data-selected={county.id === selection.countyId}><th scope="row"><button type="button" aria-pressed={county.id === selection.countyId} onClick={() => updateSelection({ countyId: county.id })}><span className={styles.rankNumber}>{currentPage * PAGE_SIZE + index + 1}</span><span>{county.name}<small>FIPS {county.id}</small></span><span className={styles.rankArrow} aria-hidden="true">↗</span></button></th><td>{county.valid ? number(county.thresholdWeeks) : "—"}<small>assessments</small></td><td>{county.valid ? number(county.longestRun.count) : "—"}<small>{compactRunBoundary(county.longestRun)}</small></td><td>{Number.isFinite(county.peakShare) ? `${number(county.peakShare, 2)}%` : "—"}</td><td>{number(county.meanDsci, 1)}<small>index points</small></td><td>{county.valid}/{county.expected}<small>{county.missing} missing</small></td></tr>)}</tbody></table></div><div className={styles.pagination}><button type="button" disabled={currentPage === 0} onClick={() => setRankPage({ key: rankKey, page: currentPage - 1 })}>← Previous counties</button><span>{analysis.ranking.length ? `${currentPage * PAGE_SIZE + 1}–${Math.min((currentPage + 1) * PAGE_SIZE, analysis.ranking.length)} of ${analysis.ranking.length}` : "No counties"}</span><button type="button" disabled={currentPage + 1 >= pageCount} onClick={() => setRankPage({ key: rankKey, page: currentPage + 1 })}>Next counties →</button></div></section>
       </>}
     </section>

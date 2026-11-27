@@ -14,9 +14,9 @@ export default function ScienceNav({ active, selection = undefined, sourceHref =
   try { if (current && selection) context = scienceSelectionPath(active, selection); } catch { /* Do not carry an unsupported selector. */ }
   const openPath = destination === active && context ? context : scienceToolPath(destination, year);
   const comparisonPath = active === "comparison" && context ? context : scienceToolPath("comparison", year);
-  return <nav className={styles.nav} aria-label="Connected science navigation">
+  return <nav className={styles.nav} aria-label="Science and Labs navigation">
     <div className={styles.row}>
-      <Link className={styles.brand} href="/science" aria-current={active === "hub" ? "page" : undefined}><span>KFM</span><span>Science<br /><small>tools & evidence</small></span></Link>
+      <Link className={styles.brand} href="/science" aria-current={active === "hub" ? "page" : undefined}><span>KFM</span><span>Science &amp; Labs<br /><small>Find a lab or report</small></span></Link>
       <div className={styles.switcher}><label>Open another science tool<select aria-label="Science destination" value={destination} onChange={event => setDestination(event.target.value)}>{SCIENCE_TOOLS.map(tool => <option key={tool.id} value={tool.id}>{tool.label}</option>)}</select></label><Link className={styles.open} href={openPath}>Open <span aria-hidden="true">↗</span></Link></div>
       <div className={styles.links}><Link href={comparisonPath} aria-current={active === "comparison" ? "page" : undefined}>Year comparison</Link><Link className={styles.custom} href={active === "services" ? "#project-brief" : serviceInquiryPath(context)} aria-current={active === "services" ? "page" : undefined}>Request custom work <span aria-hidden="true">↗</span></Link></div>
     </div>
