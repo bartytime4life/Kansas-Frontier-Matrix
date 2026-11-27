@@ -58,6 +58,7 @@ test("requested subjects have grouped subtopics, inspectable limits and real int
   assert.ok(topics.topicDefinition("land").resources.some(r => r.href === "/data/land-records"));
   assert.match(topics.topicDefinition("people").limitation, /not individuals/);
   assert.match(topics.topicDefinition("ecology").limitation, /No species inventory/);
+  for (const topic of ["weather", "science"]) assert.ok(topics.topicDefinition(topic).resources.some(resource => resource.href === "/labs/daily-air-quality"));
 });
 
 test("complete current source, imagery, feature and investigation inventories retain identity and posture", () => {

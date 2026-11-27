@@ -20,6 +20,7 @@ test("the sitemap lists only public entry pages that exist, including every guid
   const identity = await import(await moduleUrl("app/site-identity.ts"));
   const entries = sitemap.default();
   assert.equal(entries.length, sitemap.SITEMAP_PATHS.length);
+  assert.ok(sitemap.SITEMAP_PATHS.includes("/labs/daily-air-quality"));
   for (const guide of guides.LANDING_GUIDES) assert.ok(sitemap.SITEMAP_PATHS.includes(`/explore/${guide.slug}`), guide.slug);
   for (const pathName of sitemap.SITEMAP_PATHS) {
     assert.doesNotMatch(pathName, /^\/(api|data|acquisition|downloads|stewards|governed)(\/|$)/, "no owner or API route");
@@ -40,4 +41,5 @@ test("not-found, About and the layer panel link the map guides", async () => {
   assert.match(await readFile("app/not-found.tsx", "utf8"), /\["\/explore", "Map guides"/);
   assert.match(await readFile("app/about/page.tsx", "utf8"), /<Link href="\/explore">Map guides<\/Link>/);
   assert.match(await readFile("app/page.tsx", "utf8"), /<Link href="\/explore">Map guides →<\/Link>/);
+  assert.match(await readFile("app/page.tsx", "utf8"), /<Link href="\/labs\/daily-air-quality">Daily air quality →<\/Link>/);
 });
