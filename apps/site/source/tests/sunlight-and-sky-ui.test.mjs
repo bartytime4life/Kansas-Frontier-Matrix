@@ -16,7 +16,8 @@ const snapshots = new Map(await Promise.all(manifest.points.map(async (descripto
 })));
 const source = (await readFile(new URL("sunlight-and-sky.jsx", route), "utf8"))
   .replace('import styles from "./sunlight-and-sky.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
-  .replace('import Link from "next/link";', 'const Link = "a";');
+  .replace('import Link from "next/link";', 'const Link = "a";')
+  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;');
 let javascript = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX }, fileName: "sunlight-and-sky.jsx" }).outputText;
 for (const name of ["react", "react/jsx-runtime"]) javascript = javascript.replaceAll(`from "${name}"`, `from ${JSON.stringify(import.meta.resolve(name))}`);
 for (const name of ["sunlight-model.mjs", "snapshot-loader.mjs"]) javascript = javascript.replaceAll(`from "./${name}"`, `from ${JSON.stringify(new URL(name, route).href)}`);
@@ -169,7 +170,7 @@ async function viewHarness(loader, initial = "https://example.test/labs/sunlight
   const window = { location: { href: current.href, search: current.search }, history: { state: null, pushState(_state, _unused, href) { pushed.push(href); window.location.href = href; window.location.search = new URL(href).search; } }, dispatchEvent() {}, addEventListener() {}, removeEventListener() {} };
   class ViewURL extends URL { static createObjectURL(blob) { blobs.push(blob); return "blob:test"; } static revokeObjectURL() {} }
   const harness = await componentHarness("app/labs/sunlight-and-sky/sunlight-and-sky.jsx", {
-    "next/link": { default: "a" }, "./sunlight-model.mjs": model, "./snapshot-loader.mjs": { loadSunlightSnapshot: loader }, "./sunlight-and-sky.module.css": { default: styles },
+    "../../science/science-nav": { default: "science-nav" }, "next/link": { default: "a" }, "./sunlight-model.mjs": model, "./snapshot-loader.mjs": { loadSunlightSnapshot: loader }, "./sunlight-and-sky.module.css": { default: styles },
   }, { URLSearchParams, URL: ViewURL, Blob, window, navigator: {}, document: { body: { appendChild() {} }, createElement() { return { click() { downloads.push(this.download); }, remove() {} }; } }, setTimeout(fn) { fn(); return 0; } });
   return { ...harness, window, pushed, blobs, downloads };
 }

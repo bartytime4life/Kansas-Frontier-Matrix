@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import ScienceNav from "../../science/science-nav";
 import { loadDroughtSnapshot } from "./snapshot-loader.mjs";
 import { analyseDrought, droughtCsv, droughtReceipt } from "./drought-model.mjs";
 import styles from "./county-drought.module.css";
@@ -272,7 +273,7 @@ export default function CountyDrought({ manifest }) {
   }
 
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science lab navigation"><Link href="/">← KFM Explorer</Link><Link href="/science">Science tools</Link><Link href="/observatory/sources">Research & sources</Link><a href="#drought-evidence">Source & meaning ↓</a></nav>
+    <ScienceNav active="drought" selection={selection} sourceHref="#drought-evidence" sourceLabel="Source & meaning ↓" extraLinks={[{ href: "/observatory/sources", label: "Research & sources ↗" }]} />
     <header className={styles.hero}><div><span className={styles.eyebrow}>Kansas field notebook / County Drought Lab</span><h1>How often did drought<br className={styles.heroBreak} /> cover your county?</h1><p>Compare the reach, severity and observed runs of drought, one weekly assessment at a time.</p></div><div className={styles.scope}><span className={styles.badge}><i />U.S. Drought Monitor</span><strong>{manifest.period.from.slice(0, 4)}–{manifest.period.to.slice(0, 4)}</strong><span>{manifest.counties.length} counties · {manifest.snapshot.weeks} Tuesday assessments</span></div></header>
 
     <section className={styles.setup} aria-labelledby="drought-setup-heading"><div className={styles.sectionHeading}><h2 id="drought-setup-heading">Put two counties side by side.</h2><button type="button" className={styles.shareButton} disabled={!analysis} onClick={copyLink}>Copy comparison link ↗</button></div><div className={styles.controls}>

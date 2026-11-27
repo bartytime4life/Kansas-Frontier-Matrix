@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import ScienceNav from "../../science/science-nav";
 import { analyseSunlight, sunlightCsv, sunlightReceipt } from "./sunlight-model.mjs";
 import { loadSunlightSnapshot } from "./snapshot-loader.mjs";
 import styles from "./sunlight-and-sky.module.css";
@@ -215,7 +216,7 @@ export default function SunlightAndSky({ manifest }) {
   }
 
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science lab navigation"><Link href="/science">← Science tools</Link><Link href="/">Kansas Explorer</Link><Link href="/observatory/sources">Research &amp; sources</Link><a href="#sunlight-sources">Source &amp; methods ↓</a></nav>
+    <ScienceNav active="sunlight" selection={selection} sourceHref="#sunlight-sources" sourceLabel="Source & methods ↓" extraLinks={[{ href: "/observatory/sources", label: "Research & sources ↗" }]} />
     <header className={styles.hero}><div><span className={styles.eyebrow}>Kansas field notebook / Sunlight &amp; Sky Lab</span><h1>A day’s sunlight.<br /><em>A season’s rhythm.</em></h1><p>How did estimated daily sunlight on a horizontal surface differ between Kansas places and seasons?</p></div><aside className={styles.scope}><span>NASA POWER · historical modeled energy</span><strong>2020–2025</strong><p>{manifest.points.length} query points · nominal {manifest.grid.latitudeDegrees}° × {manifest.grid.longitudeDegrees}° radiation grid<br />{UNIT} · NASA Local Solar Time</p></aside></header>
     <p className={styles.meaningNote}>Satellite observations and radiative-transfer models infer this incoming shortwave energy. These are coarse grid estimates, not ground-station readings, sunlight hours or panel output.</p>
 

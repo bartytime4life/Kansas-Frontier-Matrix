@@ -131,3 +131,7 @@ checks or establish current deployment, browser acceptance or source admission.
 - [GitHub to private Site synchronization — 2026-10-09](site-synchronization-2026-10-09.md)
 - [Governed weather hosted integration — October 11, 2026](weather-hosted-integration-20261011.md)
 - [Development-tooling Zod collection validation correction](zod-collection-security-20261111.md)
+
+## Connected science and custom work
+
+[Science navigation and custom-work inquiries](science-custom-work.md) explains the free tools, project drafts and first revenue experiment.

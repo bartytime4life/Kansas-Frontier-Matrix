@@ -12,7 +12,8 @@ const manifest = JSON.parse(await readFile(new URL("snapshot-manifest.json", rou
 // CSS and client routing are presentation adapters in this server-rendered check.
 const source = (await readFile(new URL("heat-and-rain.jsx", route), "utf8"))
   .replace('import styles from "./heat-and-rain.module.css";', 'const styles = new Proxy({}, { get: (_target, name) => String(name) });')
-  .replace('import Link from "next/link";', 'const Link = "a";');
+  .replace('import Link from "next/link";', 'const Link = "a";')
+  .replace('import ScienceNav from "../../science/science-nav";', 'const ScienceNav = () => null;');
 let javascript = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
   fileName: "heat-and-rain.jsx",
