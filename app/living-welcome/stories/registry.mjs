@@ -235,6 +235,15 @@ export const STORIES = Object.freeze([
     sources: ['NOAA U.S. Climate Reference Network'], tables: [], feeds: [],
   }),
   guided({
+    id: 'daily-air-quality', group: 'Living record', title: 'Daily Air Quality Lab', kicker: '2020–2025 · 12 REPORTING COUNTIES',
+    href: '/labs/daily-air-quality',
+    summary: 'Inspect daily EPA county AQI, reported categories and defining pollutants for 12 Kansas counties, 2020–2025.',
+    try: 'Choose a county and date, set an inclusive AQI threshold, inspect the original source row and download the daily calendar.',
+    limit: 'Highest reported monitor AQI is not individual exposure or statewide coverage. Missing dates remain missing; provider-context review and dataset admission remain pending.',
+    palette: ['#081d25', '#c7d8e7', '#75d4c8'],
+    sources: ['U.S. EPA AirData AQS'], tables: [], feeds: [],
+  }),
+  guided({
     id: 'neon-terrain', group: 'Living record', title: 'Terrain & vegetation', kicker: 'KONZA PRAIRIE · ONE SAMPLED TILE',
     href: '/labs/terrain',
     summary: 'Inspect one NEON tile and compare ground, surface and independent provider canopy samples.',
@@ -276,6 +285,7 @@ export const STORIES = Object.freeze([
   }),
   ready({
     id: 'air-and-health', group: 'Living record', title: 'Air Quality', kicker: 'AQI & MONITOR COVERAGE',
+    relatedLab: { href: '/labs/daily-air-quality', label: 'Inspect daily AQI and defining pollutants in Daily Air Quality Lab ↗' },
     summary: '26 years of EPA county air-quality observations, with extremes, pollutant drivers and monitoring coverage.',
     try: 'Compare monitored counties, inspect coverage and explore relationships between annual AQI measures.',
     limit: 'Unmonitored counties are missing, not clean air. AQI does not measure individual exposure or health outcomes.',

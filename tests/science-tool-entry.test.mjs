@@ -6,7 +6,7 @@ import { STORIES, STORY_GROUPS, storyById } from '../app/living-welcome/stories/
 import { PUBLIC_LAB_SNAPSHOTS } from '../app/labs/public-snapshots.mjs';
 import * as atlas from '../app/labs/atlas-model.mjs';
 
-const ids = ['heat-and-rain', 'county-drought', 'soil-profile'];
+const ids = ['heat-and-rain', 'county-drought', 'soil-profile', 'daily-air-quality'];
 const styles = new Proxy({}, { get: (_target, key) => String(key) });
 function nodes(tree, predicate) {
   const found = [];
