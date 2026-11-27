@@ -5,7 +5,7 @@ import {
 import {fieldRole, type Collection } from '../collection-metadata';
 import {previousWaterQualityDimensions} from '../water-quality-context';
 import {fieldDictionaryRevision} from '../collection-field-dictionary';
-import {previousQualityView} from './previous-quality-view';
+import {previousQualityView,previousBiologicalView} from './previous-quality-view';
 import { recoveredCollection } from '../recovered-collections';
 import {connectRecordContexts,recordContextBrief,type ContextSample} from './record-context';
 
@@ -220,7 +220,8 @@ function readLabBundle(value:unknown){
   if(!(upgrade||waterUpgrade||contextUpgrade||qualityUpgrade)){
     try { view=viewFromBundle(value.view,collection,snapshot,profile); }
     catch(error){
-      if(!previousQualityView(collection,snapshot,value.view,value.fieldDictionaryRevision))throw error;
+      if(!previousQualityView(collection,snapshot,value.view,value.fieldDictionaryRevision)
+        &&!previousBiologicalView(collection,snapshot,value.view,value.fieldDictionaryRevision))throw error;
       sampleUpgrade=true;
     }
   }

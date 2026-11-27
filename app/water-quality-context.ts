@@ -60,15 +60,26 @@ export const waterQualityV1Dimensions:Readonly<Record<string,Readonly<Record<str
  })
 );
 
-const biologicalContext=[
+// Frozen v2 biology contexts for validating saved investigations; keep their key order.
+const biologicalV2Context=[
  'activity_media','activity_media_subdivision','result_sample_fraction','result_biological_intent',
  'result_biological_taxon','result_biological_taxon_user_supplied','result_biological_taxon_user_supplied_reference',
  'result_biological_sample_tissue_anatomy',
 ];
-export const waterQualityDimensions:typeof waterQualityV1Dimensions={
+export const waterQualityV2Dimensions:typeof waterQualityV1Dimensions={
  ...waterQualityV1Dimensions,
  'observations-usgs-samples-results':{
   ...waterQualityV1Dimensions['observations-usgs-samples-results'],
+  result_biological_group_summary_count:biologicalV2Context,
+  group_summary_weight_measure:['group_summary_weight_measure_unit',...biologicalV2Context],
+ },
+};
+
+const biologicalContext=[...biologicalV2Context,'result_biological_unidentified_species_identifier'];
+export const waterQualityDimensions:typeof waterQualityV2Dimensions={
+ ...waterQualityV2Dimensions,
+ 'observations-usgs-samples-results':{
+  ...waterQualityV2Dimensions['observations-usgs-samples-results'],
   result_biological_group_summary_count:biologicalContext,
   group_summary_weight_measure:['group_summary_weight_measure_unit',...biologicalContext],
  },
