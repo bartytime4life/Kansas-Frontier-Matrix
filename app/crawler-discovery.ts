@@ -19,7 +19,7 @@ Sitemap: ${PUBLIC_SITE_ORIGIN}/sitemap.xml
 // disallows, sign-in and status pages, and the Knowledge search (whose store is not provisioned) are left out.
 export const PUBLIC_PAGES = Object.freeze(["/records", "/topics", "/civic", "/curated", "/data-library", "/observatory", "/observatory/sources", "/research",
   "/labs", "/labs/observatory", "/labs/drought-replay", "/labs/ghost-towns", "/labs/newspaper-pulse", "/labs/water-chemistry",
-  "/history/people-events", "/history/prentis-1909", "/science", "/labs/heat-and-rain", "/labs/county-drought", "/labs/soil-profile", "/labs/daily-air-quality", "/labs/sunlight-and-sky"]);
+  "/history/people-events", "/history/prentis-1909", "/science", "/science/wheat-trade", "/labs/heat-and-rain", "/labs/county-drought", "/labs/soil-profile", "/labs/daily-air-quality", "/labs/sunlight-and-sky"]);
 
 export const SITEMAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
