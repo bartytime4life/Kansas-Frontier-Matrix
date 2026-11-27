@@ -62,3 +62,15 @@ test('CME destinations match the selected crop and have no sorghum proxy',async(
  assert.equal(h.exports.futuresReferences.Sorghum,undefined);
  h.dispose();
 });
+
+test('delivered offer compares like bushels and withholds invalid bid, cost or shrink inputs',async()=>{
+ const {exports:{netDeliveredBid}}=await componentHarness('app/field-decision-tools.tsx',{'./bounded-json':{},'./rain-normal':{},'./yield-history':{},'./moon':{},'./sun-chart':{},'./frost-dates':{}});
+ const offer={bid:'5.25',hauling:'0.35',drying:'0.1',handling:'0.05',storage:'0.02',shrink:'2'};
+ assert.equal(netDeliveredBid(offer),4.625);
+ assert.equal(netDeliveredBid({...offer,bid:'5.20',hauling:'.15',shrink:'0'}),4.88);
+ assert.equal(netDeliveredBid({...offer,shrink:'100'}),-0.52);
+ assert.equal(netDeliveredBid({...offer,bid:'0.0001',hauling:'0',drying:'0',handling:'0',storage:'0',shrink:'99.9999'}),0);
+ for(const bid of ['', '-1', '1e1', 'NaN', '5.00001', '1,000', '1000.0001']) assert.equal(netDeliveredBid({...offer,bid}),null);
+ assert.equal(netDeliveredBid({...offer,hauling:''}),null);
+ assert.equal(netDeliveredBid({...offer,shrink:'100.0001'}),null);
+});

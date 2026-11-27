@@ -69,6 +69,77 @@ export function farmBudget(yieldText:string, bidText:string, costs:readonly stri
   })) };
 }
 
+type DeliveredBid = {
+  bid: string;
+  hauling: string;
+  drying: string;
+  handling: string;
+  storage: string;
+  shrink: string;
+};
+
+const emptyDeliveredBid: DeliveredBid = { bid: "", hauling: "0", drying: "0", handling: "0", storage: "0", shrink: "0" };
+const deliveredBidFields: ReadonlyArray<[keyof DeliveredBid, string]> = [
+  ["bid", "Cash bid ($/paid bu)"],
+  ["hauling", "Hauling ($/loaded bu)"],
+  ["drying", "Drying ($/loaded bu)"],
+  ["handling", "Handling ($/loaded bu)"],
+  ["storage", "Storage ($/loaded bu)"],
+  ["shrink", "Shrink (%)"],
+];
+const bidCurrency = new Intl.NumberFormat("en-US", {
+  style: "currency", currency: "USD", minimumFractionDigits: 4, maximumFractionDigits: 4,
+});
+
+export function netDeliveredBid(offer: DeliveredBid) {
+  const { bid, hauling, drying, handling, storage, shrink } = offer;
+  const entries = [bid, hauling, drying, handling, storage, shrink];
+  if (!entries.every(value => /^(?:\d{1,4}(?:\.\d{1,4})?|\.\d{1,4})$/.test(value))) return null;
+  // Ten-thousandths keep the bid and adjustment exact until display rounding.
+  const [price, freight, dry, handle, store, loss] = entries.map(value => Math.round(Number(value) * 10_000));
+  const percentScale = 100 * 10_000;
+  if (loss > percentScale || [price, freight, dry, handle, store].some(value => value > 1_000 * 10_000)) return null;
+  const net = price * (percentScale - loss) - (freight + dry + handle + store) * percentScale;
+  return (Math.sign(net) * Math.round(Math.abs(net) / percentScale) || 0) / 10_000;
+}
+
+function DeliveredBidComparison({ crop }: { crop: string }) {
+  const [grade, setGrade] = useState("");
+  const [delivery, setDelivery] = useState("");
+  const [bidA, setBidA] = useState(emptyDeliveredBid);
+  const [bidB, setBidB] = useState(emptyDeliveredBid);
+  const netA = netDeliveredBid(bidA);
+  const netB = netDeliveredBid(bidB);
+  const ready = grade.trim() && delivery.trim() && netA !== null && netB !== null;
+  return <details>
+    <summary data-farm-delivered-bids>Compare two delivery offers</summary>
+    <p>Use two {crop.toLowerCase()} offers with the same grade and delivery window. Your entries stay in this view.</p>
+    <div className="field-inputs">
+      <label>Shared grade<input value={grade} maxLength={80} onChange={event => setGrade(event.target.value)} /></label>
+      <label>Shared delivery window<input value={delivery} maxLength={80} onChange={event => setDelivery(event.target.value)} /></label>
+    </div>
+    <p>Enter costs per bushel loaded before shrink. Use zero for costs or shrink already reflected in the bid.</p>
+    {([["Offer A", bidA, setBidA], ["Offer B", bidB, setBidB]] as const).map(([label, offer, setOffer]) =>
+      <fieldset key={label} className="field-delivery-offer">
+        <legend>{label}</legend>
+        <div className="field-inputs">{deliveredBidFields.map(([key, field]) => <label key={key}>{field}
+          <input inputMode="decimal" maxLength={9} value={offer[key]} onChange={event => {
+            const value = event.target.value;
+            setOffer(previous => ({ ...previous, [key]: value }));
+          }} />
+        </label>)}</div>
+      </fieldset>,
+    )}
+    <div role="status">{ready ? <>
+      <table><caption>Net price per loaded bushel</caption><thead><tr><th scope="col">Offer</th><th scope="col">$/loaded bu</th></tr></thead>
+        <tbody><tr><th scope="row">A</th><td>{bidCurrency.format(netA)}</td></tr><tr><th scope="row">B</th><td>{bidCurrency.format(netB)}</td></tr></tbody>
+      </table>
+      <p>{netA === netB ? "The offers return the same net price at this precision." :
+        `Offer ${netA > netB ? "A" : "B"} returns ${bidCurrency.format(Math.abs(netA - netB))} more per loaded bushel.`}</p>
+    </> : <p>Enter a shared grade and delivery window and both cash bids. Use values from 0 to 1,000 dollars or 0 to 100 percent, with up to four decimal places.</p>}</div>
+  </details>;
+}
+
 function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:string)=>void}) {
   const [crop,setCrop]=useState(crops[0]), [region,setRegion]=useState(""), [manual,setManual]=useState("");
   const yieldEstimate=yieldHistory(harvests,new Date().getUTCFullYear());
@@ -125,6 +196,7 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
       <p>{usd.format(budget.total)}/ac entered costs</p>
       <table><caption>Return above entered costs at the selected bid</caption><thead><tr><th scope="col">Yield case</th><th scope="col">bu/ac</th><th scope="col">$/ac</th></tr></thead>
         <tbody>{budget.rows.map((r,i)=><tr key={i}><th scope="row">{["−20%","Expected","+20%"][i]}</th><td>{r.yield.toLocaleString("en-US",{maximumFractionDigits:2})}</td><td>{usd.format(r.margin)}</td></tr>)}</tbody></table></>:<p>Enter a bid, expected yield and costs to compare three yield scenarios.</p>}</div>
+    <DeliveredBidComparison key={crop} crop={crop} />
     <details><summary>Costs, disasters &amp; transport sources</summary>
       <ul>{[
         ["Biweekly Illinois fertilizer benchmarks · USDA AMS","https://mymarketnews.ams.usda.gov/viewReport/3195"],
@@ -133,6 +205,7 @@ function MarketBudget({harvests,setHarvests}:{harvests:string;setHarvests:(s:str
         ["Kansas farm budgets · K-State","https://www.agmanager.info/farm-management-guides-0"],
         ["Kansas active alerts · National Weather Service","https://api.weather.gov/alerts/active?area=KS"],
         ["Grain transportation costs · USDA AMS","https://agtransport.usda.gov/d/8uye-ieij"],
+        ["Kansas road conditions and detours · KDOT KanDrive","https://www.ksdot.gov/travel/travel-conditions/kandrive"],
       ].map(([label,href])=><li key={href}><a href={href} target="_blank" rel="noreferrer">{label} ↗</a></li>)}</ul>
     </details>
   </details>;

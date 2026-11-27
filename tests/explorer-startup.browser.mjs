@@ -3651,9 +3651,9 @@ for (const [width,height] of [[1440,900],[393,852]]) {
     await p.wait("!document.querySelector('.living-welcome') && document.querySelector('.map-topic-edit')?.textContent.includes('Agriculture')",'actual agriculture entry');
     await openCategoryTool(p,'Farm planning & markets');
     await droughtEnter(p,'[data-category-tool="farm-planning"]');
-    const fill=async(label,value)=>{
+    const fill=async(label,value,scope='.field-tool')=>{
       const selector=JSON.stringify(label);
-      await p.evaluate(`(()=>{const l=[...document.querySelectorAll('.field-tool label')].find(n=>n.textContent.startsWith(${selector}));const input=l.querySelector('input,textarea');input.scrollIntoView({block:'center'});input.focus();input.select();})()`);
+      await p.evaluate(`(()=>{const l=[...document.querySelectorAll(${JSON.stringify(scope+' label')})].find(n=>n.textContent.startsWith(${selector}));const input=l.querySelector('input,textarea');input.scrollIntoView({block:'center'});input.focus();input.select();})()`);
       await p.call('Input.insertText',{text:value});
     };
     await fill('My cash bid','4.5');
@@ -3664,6 +3664,17 @@ for (const [width,height] of [[1440,900],[393,852]]) {
     await fill('Other costs','320');
     await p.wait("document.querySelector('.field-decisions')?.textContent.includes('Break-even $4.00/bu') && document.querySelector('.field-tool table tbody tr:nth-child(2)')?.textContent.includes('$40.00')",'cash bid and copied yield update the budget');
     assert.equal(await p.evaluate("document.querySelector('.field-tool a')?.href"),'https://www.ams.usda.gov/mnreports/ams_2886.pdf');
+    await droughtEnter(p,'[data-farm-delivered-bids]');
+    await fill('Shared grade','U.S. No. 2 Yellow Corn');
+    await fill('Shared delivery window','January delivery');
+    const offerA='.field-delivery-offer:nth-of-type(1)', offerB='.field-delivery-offer:nth-of-type(2)';
+    await fill('Cash bid','5.25',offerA);
+    await fill('Hauling','0.35',offerA);
+    await fill('Shrink','2',offerA);
+    await fill('Cash bid','5.10',offerB);
+    await p.wait("document.querySelector('[data-farm-delivered-bids]').parentElement.textContent.includes('Offer B returns $0.3050 more per loaded bushel')",'lower cash bid wins after hauling and shrink');
+    await fill('Shrink','101',offerA);
+    assert.equal(await p.evaluate("!!document.querySelector('[data-farm-delivered-bids]').parentElement.querySelector('table')"),false,'invalid shrink clears the estimate');
     await openCategoryTool(p,'Farmers’ Almanac & frost dates');
     await droughtEnter(p,'[data-category-tool="field-almanac"]');
     const almanac = "document.querySelector('[data-category-tool=field-almanac]').parentElement";
