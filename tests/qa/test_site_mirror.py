@@ -3546,7 +3546,33 @@ def test_sunlight_successor_preserves_immutable_history_scientific_states_and_al
         },
         '7a4d5233d96c71378285329eb5c8da905f95cf5e',
     )
-    assert TOOL.RECEIPT.name == 'site-v268-sunlight-science-overlay-20261126.json'
     manifest = json.loads((TOOL.DESTINATION / "app/labs/sunlight-and-sky/snapshot-manifest.json").read_text())
     assert manifest["review"] == manifest["admission"] == "PENDING"
     assert manifest["release"] == "UNRELEASED"
+
+
+def test_science_snapshot_integrity_successor_preserves_sources_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-science-snapshot-integrity-overlay-20261126.json",
+        "site-v268-sunlight-science-overlay-20261126.json",
+        "f9f83163c2faa8fab80e1ce8941283c19466d66c850e861060ff20d22919e2e3",
+        {
+            "app/labs/county-drought/county-drought.jsx",
+            "app/labs/county-drought/drought-model.mjs",
+            "app/labs/heat-and-rain/climate-model.mjs",
+            "app/labs/heat-and-rain/heat-and-rain.jsx",
+            "app/labs/heat-and-rain/page.tsx",
+            "app/labs/heat-and-rain/snapshot-loader.mjs",
+            "app/labs/soil-profile/soil-model.mjs",
+            "app/labs/soil-profile/soil-profile.jsx",
+            "app/science/page.tsx",
+            "app/science/snapshot-loader.mjs",
+            "docs/drought-and-soil-labs.md",
+            "docs/heat-and-rain-lab.md",
+            "tests/drought-and-soil.test.mjs",
+            "tests/heat-and-rain-ui.test.mjs",
+            "tests/heat-and-rain.test.mjs",
+            "tests/science-snapshot-requests.test.mjs",
+        },
+        "fd2ce47b4bb615e7d434236cd4a815904e9fb1d9",
+    )
