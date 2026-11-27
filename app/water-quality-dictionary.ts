@@ -1,3 +1,4 @@
+import {additionalUSGSSampleFields} from './usgs-sample-dictionary';
 import type {DocumentedField,FieldDocument} from './collection-field-dictionary';
 import type {FieldRole} from './collection-metadata';
 
@@ -9,7 +10,7 @@ const documents:readonly FieldDocument[]=[
   scope:'Legacy result-profile semantics and sampling/analysis context; this guide warns that its legacy USGS coverage omits additions after March 11, 2024.'},
  {id:schema,title:'EPA WQX 3.0 outbound field mapping and definitions',
   url:'https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv',edition:'2025-07',
-  sha256:'2174cdc24ab1d88d47b4d25ba4c0961b4c78c2c0a7b25add0ea7189b80e51d44',checkedAt:'2026-11-19',
+  sha256:'2174cdc24ab1d88d47b4d25ba4c0961b4c78c2c0a7b25add0ea7189b80e51d44',checkedAt:'2026-11-27',
   scope:'WQX 3.0 field definitions and legacy aliases. Documentation versions do not establish the edition, coverage or accuracy of captured records.'},
  {id:mapping,title:'KFM water-quality capture mappings',
   url:'https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3618a710b6bcc997288554f501f6ec5d995e8ce5/tools/local_data',
@@ -113,6 +114,9 @@ for(const [name,sourceField] of [
  ['result_comparable_method_identifier','Result_ComparableMethodIdentifier'],
  ['result_comparable_method_identifier_context','Result_ComparableMethodIdentifierContext'],
 ] as const)extra(name,sourceField,'identity','Provider comparable-method reference; retain identifier and namespace without assuming interchangeable results.');
+Object.assign(modern,additionalUSGSSampleFields([schema,mapping]));
+modern.activity_depth_height_measure.referenceField='activity_bottom_depth_altitude_reference_point';
+
 const notes=[
  'Results, analytical detection/quantitation limits and regulatory thresholds describe different things. A nondetect is not zero or proof of absence; no censoring substitution or compliance conclusion is made.',
  'Numeric summaries describe reported numbers within their recorded contexts, not verified detections. Qualifiers, status, fractions, matrices, chemical forms, tissue types, methods, laboratories and analytical limits must be checked before comparison.',
@@ -123,8 +127,10 @@ const notes=[
 const dictionaries={
  'observations-wqp-results':{fields:legacy,documents,revision,notes:[...notes,
   'The captured legacy WQP profile is distinct from the USGS WQX 3.0 samples profile. Its USGS data does not establish coverage after March 11, 2024.']},
- 'observations-usgs-samples-results':{fields:modern,documents,revision,notes:[...notes,
-  'This capture uses the USGS WQX 3.0 full physical/chemical profile. Uncurated fields remain explicitly undocumented; analytical limit A/B are not assumed lower/upper bounds.']},
+ 'observations-usgs-samples-results':{fields:modern,documents,revision:'water-quality-2026-11-27-v2',notes:[...notes,
+  'This capture uses the USGS WQX 3.0 full physical/chemical profile. All 183 archived fields have sourced definitions; that does not establish record accuracy, completeness or comparable sampling designs. Analytical limit A/B are not assumed lower/upper bounds.',
+  'Original and provider-standardized coordinates retain separate horizontal datums. Activity depths use their recorded reference point; no missing datum, geometry or coordinate conversion is inferred.',
+  'The provider schema describes AlternateLocation_IdentifierCount as a monitoring-location designator despite its name. It remains identity metadata rather than an inferred count.']},
 };
 export function waterQualityDictionary(id:string|undefined){
  return id&&Object.hasOwn(dictionaries,id)?dictionaries[id as keyof typeof dictionaries]:undefined;

@@ -91,48 +91,63 @@ geometry is available; this change does not fabricate missing map geometry.
 
 ## Water-quality sample context
 
-The water-quality dictionary adds 116 sourced definitions: all 49 archived
-legacy WQP result fields and 67 selected fields of the 183-field USGS WQX 3.0
-sample profile. Each dictionary shows its documented-field count. The remaining
-116 USGS fields retain explicit unknown definitions and name-based role hints;
-this is not a complete interpretation of that profile.
+The water-quality dictionaries document all 183 archived USGS WQX 3.0 sample
+fields and all 49 archived legacy WQP result fields, with explicit provider
+column aliases and source references. The library, metadata API and Record Lab
+show documented-field counts. Complete field-definition coverage describes this
+captured column set; it does not establish complete records, geographic or time
+coverage, source accuracy, rights, approval or AI review.
 
 Definitions cite the [WQP result guide](https://www.waterqualitydata.us/portal_userguide/),
 [EPA WQX 3.0 outbound schema](https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv)
-and pinned KFM capture mappings. Provider column aliases accompany curated fields.
-Documentation fingerprints identify the checked references, not a captured
-record's edition or accuracy. The legacy WQP profile does not establish USGS
-coverage after March 11, 2024; the separate USGS capture uses WQX 3.0.
+and pinned KFM capture mappings. EPA schema/profile snapshots were rechecked on
+November 27 and matched the earlier fingerprints. Documentation versions are
+separate from data editions. The legacy WQP column subset does not retain
+chemical speciation or depth-reference fields and does not establish USGS
+coverage after March 11, 2024; the USGS capture uses its separate WQX 3.0 profile.
 
-Results, activity depths, result depths and analytical limits use their own
-per-record units. Detection/quantitation limits remain separate from reported
-results and regulatory thresholds. Limit A/B are not interpreted as lower/upper
-bounds. Unknown units and depth references stay unknown; no conversion is made.
+Provider identities, attachment references, namespaces, plan and accreditation
+flags, preparation/dilution metadata, statistical sample sizes and comments stay
+out of measurement summaries even when their stored text looks numeric. Project
+plan approval and laboratory accreditation are provider metadata; neither means
+that an individual result is accepted by KFM or reviewed by AI. Attachment
+references remain metadata, without fetching or admitting their content.
 
-Result comparisons additionally distinguish chemical speciation and supplied
-characteristic labels where archived, tissue/taxon, collection methods,
-laboratories, analytical method details and detection-limit types, values and
-units. Limit summaries retain the result's analytical context and their own type
-and unit, while allowing different numeric limits to be described together.
-Units stay visible above the chart; the full recorded context expands on demand,
-so long method descriptions do not push the chart out of view. Grouping by
-context does not establish comparable sampling designs or methods.
-The twelve-group summary bound and all-record JSON preservation remain intact.
+Activity, top and bottom depths use their own recorded units and the captured
+activity depth/altitude reference. A depth below water surface stays separate
+from a position relative to land surface; missing references remain explicitly
+unknown. Result depths retain their separate result-reference field. Biological
+group counts and weights distinguish taxa, tissue, sample media, intent and
+fractions; group weights use their own recorded weight unit. Coordinate fields
+retain separate original/standardized datum references and are not measurement
+statistics. This dictionary does not select coordinates or create geometry.
+
+Reported results remain separate from analytical detection/quantitation limits
+and regulatory thresholds. Limit A/B are not interpreted as lower/upper bounds.
+Each measurement uses its own recorded unit; no conversion or missing unit is
+inferred. Result contexts distinguish chemical forms, tissue/taxon, collection
+methods, laboratories, analytical methods and limits. Limit summaries retain
+the result's analytical context and their own type and unit, while allowing
+different numeric limits to be described together. Matching groups do not
+establish compatible sampling designs or scientific comparability.
 
 Censored text stays literal. Numeric summaries describe reported numbers within
-their recorded contexts, including numeric values qualified as nondetects;
-they do not establish verified detections. No nondetect-to-zero substitution,
-chemical equivalence, threshold exceedance, health conclusion or compliance
-classification is made. Provider QA/QC status is separate from KFM acceptance and
-AI review. Sampling date/time/zone, analysis dates, provider changes and archive
-retrieval remain separate clocks.
+their recorded contexts, including numbers qualified as nondetects; they do not
+establish verified detections. No nondetect-to-zero substitution, chemical
+equivalence, threshold exceedance, health conclusion or compliance classification
+is made. Sampling dates/times/zones, analysis clocks, laboratory preparation
+clocks, provider changes and archive retrieval remain distinct. The first-page
+250-record bound, twelve-group summary and all-record JSON export remain intact.
+Units stay visible above the chart; full recorded context expands on demand.
 
-Known pre-dictionary saved measurement contexts reopen unchanged records,
-questions, read receipts and provenance with a visible selection-reset notice.
-New bundles include the dictionary revision and reopen their selected context
-exactly; altered contexts remain invalid. The definitions, units, references and
-limits flow through the existing metadata API, record lab, JSON and story briefs.
-No geometry, source admission or AI review credit is added by this curation.
+Pre-dictionary investigations retain the existing selection-reset behavior.
+Known USGS v1 files retain compatible selections; changed selections are checked
+against frozen v1 rules before resetting with a visible notice. Original rows,
+question, read receipts and provenance are preserved. New v2 files reopen their
+current selected context exactly. Imported profiles are recomputed; altered or
+unknown revisions do not authorize a legacy upgrade. Legacy WQP keeps its v1
+dictionary. This curation adds no source admission, native-store write, source-data
+AI review credit or public deployment.
 
 ## Station and series context
 
