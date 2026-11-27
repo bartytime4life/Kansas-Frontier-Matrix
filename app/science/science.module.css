@@ -1,4 +1,4 @@
-:global(body):has(.page) { min-width: 0; overflow: auto; }
+:global(body):has(.page) { min-width: 0; }
 
 .page { --ink: #f4efdf; --body: #bfd1d2; --muted: #a4bdc1; --night: #081d25; --line: #35545d; --teal: #75d4c8; --amber: #efbd72; min-height: 100vh; padding: 1rem clamp(1rem, 4vw, 3rem) 0; background: var(--night); color: var(--ink); font: 1rem/1.6 system-ui, sans-serif; font-variant-numeric: tabular-nums; }
 .frame { max-width: 76rem; margin-inline: auto; min-width: 0; }
@@ -16,6 +16,11 @@
 .hero > p { color: var(--body); font-size: clamp(.95rem, 1.6vw, 1.1rem); line-height: 1.7; max-width: 46rem; margin: 1.4rem 0 0; }
 .heroFacts { display: flex; align-items: baseline; flex-wrap: wrap; gap: .8rem 2.5rem; padding-top: 1.8rem; color: var(--muted); font-size: .76rem; }
 .heroFacts strong { color: var(--ink); font-size: .9rem; font-weight: 550; margin-right: .3rem; }
+.comparison { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding: 1.25rem; margin-bottom: 2rem; border: 1px solid var(--line); border-left: 3px solid var(--teal); background: #0f2a33; }
+.comparison > div { flex: 1 1 26rem; min-width: 0; }
+.comparison h2 { margin: 0; font: 400 clamp(1.5rem, 3vw, 2rem)/1.2 Georgia, serif; }
+.comparison p { margin: .5rem 0 0; color: var(--body); font-size: .88rem; }
+.comparison a { display: inline-flex; align-items: center; min-height: 2.75rem; }
 .tools { border-top: 1px solid var(--line); }
 .tool { --accent: var(--teal); display: grid; grid-template-columns: 12rem minmax(0, 1fr) 13rem; gap: 2.4rem; padding-block: 2.4rem; border-bottom: 1px solid var(--line); }
 .tool[data-tool=drought] { --accent: var(--amber); }

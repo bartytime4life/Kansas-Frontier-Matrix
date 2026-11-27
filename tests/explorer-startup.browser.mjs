@@ -3686,3 +3686,48 @@ for (const [width,height] of [[1440,900],[393,852]]) {
     assert.equal(await p.evaluate(almanac+".querySelector('[role=status]').textContent"),'Select a crop point to see the nearby station’s freeze dates.');
   });
 }
+
+for (const [width, height] of [[1440, 900], [393, 852]]) {
+  test(`science comparison loads verified data and exports on ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t, 'default');
+    const p = await pageSession(b, width, height);
+    const requests = [];
+    b.listeners.add(message => {
+      if (message.method === 'Network.requestWillBeSent') {
+        const url = new URL(message.params.request.url);
+        if (url.origin === origin.origin && url.pathname.startsWith('/science-data/')) requests.push(url.pathname);
+      }
+    });
+    await p.call('Page.navigate', { url: new URL('/science', origin).href });
+    await p.wait(`document.querySelector('a[href="/science/compare"]')`, 'science lists the comparison');
+    await p.call('Page.navigate', { url: new URL('/science/compare?year=2023&compare=2022', origin).href });
+    await p.wait(`document.querySelector('#comparison-results') && document.querySelector('select').value==='2023'`, 'shared years and verified results are hydrated');
+    assert.equal(await p.evaluate(`document.querySelectorAll('main article').length`), 4);
+    assert.equal(await p.evaluate(`document.querySelector('main article').textContent.includes('695.1')`), true);
+    assert.equal(new Set(requests).size, 4, 'four distinct bundled snapshots');
+    const reads = requests.length;
+
+    const airTable = 'article[aria-labelledby="comparison-air"] details:first-of-type > summary';
+    await droughtEnter(p, airTable);
+    assert.equal(await p.evaluate(`document.querySelector('article[aria-labelledby="comparison-air"] tbody tr:nth-child(8)').textContent.includes('16 of 31 days')`), true);
+    assert.equal(await p.evaluate('document.documentElement.scrollWidth > innerWidth + 1'), false);
+
+    await p.evaluate(`(() => {const field=document.querySelector('select');field.value='2025';field.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    await p.wait(`location.search==='?year=2025&compare=2022' && document.querySelector('main article').textContent.includes('795.7')`, 'comparison recomputes with a new year');
+    assert.equal(requests.length, reads, 'changing years reuses verified content');
+
+    const downloads = await mkdtemp(join(tmpdir(), 'kfm-comparison-download-'));
+    t.after(() => rm(downloads, { recursive: true, force: true }));
+    await b.call('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: downloads });
+    await p.evaluate(`[...document.querySelectorAll('main button')].find(button=>button.textContent==='Download JSON').click()`);
+    const deadline = Date.now() + 10000;
+    let report = null;
+    while (Date.now() < deadline && report === null) {
+      try { report = JSON.parse(await readFile(join(downloads, 'kfm-science-comparison-2025-vs-2022.json'), 'utf8')); }
+      catch { await pause(50); }
+    }
+    assert.deepEqual(report?.selection, { year: 2025, compareYear: 2022 });
+    assert.equal(report.series.length, 4);
+    assert.ok(report.series.every(metric => /^[a-f0-9]{64}$/.test(metric.display.sha256)));
+  });
+}
