@@ -358,6 +358,70 @@ async function pageSession(b, width, height, networkOptions = {}) {
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
+for (const [width, height] of [[1280, 720], [390, 844]]) {
+  test(`archive search scrolls and refines a shared query at ${width}x${height}`, { timeout: 45000 }, async t => {
+    const b = await browser(t, 'default'), queries = [];
+    const p = await pageSession(b, width, height, {
+      intercept: async ({requestId,request}, call) => {
+        const url = new URL(request.url);
+        if (url.origin !== origin.origin || url.pathname !== '/api/local-data/archive-search') return false;
+        queries.push(url.searchParams.get('q'));
+        const response = {
+          format:'kfm-local-data-v1', dataset:'archive-search', count:1, total:1,
+          rows:[{id:'fixture-1', source:'newspapers', title:'Synthetic Gazette', snippet:'OCR fixture not in the AI draft', pageUrl:'https://www.loc.gov/'}],
+          source:{notes:'Synthetic browser fixture'}, generatedAt:'2026-11-27T00:00:00Z',
+        };
+        await call('Fetch.fulfillRequest', {requestId, responseCode:200, responseHeaders:[{name:'Content-Type', value:'application/json'}], body:Buffer.from(JSON.stringify(response)).toString('base64')});
+        return true;
+      },
+    });
+    await p.call('Page.navigate', {url:new URL('/data-library?q=barton%20county&source=newspapers#archive-text-search', origin).href});
+    const words = 'document.querySelector("#archive-text-search input[type=search]")';
+    const library = 'document.querySelector("main[aria-labelledby=data-library-heading]")';
+    await p.wait(`document.querySelector('#archive-results-title') && ${words}.value==='barton county'`, 'linked query hydrates');
+    const rect = await p.evaluate(`${words}.getBoundingClientRect().toJSON()`);
+    assert.ok(rect.top >= 0 && rect.bottom <= height, 'the shared link exposes the search field');
+    assert.equal(await p.evaluate(`${library}.scrollWidth > ${library}.clientWidth+1`), false);
+    const activate = async label => {
+      const focused = await p.evaluate(`(() => {const button=[...document.querySelectorAll('#archive-text-search button')].find(node=>node.textContent===${JSON.stringify(label)});button?.focus();return document.activeElement===button;})()`);
+      assert.equal(focused, true, label+' is keyboard reachable');
+      await p.key('Enter','Enter',13);
+    };
+    await activate('Match exact phrase');
+    await p.wait(`new URL(location.href).searchParams.get('q')==='"barton county"' && document.activeElement?.id==='archive-results-title'`, 'the refined results are focused and shareable');
+    assert.deepEqual(queries, ['barton county','"barton county"']);
+    await activate('Edit search');
+    await p.wait(`document.activeElement===${words}`, 'editing returns focus to the query');
+    await activate('Ask KFM for search terms');
+    await p.wait(`document.querySelector('dialog[open] textarea')?.value.includes('barton county')`, 'AI opens with an editable draft');
+    assert.doesNotMatch(await p.evaluate(`document.querySelector('dialog[open] textarea').value`), /OCR fixture|Synthetic Gazette/);
+    await p.key('Escape','Escape',27);
+    await p.wait(`!document.querySelector('dialog[open]') && document.activeElement?.textContent==='Ask KFM for search terms'`, 'closing the dialog restores focus');
+
+    const point = await p.evaluate(`(() => {
+      const list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement;
+      list.scrollIntoView({block:'center'});list.scrollTop=list.scrollHeight;
+      const r=list.getBoundingClientRect();
+      return {x:r.left+r.width/2,y:r.top+r.height/2,top:${library}.scrollTop};
+    })()`);
+    if (width < 600) {
+      await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y:point.y+45}]});
+      for (let i=1;i<=8;i++) {
+        await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:point.x,y:point.y+45-12*i}]});
+        await pause(20);
+      }
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    } else {
+      await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x:point.x,y:point.y,deltaX:0,deltaY:230});
+    }
+    await p.wait(`${library}.scrollTop > ${point.top}+20`, 'input at the collection list boundary scrolls the page');
+    await p.evaluate(`${library}.focus({preventScroll:true})`);
+    await p.key('Home','Home',36);
+    await p.wait(`${library}.scrollTop===0`, 'keyboard scrolling returns to the page header');
+  });
+}
+
 for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823]]) {
   test(`welcome categories scroll without a floating glimpse at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);

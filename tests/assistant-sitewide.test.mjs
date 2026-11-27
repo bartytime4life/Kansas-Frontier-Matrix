@@ -14,14 +14,23 @@ test('only existing public surfaces get page help; private route/query values ar
  let pathname='/downloads',id='released-record-one';
  const Panel=()=>null,h=await componentHarness(new URL('../app/site-assistant.tsx',import.meta.url),{
   'next/navigation':{usePathname:()=>pathname,useSearchParams:()=>new URLSearchParams({id,token:'DO_NOT_SEND',password:'DO_NOT_SEND',query:'DO_NOT_SEND'})},
+  'react-dom':{createPortal:node=>node},
   './assistant-surfaces.mjs':{assistantSurfaceForPath},'./assistant-panel':{default:Panel},'./build-clock':{BUILD_UTC_YEAR:2026},'./assistant-panel.module.css':{default:{}}
- });
- const render=()=>{const tree=h.render(h.exports.PageAssistant,{});h.commit();return tree;};
+ },{document:{body:{}}});
+ const render=(props={})=>{const tree=h.render(h.exports.PageAssistant,props);h.commit();return tree;};
  try{
   let tree=render();findNode(tree,n=>n.type==='button').props.onClick();tree=render();
   let focus=findNode(tree,n=>n.type===Panel).props.focus;assert.equal(focus.context.surface,'downloads');assert.doesNotMatch(JSON.stringify(focus),/DO_NOT_SEND/);
   pathname='/knowledge/record';tree=render();focus=findNode(tree,n=>n.type===Panel).props.focus;assert.deepEqual(JSON.parse(JSON.stringify(focus.context.selection)),{kind:'knowledge',recordId:id});
   id='../private';tree=render();assert.equal(findNode(tree,n=>n.type===Panel).props.focus.context.selection,null);
+  findNode(tree,n=>n.type===Panel).props.onClose();
+  pathname='/data-library';assert.equal(render(),null,'archive help is next to the search form');
+  const draft='Suggest precise terms for “Barton County”.';
+  tree=render({inlineQuestion:draft});assert.equal(findNode(tree,n=>n.type===Panel),undefined);
+  findNode(tree,n=>n.type==='button').props.onClick();tree=render({inlineQuestion:'Edited after opening'});
+  const panel=findNode(tree,n=>n.type===Panel);assert.equal(panel.props.draftQuestion,draft);
+  assert.equal(panel.props.focus.context.surface,'archive-search');assert.equal(panel.props.focus.context.selection,null);
+  assert.doesNotMatch(JSON.stringify(panel.props.focus.context),/DO_NOT_SEND|Barton County/);
   pathname='/stewards';assert.equal(render(),null);
  }finally{h.dispose();}
 });

@@ -99,8 +99,8 @@ export default function DataLibrary(){
   const a=document.createElement('a');a.href=url;a.download='kfm-archive-comparison.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
  function download(){if(!answer)return;const url=URL.createObjectURL(new Blob([JSON.stringify(answer,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`${id}-page-${page}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
- return <main className={styles.library}>
-  <header><Link href="/?panel=layers">← Back to the map</Link> · <Link href="/data-lab">Record lab &amp; research stories →</Link><span>KANSAS FRONTIER MATRIX</span><h1>Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
+ return <main className={styles.library} tabIndex={0} aria-labelledby="data-library-heading">
+  <header><Link href="/?panel=layers">← Back to the map</Link> · <Link href="/data-lab">Record lab &amp; research stories →</Link><span>KANSAS FRONTIER MATRIX</span><h1 id="data-library-heading">Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
   <div className={styles.summary}>
    <strong>{RECOVERED_COLLECTIONS.length} record collections</strong>
    <span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} can be mapped</span>

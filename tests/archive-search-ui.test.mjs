@@ -6,6 +6,7 @@ const button=(tree,text)=>findNode(tree,n=>n.type==='button'&&n.props.children==
 const status=tree=>findNode(tree,n=>n.props?.role==='status').props.children;
 const resultTitle=tree=>findNode(tree,n=>n.props?.id==='archive-results-title');
 const field=(tree,name)=>findNode(tree,n=>n.type==='label'&&n.props.children[0]===name).props.children[1];
+const PageAssistant=()=>null;
 function response(count=2,total=35,source='newspapers'){
  return {count,total,rows:Array.from({length:count},(_,id)=>({id:String(id),source,title:'Synthetic Gazette',snippet:'Synthetic OCR',issueDate:'1893-01-01'})),
   generatedAt:'2026-11-10T00:00:00Z',source:{notes:'Synthetic UI test only'},facets:{years:[{year:1893,hits:total}],titles:[{id:'sn12345678',title:'Synthetic Gazette',hits:total}]}};
@@ -14,6 +15,7 @@ async function fixture(search='',globals={}){
  const pending=[],calls=[];
  const h=await componentHarness('app/data-library/search.tsx',{
   '../archive-layer-data':{fetchArchive:(dataset,query,signal)=>{calls.push({dataset,query,signal});return new Promise((resolve,reject)=>pending.push({resolve,reject}));}},
+  '../site-assistant':{PageAssistant},
   './library.module.css':{default:new Proxy({},{get:(_t,key)=>key})},
  },{location:{search},URLSearchParams,queueMicrotask,...globals});
  const dispose=h.dispose;h.dispose=()=>{dispose();for(const item of pending)item.resolve(response());};
@@ -53,6 +55,34 @@ test('short pages advance by returned rows and Previous retraces actual page sta
   f.click('Previous');assert.equal(f.calls.at(-1).query.offset,'3');await f.answer(response(2));
   f.click('Previous');assert.equal(f.calls.at(-1).query.offset,'0');await f.answer(response(3));
   assert.equal(button(f.tree,'Previous').props.disabled,true);
+ }finally{f.h.dispose();}
+});
+
+test('an exact-phrase refinement uses supported OCR syntax and retains the year and title filters',async()=>{
+ const f=await fixture('?q=barton%20county&source=newspapers&from=1890&to=1910&title=sn12345678');
+ try{
+  await f.answer();f.click('Match exact phrase');
+  assert.deepEqual({...f.calls.at(-1).query},{q:'"barton county"',source:'newspapers',from:'1890',to:'1910',title:'sn12345678',offset:'0',limit:'20',facets:'1'});
+  await f.answer();assert.equal(field(f.tree,'Words or phrase').props.value,'"barton county"');
+  assert.equal(resultTitle(f.tree).props.children.join(''),'Results for "barton county"');
+  for(const q of ['barton','barton OR county','barton* county','"barton county"','barton, county','a b c d e f g h i']){
+   f.change('Words or phrase',q);assert.equal(button(f.tree,'Match exact phrase'),undefined,q);
+  }
+ }finally{f.h.dispose();}
+});
+
+test('editing results returns to the search field and the AI draft uses only current input',async()=>{
+ const f=await fixture('?q=barton%20county');try{
+  await f.answer();f.change('Words or phrase','Great Bend');
+  const calls=[],input=field(f.tree,'Words or phrase');
+  input.props.ref.current={focus:options=>calls.push(['focus',options.preventScroll]),scrollIntoView:options=>calls.push(['scroll',options.block])};
+  f.click('Edit search');assert.deepEqual(calls,[['focus',true],['scroll','center']]);
+  const draft=findNode(f.tree,n=>n.type===PageAssistant).props.inlineQuestion;
+  assert.match(draft,/"Great Bend"/);assert.doesNotMatch(draft,/barton county|Synthetic OCR|Synthetic Gazette/);
+  const form=findNode(f.tree,n=>n.type==='form');
+  assert.equal(button(f.tree,'Search').props.form,form.props.id);
+  assert.equal(findNode(form,n=>n.type===PageAssistant),undefined);
+  assert.equal(f.calls.length,1);
  }finally{f.h.dispose();}
 });
 
