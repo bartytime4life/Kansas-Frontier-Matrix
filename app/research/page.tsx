@@ -9,7 +9,7 @@ import ResearchDiscovery from "./workspace";
 export const metadata: Metadata = {
   title: "Research Discovery · Kansas Frontier Matrix",
   alternates: { canonical: `${PUBLIC_SITE_ORIGIN}/research` },
-  description: "Find Kansas data, compare source clocks and limitations, and start an investigation across water, earth, ecology and history.",
+  description: "Explore Kansas research across water, weather, agriculture, geology, ecosystems, history, infrastructure and communities. Open working tools and compare traceable sources.",
 };
 
 export default async function ResearchPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {

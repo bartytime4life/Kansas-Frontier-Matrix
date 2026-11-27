@@ -67,22 +67,59 @@ test('the hosted atlas renders science questions as links instead of opening a m
   harness.dispose();
 });
 
-test('Research Discovery keeps science links in a body section and retains the existing terrain handoff', async () => {
+test('Research Discovery composes statewide pathways with direct science links and a bounded terrain case', async t => {
+  const model = await componentHarness('app/research/pathways.ts', {}, { URLSearchParams });
+  const discovery = await componentHarness('app/research/discovery.ts', {}, { URLSearchParams });
+  const pathways = await componentHarness('app/research/pathway-browser.tsx', {
+    'next/link': { default: 'a' },
+    './discovery': discovery.exports,
+    './pathways': model.exports,
+    './pathway-browser.module.css': { default: styles },
+  });
   const harness = await componentHarness('app/research/workspace.tsx', {
     'next/link': { default: 'a' },
     '../science-events': { SCIENCE_SUPPORT_LABELS: {} },
-    './discovery': { INVESTIGATIONS: [], RESEARCH_FRONTIER: [], RESEARCH_READING: [], REPRESENTATIONS: {}, discoverySearch: () => [], discoveryParams: () => new URLSearchParams() },
+    './discovery': discovery.exports,
+    './pathway-browser': pathways.exports,
     './research.module.css': { default: styles },
   }, { URLSearchParams });
+  t.after(() => { for (const entry of [harness, pathways, discovery, model]) entry.dispose(); });
   const tree = harness.render(harness.exports.default, { sources: [], instruments: [], initialState: { query: '', domain: '', kind: '', compare: [] } });
-  const observationSection = findNode(tree, (node) => node.type === 'section' && node.props.id === 'observation-tools');
-  assert.ok(observationSection);
-  const links = nodes(observationSection, (node) => node.type === 'a').map((node) => node.props.href);
+  const pathwayEntry = findNode(tree, node => node.type === pathways.exports.ResearchPathways);
+  assert.ok(pathwayEntry, 'the Research workspace mounts the real pathway component');
+  const pathwaySection = pathways.render(pathwayEntry.type, pathwayEntry.props);
+  assert.equal(pathwaySection.type, 'section');
+  assert.equal(pathwaySection.props.id, 'research-pathways');
+  const cards = nodes(pathwaySection, node => node.type === 'article' && node.props['data-research-pathway']);
+  assert.deepEqual(cards.map(node => node.props['data-research-pathway']), Array.from(model.exports.RESEARCH_PATHWAYS, pathway => pathway.id));
+  assert.equal(cards.length, 8, 'science links belong to the complete statewide set of subjects');
+  const links = nodes(pathwaySection, (node) => node.type === 'a').map((node) => node.props.href);
   for (const href of ['/science', ...ids.map((id) => `/labs/${id}`)]) assert.ok(links.includes(href), href);
+  const text = node => typeof node === 'string' || typeof node === 'number' ? String(node)
+    : node && typeof node === 'object' ? [node.props?.children].flat(Infinity).map(text).join('') : '';
+  for (const card of cards) {
+    const pathway = model.exports.RESEARCH_PATHWAYS.find(entry => entry.id === card.props['data-research-pathway']);
+    const tools = findNode(card, node => node.type === 'ul' && node.props['aria-label'] === `${pathway.title} tools`);
+    assert.deepEqual(nodes(tools, node => node.type === 'a').map(node => node.props.href), Array.from(pathway.tools, tool => tool.href));
+    assert.ok(findNode(card, node => node.type === 'a' && node.props.href === model.exports.pathwayComparisonHref(pathway)), pathway.id);
+    const context = findNode(card, node => node.type === 'details');
+    const paragraphs = [card.props.children].flat(Infinity).filter(node => node?.type === 'p');
+    for (const value of [pathway.scope, pathway.boundary]) {
+      const paragraph = paragraphs.find(node => text(node).includes(value));
+      assert.ok(paragraph, `${pathway.id} retains scope and scientific limits as direct card paragraphs`);
+      assert.ok(!findNode(context, node => node === paragraph), `${pathway.id} qualifications remain outside the source disclosure`);
+    }
+  }
+  const directories = findNode(tree, (node) => node.type === 'nav' && node.props.id === 'observation-tools');
+  assert.ok(directories, 'the body retains a direct research directory entry');
+  for (const href of ['/science', '/topics', '/data-library', '/observatory/sources']) assert.ok(findNode(directories, node => node.type === 'a' && node.props.href === href), href);
+  const terrainCase = findNode(tree, node => node.type === 'details' && findNode(node, child => child.props?.id === 'terrain-pilot-title'));
+  assert.ok(terrainCase, 'the Konza pilot remains a disclosure within the broader research page');
+  assert.ok(!terrainCase.props.open, 'the local Konza case opens only when the reader chooses it');
+  assert.ok(findNode(terrainCase, node => node.props?.href === '/labs/terrain'));
   assert.ok(findNode(tree, (node) => node.props?.href === '/acquisition#neon-lidar-lab'));
   const scope = findNode(tree, (node) => node.props?.['aria-label'] === 'Catalogue scope');
-  assert.ok(scope, 'source-directory metrics remain separate from the new observation tools');
-  harness.dispose();
+  assert.ok(scope, 'source-directory metrics remain separate from the working research tools');
 });
 
 test('only the new science pages opt into document scrolling and fluid narrow sizing', async () => {

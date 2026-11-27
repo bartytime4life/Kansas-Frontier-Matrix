@@ -1,0 +1,146 @@
+{
+  "receipt_id": "kfm-statewide-research-pathways-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/labs/page.jsx",
+    "app/layer-workspaces.ts",
+    "app/research/page.tsx",
+    "app/research/research.module.css",
+    "app/research/workspace.tsx",
+    "app/research/pathway-browser.module.css",
+    "app/research/pathway-browser.tsx",
+    "app/research/pathways.ts",
+    "docs/statewide-research-pathways-20261127.md",
+    "tests/explorer-startup.browser.mjs",
+    "tests/research-discovery-http.test.mjs",
+    "tests/science-tool-entry.test.mjs",
+    "tests/research-pathways.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:a1a6bec735bb79848278f5500e75406dd9e1963013e7f51e1573ceb464a49101",
+    "app/labs/page.jsx": "sha256:d85492f9505e6578b6fd20edaa9aaf1ffe10905f012ea173a914612e7ef64154",
+    "app/layer-workspaces.ts": "sha256:b7ce031d6585492c8106482e004de99719d014271430ea866dacb927eecd095e",
+    "app/research/page.tsx": "sha256:2099b721ac578ffb745568ea42df97724ac4cc11f1492dc20e28df5cd7ce0429",
+    "app/research/research.module.css": "sha256:5bd22c08870155f8e9b08b85848cf8598cdf502222e3da0750c5b3eafbebae8b",
+    "app/research/workspace.tsx": "sha256:301c156e9b309e826aac49bdadd54c6c9aad799a796984b1b391d9fc6afb1463",
+    "app/research/pathway-browser.module.css": "sha256:cc219e11d3782aff24cbdb39d68981dbaa442e564d46ca01ccb984c73451dbad",
+    "app/research/pathway-browser.tsx": "sha256:84c7c106b7cdd06e1a8c07b93594d18a5d10b5f1c12fbac083e75bd9419d2fab",
+    "app/research/pathways.ts": "sha256:3176880cf50fdf9ff984d14038227c4880f4688fce98105823c37adcf6947603",
+    "docs/statewide-research-pathways-20261127.md": "sha256:11a92fac62d60f120c272e96aa27dd44ce6c6ab954af9e64cbcf07e4f667b686",
+    "tests/explorer-startup.browser.mjs": "sha256:1c6595e7f8f2ce99509f4928f215238a547f2894aa109b3c68decd48b37c201a",
+    "tests/research-discovery-http.test.mjs": "sha256:5c9f6e6b8842af4cb281581aed9c682d6c3393a5223b9cebd9ca19f959862383",
+    "tests/science-tool-entry.test.mjs": "sha256:e366a5ebfddc88bbcc2378d39527856fb511c164eb3af7b269ef871f46e6a605",
+    "tests/research-pathways.test.mjs": "sha256:bbec433b8b2e78a2f4ff595b3f7ab33fb1aed58e94fb20901ead32500f47aa4c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:f5d9c9c11f936a28f02aa53583bd0ef9fb7dff83f94a27f5b8048573ed0c5912",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "TinyFish",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/labs/public-snapshots.mjs",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/living-welcome/stories/registry.mjs",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/layer-workspaces.ts",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:.github/workflows/public-core-repair.yml",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/labs/page.jsx",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/research/page.tsx",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/research/research.module.css",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/research/workspace.tsx",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:tests/explorer-startup.browser.mjs",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:tests/research-discovery-http.test.mjs",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:tests/science-tool-entry.test.mjs",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/live-context.ts",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/research/discovery.ts",
+      "https://kansasfrontiermatrix.com/research",
+      "https://kansasfrontiermatrix.com/api/build"
+    ],
+    "evidence_hashes": [
+      "sha256:03088004012f7cc984c5e7f49cdd8c54228d7dd4a7c86576ea20597cf252c05a",
+      "sha256:0fb606c169af943fb6cbdbd03fed3eb1fe2ec3ab423c76bc2ef326758c2c4905",
+      "sha256:5a547f6a440bb1aeebb8b87734408a0c953c5671be4d71445b7370a6caad591c",
+      "sha256:09c7b66b06502af46469bf46ff76f60395b663e687844ff2e5e68e44171579df",
+      "sha256:501bb14bb4c00979a5d253cffedc32835d19cfc7dd1ebd9d087701b795b7411f",
+      "sha256:4bb63e7102a3f8ca25d841b70e18ef1fe99e91b80621f30054c9f53569acaa49",
+      "sha256:8f16e1b83894cc16401d2e3847ce224e98439d3bbf451cdd8b8fda0defce3168",
+      "sha256:72b0374586a112d98d31e9bef11d3b533872d612343e717f2fd7baaf7521219e",
+      "sha256:765c0999e820ac8c6b463407d4ebdc6c7649d715fb072fdaab69fd9b64a52ca5",
+      "sha256:225709a63abc8c628622b40f7b781a7c069c45d2c63d84923905aff8fefc5a48",
+      "sha256:4f66ca2e01aacf6fce990b0ff58fd8e3023ace5f7a37d0dcd51531a920b0cf64",
+      "sha256:70e42e93fc0ee91e1b889cc5dba78d04a19920be6c513ee36b5a937047e981d1",
+      "sha256:4f0342ea5b64508be898fdb737b635e3aecd0db20eb1dfa35faff90dee0813ea"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/labs/page.jsx": "CONFIRMED",
+    "app/layer-workspaces.ts": "CONFIRMED",
+    "app/research/page.tsx": "CONFIRMED",
+    "app/research/research.module.css": "CONFIRMED",
+    "app/research/workspace.tsx": "CONFIRMED",
+    "app/research/pathway-browser.module.css": "CONFIRMED",
+    "app/research/pathway-browser.tsx": "CONFIRMED",
+    "app/research/pathways.ts": "CONFIRMED",
+    "docs/statewide-research-pathways-20261127.md": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "CONFIRMED",
+    "tests/research-discovery-http.test.mjs": "CONFIRMED",
+    "tests/science-tool-entry.test.mjs": "CONFIRMED",
+    "tests/research-pathways.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build, TypeScript, changed-area ESLint and whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "18 focused model, discovery and production HTTP tests; all 24 tool destinations and topic fragments resolve",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Real Research component composition retains eight cards, five science labs, visible scopes and closed Konza case",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Final full Node 24.11.1 suite: 3902 passed, 25 skipped, zero failed; repeated after test-harness integration repair",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent scientific and experience review",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Local production preview serves all eight pathways and 1573-file application-input digest sha256:b39aeff08214fa3d4c054bb46946ba8ff061a82ed9dc73134214ca524238c7ec",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Fresh rendered browser acceptance at desktop, phone and short landscape sizes",
+      "outcome": "SKIPPED",
+      "reason": "Automated browser journeys added to existing isolated CI harness; run and screenshots pending at authoring. Chrome attachment requires desktop network policy; no local browser result claimed."
+    },
+    {
+      "gate": "Exact-head CI, human review and publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring. Public app reports preceding1570-file source-access digest sha256:d3a8be869a7b8aac8d52bd5196441c5596a052e98e2d62516845250c4b70a03a, not this increment."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T21:42:53.441452+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor coverage for updated Research artifacts; older receipts remain intact. Eight subjects and 24 links expose existing public tools with original scopes and limits. No new dataset, source admission, provider refresh, relay, settings, credentials, DNS or original Sites synchronization. UI and application-input parity do not establish scientific release or publication."
+}

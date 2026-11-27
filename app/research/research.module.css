@@ -159,3 +159,14 @@
 
 .attribution { overflow-wrap: anywhere; }
 .tableWrap .attribution a { display: inline; margin: 0; }
+
+.directoryLinks { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+.directoryLinks a { display: inline-flex; align-items: center; min-height: 44px; color: var(--water); font-size: 12px; }
+.caseStudy { border: 1px solid var(--line-strong); border-radius: 8px; background: var(--panel); }
+.caseStudy > summary { padding: 20px 24px; min-height: 64px; color: var(--gold-soft); font: 20px/1.5 Georgia, serif; }
+.caseStudyBody { padding: 0 24px 24px; }
+.caseStudyBody > p { color: var(--muted); font-size: 13px; }
+.caseStudyBody .pilotShowcase { margin: 24px 0; }
+.caseStudyBody .pilotShowcase h3 { font: 28px/1.2 Georgia, serif; margin: 0; }
+.referenceHeading { font: 25px/1.3 Georgia, serif; margin-top: 32px; }
+@media (max-width: 720px) { .caseStudy > summary { padding: 18px; font-size: 18px; } .caseStudyBody { padding: 0 18px 18px; } .caseStudyBody .pilotShowcase { padding: 20px 16px; } }
