@@ -9150,6 +9150,7 @@ export default function Home() {
             </div>
           </nav>
         <div className="top-actions">
+          <Link className="explorer-science-entry" href="/science" prefetch={false}>Science &amp; Labs</Link>
           <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen && primaryWorkspace === "map"} onClick={toggleExplorerGuide}>?</button>
           <details className="header-overflow-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
@@ -10446,6 +10447,7 @@ export default function Home() {
             <button type="button" onClick={(event) => { openSourceStatus(event.currentTarget); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
             <button type="button" onClick={(event) => { timelineReturnRef.current = event.currentTarget; setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={openMapSettings}>Style</button>
+            <Link className="mobile-science-entry" href="/science" prefetch={false}>Science &amp; Labs</Link>
           </nav>
 
           {undergroundOpen && <UndergroundPanel entryFocusRequest={undergroundFocusRequest} basemap={basemap} onBasemap={setBasemap} onLayers={openLayerCatalogFromUtility} key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}

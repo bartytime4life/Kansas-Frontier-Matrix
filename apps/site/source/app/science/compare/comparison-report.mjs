@@ -1,4 +1,5 @@
 import { csv, YEARS } from '../science-model.mjs';
+import { comparisonPlace, DEFAULT_COMPARISON_PLACE } from './comparison-places.mjs';
 
 const columns = [
   'schema', 'scope', 'comparison_place', 'selection_role', 'calendar_year', 'period', 'calendar_month',
@@ -55,5 +56,7 @@ export function comparisonJson(report) {
 export function comparisonExportFilename(report, extension) {
   const { year, compareYear } = selectionOf(report);
   if (extension !== 'csv' && extension !== 'json') throw new TypeError('Choose CSV or JSON.');
-  return `kfm-science-comparison-${year}-vs-${compareYear}.${extension}`;
+  const place = comparisonPlace(report.location?.id)?.id;
+  const tag = place && place !== DEFAULT_COMPARISON_PLACE ? `${place}-` : '';
+  return `kfm-science-comparison-${tag}${year}-vs-${compareYear}.${extension}`;
 }

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import ScienceNav from "../science-nav";
 import { buildScienceComparison } from "./comparison-model.mjs";
+import { COMPARISON_PLACES } from "./comparison-places.mjs";
 import { comparisonCsv, comparisonExportFilename, comparisonJson } from "./comparison-report.mjs";
 import { comparisonLabPath, comparisonPath, comparisonSelection, comparisonYears } from "./comparison-selection.mjs";
-import { loadComparisonInputs } from "./comparison-snapshots";
+import { loadComparisonInputs, type CountySnapshots } from "./comparison-snapshots";
 import ComparisonView from "./comparison-view";
 import styles from "./comparison.module.css";
 
@@ -46,42 +47,54 @@ function downloadText(value: string, type: string, filename: string) {
 
 export default function ScienceComparison({ children }: { children?: ReactNode } = {}) {
   const search = useSyncExternalStore(subscribeLocation, clientSearch, serverSearch);
-  const { year, compareYear } = comparisonSelection(search);
+  const { year, compareYear, place } = comparisonSelection(search);
   const [attempt, setAttempt] = useState(0);
-  const [result, setResult] = useState<InputState | null>(null);
+  const [results, setResults] = useState<Partial<Record<string, InputState>>>({});
+  const sharedCounties = useRef<CountySnapshots | undefined>(undefined);
   const [feedback, setFeedback] = useState<{ path: string; message: string; link?: string } | null>(null);
-  const path = comparisonPath({ year, compareYear });
-  const inputs = result?.attempt === attempt ? result.inputs : undefined;
+  const path = comparisonPath({ year, compareYear, place });
+  const result = results[place];
+  const inputs = result?.inputs ?? (result?.attempt === attempt ? null : undefined);
 
   useEffect(() => {
+    if (inputs !== undefined || comparisonSelection(clientSearch()).place !== place) return;
     const controller = new AbortController();
-    loadComparisonInputs(controller.signal).then(loaded => {
-      if (!controller.signal.aborted) setResult({ attempt, inputs: loaded });
+    loadComparisonInputs(place, controller.signal, sharedCounties.current).then(loaded => {
+      if (controller.signal.aborted) return;
+      const { drought, air } = loaded.snapshots;
+      sharedCounties.current = { drought, air };
+      setResults(previous => ({ ...previous, [place]: { attempt, inputs: loaded } }));
     }).catch(() => {
       if (controller.signal.aborted) return;
       controller.abort();
-      setResult({ attempt, inputs: null });
+      setResults(previous => ({ ...previous, [place]: { attempt, inputs: null } }));
     });
     return () => controller.abort();
-  }, [attempt]);
+  }, [attempt, inputs, place]);
 
   const report = useMemo(() => {
     if (!inputs) return null;
     try {
-      return buildScienceComparison(inputs.snapshots, { year, compareYear }, inputs.evidence);
+      return buildScienceComparison(inputs.snapshots, { year, compareYear, place }, inputs.evidence);
     } catch {
       return null;
     }
-  }, [inputs, year, compareYear]);
+  }, [inputs, year, compareYear, place]);
   const failed = inputs !== undefined && !report;
   const message = feedback?.path === path ? feedback : null;
 
-  function setYears(nextYear: number, otherYear: number) {
-    const nextPath = comparisonPath({ year: nextYear, compareYear: otherYear });
+  function setSelection(nextYear: number, otherYear: number, nextPlace = place) {
+    const nextPath = comparisonPath({ year: nextYear, compareYear: otherYear, place: nextPlace });
     if (nextPath === path) return;
     window.history.pushState(null, "", nextPath);
     window.dispatchEvent(new Event(LOCATION_EVENT));
     setFeedback(null);
+  }
+
+  function retry() {
+    sharedCounties.current = undefined;
+    setResults(previous => ({ ...previous, [place]: undefined }));
+    setAttempt(value => value + 1);
   }
 
   async function copyLink() {
@@ -106,17 +119,21 @@ export default function ScienceComparison({ children }: { children?: ReactNode }
   }
 
   return <>
-    <ScienceNav active="comparison" selection={{ year, compareYear }} sourceHref="#comparison-interpretation" sourceLabel="Reading the sources ↓" />
+    <ScienceNav active="comparison" selection={{ year, compareYear, place }} sourceHref="#comparison-interpretation" sourceLabel="Reading the sources ↓" />
     {children}
     <section className={styles.controls} aria-label="Comparison settings">
       <label className={styles.control}>Reference year<select value={year} onChange={event => {
         const next = Number(event.target.value);
-        setYears(next, next === compareYear ? year : compareYear);
+        setSelection(next, next === compareYear ? year : compareYear);
       }}>{comparisonYears.map(option => <option key={option}>{option}</option>)}</select></label>
       <label className={styles.control}>Compare with<select value={compareYear} onChange={event => {
         const next = Number(event.target.value);
-        setYears(next === year ? compareYear : year, next);
+        setSelection(next === year ? compareYear : year, next);
       }}>{comparisonYears.map(option => <option key={option}>{option}</option>)}</select></label>
+      <label className={`${styles.control} ${styles.areaControl}`}>Comparison area<select value={place}
+        onChange={event => setSelection(year, compareYear, event.target.value)}>
+        {COMPARISON_PLACES.map(area => <option key={area.id} value={area.id}>{area.name}</option>)}
+      </select></label>
       <div className={styles.actions}>
         <button type="button" onClick={copyLink}>Copy comparison link</button>
         <button type="button" disabled={!report} onClick={() => exportReport("csv")}>Download CSV</button>
@@ -126,9 +143,9 @@ export default function ScienceComparison({ children }: { children?: ReactNode }
       {message && <div className={styles.status}><p role="status">{message.message}</p>{message.link &&
         <label className={styles.control}>Comparison link<input readOnly value={message.link} onFocus={event => event.currentTarget.select()} /></label>}</div>}
     </section>
-    {inputs === undefined && <p className={styles.status} role="status">Checking four public science snapshots…</p>}
+    {inputs === undefined && <p className={styles.status} role="status">Verifying data for the selected area…</p>}
     <div aria-busy={inputs === undefined}>
-      {failed && <div className={styles.status} role="alert"><p>The comparison could not verify all four snapshots. You can retry or open an individual lab below.</p><button type="button" onClick={() => setAttempt(value => value + 1)}>Retry comparison</button></div>}
+      {failed && <div className={styles.status} role="alert"><p>The comparison could not verify its four sources for this area. Retry, choose another area, or open an individual lab below.</p><button type="button" onClick={retry}>Retry comparison</button></div>}
       {report && <ComparisonView report={report} />}
     </div>
     <section className={styles.reading} aria-labelledby="comparison-interpretation">
@@ -140,7 +157,7 @@ export default function ScienceComparison({ children }: { children?: ReactNode }
       </ul>
       <ul>
         {detailedLabs.map(([metric, title]) => {
-          const href = comparisonLabPath(metric, year);
+          const href = comparisonLabPath(metric, year, place);
           return href && <li key={metric}><Link href={href}>{title}</Link></li>;
         })}
       </ul>

@@ -4,44 +4,35 @@ import drought from "../labs/county-drought/snapshot-manifest.json";
 import soil from "../labs/soil-profile/snapshot-manifest.json";
 import air from "../labs/daily-air-quality/snapshot-manifest.json";
 import sunlight from "../labs/sunlight-and-sky/snapshot-manifest.json";
+import { nativeScienceDirectory } from "./science-directory.mjs";
 import ScienceLauncher from "./science-launcher";
 import styles from "./science.module.css";
 
 export const metadata = {
-  title: "Kansas science tools | Kansas Frontier Matrix",
-  description: "Start a source-backed Kansas science question with daily temperature and precipitation, weekly county drought, measured soil depths, daily county air quality or modeled daily sunlight energy.",
+  title: "Science & Labs | Kansas Frontier Matrix",
+  description: "Find Kansas science labs, compare years and inspect the data behind each result.",
 };
 
-const number = (value: number) => value.toLocaleString("en-US");
-const period = (value: { from: string; to: string }) => `${value.from.slice(0, 4)}–${value.to.slice(0, 4)}`;
-
 export default function SciencePage() {
-  const climateRecords = climate.stations.reduce((sum, station) => sum + station.records, 0);
-  const soilRecords = soil.stations.reduce((sum, station) => sum + station.records, 0);
+  const entries = nativeScienceDirectory({ climate, drought, soil, air, sunlight });
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science navigation"><Link href="/">← KFM Explorer</Link><Link href="/observatory/sources">Research & sources ↗</Link><Link href="/science/services">Custom work ↗</Link></nav>
-    <header className={styles.hero}><span className={styles.eyebrow}>Kansas Frontier Matrix / Science tools</span><h1>Ask a Kansas question.<br /><em>Start with the data.</em></h1><p>Explore measured weather and soil, county drought and air quality, or modeled daily sunlight. Five labs put the data, the question and the source in one place.</p><div className={styles.heroFacts}><span><strong>05</strong> science labs</span><span><strong>{period(climate.period)}</strong> data window</span><span>Source files & reproducible downloads included</span></div></header>
-
-    <ScienceLauncher />
-
-    <section className={styles.comparison} aria-labelledby="science-comparison-heading">
-      <div><h2 id="science-comparison-heading">Compare two years in Topeka</h2><p>Read precipitation, drought, reported air quality and modeled sunlight month by month. Each chart keeps its own scale and source.</p></div>
-      <Link href="/science/compare">Open the comparison report ↗</Link>
+    <nav className={styles.navigation} aria-label="Science and Labs navigation">
+      <Link href="/">← KFM Explorer</Link>
+      <a href="#find-a-lab">Find a lab</a>
+      <Link href="/observatory/sources">Data sources</Link>
+    </nav>
+    <header className={styles.hero}>
+      <h1>Science &amp; Labs</h1>
+      <p>Find a Kansas question, check where the data reach, and open a lab with the right records.</p>
+      <div className={styles.shortcuts}>
+        <Link href="/science/compare">Compare two years <span aria-hidden="true">↗</span></Link>
+      </div>
+    </header>
+    <ScienceLauncher entries={entries} />
+    <section className={styles.reading} aria-labelledby="science-reading-heading">
+      <div><h2 id="science-reading-heading">Work with the evidence</h2><p>Open a lab to inspect its source, date range, and gaps. The year comparison gives each measurement its own chart and exports the records and source details together.</p></div>
+      <Link href="/observatory/sources">Explore data sources ↗</Link>
+      <Link href="/science/services">Request custom work ↗</Link>
     </section>
-
-    <section className={styles.tools} aria-label="Choose a science question">
-      <article className={styles.tool} data-tool="weather"><div className={styles.toolScope}><span className={styles.toolIndex}>01 / Daily weather</span><strong>{climate.stations.length}<span>stations</span></strong><small>{number(climateRecords)} station dates<br />{period(climate.period)} · NOAA GHCN-Daily</small></div><div className={styles.toolContent}><span className={styles.toolName}>Heat & Rain Lab</span><h2>What temperatures and precipitation shaped the season?</h2><p>Read daily extremes and precipitation at Dodge City, Wichita and Topeka. Adjust a heat or wet-day threshold, inspect the original flags and take the observations with you.</p><ul><li>Daily maximum & minimum</li><li>Quantified precipitation & traces</li><li>Monthly comparisons</li></ul><Link href="/labs/heat-and-rain" className={styles.startLink}>Explore heat & rain <span aria-hidden="true">↗</span></Link></div><aside className={styles.toolNote}><span>Look for</span><p>The first daily minimum at or below freezing. A run of hot days. When measurable precipitation arrived.</p><small>Station observations; conditions between stations are not inferred.</small></aside></article>
-
-      <article className={styles.tool} data-tool="drought"><div className={styles.toolScope}><span className={styles.toolIndex}>02 / County landscape</span><strong>{drought.counties.length}<span>counties</span></strong><small>{number(drought.snapshot.weeks)} weekly assessments<br />{period(drought.period)} · U.S. Drought Monitor</small></div><div className={styles.toolContent}><span className={styles.toolName}>County Drought Lab</span><h2>How often did drought cover your county?</h2><p>Put two Kansas counties side by side. Follow drought’s area and severity, inspect consecutive observed assessments and compare the same question across all counties.</p><ul><li>County-area percentages</li><li>Severity & observed runs</li><li>All-county comparison</li></ul><Link href="/labs/county-drought" className={styles.startLink}>Compare county drought <span aria-hidden="true">↗</span></Link></div><aside className={styles.toolNote}><span>Look for</span><p>How broadly drought reached, and how the weekly pattern differed between places.</p><small>Percentages describe area; they do not count residents or physical drought days.</small></aside></article>
-
-      <article className={styles.tool} data-tool="soil"><div className={styles.toolScope}><span className={styles.toolIndex}>03 / Below the surface</span><strong>{soil.depthsCm.length}<span>measured depths</span></strong><small>{soil.stations.length} stations · {number(soilRecords)} station dates<br />{period(soil.period)} · NOAA USCRN</small></div><div className={styles.toolContent}><span className={styles.toolName}>Soil Profile Lab</span><h2>What changed beneath the surface?</h2><p>Explore daily soil moisture and temperature near Manhattan and Oakley, from {soil.depthsCm[0]} to {soil.depthsCm.at(-1)} cm. Compare measured depths while keeping the real gaps visible.</p><ul><li>Volumetric water content</li><li>Daily mean soil temperature</li><li>Coverage at every depth</li></ul><Link href="/labs/soil-profile" className={styles.startLink}>Inspect the soil profile <span aria-hidden="true">↗</span></Link></div><aside className={styles.toolNote}><span>Look for</span><p>How the daily record changed with depth, and where the observations stop.</p><small>Five sensor depths; a continuous soil column is not reconstructed.</small></aside></article>
-      <article className={styles.tool} data-tool="air"><div className={styles.toolScope}><span className={styles.toolIndex}>04 / Reported air</span><strong>{air.counties.length}<span>reporting counties / 105</span></strong><small>{number(air.snapshot.records)} reported county-days<br />{period(air.period)} · EPA AirData</small></div><div className={styles.toolContent}><span className={styles.toolName}>Daily Air Quality Lab</span><h2>When did the air change?</h2><p>Follow daily county AQI, see the reported categories on a calendar and inspect the pollutant and monitor record that defined each day. Set a threshold while keeping the missing dates visible.</p><ul><li>EPA-published daily AQI</li><li>Defining pollutant & source row</li><li>Reported-day denominators</li></ul><Link href="/labs/daily-air-quality" className={styles.startLink}>Inspect daily air quality <span aria-hidden="true">↗</span></Link></div><aside className={styles.toolNote}><span>Look for</span><p>When reported AQI rose, and which pollutant defined the county record.</p><small>Highest reported monitor AQI; coverage varies and individual exposure is not inferred.</small></aside></article>
-      <article className={styles.tool} data-tool="sunlight"><div className={styles.toolScope}><span className={styles.toolIndex}>05 / Modeled sunlight</span><strong>{sunlight.points.length}<span>query points</span></strong><small>{number(sunlight.points.reduce((sum, point) => sum + point.records, 0))} point dates<br />{period(sunlight.period)} · NASA POWER<br />Nominal {sunlight.grid.latitudeDegrees}° × {sunlight.grid.longitudeDegrees}° radiation grid</small></div><div className={styles.toolContent}><span className={styles.toolName}>Sunlight &amp; Sky Lab</span><h2>How did daily sunlight differ across Kansas?</h2><p>Compare modeled incoming energy at Dodge City, Wichita and Topeka query points. Follow daily all-sky values, use a modeled clear-sky reference and compare places on common dates.</p><ul><li>Incoming horizontal energy</li><li>kWh/m²/day · NASA Local Solar Time</li><li>Valid-day &amp; paired-day coverage</li></ul><Link href="/labs/sunlight-and-sky" className={styles.startLink}>Explore sunlight &amp; sky <span aria-hidden="true">↗</span></Link></div><aside className={styles.toolNote}><span>Look for</span><p>The daily energy record and seasonal differences between the three query points.</p><small>Satellite-derived model estimates; coarse grid context is not a ground reading, field estimate or panel yield.</small></aside></article>
-    </section>
-
-    <section className={styles.customWork} aria-labelledby="science-custom-heading"><div><span className={styles.eyebrow}>For your team / optional custom work</span><h2 id="science-custom-heading">Take the question further.</h2><p>A focused evidence brief. A reusable data pack. A guided team walkthrough. Discuss a scope that fits your question, with the sources and limitations attached.</p><small>The tools, worked report and self-service downloads stay free.</small></div><Link href="/science/services">Discuss a custom project <span aria-hidden="true">↗</span></Link></section>
-
-    <section className={styles.readingNote} aria-labelledby="science-reading-heading"><div><span className={styles.eyebrow}>A useful answer has boundaries</span><h2 id="science-reading-heading">Keep the missing values.<br />Keep the source.</h2></div><div><p>Every tool shows its dates, measurement or model support and limits, with daily or weekly records you can inspect and export. Calendar record counts include missing values; they are not counts of valid measurements. Air-quality counts above are reported county-days; its calendar also retains dates without a report.</p><p>Captured provider data support exploration. Measurements, county summaries and modeled estimates keep their separate meanings. Six years do not establish a climate normal, a forecast or a field-wide estimate. Scientific review and KFM dataset admission remain separate.</p><Link href="/observatory/sources">Explore the research and sources ↗</Link></div></section>
-    <footer className={styles.footer}><span>Kansas Frontier Matrix · Evidence within reach</span><Link href="/">Return to the Explorer ↗</Link></footer>
   </div></main>;
 }

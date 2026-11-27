@@ -23,6 +23,7 @@ type ComparisonMetric = {
 };
 type ComparisonReport = {
   selection: { year: number; compareYear: number };
+  location: { id: string; name: string };
   series: ReadonlyArray<ComparisonMetric>;
 };
 
@@ -78,7 +79,7 @@ function TableValue({ value, supportUnit }: { value: CoveredValue; supportUnit: 
   return <td><span>{formatValue(value.value)}</span><small>{value.valid} of {value.expected} {supportUnit}</small></td>;
 }
 
-function MetricPanel({ metric, year, compareYear }: { metric: ComparisonMetric; year: number; compareYear: number }) {
+function MetricPanel({ metric, year, compareYear, place }: { metric: ComparisonMetric; year: number; compareYear: number; place: string }) {
   const titleId = `comparison-${metric.id}`;
   return <article className={styles.metric} aria-labelledby={titleId}>
     <header className={styles.metricHeader}>
@@ -118,7 +119,7 @@ function MetricPanel({ metric, year, compareYear }: { metric: ComparisonMetric; 
       </ul>
     </details>
     <footer className={styles.metricLinks}>
-      <a href={comparisonLabPath(metric.id, year) ?? metric.labPath}>Explore {year} in the full lab</a>
+      <a href={comparisonLabPath(metric.id, year, place) ?? metric.labPath}>Explore {year} in the full lab</a>
       <a href={metric.documentation}>Provider documentation</a>
     </footer>
   </article>;
@@ -129,7 +130,7 @@ export default function ComparisonView({ report }: { report: ComparisonReport })
   return <section className={styles.results} aria-labelledby="comparison-results">
     <header className={styles.resultsHeader}>
       <div>
-        <h2 id="comparison-results">Month by month</h2>
+        <h2 id="comparison-results">{report.location.name}</h2>
         <p>Each chart shares one scale across the two years. Coverage shows how many days or assessments support each value.</p>
       </div>
       <ul className={styles.legend} aria-label="Chart key">
@@ -140,6 +141,6 @@ export default function ComparisonView({ report }: { report: ComparisonReport })
       </ul>
     </header>
     <div className={styles.metrics}>{report.series.map((metric) => <MetricPanel
-      key={metric.id} metric={metric} year={year} compareYear={compareYear} />)}</div>
+      key={metric.id} metric={metric} year={year} compareYear={compareYear} place={report.location.id} />)}</div>
   </section>;
 }

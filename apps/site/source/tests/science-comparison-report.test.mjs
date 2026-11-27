@@ -94,3 +94,13 @@ test('JSON is deterministic and preserves unavailable values, limitations, and p
   assert.throws(() => comparisonJson({ ...report, series: [] }));
   assert.throws(() => comparisonCsv(null));
 });
+
+test('area identity survives exports and distinguishes the two new comparison filenames', () => {
+  const report = fixture();
+  for (const [id, name] of [['wichita', 'Wichita and Sedgwick County'], ['dodge-city', 'Dodge City and Ford County']]) {
+    const moved = { ...report, location: { id, name } };
+    assert.equal(comparisonExportFilename(moved, 'csv'), `kfm-science-comparison-${id}-2025-vs-2024.csv`);
+    assert.deepEqual(JSON.parse(comparisonJson(moved)).location, { id, name });
+    assert.equal(readCsv(comparisonCsv(moved))[0].comparison_place, name);
+  }
+});

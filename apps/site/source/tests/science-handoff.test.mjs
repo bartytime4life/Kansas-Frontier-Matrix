@@ -28,11 +28,14 @@ test('every quick start uses the target tool native clock window and distinct co
 test('handoff retains normalized thresholds, depths, dates, two-place selections and comparison years', () => {
   const cases = [
     ['weather', { station: 'USW00013996', year: 2024, month: 2, units: 'imperial', heat: 32.2, wet: 1 }, '/labs/heat-and-rain?station=USW00013996&year=2024&month=2&units=imperial&heat=32.2&wet=1'],
-    ['drought', { countyId: '20177', compareId: '20055', fromYear: 2020, toYear: 2024, level: 3, threshold: 25.5 }, '/labs/county-drought?county=20177&compare=20055&from=2020&to=2024&level=3&threshold=25.5'],
+    ['drought', { countyId: '20177', compareId: '20055', fromYear: 2020, toYear: 2024, level: 3, threshold: 25.5, date: '2024-06-04' }, '/labs/county-drought?county=20177&compare=20055&from=2020&to=2024&level=3&threshold=25.5&date=2024-06-04'],
     ['soil', { station: '53974', year: 2024, month: 2, depth: 100, variable: 'temperature', date: '2024-02-29' }, '/labs/soil-profile?station=53974&year=2024&month=2&depth=100&variable=temperature&date=2024-02-29'],
     ['air', { county: '20177', year: 2024, month: 2, threshold: 101, date: '2024-02-29' }, '/labs/daily-air-quality?county=20177&year=2024&month=2&threshold=101&date=2024-02-29'],
     ['sunlight', { primary: 'wichita', comparison: 'wichita', year: 2024, month: 0, date: '2024-02-29' }, '/labs/sunlight-and-sky?primary=wichita&comparison=wichita&year=2024&month=0&date=2024-02-29'],
     ['comparison', { year: 2021, compareYear: 2023 }, '/science/compare?year=2021&compare=2023'],
+    ['comparison', { year: 2021, compareYear: 2023, place: 'topeka' }, '/science/compare?year=2021&compare=2023'],
+    ['comparison', { year: 2021, compareYear: 2023, place: 'wichita' }, '/science/compare?year=2021&compare=2023&place=wichita'],
+    ['comparison', { year: 2021, compareYear: 2023, place: 'dodge-city' }, '/science/compare?year=2021&compare=2023&place=dodge-city'],
   ];
   for (const [tool, selection, expected] of cases) {
     const path = scienceSelectionPath(tool, { ...selection, token: 'must-not-propagate', lat: 39 });
@@ -54,7 +57,7 @@ test('current manifest coverage is accepted without broadening source coverage',
   for (const county of (await manifest('county-drought')).counties) assert.ok(safeScienceContext(`/labs/county-drought?county=${county.id}`));
   for (const county of (await manifest('daily-air-quality')).counties) assert.ok(safeScienceContext(`/labs/daily-air-quality?county=${county.id}`));
   for (const point of (await manifest('sunlight-and-sky')).points) assert.ok(safeScienceContext(`/labs/sunlight-and-sky?primary=${point.id}`));
-  assert.equal(safeScienceContext('/labs/daily-air-quality?county=20055'), null, 'no EPA display snapshot for Ford County');
+  assert.equal(safeScienceContext('/labs/daily-air-quality?county=20055'), null, 'no EPA display snapshot for Finney County');
   assert.equal(safeScienceContext('/labs/soil-profile?station=topeka'), null, 'no invented Topeka soil station');
 });
 
@@ -66,9 +69,11 @@ test('inquiry context rejects foreign routes, credentials, arbitrary text, repea
     '/labs/heat-and-rain?year=2025e0', '/labs/heat-and-rain?station=USW00000000', '/labs/heat-and-rain?heat=Infinity',
     '/labs/county-drought?county=20000', '/labs/county-drought?county=20002', '/labs/county-drought?county=20211',
     '/labs/county-drought?from=2025&to=2020', '/labs/county-drought?level=0', '/labs/county-drought?threshold=1.234',
+    '/labs/county-drought?from=2023&to=2023&date=2024-06-04', '/labs/county-drought?date=2024-06-05',
     '/labs/daily-air-quality?threshold=501', '/labs/soil-profile?depth=30',
     '/labs/sunlight-and-sky?date=2023-02-29', '/labs/sunlight-and-sky?date=2024-02-29', '/labs/sunlight-and-sky?year=2025&date=2024-02-29',
     '/labs/sunlight-and-sky?month=3&date=2024-02-29', '/science/compare?year=2024&compare=2024',
+    '/science/compare?place=lawrence', '/science/compare?place=topeka&place=wichita',
     '/labs/daily-air-quality?county=20177%0Asecret', `/science/compare?${'a'.repeat(1201)}`];
   for (const path of invalid) assert.equal(safeScienceContext(path), null, String(path));
   assert.equal(safeScienceContext('/science/compare?compare=2021&year=2024'), '/science/compare?year=2024&compare=2021');
