@@ -1,6 +1,7 @@
 'use client';
-import {useEffect,useLayoutEffect,useRef,useState,type FormEvent} from 'react';
+import {Suspense,useEffect,useLayoutEffect,useRef,useState,type FormEvent} from 'react';
 import {fetchArchive} from '../archive-layer-data';
+import {PageAssistant} from '../site-assistant';
 import styles from './library.module.css';
 
 // The archive-search dataset (scripts/local-data/texts.mjs): ranked FTS5 hits over newspaper OCR
@@ -17,6 +18,13 @@ const NEWSPAPER_TITLE=/^[a-z]{2}\d{8}$/i;
 type SearchQuery={q:string;source:Source;from:string;to:string;title:string};
 type SearchRequest={query:SearchQuery;offset:number;previous:number[]};
 type SearchPage=SearchRequest&{answer:SearchAnswer;focusResults:boolean};
+function exactArchivePhrase(query:string){
+ const words=query.trim().split(/\s+/);
+ if(words.length<2||words.length>8||words.some(word=>
+  !/^[\p{L}\p{N}'’-]{1,40}$/u.test(word)||!/[\p{L}\p{N}]/u.test(word)||/^(AND|OR|NOT)$/i.test(word)))return null;
+ const phrase='"'+words.join(' ')+'"';
+ return phrase.length<=200?phrase:null;
+}
 function searchTitle(source:Source,value:string){
  if(source==='newspapers')return NEWSPAPER_TITLE.test(value)?value.toLowerCase():'';
  return value.length<=200&&[...value].every(c=>c.charCodeAt(0)>31&&c.charCodeAt(0)!==127)?value:'';
@@ -87,7 +95,12 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
   finally{clearTimeout(timer);if(version===generation.current){setBusy(false);request.current=null;}}
  }
  function cancel(){generation.current++;request.current?.abort();request.current=null;setBusy(false);setRetry(null);setStatus('Search cancelled. No new results were applied.');queryInput.current?.focus();}
- function submit(event:FormEvent){event.preventDefault();void run({query:{q,source,from,to,title:''},offset:0,previous:[]},true);}
+ function searchDraft(words:string){
+  const activeTitle=page?.query.source===source?page.query.title:'';
+  void run({query:{q:words,source,from,to,title:activeTitle},offset:0,previous:[]},true);
+ }
+ function submit(event:FormEvent){event.preventDefault();searchDraft(q);}
+ function editSearch(){queryInput.current?.focus({preventScroll:true});queryInput.current?.scrollIntoView({block:'center',behavior:'auto'});}
  function filterTitle(value:string){if(page)void run({query:{...page.query,title:value},offset:0,previous:[]},true);}
  useEffect(()=>{
   let current=true;
@@ -109,28 +122,46 @@ export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspaper
  const total=answer?.total??0,nextOffset=offset+(answer?.rows.length??0),canNext=!!answer?.rows.length&&nextOffset<total&&nextOffset<MAX_OFFSET;
  const draftChanged=page&&(q.trim()!==page.query.q||source!==page.query.source||from!==page.query.from||to!==page.query.to);
  const period=page?.query.from&&page.query.to?`${page.query.from}–${page.query.to}`:page?.query.from?`${page.query.from} onward`:page?.query.to?`through ${page.query.to}`:'all loaded years';
+ const exactPhrase=exactArchivePhrase(q);
+ const collectionName=source==='newspapers'?'Kansas newspapers':'public-domain Kansas texts';
+ const assistantQuestion=q.trim()
+  ?`Help me refine these archive search terms for ${collectionName}: ${JSON.stringify(q.trim())}. Suggest an exact phrase, alternate wording, and a way to narrow the results.`
+  :`How should I turn a topic, place, or event into useful search terms for ${collectionName}?`;
  return <section ref={section} className={styles.search} aria-labelledby="archive-search-title">
   <h2 ref={searchHeading} tabIndex={-1} id="archive-search-title">Search the texts</h2>
-  <p>Full-text search over the Kansas newspaper pages and public-domain texts the PC has loaded: words, <q>quoted phrases</q>, prefixes such as <code>wich*</code>, and AND, OR, NOT between terms. Results rank the original OCR, so spellings and scanning errors of the period affect what is found.</p>
-  <p><a href="/labs/newspaper-pulse">Compare word coverage in Newspaper Pulse →</a></p>
-  {loadedThrough&&(loadedThrough.newspapers||loadedThrough.texts)&&<p className={styles.note}>Loading continues on the PC: {loadedThrough.newspapers?`newspaper pages last added ${loadedThrough.newspapers}`:'newspaper load date not reported'}; {loadedThrough.texts?`archive texts last added ${loadedThrough.texts}`:'text load date not reported'}. A missing match may not be loaded yet.</p>}
-  <form className={styles.searchForm} onSubmit={submit} aria-describedby={formError?"archive-search-error":undefined}>
+  <p>Search digitized Kansas newspapers and public-domain texts. For a name or place, use a quoted phrase so the words match together.</p>
+  <form id="archive-search-form" className={styles.searchForm} onSubmit={submit} aria-describedby={formError?"archive-search-error":undefined}>
    <label className={styles.grow}>Words or phrase<input ref={queryInput} type="search" value={q} onChange={e=>setQ(e.target.value)} placeholder='tornado · "dust storm" · grasshopper*' maxLength={200} required/></label>
    <label>Collection<select value={source} onChange={e=>setSource(e.target.value as Source)}><option value="newspapers">Newspaper pages</option><option value="texts">Archive texts</option></select></label>
    <label>From year<input type="text" inputMode="numeric" value={from} onChange={e=>setFrom(e.target.value)} placeholder="1864" maxLength={4} pattern="\d{4}"/></label>
    <label>To year<input type="text" inputMode="numeric" value={to} onChange={e=>setTo(e.target.value)} placeholder="1960" maxLength={4} pattern="\d{4}"/></label>
-   <button type="submit" disabled={busy}>Search</button>
-   {busy&&<button type="button" onClick={cancel}>Cancel search</button>}
   </form>
+  <div className={styles.searchActions}>
+   <button type="submit" form="archive-search-form" disabled={busy}>Search</button>
+   {exactPhrase&&<button type="button" disabled={busy} onClick={()=>{queryInput.current?.focus();setQ(exactPhrase);searchDraft(exactPhrase);}}>Match exact phrase</button>}
+   {busy&&<button type="button" onClick={cancel}>Cancel search</button>}
+   <Suspense fallback={null}><PageAssistant inlineQuestion={assistantQuestion}/></Suspense>
+  </div>
   {formError&&<p id="archive-search-error" className={styles.note} role="alert">{formError}</p>}
   <p role="status" aria-live="polite" aria-atomic="true">{status}</p>
   {retry&&!busy&&<button type="button" onClick={()=>{queryInput.current?.focus();void run(retry,true);}}>Retry last search</button>}
   {page&&(busy||retry||draftChanged)&&<p className={styles.note}>{busy?'Searching. Previous results remain below until the new search finishes.':retry?'The last search failed. Previous results remain below.':"Form changes have not been applied. Search to update the results below."}</p>}
-  {title&&answer&&<p className={styles.note}>Showing one title only. <button type="button" disabled={busy} onClick={()=>filterTitle('')}>Show all titles</button></p>}
+  {title&&answer&&<p className={styles.note}>Title filter: {facets?.titles.find(item=>item.id===title)?.title??title} <button type="button" disabled={busy} onClick={()=>filterTitle('')}>Show all titles</button></p>}
+  <details className={styles.searchHelp}>
+   <summary>Search tips and archive coverage</summary>
+   <ul>
+    <li><code>barton county</code> finds both words anywhere on the same page. <code>&quot;barton county&quot;</code> finds them together in that order.</li>
+    <li><code>&quot;barton county&quot; OR &quot;great bend&quot;</code> includes either phrase. Add <code>AND flood</code> to a phrase to require a topic on the same page.</li>
+    <li>Try a newspaper title, year range, alternate spelling, or prefix such as <code>grasshopp*</code>. Scanning errors can hide matches.</li>
+   </ul>
+   {loadedThrough&&(loadedThrough.newspapers||loadedThrough.texts)&&<p>Most recent additions reported: {loadedThrough.newspapers?`newspaper pages ${loadedThrough.newspapers}`:'newspaper load date unavailable'}, {loadedThrough.texts?`archive texts ${loadedThrough.texts}`:'text load date unavailable'}. Coverage varies by title and year.</p>}
+   <a href="/labs/newspaper-pulse">Compare word coverage in Newspaper Pulse →</a>
+  </details>
   {answer&&page&&<section className={styles.searchLayout} aria-labelledby="archive-results-title" aria-busy={busy}>
    <div className={styles.hits}>
-    <h3 ref={resultsHeading} tabIndex={-1} id="archive-results-title">Results for “{page.query.q}”</h3>
+    <h3 ref={resultsHeading} tabIndex={-1} id="archive-results-title">Results for {/^"[^"]+"$/.test(page.query.q)?page.query.q:`“${page.query.q}”`}</h3>
     <p className={styles.meta}>{page.query.source==='newspapers'?'Newspaper pages':'Archive texts'} · {period}</p>
+    <button type="button" className={styles.editSearch} onClick={editSearch}>Edit search</button>
     {answer.rows.map(hit=><article className={styles.hit} key={hit.id}>
      <h4>{hit.title??(hit.source==='newspapers'?hit.lccn:hit.identifier)}</h4>
      <p className={styles.meta}>{hit.source==='newspapers'

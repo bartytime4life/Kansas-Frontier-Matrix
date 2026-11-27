@@ -16,7 +16,8 @@ count, leaving unseen hits between pages.
    year bounds and title filter together with the response. A results heading
    identifies that query. Editing the form displays an unapplied-changes notice;
    it does not relabel the old results or send a request. Search applies the form
-   at the first page and clears its old title filter.
+   at the first page and retains an active title filter when searching the same
+   collection. Show all titles clears it. Edit search returns to the words field.
 2. **Browse.** Next and Previous use the displayed page's submitted query.
    Next advances by the number of returned rows; Previous retraces actual page
    starts. Title facets use the same submitted query, including its original
@@ -31,6 +32,18 @@ count, leaving unseen hits between pages.
    alert before contacting the archive. Search status is polite and atomic;
    the result region has a name and busy state. Empty pages retain Previous
    where applicable and never announce an inverted range such as “Showing 1–0.”
+
+The library scrolls from the catalog through the text results independently of
+the map's viewport. At the end of the collection list, the next wheel or touch
+gesture can continue down the page. A shared text-search link opens at the form.
+
+For a plain multiword query, **Match exact phrase** searches for adjacent words
+in their entered order. **Search tips and archive coverage** explains how to
+combine phrases and topic terms, use prefixes, and narrow by year or title.
+**Ask KFM for search terms** opens an editable question using the terms and
+source from the form. Sending the question is a separate action. Archive hits,
+OCR snippets, and collection records stay in the archive reader. Check the
+original source links before using a search result as historical evidence.
 
 This preserves query identity, not a database snapshot across page requests.
 Archive editions and retained coverage can change between reads. OCR, original
@@ -67,7 +80,7 @@ not verified.
 
 ## Scope and rollback
 
-Implementation is confined to `app/data-library/search.tsx` and its existing
-stylesheet. Regressions live in `tests/archive-search-ui.test.mjs`. Revert these
-changes together to restore the earlier UI. No database, saved workspace or
-deployment rollback is needed for this local candidate. Publication is separate.
+The library route owns its scrolling and search controls. The existing page
+assistant owns the optional question draft and keeps the archive search context
+at interface guidance. Revert the application change to restore the prior
+behavior. The existing provider and database rollout procedures still apply.
