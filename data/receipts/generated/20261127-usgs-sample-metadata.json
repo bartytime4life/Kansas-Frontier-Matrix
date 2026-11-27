@@ -1,0 +1,136 @@
+{
+  "receipt_id": "kfm-usgs-sample-metadata-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/usgs-sample-dictionary.ts",
+    "app/water-quality-dictionary.ts",
+    "app/water-quality-context.ts",
+    "app/data-lab/previous-quality-view.ts",
+    "app/data-lab/lab-bundle.ts",
+    "tests/usgs-sample-metadata.test.mjs",
+    "tests/water-quality-upgrade.test.mjs",
+    "tests/water-quality-metadata.test.mjs",
+    "tests/collection-integration.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/usgs-sample-dictionary.ts": "sha256:c6af60e6a7f0758a5e67ea07d427612aba9b1bf39a33e1fc6bb6922eed410428",
+    "app/water-quality-dictionary.ts": "sha256:ea22ae296506710364902835f8fc30bddaaae919278962d057899872c484d713",
+    "app/water-quality-context.ts": "sha256:2698e1d251ebc1975235145164e05c2467340034d0648e29230edb3cc8e5421f",
+    "app/data-lab/previous-quality-view.ts": "sha256:5753b322efcd3fe0d6465c77665c8cd045be8d2dcbde5acfbb8bb47bcc7d510a",
+    "app/data-lab/lab-bundle.ts": "sha256:aff294c90afe5866515e49475e6576f4c042e989f9be753183e8b632db34b7ae",
+    "tests/usgs-sample-metadata.test.mjs": "sha256:e91f0a5da12216a2b3aa91c4ac9ed0a074ba3f5d2b009fefce2101cf55a633e4",
+    "tests/water-quality-upgrade.test.mjs": "sha256:1db3c7af7d2e04970f547efffcaf06efd833ddbfc475c49a7b48ede7cffc083f",
+    "tests/water-quality-metadata.test.mjs": "sha256:ddefa0c49968bb689c877bad764e629aa1f10655536b1b7014650186ff49eb3b",
+    "tests/collection-integration.test.mjs": "sha256:4171e5449ceb180da38617f9a4c9804a1d5675a99dc5b994771516d59132c130",
+    "docs/collection-data-lab.md": "sha256:305339d3b1ce029378b0628089ebac5640f431081707f00a4262ff958551c958"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:4f47ae8d6d4cbce1e6c867f1f108c6fa76da15f1deefd1737106e57d0cf9bbc0",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "web",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:32ddea92ad7812ffbbb7534a90d0e37b9f617bb6a4928611e6a824c0367acc9a",
+      "sha256:2174cdc24ab1d88d47b4d25ba4c0961b4c78c2c0a7b25add0ea7189b80e51d44",
+      "sha256:7ed4bb02a0a58de6c5eca1b7b129305c3f1b51cec14b480956f8be49eab6b242",
+      "sha256:76df0d8397ff1d8e84f793af21ec45ea82a6b9a02e078e94d5dcf6a58c2bd4b5",
+      "sha256:b6942ea07a7d00eba057ebd6e34087863a0ec88f9ec04f0711146dd9ff1c7cfe"
+    ],
+    "evidence_refs": [
+      "https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv",
+      "https://www.epa.gov/system/files/other-files/2025-09/schema_outbound_wqx3.0_profiles_1.csv",
+      "https://www.waterqualitydata.us/beta/portal_userguide/",
+      "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/water-quality-dictionary.ts",
+      "repo:3618a710b6bcc997288554f501f6ec5d995e8ce5:tools/local_data/sql_feed_institutions.py"
+    ]
+  },
+  "truth_labels": {
+    "app/usgs-sample-dictionary.ts": "CONFIRMED",
+    "app/water-quality-dictionary.ts": "CONFIRMED",
+    "app/water-quality-context.ts": "CONFIRMED",
+    "app/data-lab/previous-quality-view.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "tests/usgs-sample-metadata.test.mjs": "CONFIRMED",
+    "tests/water-quality-upgrade.test.mjs": "CONFIRMED",
+    "tests/water-quality-metadata.test.mjs": "CONFIRMED",
+    "tests/collection-integration.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite: 3911 passed, 25 existing skips, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "58 focused definition/role/grouping/versioned-view/bundle checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone: 500 current record instances and 500 historical saved instances preserved, 232 definitions, compatible/changed v1 views, synthetic depth reference split, invalid receipt rejection and zero browser errors",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent agent cross-review: all183 historical value-eligibility decisions and frozen grouping matched pinned v1; metadata semantic review found no additional issue",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Exact-head hosted checks, human review and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Draft candidate only; hosted results are read after PR creation, human review pending and deployment not included."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "EPA WQX3 field definitions",
+      "validated": true,
+      "evidence_ref": "https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv"
+    },
+    {
+      "id": "EPA WQX3 profile mapping",
+      "validated": true,
+      "evidence_ref": "https://www.epa.gov/system/files/other-files/2025-09/schema_outbound_wqx3.0_profiles_1.csv"
+    },
+    {
+      "id": "WQP guide and profile sources",
+      "validated": true,
+      "evidence_ref": "https://www.waterqualitydata.us/beta/portal_userguide/"
+    },
+    {
+      "id": "Pinned former application and grouping",
+      "validated": true,
+      "evidence_ref": "repo:9f910226d043941e349f1bb8aae9b53725bbf4d4:app/water-quality-dictionary.ts"
+    },
+    {
+      "id": "KFM captured sample mapping",
+      "validated": true,
+      "evidence_ref": "repo:3618a710b6bcc997288554f501f6ec5d995e8ce5:tools/local_data/sql_feed_institutions.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T21:44:20.281417+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Adds116 sourced definitions, completing183 archived USGS fields while legacy49 fields stay at v1. Source-backed role curation excludes numeric-looking identities, QA flags, comments and preparation metadata from measurements. Depth references and biological contexts are separate; coordinate units remain unknown and source datum labels remain literal. Definitions are not source-data accuracy, rights, approval, Qwen review, scientific comparability or publication authority. Original records were read only through the existing public reader with read-only SQLite. Fresh and historical instances may represent the same source identities; no claim of 1,000 distinct records is made. Narrow v1 fallback reconstructs old role/context/bin behavior, not imported profile claims. Agent review does not replace human review. Initial focused expectations and malformed synthetic QA receipt were corrected; malformed receipt remains explicitly rejected in final browser checks. No native write, source admission, service change, AI batch or deployment included."
+}

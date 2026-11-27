@@ -48,7 +48,8 @@ const resultContext={
   'detection_quantitation_limit_type_name','detection_quantitation_limit_value','detection_quantitation_limit_unit_code',
  ],
 };
-export const waterQualityDimensions:Readonly<Record<string,Readonly<Record<string,readonly string[]>>>>=Object.fromEntries(
+// Frozen v1 grouping for validating older saved views; do not extend it with new fields.
+export const waterQualityV1Dimensions:Readonly<Record<string,Readonly<Record<string,readonly string[]>>>>=Object.fromEntries(
  Object.entries(previousWaterQualityDimensions).map(([id,fields])=>{
   const result=id==='observations-wqp-results'?'result_measure_value':'result_measure';
   const context=[...fields[result],...resultContext[id as keyof typeof resultContext]];
@@ -58,3 +59,17 @@ export const waterQualityDimensions:Readonly<Record<string,Readonly<Record<strin
   ])]]))}];
  })
 );
+
+const biologicalContext=[
+ 'activity_media','activity_media_subdivision','result_sample_fraction','result_biological_intent',
+ 'result_biological_taxon','result_biological_taxon_user_supplied','result_biological_taxon_user_supplied_reference',
+ 'result_biological_sample_tissue_anatomy',
+];
+export const waterQualityDimensions:typeof waterQualityV1Dimensions={
+ ...waterQualityV1Dimensions,
+ 'observations-usgs-samples-results':{
+  ...waterQualityV1Dimensions['observations-usgs-samples-results'],
+  result_biological_group_summary_count:biologicalContext,
+  group_summary_weight_measure:['group_summary_weight_measure_unit',...biologicalContext],
+ },
+};

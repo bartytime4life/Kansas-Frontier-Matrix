@@ -5,6 +5,7 @@ import {
 import {fieldRole, type Collection } from '../collection-metadata';
 import {previousWaterQualityDimensions} from '../water-quality-context';
 import {fieldDictionaryRevision} from '../collection-field-dictionary';
+import {previousQualityView} from './previous-quality-view';
 import { recoveredCollection } from '../recovered-collections';
 import {connectRecordContexts,recordContextBrief,type ContextSample} from './record-context';
 
@@ -215,8 +216,16 @@ function readLabBundle(value:unknown){
      collection.id==='observations-usgs-series'&&['data_type','parameter_name','web_description','parameter_description','thresholds'].includes(String(oldView.field)));
   const qualityUpgrade=value.fieldDictionaryRevision==null&&validOldRange&&record(oldView)&&previousQualityContext(collection,oldView,rows);
   const seriesNotice=contextUpgrade&&collection.id==='observations-usgs-series';
+  let view:LabMeasurementView|null=null,sampleUpgrade=false;
+  if(!(upgrade||waterUpgrade||contextUpgrade||qualityUpgrade)){
+    try { view=viewFromBundle(value.view,collection,snapshot,profile); }
+    catch(error){
+      if(!previousQualityView(collection,snapshot,value.view,value.fieldDictionaryRevision))throw error;
+      sampleUpgrade=true;
+    }
+  }
   return { collection, snapshot, question: value.question,
-    view:upgrade||waterUpgrade||contextUpgrade||qualityUpgrade?null:viewFromBundle(value.view, collection, snapshot, profile),
-    notice:qualityUpgrade?'Water-quality definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
+    view,
+    notice:sampleUpgrade?'USGS sample definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':qualityUpgrade?'Water-quality definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
      upgrade||waterUpgrade||contextUpgrade?`${upgrade?'FAA':'USGS'} field definitions have changed. Your records and question were preserved; choose a measurement context again.`:null };
 }

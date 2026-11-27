@@ -16,10 +16,10 @@ const cases=[
 const sample=rows=>({rows,pages:1,hasMore:true,answers:[{generatedAt:'2026-11-19T12:00:00Z',cache:{state:'stale',at:'2026-11-18T00:00:00Z'}}]});
 const row=(id,values)=>({id:String(id),values:{file_id:7,row_number:id,...values},provenance:{source_id:'synthetic-water-quality-QA',source_url:'https://example.org/synthetic',sha256:'a'.repeat(64)}});
 
-test('all 49 legacy fields and 67 selected WQX3 fields have verified aliases, roles and cited definitions',()=>{
+test('all 49 legacy fields and 183 WQX3 fields have verified aliases, roles and cited definitions',()=>{
  for(const [i,c] of cases.entries()){
   const collection=recoveredCollection(c.id),m=collectionMetadata(collection),sources=new Set(m.documentation.map(d=>d.id));
-  assert.equal(m.fields.filter(f=>f.definition).length,[49,67][i]);
+  assert.equal(m.fields.filter(f=>f.definition).length,[49,183][i]);
   for(const f of m.fields.filter(f=>f.definition)){
    assert.ok(f.sources.length&&f.sources.every(id=>sources.has(id)),f.name);
    if(!collection.keys.includes(f.name))assert.ok(f.sourceField,f.name);
@@ -31,7 +31,7 @@ test('all 49 legacy fields and 67 selected WQX3 fields have verified aliases, ro
   assert.match(m.fieldNotes.join(' '),/nondetect is not zero/);
   assert.equal(documentedCode(c.id,c.condition,'2'),null);
  }
- assert.equal(collectionMetadata(recoveredCollection(cases[1].id)).fields.find(f=>f.name==='project_name').definition,null);
+ assert.ok(collectionMetadata(recoveredCollection(cases[1].id)).fields.find(f=>f.name==='project_name').definition);
 });
 
 test('every declared result-comparison dimension separates numeric rows and remains in distribution identity',()=>{
