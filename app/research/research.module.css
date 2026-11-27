@@ -77,9 +77,11 @@
 .source dl, .methods dl { font-size: 12px; }
 .source dt, .methods dt { font-weight: 600; color: var(--gold-soft); margin-top: 15px; }
 .source dd, .methods dd { color: var(--muted); margin: 6px 0 0; line-height: 1.6; }
+.source dd a { color: var(--water); }
 .source details p { font-size: 11px; color: var(--muted); }
-.sourceActions { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--line); padding-top: 15px; font-size: 11px; }
-.sourceActions a { min-height: 30px; display: flex; align-items: center; }
+.sourceActions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 8px 12px; border-top: 1px solid var(--line); padding-top: 15px; font-size: 11px; }
+.sourceActions a { min-height: 44px; display: flex; align-items: center; gap: 4px; line-height: 1.6; overflow-wrap: anywhere; }
+.sourceActions .downloadLink { grid-column: 1 / -1; color: var(--water); }
 .sourceActions a:first-child { color: var(--gold-soft); }
 .more { display: block; margin: 24px auto 0; }
 .comparisonIntro { color: var(--muted); font-size: 13px; max-width: 780px; }
@@ -154,3 +156,6 @@
 .observationToolLinks small { display: block; color: var(--muted); font-size: 10px; line-height: 1.6; }
 .observationToolLinks b { position: absolute; top: 16px; right: 0; font-size: 16px; color: var(--gold-soft); font-weight: 400; }
 @media (max-width: 720px) { .observationTools { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 24px 20px; } .observationToolLinks h3 { font-size: 22px; } }
+
+.attribution { overflow-wrap: anywhere; }
+.tableWrap .attribution a { display: inline; margin: 0; }

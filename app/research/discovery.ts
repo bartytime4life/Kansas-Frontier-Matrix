@@ -25,6 +25,23 @@ export function discoveryLink(value: string): string | null {
   } catch { return null; }
 }
 
+export type DiscoveryCredit = { text: string; href: string | null };
+
+/** Only the registry's simple attribution anchors become links. Other markup stays inert text. */
+export function discoveryAttribution(value: string): DiscoveryCredit[] {
+  const parts: DiscoveryCredit[] = [];
+  const anchors = /<a\s+href=(["'])([^"'<>]*)\1\s*>([^<>]*)<\/a\s*>/gi;
+  let offset = 0;
+  for (const match of value.matchAll(anchors)) {
+    const start = match.index!;
+    if (start > offset) parts.push({ text: value.slice(offset, start), href: null });
+    parts.push({ text: match[3], href: discoveryLink(match[2]) });
+    offset = start + match[0].length;
+  }
+  if (offset < value.length) parts.push({ text: value.slice(offset), href: null });
+  return parts;
+}
+
 export function sourceMapHref(ids: readonly string[]): string {
   return `/?${new URLSearchParams({ ctx: ids.join(","), l: "", layerView: "selected", mapui: "open", maptab: "display" })}`;
 }

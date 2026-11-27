@@ -95,3 +95,28 @@ test("research references remain separate from registered map data and retain re
     assert.match(item.checked, /^\d{4}-\d{2}-\d{2}$/);
   }
 });
+
+
+test("catalogue credits preserve provider and license names as readable text with inspectable links", () => {
+  const civic = sources.find(source => source.id === "census-congress-119");
+  const credits = discovery.discoveryAttribution(civic.attribution);
+  assert.equal(credits.map(part => part.text).join(""), "U.S. Census Bureau · ACS 2025 generalized districts · Lewis et al. historical districts · MIT license");
+  assert.deepEqual(credits.filter(part => part.href).map(part => part.href), ["https://www.census.gov/", "https://cdmaps.polisci.ucla.edu/", "/civic-history-license.txt"]);
+  const deflock = discovery.discoveryAttribution(sources.find(source => source.id === "deflock-alpr").attribution);
+  assert.equal(deflock.map(part => part.text).join(""), "DeFlock tagging · © OpenStreetMap contributors · ODbL");
+  assert.deepEqual(deflock.filter(part => part.href).map(part => part.href), ["https://www.openstreetmap.org/copyright", "https://opendatacommons.org/licenses/odbl/1-0/"]);
+  assert.deepEqual(discovery.discoveryAttribution("USGS · original attribution"), [{ text: "USGS · original attribution", href: null }]);
+  assert.deepEqual(discovery.discoveryAttribution(""), []);
+});
+
+test("credit parsing rejects unsafe destinations and leaves unsupported markup inert", () => {
+  for (const href of ["javascript:alert(1)", "data:text/html,test", "http://example.org/", "//example.org/", "/\\example.org/", "https://user:secret@example.org/"]) {
+    assert.deepEqual(discovery.discoveryAttribution(`Before <a href="${href}">Provider terms</a> after`), [
+      { text: "Before ", href: null }, { text: "Provider terms", href: null }, { text: " after", href: null },
+    ]);
+  }
+  assert.deepEqual(discovery.discoveryAttribution("<a href='/license.txt'>Local license</a>"), [{ text: "Local license", href: "/license.txt" }]);
+  for (const text of ['<img src=x onerror=alert(1)>', '<a href="https://example.org/" onclick="alert(1)">Credit</a>', '<a href="https://example.org/"><b>Credit</b></a>', '<a href="https://example.org/">unfinished']) {
+    assert.deepEqual(discovery.discoveryAttribution(text), [{ text, href: null }]);
+  }
+});
