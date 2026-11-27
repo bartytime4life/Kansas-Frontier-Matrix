@@ -3576,3 +3576,30 @@ def test_science_snapshot_integrity_successor_preserves_sources_and_all_holds():
         },
         "fd2ce47b4bb615e7d434236cd4a815904e9fb1d9",
     )
+
+
+def test_science_comparison_successor_keeps_source_snapshots_and_holds():
+    _assert_transport_successor(
+        "site-v268-science-comparison-overlay-20261127.json",
+        "site-v268-science-snapshot-integrity-overlay-20261126.json",
+        "2b21053098f8d5479c9cd0dd0d7054b1a837c354294393cac4b24c51e68a1756",
+        {
+            "app/science/compare/comparison-client.tsx",
+            "app/science/compare/comparison-model.mjs",
+            "app/science/compare/comparison-report.mjs",
+            "app/science/compare/comparison-selection.mjs",
+            "app/science/compare/comparison-snapshots.ts",
+            "app/science/compare/comparison-view.tsx",
+            "app/science/compare/comparison.module.css",
+            "app/science/compare/page.tsx",
+            "app/science/page.tsx",
+            "app/science/science.module.css",
+            "app/sitemap.ts",
+            "tests/science-comparison-model.test.mjs",
+            "tests/science-comparison-report.test.mjs",
+            "tests/science-comparison-ui.test.mjs",
+            "tests/science-comparison-view.test.mjs",
+            "tests/sitemap-robots.test.mjs",
+        },
+        "f724de1c2d0508b1cc889f7095f39681e4a4d27b",
+    )

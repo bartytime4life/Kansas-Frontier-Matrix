@@ -20,6 +20,7 @@ test("the sitemap lists only public entry pages that exist, including every guid
   const identity = await import(await moduleUrl("app/site-identity.ts"));
   const entries = sitemap.default();
   assert.equal(entries.length, sitemap.SITEMAP_PATHS.length);
+  assert.ok(sitemap.SITEMAP_PATHS.includes("/science/compare"));
   assert.ok(sitemap.SITEMAP_PATHS.includes("/labs/daily-air-quality"));
   assert.ok(sitemap.SITEMAP_PATHS.includes("/labs/sunlight-and-sky"));
   for (const guide of guides.LANDING_GUIDES) assert.ok(sitemap.SITEMAP_PATHS.includes(`/explore/${guide.slug}`), guide.slug);
