@@ -425,10 +425,21 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
       const r=list.getBoundingClientRect();
       return {x:r.left+r.width/2,y:r.top+r.height/2,top:${library}.scrollTop};
     })()`);
-    await p.call('Input.synthesizeScrollGesture',{
-      x:point.x,y:point.y,xDistance:0,yDistance:-230,speed:800,
-      gestureSourceType:width<600?'touch':'mouse',preventFling:true,
-    });
+    if(width<600){
+      await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y:point.y+45}]});
+      for(let i=1;i<=8;i++){
+        await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:point.x,y:point.y+45-12*i}]});
+        await pause(20);
+      }
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      assert.equal(await p.evaluate(`window.__kfmArchiveScroll.some(event=>event.type==='touchmove')`),true,'real touch movement reaches the rendered collection list');
+    }else{
+      await p.call('Input.synthesizeScrollGesture',{
+        x:point.x,y:point.y,xDistance:0,yDistance:-230,speed:800,
+        gestureSourceType:'mouse',preventFling:true,
+      });
+    }
     try {
       await p.wait(`${library}.scrollTop > ${point.top}+20`, 'input at the collection list boundary scrolls the page');
     } catch(error) {
