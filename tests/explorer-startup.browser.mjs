@@ -398,23 +398,29 @@ for (const [width, height] of [[1280, 720], [390, 844]]) {
     await p.key('Escape','Escape',27);
     await p.wait(`!document.querySelector('dialog[open]') && document.activeElement?.textContent==='Ask KFM for search terms'`, 'closing the dialog restores focus');
 
+    await p.evaluate(`(() => {
+      ${library}.focus({preventScroll:true});
+      const list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement;
+      list.scrollIntoView({block:'center',behavior:'instant'});
+      list.scrollTop=list.scrollHeight-list.clientHeight;
+    })()`);
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+    await p.wait(`(() => {
+      const list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement;
+      const r=list.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;
+      return y>50 && y<innerHeight-50 && list.contains(document.elementFromPoint(x,y))
+        && Math.abs(list.scrollTop-(list.scrollHeight-list.clientHeight))<1
+        && ${library}.scrollHeight-${library}.clientHeight-${library}.scrollTop>250;
+    })()`, 'the rendered list boundary is hit-testable with page scroll remaining');
     const point = await p.evaluate(`(() => {
       const list=document.querySelector('[aria-label="Find a collection"] button[aria-pressed]').parentElement;
-      list.scrollIntoView({block:'center'});list.scrollTop=list.scrollHeight;
       const r=list.getBoundingClientRect();
       return {x:r.left+r.width/2,y:r.top+r.height/2,top:${library}.scrollTop};
     })()`);
-    if (width < 600) {
-      await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
-      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y:point.y+45}]});
-      for (let i=1;i<=8;i++) {
-        await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:point.x,y:point.y+45-12*i}]});
-        await pause(20);
-      }
-      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-    } else {
-      await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x:point.x,y:point.y,deltaX:0,deltaY:230});
-    }
+    await p.call('Input.synthesizeScrollGesture',{
+      x:point.x,y:point.y,xDistance:0,yDistance:-230,speed:800,
+      gestureSourceType:width<600?'touch':'mouse',preventFling:true,
+    });
     await p.wait(`${library}.scrollTop > ${point.top}+20`, 'input at the collection list boundary scrolls the page');
     await p.evaluate(`${library}.focus({preventScroll:true})`);
     await p.key('Home','Home',36);
@@ -3765,7 +3771,8 @@ for (const [width, height] of [[1440, 900], [393, 852]]) {
     await p.call('Page.navigate', { url: new URL('/science', origin).href });
     await p.wait(`document.querySelector('a[href="/science/compare"]')`, 'science lists the comparison');
     await p.call('Page.navigate', { url: new URL('/science/compare?year=2023&compare=2022', origin).href });
-    await p.wait(`document.querySelector('#comparison-results') && document.querySelector('select').value==='2023'`, 'shared years and verified results are hydrated');
+    const referenceYear = 'document.querySelector(\'section[aria-label="Comparison settings"] select\')';
+    await p.wait(`document.querySelector('#comparison-results') && ${referenceYear}.value==='2023'`, 'shared years and verified results are hydrated');
     assert.equal(await p.evaluate(`document.querySelectorAll('main article').length`), 4);
     assert.equal(await p.evaluate(`document.querySelector('main article').textContent.includes('695.1')`), true);
     assert.equal(new Set(requests).size, 4, 'four distinct bundled snapshots');
@@ -3776,7 +3783,7 @@ for (const [width, height] of [[1440, 900], [393, 852]]) {
     assert.equal(await p.evaluate(`document.querySelector('article[aria-labelledby="comparison-air"] tbody tr:nth-child(8)').textContent.includes('16 of 31 days')`), true);
     assert.equal(await p.evaluate('document.documentElement.scrollWidth > innerWidth + 1'), false);
 
-    await p.evaluate(`(() => {const field=document.querySelector('select');field.value='2025';field.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    await p.evaluate(`(() => {const field=${referenceYear};field.value='2025';field.dispatchEvent(new Event('change',{bubbles:true}));})()`);
     await p.wait(`location.search==='?year=2025&compare=2022' && document.querySelector('main article').textContent.includes('795.7')`, 'comparison recomputes with a new year');
     assert.equal(requests.length, reads, 'changing years reuses verified content');
     assert.equal(await p.evaluate(`document.querySelector('article[aria-labelledby="comparison-air"] footer a').getAttribute('href')`), '/labs/daily-air-quality?county=20177&year=2025');
