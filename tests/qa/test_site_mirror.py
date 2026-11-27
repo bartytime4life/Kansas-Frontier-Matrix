@@ -3512,4 +3512,41 @@ def test_daily_air_quality_doc_index_successor_preserves_runtime_data_and_all_ho
         {"docs/README.md"},
         "a483745288a2fd715d21bb4de28995414a7a9080",
     )
-    assert TOOL.RECEIPT.name == "site-v268-daily-air-quality-doc-index-overlay-20261126.json"
+
+
+def test_sunlight_successor_preserves_immutable_history_scientific_states_and_all_holds():
+    _assert_transport_successor(
+        'site-v268-sunlight-science-overlay-20261126.json',
+        'site-v268-daily-air-quality-doc-index-overlay-20261126.json',
+        'ce6d518444a7aa73cb19abf0cababb5342f2d5b9d655dc3e396f721c7d429b90',
+        {
+            'app/labs/sunlight-and-sky/page.tsx',
+            'app/labs/sunlight-and-sky/snapshot-loader.mjs',
+            'app/labs/sunlight-and-sky/snapshot-manifest.json',
+            'app/labs/sunlight-and-sky/sunlight-and-sky.jsx',
+            'app/labs/sunlight-and-sky/sunlight-and-sky.module.css',
+            'app/labs/sunlight-and-sky/sunlight-model.mjs',
+            'app/layer-workspaces.ts',
+            'app/page.tsx',
+            'app/science/page.tsx',
+            'app/science/science.module.css',
+            'app/sitemap.ts',
+            'docs/README.md',
+            'docs/sunlight-and-sky-lab.md',
+            'public/science-data/sunlight/dodge-city-34cb2b0a4c18b671.json',
+            'public/science-data/sunlight/topeka-e813440e4ae96182.json',
+            'public/science-data/sunlight/wichita-46c54872d6dd5c10.json',
+            'scripts/prepare-sunlight.py',
+            'tests/county-drought-ui.test.mjs',
+            'tests/sitemap-robots.test.mjs',
+            'tests/sunlight-and-sky-ui.test.mjs',
+            'tests/sunlight.test.mjs',
+            'tests/test_sunlight_display.py',
+            'tests/topic-organization.test.mjs',
+        },
+        '7a4d5233d96c71378285329eb5c8da905f95cf5e',
+    )
+    assert TOOL.RECEIPT.name == 'site-v268-sunlight-science-overlay-20261126.json'
+    manifest = json.loads((TOOL.DESTINATION / "app/labs/sunlight-and-sky/snapshot-manifest.json").read_text())
+    assert manifest["review"] == manifest["admission"] == "PENDING"
+    assert manifest["release"] == "UNRELEASED"
