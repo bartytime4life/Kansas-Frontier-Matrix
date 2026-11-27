@@ -12,7 +12,8 @@ const js = ts.transpileModule(source, {
   fileName: "comparison-view.tsx", compilerOptions: {
     module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX,
   },
-}).outputText.replaceAll('from "react/jsx-runtime"', `from ${JSON.stringify(import.meta.resolve("react/jsx-runtime"))}`);
+}).outputText.replaceAll('from "react/jsx-runtime"', `from ${JSON.stringify(import.meta.resolve("react/jsx-runtime"))}`)
+  .replace('from "./comparison-selection.mjs"', `from ${JSON.stringify(new URL('./comparison-selection.mjs', view).href)}`);
 const { default: ComparisonView } = await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
 
 const covered = (value, valid, expected) => ({ value, valid, expected });
@@ -51,4 +52,5 @@ test("native month rows preserve year, value and support, with original provider
   assert.match(rendered, /Original provider file · 2024/);
   assert.match(rendered, /Captured 2026-11-25/);
   assert.match(rendered, /Topeka · station/);
+  assert.match(rendered, /href="\/labs\/heat-and-rain\?station=USW00013996&amp;year=2024"/);
 });

@@ -3715,6 +3715,7 @@ for (const [width, height] of [[1440, 900], [393, 852]]) {
     await p.evaluate(`(() => {const field=document.querySelector('select');field.value='2025';field.dispatchEvent(new Event('change',{bubbles:true}));})()`);
     await p.wait(`location.search==='?year=2025&compare=2022' && document.querySelector('main article').textContent.includes('795.7')`, 'comparison recomputes with a new year');
     assert.equal(requests.length, reads, 'changing years reuses verified content');
+    assert.equal(await p.evaluate(`document.querySelector('article[aria-labelledby="comparison-air"] footer a').getAttribute('href')`), '/labs/daily-air-quality?county=20177&year=2025');
 
     const downloads = await mkdtemp(join(tmpdir(), 'kfm-comparison-download-'));
     t.after(() => rm(downloads, { recursive: true, force: true }));

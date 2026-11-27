@@ -161,7 +161,8 @@
   .metrics { display: block; }
   .metric { break-inside: avoid; margin-bottom: 1rem; border: 0; border-top: 1px solid var(--line); padding: .65rem 0; }
   .figure, .legend { print-color-adjust: exact; }
-  .monthlyDetails::details-content { content-visibility: visible; }
-  .monthlyDetails summary { display: none; }
+  .monthlyDetails::details-content, .provenance::details-content { content-visibility: visible; }
+  .monthlyDetails summary, .provenance summary { display: none; }
+  .sourceList a[href]::after { content: " (" attr(href) ")"; overflow-wrap: anywhere; }
   .metric table { break-inside: avoid; margin-top: .4rem; }
 }
