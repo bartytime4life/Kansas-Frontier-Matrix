@@ -56,7 +56,7 @@ test("requested subjects have grouped subtopics, inspectable limits and real int
   assert.ok(topics.topicDefinition("land").resources.some(r => r.href === "/knowledge"));
   assert.match(topics.topicDefinition("people").limitation, /not individuals/);
   assert.match(topics.topicDefinition("ecology").limitation, /No species inventory/);
-  for (const [topic, href] of [["weather", "/labs/heat-and-rain"], ["water", "/labs/county-drought"], ["agriculture", "/labs/soil-profile"], ["agriculture", "/labs/county-drought"], ["science", "/science"], ["science", "/labs/daily-air-quality"], ["weather", "/labs/daily-air-quality"]]) {
+  for (const [topic, href] of [["weather", "/labs/heat-and-rain"], ["water", "/labs/county-drought"], ["agriculture", "/labs/soil-profile"], ["agriculture", "/labs/county-drought"], ["science", "/science"], ["science", "/labs/daily-air-quality"], ["weather", "/labs/daily-air-quality"], ["weather", "/labs/sunlight-and-sky"], ["science", "/labs/sunlight-and-sky"], ["sky", "/labs/sunlight-and-sky"]]) {
     assert.ok(topics.topicDefinition(topic).resources.some(resource => resource.href === href), `${topic} joins ${href}`);
   }
   for (const href of ["/labs/drought-replay", "/labs/water-chemistry"]) assert.ok(topics.topicDefinition("water").resources.some(resource => resource.href === href), "existing water investigations remain reachable");

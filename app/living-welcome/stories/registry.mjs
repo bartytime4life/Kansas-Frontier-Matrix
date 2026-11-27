@@ -244,6 +244,15 @@ export const STORIES = Object.freeze([
     sources: ['U.S. EPA AirData AQS'], tables: [], feeds: [],
   }),
   guided({
+    id: 'sunlight-and-sky', group: 'Living record', title: 'Sunlight & Sky Lab', kicker: '2020–2025 · 3 QUERY POINTS · MODELED ENERGY',
+    href: '/labs/sunlight-and-sky',
+    summary: 'Compare NASA POWER modeled daily horizontal sunlight energy at three Kansas query points, 2020–2025.',
+    try: 'Choose two places and a season, compare all-sky energy with a modeled clear-sky reference, and inspect the source values.',
+    limit: 'Satellite-derived model estimates on nominal 1° grids are not station readings or panel yield. Missing values remain unavailable; provider-context review and dataset admission remain pending.',
+    palette: ['#f5f1e7', '#a66012', '#255f83'],
+    sources: ['NASA POWER · CERES SYN1deg'], tables: [], feeds: [],
+  }),
+  guided({
     id: 'neon-terrain', group: 'Living record', title: 'Terrain & vegetation', kicker: 'KONZA PRAIRIE · ONE SAMPLED TILE',
     href: '/labs/terrain',
     summary: 'Inspect one NEON tile and compare ground, surface and independent provider canopy samples.',

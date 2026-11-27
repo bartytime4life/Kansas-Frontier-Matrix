@@ -6,7 +6,7 @@ import { STORIES, STORY_GROUPS, storyById } from '../app/living-welcome/stories/
 import { PUBLIC_LAB_SNAPSHOTS } from '../app/labs/public-snapshots.mjs';
 import * as atlas from '../app/labs/atlas-model.mjs';
 
-const ids = ['heat-and-rain', 'county-drought', 'soil-profile', 'daily-air-quality'];
+const ids = ['heat-and-rain', 'county-drought', 'soil-profile', 'daily-air-quality', 'sunlight-and-sky'];
 const styles = new Proxy({}, { get: (_target, key) => String(key) });
 function nodes(tree, predicate) {
   const found = [];
@@ -19,7 +19,7 @@ function nodes(tree, predicate) {
   return found;
 }
 
-test('observation tools are direct guided routes and preserve the independent public snapshot boundary', async () => {
+test('science tools are direct guided routes and preserve the independent public snapshot boundary', async () => {
   for (const id of ids) {
     const story = storyById(id);
     assert.equal(story.status, 'guided');
@@ -41,7 +41,7 @@ test('observation tools are direct guided routes and preserve the independent pu
   assert.ok(Object.hasOwn(PUBLIC_LAB_SNAPSHOTS, 'air-and-health'), 'the annual air story keeps its existing public snapshot');
 });
 
-test('the hosted atlas renders observation questions as links instead of opening a modal loader', async () => {
+test('the hosted atlas renders science questions as links instead of opening a modal loader', async () => {
   const harness = await componentHarness('app/labs/page.jsx', {
     'next/link': { default: 'a' },
     '../living-welcome/stories/registry.mjs': { STORIES, STORY_GROUPS, storyById },
@@ -67,7 +67,7 @@ test('the hosted atlas renders observation questions as links instead of opening
   harness.dispose();
 });
 
-test('Research Discovery keeps observation links in a body section and retains the existing terrain handoff', async () => {
+test('Research Discovery keeps science links in a body section and retains the existing terrain handoff', async () => {
   const harness = await componentHarness('app/research/workspace.tsx', {
     'next/link': { default: 'a' },
     '../science-events': { SCIENCE_SUPPORT_LABELS: {} },
@@ -85,7 +85,7 @@ test('Research Discovery keeps observation links in a body section and retains t
   harness.dispose();
 });
 
-test('only the new observation pages opt into document scrolling and fluid narrow sizing', async () => {
+test('only the new science pages opt into document scrolling and fluid narrow sizing', async () => {
   for (const file of ['app/science/science.module.css', ...ids.map((id) => `app/labs/${id}/${id}.module.css`)]) {
     const source = await readFile(file, 'utf8');
     assert.match(source, /:global\(body\):has\(\.page\)\s*\{[^}]*min-width:\s*0;[^}]*overflow:\s*auto;/, file);
