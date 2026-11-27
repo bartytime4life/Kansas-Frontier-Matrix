@@ -260,3 +260,15 @@
   .sourceFiles { grid-template-columns: minmax(0, 1fr); }
   .downloads button { width: 100%; text-align: left; }
 }
+
+.wheatReplay { scroll-margin-top: 1rem; }
+.replayYears, .replaySeasons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin-top: .9rem; }
+.replayYears { max-width: 26rem; }
+.replayYears label { display: grid; gap: .35rem; min-width: 0; font-size: .8rem; color: var(--body); }
+.replaySeasons article { padding: clamp(.65rem, 2vw, 1.1rem); min-width: 0; border: 1px solid var(--line); background: var(--panel); }
+.replaySeasons p, .replaySeasons dt { font-size: .75rem; }
+.replaySeasons dl { display: flex; flex-wrap: wrap; gap: .65rem 1rem; margin: .8rem 0 0; }
+.replaySeasons dt { color: var(--body); }
+.replaySeasons dd { margin: .05rem 0 0; font-size: 1.15rem; color: var(--teal); }
+.wheatReplay table :is(th, td) { padding-inline: clamp(.3rem, 2vw, .75rem); }
+.wheatReplay table small { display: block; color: var(--muted); }

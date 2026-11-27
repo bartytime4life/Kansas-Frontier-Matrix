@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { loadDroughtSnapshot } from "./snapshot-loader.mjs";
-import { analyseDrought, droughtCsv, droughtReceipt } from "./drought-model.mjs";
+import { analyseDrought, droughtCsv, droughtReceipt, winterWheatSeason, WINTER_WHEAT_HARVEST_YEARS } from "./drought-model.mjs";
 import styles from "./county-drought.module.css";
 
 const LOCATION_EVENT = "kfm-drought-selection";
@@ -195,6 +195,58 @@ export function DroughtLoadState({ error, onRetry }) {
   return <div className={styles.loadState} role={error ? "alert" : "status"}><span className={styles.statusMark}>{error ? "!" : "…"}</span><div><h3>{error ? "The county assessments could not be loaded." : "Reading Kansas county assessments"}</h3><p>{error || "Loading and verifying the captured U.S. Drought Monitor record."}</p>{error && <button type="button" onClick={onRetry}>Retry drought snapshot</button>}</div></div>;
 }
 
+export function WinterWheatReplay({ county, snapshot, loading }) {
+  const [firstYear, setFirstYear] = useState(2022);
+  const [secondYear, setSecondYear] = useState(2023);
+  const seasons = useMemo(() => snapshot ? [
+    winterWheatSeason(snapshot, county.id, firstYear),
+    winterWheatSeason(snapshot, county.id, secondYear),
+  ] : null, [snapshot, county.id, firstYear, secondYear]);
+
+  return <section className={`${styles.analysis} ${styles.wheatReplay}`} id="winter-wheat-replay" aria-labelledby="wheat-replay-heading" aria-busy={loading}>
+    <div className={styles.sectionHeading}><div>
+      <h2 id="wheat-replay-heading">Winter wheat drought replay</h2>
+      <p>{county.name}, the primary county above. Compare two harvest years from September 1 of the prior year through July 31. These calendar windows approximate the Kansas growing season. Field planting and harvest dates vary.</p>
+    </div></div>
+    <div className={styles.replayYears}>
+      <label>First harvest year<select value={firstYear} onChange={(event) => setFirstYear(Number(event.currentTarget.value))}>
+        {WINTER_WHEAT_HARVEST_YEARS.map((year) => <option key={year} value={year} disabled={year === secondYear}>{year}</option>)}
+      </select></label>
+      <label>Second harvest year<select value={secondYear} onChange={(event) => setSecondYear(Number(event.currentTarget.value))}>
+        {WINTER_WHEAT_HARVEST_YEARS.map((year) => <option key={year} value={year} disabled={year === firstYear}>{year}</option>)}
+      </select></label>
+    </div>
+    {seasons ? <>
+      <div className={styles.replaySeasons} aria-live="polite" aria-atomic="true">{seasons.map((season) => <article key={season.harvestYear}>
+        <h3>{season.harvestYear} harvest</h3>
+        <p><time dateTime={season.from}>{dateLabel(season.from, true)}</time> – <time dateTime={season.through}>{dateLabel(season.through, true)}</time></p>
+        <dl>
+          <div><dt>Qualifying assessments</dt><dd>{number(season.thresholdWeeks)}</dd></div>
+          <div><dt>Peak D2+ county area</dt><dd>{percent(season.peakShare)}</dd></div>
+          <div><dt>Reported assessments</dt><dd>{season.reported}/{season.expected}</dd></div>
+        </dl>
+      </article>)}</div>
+      <details className={styles.sourceDetails}><summary>Check the month-by-month comparison</summary>
+        <table><caption>Assessments with D2+ on at least 50% of the county. Each cell shows qualifying / reported, followed by expected assessments.</caption>
+          <thead><tr><th scope="col">Month</th>{seasons.map((season) => <th scope="col" key={season.harvestYear}>{season.harvestYear} harvest</th>)}</tr></thead>
+          <tbody>{seasons[0].months.map((month, index) => <tr key={month.label}><th scope="row">{month.label}</th>{seasons.map((season) => {
+            const result = season.months[index];
+            return <td key={season.harvestYear}>{result.reported ? `${result.thresholdWeeks}/${result.reported}` : "Missing"} <small>({result.expected} expected)</small></td>;
+          })}</tr>)}</tbody>
+        </table>
+      </details>
+    </> : <p role="status">{loading ? "Waiting for the verified county snapshot." : "County assessments are unavailable. Retry in the County Drought Lab above."}</p>}
+    <p className={styles.metricNote}>A qualifying Tuesday assessment had severe drought (D2 or worse) on at least half of the county. County area gives regional context. Crop acreage, field conditions and actual losses require separate evidence. Missing assessments stay missing.</p>
+    <p className={styles.metricNote}>This replay has no local copy of USDA yield, acreage or loss records. Look up the selected county and harvest year in the official reports.</p>
+    <div className={styles.sourceLinks}>
+      <a href="#drought-evidence">U.S. Drought Monitor data and method</a>
+      <a href="https://www.nass.usda.gov/statistics-by-state/kansas/publications/county-estimates" target="_blank" rel="noreferrer">NASS county yield estimates ↗</a>
+      <a href="https://www.fsa.usda.gov/tools/informational/freedom-information-act-foia/electronic-reading-room/frequently-requested/crop-acreage-data" target="_blank" rel="noreferrer">FSA reported acreage ↗</a>
+      <a href="https://www.rma.usda.gov/tools-reports/summary-of-business/cause-loss" target="_blank" rel="noreferrer">RMA insured causes of loss ↗</a>
+    </div>
+  </section>;
+}
+
 export default function CountyDrought({ manifest }) {
   const search = useSyncExternalStore(subscribeLocation, locationSearch, serverSearch);
   const selection = useMemo(() => droughtSelection(manifest, search), [manifest, search]);
@@ -272,7 +324,7 @@ export default function CountyDrought({ manifest }) {
   }
 
   return <main className={styles.page}><div className={styles.frame}>
-    <nav className={styles.navigation} aria-label="Science lab navigation"><Link href="/">← KFM Explorer</Link><Link href="/science">Science tools</Link><Link href="/observatory/sources">Research & sources</Link><a href="#drought-evidence">Source & meaning ↓</a></nav>
+    <nav className={styles.navigation} aria-label="Science lab navigation"><Link href="/">← KFM Explorer</Link><Link href="/science">Science tools</Link><Link href="/observatory/sources">Research & sources</Link><a href="#winter-wheat-replay">Winter wheat replay ↓</a><a href="#drought-evidence">Source & meaning ↓</a></nav>
     <header className={styles.hero}><div><span className={styles.eyebrow}>Kansas field notebook / County Drought Lab</span><h1>How often did drought<br className={styles.heroBreak} /> cover your county?</h1><p>Compare the reach, severity and observed runs of drought, one weekly assessment at a time.</p></div><div className={styles.scope}><span className={styles.badge}><i />U.S. Drought Monitor</span><strong>{manifest.period.from.slice(0, 4)}–{manifest.period.to.slice(0, 4)}</strong><span>{manifest.counties.length} counties · {manifest.snapshot.weeks} Tuesday assessments</span></div></header>
 
     <section className={styles.setup} aria-labelledby="drought-setup-heading"><div className={styles.sectionHeading}><h2 id="drought-setup-heading">Put two counties side by side.</h2><button type="button" className={styles.shareButton} disabled={!analysis} onClick={copyLink}>Copy comparison link ↗</button></div><div className={styles.controls}>
@@ -292,6 +344,8 @@ export default function CountyDrought({ manifest }) {
         <section className={styles.ranking} aria-labelledby="drought-ranking-heading"><div className={styles.sectionHeading}><div><h3 id="drought-ranking-heading">Every county. The same question.</h3><p>{manifest.counties.length} counties ranked by qualifying assessments, then peak area. Select a county to make it your primary comparison.</p></div></div><div className={styles.rankScroll} role="region" aria-label="All Kansas county rankings, horizontally and vertically scrollable" tabIndex={0}><table><caption>{severityName(selection.level)} area ≥ {thresholdText(selection.threshold)}% · {selection.fromYear}–{selection.toYear}</caption><thead><tr><th scope="col">County</th><th scope="col">Threshold weeks</th><th scope="col">Longest run</th><th scope="col">Peak area</th><th scope="col">Mean DSCI</th><th scope="col">Reported coverage</th></tr></thead><tbody>{rankings.map((county, index) => <tr key={county.id} data-selected={county.id === selection.countyId}><th scope="row"><button type="button" aria-pressed={county.id === selection.countyId} onClick={() => updateSelection({ countyId: county.id })}><span className={styles.rankNumber}>{currentPage * PAGE_SIZE + index + 1}</span><span>{county.name}<small>FIPS {county.id}</small></span><span className={styles.rankArrow} aria-hidden="true">↗</span></button></th><td>{county.valid ? number(county.thresholdWeeks) : "—"}<small>assessments</small></td><td>{county.valid ? number(county.longestRun.count) : "—"}<small>{compactRunBoundary(county.longestRun)}</small></td><td>{Number.isFinite(county.peakShare) ? `${number(county.peakShare, 2)}%` : "—"}</td><td>{number(county.meanDsci, 1)}<small>index points</small></td><td>{county.valid}/{county.expected}<small>{county.missing} missing</small></td></tr>)}</tbody></table></div><div className={styles.pagination}><button type="button" disabled={currentPage === 0} onClick={() => setRankPage({ key: rankKey, page: currentPage - 1 })}>← Previous counties</button><span>{analysis.ranking.length ? `${currentPage * PAGE_SIZE + 1}–${Math.min((currentPage + 1) * PAGE_SIZE, analysis.ranking.length)} of ${analysis.ranking.length}` : "No counties"}</span><button type="button" disabled={currentPage + 1 >= pageCount} onClick={() => setRankPage({ key: rankKey, page: currentPage + 1 })}>Next counties →</button></div></section>
       </>}
     </section>
+
+    <WinterWheatReplay county={primary} snapshot={snapshot} loading={loading} />
 
     <section className={styles.evidence} id="drought-evidence" aria-labelledby="drought-evidence-heading"><div className={styles.sectionHeading}><div><span className={styles.eyebrow}>Keep the assessment in context</span><h2 id="drought-evidence-heading">Area, severity and the limits between them.</h2></div><span className={styles.evidenceTag}>Provider context</span></div><div className={styles.meaning}><p><strong>Drought begins at D1.</strong> D0 means abnormally dry. These percentages describe county area; they are not the share of residents affected, a soil-moisture measurement or a count of precise physical drought days.</p><p><strong>Runs follow consecutive observed Tuesday assessments.</strong> Missing weeks break runs. A run touching your analysis window may continue beyond it. Six years do not establish a climate normal or a causal explanation.</p></div>
       <div className={styles.downloads}><button type="button" disabled={!analysis || !analysis.expected} onClick={() => exportAnalysis("csv")}>Download comparison CSV ↓</button><button type="button" disabled={!analysis || !analysis.expected} onClick={() => exportAnalysis("receipt")}>Download analysis receipt ↓</button></div>{exportError && <p className={styles.errorText} role="alert">{exportError}</p>}

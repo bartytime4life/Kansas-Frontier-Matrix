@@ -87,6 +87,45 @@ export function analyseDrought(snapshot, { countyId = '20055', compareId = '2016
     primary, comparison, ranking, sources: snapshot.sources, attribution: snapshot.attribution };
 }
 
+export const WINTER_WHEAT_HARVEST_YEARS = Object.freeze(YEARS.slice(1));
+export const WINTER_WHEAT_MONTHS = Object.freeze([
+  'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+]);
+
+export function winterWheatSeason(snapshot, countyId, harvestYear) {
+  const county = snapshot.counties.find(({ id }) => id === countyId);
+  if (!county || !WINTER_WHEAT_HARVEST_YEARS.includes(harvestYear)) {
+    throw new Error('Choose a Kansas county and a harvest year with full calendar coverage.');
+  }
+
+  const from = `${harvestYear - 1}-09-01`;
+  const through = `${harvestYear}-07-31`;
+  const indexes = snapshot.weeks.flatMap((date, index) => date >= from && date <= through ? [index] : []);
+  const summary = countySummary(county, snapshot.weeks, indexes, { level: 2, threshold: 50 });
+  const months = WINTER_WHEAT_MONTHS.map((label, index) => {
+    const month = String((index + 8) % 12 + 1).padStart(2, '0');
+    const weeks = summary.weeks.filter((week) => week.date.slice(5, 7) === month);
+    const reported = weeks.filter((week) => !week.missing);
+    return {
+      label,
+      reported: reported.length,
+      expected: weeks.length,
+      thresholdWeeks: reported.length ? reported.filter((week) => week.meets).length : null,
+    };
+  });
+
+  return {
+    harvestYear,
+    from,
+    through,
+    reported: summary.valid,
+    expected: summary.expected,
+    thresholdWeeks: summary.valid ? summary.thresholdWeeks : null,
+    peakShare: summary.peakShare,
+    months,
+  };
+}
+
 export function droughtCsv(analysis) {
   const s = analysis.settings;
   const rows = [['county_fips', 'county_name', 'assessment_date', 'valid_through', 'state', 'none_percent', 'd0_plus_percent', 'd1_plus_percent', 'd2_plus_percent', 'd3_plus_percent', 'd4_percent',
