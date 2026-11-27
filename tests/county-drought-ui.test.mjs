@@ -4,7 +4,7 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
-import { analyseDrought, validateDroughtSnapshot } from "../app/labs/county-drought/drought-model.mjs";
+import { analyseDrought, validateDroughtSnapshot, winterWheatSeason } from "../app/labs/county-drought/drought-model.mjs";
 
 const route = new URL("../app/labs/county-drought/", import.meta.url);
 const manifest = JSON.parse(await readFile(new URL("snapshot-manifest.json", route), "utf8"));
@@ -135,6 +135,50 @@ test("loading and retry states keep comparison exports and share unavailable unt
   assert.match(errorHtml, /role="alert"/);
   assert.match(errorHtml, /Integrity check failed/);
   assert.match(errorHtml, /Retry drought snapshot/);
+});
+
+test("winter wheat replay crosses the calendar boundary and counts real assessments in the window", () => {
+  const first = winterWheatSeason(snapshot, "20055", 2022);
+  const second = winterWheatSeason(snapshot, "20055", 2023);
+  assert.deepEqual([first.from, first.through, first.thresholdWeeks, first.reported, first.expected], ["2021-09-01", "2022-07-31", 20, 47, 47]);
+  assert.deepEqual([second.from, second.through, second.thresholdWeeks, second.reported, second.expected], ["2022-09-01", "2023-07-31", 46, 47, 47]);
+  assert.deepEqual(first.months.map((month) => month.label), ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"]);
+  assert.equal(second.months.reduce((total, month) => total + month.thresholdWeeks, 0), second.thresholdWeeks);
+  assert.throws(() => winterWheatSeason(snapshot, "20055", 2020), /full calendar coverage/);
+  assert.throws(() => winterWheatSeason(snapshot, "20000", 2024), /Kansas county/);
+});
+
+test("winter wheat replay treats missing assessments separately from observed zeros", () => {
+  const actual = winterWheatSeason(snapshot, "20055", 2021);
+  assert.equal(actual.thresholdWeeks, 0);
+  assert.equal(actual.peakShare, 0);
+  const masked = { ...snapshot, counties: snapshot.counties.map((county) => county.id === "20055" ? {
+    ...county,
+    values: county.values.map((value, index) => snapshot.weeks[index] >= actual.from && snapshot.weeks[index] <= actual.through ? null : value),
+  } : county) };
+  const missing = winterWheatSeason(masked, "20055", 2021);
+  assert.equal(missing.expected, actual.expected);
+  assert.equal(missing.reported, 0);
+  assert.equal(missing.thresholdWeeks, null);
+  assert.equal(missing.peakShare, null);
+  assert.ok(missing.months.every((month) => month.thresholdWeeks === null && month.expected > 0));
+});
+
+test("winter wheat panel exposes distinct harvest years, reported support and official context", () => {
+  const county = manifest.counties.find((entry) => entry.id === "20055");
+  const html = render(ui.WinterWheatReplay, { county, snapshot, loading: false });
+  assert.match(html, /Winter wheat drought replay/);
+  assert.match(html, /Finney County/);
+  assert.match(html, /2021-09-01/);
+  assert.match(html, /2023-07-31/);
+  assert.match(html, /<dd>20<\/dd>/);
+  assert.match(html, /<dd>46<\/dd>/);
+  assert.match(html, /47\/47/);
+  assert.match(html, /no local copy of USDA yield, acreage or loss records/);
+  for (const agency of ["nass", "fsa", "rma"]) assert.match(html, new RegExp(`href="https://www\\.${agency}\\.usda\\.gov/`));
+  const waiting = render(ui.WinterWheatReplay, { county, snapshot: null, loading: true });
+  assert.match(waiting, /Waiting for the verified county snapshot/);
+  assert.doesNotMatch(waiting, /Peak D2\+ county area/);
 });
 
 test("science entry offers five real routes and uses actual manifest scope counts", async () => {
