@@ -216,6 +216,14 @@ Test profiles install `python-test.lock` with hash checking and require wheels
 on every supported interpreter. PyYAML 6.0.4 has matching wheels on the Linux
 x86-64 CPython 3.11–3.15 CI matrix.
 
+The shared test profile supplies Hatchling 1.33.0 for the existing offline
+`pipelines-core` wheel build as well as the root packaging checks. Before pip
+runs, the installer requires every build requirement in
+`packages/pipelines-core/pyproject.toml` to be an exact pin matching this lock.
+Build isolation and dependency resolution remain disabled for local packages; a declaration change
+must be reconciled and qualified with the locked toolchain, not just pass tests
+using the preceding backend.
+
 The CLI installer first installs hash-locked build tools from `python-build.lock`
 (setuptools 84.2.1 and Cython 3.3.1) using wheels only. It then installs the CLI
 lock with hash checking and `--no-build-isolation`. antlr4-python3-runtime 4.9.3
@@ -231,8 +239,10 @@ installs it on Python 3.12 with `project-test`. It then runs the opt-in
 Chrome (`KFM_INTAKE_BROWSER_TESTS=1`, `KFM_INTAKE_TEST_CHROMIUM`).
 
 The finite `crop-casma-tiles` profile reuses the existing
-`pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock` without changing
-its dependency pins or hashes. The Crop CASMA Tile Compatibility workflow calls
+`pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock`. Before pip runs,
+every direct pin in `requirements-tiles.txt` must match that lock, including
+NumPy 2.5.5. Missing, unpinned or duplicate inputs and version drift fail before
+installation. The Crop CASMA Tile Compatibility workflow calls
 the shared installer on Python 3.12 with SHA-256 enforcement and binary-only
 distributions. Its synthetic tests still reject tampered inputs; no source
 acquisition, lifecycle promotion or publication is authorized by this profile.

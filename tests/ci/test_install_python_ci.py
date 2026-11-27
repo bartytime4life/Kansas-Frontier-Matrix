@@ -19,6 +19,88 @@ SPEC.loader.exec_module(module)
 
 
 class InstallPythonCiTests(unittest.TestCase):
+    def _input_fixture(self, root: Path, *, crop: bool) -> module.InstallProfile:
+        profile = module.PROFILES["crop-casma-tiles" if crop else "test-dependencies"]
+        lock = root / profile.lockfile
+        lock.parent.mkdir(parents=True, exist_ok=True)
+        lock.write_text("numpy==2.5.5 \\\n    --hash=sha256:" + "a" * 64 + "\nPillow==13.0.0 \\\n    --hash=sha256:" + "b" * 64 + "\nhatchling==1.33.0 \\\n    --hash=sha256:" + "c" * 64 + "\n")
+        source = root / module.LOCK_INPUTS[profile.lockfile][0]
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text("# direct inputs\nnumpy==2.5.5\npillow==13.0.0\n" if crop else
+                          '[build-system]\nrequires = ["hatchling==1.33.0"]\n')
+        return profile
+
+    def test_committed_profile_inputs_match_consumed_locks(self) -> None:
+        for name in ("crop-casma-tiles", "test-dependencies"):
+            with self.subTest(profile=name):
+                module.build_commands(name, executable="python")
+
+    def test_direct_input_drift_fails_before_any_install(self) -> None:
+        for crop in (True, False):
+            with self.subTest(crop=crop), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                profile = self._input_fixture(root, crop=crop)
+                lock = root / profile.lockfile
+                lock.write_text(lock.read_text().replace("2.5.5", "2.5.4") if crop else
+                                lock.read_text().replace("1.33.0", "1.32.0"))
+                with mock.patch.object(module, "REPO_ROOT", root), \
+                     mock.patch.object(module.subprocess, "run") as run, \
+                     self.assertRaisesRegex(module.InstallConfigurationError, "LOCK_INPUT_PIN_MISMATCH"):
+                    module.install("crop-casma-tiles" if crop else "test-dependencies")
+                run.assert_not_called()
+
+    def test_matching_inputs_preserve_hash_and_binary_install(self) -> None:
+        for crop in (True, False):
+            with self.subTest(crop=crop), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                self._input_fixture(root, crop=crop)
+                with mock.patch.object(module, "REPO_ROOT", root):
+                    command, = module.build_commands("crop-casma-tiles" if crop else "test-dependencies")
+                self.assertIn("--require-hashes", command)
+                self.assertIn("--only-binary=:all:", command)
+
+    def test_profile_inputs_reject_missing_unpinned_and_duplicate_requirements(self) -> None:
+        cases = [("numpy==2.5.6\n", "PIN_MISMATCH"),
+                 ("missing==1.0\n", "PIN_MISMATCH"),
+                 ("numpy>=2.5.5\n", "REQUIREMENT_UNPINNED"),
+                 ("numpy @ https://example.invalid/package.whl\n", "REQUIREMENT_UNPINNED"),
+                 ("Pillow==13.0.0\npillow==13.0.0\n", "DUPLICATE_PIN"),
+                 ("# no pins\n", "INVALID")]
+        for text, code in cases:
+            with self.subTest(text=text), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                profile = self._input_fixture(root, crop=True)
+                (root / module.CROP_CASMA_INPUT).write_text(text)
+                with mock.patch.object(module, "REPO_ROOT", root), \
+                     self.assertRaisesRegex(module.InstallConfigurationError, "LOCK_INPUT_" + code):
+                    module.build_commands("crop-casma-tiles")
+
+    def test_build_input_metadata_must_be_present_and_well_formed(self) -> None:
+        for text in (None, "not toml", "[build-system]\nrequires = []\n",
+                     '[build-system]\nrequires = [1]\n', '[build-system]\nrequires = ["hatchling"]\n'):
+            with self.subTest(text=text), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                profile = self._input_fixture(root, crop=False)
+                source = root / module.LOCK_INPUTS[profile.lockfile][0]
+                if text is None:
+                    source.unlink()
+                else:
+                    source.write_text(text)
+                with mock.patch.object(module, "REPO_ROOT", root), \
+                     self.assertRaises(module.InstallConfigurationError):
+                    module.build_commands("test-dependencies")
+
+    def test_other_profiles_do_not_inherit_unrelated_declarations(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            lock = root / module.PROFILES["audit-tool"].lockfile
+            lock.parent.mkdir(parents=True)
+            lock.write_text("pip-audit==2.10.1 \\\n    --hash=sha256:" + "a" * 64 + "\n")
+            with mock.patch.object(module, "REPO_ROOT", root):
+                command, = module.build_commands("audit-tool")
+            self.assertIn("--require-hashes", command)
+            self.assertNotIn("--only-binary=:all:", command)
+
     def test_all_profiles_use_hashes_and_disable_local_resolution(self) -> None:
         self.assertEqual(
             {

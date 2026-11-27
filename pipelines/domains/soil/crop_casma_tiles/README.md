@@ -4,6 +4,12 @@ This soil-domain pipeline consumes an unreleased `kfm.crop-casma-capture/v1` dir
 
 This directory owns transformation under the existing `pipelines/domains/soil/` responsibility; source acquisition stays in `connectors/nass/`, and release decisions remain outside both. The output is always `UNRELEASED`. Run with a fresh external output directory and Python 3.12 or newer in an isolated environment declared in `requirements-tiles.txt` and installed from its hash-locked `requirements-tiles.lock` (regenerate with the command in the lock header after changing a pin). The stack pins Pillow 13.0.0 in both files; installed-version and alert-state verification remain separate checks. The Crop CASMA Tile Compatibility workflow installs this stack on Python 3.12 and runs the existing synthetic tile and tamper-rejection tests.
 
+NumPy is pinned to 2.5.5 in both the input and lock. The shared
+`crop-casma-tiles` installer checks all direct input pins against the lock before
+running pip, retains hash enforcement and accepts binary distributions only.
+Changing an input alone fails this bootstrap check. Synthetic qualification does
+not grant source admission, real-data accuracy, promotion or publication authority.
+
 The separate `dependency-scan / pip-audit-crop-casma` job audits the entire existing tile lock on Python 3.12 using the hash-locked audit tool. Findings and scanner errors fail the job; the audit does not install the tile stack or acquire source data. This advisory check complements the synthetic compatibility workflow. A passing audit does not establish that GitHub has closed its alerts or that any deployed environment uses this lock.
 
 Candidate identity serializes integral floating statistics and checkpoints as JSON integers before hashing, matching the Site verifier's JavaScript number representation (for example, `0.0` hashes as `0`). The saved manifest keeps the original numeric values; this only fixes deterministic identity.

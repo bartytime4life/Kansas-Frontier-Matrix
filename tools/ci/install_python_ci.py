@@ -20,6 +20,7 @@ import os
 import re
 import subprocess
 import sys
+import tomllib
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Sequence
@@ -28,6 +29,15 @@ from typing import Any, Sequence
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LOCK_LIMIT_BYTES = 1_048_576
 TEST_LOCK = "tools/ci/python-test.lock"
+CROP_CASMA_INPUT = "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt"
+CROP_CASMA_LOCK = "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock"
+# These existing declarations are consumed with dependency/build resolution off.
+# Keep the shared test-tool lock aligned with the offline pipeline wheel build.
+LOCK_INPUTS = {
+    TEST_LOCK: ("packages/pipelines-core/pyproject.toml",),
+    CROP_CASMA_LOCK: (CROP_CASMA_INPUT,),
+}
+EXACT_PIN = re.compile(r"([A-Za-z0-9][A-Za-z0-9_.-]*)==([A-Za-z0-9][A-Za-z0-9.!+_-]*)")
 MIGRATION_MANIFEST = "tools/ci/python-dependency-lock-migration.json"
 MIGRATION_SCHEMA = "kfm.python-dependency-lock-migration.v1"
 MIGRATION_ID = "scorecard-pinned-dependencies-20260812"
@@ -124,7 +134,7 @@ PROFILES = {
         TEST_LOCK, ("./packages/connectors-core",)
     ),
     "crop-casma-tiles": InstallProfile(
-        "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
+        CROP_CASMA_LOCK,
         only_binary=True,
     ),
     "geo-transforms": InstallProfile("tools/ci/python-geo.lock"),
@@ -464,6 +474,67 @@ def _validate_local_specs(profile: InstallProfile) -> None:
             raise InstallConfigurationError("LOCAL_PACKAGE_METADATA_MISSING")
 
 
+def _exact_pin(requirement: str) -> tuple[str, str]:
+    match = EXACT_PIN.fullmatch(requirement)
+    if match is None:
+        raise InstallConfigurationError("LOCK_INPUT_REQUIREMENT_UNPINNED")
+    return re.sub(r"[-_.]+", "-", match[1]).lower(), match[2]
+
+
+def validate_lock_inputs(profile: InstallProfile, lockfile: Path) -> None:
+    """Reject declaration/profile drift before any pip command is executed.
+
+    This finite bootstrap contract accepts exact pins only, without evaluating
+    package metadata, environment markers, build hooks or dependency resolution.
+    Other profiles keep their own independent locks and declarations.
+    """
+
+    inputs = LOCK_INPUTS.get(profile.lockfile, ())
+    if not inputs:
+        return
+    locked: dict[str, str] = {}
+    for line in lockfile.read_text(encoding="utf-8").splitlines():
+        if not line or line[0].isspace() or line.startswith("#"):
+            continue
+        name, version = _exact_pin(line.removesuffix("\\").rstrip())
+        if name in locked:
+            raise InstallConfigurationError("LOCK_INPUT_DUPLICATE_PIN")
+        locked[name] = version
+    for source in inputs:
+        path = REPO_ROOT / source
+        if path.is_symlink() or not path.is_file():
+            raise InstallConfigurationError("LOCK_INPUT_UNSAFE:" + source)
+        try:
+            path.resolve().relative_to(REPO_ROOT)
+            if not 0 < path.stat().st_size <= LOCK_LIMIT_BYTES:
+                raise ValueError("input size")
+            text = path.read_text(encoding="utf-8")
+            if path.suffix == ".toml":
+                requirements = tomllib.loads(text)["build-system"]["requires"]
+                if not isinstance(requirements, list) or not requirements:
+                    raise ValueError("build requirements")
+            else:
+                requirements = [line.strip() for line in text.splitlines()
+                                if line.strip() and not line.lstrip().startswith("#")]
+                if not requirements:
+                    raise ValueError("requirements input")
+            if any(not isinstance(item, str) for item in requirements):
+                raise ValueError("requirement type")
+        except (OSError, UnicodeError, ValueError, KeyError, TypeError) as exc:
+            raise InstallConfigurationError("LOCK_INPUT_INVALID:" + source) from exc
+        seen: set[str] = set()
+        for requirement in requirements:
+            name, version = _exact_pin(requirement)
+            if name in seen:
+                raise InstallConfigurationError("LOCK_INPUT_DUPLICATE_PIN")
+            seen.add(name)
+            if locked.get(name) != version:
+                raise InstallConfigurationError(
+                    f"LOCK_INPUT_PIN_MISMATCH:{source}:{name}:"
+                    f"declared={version}:locked={locked.get(name, 'missing')}"
+                )
+
+
 def build_commands(
     profile_name: str,
     *,
@@ -477,6 +548,7 @@ def build_commands(
         raise InstallConfigurationError("PROFILE_UNKNOWN") from exc
     lockfile = _lock_path(profile)
     validate_lockfile(lockfile)
+    validate_lock_inputs(profile, lockfile)
     _validate_local_specs(profile)
     python = executable or sys.executable
     commands: list[tuple[str, ...]] = [
