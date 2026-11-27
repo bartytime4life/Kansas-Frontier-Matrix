@@ -302,9 +302,9 @@ button:active:not(:disabled) { transform: translateY(1px); }
 }
 
 /* ---------- Not found ---------- */
+body:has(> .kfm-not-found) { min-width: 0; overflow: auto; }
 .kfm-not-found {
   min-height: 100dvh;
-  overflow: auto;
   display: grid;
   place-items: center;
   padding: 32px 16px;

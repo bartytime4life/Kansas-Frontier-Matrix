@@ -15,6 +15,7 @@ type SearchAnswer={total:number|null;count:number;rows:Hit[];generatedAt:string;
 const OPEN='⟦',CLOSE='⟧',PAGE=20,MAX_OFFSET=1000;
 const YEAR=/^\d{4}$/;
 const NEWSPAPER_TITLE=/^[a-z]{2}\d{8}$/i;
+const ARCHIVE_TEXT_TITLE=/^[A-Za-z0-9._-]{1,100}$/;
 type SearchQuery={q:string;source:Source;from:string;to:string;title:string};
 type SearchRequest={query:SearchQuery;offset:number;previous:number[]};
 type SearchPage=SearchRequest&{answer:SearchAnswer;focusResults:boolean};
@@ -27,7 +28,8 @@ function exactArchivePhrase(query:string){
 }
 function searchTitle(source:Source,value:string){
  if(source==='newspapers')return NEWSPAPER_TITLE.test(value)?value.toLowerCase():'';
- return value.length<=200&&[...value].every(c=>c.charCodeAt(0)>31&&c.charCodeAt(0)!==127)?value:'';
+ const identifier=value.trim();
+ return ARCHIVE_TEXT_TITLE.test(identifier)?identifier:'';
 }
 /** Accepted filters only; retain the independent collection finder state. */
 export function archiveSearchLocation(search:string,query:SearchQuery){

@@ -36,6 +36,7 @@ count, leaving unseen hits between pages.
 The library scrolls from the catalog through the text results independently of
 the map's viewport. At the end of the collection list, the next wheel or touch
 gesture can continue down the page. A shared text-search link opens at the form.
+If the link contains a malformed title filter, the search runs without that filter.
 
 For a plain multiword query, **Match exact phrase** searches for adjacent words
 in their entered order. **Search tips and archive coverage** explains how to

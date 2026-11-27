@@ -1,5 +1,6 @@
+:global(body):has(.page) { min-width: 0; overflow: auto; }
 .page { min-height: 100dvh; color: #e6edf5; background: #101923; padding: 24px clamp(16px, 4vw, 72px) 64px; }
-.header { display: flex; justify-content: space-between; gap: 16px; max-width: 1280px; margin: auto; }
+.header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 16px; max-width: 1280px; margin: auto; }
 .page a { color: #a3d8df; text-underline-offset: 3px; }
 .header a, .actions a, .groups a { display: inline-flex; align-items: center; min-height: 44px; }
 .intro { max-width: 800px; margin: 42px 0 28px; }

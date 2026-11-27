@@ -1986,6 +1986,20 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
   });
 }
 
+test('Topics and missing pages scroll at a short phone viewport', { timeout: 45000 }, async t => {
+  const width = 320, height = 320;
+  const b = await browser(t, 'default'), p = await pageSession(b, width, height);
+  for (const [path, selector] of [['/topics', 'main a[aria-label^="Browse map layers for "]'], ['/missing-page-check', 'main.kfm-not-found nav a']]) {
+    await p.call('Page.navigate', { url: new URL(path, origin).href });
+    await p.wait(`location.pathname===${JSON.stringify(path)} && document.readyState==='complete' && document.querySelector(${JSON.stringify(selector)})`, 'document route is ready');
+    assert.equal(await p.evaluate('document.documentElement.scrollWidth > innerWidth + 1'), false, path);
+    await p.call('Input.dispatchMouseEvent', { type: 'mouseWheel', x: width / 2, y: height / 2, deltaX: 0, deltaY: 220 });
+    await p.wait('window.scrollY > 0', `wheel scrolls ${path}`);
+    await p.key('Home', 'Home', 36);
+    await p.wait('window.scrollY === 0', `keyboard returns to the top of ${path}`);
+  }
+});
+
 // A tall topic panel must not lose its close button behind the mobile header
 // or inside its own scroll content. Exercise hit testing, scrolling and focus.
 for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
@@ -3743,11 +3757,18 @@ for(const [width,height] of [[1440,900],[390,844]])test(`optional chat downloads
 for (const [width,height] of [[1440,900],[393,852]]) {
   test(`farm planning compares harvests and per-acre cash scenarios at ${width}x${height}`,{timeout:120000},async t=>{
     const b=await browser(t), p=await pageSession(b,width,height);
+    const farmResources = () => p.evaluate(`performance.getEntriesByType('resource').filter(entry =>
+      /\\/assets\\/field-decision-tools-(?!loader-)[^/]+\\.js$/.test(new URL(entry.name).pathname)
+    ).length`);
     await p.open('/?motion=off');await readyWelcome(p);
+    assert.equal(await farmResources(), 0, 'Explorer startup does not request farm tools');
     await revealControl(p,'.topic-agriculture');
     await p.evaluate("document.querySelector('.topic-agriculture').focus()");await p.key('Enter','Enter',13);
     await p.wait("!document.querySelector('.living-welcome') && document.querySelector('.map-topic-edit')?.textContent.includes('Agriculture')",'actual agriculture entry');
+    assert.equal(await farmResources(), 0, 'opening the category keeps hidden instruments deferred');
     await openCategoryTool(p,'Farm planning & markets');
+    await p.wait(`document.activeElement?.matches('summary[data-category-tool="farm-planning"]')`, 'the ready farm control owns keyboard focus');
+    assert.equal(await farmResources(), 1, 'opening the instrument requests the implementation once');
     await droughtEnter(p,'[data-category-tool="farm-planning"]');
     const fill=async(label,value,scope='.field-tool')=>{
       const selector=JSON.stringify(label);

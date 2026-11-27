@@ -69,6 +69,11 @@ test("renders the map-first Kansas explorer shell", async () => {
     /^text\/html\b/i,
   );
   const html = await response.text();
+  const preloads = [...html.matchAll(/<link\b[^>]*>/g)]
+    .map(([link]) => link)
+    .filter(link => link.includes('rel="modulepreload"'));
+  assert.ok(!preloads.some(link => /\/assets\/field-decision-tools-(?!loader-)[^"]+\.js/.test(link)),
+    "Explorer startup leaves the farm planning implementation for Agriculture tools");
   assertHeaderWorkflowOrder(html);
   assert.match(html, /https:\/\/kansasfrontiermatrix\.com\/og-guided\.png/);
   assert.doesNotMatch(html, /untrusted\.example/);

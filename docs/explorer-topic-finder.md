@@ -58,6 +58,14 @@ tree at `/workspace/scratch/kfm-ux/`. They are UI test evidence, not provider da
 Open-PR overlap could not be independently checked: the GitHub CLI request was
 denied with HTTP 403. This candidate has not been merged, published or deployed.
 
+## Topics index navigation
+
+The subject index at `/topics` uses document scrolling so readers can move
+between the group links, subject cards and their expandable source lists. Its
+header links wrap on narrow screens. Each map-layer or imagery link identifies its
+subject in its accessible name while retaining the same visible label and URL.
+The topic organization tests check the link names and destinations across the index.
+
 ## Rollback
 
 Revert this candidate's welcome changes and remove its new search helper and

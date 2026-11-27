@@ -69,6 +69,7 @@ test("unknown and withheld paths share one accessible 404", async () => {
     await assert.doesNotReject(read(page), `${href} exists`);
   }
   const theme = await read("app/explorer-theme.css");
+  assert.match(theme, /body:has\(> \.kfm-not-found\)\s*\{[^}]*overflow:\s*auto;/);
   assert.match(theme, /\.kfm-not-found \{/);
   assert.match(theme, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.kfm-not-found-card \{ animation: none; \}/);
 });
