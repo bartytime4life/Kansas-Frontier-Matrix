@@ -44,11 +44,15 @@ export async function walk(path, prefix = '', skip = () => false) {
 export async function cli(argv, connectionDependencies) {
   const [command, ...args] = argv;
   if (command === 'market-watch' || command === 'market-listen') {
-    if (args.length !== 1) fail('MARKET_WATCH_USAGE');
-    const { watchMarket, listenMarket } = await import('./market-watch.mjs');
+    if (!args[0] || args.length > 2 || (args.length === 2 && args[1] !== '--supply-chain')) fail('MARKET_WATCH_USAGE');
     const load = () => loadConfig(resolve(args[0]));
-    if (command === 'market-listen') return listenMarket(load,result=>console.log(canonical(result)));
-    return watchMarket(await load());
+    const emit = result => console.log(canonical(result));
+    if (args[1]) {
+      const { watchSupplyChain, listenSupplyChain } = await import('./supply-chain-watch.mjs');
+      return command === 'market-listen' ? listenSupplyChain(load, emit) : watchSupplyChain(await load());
+    }
+    const { watchMarket, listenMarket } = await import('./market-watch.mjs');
+    return command === 'market-listen' ? listenMarket(load, emit) : watchMarket(await load());
   }
   if (command === 'publish-grain') {
     if (args.length !== 2 || !/^[a-f0-9]{64}$/.test(args[1])) fail('GRAIN_PUBLISH_USAGE');

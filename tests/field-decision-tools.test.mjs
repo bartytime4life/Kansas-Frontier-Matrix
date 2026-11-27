@@ -1,10 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {mkdtemp,readFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import ts from 'typescript';
 import {componentHarness} from './component-harness.mjs';
 import {GRAIN_SOURCE,parseGrainReport,validateGrain} from '../server/grain-market.mjs';
-import {reports,captureReport,reportChanges} from '../scripts/pc-pipeline/market-watch.mjs';
+import {reports,captureReport,reportChanges,watchMarket} from '../scripts/pc-pipeline/market-watch.mjs';
+import {tradeNoticeSignals,watchSupplyChain} from '../scripts/pc-pipeline/supply-chain-watch.mjs';
 
 const code=ts.transpileModule(await readFile('app/yield-history.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {yieldHistory,pairedSeasons}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
@@ -73,4 +76,60 @@ test('delivered offer compares like bushels and withholds invalid bid, cost or s
  for(const bid of ['', '-1', '1e1', 'NaN', '5.00001', '1,000', '1000.0001']) assert.equal(netDeliveredBid({...offer,bid}),null);
  assert.equal(netDeliveredBid({...offer,hauling:''}),null);
  assert.equal(netDeliveredBid({...offer,shrink:'100.0001'}),null);
+});
+
+const notice = (id, title) => ({
+  document_number: id, publication_date: '2026-11-18', title, type: 'Notice',
+  pdf_url: `https://www.govinfo.gov/content/pkg/FR-2026-11-18/pdf/${id}.pdf`,
+});
+const noticePage = (...results) => ({ count: results.length, results });
+const cropNotice = notice('2026-12345', 'Sorghum market access');
+const unrelatedNotice = notice('2026-23456', 'Advisory committee nominations');
+
+test('trade notice signals validate official links, ignore unrelated titles and are order independent', () => {
+  const signals = page => tradeNoticeSignals(Buffer.from(JSON.stringify(page)));
+  assert.deepEqual(signals(noticePage(cropNotice, unrelatedNotice)), signals(noticePage(unrelatedNotice, cropNotice)));
+  assert.deepEqual(signals(noticePage(unrelatedNotice)), []);
+  assert.equal(signals(noticePage(cropNotice))[0].published, '2026-11-18');
+  assert.throws(() => signals({ count: 3, results: [cropNotice] }), /TRADE_NOTICE_PAGE_INVALID/);
+  assert.throws(() => signals(noticePage(cropNotice, cropNotice)), /TRADE_NOTICE_RECORD_INVALID/);
+  assert.throws(() => signals(noticePage({ ...cropNotice, pdf_url: 'https://example.org/notice.pdf' })), /TRADE_NOTICE_RECORD_INVALID/);
+});
+
+test('supply-chain capture is optional and writes publisher bytes and receipts only to private lifecycle paths', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'kfm-market-watch-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const requests = [];
+  // Minimal workbook markers for this quarantine check. No workbook values are decoded.
+  const workbook = Buffer.from('PK\x03\x04[Content_Types].xml xl/workbook.xml');
+  const options = {
+    guard: async () => {},
+    clock: () => new Date('2026-11-26T12:00:00Z'),
+    fetcher(url, init) {
+      const target = new URL(url);
+      requests.push(target);
+      assert.equal(init.redirect, 'error');
+      if (target.hostname === 'www.federalregister.gov') {
+        assert.equal(target.searchParams.get('per_page'), '50');
+        return Response.json(noticePage(cropNotice, unrelatedNotice));
+      }
+      if (target.pathname.endsWith('GTRTable1.xlsx')) return new Response(workbook);
+      return new Response(null, { status: 503 });
+    },
+  };
+  const basic = await watchMarket({ root }, options);
+  assert.ok(basic.outcomes.every(outcome => !outcome.sourceId.includes('freight') && !outcome.sourceId.includes('ustr')));
+  requests.length = 0;
+  const expanded = await watchSupplyChain({ root }, options);
+  const freight = expanded.outcomes.find(outcome => outcome.sourceId === 'usda-grain-freight-indicators');
+  const trade = expanded.outcomes.find(outcome => outcome.sourceId === 'federal-register-ustr-notices');
+  assert.equal(requests.filter(url => url.hostname === 'www.federalregister.gov').length, 1);
+  assert.deepEqual(await readFile(join(root, 'data/quarantine', freight.sourceId, 'objects/sha256', freight.captureSha256, 'payload')), workbook);
+  assert.equal(freight.releaseState, 'unreleased');
+  assert.equal(trade.releaseState, 'unreleased');
+  assert.deepEqual(trade.notices.map(({ id }) => id), [cropNotice.document_number]);
+
+  const previous = new Map();
+  reportChanges([trade], previous);
+  assert.equal(reportChanges([{ ...trade, captureSha256: 'different envelope' }], previous)[0].change, 'unchanged');
 });
