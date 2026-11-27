@@ -77,3 +77,21 @@ release. The original dirty checkout and separate private Sites composition,
 its audience and storage remain separate. No DNS, settings, relay, credentials,
 models or persisted data changes are required. Rollback is a focused application
 revert followed by verified redeployment; no data migration applies.
+
+## Browser acceptance follow-up
+
+The first exact-head hosted run `46072258869`, at
+`bc7be23e3fabf48249d1f6a95e5960b9d7b8df73`, passed the desktop Research journey
+and initial card/tool geometry at all three sizes. The phone and short landscape
+journeys could not reveal a control after native subject/related fragment focus.
+That failure remains recorded; initial screenshots are layout evidence, not a
+passing mobile navigation result.
+
+The Research-only reveal helper now waits for two animation frames both before
+and after its instant scroll. Pointer navigation does not pre-focus its target;
+keyboard navigation uses prevent-scroll focus followed by an actual Enter key.
+The same viewport, hit-testing, 44-pixel targets, source selection, anchor and
+history assertions remain. Failures now retain target/hit/focus/scroll geometry
+and a screenshot. The generic drought helper and deadlines are unchanged. This
+is a browser acceptance correction pending a fresh CI run, not a claim that the
+first failure was a validated product defect or a passing mobile result.

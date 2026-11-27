@@ -3829,8 +3829,36 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
       const shot = await p.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
       await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `${name}-${width}x${height}.png`), Buffer.from(shot.data, 'base64'));
     };
+    const reveal = async selector => {
+      // Let native fragment scrolling finish before revealing the next control,
+      // then let layout settle again. Pointer acceptance must not depend on
+      // pre-focusing its target; the same viewport and hit checks still apply.
+      await p.evaluate(`(async()=>{const settle=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));await settle();const node=document.querySelector(${JSON.stringify(selector)});node.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});await settle();})()`);
+      try {
+        await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect();return r&&r.width>0&&r.height>0&&r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'uncovered Research pathway target: '+selector);
+      } catch (error) {
+        const geometry = await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),hit=r?document.elementFromPoint(r.left+r.width/2,r.top+r.height/2):null,ancestors=[];for(let parent=node?.parentElement;parent;parent=parent.parentElement){const style=getComputedStyle(parent);ancestors.push({tag:parent.tagName,id:parent.id,className:parent.className,rect:parent.getBoundingClientRect().toJSON(),scrollTop:parent.scrollTop,scrollLeft:parent.scrollLeft,scrollWidth:parent.scrollWidth,scrollHeight:parent.scrollHeight,clientWidth:parent.clientWidth,clientHeight:parent.clientHeight,overflowX:style.overflowX,overflowY:style.overflowY});}return {selector:${JSON.stringify(selector)},url:location.href,viewport:{width:innerWidth,height:innerHeight,scrollX,scrollY},target:r?.toJSON(),hit:hit?.outerHTML.slice(0,500),active:document.activeElement?.outerHTML.slice(0,500),ancestors};})()`);
+        t.diagnostic('Research target geometry: '+JSON.stringify(geometry));
+        if (process.env.KFM_WORKSPACE_SCREENSHOTS) {
+          try {
+            await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+            const name = `research-unreachable-${width}x${height}-${selector.replace(/[^a-z0-9-]/gi, '_').slice(0, 120)}`;
+            const shot = await p.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+            await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, name+'.png'), Buffer.from(shot.data, 'base64'));
+            await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, name+'.json'), JSON.stringify(geometry, null, 2));
+          } catch (captureError) { t.diagnostic('Research failure capture unavailable: '+String(captureError)); }
+        }
+        throw new Error(error.message+'; Research target geometry: '+JSON.stringify(geometry), { cause: error });
+      }
+      return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+    };
+    const enter = async selector => {
+      await reveal(selector);
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus({preventScroll:true})`);
+      await p.key('Enter', 'Enter', 13);
+    };
     const click = async selector => {
-      const point = await droughtPoint(p, selector);
+      const point = await reveal(selector);
       for (const type of ['mousePressed', 'mouseReleased']) await p.call('Input.dispatchMouseEvent', {
         type, x: point.x, y: point.y, button: 'left', buttons: type === 'mousePressed' ? 1 : 0, clickCount: 1,
       });
@@ -3867,25 +3895,25 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
       assert.equal(actual.comparison, researchPathways.pathwayComparisonHref(pathway));
       for (const tool of pathway.tools) {
         const selector = link(pathway.id, tool.href);
-        await droughtPoint(p, selector);
+        await reveal(selector);
         assert.equal(await p.evaluate(`(() => {const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return r.width>=44&&r.height>=44;})()`), true, `${pathway.id} tool meets the touch target`);
       }
-      await droughtPoint(p, `${card(pathway.id)} details > summary`);
+      await reveal(`${card(pathway.id)} details > summary`);
     }
     await capture('research-pathways', '#research-pathways');
 
     // Native subject and related links move keyboard focus as well as scrolling.
-    await droughtEnter(p, '[aria-label="Research subjects"] a[href="#research-ecology"]');
+    await enter('[aria-label="Research subjects"] a[href="#research-ecology"]');
     await p.wait(`location.hash==='#research-ecology' && document.activeElement?.id==='research-ecology'`, 'subject navigation focuses its visible research card');
     const ecology = pathways.find(pathway => pathway.id === 'ecology');
     const related = ecology.connections[0];
-    await droughtEnter(p, link('ecology', '#research-' + related));
+    await enter(link('ecology', '#research-' + related));
     await p.wait(`location.hash===${JSON.stringify('#research-' + related)} && document.activeElement?.id===${JSON.stringify('research-' + related)}`, 'a cross-discipline connection focuses its real destination');
 
     for (const id of ['water', 'infrastructure']) {
       const pathway = pathways.find(item => item.id === id);
       const summary = `${card(id)} details > summary`;
-      await droughtEnter(p, summary);
+      await enter(summary);
       await p.wait(`document.querySelector(${JSON.stringify(card(id) + ' details')}).open`, 'native source context opens');
       await click(link(id, researchPathways.pathwayComparisonHref(pathway)));
       await assertSelection(pathway);
@@ -3893,7 +3921,7 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
 
     const selected = pathways.find(pathway => pathway.id === 'infrastructure');
     const search = '#source-catalog input[type="search"]';
-    await droughtPoint(p, search);
+    await reveal(search);
     await p.evaluate(`document.querySelector(${JSON.stringify(search)}).focus()`);
     await p.call('Input.insertText', { text: 'water' });
     await p.wait(`new URLSearchParams(location.search).get('q')==='water'`, 'native search updates the shareable Research URL');
@@ -3910,7 +3938,7 @@ for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
     const destinationReady = `location.pathname===${JSON.stringify(destination.pathname)} && location.search===${JSON.stringify(destination.search)} && ${storyId ? `!!document.querySelector(${JSON.stringify('.story-lab[data-story="' + storyId + '"] #story-lab-title')})` : "!!document.querySelector('main')"}`;
     const selector = link(selected.id, tool.href);
     await p.key('Tab', 'Tab', 9);
-    await droughtPoint(p, selector);
+    await reveal(selector);
     await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus({preventScroll:true})`);
     assert.equal(await p.evaluate(`document.activeElement?.matches(${JSON.stringify(selector + ':focus-visible')})`), true, 'the named tool has visible keyboard focus');
     await p.key('Enter', 'Enter', 13);
