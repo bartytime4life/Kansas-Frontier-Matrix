@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp,mkdir,writeFile,readFile,readdir,rm,symlink} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {stagePublicClientAssets} from '../scripts/stage-public-client-assets.mjs';
+import {inventoryPublicClientAssets,stagePublicClientAssets} from '../scripts/stage-public-client-assets.mjs';
 import {gunzipSync,brotliDecompressSync} from 'node:zlib';
 async function fixture(){
  const root=await mkdtemp(join(tmpdir(),'kfm-client-assets-'));
@@ -82,4 +82,46 @@ test('prebuild may skip an absent build but never an existing malformed one',asy
   await mkdir(f.source,{recursive:true});await writeFile(join(f.source,'unhashed.js'),'bad');
   await assert.rejects(stagePublicClientAssets(f.root,{ifBuilt:true}),/CLIENT_ASSET_NAME_UNSAFE/);
  }finally{await f.close();}
+});
+test('retained inventory identifies review candidates without touching any files',async t=>{
+ const f=await fixture();t.after(f.close);
+ const files={
+  'older-12345678.js':'an earlier browser build',
+  'older-12345678.js.br':'paired',
+  'alone-12345678.css.gz':'original missing',
+  'lost-12345678.js.br':'original is a symlink',
+  '.stage-f3081948-ffaa-490b-88bd-edb1ddaf31af':'interrupted staging',
+  'unexpected.txt':'unknown file',
+ };
+ for(const [name,bytes] of Object.entries(files))await writeFile(join(f.target,name),bytes);
+ await symlink(join(f.target,'older-12345678.js'),join(f.target,'lost-12345678.js'));
+ await mkdir(join(f.target,'unexpected-directory'));
+ const expected={
+  entries:8,bytes:Object.values(files).reduce((total,bytes)=>total+Buffer.byteLength(bytes),0),
+  entryLimit:4096,byteLimit:256*1024*1024,
+  compressionWithoutOriginal:[
+   {name:'alone-12345678.css.gz',bytes:Buffer.byteLength(files['alone-12345678.css.gz'])},
+   {name:'lost-12345678.js.br',bytes:Buffer.byteLength(files['lost-12345678.js.br'])},
+  ],
+  stagingTemporaries:[
+   {name:'.stage-f3081948-ffaa-490b-88bd-edb1ddaf31af',bytes:Buffer.byteLength(files['.stage-f3081948-ffaa-490b-88bd-edb1ddaf31af'])},
+  ],
+  otherEntries:3,
+ };
+ assert.deepEqual(await inventoryPublicClientAssets(f.root),expected);
+ assert.deepEqual(await inventoryPublicClientAssets(f.root),expected);
+ assert.deepEqual(await readdir(f.source),[]);
+ assert.deepEqual((await readdir(f.target)).sort(),[...Object.keys(files),'lost-12345678.js','unexpected-directory'].sort());
+ for(const [name,bytes] of Object.entries(files))assert.equal(await readFile(join(f.target,name),'utf8'),bytes);
+});
+test('retained inventory treats missing output as empty and rejects a symlink directory',async t=>{
+ const f=await fixture();t.after(f.close);
+ await rm(f.target,{recursive:true});
+ assert.deepEqual(await inventoryPublicClientAssets(f.root),{
+  entries:0,bytes:0,entryLimit:4096,byteLimit:256*1024*1024,
+  compressionWithoutOriginal:[],stagingTemporaries:[],otherEntries:0,
+ });
+ assert.deepEqual(await readdir(join(f.root,'public')),[]);
+ await symlink(f.source,f.target);
+ await assert.rejects(inventoryPublicClientAssets(f.root),/CLIENT_ASSET_DIRECTORY_UNSAFE/);
 });

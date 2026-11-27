@@ -59,9 +59,26 @@ date has used (which needs a reliable record of what each build used), raising t
 clearing the folder at a quiet hour and accepting that pages left open across that publish must
 reload.
 
+## Inspect a checkout before reviewing cleanup
+
+From the hosted application root, run this while the build and staging processes are idle.
+
+```sh
+node scripts/stage-public-client-assets.mjs --inventory
+```
+
+The command inventories `public/assets` without writing to the checkout. It reports the current
+entry and byte counts, compression variants whose same-name uncompressed file is absent, and
+temporary files named by the staging process. Unrecognized entries and links are counted.
+Candidate names appear only in the command output. A candidate requires review against active
+and rollback releases before disposal. Ordinary hashed files, including files from earlier
+builds, remain outside the candidate list.
+
 ## Tests
 
 `tests/build-identity.test.mjs` checks the counts, that the limits equal the ones the staging
 step enforces, that no file name is written, and that `--print` is unchanged.
 `tests/build-identity-http.test.mjs` accepts the field on `/api/build` only with these four
 positive integers.
+`tests/public-client-assets.test.mjs` checks that the inventory distinguishes paired variants
+from candidates, refuses a linked inventory directory, and leaves the files intact.

@@ -14,6 +14,39 @@ export const CLIENT_ASSET_ENTRY_LIMIT=4096,CLIENT_ASSET_BYTE_LIMIT=256*1024*1024
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const allowed=/^[A-Za-z0-9][A-Za-z0-9_.-]{0,180}-[A-Za-z0-9_-]{8,}\.(?:js|css|woff2?|ttf|svg|png|jpe?g|webp|avif|wasm)(?:\.(?:br|gz|zst))?$/;
 async function directory(path){const info=await lstat(path);if(!info.isDirectory()||info.isSymbolicLink())fail('CLIENT_ASSET_DIRECTORY_UNSAFE');}
+
+export async function inventoryPublicClientAssets(root=process.cwd()){
+ const publicRoot=resolve(root,'public');
+ const retained=join(publicRoot,'assets');
+ await directory(publicRoot);
+ let names=[];
+ try{
+  await directory(retained);
+  names=(await readdir(retained)).sort();
+ }catch(error){if(error.code!=='ENOENT')throw error;}
+
+ const assetFiles=new Map();
+ const stagingTemporaries=[];
+ let bytes=0, otherEntries=0;
+ for(const name of names){
+  const info=await lstat(join(retained,name));
+  if(!info.isFile()){otherEntries++;continue;}
+  bytes+=info.size;
+  if(allowed.test(name))assetFiles.set(name,info.size);
+  else if(/^\.stage-[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(name)){
+   stagingTemporaries.push({name,bytes:info.size});
+  }else otherEntries++;
+ }
+
+ const compressionWithoutOriginal=[];
+ for(const [name,size] of assetFiles){
+  const original=name.replace(/\.(?:br|gz|zst)$/,'');
+  if(original!==name&&!assetFiles.has(original))compressionWithoutOriginal.push({name,bytes:size});
+ }
+ return {entries:names.length,bytes,entryLimit:CLIENT_ASSET_ENTRY_LIMIT,byteLimit:CLIENT_ASSET_BYTE_LIMIT,
+  compressionWithoutOriginal,stagingTemporaries,otherEntries};
+}
+
 export async function stagePublicClientAssets(root=process.cwd(),{ifBuilt=false,compress=false}={}){
  root=resolve(root);
  try{for(const part of ['dist','dist/client','dist/client/assets'])await directory(join(root,part));}
@@ -88,5 +121,11 @@ export async function stagePublicClientAssets(root=process.cwd(),{ifBuilt=false,
  return {files:items.length,bytes:totalBytes,added,retained,...(compress?{compression}:{})};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
- const result=await stagePublicClientAssets(process.cwd(),{ifBuilt:process.argv.includes('--if-built'),compress:process.argv.includes('--compress')});console.info('KFM public client assets staged '+JSON.stringify(result));
+ if(process.argv.includes('--inventory')){
+  if(process.argv.length!==3)fail('CLIENT_ASSET_INVENTORY_OPTIONS');
+  console.log(JSON.stringify(await inventoryPublicClientAssets()));
+ }else{
+  const result=await stagePublicClientAssets(process.cwd(),{ifBuilt:process.argv.includes('--if-built'),compress:process.argv.includes('--compress')});
+  console.info('KFM public client assets staged '+JSON.stringify(result));
+ }
 }
