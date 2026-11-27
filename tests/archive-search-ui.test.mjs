@@ -159,6 +159,20 @@ test('linked searches preserve valid newspaper and book titles and reject malfor
  }finally{valid.h.dispose();foreign.h.dispose();book.h.dispose();invalid.h.dispose();}
 });
 
+test('archive text links retain valid case-sensitive IDs and omit filters rejected by the archive',async()=>{
+ const validTitle='Prairie.1900_Text-1',maxLengthTitle='x'.repeat(100);
+ const cases=[['not an identifier',undefined],['x'.repeat(101),undefined],['prairie%1900',undefined],['prérié',undefined],
+  [validTitle,validTitle],[' '+validTitle+' ',validTitle],[maxLengthTitle,maxLengthTitle]];
+ for(const [title,expected] of cases){
+  const f=await fixture('?q=prairie&source=texts&title='+encodeURIComponent(title));
+  try{
+   assert.equal(f.calls[0].query.title,expected,title);
+   const shared=new URL(f.h.exports.archiveSearchLocation('',{q:'prairie',source:'texts',from:'',to:'',title}),'https://example.test');
+   assert.equal(shared.searchParams.get('title'),expected??null,title);
+  }finally{f.h.dispose();}
+ }
+});
+
 test('a response arriving after the timeout stays unapplied and can be retried',async()=>{
  let expire;
  const f=await fixture('',{setTimeout:callback=>{expire=callback;return 1;},clearTimeout(){}});

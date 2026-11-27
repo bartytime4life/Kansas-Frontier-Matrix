@@ -4,7 +4,7 @@ import {mkdtemp,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import ts from 'typescript';
-import {componentHarness} from './component-harness.mjs';
+import {componentHarness,findNode,settle} from './component-harness.mjs';
 import {GRAIN_SOURCE,parseGrainReport,validateGrain} from '../server/grain-market.mjs';
 import {reports,captureReport,reportChanges,watchMarket} from '../scripts/pc-pipeline/market-watch.mjs';
 import {tradeNoticeSignals,watchSupplyChain} from '../scripts/pc-pipeline/supply-chain-watch.mjs';
@@ -12,6 +12,62 @@ import {tradeNoticeSignals,watchSupplyChain} from '../scripts/pc-pipeline/supply
 const code=ts.transpileModule(await readFile('app/yield-history.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {yieldHistory,pairedSeasons}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 const {exports:{farmBudget}}=await componentHarness('app/field-decision-tools.tsx',{'./bounded-json':{},'./rain-normal':{},'./yield-history':{},'./moon':{},'./sun-chart':{},'./frost-dates':{}});
+
+test('deferred farm tools preserve the requested control and never take focus from another control', async () => {
+  class HTMLElement {
+    dataset = { categoryToolLoading: 'field-almanac' };
+  }
+  for (const moveFocus of [false, true]) {
+    const body = {}, elsewhere = {}, loading = new HTMLElement(), focused = [];
+    const document = { body, activeElement: loading };
+    const Tools = () => null;
+    let imports = 0;
+    const h = await componentHarness('app/field-decision-tools-loader.tsx', {
+      get './field-decision-tools'() { imports++; return { FieldDecisionTools: Tools }; },
+    }, { HTMLElement, document });
+    const render = props => h.render(h.exports.FieldDecisionToolsLoader, props);
+    const shell = render({ point: null, year: 2024, frost: null });
+    assert.equal(imports, 0, 'rendering the shell does not start the import');
+    assert.ok(findNode(shell, node => node.props?.['data-category-tool-loading'] === 'field-almanac'));
+    shell.props.ref.current = {
+      contains: node => node === loading,
+      querySelector(selector) {
+        assert.equal(selector, '[data-category-tool="field-almanac"]');
+        return {
+          scrollIntoView: () => focused.push('scrolled'),
+          focus: () => focused.push('focused'),
+        };
+      },
+    };
+    h.commit(); await settle();
+    assert.equal(imports, 1);
+    document.activeElement = moveFocus ? elsewhere : body;
+    const point = { lon: -98, lat: 38 };
+    const result = findNode(render({ point, year: 2025, frost: null }), node => node.type === Tools);
+    assert.equal(result.props.point, point);
+    assert.equal(result.props.year, 2025);
+    h.commit();
+    assert.deepEqual(focused, moveFocus ? [] : ['scrolled', 'focused']);
+    h.dispose();
+  }
+});
+
+test('failed farm tools render an inline notice and an explicit reload', async () => {
+  let reloads = 0;
+  const h = await componentHarness('app/field-decision-tools-loader.tsx', {
+    get './field-decision-tools'() { throw new Error('Internal failure'); },
+  }, { window: { location: { reload: () => reloads++ } } });
+  const render = () => h.render(h.exports.FieldDecisionToolsLoader, { point: null, year: 2024, frost: null });
+  render(); h.commit(); await settle();
+  const failed = render();
+  assert.equal(findNode(failed, node => node.props?.role === 'alert').props.children, 'Farm planning tools could not load.');
+  const reload = findNode(failed, node => node.type === 'button');
+  assert.equal(reloads, 0);
+  reload.props.onClick();
+  assert.equal(reloads, 1);
+  h.dispose();
+});
+
 test('farm budget handles crop failure, entered zero, empty or negative costs and the selected cash price',()=>{
  const b=farmBudget('100','4.5',['20','80','10','250']);
  assert.equal(b.breakEven,3.6);assert.deepEqual(Array.from(b.rows,row=>row.margin),[0,90,180]);

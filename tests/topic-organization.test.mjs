@@ -138,9 +138,17 @@ test("rendered topic index binds counts to current inventories and opens valid t
   const cards = nodes(tree, node => node.type === "article");
   assert.equal(cards.length, topics.TOPIC_STRUCTURE.length);
   for (const card of cards) {
+    const topic = topics.topicDefinition(card.props.id);
     const summaries = nodes(card, node => node.type === "summary");
     assert.equal(summaries[0].props.children.at(-1), context.OFFICIAL_CONTEXT_SOURCES.filter(source => topics.officialSourceTopics(source.id).includes(card.props.id)).length);
-    assert.ok(findNode(card, node => node.props?.href === `/?topic=${card.props.id}`));
+    const layerLink = findNode(card, node => node.props?.href === `/?topic=${topic.id}`);
+    assert.equal(layerLink.props["aria-label"], `Browse map layers for ${topic.title}`);
+    const imageryLink = findNode(card, node => node.props?.href === `/?topic=${topic.id}&layerView=imagery`);
+    if (imagery.EARTH_ENGINE_CONTEXT_LAYERS.some(layer => topics.imageryTopics(layer.id).includes(topic.id))) {
+      assert.equal(imageryLink.props["aria-label"], `Browse related imagery for ${topic.title}`);
+    } else {
+      assert.equal(imageryLink, undefined);
+    }
   }
   for (const anchor of nodes(tree, node => typeof node.props?.href === "string" && node.props.href.startsWith("/?topic="))) {
     const params = new URLSearchParams(anchor.props.href.slice(2));

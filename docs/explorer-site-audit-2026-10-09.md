@@ -63,3 +63,7 @@ The indexes are optional: without them the route returns the same pages, only sl
 ## Rollback
 
 Revert the commit. Delete `app/not-found.tsx` to restore the plain-text 404 by itself, or remove `headers()` from `next.config.ts` to drop only the baseline headers. No stored data, API response or saved-workspace format is affected.
+
+## Hosted 404 scrolling follow-up
+
+The hosted 404 restores document scrolling so visitors can reach the recovery links on short screens and at higher zoom levels. The existing map workspace keeps its own viewport. The same 404 page and status apply to missing and withheld routes.
