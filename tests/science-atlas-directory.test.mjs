@@ -63,3 +63,9 @@ test('flow questions and USGS source searches both find River Flow', () => {
   assert.ok(usgs.includes('/labs/river-flow'));
   assert.ok(usgs.includes('/labs/water-chemistry'));
 });
+
+test('search finds the earthquake threshold lab by catalog or epicenters', () => {
+  for (const query of ['ComCat', 'epicenters', 'magnitude threshold']) {
+    assert.ok(filterScienceDirectory(entries, query, '').some(entry => entry.href === '/labs/earthquakes'), query);
+  }
+});

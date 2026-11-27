@@ -186,7 +186,17 @@ export const STORIES = Object.freeze([
     palette: ['#14121a', '#ff9f68', '#a78bfa'],
     sources: ["USGS ComCat"],
     tables: ['kfm_usgs_earthquakes', 'kfm_kgs_wells'], feeds: ['earthquakes', 'kgs-oil-gas'],
+    relatedLab: { href: '/labs/earthquakes', label: 'Compare magnitude thresholds in Earthquake Catalog Lab ↗' },
     load: () => import('./record-lab.jsx'),
+  }),
+  guided({
+    id: 'earthquake-catalog', group: 'Living record', title: 'Earthquake Catalog Lab', kicker: 'SEISMICITY · MAGNITUDE · EPICENTERS',
+    summary: 'Find how the comparison between two periods changes as you raise the magnitude threshold for recorded earthquakes around Kansas.',
+    try: 'Compare rates across four-year periods, layer epicenters and inspect the underlying USGS records.',
+    limit: 'The search box includes parts of neighboring states. Catalog detection varies, especially for smaller earthquakes.',
+    href: '/labs/earthquakes',
+    palette: ['#0d1f2d', '#eeb477', '#a5d9dc'],
+    sources: ['USGS ComCat'], tables: ['kfm_usgs_earthquakes'], feeds: ['earthquakes'],
   }),
   planned({
     id: 'black-gold', group: 'Living record', title: 'Black Gold', kicker: 'OIL & GAS',
