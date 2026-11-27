@@ -72,26 +72,28 @@ export function analyseSoil(snapshot, { year = 2025, month = 0, depth = 20, vari
     valid: selected.valid, missing: selected.missing, min: selected.min, median: selected.median, max: selected.max,
     meanColdDays: selected.meanColdDays, temperatureValid: selected.temperatureValid, depths, days, sources: snapshot.sources };
 }
-export function soilCsv(analysis) {
+export function soilCsv(analysis, citation) {
   const s = analysis.settings;
   const rows = [['station_wban', 'station_name', 'latitude', 'longitude', 'local_standard_date', 'utc_offset_hours', 'depth_cm', 'moisture_source_token',
     'moisture_m3_m3', 'moisture_state', 'temperature_source_token', 'temperature_c', 'temperature_state', 'datalogger_version',
-    'selected_year', 'selected_month_0_is_all', 'selected_variable', 'selected_depth_cm', 'source_url', 'source_sha256']];
+    'selected_year', 'selected_month_0_is_all', 'selected_variable', 'selected_depth_cm', 'source_url', 'source_sha256',
+    'source_captured_at', 'source_bytes', 'source_citation']];
   for (const day of analysis.days) for (const [index, depth] of DEPTHS_CM.entries()) {
     const source = yearSource(analysis.sources, day.date);
     const m = day.moisture[index];
     const t = day.temperature[index];
-    rows.push([analysis.station.id, analysis.station.name, analysis.station.latitude, analysis.station.longitude, day.date, -6, depth,
-      m.raw, m.value, m.state, t.raw, t.value, t.state, day.version, s.year, s.month, s.variable, s.depth, source.url, source.sha256]);
+    rows.push([analysis.station.id, analysis.station.name, analysis.station.latitude, analysis.station.longitude, day.date, analysis.station.utcOffsetHours, depth,
+      m.raw, m.value, m.state, t.raw, t.value, t.state, day.version, s.year, s.month, s.variable, s.depth, source.url, source.sha256,
+      source.capturedAt, source.bytes, citation]);
   }
   return csv(rows);
 }
-export function soilReceipt(analysis, descriptor) {
+export function soilReceipt(analysis, descriptor, citation) {
   if (descriptor?.id !== analysis.station.id || !Array.isArray(descriptor.sources) ||
       !analysis.sources.every((source, index) => sameSource(source, descriptor.sources[index]))) throw new Error('Soil receipt station identity mismatch.');
   return { schema: 'kfm.soil-profile-analysis/v1', scope: 'provider-context', station: analysis.station, settings: analysis.settings, period: analysis.period,
     expectedDays: analysis.expected, depths: analysis.depths,
-    displaySnapshot: { url: descriptor.url, sha256: descriptor.sha256, bytes: descriptor.bytes }, sources: analysis.sources,
+    displaySnapshot: { url: descriptor.url, sha256: descriptor.sha256, bytes: descriptor.bytes }, sources: analysis.sources, citation,
     method: 'Separate daily-mean point measurements at 5,10,20,50,100 cm, local standard time UTC−6. Moisture m³/m³, temperature °C. No interpolation or depth average. Sentinels and out-of-range values withheld; missing never means zero. Median uses observed days only. Daily-mean temperature ≤0°C counts do not identify all freezing events.',
     displayRanges: { moisture: [0, 1], temperature: [-50, 60] }, reviewState: 'PENDING', sourceAdmission: 'PENDING', releaseState: 'UNRELEASED' };
 }

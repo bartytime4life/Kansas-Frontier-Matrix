@@ -4,7 +4,8 @@ const DAY = 86400000;
 const PERIOD = Object.freeze({ from: '2020-01-01', to: '2025-12-31' });
 const SOURCE_FLAGS = new Set('01267AaBbCDdEFGHIKMf mNQRrSsTUuWXZz'.replaceAll(' ', ''));
 const TEMPERATURE_FLAGS = new Set(['', 'H', 'L']);
-const RAIN_FLAGS = new Set(['', 'A', 'B', 'C', 'D', 'E', 'F', 'G']);
+const DAILY_PRECIPITATION_FLAGS = new Set(['', 'B', 'D', 'F', 'G']);
+const PARTIAL_PRECIPITATION_FLAGS = new Set(['A', 'C', 'E']);
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const finite = value => typeof value === 'number' && Number.isFinite(value);
 
@@ -22,7 +23,9 @@ export function climateReading(tuple, element) {
   else if (element === 'prcp' && measurementFlag === 'H') result.state = 'precipitation-noted';
   else if (element === 'prcp' && measurementFlag === 'I') result.state = 'precipitation-not-reported';
   else if (element === 'prcp' && measurementFlag === 'T' && raw === 0) result.state = 'trace';
-  else if ((element === 'prcp' ? RAIN_FLAGS : TEMPERATURE_FLAGS).has(measurementFlag) && (element !== 'prcp' || raw >= 0)) {
+  // GHCN .dly flags A, C and E describe 6-, 18- and 12-hour totals.
+  else if (element === 'prcp' && raw >= 0 && PARTIAL_PRECIPITATION_FLAGS.has(measurementFlag)) result.state = 'partial-period';
+  else if ((element === 'prcp' ? DAILY_PRECIPITATION_FLAGS : TEMPERATURE_FLAGS).has(measurementFlag) && (element !== 'prcp' || raw >= 0)) {
     result.state = 'reported'; result.value = raw / 10;
   }
   return result;
@@ -64,6 +67,7 @@ function summary(days, heatC, wetMm) {
     wetDays: days.filter(day => day.prcp.value !== null && day.prcp.value >= wetMm).length,
     rainMm: valid.prcp ? days.reduce((sum, day) => sum + (day.prcp.state === 'reported' ? day.prcp.raw : 0), 0) / 10 : null,
     traceDays: days.filter(day => day.prcp.state === 'trace').length,
+    partialPrecipitationDays: days.filter(day => day.prcp.state === 'partial-period').length,
     maxC: temperatures.length ? Math.max(...temperatures) : null,
     minC: temperatures.length ? Math.min(...temperatures) : null };
 }
@@ -82,7 +86,7 @@ export function analyseClimate(snapshot, { year = 2025, month = 0, heatC = 32.2,
 
 const STATES = Object.freeze({ missing: 'Missing', trace: 'Trace (unquantified)', 'quality-withheld': 'Withheld: NOAA quality flag',
   'missing-presumed-zero': 'Missing, presumed zero', 'precipitation-noted': 'Precipitation noted, amount unresolved',
-  'precipitation-not-reported': 'Precipitation not reported', unqualified: 'Unqualified reading',
+  'precipitation-not-reported': 'Precipitation not reported', 'partial-period': 'Withheld: partial precipitation period', unqualified: 'Unqualified reading',
   'inconsistent-temperatures': 'Withheld: minimum exceeds maximum' });
 
 export function readingLabel(reading, element, units = 'metric') {
@@ -108,7 +112,7 @@ export function climateCsv(analysis, units = 'metric') {
   const rows = analysis.days.map(day => [analysis.station.id, analysis.station.name, day.date, analysis.year, analysis.month || 'all', analysis.heatC, analysis.wetMm, units,
     ...ELEMENTS.flatMap(element => { const reading = day[element]; const converted = reading.value === null ? null : units === 'metric' ? reading.value : element === 'prcp' ? reading.value / 25.4 : reading.value * 9 / 5 + 32;
       return [converted === null ? null : Number(converted.toFixed(8)), reading.state, reading.raw, reading.measurementFlag, reading.qualityFlag, reading.sourceFlag]; }),
-    analysis.source.url, analysis.source.sha256, analysis.source.capturedAt, 'Station observation-day provider context; no filled days; trace unquantified']);
+    analysis.source.url, analysis.source.sha256, analysis.source.capturedAt, 'Station observation-day provider context; PRCP is liquid-equivalent precipitation; trace unquantified; partial periods withheld; no filled days']);
   return [names, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n') + '\r\n';
 }
 
@@ -116,11 +120,11 @@ export function climateReceipt(analysis, descriptor, units = 'metric') {
   if (!['metric', 'imperial'].includes(units) || descriptor.id !== analysis.station.id || !same(descriptor.source, analysis.source)) throw new Error('Receipt must match the current station.');
   return { schema: 'kfm.daily-climate-analysis/v1', scope: 'provider-context', station: analysis.station,
     selection: { year: analysis.year, month: analysis.month, heatC: analysis.heatC, wetMm: analysis.wetMm, displayUnits: units },
-    support: { expectedDays: analysis.expected, quantifiedDays: analysis.valid, excludedDays: analysis.excluded, traceDays: analysis.traceDays },
+    support: { expectedDays: analysis.expected, quantifiedDays: analysis.valid, excludedDays: analysis.excluded, traceDays: analysis.traceDays, partialPrecipitationDays: analysis.partialPrecipitationDays },
     metrics: { hotDays: analysis.hotDays, frostDays: analysis.frostDays, wetDays: analysis.wetDays, quantifiedRainMm: analysis.rainMm },
     source: analysis.source, snapshot: { url: descriptor.url, sha256: descriptor.sha256, bytes: descriptor.bytes },
-    method: 'TMAX >= heatC; TMIN <= 0 C; quantified PRCP >= wetMm. Each denominator is independent. Sum only quantified, QA-passing precipitation. Trace has no assigned amount. No missing values filled.',
-    limitations: ['Station observation days, not hourly, field or county estimates.', 'Trace precipitation is excluded from the quantified sum; missing and withheld readings remain excluded.',
+    method: 'TMAX >= heatC; TMIN <= 0 C; quantified PRCP >= wetMm. Each denominator is independent. Sum only qualified daily liquid-equivalent precipitation, which can include melted snow. GHCN .dly flags A, C and E are partial periods and excluded. Trace has no assigned amount. No missing values filled.',
+    limitations: ['Station observation days, not hourly, field or county estimates.', 'The daily minimum does not establish the time of freezing temperatures or the occurrence of frost.', 'Trace precipitation is excluded from the quantified sum; missing and withheld readings remain excluded.',
       'A six-year sample is not a climate normal, trend attribution, drought index or forecast.', 'Captured source SHA256 establishes local byte identity, not a provider-issued checksum or KFM source admission.'],
     documentation: 'https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme.txt' };
 }
