@@ -23,7 +23,12 @@ Sources and reuse:
 - [Classification](https://droughtmonitor.unl.edu/About/AbouttheData/DroughtClassification.aspx)
 - [Reuse and required attribution](https://droughtmonitor.unl.edu/About/Permission.aspx)
 
-The app and exports retain the provider's attribution. Traditional percentages
+The app and exports retain the provider's attribution. The drought CSV includes
+capture time, byte count and attribution after the original columns. For
+reported assessments, `assessment_date` and `valid_through` are the provider's
+Tuesday start and Monday end dates. These fields describe the data product's
+validity interval. Publication and physical drought duration are separate.
+Missing assessments have an empty `valid_through`. Traditional percentages
 are cumulative: D0 ≥ D1 ≥ D2 ≥ D3 ≥ D4. Exclusive stacked categories are computed
 from adjacent differences; cumulative shares must not be stacked. None + D0
 can differ from 100 by source rounding. D0 is abnormally dry; drought begins at
@@ -94,9 +99,10 @@ assets. These hashes are computed by KFM, not provider-issued signatures.
 Browser readers enforce exact display length and SHA-256 before validating the
 full schema. Reads time out even if a transport ignores cancellation. A station
 switch clears old soil results, cancels obsolete work and disables stale export.
-CSV retains source tokens/qualification and settings; JSON retains provenance,
-coverage and methods. The inspection date is recorded separately from the
-analysis window when added by the UI.
+Soil CSV retains source tokens, reading states, settings, annual capture time,
+source size and the requested NOAA citations. JSON retains provenance,
+citations, coverage and methods. The UI adds the inspection date separately
+from the analysis window.
 
 ## Evidence boundaries
 

@@ -44,13 +44,14 @@ test("rendered metrics keep separate support denominators and precise Fahrenheit
     assert.ok(html.includes("Maximum ≥ 89.96 °F"));
     assert.ok(html.includes(`${analysis.valid.tmax}/${analysis.expected} days with valid maximum`));
     assert.ok(html.includes(`${analysis.valid.tmin}/${analysis.expected} days with valid minimum`));
-    assert.ok(html.includes(`${analysis.valid.prcp}/${analysis.expected} days with quantified rain`));
+    assert.ok(html.includes(`${analysis.valid.prcp}/${analysis.expected} days with quantified precipitation`));
     assert.ok(html.includes(`${analysis.traceDays} trace days`));
-    assert.doesNotMatch(html, /total rainfall/i);
+    assert.match(html, /Days at or below freezing/);
+    assert.doesNotMatch(html, /frost night|total rainfall/i);
   }
 });
 
-test("day inspector renders actual zero, trace and quantified rain using the model element contract", () => {
+test("day inspector renders actual zero, trace and quantified precipitation using the model element contract", () => {
   for (const { analysis } of snapshots) {
     const indices = [
       analysis.days.findIndex((day) => day.prcp.state === "trace"),
@@ -87,17 +88,27 @@ test("both native date events select validated calendar dates through the same h
   assert.deepEqual(selected, ["2025-01-06", "2025-01-07"]);
 });
 
-test("rain chart distinguishes recorded zero from trace and frost chart labels the correct inequality", () => {
+test("precipitation chart distinguishes recorded zero from trace and the freezing chart labels the correct inequality", () => {
   const { analysis } = snapshots.find(({ descriptor }) => /WICHITA/.test(descriptor.name));
   const html = render(ui.ClimatePlot, { analysis, units: "metric", view: "rain", selectedIndex: 0 });
   assert.equal((html.match(/class="traceMark"/g) ?? []).length, analysis.traceDays);
   assert.equal((html.match(/class="zeroMark"/g) ?? []).length, analysis.days.filter((day) => day.prcp.value === 0).length);
   assert.equal((html.match(/class="rainBar"/g) ?? []).length, analysis.days.filter((day) => day.prcp.value > 0).length);
   const frost = render(ui.ClimatePlot, { analysis, units: "imperial", view: "frost", selectedIndex: 0 });
-  assert.ok(frost.includes("Frost ≤ 32 °F"));
+  assert.ok(frost.includes("Freezing ≤ 32 °F"));
   assert.ok(frost.includes("Missing readings leave line gaps"));
   assert.doesNotMatch(frost, /class="gapKey"/);
-  assert.doesNotMatch(frost, /Frost ≥/);
+  assert.doesNotMatch(frost, /Freezing ≥/);
+});
+
+test("the Topeka blizzard-day PRCP is displayed as precipitation rather than rain or snowfall depth", () => {
+  const { analysis } = snapshots.find(({ descriptor }) => /TOPEKA/.test(descriptor.name));
+  const selectedIndex = analysis.days.findIndex(day => day.date === "2025-01-05");
+  assert.equal(analysis.days[selectedIndex].prcp.value, 20.6);
+  const day = render(ui.ClimateDayInspector, { days: analysis.days, selectedIndex, units: "metric", onSelectDate() {} });
+  assert.match(day, /Daily precipitation/);
+  assert.match(day, /20\.6 mm/);
+  assert.doesNotMatch(day, /Daily rain|snowfall depth/);
 });
 
 test("initial page is a truthful loading state and keeps analytical exports disabled", () => {

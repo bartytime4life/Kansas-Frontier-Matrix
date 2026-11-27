@@ -22,16 +22,21 @@ for each station, including 2020 and 2024 leap days. Absent element records
 become explicit missing fields, never zeros.
 
 - Heat: reported TMAX greater than or equal to the selected °C threshold.
-- Frost: reported TMIN less than or equal to 0°C.
+- Freezing threshold: reported TMIN at or below 0°C. The daily minimum alone
+  does not establish the hour of the minimum or whether frost formed.
 - Wet day: quantified PRCP greater than or equal to the positive mm threshold.
 - Quantified precipitation sum: add only reported, quality-passing daily
   amounts. Separate denominators show valid versus expected days for every
   element; traces are unquantified and counted separately. An incomplete sum
-  does not estimate rainfall on the excluded dates.
+  does not estimate precipitation on excluded dates. Quantified PRCP is
+  liquid-equivalent precipitation and can include melted snow.
 
 Nonblank quality flags are withheld. Presumed-zero missing (`P`), unresolved
 precipitation (`H`), no precipitation report (`I`), unknown/inapplicable flags
-and missing source flags are excluded. Trace (`T`) at raw zero is retained as
+and missing source flags are excluded. GHCN `.dly` measurement flags `A`,
+`C` and `E` represent precipitation periods of 6, 18 and 12 hours. The
+raw values remain available, with these partial periods excluded from daily
+threshold counts and sums. Trace (`T`) at raw zero is retained as
 an unquantified occurrence. For temperatures, hourly-derived (`H`) and lagged
 (`L`) readings retain their measurement flags. A reported minimum exceeding
 the reported maximum excludes both temperatures for that date.
@@ -42,6 +47,11 @@ station-location reconstruction. Do not use these observations as field,
 county or gridded estimates. Six years do not establish a climate normal,
 attributed trend, drought diagnosis or forecast. Daily precipitation is not
 linked to a particular river or watershed by this tool.
+
+For a winter example, inspect Topeka on January 5, 2025. The lab’s GHCN Daily
+snapshot records 20.6 mm of liquid-equivalent precipitation. The separate
+[NWS event summary](https://www.weather.gov/top/2025Blizzard) documents the
+snowfall and other precipitation types during the January 4–5 storm.
 
 CSV retains raw integers, every flag, accepted values in the selected units,
 station/date, thresholds, source URL, capture time and original-source SHA256.
