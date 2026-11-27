@@ -3481,7 +3481,6 @@ def test_daily_air_quality_successor_preserves_scientific_states_and_all_holds()
         DAILY_AIR_QUALITY_CHANGED,
         "54973bc72508f0fe5d4d249458c566ea93c54f2f",
     )
-    assert TOOL.RECEIPT.name == "site-v268-daily-air-quality-overlay-20261126.json"
     manifest = json.loads((TOOL.DESTINATION / "app/labs/daily-air-quality/snapshot-manifest.json").read_text())
     assert manifest["review"] == manifest["admission"] == "PENDING"
     assert manifest["release"] == "UNRELEASED"
@@ -3503,3 +3502,14 @@ DAILY_AIR_QUALITY_CHANGED = {
     "tests/sitemap-robots.test.mjs", "tests/test_daily_air_quality_display.py",
     "tests/topic-organization.test.mjs",
 }
+
+
+def test_daily_air_quality_doc_index_successor_preserves_runtime_data_and_all_holds():
+    _assert_transport_successor(
+        "site-v268-daily-air-quality-doc-index-overlay-20261126.json",
+        "site-v268-daily-air-quality-overlay-20261126.json",
+        "35223d1d9e08fa84a4beafb794da4deca2f39a7a2eb450d219d9eed561a6ced1",
+        {"docs/README.md"},
+        "a483745288a2fd715d21bb4de28995414a7a9080",
+    )
+    assert TOOL.RECEIPT.name == "site-v268-daily-air-quality-doc-index-overlay-20261126.json"
