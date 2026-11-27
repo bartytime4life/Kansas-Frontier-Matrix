@@ -6,17 +6,27 @@ import { loadAirSnapshot } from "../../labs/daily-air-quality/snapshot-loader.mj
 import { loadClimateSnapshot } from "../../labs/heat-and-rain/snapshot-loader.mjs";
 import { loadDroughtSnapshot } from "../../labs/county-drought/snapshot-loader.mjs";
 import { loadSunlightSnapshot } from "../../labs/sunlight-and-sky/snapshot-loader.mjs";
-import { TOPEKA_COMPARISON } from "./comparison-model.mjs";
+import { comparisonPlace } from "./comparison-places.mjs";
 
-export async function loadComparisonInputs(signal: AbortSignal) {
-  const station = climate.stations.find(item => item.id === TOPEKA_COMPARISON.climateId);
-  const point = sunlight.points.find(item => item.id === TOPEKA_COMPARISON.sunlightId);
-  if (!station || !point) throw new Error("A Topeka source is missing from the public manifests.");
+export type CountySnapshots = {
+  drought: Awaited<ReturnType<typeof loadDroughtSnapshot>>;
+  air: Awaited<ReturnType<typeof loadAirSnapshot>>;
+};
+
+export async function loadComparisonInputs(place: string, signal: AbortSignal, shared?: CountySnapshots) {
+  const area = comparisonPlace(place);
+  if (!area) throw new Error("Choose a supported Kansas comparison area.");
+  const station = climate.stations.find(item => item.id === area.climateId);
+  const point = sunlight.points.find(item => item.id === area.sunlightId);
+  if (!station || !point || !drought.counties.some(county => county.id === area.countyId) ||
+      !air.counties.some(county => county.id === area.countyId)) {
+    throw new Error("A required source for this area is missing from the public manifests.");
+  }
 
   const [climateSnapshot, droughtSnapshot, airSnapshot, sunlightSnapshot] = await Promise.all([
     loadClimateSnapshot(station, { signal }),
-    loadDroughtSnapshot(drought, { signal }),
-    loadAirSnapshot(air, { signal }),
+    shared?.drought ?? loadDroughtSnapshot(drought, { signal }),
+    shared?.air ?? loadAirSnapshot(air, { signal }),
     loadSunlightSnapshot(point, { signal }),
   ]);
 

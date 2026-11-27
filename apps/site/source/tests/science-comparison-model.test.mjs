@@ -6,18 +6,20 @@ import { loadAirSnapshot } from '../app/labs/daily-air-quality/snapshot-loader.m
 import { loadClimateSnapshot } from '../app/labs/heat-and-rain/snapshot-loader.mjs';
 import { loadDroughtSnapshot } from '../app/labs/county-drought/snapshot-loader.mjs';
 import { loadSunlightSnapshot } from '../app/labs/sunlight-and-sky/snapshot-loader.mjs';
-import { buildScienceComparison, COMPARISON_METRICS, COMPARISON_YEARS, TOPEKA_COMPARISON } from '../app/science/compare/comparison-model.mjs';
+import { buildScienceComparison, COMPARISON_METRICS, COMPARISON_YEARS } from '../app/science/compare/comparison-model.mjs';
+import { COMPARISON_PLACES, comparisonPlace } from '../app/science/compare/comparison-places.mjs';
 
 const manifest = async lab => JSON.parse(await readFile(new URL(`../app/labs/${lab}/snapshot-manifest.json`, import.meta.url)));
 const [climateManifest, droughtManifest, airManifest, sunlightManifest] = await Promise.all([
   manifest('heat-and-rain'), manifest('county-drought'), manifest('daily-air-quality'), manifest('sunlight-and-sky'),
 ]);
-const descriptors = {
-  climate: climateManifest.stations.find(station => station.id === TOPEKA_COMPARISON.climateId),
+const areaDescriptors = ({ climateId, sunlightId }) => ({
+  climate: climateManifest.stations.find(station => station.id === climateId),
   drought: droughtManifest,
   air: airManifest,
-  sunlight: sunlightManifest.points.find(point => point.id === TOPEKA_COMPARISON.sunlightId),
-};
+  sunlight: sunlightManifest.points.find(point => point.id === sunlightId),
+});
+const descriptors = areaDescriptors(comparisonPlace('topeka'));
 const options = {
   cryptoImpl: webcrypto,
   fetchImpl: async path => new Response(await readFile(new URL(`../public${path}`, import.meta.url))),
@@ -35,6 +37,7 @@ test('comparison combines only supported source locations and independently supp
   const report = buildScienceComparison(samples, undefined, descriptors);
   assert.equal(report.schema, 'kfm.science-comparison/v1');
   assert.equal(report.scope, 'provider-context');
+  assert.deepEqual(report.location, { id: 'topeka', name: 'Topeka and Shawnee County' });
   assert.deepEqual(report.selection, { year: 2025, compareYear: 2024 });
   assert.deepEqual(report.series.map(row => row.id), COMPARISON_METRICS.map(metric => metric.id));
   assert.deepEqual(report.series.map(row => row.location.id), ['USW00013996', '20177', '20177', 'topeka']);
@@ -47,6 +50,31 @@ test('comparison combines only supported source locations and independently supp
       assert.equal(series.monthly.reduce((sum, month) => sum + month[side].expected, 0), series.annual[side].expected);
       assert.equal(series.monthly.reduce((sum, month) => sum + month[side].valid, 0), series.annual[side].valid);
     }
+  }
+});
+
+test('Wichita and Dodge City bind each local station and model to the corresponding county records', async () => {
+  const expected = [
+    ['wichita', 'Wichita and Sedgwick County', 'USW00003928', '20173', 2192],
+    ['dodge-city', 'Dodge City and Ford County', 'USW00013985', '20057', 2058],
+  ];
+  assert.deepEqual(COMPARISON_PLACES.map(area => area.id), ['topeka', 'wichita', 'dodge-city']);
+  for (const [place, name, station, county, allAirDays] of expected) {
+    const inputs = areaDescriptors(comparisonPlace(place));
+    const [areaClimate, areaSunlight] = await Promise.all([
+      loadClimateSnapshot(inputs.climate, options), loadSunlightSnapshot(inputs.sunlight, options),
+    ]);
+    const areaSamples = { climate: areaClimate, drought, air, sunlight: areaSunlight };
+    let totalAirDays = 0;
+    for (const year of COMPARISON_YEARS) {
+      const report = buildScienceComparison(areaSamples, { year, compareYear: year === 2025 ? 2024 : 2025, place }, inputs);
+      assert.deepEqual(report.location, { id: place, name });
+      assert.deepEqual(report.series.map(metric => metric.location.id), [station, county, county, place]);
+      assert.equal(byId(report, 'climate').display.sha256, inputs.climate.sha256);
+      assert.equal(byId(report, 'sunlight').display.sha256, inputs.sunlight.sha256);
+      totalAirDays += byId(report, 'air').annual.selected.valid;
+    }
+    assert.equal(totalAirDays, allAirDays);
   }
 });
 
@@ -91,8 +119,10 @@ test('rejects unsupported years, mismatched weather and mismatched snapshot desc
   for (const year of [2019, '2023', 2024, 2026]) {
     assert.throws(() => buildScienceComparison(samples, { year, compareYear: 2024 }, descriptors), /different calendar years/);
   }
+  assert.throws(() => buildScienceComparison(samples, { place: 'lawrence' }, descriptors), /supported Kansas/);
+  assert.throws(() => buildScienceComparison(samples, { place: 'wichita' }, descriptors), /verified source snapshots/);
   const otherClimate = climateManifest.stations.find(station => station.id !== descriptors.climate.id);
-  assert.throws(() => buildScienceComparison(samples, undefined, { ...descriptors, climate: otherClimate }), /verified Topeka/);
+  assert.throws(() => buildScienceComparison(samples, undefined, { ...descriptors, climate: otherClimate }), /verified source snapshots/);
   const badAir = { ...descriptors.air, snapshot: { ...descriptors.air.snapshot, bytes: descriptors.air.snapshot.bytes + 1 } };
   assert.throws(() => buildScienceComparison(samples, undefined, { ...descriptors, air: badAir }), /matching verified display/);
   const badSunlight = { ...descriptors.sunlight, bytes: descriptors.sunlight.bytes + 1 };

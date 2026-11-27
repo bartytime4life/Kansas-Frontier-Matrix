@@ -1581,7 +1581,7 @@ input[type="range"] { accent-color: var(--gold); }
   .source-connection-card dl div:nth-child(2) { border-right: 0; }
   .source-connection-card dl div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
   .measurement-readout { max-width: calc(100% - 20px); flex-wrap: wrap; justify-content: center; border-radius: 14px; }
-  .map-mobile-actions { position: absolute; z-index: 14; display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); }
+  .map-mobile-actions { position: absolute; z-index: 14; display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); }
   .map-mobile-actions button, .map-mobile-actions a { display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 11px; background: rgba(7,25,27,.93); color: var(--muted); font-size: 12px; font-weight: 850; text-decoration: none; backdrop-filter: blur(10px); }
   .map-mobile-actions b { color: var(--gold); }
   .status-bar span { display: none; }
@@ -2305,6 +2305,9 @@ body { font-size: 14px; }
 .top-actions { grid-area: actions; display: flex; align-items: center; gap: 5px; }
 .top-actions button, .top-actions a, .icon-close { display: grid; place-items: center; min-width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.025); color: var(--muted); padding: 0 10px; font-size: 12px; font-weight: 850; text-decoration: none; }
 .top-actions button:hover, .top-actions a:hover, .icon-close:hover { border-color: var(--line-strong); color: var(--ink); }
+.top-actions .explorer-science-entry, .map-mobile-actions .mobile-science-entry { color: var(--water); }
+.top-actions .explorer-science-entry { min-height: 44px; white-space: nowrap; }
+:is(.explorer-science-entry, .mobile-science-entry):focus-visible { outline: 2px solid var(--water); outline-offset: 2px; }
 .top-actions .data-notices-trigger,
 .top-actions > .status-header-action { min-height: 44px; height: 44px; }
 .repository-heading .icon-close,
@@ -2591,6 +2594,7 @@ body { font-size: 14px; }
   .brand-lockup > span:last-child { display: none; }
   .brand-lockup strong { font-size: 15px; }
   .top-actions button { width: 36px; }
+  .top-actions .explorer-science-entry { display: none; }
   .top-actions .new-from-map-action { min-width: 44px; width: 44px; padding: 0; }
   .status-header-action { min-width: 44px !important; width: 44px; padding: 0 !important; }
   .status-header-action > span:last-child { display: none; }

@@ -3644,3 +3644,40 @@ def test_connected_science_successor_preserves_free_exports_sources_and_all_hold
         },
         '913db2eac8fbffc94dac31660e8e6b51bcf3f8f6',
     )
+
+
+def test_unified_science_labs_successor_preserves_capture_and_release_boundaries():
+    _assert_transport_successor(
+        "site-v268-unified-science-labs-overlay-20261127.json",
+        "site-v268-connected-science-inquiry-overlay-20261127.json",
+        "d274851d4759dde0770279489e1aa7fdd2e0045bc978d630e9c5e8c0b426f584",
+        {
+            "app/globals.css",
+            "app/labs/county-drought/county-drought.jsx",
+            "app/labs/county-drought/drought-model.mjs",
+            "app/page.tsx",
+            "app/science/compare/comparison-client.tsx",
+            "app/science/compare/comparison-model.mjs",
+            "app/science/compare/comparison-places.mjs",
+            "app/science/compare/comparison-report.mjs",
+            "app/science/compare/comparison-selection.mjs",
+            "app/science/compare/comparison-snapshots.ts",
+            "app/science/compare/comparison-view.tsx",
+            "app/science/compare/comparison.module.css",
+            "app/science/compare/page.tsx",
+            "app/science/page.tsx",
+            "app/science/science-directory.mjs",
+            "app/science/science-handoff.mjs",
+            "app/science/science-launcher.jsx",
+            "app/science/science-nav.jsx",
+            "app/science/science.module.css",
+            "tests/county-drought-ui.test.mjs",
+            "tests/science-comparison-model.test.mjs",
+            "tests/science-comparison-report.test.mjs",
+            "tests/science-comparison-ui.test.mjs",
+            "tests/science-comparison-view.test.mjs",
+            "tests/science-connected-ui.test.mjs",
+            "tests/science-handoff.test.mjs",
+        },
+        "06a43eed78c5db79aa4dacd1c91977ab449c8dac",
+    )

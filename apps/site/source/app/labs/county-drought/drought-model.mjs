@@ -5,6 +5,12 @@ export function assessmentDates(fromYear = 2020, toYear = 2025) {
   first.setUTCDate(first.getUTCDate() + (9 - first.getUTCDay()) % 7);
   return calendar(iso(first), `${toYear}-12-31`, 7);
 }
+export function isDroughtAssessmentDate(value, fromYear = 2020, toYear = 2025) {
+  if (!YEARS.includes(fromYear) || !YEARS.includes(toYear) || fromYear > toYear || typeof value !== 'string' || !/^202[0-5]-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T12:00:00Z`);
+  const year = date.getUTCFullYear();
+  return date.getUTCDay() === 2 && year >= fromYear && year <= toYear && iso(date) === value;
+}
 const round = value => Math.round(value * 100) / 100;
 export function droughtCategories(values) {
   if (values === null) return null;

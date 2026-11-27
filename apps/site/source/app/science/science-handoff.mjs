@@ -1,4 +1,7 @@
 /** Public science navigation and user-initiated project inquiry drafts. No I/O. */
+import { comparisonPlace, DEFAULT_COMPARISON_PLACE } from './compare/comparison-places.mjs';
+import { isDroughtAssessmentDate } from '../labs/county-drought/drought-model.mjs';
+
 export const SCIENCE_YEARS = Object.freeze([2025, 2024, 2023, 2022, 2021, 2020]);
 export const SCIENCE_TOOLS = Object.freeze([
   { id: 'weather', label: 'Heat & Rain', path: '/labs/heat-and-rain', question: 'Explore daily heat and precipitation', support: 'Three NOAA weather stations; select a station inside the lab.' },
@@ -6,7 +9,7 @@ export const SCIENCE_TOOLS = Object.freeze([
   { id: 'soil', label: 'Soil Profile', path: '/labs/soil-profile', question: 'Inspect measured soil moisture and temperature', support: 'Two NOAA stations and five measured depths; gaps remain visible.' },
   { id: 'air', label: 'Daily Air Quality', path: '/labs/daily-air-quality', question: 'Inspect reported daily air quality', support: 'Twelve reporting counties; coverage varies and exposure is not inferred.' },
   { id: 'sunlight', label: 'Sunlight & Sky', path: '/labs/sunlight-and-sky', question: 'Compare modeled daily sunlight energy', support: 'Three NASA POWER query points on a nominal 1° radiation grid.' },
-  { id: 'comparison', label: 'Year comparison', path: '/science/compare', question: 'Compare two years in Topeka', support: 'Topeka station and model context beside Shawnee County summaries; each keeps its own scale.' },
+  { id: 'comparison', label: 'Year comparison', path: '/science/compare', question: 'Compare two years in a Kansas area', support: 'Topeka, Wichita and Dodge City with their associated county summaries, station observations and modeled sunlight.' },
 ].map(Object.freeze));
 
 export const SERVICE_OPTIONS = Object.freeze([
@@ -36,11 +39,11 @@ const calendarDate = value => {
 const point = inList(['dodge-city', 'wichita', 'topeka']);
 const selectors = Object.freeze({
   weather: { station: inList(['USW00013985', 'USW00003928', 'USW00013996']), year, month, units: inList(['metric', 'imperial']), heat: bounded(-60, 60), wet: bounded(0.1, 500) },
-  drought: { county, compare: county, from: year, to: year, level: bounded(1, 4, true), threshold: value => bounded(0.01, 100)(value) && Number(value) === Math.round(Number(value) * 100) / 100 },
+  drought: { county, compare: county, from: year, to: year, level: bounded(1, 4, true), threshold: value => bounded(0.01, 100)(value) && Number(value) === Math.round(Number(value) * 100) / 100, date: isDroughtAssessmentDate },
   soil: { station: inList(['53974', '03067']), year, month, depth: inList(['5', '10', '20', '50', '100']), variable: inList(['moisture', 'temperature']), date: calendarDate },
   air: { county: inList(['20017', '20045', '20057', '20091', '20103', '20133', '20173', '20177', '20181', '20191', '20195', '20209']), year, month, threshold: bounded(0, 500, true), date: calendarDate },
   sunlight: { primary: point, comparison: point, year, month, date: calendarDate },
-  comparison: { year, compare: year },
+  comparison: { year, compare: year, place: value => Boolean(comparisonPlace(value)) },
 });
 
 /** Launch one native tool at a supported year; locations remain tool-specific. */
@@ -74,7 +77,9 @@ export function safeScienceContext(raw) {
     if (params.has('county') && params.get('county') === params.get('compare')) return null;
   }
   if (tool.id === 'comparison' && params.has('year') && params.get('year') === params.get('compare')) return null;
-  if (params.has('date')) {
+  if (params.has('date') && tool.id === 'drought') {
+    if (!isDroughtAssessmentDate(params.get('date'), Number(params.get('from') ?? 2020), Number(params.get('to') ?? 2025))) return null;
+  } else if (params.has('date')) {
     const date = params.get('date');
     if (!params.has('year') || !date.startsWith(params.get('year'))) return null;
     if (params.has('month') && Number(params.get('month')) !== 0 && Number(date.slice(5, 7)) !== Number(params.get('month'))) return null;
@@ -89,8 +94,10 @@ export function scienceSelectionPath(toolId, selection) {
   const tool = toolById(toolId);
   if (!tool || !selection || typeof selection !== 'object' || Array.isArray(selection)) throw new Error('Science selection unavailable.');
   const values = toolId === 'drought'
-    ? { county: selection.countyId, compare: selection.compareId, from: selection.fromYear, to: selection.toYear, level: selection.level, threshold: selection.threshold }
-    : toolId === 'comparison' ? { year: selection.year, compare: selection.compareYear } : selection;
+    ? { county: selection.countyId, compare: selection.compareId, from: selection.fromYear, to: selection.toYear, level: selection.level, threshold: selection.threshold, date: selection.date }
+    : toolId === 'comparison'
+      ? { year: selection.year, compare: selection.compareYear, place: selection.place === DEFAULT_COMPARISON_PLACE ? undefined : selection.place }
+      : selection;
   const query = new URLSearchParams();
   for (const key of Object.keys(selectors[toolId])) {
     const value = values[key];
