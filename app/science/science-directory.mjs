@@ -8,7 +8,7 @@ export function nativeScienceDirectory({ climate, drought, soil, air, sunlight }
   const metadata = {
     weather: { topic: 'Weather & climate', question: 'When did it get hot, freeze, or get wet?',
       coverage: `${climate.stations.length} stations · daily · ${period(climate.period)}`,
-      source: 'NOAA GHCN-Daily', keywords: 'weather temperature frost rain snowfall heat precipitation station' },
+      source: 'NOAA GHCN-Daily', keywords: 'weather temperature frost rain snowfall heat precipitation station corn growing degree days gdd crop season' },
     drought: { topic: 'Water & land', question: 'How much of my county was in drought?',
       coverage: `${drought.counties.length} counties · ${count.format(drought.snapshot.weeks)} weekly assessments · ${period(drought.period)}`,
       source: 'U.S. Drought Monitor', keywords: 'water soil agriculture dry severe coverage county' },

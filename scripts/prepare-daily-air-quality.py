@@ -229,10 +229,10 @@ def build(sources):
     return raw, manifest
 
 
-def prepare(folder):
+def prepare(folder, output_root=ROOT):
     raw, manifest = build(verified_sources(folder))
-    targets = [(ROOT / "public" / manifest["snapshot"]["url"].lstrip("/"), raw),
-               (ROOT / "app/labs/daily-air-quality/snapshot-manifest.json", encoded(manifest))]
+    targets = [(output_root / "public" / manifest["snapshot"]["url"].lstrip("/"), raw),
+               (output_root / "app/labs/daily-air-quality/snapshot-manifest.json", encoded(manifest))]
     # Validate everything before writing either derived artifact. Originals are
     # immutable; content-hashed old display files are never removed here.
     for path, body in targets:

@@ -4,7 +4,7 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
-import { analyseClimate, readingLabel, validateSnapshot } from "../app/labs/heat-and-rain/climate-model.mjs";
+import { analyseClimate, analyseCornHeat, readingLabel, validateSnapshot } from "../app/labs/heat-and-rain/climate-model.mjs";
 
 const route = new URL("../app/labs/heat-and-rain/", import.meta.url);
 const manifest = JSON.parse(await readFile(new URL("snapshot-manifest.json", route), "utf8"));
@@ -24,7 +24,7 @@ const ui = await import(`data:text/javascript;base64,${Buffer.from(javascript).t
 const render = (component, props) => renderToStaticMarkup(createElement(component, props));
 const snapshots = await Promise.all(manifest.stations.map(async (descriptor) => {
   const snapshot = JSON.parse(await readFile(new URL(`../public${descriptor.url}`, import.meta.url), "utf8"));
-  return { descriptor, analysis: analyseClimate(validateSnapshot(snapshot, descriptor), { year: 2025 }) };
+  return { descriptor, snapshot, analysis: analyseClimate(validateSnapshot(snapshot, descriptor), { year: 2025 }) };
 }));
 
 test("analysis links retain validated settings and reject unsupported station, dates, units and thresholds", () => {
@@ -50,6 +50,40 @@ test("rendered metrics keep separate support denominators and precise Fahrenheit
     assert.match(html, /Days at or below freezing/);
     assert.doesNotMatch(html, /frost night|total rainfall/i);
   }
+});
+
+test("share links preserve the grower’s valid corn window and reject mismatched or incomplete dates", () => {
+  const defaultSelection = ui.climateSelection(manifest, "?year=2024");
+  const selection = ui.climateSelection(manifest, "?year=2024&month=3&cornFrom=2024-02-29&cornTo=2024-10-31");
+  assert.equal(selection.cornFrom, "2024-02-29");
+  assert.equal(selection.cornTo, "2024-10-31");
+  const link = new URL(ui.climateLink("https://example.test/labs/heat-and-rain", selection));
+  assert.deepEqual(ui.climateSelection(manifest, link.search), selection);
+  for (const range of ["cornFrom=2024-02-30&cornTo=2024-04-01", "cornFrom=2025-04-01&cornTo=2025-10-31", "cornFrom=2024-04-01"]) {
+    assert.deepEqual(ui.climateSelection(manifest, `?year=2024&${range}`), defaultSelection);
+  }
+  const changedYear = new URL(ui.climateLink(link.href, { ...selection, year: 2025 }));
+  assert.equal(changedYear.searchParams.has("cornFrom"), false);
+  assert.equal(changedYear.searchParams.has("cornTo"), false);
+});
+
+test("corn heat renders dated, source-linked subtotals when a NOAA day is withheld", () => {
+  const snapshot = structuredClone(snapshots.find(({ descriptor }) => /WICHITA/.test(descriptor.name)).snapshot);
+  snapshot.records.find(row => row.date === "2025-04-29").tmax = null;
+  const analysis = analyseCornHeat(snapshot, { year: 2025, from: "2025-04-29", to: "2025-05-04" });
+  const html = render(ui.CornHeatPanel, { analysis, units: "imperial" });
+  assert.match(html, /Corn growing degree days/);
+  assert.match(html, /name="cornFrom"[^>]*value="2025-04-29"/);
+  assert.match(html, /name="cornTo"[^>]*value="2025-05-04"/);
+  assert.match(html, /°F·days · observed subtotal/);
+  assert.ok(html.includes(`${analysis.paired} of 6 days had both temperatures`));
+  assert.match(html, /https:\/\/mesonet\.k-state\.edu\/agriculture\/degreedays\//);
+  assert.match(html, /<th scope="row">April<\/th>.*?subtotal/);
+  assert.match(html, /Download corn GDD CSV/);
+  const noData = analyseCornHeat(snapshot, { year: 2025, from: "2025-04-29", to: "2025-04-29" });
+  const unavailable = render(ui.CornHeatPanel, { analysis: noData, units: "metric" });
+  assert.match(unavailable, /Growing degree days unavailable/);
+  assert.doesNotMatch(unavailable, /class="cornBar"/);
 });
 
 test("day inspector renders actual zero, trace and quantified precipitation using the model element contract", () => {

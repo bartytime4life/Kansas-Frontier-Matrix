@@ -203,16 +203,16 @@ def parse_soil(raw, wban, year):
     return out, next(iter(coordinates))
 
 
-def asset(kind, identity, snapshot, outputs):
+def asset(kind, identity, snapshot, outputs, output_root):
     raw = encode(snapshot)
     digest = sha(raw)
     name = f"{identity}-{digest[:16]}.json"
-    folder = ROOT / "public/science-data" / kind
+    folder = output_root / "public/science-data" / kind
     outputs[folder / name] = raw
     return {"id": identity, "url": f"/science-data/{kind}/{name}", "sha256": digest, "bytes": len(raw)}
 
 
-def prepare(folder):
+def prepare(folder, output_root=ROOT):
     sources = verified(folder)
     outputs = {}
     names, rows, drought_sources = {}, {}, []
@@ -231,9 +231,9 @@ def prepare(folder):
                         "documentation": DROUGHT_DOC, "permission": "https://droughtmonitor.unl.edu/About/Permission.aspx",
                         "scope": "provider-context", "attribution": ATTRIBUTION, "sources": drought_sources,
                         "counties": [{"id": c["id"], "name": c["name"]} for c in counties],
-                        "snapshot": {**asset("county-drought", "kansas", snapshot, outputs), "records": len(rows), "weeks": len(weeks)},
+                        "snapshot": {**asset("county-drought", "kansas", snapshot, outputs, output_root), "records": len(rows), "weeks": len(weeks)},
                         "generatedAt": max(s["capturedAt"] for s in drought_sources)}
-    drought_path = ROOT / "app/labs/county-drought/snapshot-manifest.json"
+    drought_path = output_root / "app/labs/county-drought/snapshot-manifest.json"
     outputs[drought_path] = encode(drought_manifest)
 
     headers, header_source = sources["uscrn-headers.txt"]
@@ -255,13 +255,13 @@ def prepare(folder):
         station = {"id": wban, "name": name.removeprefix("KS_").replace("_", " "), "longitude": lon, "latitude": lat, "utcOffsetHours": -6}
         snapshot = {"schema": "kfm.soil-profile/v1", "station": station, "period": PERIOD, "depthsCm": list(DEPTHS),
                     "sources": station_sources, "records": [records[day] for day in sorted(records)]}
-        descriptors.append({**station, **asset("soil-profile", wban, snapshot, outputs), "records": len(records), "sources": station_sources})
+        descriptors.append({**station, **asset("soil-profile", wban, snapshot, outputs, output_root), "records": len(records), "sources": station_sources})
     soil_manifest = {"schema": "kfm.soil-profile-manifest/v1", "provider": "NOAA NCEI U.S. Climate Reference Network",
                      "period": PERIOD, "depthsCm": list(DEPTHS), "documentation": USCRN + "README.txt", "scope": "provider-context",
                      "headerSource": header_source, "documentationSource": sources["uscrn-readme.txt"][1], "stations": descriptors,
                      "citation": "Diamond et al. (2013), U.S. Climate Reference Network after one decade of operations, doi:10.1175/BAMS-D-12-00170.1; Bell et al. (2013), U.S. Climate Reference Network soil moisture and temperature observations, doi:10.1175/JHM-D-12-0146.1.",
                      "generatedAt": max(s["capturedAt"] for d in descriptors for s in d["sources"])}
-    soil_path = ROOT / "app/labs/soil-profile/snapshot-manifest.json"
+    soil_path = output_root / "app/labs/soil-profile/snapshot-manifest.json"
     outputs[soil_path] = encode(soil_manifest)
     # Validate both families before writing any display artifact. A failed
     # source check cannot leave a partly refreshed pair of manifests behind.

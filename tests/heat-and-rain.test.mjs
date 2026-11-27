@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash, webcrypto } from 'node:crypto';
-import { analyseClimate, climateReading, climateCsv, climateReceipt, readingLabel, validateSnapshot } from '../app/labs/heat-and-rain/climate-model.mjs';
+import { analyseClimate, analyseCornHeat, climateReading, climateCsv, climateReceipt, cornHeatCsv, readingLabel, validateSnapshot } from '../app/labs/heat-and-rain/climate-model.mjs';
 import { loadClimateSnapshot } from '../app/labs/heat-and-rain/snapshot-loader.mjs';
 
 const root = new URL('../', import.meta.url);
@@ -100,6 +100,55 @@ test('physically inconsistent daily temperatures are excluded together', () => {
   const a = analyseClimate(s, { year: 2020, month: 1 });
   assert.equal(a.days[0].tmax.state, 'inconsistent-temperatures');
   assert.equal(a.days[0].tmin.value, null);
+});
+
+test('modified corn heat includes the leap day, caps both extremes and keeps gaps distinct from zero', () => {
+  const values = {
+    '2024-02-28': [raw(350), raw(80)],
+    '2024-02-29': [raw(95), raw(40)],
+    '2024-03-01': [raw(266, '', 'X'), raw(177)],
+    '2024-03-02': [raw(155), raw(160)],
+    '2024-03-03': [raw(201), raw(200)],
+    '2024-03-05': [raw(411), raw(311)],
+  };
+  const s = copy();
+  s.records = s.records.map(({ date }) => {
+    const [tmax, tmin] = values[date] ?? [null, null];
+    return { date, tmax, tmin, prcp: null };
+  });
+  const result = analyseCornHeat(s, { year: 2024, from: '2024-02-28', to: '2024-03-05' });
+  assert.equal(result.expected, 7);
+  assert.equal(result.paired, 4);
+  assert.equal(result.degreeDaysC, 40.05);
+  assert.deepEqual(result.days.map(day => day.degreeDaysC), [10, 0, null, null, 10.05, null, 20]);
+  assert.deepEqual(result.monthly, [
+    { month: '2024-02', expected: 2, paired: 2, degreeDaysC: 10 },
+    { month: '2024-03', expected: 5, paired: 2, degreeDaysC: 30.05 },
+  ]);
+  const noData = analyseCornHeat(s, { year: 2024, from: '2024-03-04', to: '2024-03-04' });
+  assert.equal(noData.degreeDaysC, null);
+  assert.equal(noData.monthly[0].degreeDaysC, null);
+
+  const csv = cornHeatCsv(result, descriptor);
+  const [header, ...rows] = csv.trimEnd().split('\r\n').map(row => row.split(','));
+  const column = name => header.indexOf(name);
+  assert.deepEqual(rows.map(row => row[column('corn_degree_days_F')]), ['18', '0', '', '', '18.09', '', '36']);
+  assert.equal(rows[2][column('tmax_qflag')], 'X');
+  assert.equal(rows[2][column('tmax_state')], 'quality-withheld');
+  assert.equal(rows[2][column('source_sha256')], descriptor.source.sha256);
+  assert.equal(rows[2][column('snapshot_sha256')], descriptor.sha256);
+  assert.equal(rows[2][column('method_url')], 'https://mesonet.k-state.edu/agriculture/degreedays/');
+  assert.throws(() => cornHeatCsv(result, manifest.stations[0]), /match the current station/);
+});
+
+test('corn heat requires an actual ordered window in the station year and the full daily calendar', () => {
+  for (const [year, from, to] of [[2023, '2023-02-29', '2023-03-01'], [2024, '2023-12-31', '2024-01-01'],
+    [2024, '2024-04-31', '2024-06-01'], [2024, '2024-06-02', '2024-06-01']]) {
+    assert.throws(() => analyseCornHeat(actual, { year, from, to }), /valid start and end date/);
+  }
+  const s = copy();
+  s.records = s.records.filter(row => row.date !== '2024-02-29');
+  assert.throws(() => analyseCornHeat(s, { year: 2024, from: '2024-02-28', to: '2024-03-01' }), /calendar is incomplete/);
 });
 
 test('invalid selections cannot silently become different calendar windows', () => {

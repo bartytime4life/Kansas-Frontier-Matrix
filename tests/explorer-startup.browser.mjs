@@ -3839,6 +3839,10 @@ for (const [width, height] of [[1440, 900], [393, 852]]) {
     await p.wait(`document.querySelector('#comparison-results') && ${referenceYear}.value==='2023'`, 'shared years and verified results are hydrated');
     assert.equal(await p.evaluate(`document.querySelectorAll('main article').length`), 4);
     assert.equal(await p.evaluate(`document.querySelector('main article').textContent.includes('695.1')`), true);
+    assert.equal(await p.evaluate(`document.querySelectorAll('section[aria-labelledby="comparison-coverage"] [data-coverage]').length`), 48);
+    assert.ok(await p.evaluate(`document.querySelectorAll('[data-coverage="partial"]').length > 0`), 'coverage highlights incomplete months');
+    await p.evaluate(`document.querySelector('a[href="#comparison-air"]').click()`);
+    await p.wait(`location.hash==='#comparison-air' && Math.max(scrollY, document.body.scrollTop) > 0`, 'the coverage link scrolls to the air quality card');
     assert.equal(new Set(requests).size, 4, 'four distinct bundled snapshots');
     const reads = requests.length;
 

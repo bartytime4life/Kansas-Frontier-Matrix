@@ -56,7 +56,7 @@
 .sectionHeader p { font-size: .89rem; }
 .page .shareButton { flex-shrink: 0; background: transparent; font-size: .85rem; }
 .selects { display: grid; grid-template-columns: 2fr .8fr 1.1fr 1.1fr; gap: .85rem; margin-top: 1.5rem; }
-.selects label, .thresholdForm label, .dateControls label, .shareFallback { display: grid; gap: .4rem; min-width: 0; color: var(--body); font-size: .79rem; font-weight: 600; }
+.selects label, .thresholdForm label, .dateControls label, .shareFallback, .cornWindow label { display: grid; gap: .4rem; min-width: 0; color: var(--body); font-size: .79rem; font-weight: 600; }
 .selects select { font-size: .92rem; font-weight: 450; }
 .page .shareStatus { font-size: .82rem; color: var(--teal); }
 .shareStatus:empty { display: none; }
@@ -141,6 +141,22 @@
 .dayReadings > div > span { display: block; color: var(--body); font-size: .73rem; }
 .dayReadings strong { display: block; color: var(--ink); font-size: 1.1rem; font-weight: 550; overflow-wrap: anywhere; }
 .flags { display: block; margin-top: .25rem; color: var(--muted); font-size: .64rem; line-height: 1.6; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.cornHeat { min-width: 0; margin-top: 2.4rem; padding: clamp(.8rem, 3vw, 1.4rem); border: 1px solid var(--line); background: #0b252e; }
+.cornWindow { display: flex; flex-wrap: wrap; gap: .7rem; align-items: end; margin-top: 1rem; }
+.cornWindow label { flex: 0 1 10.5rem; }
+.cornWindow input { box-sizing: border-box; width: 100%; font-weight: 450; }
+.cornWindow p { flex-basis: 100%; font-size: .82rem; }
+.page .cornTotal { display: grid; gap: .15rem; margin: 1.15rem 0; }
+.cornTotal strong { color: var(--heat); font-size: 1.24rem; }
+.cornTotal span { font-size: .82rem; }
+.cornTable { width: 100%; max-width: 38rem; border-collapse: collapse; text-align: left; font-size: .82rem; }
+.cornTable caption { text-align: left; color: var(--muted); padding-bottom: .3rem; }
+.cornTable :is(th, td) { padding: .45rem .3rem; border-bottom: 1px solid var(--line); }
+.cornTable thead th { color: var(--body); }
+.cornTable tbody th { font-weight: 550; }
+.cornBar { display: block; height: .25rem; margin-top: .16rem; background: #23444a; border-radius: .15rem; }
+.cornBar i { display: block; height: 100%; background: var(--heat); border-radius: inherit; }
+.cornHeat > a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: .84rem; }
 .monthly { margin-top: 2.4rem; }
 .monthly .sectionHeader { margin-bottom: 1rem; }
 .monthly .sectionHeader button { font-size: .8rem; }
