@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { buildScienceComparison } from "./comparison-model.mjs";
 import { comparisonCsv, comparisonExportFilename, comparisonJson } from "./comparison-report.mjs";
-import { comparisonPath, comparisonSelection, comparisonYears } from "./comparison-selection.mjs";
+import { comparisonLabPath, comparisonPath, comparisonSelection, comparisonYears } from "./comparison-selection.mjs";
 import { loadComparisonInputs } from "./comparison-snapshots";
 import ComparisonView from "./comparison-view";
 import styles from "./comparison.module.css";
@@ -24,6 +24,10 @@ const clientSearch = () => window.location.search;
 const serverSearch = () => "";
 
 type InputState = { attempt: number; inputs: Awaited<ReturnType<typeof loadComparisonInputs>> | null };
+const detailedLabs = [
+  ["climate", "Heat & Rain Lab"], ["drought", "County Drought Lab"],
+  ["air", "Daily Air Quality Lab"], ["sunlight", "Sunlight & Sky Lab"],
+];
 
 function downloadText(value: string, type: string, filename: string) {
   const url = URL.createObjectURL(new Blob([value], { type }));
@@ -132,10 +136,10 @@ export default function ScienceComparison() {
         <li>Open a detailed lab to inspect dates, flags, and original records for {year}.</li>
       </ul>
       <ul>
-        <li><Link href={`/labs/heat-and-rain?station=USW00013996&year=${year}`}>Heat &amp; Rain Lab</Link></li>
-        <li><Link href={`/labs/county-drought?county=20177&from=${year}&to=${year}`}>County Drought Lab</Link></li>
-        <li><Link href={`/labs/daily-air-quality?county=20177&year=${year}`}>Daily Air Quality Lab</Link></li>
-        <li><Link href={`/labs/sunlight-and-sky?primary=topeka&comparison=topeka&year=${year}`}>Sunlight &amp; Sky Lab</Link></li>
+        {detailedLabs.map(([metric, title]) => {
+          const href = comparisonLabPath(metric, year);
+          return href && <li key={metric}><Link href={href}>{title}</Link></li>;
+        })}
       </ul>
     </section>
   </>;

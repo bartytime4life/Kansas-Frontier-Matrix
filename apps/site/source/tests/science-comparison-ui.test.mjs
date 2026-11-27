@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { comparisonPath, comparisonSelection } from '../app/science/compare/comparison-selection.mjs';
+import { comparisonLabPath, comparisonPath, comparisonSelection } from '../app/science/compare/comparison-selection.mjs';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
 
 const styleNames = new Proxy({}, { get: (_target, name) => String(name) });
@@ -41,7 +41,7 @@ async function comparisonHarness(t, search = '') {
       comparisonJson: report => JSON.stringify(report),
       comparisonExportFilename: (report, ext) => `${report.selection.year}.${ext}`,
     },
-    './comparison-selection.mjs': { comparisonPath, comparisonSelection, comparisonYears: [2025, 2024, 2023, 2022, 2021, 2020] },
+    './comparison-selection.mjs': { comparisonLabPath, comparisonPath, comparisonSelection, comparisonYears: [2025, 2024, 2023, 2022, 2021, 2020] },
     './comparison-snapshots': { loadComparisonInputs: signal => new Promise((resolve, reject) => calls.push({ signal, resolve, reject })) },
     './comparison-view': { default: 'comparison-view' },
     './comparison.module.css': { default: styleNames },

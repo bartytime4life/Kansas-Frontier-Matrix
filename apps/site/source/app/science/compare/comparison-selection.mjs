@@ -1,4 +1,4 @@
-import { COMPARISON_YEARS } from './comparison-model.mjs';
+import { COMPARISON_YEARS, TOPEKA_COMPARISON } from './comparison-model.mjs';
 
 export const comparisonYears = Object.freeze([...COMPARISON_YEARS].reverse());
 const [lastYear, previousYear] = comparisonYears;
@@ -25,4 +25,16 @@ export function comparisonPath({ year, compareYear }) {
     throw new Error('Choose two distinct comparison years.');
   }
   return `/science/compare?year=${year}&compare=${compareYear}`;
+}
+
+/** @param {string} metric @param {number} year */
+export function comparisonLabPath(metric, year) {
+  const { climateId, countyId, sunlightId } = TOPEKA_COMPARISON;
+  switch (metric) {
+    case 'climate': return `/labs/heat-and-rain?station=${climateId}&year=${year}`;
+    case 'drought': return `/labs/county-drought?county=${countyId}&from=${year}&to=${year}`;
+    case 'air': return `/labs/daily-air-quality?county=${countyId}&year=${year}`;
+    case 'sunlight': return `/labs/sunlight-and-sky?primary=${sunlightId}&comparison=${sunlightId}&year=${year}`;
+    default: return null;
+  }
 }

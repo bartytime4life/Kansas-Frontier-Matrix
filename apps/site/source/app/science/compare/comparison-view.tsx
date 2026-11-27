@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { comparisonLabPath } from "./comparison-selection.mjs";
 import styles from "./comparison.module.css";
 
 type CoveredValue = { value: number | null; valid: number; expected: number };
@@ -117,7 +118,7 @@ function MetricPanel({ metric, year, compareYear }: { metric: ComparisonMetric; 
       </ul>
     </details>
     <footer className={styles.metricLinks}>
-      <a href={metric.labPath}>Explore the full lab</a>
+      <a href={comparisonLabPath(metric.id, year) ?? metric.labPath}>Explore {year} in the full lab</a>
       <a href={metric.documentation}>Provider documentation</a>
     </footer>
   </article>;

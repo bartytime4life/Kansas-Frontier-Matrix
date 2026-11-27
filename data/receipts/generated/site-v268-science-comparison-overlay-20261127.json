@@ -3465,7 +3465,7 @@
     },
     "app/science/compare/comparison-client.tsx": {
       "difference": "Add the Topeka and Shawnee County science comparison with source-native periods, coverage, readable graphics and reproducible reports over the existing snapshot bytes.",
-      "mirror_sha256": "55431aaf0357a1624bb4277a4adf24814b5d46c03c02793b65eea8fb91d4e2b9",
+      "mirror_sha256": "2217e9f5ef5b9acc4a871d63490485fd4381c2b4725b75b0727bdbeb3f97c99d",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -3483,7 +3483,7 @@
     },
     "app/science/compare/comparison-selection.mjs": {
       "difference": "Add the Topeka and Shawnee County science comparison with source-native periods, coverage, readable graphics and reproducible reports over the existing snapshot bytes.",
-      "mirror_sha256": "0ef1994a9f26d25207495fdc9aa43173c256d318d565aa76d1ba1a157b2b21ef",
+      "mirror_sha256": "29fba1997e79037f78385fb46b7bf635e250a6af45f0bee8f345acf27df6816f",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -3495,13 +3495,13 @@
     },
     "app/science/compare/comparison-view.tsx": {
       "difference": "Add the Topeka and Shawnee County science comparison with source-native periods, coverage, readable graphics and reproducible reports over the existing snapshot bytes.",
-      "mirror_sha256": "6e17967febc143bba6c7469e1dd7f9975098aa75e542095a542ef8a1e59e3eef",
+      "mirror_sha256": "ad6bf5757ba8a63f4f07c2057de7a3c614f4471641fa3cd3c454ffcb0bd7f784",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
     "app/science/compare/comparison.module.css": {
       "difference": "Add the Topeka and Shawnee County science comparison with source-native periods, coverage, readable graphics and reproducible reports over the existing snapshot bytes.",
-      "mirror_sha256": "f44516a847a3ad6a095d72efe9df9096812baeee18145dec2ad9409dce2ded08",
+      "mirror_sha256": "bcef4c51cad5816834deef529b12777e4e0b9f3e212c0e41518913246cf0ddcb",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -6381,13 +6381,13 @@
     },
     "tests/science-comparison-ui.test.mjs": {
       "difference": "Add the Topeka and Shawnee County science comparison with source-native periods, coverage, readable graphics and reproducible reports over the existing snapshot bytes.",
-      "mirror_sha256": "52b9831153f26f5b672f580f309cad13b2b6a977d46c6801521a2aaaa454754e",
+      "mirror_sha256": "27951cd8afd8bedff487e4cf7dbbdb50dde79405be6275334feb6317f2374f03",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
     "tests/science-comparison-view.test.mjs": {
       "difference": "Add the Topeka and Shawnee County science comparison with source-native periods, coverage, readable graphics and reproducible reports over the existing snapshot bytes.",
-      "mirror_sha256": "d5348a05e8b6defbbb8776f2c91cf1d115633a92e5fa6fc2d9d19f7edf58e032",
+      "mirror_sha256": "d7168bc9afc17f3ea13e1af68f2913bd1afba8ac232e5969b252135dd40794c7",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -7026,7 +7026,7 @@
     }
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "51382a519f38205443a6a9536ee09c0497e5640fa72335b098045276902dcf6d",
+  "inventory_sha256": "12f0b9731721ffde03a8d6f7590fb8a406b05ff4e7a4acd6c3b2a5bab315dcba",
   "overlay": {
     "scope": "Inherited containment history plus a repository-only history catalogue hold. Withheld paths must remain absent; their digests do not authorize restoration, source admission or release.",
     "withheld_paths": [
@@ -9222,7 +9222,7 @@
     "base_commit": "f724de1c2d0508b1cc889f7095f39681e4a4d27b",
     "changes": [
       {
-        "mirror_sha256": "55431aaf0357a1624bb4277a4adf24814b5d46c03c02793b65eea8fb91d4e2b9",
+        "mirror_sha256": "2217e9f5ef5b9acc4a871d63490485fd4381c2b4725b75b0727bdbeb3f97c99d",
         "path": "app/science/compare/comparison-client.tsx",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
@@ -9246,7 +9246,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "0ef1994a9f26d25207495fdc9aa43173c256d318d565aa76d1ba1a157b2b21ef",
+        "mirror_sha256": "29fba1997e79037f78385fb46b7bf635e250a6af45f0bee8f345acf27df6816f",
         "path": "app/science/compare/comparison-selection.mjs",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
@@ -9262,7 +9262,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "6e17967febc143bba6c7469e1dd7f9975098aa75e542095a542ef8a1e59e3eef",
+        "mirror_sha256": "ad6bf5757ba8a63f4f07c2057de7a3c614f4471641fa3cd3c454ffcb0bd7f784",
         "path": "app/science/compare/comparison-view.tsx",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
@@ -9270,7 +9270,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "f44516a847a3ad6a095d72efe9df9096812baeee18145dec2ad9409dce2ded08",
+        "mirror_sha256": "bcef4c51cad5816834deef529b12777e4e0b9f3e212c0e41518913246cf0ddcb",
         "path": "app/science/compare/comparison.module.css",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
@@ -9326,7 +9326,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "52b9831153f26f5b672f580f309cad13b2b6a977d46c6801521a2aaaa454754e",
+        "mirror_sha256": "27951cd8afd8bedff487e4cf7dbbdb50dde79405be6275334feb6317f2374f03",
         "path": "tests/science-comparison-ui.test.mjs",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
@@ -9334,7 +9334,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "d5348a05e8b6defbbb8776f2c91cf1d115633a92e5fa6fc2d9d19f7edf58e032",
+        "mirror_sha256": "d7168bc9afc17f3ea13e1af68f2913bd1afba8ac232e5969b252135dd40794c7",
         "path": "tests/science-comparison-view.test.mjs",
         "previous_receipt_sha256": null,
         "proposed_in_this_change": true,
