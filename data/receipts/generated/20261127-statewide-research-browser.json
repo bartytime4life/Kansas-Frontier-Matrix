@@ -1,0 +1,70 @@
+{
+  "receipt_id": "kfm-statewide-research-browser-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/explorer-startup.browser.mjs",
+    "docs/statewide-research-pathways-20261127.md"
+  ],
+  "artifact_hashes": {
+    "tests/explorer-startup.browser.mjs": "sha256:413fcfbbbc1ae3d2663a0d5fa9b195e95f83c5e8bf3ff236d59e16a455993499",
+    "docs/statewide-research-pathways-20261127.md": "sha256:64df4112c3e346ae525ad29ab9265b62030253029288f833ba6472762b26f37a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:afa39fe8d125544d2c4da06c793c8aea5dbb657e78f5357dadc3bf04a0568415",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bc7be23e3fabf48249d1f6a95e5960b9d7b8df73:tests/explorer-startup.browser.mjs",
+      "repo:bc7be23e3fabf48249d1f6a95e5960b9d7b8df73:docs/statewide-research-pathways-20261127.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/46072258869/job/140751732054"
+    ],
+    "evidence_hashes": [
+      "sha256:1c6595e7f8f2ce99509f4928f215238a547f2894aa109b3c68decd48b37c201a",
+      "sha256:11a92fac62d60f120c272e96aa27dd44ce6c6ab954af9e64cbcf07e4f667b686"
+    ]
+  },
+  "truth_labels": {
+    "tests/explorer-startup.browser.mjs": "CONFIRMED",
+    "docs/statewide-research-pathways-20261127.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "First exact-head Research browser journey at desktop",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "First exact-head Research phone and short landscape navigation",
+      "outcome": "FAIL",
+      "reason": "After native fragment focus, target reveal timed out; initial all-card/tool geometry passed. No complete mobile navigation acceptance claimed."
+    },
+    {
+      "gate": "Follow-up browser syntax, changed-area ESLint, whitespace and five pathway model tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Fresh exact-head browser CI after bounded reveal settling and diagnostic changes",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring. Same three viewports, anchors, geometry, pointer/keyboard events, exact source IDs, reload and Back/Forward checks retained."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T21:50:25.864689+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor hashes for the browser test and guide; prior receipts and failing run remain intact. Application source and 1573-file input digest are unchanged. The existing full Node result belongs to the preceding application tree; no local rendered or publication result is inferred."
+}
