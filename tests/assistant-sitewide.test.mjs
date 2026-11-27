@@ -14,9 +14,8 @@ test('only existing public surfaces get page help; private route/query values ar
  let pathname='/downloads',id='released-record-one';
  const Panel=()=>null,h=await componentHarness(new URL('../app/site-assistant.tsx',import.meta.url),{
   'next/navigation':{usePathname:()=>pathname,useSearchParams:()=>new URLSearchParams({id,token:'DO_NOT_SEND',password:'DO_NOT_SEND',query:'DO_NOT_SEND'})},
-  'react-dom':{createPortal:node=>node},
   './assistant-surfaces.mjs':{assistantSurfaceForPath},'./assistant-panel':{default:Panel},'./build-clock':{BUILD_UTC_YEAR:2026},'./assistant-panel.module.css':{default:{}}
- },{document:{body:{}}});
+ });
  const render=(props={})=>{const tree=h.render(h.exports.PageAssistant,props);h.commit();return tree;};
  try{
   let tree=render();findNode(tree,n=>n.type==='button').props.onClick();tree=render();
@@ -28,7 +27,7 @@ test('only existing public surfaces get page help; private route/query values ar
   const draft='Suggest precise terms for “Barton County”.';
   tree=render({inlineQuestion:draft});assert.equal(findNode(tree,n=>n.type===Panel),undefined);
   findNode(tree,n=>n.type==='button').props.onClick();tree=render({inlineQuestion:'Edited after opening'});
-  const panel=findNode(tree,n=>n.type===Panel);assert.equal(panel.props.draftQuestion,draft);
+  const panel=findNode(tree,n=>n.type===Panel);assert.equal(panel.props.draftQuestion,draft);assert.equal(panel.props.portal,true);
   assert.equal(panel.props.focus.context.surface,'archive-search');assert.equal(panel.props.focus.context.selection,null);
   assert.doesNotMatch(JSON.stringify(panel.props.focus.context),/DO_NOT_SEND|Barton County/);
   pathname='/stewards';assert.equal(render(),null);
