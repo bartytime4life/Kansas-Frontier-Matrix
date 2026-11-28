@@ -266,6 +266,61 @@ test('terrain guide stems use bounded cached DEM heights and plane-only frames d
  const absent=fixture();absent.map.queryTerrainElevation=()=>null;const missing=attachKansasSky(absent.map,()=>{},message=>assert.fail(message));missing.update([aircraft],trails,aircraft.hex);absent.draw();assert.equal(missing.metrics().heightGuides,0,'missing DEM is not silently replaced with sea level');missing.dispose();
 });
 
+function rendererWithClock(now){
+ const isolated={};
+ new Function('exports','require','document','performance',code)(isolated,name=>{
+  if(name==='./kansas-sky')return skyHelpers;
+  if(name==='./aviation-traffic')return {TRAFFIC_ALTITUDE_COLORS:[[0,'#7d8a96']]};
+  throw Error(`Unexpected renderer dependency ${name}`);
+ },{hidden:false},{now});
+ return isolated.attachKansasSky;
+}
+
+test('finite terrain caches retain trail GPU buffers across retry clock boundaries and refresh on terrain events',()=>{
+ let stamp=4999,height=333,queries=0;
+ const f=fixture();f.map.getTerrain=()=>({source:'terrain-dem'});f.map.queryTerrainElevation=()=>{queries++;return height;};
+ const renderer=rendererWithClock(()=>stamp)(f.map,()=>{},message=>assert.fail(message));
+ const points=Array.from({length:2000},(_,i)=>({...aircraft,lon:-98+i*.0001,lat:38,observedAt:1000000+i*1000,providerId:'adsb-lol'}));
+ renderer.update([aircraft],[{hex:aircraft.hex,points}],aircraft.hex);f.draw();
+ const before=queries,trailUploads=()=>f.uploads.filter(upload=>upload.offset>0).length,initialUploads=trailUploads();
+ assert.ok(before>1&&before<=96);assert.equal(renderer.metrics().heightGuides,before);
+ for(stamp of [5001,10002,15003]){
+  renderer.updateAircraft([{...aircraft,lon:-97.9}]);f.draw();
+  assert.equal(queries,before,'elapsed retry intervals preserve finite DEM values');
+  assert.equal(trailUploads(),initialUploads,'elapsed retry intervals preserve cached path GPU geometry');
+ }
+ const idleUploads=f.uploads.length;stamp=20004;f.draw();
+ assert.equal(f.uploads.length,idleUploads,'an idle frame does not upload unchanged aircraft or trails');
+ f.emit('sourcedata',{sourceId:'radar'});f.draw();assert.equal(f.uploads.length,idleUploads);
+ for(const event of ['sourcedata','terrain','style.load']){
+  const previousQueries=queries,previousUploads=trailUploads();height+=111;
+  f.emit(event,{sourceId:'terrain-dem'});f.draw();
+  assert.equal(queries-previousQueries,before,`${event} invalidates retained DEM heights`);
+  assert.equal(trailUploads(),previousUploads+1,`${event} refreshes retained trail geometry`);
+  assert.ok(Array.from(f.uploads.findLast(upload=>upload.offset>0).data).some((value,index)=>index%6===2&&value===height));
+ }
+ renderer.dispose();
+});
+
+test('missing terrain retries stay bounded and preserve successful cached heights',()=>{
+ let stamp=4999,available=false;const queries=[];
+ const f=fixture();f.map.queryTerrainElevation=([lon,lat])=>{const missing=lon<-97.9&&!available;queries.push({key:`${lon},${lat}`,missing});return missing?null:333;};
+ const renderer=rendererWithClock(()=>stamp)(f.map,()=>{},message=>assert.fail(message));
+ const points=Array.from({length:2000},(_,i)=>({...aircraft,lon:-98+i*.0001,lat:38,observedAt:1000000+i*1000,providerId:'adsb-lol'}));
+ renderer.update([aircraft],[{hex:aircraft.hex,points}],aircraft.hex);f.draw();
+ const initial=queries.length,missing=queries.filter(query=>query.missing).length,finite=new Set(queries.filter(query=>!query.missing).map(query=>query.key));
+ assert.ok(initial>1&&initial<=96);assert.ok(missing>0&&missing<initial);
+ assert.equal(renderer.metrics().heightGuides,initial-missing,'missing DEM omits guides instead of supplying sea level');
+ stamp=5000;const uploads=f.uploads.length;f.draw();assert.equal(queries.length,initial);assert.equal(f.uploads.length,uploads);
+ stamp=5001;f.draw();assert.equal(queries.length,initial+missing,'the retry queries only missing retained locations');
+ available=true;stamp=10001;f.draw();assert.equal(queries.length,initial+missing,'missing DEM is not retried before the next interval');
+ stamp=10002;f.draw();assert.equal(queries.length,initial+missing*2);assert.equal(renderer.metrics().heightGuides,initial);
+ for(const key of finite)assert.equal(queries.filter(query=>query.key===key).length,1,'successful heights survive each missing-value retry');
+ const settledUploads=f.uploads.length;stamp=15003;f.draw();
+ assert.equal(queries.length,initial+missing*2);assert.equal(f.uploads.length,settledUploads,'completed missing-value recovery leaves geometry cached');
+ renderer.dispose();
+});
+
 test('explicit flight focus restores owned context opacity without altering restrictions or another layer owner',()=>{
  const airport={id:'kfm-aviation-airports-dot',type:'circle'},restriction={id:'kfm-aviation-tfr-edge',type:'line'},water={id:'water-fill',type:'fill'};
  const layers=[airport,restriction,water],paint=new Map([['kfm-aviation-airports-dot:circle-opacity',.8],['kfm-aviation-tfr-edge:line-opacity',1],['water-fill:fill-opacity',.9]]),listeners=new Map();
