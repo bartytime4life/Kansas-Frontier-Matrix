@@ -1,5 +1,5 @@
 import {
-  LAB_MAX_PAGES, LAB_MAX_ROWS, measurementDistribution, profileCollection, storyBrief,
+  LAB_MAX_PAGES, LAB_MAX_ROWS, measurementContexts, measurementDistribution, profileCollection, storyBrief,
   type LabSnapshot, type MeasurementBin,
 } from '../collection-lab';
 import {fieldRole, type Collection } from '../collection-metadata';
@@ -75,7 +75,7 @@ function viewFromBundle(value: unknown, collection: Collection, snapshot: LabSna
     throw new Error('The saved measurement selection is invalid.');
   }
   const field = profile.fields.find(candidate => candidate.name === value.field);
-  if (!field?.groups.some(candidate => candidate.context === value.context)) {
+  if (!field || !measurementContexts(collection, snapshot, field.name).some(candidate => candidate.context === value.context)) {
     throw new Error('The saved measurement context does not match the bundle’s records.');
   }
   const distribution = measurementDistribution(collection, snapshot, value.field, value.context);

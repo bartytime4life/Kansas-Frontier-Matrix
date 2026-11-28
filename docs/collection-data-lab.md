@@ -29,8 +29,14 @@ nulls, absent fields and blanks stay missing. Numeric identifiers, dates,
 coordinates and quality flags are not measurement fields. Measurement units,
 parameter identifiers and quality qualifiers form separate summary groups.
 Original fill codes and censored values are not silently normalized. A field
-summary includes at most twelve groups and explicitly counts additional groups;
-the complete loaded source rows remain in the JSON export.
+summary includes at most twelve groups and explicitly counts additional groups.
+The measurement explorer lists every eligible context in the loaded sample,
+with a search for units, parameters, methods and qualifiers and a record count
+for each choice. Searching keeps the current chart and range selected; choosing
+another context clears its range. A selected context beyond the twelve-group
+overview is retained when its lab bundle is downloaded and reopened. The same
+250-record read limit and exact unit/context grouping apply. The complete loaded
+source rows remain in the JSON export.
 
 One field and one measurement context can be exported as a GeoJSON layer.
 It uses validated longitude/latitude XY geometry, with no geocoding, reprojection
