@@ -199,7 +199,8 @@ def render(value,packet,inspection):
         'recommendation':value['recommendation'],'confidence':value['confidence'],
         'evidence':evidence,'concerns':[CONCERNS[i] for i in value['concern_codes']]}, {
         'version':packet.get('description_policy',VERSION),'method':('Qwen-selected archive metadata; KFM-rendered saved-grid checks'
-            if packet.get('description_policy')==ARCHIVE_VERSION else 'KFM-measured OCR availability and scope; Qwen-selected metadata context'
+            if packet.get('description_policy')==ARCHIVE_VERSION else 'KFM-measured text availability and scope; Qwen-selected metadata context'
+            if packet.get('description_policy')==AVAILABILITY_VERSION else 'KFM-measured OCR availability and scope; Qwen-selected metadata context'
             if value['passage_ids']==['no_usable_excerpt'] else 'Qwen-selected source quotations; KFM-rendered scope'),
         'metadata_summary':metadata_summary(packet),'title_ids':value['title_ids'],'passage_ids':value['passage_ids'],
         'concern_codes':value['concern_codes'],'content_text':content,'scope_text':measured}

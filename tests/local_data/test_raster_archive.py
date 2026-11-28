@@ -129,7 +129,8 @@ class RasterArchiveTests(unittest.TestCase):
         self.assertEqual(packet['description_policy'],g.AVAILABILITY_VERSION)
         value={'title_ids':[],'passage_ids':['no_readable_text'],'domain':'unassigned',
             'recommendation':'hold','confidence':'low','concern_codes':[]}
-        result,_=g.render(value,packet,g.inspection_for(packet));self.assertIn('KFM inspection:',result['description'])
+        result,rendering=g.render(value,packet,g.inspection_for(packet));self.assertIn('KFM inspection:',result['description'])
+        self.assertEqual(rendering['method'],'KFM-measured text availability and scope; Qwen-selected metadata context')
         self.assertNotIn('Source text (',result['description']);ai.validate_output(result,packet)
         packet['description_policy']=g.VERSION
         old,_=g.render(value,packet,g.inspection_for(packet));self.assertIn('Source text (',old['description']);ai.validate_output(old,packet)
