@@ -135,3 +135,42 @@ test('exact-cap and capped geographic pages retain their qualification through t
  }
  assert.equal(calls,2);assert.equal(hash(),before,'read-only geographic queries leave database bytes unchanged');
 });
+
+
+test('wide payload projection is limited to returned page rows, including named searches and offsets',t=>{
+ const db=fixture(t);let payloadReads=0;
+ db.function('tracked_payload',value=>{payloadReads++;return value;});
+ db.exec(`ALTER TABLE "${c.table}" RENAME TO raw_near_records;
+  CREATE VIEW "${c.table}" AS SELECT ${c.columns.map(k=>k===c.geometry?`tracked_payload("${k}") AS "${k}"`:`"${k}"`).join(',')} FROM raw_near_records;`);
+ for(const input of [{offset:'1',limit:'1'},{offset:'2',limit:'1'},{name:'I',offset:'1',limit:'1'},{offset:'3',limit:'1'}]){
+  payloadReads=0;const answer=run(db,{collection:c.id,bbox:WICHITA,...input});
+  assert.equal(payloadReads,answer.rows.length,JSON.stringify(input));
+  assert.equal(answer.rows.length,input.offset==='3'?0:1);
+  if(answer.rows.length)assert.deepEqual(JSON.parse(answer.rows[0].values.geometry_geojson).type,input.offset==='2'?'LineString':'Point');
+ }
+});
+
+test('orphan sidecar identities do not consume paginated result slots',t=>{
+ const db=fixture(t);
+ db.prepare(`INSERT INTO "${c.table}_rtree" VALUES(?,?,?,?,?)`).run(key(1,0),-97.33,-97.33,37.69,37.69);
+ const all=run(db,{collection:c.id,bbox:WICHITA,limit:'10'});
+ assert.deepEqual(all.rows.map(r=>JSON.parse(r.id)),[[1,1],[1,2],[1,4]]);
+ // The existing nameless total counts sidecar extents, including its orphan.
+ assert.equal(all.total,4);
+ const first=run(db,{collection:c.id,bbox:WICHITA,limit:'2'});
+ assert.deepEqual(first.rows,all.rows.slice(0,2));
+ const next=run(db,{collection:c.id,bbox:WICHITA,offset:'2',limit:'2'});
+ assert.deepEqual(next.rows,all.rows.slice(2));
+ const named=run(db,{collection:c.id,bbox:WICHITA,name:'I',limit:'2'});
+ assert.deepEqual(named.rows,all.rows.slice(0,2));assert.equal(named.total,3);
+});
+
+test('packed spatial identities above the JavaScript safe-integer range stay inside SQLite',t=>{
+ const db=fixture(t),file=2**22;
+ db.prepare(`INSERT INTO "${c.table}"(file_id,row_number,resname,geometry_geojson) VALUES(?,?,?,?)`).run(file,1,'Large capture key',point(-97.33,37.69));
+ db.prepare(`INSERT INTO "${c.table}_rtree" VALUES(?,?,?,?,?)`).run(key(file,1),-97.33,-97.33,37.69,37.69);
+ db.prepare('UPDATE kfm_spatial_index SET max_file_id=? WHERE table_name=?').run(file,c.table);
+ const answer=run(db,{collection:c.id,bbox:WICHITA,offset:'3',limit:'1'});
+ assert.equal(answer.rows.length,1);assert.deepEqual(JSON.parse(answer.rows[0].id),[file,1]);
+ assert.equal(answer.rows[0].values.resname,'Large capture key');
+});

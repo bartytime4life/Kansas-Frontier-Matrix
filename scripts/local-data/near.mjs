@@ -52,7 +52,14 @@ export function nearDataset(database){
    const clause=`${join} WHERE ${where.join(' AND ')}`;
    // Without a name filter the count needs only the sidecar.
    const counted=db.prepare(`SELECT COUNT(*) AS n FROM (SELECT r.id ${q.name?clause:`FROM ${r} r WHERE ${where[0]}`} LIMIT ?)`).get(...params,TOTAL_CAP+1).n;
-   const rows=db.prepare(`SELECT ${c.columns.map(k=>'t.'+quote(k)).join(',')} ${clause} ORDER BY r.id LIMIT ? OFFSET ?`).all(...params,q.limit,q.offset)
+   // Sort and page identities before projecting wide payloads. Keep the existence/name
+   // join inside the selector: orphan sidecar IDs must not consume page slots.
+   // LIMIT prevents flattening into the outer join, so full records are fetched
+   // only for the final page, including when OFFSET skips earlier identities.
+   const selected=`SELECT r.id ${clause} ORDER BY r.id LIMIT ? OFFSET ?`;
+   const rows=db.prepare(`SELECT ${c.columns.map(k=>'t.'+quote(k)).join(',')} FROM (${selected}) selected
+    JOIN ${t} t ON t.file_id = (selected.id >> 32) AND t.row_number = (selected.id & 4294967295)
+    ORDER BY selected.id`).all(...params,q.limit,q.offset)
     .map(values=>({id:JSON.stringify(c.keys.map(k=>values[k])),values}));
    const sources=new Map();
    if(c.columns.includes('file_id')){
