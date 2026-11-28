@@ -112,3 +112,28 @@ reuse the same row index for replacement source values. Refreshing another tile
 retains the unchanged selected grid. These are component/source guarantees,
 not field accuracy, provider admission or deployed browser acceptance. This is
 an isolated authoring candidate; publication remains on hold.
+
+
+### Keyboard cross-sections — 2026-11-28
+
+During **Draw a cross-section**, **Add map center to line** places the current
+camera center as a browser-local line vertex. **Pan map with arrow keys** moves
+focus to the actual map canvas. Use its arrow keys to pan; Enter adds the settled
+center and returns focus to the placement action. One reverse Tab reaches
+**Finish profile**. Pointer clicks and keyboard placement share the same line,
+point count and map rendering; Undo, Clear and cancellation remain available.
+
+The quiet center crosshair is a placement aid, never a height observation.
+Repeated consecutive positions and invalid map coordinates leave the line
+unchanged with an explanation. Source-profile lines stop at 64 vertices; finish
+or undo at that bound. Generic point/area/distance measurements keep their
+existing behavior. Finishing pauses placement; Undo can resume that same source
+line. Cancel, Clear, saved-workspace restoration and a new generic tool retire
+source-profile input, so a retained callback cannot revive it.
+
+Placement reads no provider data and does not sample height. Deliberate panning
+retains the normal bounded tile-loading lifecycle. Once finished, the existing
+profile samples already loaded source cells: source metres remain unscaled,
+missing stations remain gaps, vertical references are not harmonized, and
+privacy still denies report/download export. Source accuracy, admission,
+publication and physical-device acceptance remain separate from this UI change.

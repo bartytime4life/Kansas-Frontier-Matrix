@@ -831,6 +831,9 @@ input[type="range"] { accent-color: var(--gold); }
 .map-canvas { position: absolute; inset: 0; overflow: hidden; isolation: isolate; z-index: 0; }
 .map-effects { position: absolute; inset: 0; z-index: 1; overflow: hidden; isolation: isolate; pointer-events: none; }
 .map-canvas:focus-visible { outline-offset: -5px; }
+/* A line-placement aid only: no elevation value or source observation. */
+.map-canvas[data-terrain-line-placement="true"]::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 22px; height: 22px; border: 1px solid #f2d897; border-radius: 50%; background: linear-gradient(#f2d897,#f2d897) center / 1px 14px no-repeat, linear-gradient(#f2d897,#f2d897) center / 14px 1px no-repeat, #09273399; box-shadow: 0 0 0 2px #092733aa; pointer-events: none; z-index: 2; }
+
 .guided-start { position: absolute; z-index: 15; top: var(--map-overlay-top); left: 18px; display: grid; gap: 13px; width: min(410px, calc(100% - 94px)); max-height: calc(100% - var(--map-overlay-top) - 24px); overflow-y: auto; border: 1px solid rgba(224,186,109,.38); border-radius: 18px; background: linear-gradient(145deg, rgba(14,43,45,.98), rgba(6,22,24,.98)); padding: 18px; box-shadow: 0 28px 90px rgba(0,0,0,.5); backdrop-filter: blur(16px); }
 .guided-start > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .guided-start > header > div { display: grid; gap: 7px; }

@@ -122,6 +122,7 @@ test('map Escape cancels an active measurement before dismissing live controls o
   const scope={repositoryOpen:false,workspaceDetailsRef:{current:null},sourceStatusOpen:false,qwenOpen:false,mapContextOpen:false,helpOpen:false,mapUtilityOpen:false,
     liveDockVisible:true,glmFlashesEnabled:false,isCompact:false,rightOpen:true,
     measureModeRef:{current:'distance'},measurementGeometryModeRef:{current:'distance'},measureCoordinatesRef:{current:[[0,0]]},
+    sourceTransectSessionRef:{current:true},setSourceTransectSession:value=>calls.push(['source session',value]),setSourceTransectNotice:value=>calls.push(['placement notice',value]),
     mapRef:{current:{doubleClickZoom:{enable:()=>calls.push('zoom enabled')},isStyleLoaded:()=>false}},
     setMeasureCoordinateCount:value=>calls.push(['count',value]),setMeasureMode:value=>calls.push(['mode',value]),
     setMeasurementGeometryMode:value=>calls.push(['geometry',value]),setMeasurement:value=>calls.push(['message',value]),
@@ -132,6 +133,7 @@ test('map Escape cancels an active measurement before dismissing live controls o
   const event={key:'Escape',defaultPrevented:false,target:{closest:()=>null}};
   run(event);
   assert.equal(scope.measureModeRef.current,null);assert.equal(scope.measurementGeometryModeRef.current,null);
+  assert.equal(scope.sourceTransectSessionRef.current,false);assert.deepEqual(calls.filter(row=>Array.isArray(row)&&row[0]==='source session'),[['source session',false]]);assert.deepEqual(calls.filter(row=>Array.isArray(row)&&row[0]==='placement notice'),[['placement notice','']]);
   assert.deepEqual(scope.measureCoordinatesRef.current,[]);assert.ok(calls.includes('zoom enabled'));
   assert.ok(!calls.includes('dock dismissed'));assert.ok(!calls.includes('evidence dismissed'));
   run(event);assert.equal(calls.at(-1),'dock dismissed');assert.ok(!calls.includes('evidence dismissed'));

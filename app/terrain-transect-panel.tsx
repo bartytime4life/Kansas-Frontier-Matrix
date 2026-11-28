@@ -1,10 +1,10 @@
 'use client';
 import {useEffect,useMemo,useRef,useState} from 'react';
-import {terrainTransect,transectGeometry,transectJSON,TRANSECT_METHOD,type TransectCoordinate} from './terrain-transect';
+import {terrainTransect,transectGeometry,transectJSON,TRANSECT_METHOD,TRANSECT_LIMITS,type TransectCoordinate} from './terrain-transect';
 import type {TerrainTileData} from './terrain-viewport-tiles';
 import type {LidarGridMode} from './kansas-lidar-grid-layer';
 import styles from './terrain-transect-panel.module.css';
-export type TerrainTransectDrawing={onReport?:(profile:import('./terrain-transect').TerrainTransect,pendingTiles:number)=>void;line:readonly TransectCoordinate[];drawing:boolean;onStart:()=>void;onFinish:()=>void;onUndo:()=>void;onClear:()=>void;redacted:boolean};
+export type TerrainTransectDrawing={onReport?:(profile:import('./terrain-transect').TerrainTransect,pendingTiles:number)=>void;line:readonly TransectCoordinate[];drawing:boolean;onMapCenter?:()=>void;onFocusMap?:()=>void;placementStatus?:string;onStart:()=>void;onFinish:()=>void;onUndo:()=>void;onClear:()=>void;redacted:boolean};
 const names={ground:'Ground',surface:'Surface',canopy:'Canopy height'};
 const metres=(v:number)=>v>=1000?(v/1000).toFixed(2)+' km':v.toFixed(1)+' m';
 export function TerrainTransectPanel({entries,mode,paused,pending=0,drawing:d}:{entries:readonly TerrainTileData[];mode:LidarGridMode;paused:boolean;pending?:number;drawing:TerrainTransectDrawing}){
@@ -14,10 +14,12 @@ export function TerrainTransectPanel({entries,mode,paused,pending=0,drawing:d}:{
  const index=profile&&probe?.profile===profile?probe.index:Math.max(0,profile?.stations.findIndex(s=>s.value!==null)??0),sample=profile?.stations[index],point=geometry?.points[index],source=profile?.sources.find(s=>s.tile===sample?.tile);
  useEffect(()=>{if(profile?.stations.length&&revealed.current!==d.line){revealed.current=d.line;result.current?.scrollIntoView({block:'start',behavior:'auto'});}},[profile,d.line]);
  function download(){if(!profile||paused||d.drawing||d.redacted||!profile.stations.length)return;const url=URL.createObjectURL(new Blob([transectJSON(profile)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='kfm-'+mode+'-transect.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
- return <section className={styles.panel} data-terrain-transect aria-label="Drawn terrain cross-section">
+ return <section className={styles.panel} data-terrain-transect data-drawing={d.drawing?"true":undefined} aria-label="Drawn terrain cross-section">
   <header><span>LANDSCAPE LAB</span><strong>Draw a terrain profile</strong><small>Follow a ridge, valley or canopy across loaded tiles.</small></header>
-  <div className={styles.actions}><button type="button" onClick={d.onStart} disabled={paused}>{d.drawing?'Cancel drawing':'Draw a cross-section'}</button>{d.drawing&&<button type="button" disabled={d.line.length<2} onClick={d.onFinish}>Finish profile</button>}</div>
-  {d.drawing?<p role="status">Click the map to trace your line · {d.line.length} points. Finish to read source cells. Up to 64 vertices; no extra data downloads.</p>:paused&&d.line.length>1?<p role="status">Profile paused while the layer is inactive, hidden or moving. It updates from current source tiles after settling.</p>:null}
+  <div className={styles.actions}><button type="button" onClick={d.onStart} disabled={paused}>{d.drawing?'Cancel drawing':'Draw a cross-section'}</button>{d.drawing&&<button data-finish-terrain-profile type="button" disabled={d.line.length<2} onClick={d.onFinish}>Finish profile</button>}</div>
+  {d.drawing&&d.onMapCenter&&<button className={styles.place} data-place-map-center type="button" disabled={paused||d.line.length>=TRANSECT_LIMITS.vertices} onClick={()=>{if(!paused&&d.line.length<TRANSECT_LIMITS.vertices)d.onMapCenter?.();}}>Add map center to line <span>{d.line.length} / {TRANSECT_LIMITS.vertices}</span></button>}
+  {d.drawing&&d.onFocusMap&&<button className={styles.pan} type="button" disabled={paused||d.line.length>=TRANSECT_LIMITS.vertices} onClick={()=>{if(!paused&&d.line.length<TRANSECT_LIMITS.vertices)d.onFocusMap?.();}}>Pan map with arrow keys</button>}
+  {d.drawing?<><p role="status">{paused?'Wait for the map to settle before placing the next line point.':d.placementStatus||`${d.line.length} / ${TRANSECT_LIMITS.vertices} line points placed. ${d.line.length<2?'Place two different points to begin.':'Add a point or finish the profile.'}`}</p><p>{d.onMapCenter?<>Click the map, or choose Pan map with arrow keys. On the map, arrow keys move and Enter adds its center, then returns here. The center crosshair places your line; it is not a height reading. </>:<>Click the map to trace your line. </>}Finish to read already loaded source cells. Up to {TRANSECT_LIMITS.vertices} vertices; no extra profile downloads.</p></>:paused&&d.line.length>1?<p role="status">Profile paused while the layer is inactive, hidden or moving. It updates from current source tiles after settling.</p>:null}
   {d.line.length>0&&<div className={styles.secondary}><button type="button" onClick={d.onUndo}>Undo point</button><button type="button" onClick={d.onClear}>Clear line</button></div>}
   {profile?.error&&<p role="alert">{profile.error}</p>}
   {profile&&geometry&&<>

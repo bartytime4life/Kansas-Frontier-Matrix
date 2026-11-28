@@ -58,15 +58,19 @@ async function setup(overrides = {}, pilotOverrides = {}) {
 
 async function mainClickHandler(scope) {
   const source = await readFile("app/page.tsx", "utf8"), ast = ts.createSourceFile("page.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-  let callback;
+  let callback, append;
   function visit(node) {
     if (ts.isCallExpression(node) && node.expression.getText(ast) === "map.on" && node.arguments[0]?.getText(ast) === '"click"'
       && node.arguments[1]?.getText(ast).includes("measureModeRef.current")) callback = node.arguments[1];
+    if (ts.isVariableDeclaration(node) && node.name.getText(ast) === "appendMeasurementPoint") append = node.initializer.arguments[0];
     ts.forEachChild(node, visit);
   }
-  visit(ast); assert.ok(callback, "the real page click handler must be found");
+  visit(ast); assert.ok(callback, "the real page click handler must be found"); assert.ok(append, "the real shared measurement append callback must be found");
+  const dependencies = { ...scope, sourceTransectSessionRef: { current: false } };
+  const appendCode = ts.transpileModule(`return (${append.getText(ast)});`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+  dependencies.appendMeasurementPoint = new Function(...Object.keys(dependencies), appendCode)(...Object.values(dependencies));
   const code = ts.transpileModule(`const handler = ${callback.getText(ast)};`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
-  return new Function(...Object.keys(scope), `${code};return handler;`)(...Object.values(scope));
+  return new Function(...Object.keys(dependencies), `${code};return handler;`)(...Object.values(dependencies));
 }
 
 test("map control starts empty, imports locally, waits for explicit Show and retains state across control unmount", async () => {

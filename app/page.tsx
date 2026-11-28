@@ -424,6 +424,7 @@ import {
 } from "./daylight-layer";
 import { daylightPhaseReading } from "./daylight-shader-layer";
 import { formatMeasuredArea } from "./measurement-format";
+import { TRANSECT_LIMITS } from "./terrain-transect";
 
 /** How long each quarter-hour step of Play the day holds: 5:00 AM to 11:45 PM plays in about 15 seconds. */
 const SUN_PLAY_STEP_MS = 200;
@@ -1467,6 +1468,7 @@ export default function Home() {
   const measurementGeometryModeRef = useRef<MeasureMode>(null);
   const measureUnitRef = useRef<MeasureUnit>("imperial");
   const measureCoordinatesRef = useRef<[number, number][]>([]);
+  const sourceTransectSessionRef = useRef(false);
   const analysisAreaRef = useRef<MapBoundsState | null>(null);
   const boxDragModeRef = useRef<BoxDragMode>("zoom");
   const importPreviewRef = useRef<LocalImportPreview | null>(null);
@@ -1944,6 +1946,8 @@ export default function Home() {
   const [measureMode, setMeasureMode] = useState<MeasureMode>(null);
   const [measurementGeometryMode, setMeasurementGeometryMode] = useState<MeasureMode>(null);
   const [measureCoordinateCount, setMeasureCoordinateCount] = useState(0);
+  const [sourceTransectSession, setSourceTransectSession] = useState(false);
+  const [sourceTransectNotice, setSourceTransectNotice] = useState("");
   const [measureUnit, setMeasureUnit] = useState<MeasureUnit>("imperial");
   const [measurement, setMeasurement] = useState("Select a measurement tool");
   const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
@@ -3136,6 +3140,45 @@ export default function Home() {
     setToast(message);
     window.setTimeout(() => setToast(""), 3600);
   }, []);
+
+  // Pointer and keyboard placement share the exact measurement geometry path.
+  // Only the source-profile session adopts its scientific vertex/coordinate bounds.
+  const appendMeasurementPoint = useCallback((map: MapLibreMap, coordinate: [number, number]) => {
+    const mode = measureModeRef.current;
+    if (!mode) return false;
+    if (mode === "distance" && sourceTransectSessionRef.current) {
+      const deny = (message: string) => { setSourceTransectNotice(message); announce(message); return false; };
+      // This generation already owns the installed measurement source. Global
+      // isStyleLoaded() also waits for unrelated source tiles and worker updates.
+      if (mapRef.current !== map || !styleGenerationReadyRef.current || map.isMoving()) {
+        return deny("Wait for the map to settle before placing a line point.");
+      }
+      if (!coordinate.every(Number.isFinite) || coordinate[0] < -180 || coordinate[0] > 180 || coordinate[1] < -85 || coordinate[1] > 85) {
+        return deny("This map position cannot be used. Move to a valid map location before adding a point.");
+      }
+      const previous = measureCoordinatesRef.current.at(-1);
+      if (previous && previous[0] === coordinate[0] && previous[1] === coordinate[1]) {
+        return deny("That is the last line point. Move the map or choose a different point before adding another.");
+      }
+      if (measureCoordinatesRef.current.length >= TRANSECT_LIMITS.vertices) {
+        return deny(`The line has ${TRANSECT_LIMITS.vertices} points. Finish the profile or undo a point to change it.`);
+      }
+    }
+    measureCoordinatesRef.current = mode === "point" ? [coordinate] : [...measureCoordinatesRef.current, coordinate];
+    const coordinates = measureCoordinatesRef.current;
+    setMeasureCoordinateCount(coordinates.length);
+    updateMeasurementSource(map, buildMeasurementData(coordinates, mode));
+    setMeasurement(measurementLabelFor(mode, coordinates, measureUnitRef.current));
+    if (sourceTransectSessionRef.current) setSourceTransectNotice(`${coordinates.length} / ${TRANSECT_LIMITS.vertices} line points placed. ${coordinates.length === TRANSECT_LIMITS.vertices ? "Point limit reached. Finish the profile or undo a point to change it." : coordinates.length < 2 ? "Add a different point to continue." : "Add another point or finish the profile."}`);
+    if (mode === "point") {
+      measureModeRef.current = null;
+      setMeasureMode(null);
+      map.doubleClickZoom.enable();
+      setMeasurement(`Complete · ${measurementLabelFor("point", coordinates, measureUnitRef.current)}`);
+      announce("Placed a browser-local point; it is not admitted evidence");
+    }
+    return true;
+  }, [announce]);
 
   const setDaylightPlayback = useCallback((playing: boolean) => {
     daylightPlayingRef.current = playing;
@@ -6827,6 +6870,7 @@ export default function Home() {
     let resizeObserver: ResizeObserver | null = null;
     let mapResizeFrame: number | undefined;
     let cancelHoverSample = () => {};
+    let stopSourceTransectKeyboard = () => {};
     let cancelSettledViewCommit = () => {};
     let stopStormDeskProbe = () => {};
     let stopBasemapDiagnostics = () => {};
@@ -7273,26 +7317,25 @@ export default function Home() {
           if (!aviationPickingRef.current && !measureModeRef.current) clearInspectionCursor();
         });
 
+        const handleSourceTransectKey = (event: KeyboardEvent) => {
+          if (event.defaultPrevented || event.repeat || event.key !== "Enter" || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+            || mapRef.current !== map || !sourceTransectSessionRef.current || measureModeRef.current !== "distance") return;
+          event.preventDefault();
+          const center = map.getCenter();
+          if (appendMeasurementPoint(map, [center.lng, center.lat])) {
+            document.querySelector<HTMLButtonElement>(measureCoordinatesRef.current.length >= TRANSECT_LIMITS.vertices ? "[data-finish-terrain-profile]" : "[data-terrain-transect] [data-place-map-center]")?.focus({ preventScroll: true });
+          }
+        };
+        map.getCanvas().addEventListener("keydown", handleSourceTransectKey);
+        stopSourceTransectKeyboard = () => map.getCanvas().removeEventListener("keydown", handleSourceTransectKey);
+
         map.on("click", (event) => {
           // Claim tools before point completion can clear its measurement mode.
           if (aviationPickingRef.current || measureModeRef.current || undergroundOpenRef.current) neonClaimedMapClicksRef.current.add(event);
           if (aviationPickingRef.current) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
           if (measureModeRef.current) {
-            measureCoordinatesRef.current = measureModeRef.current === "point"
-              ? [[event.lngLat.lng, event.lngLat.lat]]
-              : [...measureCoordinatesRef.current, [event.lngLat.lng, event.lngLat.lat]];
-            setMeasureCoordinateCount(measureCoordinatesRef.current.length);
-            const coordinates = measureCoordinatesRef.current;
-            updateMeasurementSource(map, buildMeasurementData(coordinates, measureModeRef.current));
-            setMeasurement(measurementLabelFor(measureModeRef.current, coordinates, measureUnitRef.current));
-            if (measureModeRef.current === "point") {
-              measureModeRef.current = null;
-              setMeasureMode(null);
-              map.doubleClickZoom.enable();
-              setMeasurement(`Complete · ${measurementLabelFor("point", coordinates, measureUnitRef.current)}`);
-              announce("Placed a browser-local point; it is not admitted evidence");
-            }
+            appendMeasurementPoint(map, [event.lngLat.lng, event.lngLat.lat]);
             return;
           }
 
@@ -7849,6 +7892,7 @@ export default function Home() {
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
       cancelHoverSample();
+      stopSourceTransectKeyboard();
       cancelSettledViewCommit();
       if (mapResizeFrame !== undefined) window.cancelAnimationFrame(mapResizeFrame);
       resizeObserver?.disconnect();
@@ -7869,7 +7913,7 @@ export default function Home() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [announce, runMapMutation, runtimeOfficialVisibility, mapRequested]);
+  }, [announce, appendMeasurementPoint, runMapMutation, runtimeOfficialVisibility, mapRequested]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -9067,6 +9111,9 @@ export default function Home() {
       else if (measureModeRef.current) {
         measureModeRef.current = null;
         measurementGeometryModeRef.current = null;
+        sourceTransectSessionRef.current = false;
+        setSourceTransectSession(false);
+        setSourceTransectNotice("");
         measureCoordinatesRef.current = [];
         setMeasureCoordinateCount(0);
         setMeasureMode(null);
@@ -9710,8 +9757,23 @@ export default function Home() {
     if (!terrainCellsEnabled) kansasLidar.setCellsOn(true);
     setOfficialWorkspace("terrain"); setCategoryDockTopic("terrain"); setCategoryDockHidden(false);
     dismissMapUtilityWithoutFocus();
+    const starting = measureModeRef.current !== "distance";
     toggleMeasure("distance");
-    announce("Draw a cross-section on the map. Finish profile in Terrain tools to read already loaded source tiles; no new profile downloads.");
+    sourceTransectSessionRef.current = starting;
+    setSourceTransectSession(starting);
+    setSourceTransectNotice("");
+    if (starting) announce("Add two different line points, then finish the profile.");
+  };
+  const addSourceTransectCenter = () => {
+    // A retained callback must not revive a cancelled, restored or different tool.
+    if (!sourceTransectSessionRef.current || measureModeRef.current !== "distance") return;
+    const map = mapRef.current;
+    if (!map) {
+      const message = "The map is not ready for line placement yet.";
+      setSourceTransectNotice(message); announce(message); return;
+    }
+    const center = map.getCenter();
+    appendMeasurementPoint(map, [center.lng, center.lat]);
   };
   const startCategoryTransect = () => {
     if (categoryDockTopic === "terrain") { startSourceTransect(); return; }
@@ -10224,6 +10286,9 @@ export default function Home() {
       : null;
     measureModeRef.current = null;
     measurementGeometryModeRef.current = restoredMeasurement?.mode ?? null;
+    sourceTransectSessionRef.current = false;
+    setSourceTransectSession(false);
+    setSourceTransectNotice("");
     measureCoordinatesRef.current = restoredMeasurement ? restoredMeasurement.coordinates.map(([longitude, latitude]) => [longitude, latitude] as [number, number]) : [];
     setMeasureCoordinateCount(measureCoordinatesRef.current.length);
     setMeasureMode(null);
@@ -10600,6 +10665,9 @@ export default function Home() {
     setMeasurementGeometryMode(null);
     measureModeRef.current = null;
     measurementGeometryModeRef.current = null;
+    sourceTransectSessionRef.current = false;
+    setSourceTransectSession(false);
+    setSourceTransectNotice("");
     measureCoordinatesRef.current = [];
     setMeasureCoordinateCount(0);
     setMeasurement("Select a measurement tool");
@@ -10639,6 +10707,9 @@ export default function Home() {
   };
 
   const toggleMeasure = (mode: Exclude<MeasureMode, null>) => {
+    sourceTransectSessionRef.current = false;
+    setSourceTransectSession(false);
+    setSourceTransectNotice("");
     setTerrainProfile([]);
     if (measureMode === mode) {
       setMeasureMode(null);
@@ -10683,6 +10754,7 @@ export default function Home() {
     }
     measureCoordinatesRef.current = measureCoordinatesRef.current.slice(0, -1);
     setMeasureCoordinateCount(measureCoordinatesRef.current.length);
+    if (sourceTransectSessionRef.current) setSourceTransectNotice("");
     if (!measureModeRef.current) {
       measureModeRef.current = mode;
       setMeasureMode(mode);
@@ -10710,6 +10782,9 @@ export default function Home() {
   const clearMeasurement = () => {
     measureModeRef.current = null;
     measurementGeometryModeRef.current = null;
+    sourceTransectSessionRef.current = false;
+    setSourceTransectSession(false);
+    setSourceTransectNotice("");
     measureCoordinatesRef.current = [];
     setMeasureCoordinateCount(0);
     setMeasureMode(null);
@@ -12531,7 +12606,7 @@ export default function Home() {
           <ExplorerGuide open={guideOpen === true && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onMap={runWelcomeMap} onMaps={runWelcomeMaps} initialTopics={welcomeTopics} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onSources={() => setWelcomeSourcesOpen(true)} />
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-terrain-line-placement={sourceTransectSession && measureMode === "distance" ? "true" : undefined} data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           <NeonLidarMapBadge controller={neonLidarMap} />
           <KansasLidarBadge controller={kansasLidar} controlsOpen={showCategoryDock} />
           {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
@@ -12575,7 +12650,7 @@ export default function Home() {
             fieldTools={activeCategoryMap.topic === "agriculture" ? <FieldDecisionToolsLoader point={cropsOn && cropPoint ? { lon:cropPoint.lon, lat:cropPoint.lat } : null} year={cropsYear} frost={frostDates} /> : undefined}
             keys={currentMapKeys}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
-            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} transect={{onReport:(profile,pendingTiles)=>{const captured=captureTerrainReport(profile,pendingTiles,locationCameraRedacted || locationDerivedViewRef.current);if(captured)openPrimaryWorkspace("reports",true,null,null,null,captured);},line:measurementGeometryMode === "distance" ? measureCoordinatesRef.current : [],drawing:measureMode === "distance",onStart:startSourceTransect,onFinish:finishMeasurement,onUndo:undoMeasurementPoint,onClear:clearMeasurement,redacted:locationCameraRedacted || locationDerivedViewRef.current}} />}
+            terrainSource={{ provider: terrainProvider, state: terrainState, landscapes: PHOTOREAL_LANDSCAPES.filter(place => place.id !== "wichita") }} onTerrainProvider={chooseTerrainProviderByHand} onTerrainPlace={showTerrainLandscape} onTerrainRetry={retryTerrain} sourceCatalog={<LidarSourcePanel onOpenContinuous={() => openCategoryMap("terrain")} />} lidarLayers={<KansasLidarLayers controller={kansasLidar} transect={{onReport:(profile,pendingTiles)=>{const captured=captureTerrainReport(profile,pendingTiles,locationCameraRedacted || locationDerivedViewRef.current);if(captured)openPrimaryWorkspace("reports",true,null,null,null,captured);},line:measurementGeometryMode === "distance" ? measureCoordinatesRef.current : [],drawing:measureMode === "distance",onMapCenter:sourceTransectSession ? addSourceTransectCenter : undefined,onFocusMap:sourceTransectSession ? ()=>mapRef.current?.getCanvas().focus({preventScroll:true}) : undefined,placementStatus:sourceTransectNotice,onStart:startSourceTransect,onFinish:finishMeasurement,onUndo:undoMeasurementPoint,onClear:clearMeasurement,redacted:locationCameraRedacted || locationDerivedViewRef.current}} />}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic, officialWorkspace === "all" && welcomeTopics.length > 1 ? welcomeTopics : [activeCategoryMap.topic]) : resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
               state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",
