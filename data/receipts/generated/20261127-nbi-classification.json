@@ -1,0 +1,126 @@
+{
+  "receipt_id": "kfm-nbi-classification-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/nbi-field-dictionary.ts",
+    "app/data-lab/previous-nbi-view.ts",
+    "tests/nbi-classification.test.mjs",
+    "tests/nbi-classification-upgrade.test.mjs",
+    "tests/nbi-field-metadata.test.mjs",
+    "tests/nbi-view-upgrade.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/nbi-field-dictionary.ts": "sha256:d930a5301322f915929c13f1dfaa3d2483e9182d52adfd52de68b9fd6b4bc6d7",
+    "app/data-lab/previous-nbi-view.ts": "sha256:39dcc9ff54b144cdfda1639e6ea67c187cd5a741d64d2f957b79cfd11dfd5b9a",
+    "tests/nbi-classification.test.mjs": "sha256:6ee2743a37921fcbcba845d883e3a919c3c0faa204b9e0e6218cdbb10cb595ae",
+    "tests/nbi-classification-upgrade.test.mjs": "sha256:e1d9fb6b976de7050a66ca55efce9e953ed35bdf8a8418652eadb65ef70f4c51",
+    "tests/nbi-field-metadata.test.mjs": "sha256:d8154d9b73f743623e7382ca0266738e81d048388e2d59eba2ac95b25f15e316",
+    "tests/nbi-view-upgrade.test.mjs": "sha256:a7298cfcc60f37324d1871d8097482ccda02926a15974f3ae4647db4b6d73c32",
+    "docs/collection-data-lab.md": "sha256:e8f682288c0247f8cbaa5a9763310efe11473733a0736aee5bb690eb8a66e1c6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "web",
+      "collaboration",
+      "view_image"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:58a5cf171115e6ca0284d8dea922923e338fc162df5b252943d87a13702b15f4",
+      "sha256:d9adfd1abf8c43fe5f67b8ad7e6bb13bbbf34ceccf1a233e0e54b938c6c34401",
+      "sha256:def47989c22703f58dc2befbd6043974eeb5d4811ff399e1059452e26ce1ac2d",
+      "sha256:1d80ac112676f523a9199f466b90c7279d87e02a22e28b981389813a20ed2ebf",
+      "sha256:dc974ab63cd580ffbd221c8525144f93b1d1aabd25df5a630bba8523f266db58",
+      "sha256:365b66bda6a582bf078286fa7e93f804470de8a8801d8fd11d97450333db0ab9",
+      "sha256:641e5a366338f32706060f4e98cdeac77fe3817746d34a6b6538037a3e9e98ec",
+      "sha256:382c6849462049af6a94fbdcf4e3da7d6f134226b2824c01660cf353544348a8",
+      "sha256:f8850431cb21ce131e0ceeba09c20d6f2b5520cfdbe13356e65e79e446dfcdb2"
+    ],
+    "evidence_refs": [
+      "https://www.fhwa.dot.gov/bridge/mtguide.pdf",
+      "https://www.fhwa.dot.gov/engineering/hydraulics/policymemo/revguide.cfm",
+      "https://www.fhwa.dot.gov/bridge/nbi/format.cfm",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/490d61906ebb2760565858f41bc1bad436e65c32/tools/local_data/sql_feed_bulk.py"
+    ]
+  },
+  "truth_labels": {
+    "app/nbi-field-dictionary.ts": "CONFIRMED",
+    "app/data-lab/previous-nbi-view.ts": "CONFIRMED",
+    "tests/nbi-classification.test.mjs": "CONFIRMED",
+    "tests/nbi-classification-upgrade.test.mjs": "CONFIRMED",
+    "tests/nbi-field-metadata.test.mjs": "CONFIRMED",
+    "tests/nbi-view-upgrade.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite after final source/build freeze: 3975 passed, 25 existing skips, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "107 focused metadata/context/bundle checks, including13 new classification/migration cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent source review:57 additions match inventory;89/147 coverage; original32 fields unchanged; paired approach zeros, download-only fields and scour revision qualified",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Owned desktop/phone browser: same50 saved nearby records and receipts preserved across v1/null upgrades; compatible physical ranges and v2 exact views reopen; forged ranges and v1 views of original code fields rejected without replacing current work",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "New exact-head hosted checks, human review and deployment",
+      "outcome": "SKIPPED",
+      "reason": "Authorship/integrity receipt generated before draft PR creation; new-head results are read separately. Human review pending; no deployment included."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "guide",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/bridge/mtguide.pdf"
+    },
+    {
+      "id": "scour",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/engineering/hydraulics/policymemo/revguide.cfm"
+    },
+    {
+      "id": "format",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/bridge/nbi/format.cfm"
+    },
+    {
+      "id": "mapping",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/490d61906ebb2760565858f41bc1bad436e65c32/tools/local_data/sql_feed_bulk.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T05:15:50.586664+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Extends selected legacy NBI definitions from32 to89 of147.57 additions classify49 previously value-role fields as nonmeasurements and correct false time/location/identity hints; physical values and58 undocumented fields remain outside this slice. All original32 definitions/legends are preserved. Main construction type20 stays unknown while approach20 is documented; approach0/00 labels retain combined000 applicability. Former6B remains a retired blank segment, and unknown historical nonblank values are not interpreted. Source-era status/network/history/standards labels are not current operation, access, ownership or safety decisions. Scour code7 remains edition-dependent with a2001 amendment reference; no current scour-critical status is inferred. Guide bytes are hash-bound; scour and format original-byte hashes remain null where direct retrieval failed and rendered/indexed primary-source text supplied bounded evidence. No physical units, normalization, CAT alias expansion, joins, deduplication or source review credits are introduced. Frozen null-revision migration permits original19 plus new49 fields; explicitv1 permits only the new49. Numeric eligibility, context order/text and exact bin reconstruction remain unchanged. Current compatible views are tried first. Browser QA reuses the same50 previously saved geographically filtered public rows across representations, not fresh/distinct/representative samples. Source records, questions, receipts, clocks, identifiers and raw codes stay unchanged. Feature-guide catalog count corrected to183 from the shipped static catalog. No native store/source mutation, Qwen inference, intake decision, hosted activation or deployment. Agent review is not human approval."
+}

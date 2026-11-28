@@ -22,11 +22,11 @@ const row=(id,values={})=>({id,values:{file_id:1,row_number:Number(id),state_cod
  provenance:{source_id:'synthetic-nbi-metadata-QA',source_url:'https://example.org/synthetic-nbi',sha256:'a'.repeat(64)}});
 const snapshot=rows=>({rows,pages:1,hasMore:true,answers:[{generatedAt:'2026-11-28T00:00:00Z',cache:{state:'stale',at:'2026-11-27T00:00:00Z'}}]});
 
-test('32 source-backed legacy NBI definitions retain honest partial coverage, clocks and source identity',()=>{
+test('the expanded legacy NBI dictionary preserves the original field roles, clocks and source identity',()=>{
  const metadata=collectionMetadata(collection),documents=new Set(metadata.documentation.map(source=>source.id));
  assert.equal(metadata.fields.length,147);
- assert.equal(metadata.fields.filter(field=>field.definition).length,32);
- assert.equal(metadata.fieldDictionaryRevision,'nbi-legacy-2026-11-27-v1');
+ assert.equal(metadata.fields.filter(field=>field.definition).length,89);
+ assert.equal(metadata.fieldDictionaryRevision,'nbi-legacy-2026-11-27-v2');
  for(const [role,names] of [['category',categories],['quality',qualities],['time',times],['identity',identities]]){
   for(const name of names){
    const field=metadata.fields.find(field=>field.name===name);
@@ -68,7 +68,7 @@ test('raw zero, N/A, unknown codes, encoded dates and leading-zero IDs survive a
  assert.deepEqual(reopened.snapshot.rows,s.rows);assert.deepEqual(reopened.snapshot.answers,s.answers);
  assert.equal(reopened.question,'Inspect the archived codes');assert.equal(reopened.notice,null);
  assert.equal(bundle.profile.credit.aiReview,null);assert.equal(bundle.profile.collection.provenance.reviewCredit,null);
- assert.equal(bundle.fieldDictionaryRevision,'nbi-legacy-2026-11-27-v1');
+ assert.equal(bundle.fieldDictionaryRevision,'nbi-legacy-2026-11-27-v2');
  assert.match(documentedField(collection.id,'date_of_inspect_090').encoding,/^MMYY; century not supplied$/);
  for(const code of ['Z','05','__proto__','constructor'])assert.equal(documentedCode(collection.id,'deck_cond_058',code),null);
  assert.equal(JSON.stringify(s),before);
@@ -94,7 +94,7 @@ test('edition-sensitive load codes and item-specific condition/appraisal meaning
 
 test('metadata API and story briefs carry legacy scope and code definitions without a safety or AI-review decision',async()=>{
  const response=GET(new Request('https://example.org/api/collection-metadata?collection='+collection.id)),body=await response.json();
- assert.equal(response.status,200);assert.equal(body.collections[0].fields.filter(field=>field.definition).length,32);
+ assert.equal(response.status,200);assert.equal(body.collections[0].fields.filter(field=>field.definition).length,89);
  assert.ok(body.collections[0].documentation.some(source=>source.url.includes('fhwa.dot.gov')));
  const brief=storyBrief(collection,snapshot([row('1')]),'Which recorded codes need edition checks?');
  assert.match(brief,/Field definitions and units/);assert.match(brief,/MMYY/);

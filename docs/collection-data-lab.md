@@ -1,6 +1,6 @@
 # Connected collection metadata and record lab
 
-The Data library links all 189 recovered collections to source metadata,
+The Data library links all 183 recovered collections to source metadata,
 field roles, related collections, research questions and the record lab at
 `/data-lab`. Search includes topics and field names. The machine-readable
 `/api/collection-metadata` catalog also describes the existing map layers and
@@ -50,12 +50,29 @@ identities and interpretation limits. It and the lab bundle are free downloads.
 
 ## Legacy bridge codes and inspection clocks
 
-The legacy National Bridge Inventory collection documents 32 of its 147 retained
+The legacy National Bridge Inventory collection documents 89 of its 147 retained
 fields using the [FHWA Coding Guide](https://www.fhwa.dot.gov/bridge/mtguide.pdf),
 applicable revisions and the [ASCII record format](https://www.fhwa.dot.gov/bridge/nbi/format.cfm).
 These are legacy format definitions, separate from the newer SNBI specification
 and from the edition, accuracy or currency of any individual archived record.
 Undocumented fields retain their explicit unknowns.
+
+The classification expansion covers route classes and identifiers, agency types,
+service and construction categories, deck systems, network flags, historical
+designations and source-era operation/inspection context. These labels remain
+metadata when they contain only digits. Numeric-looking feature names and
+location descriptions also remain text. Proposed-work categories and their cost
+estimate year do not establish that work occurred. Ownership and submitter codes
+are distinct, and no identifier is completed or joined automatically.
+
+Item-specific tables stay separate: main-span construction does not use the
+approach-only mixed code; combined approach code `000` needs both retained
+segments to interpret applicability. The posted guide retires former item 6B
+to blank, so historical nonblank values do not become a current critical-facility
+flag. Scour codes have their own applicability/unknown categories and a
+[2001 revision](https://www.fhwa.dot.gov/engineering/hydraulics/policymemo/revguide.cfm);
+an archived code does not establish present scour status. Unverified historical
+CAT/admin aliases and physical units remain explicitly undocumented.
 
 Condition and appraisal ratings, design-load classes, rating-method codes and
 critical-feature inspection flags are categories or quality metadata. Numeric
@@ -74,10 +91,12 @@ keys remain the stored record identity; repeated captures are not deduplicated.
 Archived ratings and dates do not establish current bridge safety or a present
 inspection decision. Field documentation establishes no AI review or approval.
 
-Unversioned saved NBI investigations retain their original records, question,
+Unversioned and v1 saved NBI investigations retain their original records, question,
 source references and read receipts. A formerly measurable code selection resets
 with a visible notice only after its exact old numeric context and range can be
-reconstructed from the retained records. Compatible measurement views stay intact;
+reconstructed from the retained records. An explicit v1 file can reset only a
+field that was still measurable in v1; it cannot authorize an obsolete chart of
+the original 19 code fields. Compatible measurement views stay intact;
 forged contexts and altered bins are rejected, and unknown dictionary revisions
 cannot authorize a selection reset.
 The complete context selector and existing record/export bounds remain intact.
