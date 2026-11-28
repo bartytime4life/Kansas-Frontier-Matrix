@@ -108,7 +108,7 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
             {options.map(option => <option key={option.context} value={option.context}>{contextLabel(option.context,collection.id)} · {option.count} {option.count === 1 ? 'record' : 'records'}</option>)}
           </select>
         </label>
-        <p id="measurement-context-matches" role="status">{query ? `${matches.length} of ${contexts.length} contexts match.` : `${contexts.length} contexts in the loaded sample.`}{!selectedMatches&&' Current selection retained.'}</p>
+        <p id="measurement-context-matches" role="status">{query ? `${matches.length} of ${contexts.length} contexts match.` : `${contexts.length} ${contexts.length === 1 ? 'context' : 'contexts'} in the loaded sample.`}{!selectedMatches&&' Current selection retained.'}</p>
       </div>
     </div>
 

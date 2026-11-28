@@ -48,6 +48,40 @@ The research brief includes the question, measured sample scope, recorded value
 ranges, example source-time fields, retrieval times, source lineage, exact record
 identities and interpretation limits. It and the lab bundle are free downloads.
 
+## Legacy bridge codes and inspection clocks
+
+The legacy National Bridge Inventory collection documents 32 of its 147 retained
+fields using the [FHWA Coding Guide](https://www.fhwa.dot.gov/bridge/mtguide.pdf),
+applicable revisions and the [ASCII record format](https://www.fhwa.dot.gov/bridge/nbi/format.cfm).
+These are legacy format definitions, separate from the newer SNBI specification
+and from the edition, accuracy or currency of any individual archived record.
+Undocumented fields retain their explicit unknowns.
+
+Condition and appraisal ratings, design-load classes, rating-method codes and
+critical-feature inspection flags are categories or quality metadata. Numeric
+codes stay out of measurement averages, range charts and measurement layers.
+Channel, culvert and bridge-component tables retain their different meanings.
+Unknown codes and original values remain literal. Design-load code meanings
+changed with guide revisions; the dictionary exposes that ambiguity instead of
+choosing a record's edition. Method codes do not assign units to the separate
+operating/inventory rating-value columns.
+
+Inspection clocks keep their recorded `MMYY` precision; no day or century is
+filled in. The archive year, construction/reconstruction years, inspection dates
+and retrieval timestamps describe different events. Provider state and structure
+identifiers retain their original spelling and leading zeros. Capture-file/row
+keys remain the stored record identity; repeated captures are not deduplicated.
+Archived ratings and dates do not establish current bridge safety or a present
+inspection decision. Field documentation establishes no AI review or approval.
+
+Unversioned saved NBI investigations retain their original records, question,
+source references and read receipts. A formerly measurable code selection resets
+with a visible notice only after its exact old numeric context and range can be
+reconstructed from the retained records. Compatible measurement views stay intact;
+forged contexts and altered bins are rejected, and unknown dictionary revisions
+cannot authorize a selection reset.
+The complete context selector and existing record/export bounds remain intact.
+
 ## Documented FAA fields
 
 The FAA obstacle collection now has definitions for all 31 archived fields.

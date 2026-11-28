@@ -6,6 +6,7 @@ import {fieldRole, type Collection } from '../collection-metadata';
 import {previousWaterQualityDimensions} from '../water-quality-context';
 import {fieldDictionaryRevision} from '../collection-field-dictionary';
 import {previousQualityView,previousBiologicalView} from './previous-quality-view';
+import {previousNbiView} from './previous-nbi-view';
 import { recoveredCollection } from '../recovered-collections';
 import {connectRecordContexts,recordContextBrief,type ContextSample} from './record-context';
 
@@ -216,17 +217,20 @@ function readLabBundle(value:unknown){
      collection.id==='observations-usgs-series'&&['data_type','parameter_name','web_description','parameter_description','thresholds'].includes(String(oldView.field)));
   const qualityUpgrade=value.fieldDictionaryRevision==null&&validOldRange&&record(oldView)&&previousQualityContext(collection,oldView,rows);
   const seriesNotice=contextUpgrade&&collection.id==='observations-usgs-series';
-  let view:LabMeasurementView|null=null,sampleUpgrade=false;
+  let view:LabMeasurementView|null=null,sampleUpgrade=false,nbiUpgrade=false;
   if(!(upgrade||waterUpgrade||contextUpgrade||qualityUpgrade)){
     try { view=viewFromBundle(value.view,collection,snapshot,profile); }
     catch(error){
-      if(!previousQualityView(collection,snapshot,value.view,value.fieldDictionaryRevision)
-        &&!previousBiologicalView(collection,snapshot,value.view,value.fieldDictionaryRevision))throw error;
-      sampleUpgrade=true;
+      if(previousNbiView(collection,snapshot,value.view,value.fieldDictionaryRevision))nbiUpgrade=true;
+      else {
+        if(!previousQualityView(collection,snapshot,value.view,value.fieldDictionaryRevision)
+          &&!previousBiologicalView(collection,snapshot,value.view,value.fieldDictionaryRevision))throw error;
+        sampleUpgrade=true;
+      }
     }
   }
   return { collection, snapshot, question: value.question,
     view,
-    notice:sampleUpgrade?'USGS sample definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':qualityUpgrade?'Water-quality definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
+    notice:nbiUpgrade?'Legacy NBI field definitions have changed. Your records and question were preserved; condition and classification codes are not measurements.':sampleUpgrade?'USGS sample definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':qualityUpgrade?'Water-quality definitions and comparison contexts have changed. Your records and question were preserved; choose a measurement context again.':seriesNotice?'USGS series definitions have changed. Your records and question were preserved; metadata flags and thresholds are not observations.':
      upgrade||waterUpgrade||contextUpgrade?`${upgrade?'FAA':'USGS'} field definitions have changed. Your records and question were preserved; choose a measurement context again.`:null };
 }

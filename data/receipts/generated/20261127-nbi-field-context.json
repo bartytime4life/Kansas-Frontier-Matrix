@@ -1,0 +1,143 @@
+{
+  "receipt_id": "kfm-nbi-field-context-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/nbi-field-dictionary.ts",
+    "app/collection-field-dictionary.ts",
+    "app/data-lab/previous-nbi-view.ts",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/measurement-explorer.tsx",
+    "tests/nbi-field-metadata.test.mjs",
+    "tests/nbi-view-upgrade.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/nbi-field-dictionary.ts": "sha256:f84f9f9496bd1932f162bec9f31dd256cd3b86f68b95fb138e51e327b1235b10",
+    "app/collection-field-dictionary.ts": "sha256:10da2ccbe286d44a0cdb6a3c70aff600ea188567606a2be913ae31722414e27f",
+    "app/data-lab/previous-nbi-view.ts": "sha256:da6e387d2e3654caf5b71f2fc78fbc1977a9ddd32317da191d349aa53c9a9411",
+    "app/data-lab/lab-bundle.ts": "sha256:9f865dd3cfee68982a82bcfedb5af888f18c40097bd88e145654bf2afe2feab0",
+    "app/data-lab/measurement-explorer.tsx": "sha256:0711279050d7829a67b238407d1c953f03b368a16cab0c3c0d6886f1592aff58",
+    "tests/nbi-field-metadata.test.mjs": "sha256:221e1c99083e7cdda23924631f00049fc9ec7471ade0dd7734a7a7588af9c2c9",
+    "tests/nbi-view-upgrade.test.mjs": "sha256:01c8fecdfc6324d72e0d5fb87b3ceeb8a5767ca180178eff0238d50a52949544",
+    "docs/collection-data-lab.md": "sha256:4d7a416ec147de0fc708e393239e3cc6b3de711efce1ce2fea6157aa9d5cb978"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "web",
+      "collaboration",
+      "view_image"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:25110965cab10c30ab25c6727c09b26634170dc42eafe08e62b10b1364ccdad1",
+      "sha256:05850546291683bb12cb35657fdbbbd4043c9c0b46d74ffa2b8f4650ade77b0c",
+      "sha256:04e3b72c9bd62aa9968551d21af1448aabfb9a0f2398d4399618adefc3fabb91",
+      "sha256:24907c4e6af93d2b62484de96e34e22329b2042bda6903a0ee4ccfd9190c1e08",
+      "sha256:9b7441d346c13942c400294bd0723b02af254229feefd4b796148d2410be4969",
+      "sha256:719af28ad047504dee1ce5bce486130c2e02aea2002785ed86adb17cc2556dbe",
+      "sha256:9c3ec3e89e11f23709f95d46ed861880c0ef11e491c9a4991c73bf7a39708361",
+      "sha256:84cee25b87a3b80cfccd0f127fc0bb49764380f852b973c30db84a741db32549",
+      "sha256:c60bc0ec3571103ee5ec0f6ff971f36708f6bf62b1361d1d04a9dbc58925f342",
+      "sha256:453db3e9e2ac9a845516fa4194b6ff717a9a64fa56317e001f5c591f0a085522",
+      "sha256:4bd971f1a065e3a225032b176ea94c53e46ad5b9b39366c129ef45b0cd75a810"
+    ],
+    "evidence_refs": [
+      "https://www.fhwa.dot.gov/bridge/mtguide.pdf",
+      "https://www.fhwa.dot.gov/bridge/110202.pdf",
+      "https://www.fhwa.dot.gov/bridge/nbi/111115.pdf",
+      "https://www.fhwa.dot.gov/tpm/guidance/hif18023.pdf",
+      "https://www.fhwa.dot.gov/bridge/nbi/format.cfm",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/490d61906ebb2760565858f41bc1bad436e65c32/tools/local_data/sql_feed_bulk.py"
+    ]
+  },
+  "truth_labels": {
+    "app/nbi-field-dictionary.ts": "CONFIRMED",
+    "app/collection-field-dictionary.ts": "CONFIRMED",
+    "app/data-lab/previous-nbi-view.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/measurement-explorer.tsx": "CONFIRMED",
+    "tests/nbi-field-metadata.test.mjs": "CONFIRMED",
+    "tests/nbi-view-upgrade.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite against a finished frozen build: 3953 passed, 25 existing skips, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "94 focused metadata/role/context/bundle/historical compatibility checks, including12 new NBI cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone owned Chrome:50 saved nearby records and50 geometries unchanged; old code view resets, current exact range reopens, invalid old range rejected while current investigation retained",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent source and migration review; complete PDF hashes, distinct item tables, edition ambiguities and A\u2013Z under-route codes checked",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "New exact-head hosted checks and human review",
+      "outcome": "SKIPPED",
+      "reason": "Receipt generated before draft PR creation; hosted readback and human review are separate. No deployment included."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "guide",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/bridge/mtguide.pdf"
+    },
+    {
+      "id": "load2011",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/bridge/110202.pdf"
+    },
+    {
+      "id": "assigned2011",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/bridge/nbi/111115.pdf"
+    },
+    {
+      "id": "condition2018",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/tpm/guidance/hif18023.pdf"
+    },
+    {
+      "id": "legacy-format",
+      "validated": true,
+      "evidence_ref": "https://www.fhwa.dot.gov/bridge/nbi/format.cfm"
+    },
+    {
+      "id": "normalizer",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/490d61906ebb2760565858f41bc1bad436e65c32/tools/local_data/sql_feed_bulk.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T02:27:46.708253+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Documents32 of147 legacy NBI columns;19 former generic measurement fields become categories/quality and item68 changes location to quality. No physical value unit/conversion, SNBI translation or current bridge safety conclusion is introduced. Four full government PDFs are hash-bound; format HTML was available only as indexed primary-page content, without a claimed full HTML hash. One32768-byte provider header/record prefix verified state identifier spelling; no source payload is shipped. Inspection literals including424, leading-zero IDs, blanks, N and0000 remain unchanged. Design-load and method revision ambiguities are explicit. Null-revision fallback uses a frozen19-field whitelist and exact prior numeric/context/bin rules, accepting all bounded contexts because earlier first12/full-context exports share null revisions; historical USGS rules stay unchanged. Imported profiles/credits never authorize a reset. Browser input was50 previously saved geographically filtered public query records, not a fresh or representative sample. Initial focused encoding assertion was too narrow and corrected to include the century limitation. First full-suite attempt overlapped a rebuild, invalidating7 runtime checks; an eighth Sky cache failure was reproduced independently on the unchanged baseline using a clock boundary. That separate renderer defect is not repaired by this NBI change. Final full suite uses frozen finished artifacts, and failed-attempt logs remain retained. No native-store write, intake decision, Qwen run, AI source-review credit, public release or deployment. Agent review is separate from human approval."
+}
