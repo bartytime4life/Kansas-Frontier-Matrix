@@ -27,6 +27,7 @@ const QUESTIONS = [
   ['river-memory', 'When did the rivers surge?', '3 gauges · daily flow · compare the record'],
   ['river-flow', 'How often did the rivers run high?', 'River Flow Lab · gauge comparison and daily records'],
   ['tornado-tracks', 'Where have tornadoes traveled?', 'Since 1950 · tracks, ratings & reported impacts'],
+  ['tornado-season', 'When were tornadoes most often recorded?', 'Compare tracks, tornado days, and reported starts by month'],
   ['shaking-ground', 'Where has the ground shaken?', 'Since 2010 · magnitude, depth & source records'],
   ['earthquake-catalog', 'How often did earthquakes of different sizes occur?', 'Compare time periods, magnitude thresholds, and epicenters'],
   ['built-kansas', 'What carries Kansas?', 'Bridge inventory · age, traffic, dimensions & condition'],
