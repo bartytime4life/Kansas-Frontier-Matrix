@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { fieldLabel, type Collection } from '../collection-metadata';
 import {documentedField,documentedCode} from '../collection-field-dictionary';
 import {
   measurementDistribution,
+  measurementContexts,
   measurementLayer,
   type LabSnapshot,
   type MeasurementBin,
@@ -49,8 +50,17 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
   view: LabMeasurementView | null;
   onViewChange: (view: LabMeasurementView) => void;
 }) {
+  const [contextSearch, setContextSearch] = useState('');
   const field = fields.find(candidate => candidate.name === view?.field) ?? fields[0];
-  const group = field.groups.find(candidate => candidate.context === view?.context) ?? field.groups[0];
+  const contexts = useMemo(
+    () => measurementContexts(collection, snapshot, field.name),
+    [collection, snapshot, field.name],
+  );
+  const group = contexts.find(candidate => candidate.context === view?.context) ?? contexts[0];
+  const query = contextSearch.trim().toLowerCase();
+  const matches = contexts.filter(candidate => contextLabel(candidate.context,collection.id).toLowerCase().includes(query));
+  const selectedMatches = matches.some(candidate => candidate.context === group.context);
+  const options = selectedMatches ? matches : [group, ...matches];
   const contextUnits=group.context.startsWith('{')
     ?Object.fromEntries(Object.entries(JSON.parse(group.context) as Record<string,string>).filter(([name])=>isUnit(name)))
     :{};
@@ -79,18 +89,27 @@ export default function MeasurementExplorer({ collection, snapshot, fields, busy
     </div>
     <div className={styles.measurementControls}>
       <label>Measurement field
-        <select value={field.name} onChange={event => {
+        <select value={field.name} aria-label="Measurement field" onChange={event => {
           const selected = fields.find(candidate => candidate.name === event.target.value);
-          if (selected) onViewChange({ field: selected.name, context: selected.groups[0].context, range: null });
+          if (selected) {
+            setContextSearch('');
+            onViewChange({ field: selected.name, context: selected.groups[0].context, range: null });
+          }
         }}>
           {fields.map(option => <option key={option.name} value={option.name}>{documentedField(collection.id,option.name)?.label??fieldLabel(option.name)}</option>)}
         </select>
       </label>
-      <label>Unit &amp; measurement context
-        <select value={group.context} onChange={event => onViewChange({ field: field.name, context: event.target.value, range: null })}>
-          {field.groups.map(option => <option key={option.context} value={option.context}>{contextLabel(option.context,collection.id)}</option>)}
-        </select>
-      </label>
+      <div className={styles.contextPicker}>
+        <label>Find a measurement context
+          <input type="search" value={contextSearch} placeholder="Unit, parameter, method, qualifier…" aria-describedby="measurement-context-matches" onChange={event => setContextSearch(event.target.value)}/>
+        </label>
+        <label>Unit &amp; measurement context
+          <select value={group.context} aria-label="Unit & measurement context" aria-describedby="measurement-context-matches" onChange={event => onViewChange({ field: field.name, context: event.target.value, range: null })}>
+            {options.map(option => <option key={option.context} value={option.context}>{contextLabel(option.context,collection.id)} · {option.count} {option.count === 1 ? 'record' : 'records'}</option>)}
+          </select>
+        </label>
+        <p id="measurement-context-matches" role="status">{query ? `${matches.length} of ${contexts.length} contexts match.` : `${contexts.length} contexts in the loaded sample.`}{!selectedMatches&&' Current selection retained.'}</p>
+      </div>
     </div>
 
     {Object.keys(contextUnits).length>0&&<p className={styles.note}>{contextLabel(JSON.stringify(contextUnits),collection.id)}.</p>}

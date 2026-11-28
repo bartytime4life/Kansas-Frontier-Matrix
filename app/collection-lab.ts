@@ -89,6 +89,22 @@ function isMeasurementField(collection: Collection, field: string) {
  return collection.columns.includes(field) && fieldRole(field, collection.keys,collection.id) === 'value';
 }
 
+/** All eligible contexts in the bounded loaded sample, in first-seen order. */
+export function measurementContexts(
+ collection: Collection,
+ snapshot: LabSnapshot,
+ field: string,
+): { context: string; count: number }[] {
+ if (!isMeasurementField(collection, field)) return [];
+ const counts = new Map<string, number>();
+ for (const row of snapshot.rows) {
+  if (!object(row.values) || numeric(row.values[field]) === null) continue;
+  const context = groupKey(collection, field, row.values);
+  counts.set(context, (counts.get(context) ?? 0) + 1);
+ }
+ return [...counts].map(([context, count]) => ({ context, count }));
+}
+
 function binBoundaries(min: number, max: number, count: number) {
  // Fewer bins keep boundaries distinct when adjacent values are very close.
  for (let size = count; size > 1; size--) {

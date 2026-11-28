@@ -1,0 +1,120 @@
+{
+  "receipt_id": "kfm-measurement-contexts-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/collection-lab.ts",
+    "app/data-lab/lab-bundle.ts",
+    "app/data-lab/measurement-explorer.tsx",
+    "app/data-lab/page.tsx",
+    "app/data-lab/lab.module.css",
+    "docs/collection-data-lab.md",
+    "tests/measurement-contexts.test.mjs",
+    "tests/measurement-context-picker.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/collection-lab.ts": "sha256:ad214a3a9c8cf91f80b0e5633f1cba2d1f1dae1b4a94e202ce0c963edbb07251",
+    "app/data-lab/lab-bundle.ts": "sha256:7d0249e8c7450c0a7d759c3b885db6061a4a7d7d7e5a3141af2e05fc2468f33c",
+    "app/data-lab/measurement-explorer.tsx": "sha256:e43d8183aa0fc6712b08c84aac25cec4bbb5d1e2f80b4146cae7765a57928084",
+    "app/data-lab/page.tsx": "sha256:ada77092c47a6d78f25b856e06cc5b0468ce05832dec7183fb9d26e573728324",
+    "app/data-lab/lab.module.css": "sha256:ecf6d94c5eabfb3caee268783f63b73edf0640eb2bba005d78d253fc99e20897",
+    "docs/collection-data-lab.md": "sha256:d6889455b52ba53c3cb04d4899606c0ae8809034b0eba3a336670330a8f3b274",
+    "tests/measurement-contexts.test.mjs": "sha256:2b697c6aae0a93df4c26a5ccf0a01e1a127da28d0ced71ca0f3978ff80e2590a",
+    "tests/measurement-context-picker.test.mjs": "sha256:3e18464f09f1a25d07db175c7ecf8b657e6bf3757a6a5e951a8d829c14e54dc7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "collaboration",
+      "view_image"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d631722aacecacfd76bcf9a9790ba3f0d11bf79001622aec297b98daa4630f97",
+      "sha256:68a72283ead8517c6050913b780972ce1705457b901ed8837f855db080014837",
+      "sha256:899f4635ad4b0a6f3fafd032a4a042ff46415ab52790b7297b0b18a52650e060",
+      "sha256:ad89211186e5f8c9a869bcc3231033245da4999a61d658d55d0e400532253bb4",
+      "sha256:45880ac82ff977e0dd5ce10c5463419a3d3a68549d0c1bd8f1e232fd61e749a7",
+      "sha256:33728dafaa829a6be0fe19302277959c6951dc902f44d6316281fa687fd4d06d",
+      "sha256:ff0e7219da42b5b34f6c86f83a2e8648b5e9562ef7ed5ce8a16c2fcfb2d0357b"
+    ],
+    "evidence_refs": [
+      "repo:504f31a9a3cb9c2139e5ca164b6e1cfb5228ec1c:app/collection-lab.ts",
+      "repo:504f31a9a3cb9c2139e5ca164b6e1cfb5228ec1c:app/data-lab/lab-bundle.ts",
+      "repo:504f31a9a3cb9c2139e5ca164b6e1cfb5228ec1c:docs/collection-data-lab.md"
+    ]
+  },
+  "truth_labels": {
+    "app/collection-lab.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "app/data-lab/measurement-explorer.tsx": "CONFIRMED",
+    "app/data-lab/page.tsx": "CONFIRMED",
+    "app/data-lab/lab.module.css": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED",
+    "tests/measurement-contexts.test.mjs": "CONFIRMED",
+    "tests/measurement-context-picker.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full Node suite: 3941 passed, 25 existing skips, zero failures",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "82 focused measurement-context, historical dictionary, bundle and field-metadata checks; eight new regression cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Owned isolated browser on desktop and phone: 500 retained records, 147 USGS and59WQP contexts, all425 numeric results reachable, later contexts/ranges reopen; unchanged records, zero browser errors",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent agent changed-area review: no correctness, range, grouping, compatibility or denial regression found",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Exact-head hosted checks, human review and public deployment",
+      "outcome": "SKIPPED",
+      "reason": "Generated before draft PR creation; exact-head hosted results are read separately. Human review pending; deployment is outside this source contribution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Pinned Record Lab context grouping and bounds",
+      "validated": true,
+      "evidence_ref": "repo:504f31a9a3cb9c2139e5ca164b6e1cfb5228ec1c:app/collection-lab.ts"
+    },
+    {
+      "id": "Pinned exact-range bundle validation",
+      "validated": true,
+      "evidence_ref": "repo:504f31a9a3cb9c2139e5ca164b6e1cfb5228ec1c:app/data-lab/lab-bundle.ts"
+    },
+    {
+      "id": "Existing feature documentation",
+      "validated": true,
+      "evidence_ref": "repo:504f31a9a3cb9c2139e5ca164b6e1cfb5228ec1c:docs/collection-data-lab.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T02:05:33.226486+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Full context enumeration reuses unchanged field-role, numeric and exact-context functions in first-seen order; each context requires at least one eligible loaded numeric value. Overview remains12groups with explicit overflow, reads stay250rows/fivepages, source rows and clocks remain unchanged. Saved exact contexts/ranges are recomputed from records rather than trusted profiles. Historical dictionary revision gates remain unchanged. Browser verification reused previously saved actual archive samples; it made no fresh provider read and establishes neither representativeness nor current source editions. All425 numeric result instances across those two samples became reachable; no scientific comparability is inferred. The first browser label lookup timed out; explicit accessible control names and a desktop alignment refinement were verified in the final successful browser run. Browser profile removed. No intake decision, cache/database write, AI source review credit, service activation, public deployment, source admission or rights change. Agent review is not human approval."
+}
