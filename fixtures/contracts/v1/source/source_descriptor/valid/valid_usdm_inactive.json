@@ -2,14 +2,18 @@
   "object_type": "SourceDescriptor",
   "schema_version": "v1",
   "source_id": "src:usdm-weekly",
-  "descriptor_version": "0.1.0",
-  "title": "U.S. Drought Monitor (USDM) — Weekly Drought Classification",
-  "description": "Weekly drought-classification polygon product jointly produced by NDMC (University of Nebraska-Lincoln), USDA, and NOAA. Released every Thursday morning; data valid through Tuesday 08:00 EDT of the preceding week. Inactive governance candidate only — no connector activation, schedule, release, or publication is authorized by this descriptor.",
-  "domain_scope": ["agriculture", "hydrology", "hazards"],
-  "source_type": "official_government_dataset",
-  "source_role": "authoritative_for_claim",
+  "descriptor_version": "0.2.0",
+  "title": "U.S. Drought Monitor — dated weekly classification polygon ZIP candidate",
+  "description": "Inactive review fixture for USDM_20261124_M.zip from NDMC: the weekly classification polygon distribution, excluding impacts, grids and tabular statistics. HTTP HEAD metadata was observed; ZIP contents, valid/publication clocks and distribution-specific metadata were not inspected. Not a registry record or admission.",
+  "domain_scope": [
+    "agriculture",
+    "hydrology",
+    "hazards"
+  ],
+  "source_type": "map_artifact",
+  "source_role": "derived_public_product",
   "authority_rank": "primary_authority",
-  "authority_notes": "Jointly authoritative product for broad-scale drought-extent classification. Not a forecast, not a parcel observation, not an emergency declaration.",
+  "authority_notes": "Proposed mapping for the published expert-synthesis classification product, not raw observation or forecast. Primary authority is limited to the publisher classification within its native support; admissibility and source-specific acceptance remain pending.",
   "publisher": {
     "name": "National Drought Mitigation Center (NDMC), University of Nebraska-Lincoln",
     "jurisdiction": "United States",
@@ -19,7 +23,7 @@
     }
   },
   "owner_or_steward": {
-    "name": "NDMC / USDA / NOAA (joint producers); NDMC hosts canonical distribution",
+    "name": "NDMC / University of Nebraska-Lincoln with USDA, NOAA and NASA partnership; NDMC hosts distribution",
     "jurisdiction": "United States",
     "contact": {
       "contact_status": "public_contact",
@@ -28,20 +32,23 @@
   },
   "rights": {
     "rights_status": "unknown",
-    "license_or_terms": "NEEDS VERIFICATION — publicly distributed by NDMC with NDMC, USDA, and NOAA attribution required; exact license string, redistribution constraints, and KFM derivative-tile/PMTiles terms unconfirmed.",
+    "license_or_terms": "UNRESOLVED KFM acceptance. Publisher Permission page permits commercial/noncommercial map and associated-data use with required credit; exact dated distribution, derivative use and attribution handling need accountable review. No public-domain or SPDX license inferred.",
     "attribution_required": true,
-    "attribution_text": "U.S. Drought Monitor, produced by the National Drought Mitigation Center (NDMC) at the University of Nebraska-Lincoln, the U.S. Department of Agriculture (USDA), and the National Oceanic and Atmospheric Administration (NOAA).",
+    "attribution_text": "Pending exact publisher credit selection: include NDMC/UNL, USDA, NOAA, NASA and NDMC distribution credit per the Permission page. This note is not approved release copy.",
     "redistribution_allowed": "unknown",
     "commercial_use_allowed": "unknown",
     "last_verified_at": "2026-07-28T00:00:00Z",
-    "verified_by": "kfm-source-review"
+    "verified_by": "UNVERIFIED — schema-required fixture sentinel; no accountable rights reviewer",
+    "license_url": "https://droughtmonitor.unl.edu/About/Permission.aspx",
+    "terms_url": "https://droughtmonitor.unl.edu/About/Permission.aspx",
+    "rights_notes": "The required last_verified_at value is retained from the historical July 28 fixture as a synthetic compatibility sentinel, not an actual verification or renewed rights timestamp. rights_status and both permissions remain unknown. This fixture cannot substitute for an attributable source-specific rights record."
   },
   "sensitivity_default": "public",
   "cadence": {
     "update_cadence": "weekly",
-    "freshness_expectation": "New release every Thursday at approximately 08:30 ET; data valid through Tuesday 08:00 EDT of the preceding week.",
+    "freshness_expectation": "Nominal weekly release Thursday 08:30 America/New_York using the preceding Tuesday morning data window in that release week; actual publication and validity must come from the specific release. Schedule exceptions are possible.",
     "staleness_policy": "deny_publication",
-    "known_update_window": "Thursday 08:30 ET weekly",
+    "known_update_window": "Nominal Thursday 08:30 America/New_York; actual release timestamp unverified",
     "timezone": "America/New_York"
   },
   "access": {
@@ -49,42 +56,59 @@
     "access_posture": "open",
     "endpoints": [
       {
-        "label": "USDM GIS data landing page",
+        "label": "Selected dated classification polygon ZIP (HEAD only; no payload captured)",
+        "uri": "https://droughtmonitor.unl.edu/data/shapefiles_m/USDM_20261124_M.zip",
+        "purpose": "download"
+      },
+      {
+        "label": "Publisher GIS distributions and separate impacts ZIP",
         "uri": "https://droughtmonitor.unl.edu/DmData/GISData.aspx",
         "purpose": "documentation"
       },
       {
-        "label": "USDM statistics REST service",
-        "uri": "https://droughtmonitor.unl.edu/DmData/DataDownload/WebServiceInfo.aspx",
+        "label": "Publisher vector processing and per-ZIP metadata documentation",
+        "uri": "https://droughtmonitor.unl.edu/DmData/Metadata.aspx",
         "purpose": "documentation"
       },
       {
-        "label": "USDM data download page",
-        "uri": "https://droughtmonitor.unl.edu/Data.aspx",
+        "label": "Publisher attribution and permission",
+        "uri": "https://droughtmonitor.unl.edu/About/Permission.aspx",
         "purpose": "documentation"
       }
     ],
-    "rate_limit_notes": "NEEDS VERIFICATION — rate-limit, retry, and timeout behavior not yet tested against live endpoints."
+    "rate_limit_notes": "Not measured. One metadata-only HEAD, no ZIP GET, retries or throughput probe. Acquisition is disabled; bounded timeout/retry/size/redirect/archive handling requires separate implementation and review."
   },
   "citation": {
     "citation_required": true,
-    "citation_template": "U.S. Drought Monitor, {source_id}, accessed {accessed_at}. Produced by the National Drought Mitigation Center (NDMC) at the University of Nebraska-Lincoln, the USDA, and NOAA.",
-    "citation_guidance": "Cite the NDMC canonical URL, the map release date, the data-valid date, and the access date. Canonical citation: Svoboda et al. (2002), Bull. Amer. Meteor. Soc. 83(8):1181-1190.",
-    "preferred_link": "https://droughtmonitor.unl.edu/"
+    "citation_template": "USDM weekly classification polygon ZIP {upstream_version}, source-valid {valid_at}, published {published_at}, captured {captured_at}; NDMC/UNL, USDA, NOAA, NASA; required NDMC credit per https://droughtmonitor.unl.edu/About/Permission.aspx.",
+    "citation_guidance": "Proposed citation fields, not approved credit copy. Resolve full current publisher attribution before use. Keep the source-valid time, actual publication time and capture time distinct; neither filename nor HTTP Last-Modified alone supplies all three.",
+    "preferred_link": "https://droughtmonitor.unl.edu/DmData/GISData.aspx"
   },
   "source_head": {
-    "observed_at": "2026-07-28T00:00:00Z",
-    "method": "manual_review",
+    "observed_at": "2026-11-28T01:49:02.103102Z",
+    "method": "http_head",
     "content_identity": {
-      "upstream_version": "usdm-profile-candidate-2026-07-28"
+      "upstream_version": "USDM_20261124_M.zip",
+      "source_head_uri": "https://droughtmonitor.unl.edu/data/shapefiles_m/USDM_20261124_M.zip",
+      "etag": "\"4eedefd7c57cdd1:0\"",
+      "last_modified": "Wed, 25 Nov 2026 10:15:06 GMT",
+      "content_length": 1857301
     },
-    "source_head_notes": "Documentation profile review only; no connector activation. Endpoint health, ETag, Last-Modified, and content digest are NEEDS VERIFICATION."
+    "source_head_notes": "HEAD returned HTTP 200 and application/x-zip-compressed at the exact dated URI, with no redirect or payload read. ETag is opaque; no content SHA-256 is known. The filename identifies the selected archive; actual validity, publication, CRS, units, geometry and embedded .shp.xml remain unverified. HEAD observation time is not a drought observation or rights-verification time."
   },
   "admissibility_limits": {
-    "allowed_claim_roles": ["operational_context", "citation_support", "historical_context", "candidate_signal"],
-    "prohibited_claim_roles": ["not_for_life_safety", "not_for_title_truth"],
-    "limitations": "USDM is a broad-scale expert-synthesis classification. Do not infer parcel, field, farm, person, facility, water-right, crop-loss, or emergency-status conditions from USDM classifications alone. Native D0-D4 classifications and short-/long-term impact markers must be preserved without silent recoding into KFM domain truth.",
-    "confidence_posture": "corroborate_before_claim",
+    "allowed_claim_roles": [
+      "operational_context",
+      "citation_support",
+      "historical_context",
+      "candidate_signal"
+    ],
+    "prohibited_claim_roles": [
+      "not_for_life_safety",
+      "not_for_title_truth"
+    ],
+    "limitations": "Candidate scope is only the dated NDMC classification polygon ZIP named in source_head. Proposed context/citation roles require review; do not infer field, farm, parcel, person, groundwater, crop-loss, water-right or emergency-status conditions. Preserve native D0-D4 classes and missing/outside-coverage distinctions; absent polygons do not prove normal conditions. Publisher documentation describes cleaned/merged vectors and an embedded .shp.xml; inspect the actual archive before asserting its CRS or support. Impacts ZIP, statistics, grids, WMS, successor weeks and derived tiles are outside this candidate.",
+    "confidence_posture": "candidate_only",
     "review_required_before_use": true,
     "review_required_before_publication": true
   },
@@ -93,29 +117,27 @@
     "requires_review": true,
     "redaction_required": false,
     "release_conditions": [
-      "Issue #1675 controls verified",
-      "SourceDescriptor activation reviewed and explicitly authorized",
-      "EvidenceBundle + policy decision + review + release + rollback recorded",
-      "Rights and attribution verified for KFM derivative use",
-      "No-network fixtures and boundary tests exist before live-fetch implementation",
-      "Polygon products and aggregate statistics treated as separate source artifacts"
+      "Resolve single source identity, registry placement and accountable writer using accepted Directory Rules; this fixture is not a registry entry.",
+      "Obtain an attributable source-specific rights/admission decision for this exact distribution and approved current publisher credit; existing water/weather/soil self-release exceptions do not extend to USDM.",
+      "After authorization, capture the same dated candidate and verify bytes, embedded metadata, native spatial support, source-valid time and actual publication time; HEAD metadata alone is insufficient.",
+      "Bind EvidenceBundle, policy decision, review, release, missing/stale/conflict/abstain handling, correction/withdrawal and retained rollback evidence before serving.",
+      "Preserve original capture and digest; quarantine unexpected same-URI changes pending review, distinguish later weekly successors, and invalidate affected consumers without rewriting history."
     ],
-    "deny_reason_if_not_allowed": "Governance candidate only; no connector activation, schedule, release, or publication authority granted by this descriptor."
+    "deny_reason_if_not_allowed": "Inactive, unreviewed fixture; rights and permissions unknown, required credit unresolved and payload unverified. Schema validity does not authorize acquisition or serving."
   },
   "connectors": {
     "activation_state": "disabled",
     "connector_ref": "connectors/drought-monitor/",
-    "activation_notes": "Connector and schedule remain disabled. Activation requires explicit authorization after Issue #1675 unblock, rights verification, and no-network fixture + boundary test readiness."
+    "activation_notes": "Disabled. No connector code, watcher, schedule or live acquisition is installed by this fixture. A new source-specific decision is required; a merged fixture or schema PASS cannot activate it."
   },
   "review_state": "needs_review",
   "release_state": "not_released",
   "lifecycle": {
     "registry_state": "proposed",
     "created_at": "2026-07-28T00:00:00Z",
-    "updated_at": "2026-07-28T00:00:00Z"
+    "updated_at": "2026-11-28T01:49:02.103102Z"
   },
   "governance_refs": {
-    "source_registry_ref": "kfm://source-registry/hazards-agriculture-hydrology/usdm-weekly",
-    "validation_report_ref": "kfm://validation/usdm-weekly/source-descriptor-candidate"
+    "validation_report_ref": "tests/schemas/test_usdm_source_descriptor_contracts.py"
   }
 }
