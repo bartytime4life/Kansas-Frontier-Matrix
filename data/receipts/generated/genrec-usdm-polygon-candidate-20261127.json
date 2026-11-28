@@ -1,0 +1,166 @@
+{
+  "receipt_id": "genrec-usdm-polygon-candidate-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/sources/western-kansas-source-family-matrix.md",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json",
+    "tests/schemas/test_usdm_source_descriptor_contracts.py"
+  ],
+  "artifact_hashes": {
+    "docs/sources/western-kansas-source-family-matrix.md": "sha256:a8a638d60ed1fc67c7a37029a00f43af29f3978e58fc274fc5249d1af7771d76",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json": "sha256:429e5bb94b905943e4f90a431b42b33409087b907fc9bd0af64320f19514b337",
+    "tests/schemas/test_usdm_source_descriptor_contracts.py": "sha256:1fba304144521765a0aa7ddda80bbdf3ae46fc4233e69570637725d7feb7f4d8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact serving build not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:b1bbf9cf0dd9fc842ca0fe25bdb09785f9bdb49271888ceccabc1afd71d5b35d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Git and repository inspection",
+      "GitHub readback and draft PR delivery",
+      "official publisher documentation",
+      "one HTTP HEAD without payload",
+      "native project-test profile",
+      "process-guarded no-network tests",
+      "documentation and repository guardrails"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:521df3b0579a81d8be5c234a23fa8a452ff7e67ac9c2bc9976f097593b7f1966",
+      "sha256:05b1fc79c1486f413414ba7e361fdd4ddb4f53bacdd2e790259e6f395f9040a7",
+      "sha256:8417519024eee6612df8b4d69831cd4ecfce06b8456081e17f475e38df5943de",
+      "sha256:6b62b92f3ce03844e1cfd5e69314415d1851bcbf75c049ef2acaed609d149bc6",
+      "sha256:01e2c03e770d7c84d0d329e482703688281792fcf0b2f7c9e431a65b10c13c5c",
+      "sha256:42df3bfe61b3345fb35f60e18512d68850943790a6fa7933b965093bad697621",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:bf6ac42cac961534b2125673ecb32e65409877d9ccd447ebea6362aacd817cc4"
+    ],
+    "evidence_refs": [
+      "repo:docs/sources/western-kansas-source-family-matrix.md@490d61906ebb2760565858f41bc1bad436e65c32",
+      "repo:fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json@490d61906ebb2760565858f41bc1bad436e65c32",
+      "repo:tests/schemas/test_usdm_source_descriptor_contracts.py@490d61906ebb2760565858f41bc1bad436e65c32",
+      "repo:schemas/contracts/v1/source/source_descriptor.schema.json@490d61906ebb2760565858f41bc1bad436e65c32",
+      "repo:schemas/contracts/v1/sources/source_descriptor.schema.json@490d61906ebb2760565858f41bc1bad436e65c32",
+      "repo:contracts/source/source_descriptor.md@490d61906ebb2760565858f41bc1bad436e65c32",
+      "repo:docs/doctrine/directory-rules.md@490d61906ebb2760565858f41bc1bad436e65c32",
+      "https://droughtmonitor.unl.edu/DmData/GISData.aspx",
+      "https://droughtmonitor.unl.edu/DmData/Metadata.aspx",
+      "https://droughtmonitor.unl.edu/About/Permission.aspx",
+      "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "https://droughtmonitor.unl.edu/data/shapefiles_m/USDM_20261124_M.zip",
+      "recovery:usdm-polygon-candidate-20261127/publisher-head.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/sources/western-kansas-source-family-matrix.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json": "PROPOSED",
+    "tests/schemas/test_usdm_source_descriptor_contracts.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source_candidate_and_entrypoint_suites",
+      "outcome": "PASS",
+      "reason": "63 tests pass under the Python process network guard; includes 14 added negative cases across implementation and compatibility schemas, plus existing USDM and generic entrypoint coverage."
+    },
+    {
+      "gate": "common_source_schema",
+      "outcome": "PASS",
+      "reason": "1 source-descriptor common-schema case passes; 255 unrelated cases deselected."
+    },
+    {
+      "gate": "drought_forecast_consumer_regressions",
+      "outcome": "PASS",
+      "reason": "58 tests and 14 subtests pass under the process network guard; existing synthetic fixtures are not captures of the selected archive."
+    },
+    {
+      "gate": "source_fixture_polarity",
+      "outcome": "PASS",
+      "reason": "Existing fixture inventory and explicit compatibility entrypoint accept the inactive schema example, not a real admission or runtime rights decision."
+    },
+    {
+      "gate": "publisher_documentation_and_head",
+      "outcome": "PASS",
+      "reason": "Official metadata and permission pages reviewed; one dated ZIP HTTP HEAD returned 200 with ZIP type, length, ETag and Last-Modified. No ZIP body, content SHA-256, authenticated valid/publication time, rights renewal or acquisition authorization."
+    },
+    {
+      "gate": "repository_health",
+      "outcome": "PASS",
+      "reason": "29-entry validator registry valid; topology ratchet exits 0; scaffold retains 700 markers in 625 files with no new/resolved entries; gaps: 0 structured parse errors, test-package shadows and broken local links. Baselines unchanged."
+    },
+    {
+      "gate": "changed_documentation",
+      "outcome": "PASS",
+      "reason": "21 local targets resolve; 23 external links classified separately. One valid metadata block with zero findings; critical structure has zero findings."
+    },
+    {
+      "gate": "historical_receipt_integrity",
+      "outcome": "PASS",
+      "reason": "Prior source-family receipt validates its three artifact hashes at recorded commit 4c864b95e48ac13f805c7e8b77c9661b679fd001; historical receipt unchanged."
+    },
+    {
+      "gate": "committed_document_graph",
+      "outcome": "PASS",
+      "reason": "Changed-file document graph and metadata ratchets exit 0 with zero failure findings; historical warning sets retained. One changed document; no registry write or schema change."
+    },
+    {
+      "gate": "candidate_hosted_and_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Not observed at authoring; review remains pending. Source-specific decision, truthful unverified-rights representation, registry identity/writer placement and actual capture remain prerequisites to dependent live transitions."
+    },
+    {
+      "gate": "full_local_suite_and_hook_sweep",
+      "outcome": "SKIPPED",
+      "reason": "Focused candidate, entrypoint, schema and drought consumers run for this fixture/test/document contribution. No production code, schema, policy or runtime consumer changes; broad candidate CI remains separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "publisher-1",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/DmData/GISData.aspx"
+    },
+    {
+      "id": "publisher-2",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/DmData/Metadata.aspx"
+    },
+    {
+      "id": "publisher-3",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/About/Permission.aspx"
+    },
+    {
+      "id": "publisher-4",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+    },
+    {
+      "id": "publisher-5",
+      "validated": true,
+      "evidence_ref": "https://droughtmonitor.unl.edu/data/shapefiles_m/USDM_20261124_M.zip"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T01:56:01.789106+00:00",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Existing inactive fixture identity retained, not a new registry writer. Proposed map_artifact/derived_public_product mapping uses existing enums. Unknown rights, disabled connector, proposed lifecycle and denied public release remain. The old schema-required July 28 verification date is explicitly synthetic; UNVERIFIED verifier is not an accountable rights decision. ETag/HTTP metadata are not content authenticity, source-valid time or publication time. Citation validation means metadata/link readback only; ZIP URL was HEAD-only, not a payload capture. No source admission, registry population, rights approval or timestamp renewal, policy/schema/runtime changes, settings/schedules, ready, approval, merge, activation, release, deployment, promotion or publication action."
+}

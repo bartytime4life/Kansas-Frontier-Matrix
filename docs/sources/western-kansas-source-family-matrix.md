@@ -2,7 +2,7 @@
 doc_id: kfm://doc/source-review/western-kansas-family-matrix
 title: Western Kansas source-family review matrix
 type: reference
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; bounded source review; non-authoritative
 owners: ["@bartytime4life — CODEOWNERS review route; accountable source/rights acceptance remains separate"]
 created: 2026-11-27
@@ -11,7 +11,7 @@ policy_label: repository-facing
 owning_root: docs/
 responsibility: Explain the seven drought/hydrology source families, their current scoped registry evidence, publisher documentation, distinct clocks, rights and correction gaps, and next review without admitting or activating a source.
 truth_posture: "CONFIRMED repository declarations and retrieved publisher metadata; PARTIAL seven-family acceptance; UNKNOWN unreviewed terms, spatial support and operational consumer closure"
-evidence_snapshot: "main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d; publisher documentation read 2026-11-27"
+evidence_snapshot: "Matrix registry facts: main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d; inactive USDM candidate follow-through: main@490d61906ebb2760565858f41bc1bad436e65c32; publisher documentation read 2026-11-27 local"
 related:
   - docs/sources/README.md
   - contracts/domains/hydrology/western_kansas_observation_assessment.md
@@ -51,7 +51,7 @@ not an exhaustive active-source census.
 
 | Family from the existing assessment | Registry evidence at the pin | What the existing scope supports | First unresolved step |
 |---|---|---|---|
-| USDM | No matching admitted descriptor found in the inspected `data/registry/sources/` identities; a [human product page](catalog/drought_monitor/drought-monitor.md) exists. | Synthetic classification proof only; provider documentation is not KFM admission. | Draft one product/version-specific descriptor with attribution, polygon support, rights and source-correction review. |
+| USDM | No matching admitted descriptor found in the inspected `data/registry/sources/` identities; a [human product page](catalog/drought_monitor/drought-monitor.md) exists. | Synthetic proof and an inactive dated-ZIP review fixture; provider documentation and HTTP metadata are not KFM admission. | Review the [existing inactive candidate](../../fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json), including attribution, polygon support, rights and source-correction questions. |
 | USGS streamflow | [USGS descriptor](../../data/registry/sources/hydrology/usgs_nwis.yaml), approved/active, with [ADR-0044](../adr/ADR-0044-owner-self-release-for-admitted-public-water-data.md). | Provisional instantaneous discharge, parameter `00060`, at **USGS-06892518 and USGS-07156900**. | Reproduce one admitted package and its actual decision/readback; wider stations, groundwater and other variables need their own scope review. |
 | KGS groundwater | No WIZARD-specific admitted descriptor found in the inspected registry identities. | Published database metadata provides discovery and review context. | Resolve current product/terms, per-well provenance, sensitivity and permitted precision before creating a candidate descriptor. |
 | Precipitation / EDDI | [GHCN-Daily descriptor](../../data/registry/sources/atmosphere/noaa_ghcnd.yaml), approved/active, with [ADR-0045](../adr/ADR-0045-owner-self-release-for-admitted-public-weather-data.md); no reviewed EDDI descriptor found. | `PRCP`, `TMAX`, `TMIN` at **USW00003928, USW00013996, USW00013985 and USW00023065**. This is station weather, not EDDI authority. | Keep the admitted precipitation branch separate from a proposed, explicitly versioned CPC EDDI branch. |
@@ -213,6 +213,43 @@ admission still require review.
 [Download products and cadence](https://www.usgs.gov/national-hydrography/access-national-hydrography-products).
 
 ## Review and next proof
+
+### Inactive polygon candidate follow-through — November 27
+
+The [existing USDM fixture](../../fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json)
+retains `src:usdm-weekly`, now narrowed to **USDM_20261124_M.zip**. It proposes
+the existing `map_artifact` type and `derived_public_product` role for this
+published classification; the mapping is review input, not an accepted decision.
+No second identity or registry writer is created.
+
+A metadata-only **HEAD** to the
+[dated publisher ZIP](https://droughtmonitor.unl.edu/data/shapefiles_m/USDM_20261124_M.zip)
+returned HTTP 200 at **2026-11-28T01:49:02.103102Z** (November 27 locally),
+length 1,857,301 bytes, ZIP content type, an opaque ETag and Last-Modified.
+These identify observed response metadata only. No ZIP body was read, no
+content SHA-256 was computed, and neither actual validity nor publication time
+was authenticated. Do not treat Last-Modified as publication or observation time.
+Inspect the embedded metadata and actual CRS/support after authorization;
+impacts, grids and statistics remain separate distributions.
+[Publisher format notes](https://droughtmonitor.unl.edu/DmData/Metadata.aspx).
+Existing connector response fixtures remain synthetic examples, not captures
+of this dated ZIP.
+
+Rights and permissions remain `unknown`, review is pending, the connector is
+disabled and public release is false. The schema requires a verification date
+and verifier even for unknown rights: the old July 28 fixture date is explicitly
+retained as a synthetic compatibility sentinel, with the verifier marked
+`UNVERIFIED`. It records no real rights verification. Resolve truthful pending
+representation or obtain the attributable review before creating a registry
+record; do not copy fixture sentinels into authority-bearing records.
+
+The [offline negative tests](../../tests/schemas/test_usdm_source_descriptor_contracts.py)
+exercise the existing schemas: unresolved rights block public release even
+with approved review; pending review blocks live activation and release; the
+human label `classification` cannot extend the role enum. These are schema
+checks, not runtime policy or release proof.
+
+### Required next decisions
 
 The next proposed unadmitted product is **one USDM distribution/version**: its
 classification role and published attribution terms are explicit, and it adds

@@ -24,6 +24,8 @@ from pathlib import Path
 
 import pytest
 
+from tools.validators._common.jsonschema_runner import load_validator
+
 ROOT = Path(__file__).resolve().parents[2]
 
 USDM_DESCRIPTOR_PATH = (
@@ -344,4 +346,65 @@ def test_usdm_descriptor_admissibility_prohibits_not_for_title_truth():
     assert "not_for_title_truth" in prohibited, (
         "USDM admissibility must prohibit 'not_for_title_truth'. "
         "USDM is not a legal or parcel determination."
+    )
+
+
+# Existing schema controls exercised against the dated candidate, offline.
+USDM_SCHEMAS = (
+    ROOT / "schemas/contracts/v1/source/source_descriptor.schema.json",
+    ROOT / "schemas/contracts/v1/sources/source_descriptor.schema.json",
+)
+
+
+@pytest.fixture(params=USDM_SCHEMAS, ids=("implementation", "compatibility"))
+def validator(request):
+    return load_validator(request.param)
+
+
+@pytest.fixture
+def candidate():
+    return json.loads(USDM_DESCRIPTOR_PATH.read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("rights_status", ("unknown", "noassertion", "denied"))
+def test_blocked_rights_deny_release_even_with_approved_review(
+    validator, candidate, rights_status
+):
+    candidate["rights"]["rights_status"] = rights_status
+    candidate["review_state"] = "approved"
+    candidate["public_release"]["allowed"] = True
+    errors = list(validator.iter_errors(candidate))
+    assert any(
+        list(error.absolute_path) == ["public_release", "allowed"]
+        and error.validator == "const"
+        for error in errors
+    )
+
+
+@pytest.mark.parametrize("activation_state", ("live_candidate", "live_active"))
+def test_pending_review_does_not_allow_live_activation(
+    validator, candidate, activation_state
+):
+    candidate["connectors"]["activation_state"] = activation_state
+    errors = list(validator.iter_errors(candidate))
+    assert any(list(error.absolute_path) == ["review_state"] for error in errors)
+
+
+def test_open_rights_do_not_replace_review_before_public_release(validator, candidate):
+    candidate["rights"].update(
+        rights_status="verified_open",
+        redistribution_allowed="yes",
+        commercial_use_allowed="yes",
+    )
+    candidate["public_release"]["allowed"] = True
+    errors = list(validator.iter_errors(candidate))
+    assert any(list(error.absolute_path) == ["review_state"] for error in errors)
+
+
+def test_human_classification_label_cannot_extend_the_role_enum(validator, candidate):
+    candidate["source_role"] = "classification"
+    errors = list(validator.iter_errors(candidate))
+    assert any(
+        list(error.absolute_path) == ["source_role"] and error.validator == "enum"
+        for error in errors
     )
