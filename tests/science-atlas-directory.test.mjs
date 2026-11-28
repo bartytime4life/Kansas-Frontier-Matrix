@@ -69,3 +69,10 @@ test('search finds the earthquake threshold lab by catalog or epicenters', () =>
     assert.ok(filterScienceDirectory(entries, query, '').some(entry => entry.href === '/labs/earthquakes'), query);
   }
 });
+
+
+test('population accounting questions discover the existing County Observatory', () => {
+  for (const query of ['births deaths', 'migration remainder', 'population components']) {
+    assert.ok(filterScienceDirectory(entries, query, '').some(entry => entry.href === '/labs/observatory'), query);
+  }
+});

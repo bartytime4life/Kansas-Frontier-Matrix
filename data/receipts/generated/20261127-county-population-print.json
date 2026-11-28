@@ -1,0 +1,80 @@
+{
+  "receipt_id": "kfm-county-population-print-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/labs/observatory/PopulationBalance.jsx",
+    "tests/population-balance-ui.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/labs/observatory/PopulationBalance.jsx": "sha256:721fca63e4b7cc4ba0c8aaff42b59be6bddceec0aa2b19a640f97222621575dc",
+    "tests/population-balance-ui.test.mjs": "sha256:2b2c658adab91313fb45162fbcbbd1940856dbc9e07708a1107146c8396080e5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:33bc61a999da2ed8c3823312b7863f8de41af386b8683cdc002f0959d17692ee",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6171#discussion_r4725650096",
+      "repo:7a0338aeba9a5cd28d50260c89ed2a66dc36224b:app/labs/observatory/PopulationBalance.jsx",
+      "repo:7a0338aeba9a5cd28d50260c89ed2a66dc36224b:tests/population-balance-ui.test.mjs",
+      "repo:7a0338aeba9a5cd28d50260c89ed2a66dc36224b:data/receipts/generated/20261127-county-population-balance.json"
+    ],
+    "evidence_hashes": [
+      "sha256:15f0144455db0ef9a5a7e2560cb010df77358f75cda4b91e5e32c514575d55d6",
+      "sha256:127792ff193277139706447a9a8d5d35506ee13c0b999a49c2f17b6545e0715e"
+    ]
+  },
+  "truth_labels": {
+    "app/labs/observatory/PopulationBalance.jsx": "CONFIRMED",
+    "tests/population-balance-ui.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Full standalone suite at predecessor saved head7a0338a:3977passed25skipped0failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "New ready-print regression before correction",
+      "outcome": "FAIL",
+      "reason": "Actual table class exactTable remained on the white report;2compositioncases passed and1failed as intended."
+    },
+    {
+      "gate": "Corrected signed model and actual composed screen/ready-print/unavailable-print behavior:12actualcases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Changed-area ESLint, syntax and whitespace after correction",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Corrected exact-head production build, full CI, three-size browser acceptance and public delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt authoring; obsolete predecessor CI was canceled in favor of a fresh corrected-head run."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "title": "Population print review finding",
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6171#discussion_r4725650096"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T05:26:12.459187+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Successor receipt for the reviewed print correction and meaningful real-composition regression only. Existing original receipt remains unchanged. The screen tables retain their existing class; print tables inherit established report styling. Signed counts, calculated rates, county context and source fingerprint are identical in screen and print compositions. No source data or settings changed. Formal Chrome audit and different-provider visual-evaluator limitations remain as in the predecessor receipt."
+}
