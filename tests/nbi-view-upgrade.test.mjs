@@ -58,7 +58,7 @@ test('plausible but altered ranges, invented contexts and forged profile eligibi
  assert.throws(()=>open(bundle(source,invented)),/does not match/);
 });
 
-test('only explicitly frozen former measurement fields can use the NBI fallback',()=>{
+test('original null-revision measurement fields retain their fallback while previously excluded roles stay denied',()=>{
  const fields=['record_type_005a','design_load_031',
   'deck_cond_058','superstructure_cond_059','substructure_cond_060','channel_cond_061','culvert_cond_062',
   'opr_rating_meth_063','inv_rating_meth_065','bridge_condition','lowest_rating','structural_eval_067','undclrence_eval_069',
@@ -68,8 +68,7 @@ test('only explicitly frozen former measurement fields can use the NBI fallback'
   assert.equal(previousNbiView(collection,source,view(field),null),true,field);
  }
  for(const field of ['not_a_column','date_of_inspect_090','fracture_last_date_093a','appr_rail_end_036d',
-  'deck_geometry_eval_068','state_code_001','main_unit_spans_045','adt_029','inspect_freq_months_091',
-  'structure_kind_043a','structure_type_043b','appr_kind_044a','appr_type_044b','scour_critical_113']){
+  'deck_geometry_eval_068','state_code_001','main_unit_spans_045','adt_029','inspect_freq_months_091']){
   const source=snapshot([row(1,{[field]:'2'})]);
   assert.equal(previousNbiView(collection,source,view(field),null),false,field);
  }
@@ -77,7 +76,7 @@ test('only explicitly frozen former measurement fields can use the NBI fallback'
 
 test('null revision NBI fallback rejects current, future and malformed revisions and other collections',()=>{
  const source=snapshot([row(1,{deck_cond_058:'2'})]),selection=view('deck_cond_058');
- for(const revision of ['nbi-2026-11-27-v1','nbi-future-v2','',0,{},false]){
+ for(const revision of ['nbi-2026-11-27-v1','nbi-legacy-2026-11-27-v1','nbi-legacy-2026-11-27-v2','nbi-future-v2','',0,{},false]){
   assert.equal(previousNbiView(collection,source,selection,revision),false);
   assert.throws(()=>open({...bundle(source,selection),fieldDictionaryRevision:revision}),/does not match/);
  }
