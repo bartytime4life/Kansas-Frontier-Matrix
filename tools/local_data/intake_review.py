@@ -7,7 +7,7 @@ import re
 import uuid
 
 from tools.local_data import intake_route
-from tools.local_data.file_io import hash_regular, write_new
+from tools.local_data.file_io import hash_regular, read_regular, write_new
 from tools.local_data.manage import canonical, utc_now
 
 DOMAINS = ("agriculture", "archaeology", "atmosphere", "fauna", "flora", "geology", "habitat", "hazards",
@@ -101,7 +101,25 @@ def decision(conn, item, profile, budget):
         return intake_route.decide(item, profile, budget)
 
 
-def save(root: Path, value: dict, budget, *, ai_attribution=None, expected_context=None):
+def owner_reference_authorization(root, digest, item):
+    """A one-time owner request binds private retention to exact files and context."""
+    if not isinstance(digest, str) or not re.fullmatch(r'[a-f0-9]{64}', digest):
+        raise ValueError('OWNER_REFERENCE_POLICY_INVALID')
+    raw = read_regular(root / 'data/work/intake/owner-policies' / (digest + '.json'), 4 * 1024**2)
+    if hashlib.sha256(raw).hexdigest() != digest:
+        raise ValueError('OWNER_REFERENCE_POLICY_CHANGED')
+    policy = json.loads(raw)
+    entry = policy.get('items', {}).get(item['id'])
+    if (policy.get('schema') != 'kfm-owner-private-reference-v1'
+            or policy.get('scope') != 'private-reference-only'
+            or not policy.get('requested_by') or not policy.get('request')
+            or entry != {'sha256': item.get('sha256'), 'context': context(item)}):
+        raise ValueError('OWNER_REFERENCE_POLICY_DOES_NOT_COVER_ITEM')
+    return {'policy_sha256': digest, 'requested_by': policy['requested_by'],
+            'scope': policy['scope'], 'authorized_at': policy['authorized_at']}
+
+
+def save(root: Path, value: dict, budget, *, ai_attribution=None, expected_context=None, owner_policy=None):
     from tools.local_data import intake
 
     if not isinstance(value, dict) or set(value) != FIELDS:
@@ -136,11 +154,14 @@ def save(root: Path, value: dict, budget, *, ai_attribution=None, expected_conte
             raise ValueError("REVIEW_CAPTURE_REQUIRED")
         if item["sha256"] != value["sha256"]:
             raise ValueError("REVIEW_STALE_FILE")
+        owner_authorization = owner_reference_authorization(root, owner_policy, item) if owner_policy is not None else None
+        if owner_authorization is not None and (value['decision'] != 'local' or ai_attribution is None):
+            raise ValueError('OWNER_REFERENCE_IS_AI_ASSISTED_PRIVATE_ONLY')
         if ai_attribution is not None:
             declared = item.get("declared") or {}
             if (value["rights"] != (declared.get("rights") or {}).get("redistribution","unknown")
                     or value["sensitivity"] != declared.get("sensitivity","unknown")
-                    or item["decision"].get("review_flags") or item["decision"].get("blocking_issues")
+                    or (item["decision"].get("review_flags") and owner_authorization is None) or item["decision"].get("blocking_issues")
                     or (declared.get("rights") or {}).get("redistribution") in {"restricted","denied"}
                     or declared.get("sensitivity") in {"restricted","controlled"}):
                 raise ValueError("AI_REVIEW_HUMAN_DECISION_REQUIRED")
@@ -161,6 +182,8 @@ def save(root: Path, value: dict, budget, *, ai_attribution=None, expected_conte
                       authority={"source_admission": False, "release": False, "publication": False})
         if ai_attribution is not None:
             review["ai_attribution"] = dict(ai_attribution)
+        if owner_authorization is not None:
+            review['owner_reference_authorization'] = owner_authorization
         with intake.open_index(root) as conn:
             previous = history(conn, identity)
             if value["revision"] != (previous[0]["revision"] if previous else 0):

@@ -76,5 +76,23 @@ class GroundedReviewTests(unittest.TestCase):
         self.assertIn('recovered no readable text',review['description'])
         self.assertEqual(g.schema(packet)['properties']['title_ids']['maxItems'],0)
 
+    def test_provider_title_is_labeled_metadata_and_cannot_be_rewritten(self):
+        self.packet['facts'].append({'id':'source_metadata','text':json.dumps({'record':{'title':'1904 Kansas catalog record'}})})
+        value={**self.value,'title_ids':['catalog_title']}
+        review,_=g.render(value,self.packet,self.inspection)
+        self.assertIn('Provider catalog title (unverified metadata)',review['description'])
+        g.validate_rendered(review,self.packet,self.inspection)
+        with self.assertRaises(ValueError):
+            g.validate_rendered({**review,'description':review['description'].replace('1904 Kansas','Verified 1904 Kansas')},self.packet,self.inspection)
+
+    def test_single_ocr_glyph_is_an_availability_note_without_an_invented_quote(self):
+        from tools.local_data import ai_acceptance as ai
+        self.packet['facts'][0]['text']='\n\nV\n\n'
+        value={**self.value,'title_ids':[],'passage_ids':['no_usable_excerpt']}
+        review,_=g.render(value,self.packet,self.inspection)
+        self.assertIn('KFM inspection: no usable OCR excerpt',review['description'])
+        self.assertNotIn('Source text',review['description'])
+        ai.validate_output(review,{**self.packet,'description_policy':g.VERSION})
+
 
 if __name__=='__main__':unittest.main()

@@ -125,12 +125,13 @@ class AcceptanceTests(unittest.TestCase):
         self.assertIn('CONTENT_SENSITIVITY_REQUIRES_ADMIN',intake.get_item(self.root,self.id)['ai_review']['holds'])
 
     def test_uninspected_archive_is_held_even_when_model_is_high_confidence(self):
-        import gzip
+        import zipfile
         self.path.unlink()
-        archive=self.root/'data/raw/hydrology.csv.gz'
-        archive.write_bytes(gzip.compress(b'Synthetic river water notes, QA only.'))
+        archive=self.root/'data/raw/hydrology.zip'
+        with zipfile.ZipFile(archive,'w') as bundle:
+            bundle.writestr('notes.txt','Synthetic river water notes, QA only.')
         intake.analyze(self.root)
-        identity=intake.item_id('raw','hydrology.csv.gz')
+        identity=intake.item_id('raw','hydrology.zip')
         self.assertEqual(self.run_batch()['counts'],{'held':1})
         item=intake.get_item(self.root,identity)
         self.assertEqual(item['status'],'review')

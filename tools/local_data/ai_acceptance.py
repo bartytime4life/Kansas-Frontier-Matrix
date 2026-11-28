@@ -237,7 +237,7 @@ def packet_for(root, item):
         fact("studio_review",snapshot["review"],3000)
         fact("ocr",snapshot["analysis"].get("text", ""),6000)
         coverage = "metadata plus saved, hash-bound Studio review and bounded derived OCR; OCR may be incomplete"
-    elif profile["format"]["kind"] == "gzip" and original_name.lower().endswith(".txt.gz"):
+    elif profile["format"]["kind"] == "gzip":
         sample = text_sample.gzip_text(path)
         fact("gzip_inspection",sample["inspection"])
         for offset in range(0,len(sample["text"]),1000):
@@ -285,9 +285,10 @@ def gates(item, review, packet):
 
 
 class Manager:
-    def __init__(self, root, client, *, check_volume=lambda:None):
+    def __init__(self, root, client, *, check_volume=lambda:None, packet_builder=None):
         self.root, self.client = root, client
         self.check_volume = check_volume
+        self.packet_builder = packet_builder or packet_for
         self.lock = threading.RLock()
         self.stop = threading.Event()
         self.action = "pause"
@@ -300,8 +301,10 @@ class Manager:
             return
         try:
             with self.db() as db:
-                db.execute("UPDATE ai_acceptance_tasks SET state='pending' WHERE state='working'")
-                db.execute("UPDATE ai_acceptance_jobs SET state='paused',error='INTERRUPTED_RESTART',updated=? WHERE state IN ('running','pausing','cancelling')",(utc_now(),))
+                if db.execute("SELECT 1 FROM ai_acceptance_tasks WHERE state='working' LIMIT 1").fetchone():
+                    db.execute("UPDATE ai_acceptance_tasks SET state='pending' WHERE state='working'")
+                if db.execute("SELECT 1 FROM ai_acceptance_jobs WHERE state IN ('running','pausing','cancelling') LIMIT 1").fetchone():
+                    db.execute("UPDATE ai_acceptance_jobs SET state='paused',error='INTERRUPTED_RESTART',updated=? WHERE state IN ('running','pausing','cancelling')",(utc_now(),))
         finally:
             os.close(fd)
 
@@ -457,10 +460,10 @@ class Manager:
                 self.launch(job["id"],fd)
             elif action in {"pause","cancel"}:
                 if job["state"] == "paused" and action == "cancel":
-                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state='cancelled',updated=? WHERE id=?",(utc_now(),job["id"]))
+                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state='cancelled',error='ADMIN_CANCELLED',updated=? WHERE id=?",(utc_now(),job["id"]))
                 elif job["state"] in ACTIVE:
                     self.action = action; self.stop.set()
-                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state=?,updated=? WHERE id=?",("pausing" if action=="pause" else "cancelling",utc_now(),job["id"]))
+                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state=?,error=?,updated=? WHERE id=?",("pausing" if action=="pause" else "cancelling","ADMIN_PAUSED" if action=="pause" else "ADMIN_CANCELLED",utc_now(),job["id"]))
                 else: raise ValueError("AI_BATCH_NOT_RUNNING")
             else: raise ValueError("AI_ACTION_INVALID")
         return self.status()
@@ -469,6 +472,8 @@ class Manager:
         _,seq,identity,sha,context,key = task
         try:
             self.check_volume()
+        except ProviderError:
+            raise
         except RuntimeError:
             raise ProviderError("AI_DATA_VOLUME_UNAVAILABLE") from None
         item = intake.get_item(self.root,identity)
@@ -496,7 +501,7 @@ class Manager:
         actual,_ = hash_regular(path,intake.DEFAULT_HASH_LIMIT,expected_size=item["size_bytes"])
         if actual != sha:
             raise ValueError("AI_SOURCE_CHANGED_REANALYZE")
-        packet = packet_for(self.root,item)
+        packet = self.packet_builder(self.root,item)
         with self.db() as db:
             cached = db.execute("SELECT result FROM ai_acceptance_results WHERE cache_key=?",(key,)).fetchone()
         draft = json.loads(cached[0]) if cached else None
@@ -535,7 +540,7 @@ class Manager:
             "input_sha256":hashlib.sha256(canonical(packet)).hexdigest(),
             "input_path":f"data/work/intake/ai-context/{hashlib.sha256(canonical(packet)).hexdigest()}.json",
             "response_sha256":response_hash,"coverage":packet["coverage"],"review":review,
-            "generated_at":utc_now(),"options":{"temperature":0,"num_ctx":8192,"num_predict":800,"think":False}}
+            "generated_at":getattr(self.client,'last_generated_at',None) or utc_now(),"options":{"temperature":0,"num_ctx":8192,"num_predict":800,"think":False}}
         inspection = next((json.loads(f["text"]) for f in packet["facts"] if f["id"]=="gzip_inspection"),None)
         if inspection is not None:
             attribution["text_extraction"] = inspection
@@ -557,6 +562,8 @@ class Manager:
                 db.execute("INSERT OR REPLACE INTO ai_acceptance_results VALUES (?,?,?,?,?,?)",(key,identity,sha,context,utc_now(),json.dumps(pending)))
             try:
                 self.check_volume()
+            except ProviderError:
+                raise
             except RuntimeError:
                 raise ProviderError("AI_DATA_VOLUME_UNAVAILABLE") from None
             revision = item["review_history"][0]["revision"] if item["review_history"] else 0
@@ -593,6 +600,11 @@ class Manager:
             job = {"id":job_id,"admin":row[0]}
             while not self.stop.is_set():
                 with self.db() as db:
+                    requested = db.execute('SELECT state FROM ai_acceptance_jobs WHERE id=?',(job_id,)).fetchone()[0]
+                    if requested in {'pausing','cancelling'}:
+                        self.action = 'pause' if requested == 'pausing' else 'cancel'
+                        self.stop.set()
+                        break
                     task = db.execute("SELECT job,seq,item,sha,context,cache_key FROM ai_acceptance_tasks WHERE job=? AND state='pending' ORDER BY seq LIMIT 1",(job_id,)).fetchone()
                     if not task: break
                     db.execute("UPDATE ai_acceptance_tasks SET state='working' WHERE job=? AND seq=?",(job_id,task[1]))

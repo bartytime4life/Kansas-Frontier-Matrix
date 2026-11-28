@@ -230,7 +230,10 @@ def open_index(root: Path, *, allow_stale_bindings: bool = False, read_only: boo
             conn.execute("PRAGMA journal_mode=WAL")
             conn.execute("PRAGMA foreign_keys=ON")
             conn.executescript(SCHEMA_SQL)
-            conn.execute("INSERT OR IGNORE INTO meta(key, value) VALUES ('schema_version', ?)", (INDEX_SCHEMA_VERSION,))
+            # Existing readers must not acquire the writer lock just to insert
+            # an already-present schema row during a long catalog analysis.
+            if not conn.execute("SELECT 1 FROM meta WHERE key='schema_version'").fetchone():
+                conn.execute("INSERT OR IGNORE INTO meta(key, value) VALUES ('schema_version', ?)", (INDEX_SCHEMA_VERSION,))
         version = conn.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0]
         if version != INDEX_SCHEMA_VERSION:
             raise IntakeError("INDEX_SCHEMA_UNSUPPORTED")

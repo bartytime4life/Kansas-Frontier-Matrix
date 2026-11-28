@@ -2,8 +2,13 @@
 (() => {
   "use strict";
   if (WORKSPACE !== "working") return;
-  let current = null, configured = false, timer = null, previousState = null, previousDone = 0, refreshedAt = 0, serial = 0;
+  let current = null, configured = false, maintenance = false, timer = null, previousState = null, previousDone = 0, refreshedAt = 0, serial = 0;
   const messages = {
+    ADMIN_PAUSED:"Paused by the admin. Resume when ready; the schedule will respect this pause.",
+    ADMIN_CANCELLED:"Stopped by the admin. Start a new batch when ready.",
+    AI_DATA_MAINTENANCE:"Drive maintenance is running. Acceptance will resume when it finishes.",
+    AI_BACKUP_RUNNING:"A backup is running. Qwen progress is saved; resume after the backup finishes.",
+    AI_BACKUP_STATE_UNAVAILABLE:"Backup status is unavailable. Review is paused until the service status can be checked.",
     AI_NO_NEW_PENDING_FILES_MATCH_FILTERS:"No new pending files match. Change the filters or enable re-review of previous AI holds.",
     AI_RESUME_OR_CANCEL_CURRENT_BATCH:"Resume or stop the existing batch before starting another.",
     LOCAL_QWEN_UNAVAILABLE_OR_INVALID:"Local Qwen is unavailable. Check Ollama, then resume the batch.",
@@ -19,12 +24,12 @@
   const active = () => current && ["running","pausing","cancelling"].includes(current.state);
   function scope() {
     const disallowed = ($("f-status").value && $("f-status").value !== "review") || $("f-lane").value === "inbox";
-    $("ai-start").disabled = !configured || active() || current?.state === "paused" || !!disallowed;
+    $("ai-start").disabled = !configured || maintenance || active() || current?.state === "paused" || !!disallowed;
     $("ai-scope").textContent = disallowed ? "Choose Any status or Needs review, and captured files, to run smart acceptance."
-      : "Only pending files matching the current filters are queued. Qwen reviews metadata, bounded text (including .txt.gz) and available Studio OCR; it does not validate every record.";
+      : "Only pending files matching the current filters are queued. Qwen reviews metadata, bounded plain or gzip text and available Studio OCR; it does not validate every record.";
   }
   function render(data) {
-    configured = data.enabled === true; current = data.job || null;
+    configured = data.enabled === true; maintenance = !!data.maintenance; current = data.job || null;
     $("smart-acceptance").hidden = false;
     $("ai-model").textContent = data.model ? `${data.model} · on this PC` : "Not connected";
     if (!configured) { $("ai-state").textContent = data.reason || "Local Qwen is not configured."; scope(); return; }
@@ -35,12 +40,18 @@
     $("ai-progress").max = job?.total || 1; $("ai-progress").value = done;
     $("ai-pause").hidden = !active(); $("ai-pause").disabled = job?.state !== "running";
     $("ai-resume").hidden = job?.state !== "paused";
+    $("ai-resume").disabled = !!data.maintenance;
     $("ai-cancel").hidden = !job || !["running","paused","pausing"].includes(job.state);
     $("ai-rerun").hidden = !job || !["completed","cancelled"].includes(job.state) || (!!counts.accepted && !counts.held) || resolvedLater;
+    $("ai-rerun").disabled = maintenance;
     $("ai-rerun").textContent = counts.held ? `Re-review ${counts.held} held files` : "Re-review same pending files";
     $("ai-state").textContent = !job ? "Ready. Enter your name, choose a batch size, and start a local review."
       : `${job.state.replaceAll("_"," ")} · ${done} / ${job.total} processed · ${counts.accepted||0} accepted locally · ${counts.held||0} held · ${counts.failed||0} failed · ${counts.stale||0} changed/skipped · requested by ${job.admin}${job.cached ? ` · ${job.cached} unchanged AI reviews skipped` : ""}${job.error ? `. ${explain(job.error)}` : ""}${["pausing","cancelling"].includes(job.state) ? ". Finishing the current file first." : ""}`;
     if (job && resolvedLater) $("ai-state").textContent += ` Qwen run outcomes above are historical. Current files: ${live.reviewed||0} reviewed locally · ${live.review||0} need review · ${live.blocked||0} blocked.`;
+    if (data.maintenance) $("ai-state").textContent += data.maintenanceReason === "backup"
+      ? " A backup is running; review progress is saved."
+      : " Drive maintenance is running; acceptance will resume afterward.";
+    if (data.preparation) $("ai-state").textContent += ` Prepared metadata: ${(data.preparation.prepared||0)+(data.preparation.cached||0)} packets saved locally. Preparation does not release files.`;
     const results = $("ai-results"); results.replaceChildren();
     if (job?.recent.length) {
       const list = el("ul",{class:"ai-results"});
