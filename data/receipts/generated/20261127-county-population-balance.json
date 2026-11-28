@@ -1,0 +1,135 @@
+{
+  "receipt_id": "kfm-county-population-balance-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/labs/observatory/CountyObservatory.jsx",
+    "app/labs/observatory/observatory.module.css",
+    "app/labs/page.jsx",
+    "app/research/pathways.ts",
+    "app/science/atlas-directory.mjs",
+    "tests/explorer-startup.browser.mjs",
+    "tests/science-atlas-directory.test.mjs",
+    "app/labs/observatory/PopulationBalance.jsx",
+    "app/labs/observatory/population-balance.module.css",
+    "app/labs/population-components.mjs",
+    "tests/population-balance-ui.test.mjs",
+    "tests/population-components.test.mjs",
+    "docs/county-population-balance-20261127.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:708d8f6f6b1c646ef78064590fba3549ff4c9a21136333bd07c6d92c5afeb56c",
+    "app/labs/observatory/CountyObservatory.jsx": "sha256:979e4ec845680114114f09eef4f7c764cf292d7bc5b29e97dc8c5a53dfe87a17",
+    "app/labs/observatory/observatory.module.css": "sha256:220f57dc7c04d98eb52d005ebf46c99e8d4f301d96b64edc26d9151dacf02d88",
+    "app/labs/page.jsx": "sha256:a224dc985bd020858578669a583263f90764deba27c5685b1fdc23f37ad45a9d",
+    "app/research/pathways.ts": "sha256:37d4cee14e9471931b3b316c56156dccd7383e281ff319d3fae35e89490a1749",
+    "app/science/atlas-directory.mjs": "sha256:db72c0d1f26d828d9aab3fa66f389fdbd2635c5d37a84f5b2ef9809e0694783f",
+    "tests/explorer-startup.browser.mjs": "sha256:7edc32cc34803b61baf2949449f037d864e49c4773d3d2537077b9d0eadb2d63",
+    "tests/science-atlas-directory.test.mjs": "sha256:9f6d784dcd5822ff0d7c308d3511e1079340f96bb22e4212b2d345aa897fc522",
+    "app/labs/observatory/PopulationBalance.jsx": "sha256:15f0144455db0ef9a5a7e2560cb010df77358f75cda4b91e5e32c514575d55d6",
+    "app/labs/observatory/population-balance.module.css": "sha256:40c2edc1712ba1e9199722e28c5f4aeca27d0f9723ca8a2fbd6db5005b7efdfa",
+    "app/labs/population-components.mjs": "sha256:e732def70652513833cf8d321d10fdf1ede993b6d8973535b0ed783f17667442",
+    "tests/population-balance-ui.test.mjs": "sha256:127792ff193277139706447a9a8d5d35506ee13c0b999a49c2f17b6545e0715e",
+    "tests/population-components.test.mjs": "sha256:c9cf801492e54de0c6529fd118972262e65d4600faad2c8ea7a37635074ab0ec",
+    "docs/county-population-balance-20261127.md": "sha256:946644a163bb2edf656d0677e6625e8d80364114aa5cff4864a55f7471787374"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:ec454c35d7998f2a21c2ec7378f89a2dd9bd31a25f0dbc43b24548857b9cd7ab",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "GitHub",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:3b39f7fcf1388f3bf5741e69fac5335db1ab0ff7:AGENTS.md",
+      "repo:3b39f7fcf1388f3bf5741e69fac5335db1ab0ff7:app/labs/observatory/CountyObservatory.jsx",
+      "repo:3b39f7fcf1388f3bf5741e69fac5335db1ab0ff7:app/labs/public-snapshots.mjs",
+      "repo:3b39f7fcf1388f3bf5741e69fac5335db1ab0ff7:public/labs-data/census-mosaic-a3c82ebd5d89619c.json",
+      "https://www2.census.gov/programs-surveys/popest/technical-documentation/file-layouts/2020-2025/CO-EST2025-ALLDATA.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:a3c82ebd5d89619c498db370861f1288eed6199c3ae8ec0407aea999410c7399",
+      "sha256:03088004012f7cc984c5e7f49cdd8c54228d7dd4a7c86576ea20597cf252c05a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/labs/observatory/CountyObservatory.jsx": "CONFIRMED",
+    "app/labs/observatory/observatory.module.css": "CONFIRMED",
+    "app/labs/page.jsx": "CONFIRMED",
+    "app/research/pathways.ts": "CONFIRMED",
+    "app/science/atlas-directory.mjs": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "CONFIRMED",
+    "tests/science-atlas-directory.test.mjs": "CONFIRMED",
+    "app/labs/observatory/PopulationBalance.jsx": "CONFIRMED",
+    "app/labs/observatory/population-balance.module.css": "CONFIRMED",
+    "app/labs/population-components.mjs": "CONFIRMED",
+    "tests/population-balance-ui.test.mjs": "CONFIRMED",
+    "tests/population-components.test.mjs": "CONFIRMED",
+    "docs/county-population-balance-20261127.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Population candidate production build, TypeScript, changed-area ESLint and whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full standalone Node24.11.1 suite before independent tornado integration:3974 passed,25 skipped,zero failed",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "All525 complete county/year balances, source-bound sample rates, malformed/missing/duplicate/unsafe inputs, actual composed UI and print/export states",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent final scientific and integration review",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Earlier overlapping build/test identity check",
+      "outcome": "FAIL",
+      "reason": "CSS changed while identity was being built. Retained diagnostic log; rebuilt frozen inputs and full standalone suite then passed."
+    },
+    {
+      "gate": "Final integrated exact-head CI, real three-size browser interactions and public delivery",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authoring. No rendered or public acceptance claimed from local/source tests."
+    },
+    {
+      "gate": "Formal Product Design screenshot audit",
+      "outcome": "SKIPPED",
+      "reason": "Chrome attachment blocked by browser network policy; no formal audit claimed."
+    },
+    {
+      "gate": "Different-provider visual evaluator",
+      "outcome": "SKIPPED",
+      "reason": "No supported different-provider visual evaluator agent is available in this environment."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "title": "Census Vintage2025 county file layout",
+      "url": "https://www2.census.gov/programs-surveys/popest/technical-documentation/file-layouts/2020-2025/CO-EST2025-ALLDATA.pdf"
+    },
+    {
+      "title": "Census state and county terms",
+      "url": "https://cdn.www.census.gov/programs-surveys/popest/about/glossary/state-and-county.html"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T05:18:07.903255+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Additive public accounting in the existing County Observatory. Census raw capture and public bundle preparation remain distinct. Calculated balance remainder is not an independently captured published residual. Existing private CSV values never enter the calculation. Source snapshot unchanged; no data admission, new fetch, paid export, settings, credentials, routing, model, store or original Sites change. The owner tornado integration is preserved. CI and public readback remain separate."
+}

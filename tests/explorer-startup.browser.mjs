@@ -4137,3 +4137,228 @@ for (const [width, height] of [[1440, 900], [393, 852]]) {
     assert.equal(requests.length - reads, 2, 'Back reuses the previous location snapshots');
   });
 }
+
+for (const [width, height] of [[1440, 900], [390, 844], [568, 320]]) {
+  test(`county investigation accounts for population components at ${width}x${height}`, { timeout: 90000 }, async t => {
+    // Expected arithmetic comes directly from the hash-pinned public rows,
+    // independently of the population-components implementation under test.
+    const manifest = PUBLIC_LAB_SNAPSHOTS['census-mosaic'];
+    const raw = await readFile('public' + manifest.path);
+    assert.equal(raw.length, manifest.bytes);
+    assert.equal(createHash('sha256').update(raw).digest('hex'), manifest.sha256);
+    const bundle = JSON.parse(raw), sourceRows = bundle.data.records;
+    const expected = (fips, year) => {
+      const before = sourceRows.filter(row => row.fips === fips && row.year === year - 1);
+      const after = sourceRows.filter(row => row.fips === fips && row.year === year);
+      assert.equal(before.length, 1); assert.equal(after.length, 1);
+      const a = before[0], z = after[0], mean = (a.population + z.population) / 2;
+      const change = z.population - a.population, naturalChange = z.births - z.deaths;
+      const people = { births: z.births, deaths: -z.deaths, netMigration: z.netMigration,
+        remainder: change - naturalChange - z.netMigration, naturalChange, change };
+      const intervals = {}, contributions = ['births', 'deaths', 'netMigration', 'remainder'];
+      let cumulative = 0;
+      for (const key of contributions) { intervals[key] = [cumulative, cumulative + people[key]]; cumulative += people[key]; }
+      intervals.change = [0, change];
+      assert.equal(cumulative, change);
+      return { fips, year, name: z.name, begin: a.population, end: z.population, mean, people, intervals,
+        rates: Object.fromEntries(Object.entries(people).map(([key, value]) => [key, value * 1000 / mean])) };
+    };
+    const b = await browser(t, 'default'), requests = [];
+    const p = await pageSession(b, width, height);
+    b.listeners.add(message => {
+      if (message.method !== 'Network.requestWillBeSent') return;
+      const url = new URL(message.params.request.url);
+      if (url.origin === origin.origin && /^\/labs-data(?:-|\/)/.test(url.pathname)) requests.push(url.pathname);
+    });
+    const node = selector => `document.querySelector(${JSON.stringify(selector)})`;
+    const button = label => `[...document.querySelectorAll('main button')].find(button=>button.textContent.trim()===${JSON.stringify(label)})`;
+    const focus = async expression => {
+      await p.wait(`!!(${expression})`, 'the named native control exists');
+      await p.key('Tab', 'Tab', 9);
+      await p.evaluate(`(()=>{const e=${expression};e.focus({preventScroll:true});e.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));})()`);
+      await p.wait(`(()=>{const e=${expression},r=e.getBoundingClientRect();return document.activeElement===e&&e.matches(':focus-visible')&&r.width>=44&&r.height>=44&&r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'the native control has visible keyboard focus, a full touch target and an unobscured hit point');
+    };
+    const enter = async expression => { await focus(expression); await p.key('Enter', 'Enter', 13); };
+    const select = async (label, value) => {
+      const expression = node(`select[aria-label="${label}"]`);
+      await focus(expression);
+      const options = await p.evaluate(`(()=>{const e=${expression};return {values:[...e.options].map(option=>option.value),index:e.selectedIndex};})()`);
+      const target = options.values.indexOf(String(value));
+      assert.ok(target >= 0, `${label} offers the real source selection ${value}`);
+      const paths = [
+        { distance: Math.abs(target - options.index), start: null, offset: target - options.index },
+        { distance: target + 1, start: ['Home', 36], offset: target },
+        { distance: options.values.length - target, start: ['End', 35], offset: target - options.values.length + 1 },
+      ].sort((a, z) => a.distance - z.distance);
+      const path = paths[0];
+      if (path.start) await p.key(path.start[0], path.start[0], path.start[1]);
+      for (let index = 0; index < Math.abs(path.offset); index++) await p.key(path.offset > 0 ? 'ArrowDown' : 'ArrowUp', path.offset > 0 ? 'ArrowDown' : 'ArrowUp', path.offset > 0 ? 40 : 38);
+      await p.wait(`(${expression}).value===${JSON.stringify(String(value))}`, `${label} changes through native select keys`);
+    };
+    const capture = async (label, selector = '#population-balance') => {
+      if (!process.env.KFM_WORKSPACE_SCREENSHOTS) return;
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+      if (selector) await p.evaluate(`${node(selector)}.scrollIntoView({block:'start',behavior:'instant'})`);
+      const shot = await p.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `${label}-${width}x${height}.png`), Buffer.from(shot.data, 'base64'));
+    };
+    const displayedNumber = text => Number(text.replaceAll('−', '-').replace(/[^\d.\-]/g, ''));
+    const assertBalance = async (fipsA, fipsB, year) => {
+      await p.wait(`document.querySelector('#population-balance')?.dataset.year===${JSON.stringify(String(year))}&&JSON.stringify([...document.querySelectorAll('#population-balance article[data-population-county]')].map(article=>[article.dataset.populationCounty,article.dataset.status]))===${JSON.stringify(JSON.stringify([[fipsA, 'ready'], [fipsB, 'ready']]))}`, 'both selected public county balances settle');
+      const actual = await p.evaluate(`(()=>{const section=document.querySelector('#population-balance');return {overflow:document.documentElement.scrollWidth>innerWidth+1||section.scrollWidth>section.clientWidth+1,articles:[...section.querySelectorAll('article[data-population-county]')].map(article=>({fips:article.dataset.populationCounty,text:article.textContent,begin:article.querySelector('[data-population="begin"]')?.dataset.people,end:article.querySelector('[data-population="end"]')?.dataset.people,rows:[...article.querySelectorAll('tr[data-component]')].map(row=>({key:row.dataset.component,people:row.dataset.people,rate:row.dataset.per1000,cells:[...row.querySelectorAll('td')].map(cell=>cell.textContent)})),chart:(()=>{const svg=article.querySelector('svg'),zero=svg?.querySelector('[data-waterfall-zero]');return svg?{min:svg.dataset.min,max:svg.dataset.max,zero:Number(zero?.getAttribute('y1')),bars:[...svg.querySelectorAll('rect[data-waterfall-component]')].map(rect=>({key:rect.dataset.waterfallComponent,people:Number(rect.dataset.people),from:Number(rect.dataset.from),to:Number(rect.dataset.to),y:Number(rect.getAttribute('y')),height:Number(rect.getAttribute('height')),width:Number(rect.getAttribute('width')),painted:getComputedStyle(rect).fill!=='none'&&getComputedStyle(rect).visibility==='visible'&&Number(getComputedStyle(rect).opacity)>0,rendered:rect.getBoundingClientRect().height}))}:null;})()}))};})()`);
+      assert.equal(actual.overflow, false, 'the county analysis remains inside the page width; only dedicated tables can scroll');
+      const scales = [];
+      for (const [index, fips] of [fipsA, fipsB].entries()) {
+        const a = actual.articles[index], e = expected(fips, year);
+        assert.equal(a.fips, fips); assert.ok(a.text.includes(e.name), 'the selected county is named in the result');
+        assert.equal(Number(a.begin), e.begin); assert.equal(Number(a.end), e.end);
+        assert.deepEqual(a.rows.map(row => row.key).sort(), Object.keys(e.people).sort(), 'natural change is a textual subtotal, not a fifth plotted contribution');
+        for (const row of a.rows) {
+          assert.equal(Number(row.people), e.people[row.key], `${fips} ${row.key} retains the exact signed count`);
+          assert.ok(Math.abs(Number(row.rate) - e.rates[row.key]) < 1e-9, `${fips} ${row.key} uses the mean of endpoint populations`);
+          assert.equal(displayedNumber(row.cells[0]), e.people[row.key], 'the signed people value is actually rendered');
+          assert.ok(Math.abs(displayedNumber(row.cells[1]) - e.rates[row.key]) <= .000501, 'the calculated per-1,000 value is actually rendered to its stated three decimal places');
+        }
+        assert.ok(a.chart && Number.isFinite(a.chart.zero), 'an actual quantitative SVG is rendered');
+        assert.deepEqual(a.chart.bars.map(bar => bar.key).sort(), Object.keys(e.intervals).sort());
+        const scale = a.chart.bars.find(bar => bar.key === 'births').height / e.people.births;
+        assert.ok(scale > 0, 'the source birth count has nonempty plotted length'); scales.push(scale);
+        for (const bar of a.chart.bars) {
+          assert.equal(bar.people, e.people[bar.key]); assert.deepEqual([bar.from, bar.to], e.intervals[bar.key]);
+          assert.ok(bar.width > 0 && bar.painted, 'real source bars are painted');
+          assert.ok(Math.abs(bar.height - Math.abs(bar.people) * scale) < 1e-6, 'bar length is quantitatively proportional, including negative and zero contributions');
+          assert.ok(Math.abs(bar.y - Math.min(a.chart.zero - bar.from * scale, a.chart.zero - bar.to * scale)) < 1e-6, 'each cumulative bar has its actual signed position relative to zero');
+          if (bar.people !== 0) assert.ok(bar.rendered > 0, 'nonzero source contributions are visibly drawn');
+        }
+      }
+      assert.ok(Math.abs(scales[0] - scales[1]) < 1e-9, 'A and B use the same people scale');
+    };
+    const downloads = await mkdtemp(join(tmpdir(), 'kfm-population-download-'));
+    t.after(() => rm(downloads, { recursive: true, force: true }));
+    await b.call('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: downloads });
+    const downloaded = async filename => {
+      const deadline = Date.now() + 10000;
+      while (Date.now() < deadline) {
+        try { return await readFile(join(downloads, filename), 'utf8'); } catch { await pause(50); }
+      }
+      throw new Error('Expected native download did not complete: ' + filename);
+    };
+    const parseCsv = text => {
+      const rows = [], row = []; let value = '', quoted = false;
+      for (let index = 0; index < text.length; index++) {
+        const char = text[index];
+        if (char === '"') { if (quoted && text[index + 1] === '"') { value += '"'; index++; } else quoted = !quoted; }
+        else if (!quoted && (char === ',' || char === '\n')) { row.push(value); value = ''; if (char === '\n') { rows.push([...row]); row.length = 0; } }
+        else if (char !== '\r' || quoted) value += char;
+      }
+      assert.equal(quoted, false, 'downloaded CSV has complete quoted fields');
+      const [headers, ...records] = rows;
+      return records.map(cells => { assert.equal(cells.length, headers.length); return Object.fromEntries(headers.map((key, index) => [key, cells[index]])); });
+    };
+    try {
+      await p.call('Page.navigate', { url: new URL('/labs/observatory', origin).href });
+      await p.wait(`document.querySelector('#population-balance article[data-status="ready"]')`, 'all four public snapshots hydrate the existing County Observatory');
+      // Check native page scrolling before revealing any far-away control.
+      const scrollPosition = `Math.max(scrollY,document.documentElement.scrollTop,document.body.scrollTop,document.querySelector('main').scrollTop,document.querySelector('main').parentElement.scrollTop)`;
+      const beforeWheel = await p.evaluate(scrollPosition);
+      await p.call('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 8, y: height / 2 });
+      await p.call('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 8, y: height / 2, deltaX: 0, deltaY: 240 });
+      await p.wait(`${scrollPosition}>${beforeWheel}+10`, 'native wheel input scrolls the existing county workspace');
+      await assertBalance('20173', '20091', 2025);
+      const publicReads = requests.length;
+      assert.equal(new Set(requests).size, 4, 'the investigation uses its existing four public snapshots');
+      await select('County A', '20177'); await assertBalance('20177', '20091', 2025);
+      await select('County B', '20001'); await assertBalance('20177', '20001', 2025);
+      await select('Population year', '2021'); await assertBalance('20177', '20001', 2021);
+      assert.ok(expected('20177', 2021).people.netMigration < 0 && expected('20177', 2021).people.change < 0, 'this real selection exercises signed migration and total losses');
+      await capture('population-balance');
+      await capture('population-balance-chart', '#population-balance article[data-population-county="20177"] svg');
+      await select('Population year', '2020');
+      await p.wait(`document.querySelector('#population-balance')?.dataset.year==='2020'&&document.querySelectorAll('#population-balance article[data-status="unavailable"]').length===2`, 'the real 2020 selection is unavailable for both counties');
+      assert.equal(await p.evaluate(`document.querySelectorAll('#population-balance article[data-population-county] svg').length`), 0, 'partial-year components do not acquire synthetic zero charts');
+      assert.equal(await p.evaluate(`[...document.querySelectorAll('#population-balance article[data-population-county]')].every(article=>/partial year/i.test(article.textContent)&&/preceding|2019|endpoint/i.test(article.textContent))`), true, 'the unavailable result explains the partial interval and missing baseline');
+      await capture('population-balance-unavailable');
+      await select('Population year', '2024'); await assertBalance('20177', '20001', 2024);
+      assert.equal(requests.length, publicReads, 'county and year changes reuse the same verified public bytes');
+      assert.equal(await p.evaluate(`!!document.querySelector('#population-balance a[download][href="${manifest.path}"]')`), true, 'the exact public snapshot remains downloadable');
+      assert.equal(await p.evaluate(`document.querySelector('#population-balance').textContent.includes(${JSON.stringify(manifest.sha256)})`), true, 'the visible source identifies its exact display bytes');
+      const historySummary = node('#population-balance details:has([data-history-slot]) > summary');
+      await enter(historySummary);
+      await p.wait(`(${historySummary}).parentElement.open`, 'the five-year history opens through its native disclosure');
+      const histories = await p.evaluate(`[...document.querySelectorAll('#population-balance [data-history-slot]')].map(table=>({slot:table.dataset.historySlot,rows:[...table.querySelectorAll('tbody tr')].map(row=>({year:Number(row.dataset.historyYear),status:row.dataset.status,cells:[...row.querySelectorAll('td')].map(cell=>cell.textContent)}))}))`);
+      assert.deepEqual(histories.map(history => history.slot), ['A', 'B']);
+      for (const history of histories) {
+        assert.deepEqual(history.rows.map(row => row.year), [2021, 2022, 2023, 2024, 2025]);
+        for (const row of history.rows) {
+          const e = expected(history.slot === 'A' ? '20177' : '20001', row.year);
+          assert.equal(row.status, 'ready');
+          assert.deepEqual(row.cells.slice(0, 8).map(displayedNumber), [e.begin, e.end, e.people.births, -e.people.deaths, e.people.naturalChange, e.people.netMigration, e.people.remainder, e.people.change]);
+          assert.ok(Math.abs(displayedNumber(row.cells[8]) - e.rates.change) <= .000501, 'the expanded history renders each independently calculated annual rate');
+        }
+      }
+      await capture('population-balance-history', '#population-balance details:has([data-history-slot]) > summary');
+      await enter(historySummary);
+      await p.wait(`!(${historySummary}).parentElement.open`, 'the native history disclosure also closes');
+      await enter(button('Download population history CSV ↓'));
+      const csvBytes = await downloaded('kfm-population-components-history.csv');
+      assert.ok(csvBytes.endsWith('\r\n'), 'the actual CSV has complete CRLF records');
+      const csv = parseCsv(csvBytes); assert.equal(csv.length, 10, 'the actual export includes both five-interval histories');
+      for (const row of csv) {
+        const fips = row.county_slot === 'A' ? '20177' : '20001', year = Number(row.year), e = expected(fips, year);
+        assert.equal(row.county_fips, fips); assert.equal(row.county_name, e.name); assert.equal(row.status, 'ready');
+        assert.equal(row.selected_year, '2024'); assert.equal(row.selected_interval, String(year === 2024));
+        for (const [column, value] of Object.entries({ begin_population_people: e.begin, end_population_people: e.end, change_people: e.people.change, births_people: e.people.births, deaths_people: -e.people.deaths, deaths_contribution_people: e.people.deaths, natural_change_people: e.people.naturalChange, net_migration_people: e.people.netMigration, calculated_balance_remainder_people: e.people.remainder, mean_estimated_residents: e.mean })) assert.equal(Number(row[column]), value, `CSV ${fips}/${year} ${column}`);
+        assert.ok(Math.abs(Number(row.change_per_1000_mean_residents) - e.rates.change) < 1e-9);
+        assert.equal(row.population_begin_date, `${year - 1}-07-01`); assert.equal(row.population_end_date, `${year}-07-01`);
+        assert.equal(row.components_from, `${year - 1}-07-01`); assert.equal(row.components_to, `${year}-06-30`);
+        assert.equal(row.source_snapshot_sha256, manifest.sha256); assert.equal(row.source_snapshot_path, manifest.path);
+        assert.equal(row.source_snapshot_bytes, String(manifest.bytes)); assert.equal(row.method_id, 'kfm.population-components/v1');
+        assert.ok(row.normalization_denominator.includes('Mean') && row.source_urls.includes(bundle.data.sourceSnapshot.url));
+        assert.equal(row.raw_source_url, bundle.data.sourceSnapshot.url); assert.equal(row.raw_source_sha256, bundle.data.sourceSnapshot.rawSha256);
+        assert.equal(row.raw_source_bytes, String(bundle.data.sourceSnapshot.rawBytes)); assert.equal(row.raw_source_retrieved_at, bundle.data.sourceSnapshot.retrievedAt);
+        assert.equal(row.source_captured_at, bundle.data.sourceSnapshot.retrievedAt); assert.equal(row.public_snapshot_prepared_at, bundle.built_at);
+        assert.equal(JSON.parse(row.raw_source_snapshots_json)[0].rawSha256, bundle.data.sourceSnapshot.rawSha256, 'CSV retains the original captured-source fingerprint as well as display bytes');
+      }
+      assert.deepEqual(csv.map(row => `${row.county_slot}/${row.year}`), ['A', 'B'].flatMap(slot => [2021, 2022, 2023, 2024, 2025].map(year => `${slot}/${year}`)));
+      await enter(button('Analysis receipt ↓'));
+      const receipt = JSON.parse(await downloaded('kfm-county-investigation-receipt.json'));
+      assert.equal(receipt.format, 'kfm-county-investigation-v1');
+      assert.equal(receipt.sourceBindings['census-mosaic'], manifest.sha256);
+      const report = receipt.populationBalance;
+      assert.equal(report.schema, 'kfm.population-components/v1'); assert.equal(report.method.id, report.schema);
+      assert.deepEqual(report.selection, { fipsA: '20177', fipsB: '20001', year: 2024 });
+      assert.equal(report.source.sha256, manifest.sha256); assert.equal(report.source.snapshotPath, manifest.path); assert.equal(report.source.bytes, manifest.bytes);
+      assert.equal(report.source.capturedAt, bundle.data.sourceSnapshot.retrievedAt); assert.equal(report.source.preparedAt, bundle.built_at);
+      assert.equal(report.source.sourceSnapshot.rawSha256, bundle.data.sourceSnapshot.rawSha256);
+      assert.equal(report.source.sourceSnapshot.rawBytes, bundle.data.sourceSnapshot.rawBytes);
+      assert.deepEqual(report.history.a.map(result => result.year), [2021, 2022, 2023, 2024, 2025]);
+      assert.deepEqual(report.history.b.map(result => result.year), [2021, 2022, 2023, 2024, 2025]);
+      assert.equal(report.countyA.change, expected('20177', 2024).people.change);
+      assert.equal(report.countyB.change, expected('20001', 2024).people.change);
+      for (const [slot, fips] of [['a', '20177'], ['b', '20001']]) for (const result of report.history[slot]) {
+        const e = expected(fips, result.year);
+        assert.equal(result.beginPopulation, e.begin); assert.equal(result.endPopulation, e.end); assert.equal(result.meanPopulation, e.mean);
+        assert.equal(result.change, e.people.change); assert.equal(result.remainder, e.people.remainder);
+        assert.ok(Math.abs(result.changePer1000 - e.rates.change) < 1e-9);
+      }
+      await enter(button('Share investigation ↗'));
+      const sharedInput = `[...document.querySelectorAll('main input[readonly]')].find(input=>input.labels?.[0]?.textContent.includes('Investigation link'))`;
+      await p.wait(`!!(${sharedInput})?.value`, 'the existing share action exposes a complete investigation link');
+      const href = await p.evaluate(`(${sharedInput}).value`), shared = new URL(href);
+      assert.equal(shared.origin, origin.origin); assert.equal(shared.pathname, '/labs/observatory');
+      const sharedState = JSON.parse(Buffer.from(shared.searchParams.get('view'), 'base64url').toString('utf8'));
+      assert.equal(sharedState.sourceBindings['census-mosaic'], manifest.sha256);
+      assert.equal(sharedState.state.countyA, '20177'); assert.equal(sharedState.state.countyB, '20001'); assert.equal(sharedState.state.populationYear, 2024);
+      await p.call('Page.navigate', { url: href });
+      await p.wait(`document.querySelector('select[aria-label="County A"]')?.value==='20177'&&document.querySelector('select[aria-label="County B"]')?.value==='20001'&&document.querySelector('select[aria-label="Population year"]')?.value==='2024'`, 'reopening the existing source-bound share restores A, B and population year');
+      await assertBalance('20177', '20001', 2024);
+      await enter(node('a[href="#population-balance"]'));
+      await p.wait(`location.hash==='#population-balance'`, 'the ready-only population anchor navigates to the real analysis');
+      await capture('population-balance-reopened');
+    } catch (error) {
+      await capture('population-balance-failure', null).catch(captureError => t.diagnostic(`Population evidence capture failed: ${captureError}`));
+      t.diagnostic(await p.evaluate(`JSON.stringify({url:location.href,viewport:[innerWidth,innerHeight],active:document.activeElement?.outerHTML,section:document.querySelector('#population-balance')?.outerHTML.slice(0,2400),overflow:{page:document.documentElement.scrollWidth,width:innerWidth}})`));
+      throw error;
+    }
+  });
+}

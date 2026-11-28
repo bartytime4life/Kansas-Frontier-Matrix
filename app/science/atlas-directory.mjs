@@ -4,8 +4,8 @@ import { atlasCoverage } from '../labs/atlas-model.mjs';
 
 const workspaces = [
   { id: 'atlas-county-observatory', label: 'County Observatory', href: '/labs/observatory', topic: 'Reports & workspaces',
-    question: 'Explore county trends, compare peers, or bring a private CSV.', coverage: 'Kansas counties · coverage differs by indicator',
-    source: 'U.S. Census, transportation and air records', keywords: 'county population poverty income migration education csv bridges' },
+    question: 'Account for population change, compare county histories and peers, or bring a private CSV.', coverage: 'Kansas counties · coverage differs by indicator',
+    source: 'U.S. Census, transportation and air records', keywords: 'county population change components births deaths migration balance remainder history poverty income education csv bridges' },
   { id: 'atlas-signals', label: 'Signal Studio', href: '/labs/signals', topic: 'Reports & workspaces',
     question: 'Compare annual signals and inspect the dates they share.', coverage: 'Kansas annual series · years vary by source',
     source: 'NOAA, USGS, EIA and other named sources', keywords: 'time series climate river flow water energy tornado correlation trend' },

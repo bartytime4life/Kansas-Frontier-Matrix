@@ -119,7 +119,7 @@ export const RESEARCH_PATHWAYS: readonly ResearchPathway[] = [
     tools: [
       { label: "County Pulse", href: "/labs?story=census-mosaic", scope: "105 counties · annual population estimates, births, deaths and migration · 2020–2025." },
       { label: "County Conditions", href: "/labs?story=county-conditions", scope: "105 counties · three ACS five-year periods spanning 2010–2024 · 90% margins of error." },
-      { label: "County Observatory", href: "/labs/observatory", scope: "County and peer comparisons with linked indicators; coverage differs by measure. Private CSV joins stay local." },
+      { label: "County Observatory", href: "/labs/observatory", scope: "Population components, county histories and peer comparisons; coverage differs by measure. Private CSV joins stay local." },
     ],
     sourceIds: ["census-counties", "census-congress-119"],
     boundary: "ACS five-year estimates describe periods, not single years; dollar values use each vintage’s dollars. The 2020 population components cover a partial year. Map Census counts retain their 2020 edition. Area aggregates do not identify individuals.",
