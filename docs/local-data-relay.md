@@ -412,7 +412,7 @@ model, queue, time or resource allowance changes are required.
 
 ## Nearby page payloads (2026-11-27)
 
-Nearby archive queries now select, sort and paginate packed spatial record IDs
+The initial nearby pagination change selects, sorts and paginates packed spatial record IDs
 before fetching the full record columns. The inner selector retains the source
 row existence join and optional name filter, so orphan sidecar IDs do not consume
 page slots. The outer primary-key join loads only the selected page's payloads.
@@ -444,3 +444,27 @@ all environment overlays and the worker runtime. Bind the complete derivative
 file map explicitly; do not claim its digest follows an unknown historical
 bundler. Keep the previous release and executable overrides for rollback. This
 source change does not publish the hosted application or admit additional data.
+
+### Ordered identity lookup for unnamed pages
+
+Without a name filter, the reader now sorts matching R-tree identities before
+looking up source rows. It walks that ordered iterator only until it has skipped
+the requested number of existing records and filled the page. Orphan extents
+consume neither the offset nor a page slot. Skipped records need only a source
+primary-key existence check; full payloads are fetched for returned records.
+This removes the spatial-first source-index join across every matching extent.
+Named queries retain their existing filtered selector and count behavior.
+
+Packed-ID shifts and masks remain in SQLite. Only the two original 32-bit key
+components cross into JavaScript for bound lookups. Native Node 22.13 or newer
+provides the [statement iterator](https://nodejs.org/download/release/latest-jod/docs/api/sqlite.html#statementiteratenamedparameters-anonymousparameters).
+Breaking after a filled page closes the iterator so the connection can be reused.
+
+Synthetic tests count the consumed identity prefix, existence checks and payload
+lookups with an orphan ahead of a page and many later matching records. Exact
+native comparisons preserve all rows, columns, totals and provenance for first,
+offset, maximum-offset and empty pages. Cache effects remain substantial: one
+fully warm maximum-offset comparison took 58 ms with the previous reader and
+68 ms with this reader; a cold standalone prototype still took about 21 seconds.
+This bounds source lookup work, not cold storage latency. Existing query deadlines,
+request/page/count limits, freshness checks and read-only access remain intact.

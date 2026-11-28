@@ -1,0 +1,82 @@
+{
+  "receipt_id": "kfm-near-ordered-identity-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/local-data/near.mjs",
+    "tests/local-data-near.test.mjs",
+    "docs/local-data-relay.md"
+  ],
+  "artifact_hashes": {
+    "scripts/local-data/near.mjs": "sha256:2a1a70cde9b7288ab5f4b1afa0b4d80f5b395bc0773f12265d2ca545f108ab6e",
+    "tests/local-data-near.test.mjs": "sha256:192745bca6549336486fa51b2fb70662e27eeb5b288f4c2b7581945043baa0cc",
+    "docs/local-data-relay.md": "sha256:7526539f3fc89c7bf2b89f45a51612f4cd3f75e229bfc70837e6740eda160c72"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Current Codex session; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:4f47ae8d6d4cbce1e6c867f1f108c6fa76da15f1deefd1737106e57d0cf9bbc0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:2fc86abd5fdc7c823dff57d9cdc4b1f71c2545f7:scripts/local-data/near.mjs",
+      "https://nodejs.org/download/release/latest-jod/docs/api/sqlite.html"
+    ],
+    "evidence_hashes": [
+      "sha256:46dbf8f21432a7736ca35ab848d60e90b693699009cdc9a4c221403038115910",
+      "sha256:035add11ec867a8150c3abdf296e5c7eee7522145819c401957a49d03d60c5c2",
+      "sha256:54e3e0be4411a3756c964ae059934062b01259fa9f112f3fcf8b42902e62655f"
+    ]
+  },
+  "truth_labels": {
+    "scripts/local-data/near.mjs": "CONFIRMED",
+    "tests/local-data-near.test.mjs": "CONFIRMED",
+    "docs/local-data-relay.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "All local-data Node tests",
+      "outcome": "PASS",
+      "reason": "73 tests passed, including 10 nearby cases. The new prefix-bound regression fails against the unchanged prior reader."
+    },
+    {
+      "gate": "Targeted ESLint and whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Complete native result parity under existing intake I/O",
+      "outcome": "PASS",
+      "reason": "Four first/offset/maximum-offset/empty page cases match complete before/after result hashes. Timings include cache effects; a 21-second standalone cold prototype is explicitly not qualified for the public deadline."
+    },
+    {
+      "gate": "Signed staged derivative gateway",
+      "outcome": "PASS",
+      "reason": "All 41 files bound, only near.mjs changed; bridge and observations pages equal exact readonly native rows, signatures verified, unsigned401 and oversized400 retained."
+    },
+    {
+      "gate": "Hosted exact-head checks, human review, native activation and hosted publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending at authorship. Any native activation is a separate reversible operational record; no public application publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Native Node 22 statement iterator",
+      "validated": true,
+      "evidence_ref": "https://nodejs.org/download/release/latest-jod/docs/api/sqlite.html"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T02:58:09.033458+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Bounds unnamed-page source identity lookups to the ordered valid prefix and preserves orphan, offset, source value, provenance, count and packed-ID semantics. Named queries retain the prior path. No source values, rights, access, timeout or model changes. Author-run tests are not independent human approval. Cold I/O can still exceed the unchanged deadline. Operational evidence and configuration stay outside Git."
+}
