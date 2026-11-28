@@ -13,7 +13,7 @@ const sample=rows=>({rows,pages:1,hasMore:true,answers:[{generatedAt:'2026-11-27
 test('all 183 captured sample columns have cited definitions and provider aliases without implying source approval',()=>{
  const metadata=collectionMetadata(collection),documents=new Set(metadata.documentation.map(d=>d.id));
  assert.equal(metadata.fields.length,183);assert.equal(metadata.fields.filter(f=>f.definition).length,183);
- assert.equal(metadata.fieldDictionaryRevision,'water-quality-2026-11-27-v2');
+ assert.equal(metadata.fieldDictionaryRevision,'water-quality-2026-11-27-v3');
  for(const field of metadata.fields){
   assert.ok(field.sources.length&&field.sources.every(id=>documents.has(id)),field.name);
   if(!collection.keys.includes(field.name))assert.ok(field.sourceField,field.name);
@@ -101,7 +101,7 @@ test('complete metadata and reference groups round-trip all original text, sourc
  assert.equal(JSON.stringify(s),before);
 });
 
-test('a v1 biological-count selection resets rather than carrying a pooled taxon range into v2',()=>{
+test('a v1 biological-count selection resets rather than carrying a pooled taxon range into the current dictionary',()=>{
  const s=sample([row(1,{result_biological_group_summary_count:'2',result_biological_taxon:'Synthetic A'}),
   row(2,{result_biological_group_summary_count:'8',result_biological_taxon:'Synthetic B'})]);
  const saved=JSON.parse(createLabBundle(collection,s,'Preserve the biological question',null));

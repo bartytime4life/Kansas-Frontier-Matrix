@@ -127,8 +127,9 @@ const notes=[
 const dictionaries={
  'observations-wqp-results':{fields:legacy,documents,revision,notes:[...notes,
   'The captured legacy WQP profile is distinct from the USGS WQX 3.0 samples profile. Its USGS data does not establish coverage after March 11, 2024.']},
- 'observations-usgs-samples-results':{fields:modern,documents,revision:'water-quality-2026-11-27-v2',notes:[...notes,
+ 'observations-usgs-samples-results':{fields:modern,documents,revision:'water-quality-2026-11-27-v3',notes:[...notes,
   'This capture uses the USGS WQX 3.0 full physical/chemical profile. All 183 archived fields have sourced definitions; that does not establish record accuracy, completeness or comparable sampling designs. Analytical limit A/B are not assumed lower/upper bounds.',
+  'Biological count and weight contexts retain unidentified-species identifiers separately within the recorded genus or taxon; this does not resolve an unidentified species or establish cross-source identity.',
   'Original and provider-standardized coordinates retain separate horizontal datums. Activity depths use their recorded reference point; no missing datum, geometry or coordinate conversion is inferred.',
   'The provider schema describes AlternateLocation_IdentifierCount as a monitoring-location designator despite its name. It remains identity metadata rather than an inferred count.']},
 };

@@ -1,0 +1,106 @@
+{
+  "receipt_id": "kfm-usgs-biological-context-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/water-quality-context.ts",
+    "app/water-quality-dictionary.ts",
+    "app/data-lab/previous-quality-view.ts",
+    "app/data-lab/lab-bundle.ts",
+    "tests/usgs-biological-context.test.mjs",
+    "tests/usgs-sample-metadata.test.mjs",
+    "docs/collection-data-lab.md"
+  ],
+  "artifact_hashes": {
+    "app/water-quality-context.ts": "sha256:702eaafd829da02d5e6483aba3b4c95000e953ce8ea340cc1955485713ba492f",
+    "app/water-quality-dictionary.ts": "sha256:a52dbe6fd0cf999b59dde0fcb6784b4ec596a86abdaf1802136d0d5dffb6e04d",
+    "app/data-lab/previous-quality-view.ts": "sha256:bfe0345ed2b4189266d992b6f26ab04a94526ccef4c64d6f5e5f1b1c5815d83a",
+    "app/data-lab/lab-bundle.ts": "sha256:374c82e6ea3d33308f7f87599bd9d82c55b604d56a8c095f9833dd4e3e044d61",
+    "tests/usgs-biological-context.test.mjs": "sha256:85ecd6dc7a195c1518f892355355274b57f8310191d50a6bd5960e0ac707f615",
+    "tests/usgs-sample-metadata.test.mjs": "sha256:2b997c3ed44452447067e5644b642bb8c18bf13aa6269a821cd8506e39969582",
+    "docs/collection-data-lab.md": "sha256:01954ee2ff8cfe7bf28f8cde9d74675a8057ec8c442aced7c19e7be03d732847"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:4f47ae8d6d4cbce1e6c867f1f108c6fa76da15f1deefd1737106e57d0cf9bbc0",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2174cdc24ab1d88d47b4d25ba4c0961b4c78c2c0a7b25add0ea7189b80e51d44",
+      "sha256:749b9fbcbcfe261dae0df55984db2f5251bf90e0496fc731d19f7852e23b75e7"
+    ],
+    "evidence_refs": [
+      "https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/water-quality-context.ts",
+      "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/usgs-sample-dictionary.ts"
+    ]
+  },
+  "truth_labels": {
+    "app/water-quality-context.ts": "CONFIRMED",
+    "app/water-quality-dictionary.ts": "CONFIRMED",
+    "app/data-lab/previous-quality-view.ts": "CONFIRMED",
+    "app/data-lab/lab-bundle.ts": "CONFIRMED",
+    "tests/usgs-biological-context.test.mjs": "CONFIRMED",
+    "tests/usgs-sample-metadata.test.mjs": "CONFIRMED",
+    "docs/collection-data-lab.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "51 focused biological grouping, existing metadata, v1/v2 upgrade, bundle and collection integration tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Frozen v2 dimensions match pinned 51cfb8a8 source exactly; only current biological count and weight dimensions change",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Desktop/phone synthetic v2 import/export/reopening: distinct unresolved-species counts and weights retain means 2 and 8, invalid old range rejected, rows and current view retained, null source AI credit and zero browser errors",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full-site suite, exact-head hosted checks, human review and deployment",
+      "outcome": "SKIPPED",
+      "reason": "Parent requested proportionate focused validation plus build/types/browser for this bounded addition. No commit/PR or deployment is performed by this agent; later delivery gates remain with the parent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "EPA WQX 3.0 field definitions",
+      "validated": true,
+      "evidence_ref": "https://www.epa.gov/system/files/other-files/2025-07/schema_outbound_wqx3.0.csv"
+    },
+    {
+      "id": "Pinned v2 biological grouping",
+      "validated": true,
+      "evidence_ref": "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/water-quality-context.ts"
+    },
+    {
+      "id": "Existing biological field definition",
+      "validated": true,
+      "evidence_ref": "repo:51cfb8a87c9dfee3abdae2eb82df06e71885f784:app/usgs-sample-dictionary.ts"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-27T22:07:26.710169+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "Preserves provider unidentified-species identifiers as measurement context without resolving species or claiming cross-source taxonomic identity. Modern dictionary revision advances to v3; legacy WQP and frozen v1 behavior remain unchanged. Only exact v2 biological count/weight contexts and bin ranges reconstructed from retained records can reset an obsolete view; compatible views remain exact. Source rows, questions, provenance, read receipts and null source-data AI review are preserved. QA used explicitly synthetic records in isolated browser storage; no native data, source admission, Qwen batch, service configuration or public deployment changed. Fresh-worktree typecheck initially needed the normal ignored generated build-identity file; it passed after the existing generator ran. No dependency installation performed. Human review remains pending."
+}

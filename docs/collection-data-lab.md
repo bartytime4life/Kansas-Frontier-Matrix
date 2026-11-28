@@ -117,8 +117,9 @@ Activity, top and bottom depths use their own recorded units and the captured
 activity depth/altitude reference. A depth below water surface stays separate
 from a position relative to land surface; missing references remain explicitly
 unknown. Result depths retain their separate result-reference field. Biological
-group counts and weights distinguish taxa, tissue, sample media, intent and
-fractions; group weights use their own recorded weight unit. Coordinate fields
+group counts and weights distinguish taxa, tissue, sample media, intent,
+fractions and unidentified-species identifiers within a recorded genus; group
+weights use their own recorded weight unit. Coordinate fields
 retain separate original/standardized datum references and are not measurement
 statistics. This dictionary does not select coordinates or create geometry.
 
@@ -142,8 +143,11 @@ Units stay visible above the chart; full recorded context expands on demand.
 
 Pre-dictionary investigations retain the existing selection-reset behavior.
 Known USGS v1 files retain compatible selections; changed selections are checked
-against frozen v1 rules before resetting with a visible notice. Original rows,
-question, read receipts and provenance are preserved. New v2 files reopen their
+against frozen v1 rules before resetting with a visible notice. USGS v2 biology
+views also retain compatible selections. When an identifier changes an old
+biology context, the retained rows must reproduce its exact v2 context and range
+before the view resets with a notice. Original rows,
+question, read receipts and provenance are preserved. New v3 files reopen their
 current selected context exactly. Imported profiles are recomputed; altered or
 unknown revisions do not authorize a legacy upgrade. Legacy WQP keeps its v1
 dictionary. This curation adds no source admission, native-store write, source-data

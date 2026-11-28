@@ -1,8 +1,8 @@
 import type {Collection} from '../collection-metadata';
-import {waterQualityV1Dimensions} from '../water-quality-context';
+import {waterQualityV1Dimensions,waterQualityV2Dimensions} from '../water-quality-context';
 import type {LabSnapshot} from '../collection-lab';
 
-const V1='water-quality-2026-11-19-v1';
+const V1='water-quality-2026-11-19-v1',V2='water-quality-2026-11-27-v2';
 const object=(value:unknown):value is Record<string,unknown>=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value);
 
 // The v1 dictionary's non-measurement overrides, pinned to 9f910226d043941e349f1bb8aae9b53725bbf4d4.
@@ -72,13 +72,18 @@ export function previousQualityView(collection:Collection,snapshot:LabSnapshot,v
  if(collection.id!=='observations-usgs-samples-results'||revision!==V1||!object(view)
   ||typeof view.field!=='string'||typeof view.context!=='string'||!collection.columns.includes(view.field)
   ||nonMeasurements.has(view.field)||!wasValue(view.field,collection.keys))return false;
+ return matchesPreviousView(snapshot,view as PreviousView,context);
+}
+
+type PreviousView={field:string;context:string;range:unknown};
+function matchesPreviousView(snapshot:LabSnapshot,view:PreviousView,makeContext:(field:string,values:Record<string,unknown>)=>string){
  const field=view.field,groups=new Map<string,number[]>();
  for(const row of snapshot.rows){
   if(!object(row.values))continue;
   const value=number(row.values[field]);if(value===null)continue;
-  const key=context(field,row.values),group=groups.get(key)??[];group.push(value);groups.set(key,group);
+  const key=makeContext(field,row.values),group=groups.get(key)??[];group.push(value);groups.set(key,group);
  }
- // V1 exposed only the first twelve measurement contexts in its profile and saved-view picker.
+ // Historical versions exposed only the first twelve measurement contexts in their profile and view picker.
  const group=[...groups].slice(0,12).find(([key])=>key===view.context)?.[1];
  if(!group?.length)return false;
  if(view.range===null)return true;
@@ -86,4 +91,20 @@ export function previousQualityView(collection:Collection,snapshot:LabSnapshot,v
   ||typeof view.range.upper!=='number'||!Number.isFinite(view.range.upper)||typeof view.range.includeUpper!=='boolean')return false;
  const range=view.range,edges=boundaries(Math.min(...group),Math.max(...group),group.length);
  return edges.slice(0,-1).some((lower,index)=>range.lower===lower&&range.upper===edges[index+1]&&range.includeUpper===(index===edges.length-2));
+}
+
+/** V2 changed only the two biology contexts; no other field or revision gets this fallback. */
+export function previousBiologicalView(collection:Collection,snapshot:LabSnapshot,view:unknown,revision:unknown):boolean{
+ if(collection.id!=='observations-usgs-samples-results'||revision!==V2||!object(view)
+  ||typeof view.field!=='string'||typeof view.context!=='string'
+  ||!['result_biological_group_summary_count','group_summary_weight_measure'].includes(view.field))return false;
+ return matchesPreviousView(snapshot,view as PreviousView,(field,values)=>{
+  const dimensions=waterQualityV2Dimensions['observations-usgs-samples-results'][field];
+  const entries=dimensions.filter(key=>{
+   const value=values[key];return ['string','number'].includes(typeof value)&&String(value).trim();
+  }).map(key=>[key,String(values[key])]);
+  // V2 count had a fixed count unit; weight used only its recorded per-row unit.
+  const key={...(field==='result_biological_group_summary_count'?{unit:'count'}:{}),...Object.fromEntries(entries)};
+  return Object.keys(key).length?JSON.stringify(key):'Unit and measurement context not supplied';
+ });
 }
