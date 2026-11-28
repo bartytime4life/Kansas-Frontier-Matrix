@@ -53,6 +53,12 @@ transcriptions are labeled separately from independently established facts.
 
 `tools.local_data.prepare_intake` prepares an owner-bound selection in a local runtime cache while drive maintenance blocks acceptance. It opens the current catalog read-only, checks the source digest and context, and writes results to the runtime disk. It does not accept files. The native worker can later reuse exact prepared inputs and responses; source checks and the model pin still run before acceptance, and the original generation time is retained. Cache entries are bound to the item, digest, complete review context, model digest and prompt version. Modified or stale entries are rejected.
 
+Preparation writes to `preparation_cache` when configured, matching Studio and
+the scheduled acceptance controller. Without that field, all three use
+`run/smart-intake-cache.sqlite` beside the runtime directory. A prepared review
+retains its original input, response and generation time when the consumer
+loads it; preparation does not accept the source file.
+
 ## Resolving an existing held selection
 
 Keep an earlier `owner_policy` when its original verification or recovery job
@@ -81,6 +87,13 @@ prompt, cache digest and immutable native input/response hashes. It reconstructs
 the description from the actual saved Qwen response and compares it with the
 recorded review. A forged description, missing receipt or changed source fails
 closed. This cache is a local operational artifact and belongs outside Git.
+
+An explicitly trusted historical packet can still use a description format the
+current renderer does not support, such as `source-passages-v1`. Its native
+input and response hashes are checked before the recorded-review reader declines
+reuse. The current review engine then handles the file, using a valid current
+draft or new inference as needed. It does not reinterpret the old response as a
+different schema or rewrite the old generation's description and credit.
 
 Reuse preserves the original generation time, model, prompt, batch and raw
 response credit. A new acceptance batch, owner authorization and acceptance time

@@ -39,7 +39,7 @@ def main():
     fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     raw=read_regular(Path(config['owner_policy_source']),4*1024**2)
     if hashlib.sha256(raw).hexdigest()!=config['owner_policy']:raise ValueError('OWNER_POLICY_SOURCE_CHANGED')
-    policy=json.loads(raw);cache=Cache(runtime.parent/'run/smart-intake-cache.sqlite')
+    policy=json.loads(raw);cache=Cache(config.get('preparation_cache',runtime.parent/'run/smart-intake-cache.sqlite'))
     client=ai.Qwen(config['model'],config['model_digest']);client.identity();builder=Packets(root)
     stopping=[False]
     def stop(_sig,_frame):stopping[0]=True
