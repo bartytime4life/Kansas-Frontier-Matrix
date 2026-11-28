@@ -137,3 +137,19 @@ profile samples already loaded source cells: source metres remain unscaled,
 missing stations remain gaps, vertical references are not harmonized, and
 privacy still denies report/download export. Source accuracy, admission,
 publication and physical-device acceptance remain separate from this UI change.
+
+### Phone announcement clearance — 2026-11-28
+
+Temporary status messages sit above the phone's Map layers, Topics, Time, Style
+and Science & Labs actions, including the status-row and safe-area clearance.
+The shared announcement stays pointer-inert and politely announced; its lifetime
+and desktop position are unchanged. This keeps terrain completion feedback
+readable while the map navigation remains visible.
+
+The existing built-page terrain journeys check the announcement's actual
+rectangles alongside both native profile disclosures. Enter, Space and phone
+touches near a summary's edge retain its open/closed behavior, visible keyboard
+focus, source metadata and scientific limits. The selected source-cell height,
+camera and source-request counts remain unchanged by disclosure input. These
+synthetic checks are separate from physical-device, full accessibility, provider
+accuracy or deployed acceptance. Publication remains on hold.

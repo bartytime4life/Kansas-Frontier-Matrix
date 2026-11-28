@@ -1597,6 +1597,13 @@ for(const width of [1280,390])test(`solid Ground Surface Canopy render and sourc
  assert.deepEqual(fixtures.hits,beforeSecond,'keyboard placement does not acquire more source data; ordinary panning has its separate tile lifecycle');
  assert.equal(await p.evaluate(`(()=>{const root=document.querySelector('[data-terrain-transect]'),buttons=[root.querySelector('[data-place-map-center]'),[...root.querySelectorAll('button')].find(e=>e.textContent==='Pan map with arrow keys')];return buttons.every(e=>{const r=e.getBoundingClientRect();return r.width>=44&&r.height>=44;})&&document.activeElement.matches(':focus-visible')&&document.documentElement.scrollWidth<=innerWidth&&getComputedStyle(document.querySelector('#map-canvas'),'::after').pointerEvents==='none';})()`),true,'placement controls retain visible keyboard focus, full-sized targets, no overflow and a noninteractive center cue');
  await phase('profile:finish',async()=>{await p.key('Tab','Tab',9,8);assert.equal(await p.evaluate(`document.activeElement?.textContent`),'Finish profile','one reverse Tab reaches Finish from the returned placement control');await p.key('Enter','Enter',13);await p.wait(`!!document.querySelector('[data-terrain-transect] svg')&&!!document.querySelector('[data-terrain-transect] input[aria-label="Explore terrain transect stations"]')&&!document.querySelector('#map-canvas[data-terrain-line-placement]')`,'completed source-backed profile replaces its placement cue');});
+ const finishToast=await phase('profile:toast-geometry',async()=>{
+  await p.wait(`(()=>{const toast=document.querySelector('.toast[data-visible="true"]');return toast&&Number(getComputedStyle(toast).opacity)===1&&toast.textContent==='Screen measurement finished locally; it is not survey or evidence';})()`,'actual Finish announcement is visibly rendered before its rectangles are measured');
+  const geometry=await p.evaluate(`(()=>{const toast=document.querySelector('.toast[data-visible="true"]'),nav=document.querySelector('.map-mobile-actions'),style=getComputedStyle(toast),rect=e=>e.getBoundingClientRect().toJSON(),r=nav.getBoundingClientRect();return {toast:rect(toast),text:toast.textContent,role:toast.getAttribute('role'),live:toast.getAttribute('aria-live'),pointerEvents:style.pointerEvents,bottomRule:style.bottom,viewport:{width:innerWidth,height:innerHeight},nav:rect(nav),navVisible:r.width>0&&r.height>0&&getComputedStyle(nav).display!=='none',clearance:r.top-toast.getBoundingClientRect().bottom};})()`);
+  await record('state','profile:toast-geometry',geometry);
+  if(process.env.KFM_WORKSPACE_SCREENSHOTS){const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`terrain-profile-toast-${width}.png`),Buffer.from(shot.data,'base64'));}
+  return geometry;
+ });
  const readProfileStation=()=>p.evaluate(`(()=>{const root=document.querySelector('[data-terrain-transect]'),reading=root.querySelector('div[aria-live="polite"]'),slider=root.querySelector('input[aria-label="Explore terrain transect stations"]'),key=[...reading.querySelectorAll('dt')].find(e=>e.textContent==='Request key')?.nextElementSibling.textContent,position=reading.textContent.match(/Row ([0-9]+) · column ([0-9]+)/),support=[...root.querySelectorAll('dt')].find(e=>e.textContent==='Supported stations')?.nextElementSibling.textContent,pending=[...root.querySelectorAll('[role="status"]')].map(e=>e.textContent).find(s=>s.includes('source tiles still arriving'));return {key,row:Number(position?.[1]),column:Number(position?.[2]),value:reading.querySelector('strong').textContent,index:Number(slider.value),max:Number(slider.max),support,pending:Number(pending?.match(/^([0-9]+)/)?.[1]??0)};})()`);
  let station=await readProfileStation();
  await phase('profile:source-station',async()=>{
@@ -1611,7 +1618,48 @@ for(const width of [1280,390])test(`solid Ground Surface Canopy render and sourc
   const profileGrid=fixtures.grids.get(station.key);assert.ok(profileGrid,'keyboard profile must contain a station bound to an actual loaded synthetic source grid');assert.ok(Number.isInteger(station.row)&&station.row>=1&&station.row<=profileGrid.height&&Number.isInteger(station.column)&&station.column>=1&&station.column<=profileGrid.width,'station row and column address the exact source grid');const value=profileGrid.ground[(station.row-1)*profileGrid.width+station.column-1];assert.ok(Number.isFinite(value),'the selected source cell supplies a finite observation rather than NoData');assert.equal(station.value,value.toFixed(3)+' m','finished keyboard profile retains unscaled source-cell metres');
  });
  assert.equal(await p.evaluate(`document.querySelector('[data-terrain-transect]').textContent.includes('no height interpolation')&&document.querySelector('[data-terrain-transect]').textContent.includes('not harmonized')`),true,'profile keeps scientific sampling and cross-source limits');
+ await phase('profile:native-disclosures',async()=>{
+  const beforeStation=await readProfileStation(),beforeHits={...fixtures.hits},camera=()=>p.evaluate(`(()=>{const m=window.__terrainAcceptanceMap,c=m.getCenter();return {center:[c.lng,c.lat],zoom:m.getZoom(),pitch:m.getPitch(),bearing:m.getBearing()};})()`),beforeCamera=await camera(),measurements=[];
+  for(const label of ['This station’s source','Distance, sampling & scientific limits']){
+   const summary=`[...document.querySelectorAll('[data-terrain-transect] details>summary')].find(e=>e.textContent===${JSON.stringify(label)})`;
+   await p.evaluate(`(()=>{const e=${summary};if(!e)throw Error('Profile disclosure missing');e.scrollIntoView({block:'center'});e.focus();})()`);
+   await p.wait(`(()=>{const e=${summary},r=e.getBoundingClientRect();return document.activeElement===e&&r.top>=0&&r.bottom<=innerHeight&&e.contains(document.elementFromPoint(r.right-4,r.top+r.height/2));})()`,'native profile summary and its outer edge are visible: '+label);
+   const geometry=await p.evaluate(`(()=>{const e=${summary},r=e.getBoundingClientRect(),style=getComputedStyle(e);return {label:e.textContent,rect:r.toJSON(),display:style.display,listStyleType:style.listStyleType,focusVisible:e.matches(':focus-visible'),outlineStyle:style.outlineStyle,outlineWidth:style.outlineWidth,outlineColor:style.outlineColor,overflow:document.documentElement.scrollWidth>innerWidth,open:e.parentElement.open};})()`);
+   measurements.push(geometry);await record('state','profile:disclosure-geometry',geometry);
+   assert.equal(geometry.open,false,'profile disclosure starts natively closed: '+label);
+   assert.equal(geometry.display,'list-item','native disclosure marker is retained: '+label);
+   assert.notEqual(geometry.listStyleType,'none','native disclosure marker is not suppressed: '+label);
+   assert.equal(geometry.focusVisible,true,'profile summary exposes visible keyboard focus: '+label);
+   assert.notEqual(geometry.outlineStyle,'none','profile summary retains its focus outline: '+label);
+   assert.ok(Number.parseFloat(geometry.outlineWidth)>=2,'profile summary focus outline remains at least two pixels: '+label);
+   await p.key('Enter','Enter',13);await p.wait(`(${summary}).parentElement.open`,'Enter opens native profile disclosure: '+label);
+   if(label==='This station’s source'){
+    const fields=await p.evaluate(`(()=>{const details=(${summary}).parentElement;return Object.fromEntries([...details.querySelectorAll('dt')].map(e=>[e.textContent,e.nextElementSibling.textContent]));})()`);
+    for(const field of ['Source','Vertical reference','Acquisition'])assert.ok(fields[field]?.trim(),'opened station keeps '+field);
+    assert.equal(fields['Request key'],beforeStation.key,'opened station disclosure retains the selected source identity');
+   }else assert.match(await p.evaluate(`(${summary}).parentElement.querySelector('p').textContent`),/no height interpolation.*not harmonized.*admission and release remain unverified/,'native scientific disclosure exposes the actual sampling and review limits');
+   await p.key(' ','Space',32);await p.wait(`!(${summary}).parentElement.open`,'Space closes native profile disclosure: '+label);
+   if(width<=760){
+    for(const open of [true,false]){const point=await p.evaluate(`(()=>{const e=${summary};e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {x:r.right-4,y:r.top+r.height/2};})()`);await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await p.wait(`(${summary}).parentElement.open===${open}`,'touch near the full summary edge '+(open?'opens':'closes')+' native disclosure: '+label);}
+   }
+  }
+  assert.deepEqual(await camera(),beforeCamera,'native profile disclosures do not pan, zoom, tilt or rotate the map');
+  assert.deepEqual(fixtures.hits,beforeHits,'native profile disclosures do not acquire additional source data');
+  assert.deepEqual(await readProfileStation(),beforeStation,'native disclosure input preserves the selected station and exact source height');
+  for(const geometry of measurements){assert.ok(geometry.rect.width>=44&&geometry.rect.height>=44,'profile disclosure has a measured target of at least44×44px: '+geometry.label);assert.equal(geometry.overflow,false,'profile disclosure adds no horizontal page overflow: '+geometry.label);}
+ });
  if(process.env.KFM_WORKSPACE_SCREENSHOTS)await phase('profile:screenshot',async()=>{await p.evaluate(`document.querySelector('[data-terrain-transect] figure').scrollIntoView({block:'center'})`);const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`terrain-keyboard-profile-${width}.png`),Buffer.from(shot.data,'base64'));});
+ await phase('profile:toast-clearance',async()=>{
+  assert.equal(finishToast.role,'status','terrain announcement retains native live-status semantics');assert.equal(finishToast.live,'polite');assert.equal(finishToast.pointerEvents,'none','visible terrain announcement remains pointer-inert');
+  assert.ok(finishToast.toast.left>=0&&finishToast.toast.right<=finishToast.viewport.width&&finishToast.toast.top>=0&&finishToast.toast.bottom<=finishToast.viewport.height,'the actual terrain announcement remains inside its viewport');
+  if(width<=760){
+   assert.equal(finishToast.navVisible,true,'phone navigation is visibly composed with the actual terrain announcement');
+   assert.ok(finishToast.clearance>=8,'terrain announcement clears phone navigation by at least8px; measured '+finishToast.clearance+'px');
+   const point=await p.evaluate(`(()=>{const button=document.querySelector('.map-mobile-actions [data-category-dock-return]'),r=button.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+   await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+   await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'real phone navigation touch still opens Map layers after the terrain announcement');
+  }
+ });
  assert.equal(fixtures.hits.chunks,0,'surface/canopy grid journey does not download raw point chunks');t.diagnostic(JSON.stringify({source:'synthetic analytic grids; no provider or owner-hardware acceptance',hits:fixtures.hits,frames:await p.evaluate('window.__solidFixtureFrames')}));
 });
 

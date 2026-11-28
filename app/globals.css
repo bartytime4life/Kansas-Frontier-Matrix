@@ -3981,6 +3981,8 @@ body { font-size: 14px; }
   .map-mobile-actions b { display: block; overflow: hidden; font-size: 10px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
   .maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right { bottom: calc(68px + env(safe-area-inset-bottom)); }
   .measurement-readout { bottom: calc(70px + env(safe-area-inset-bottom)); }
+  /* Toasts are fixed to the viewport; the map actions sit above its status row. */
+  .toast { bottom: calc(var(--status) + 74px + env(safe-area-inset-bottom)); }
 
   .map-source-status {
     z-index: 85;
