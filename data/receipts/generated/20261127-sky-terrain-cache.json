@@ -1,0 +1,96 @@
+{
+  "receipt_id": "kfm-sky-terrain-cache-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/kansas-sky-layer.ts",
+    "tests/kansas-sky-picking.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/kansas-sky-layer.ts": "sha256:2ec17d108f501a66c060c6374726845bdc31d6cedd9dc918c967d68174d40fc6",
+    "tests/kansas-sky-picking.test.mjs": "sha256:6f09db8745e33330c541c862ca4ae5a162a64bff8a64df9e6834a15da62549c3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "tools_enabled": [
+      "exec_command",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f0863cdbeb0395c1a539e00ff0d70ab9b9b21b373e19d3d636fdc517384fcfef",
+      "sha256:af11972b2b5d95a5d459beb21dce23730dc25f508c7d57207d7b360515e53437",
+      "sha256:90c88f2b296b468d9d16fc84fda33e50638a67eb58be3b8d1b12154767679a9f",
+      "sha256:5619361d08554c1be548bd813581d49f6703faa603212d8c85213f14e231a0d7"
+    ],
+    "evidence_refs": [
+      "repo:2fc86abd5fdc7c823dff57d9cdc4b1f71c2545f7:app/kansas-sky-layer.ts",
+      "repo:2fc86abd5fdc7c823dff57d9cdc4b1f71c2545f7:tests/kansas-sky-picking.test.mjs"
+    ]
+  },
+  "truth_labels": {
+    "app/kansas-sky-layer.ts": "CONFIRMED",
+    "tests/kansas-sky-picking.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Unchanged baseline original assertion reproduces two trail uploads instead of one at4999\u21925001ms with only the render clock controlled; identical probe passes with fix",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Two new deterministic clock regressions fail before source fix and pass after",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "116 focused Sky tests: zero failures or skips",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Missing-only retry queries, finite heights retained, retry boundaries,96 selected-guide bound and active DEM/style/terrain invalidation covered",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Production build, TypeScript, targeted ESLint and git diff checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent code/negative-path review: no blocker; agent review is not human approval",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Generated-receipt schema/path/hash integrity",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Full-site suite, extra native/browser/GPU acceptance, exact-head hosted checks and human review",
+      "outcome": "SKIPPED",
+      "reason": "Focused116-case renderer suite, baseline-negative proof, build/types and independent review cover this bounded scheduling condition. Full NBI suite is separate evidence, not a combined-tree claim. New-head hosted results are read after draft creation; human review remains pending. No public deployment."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Pinned terrain retry and renderer invalidation",
+      "validated": true,
+      "evidence_ref": "repo:2fc86abd5fdc7c823dff57d9cdc4b1f71c2545f7:app/kansas-sky-layer.ts"
+    },
+    {
+      "id": "Unchanged original trail-cache assertion",
+      "validated": true,
+      "evidence_ref": "repo:2fc86abd5fdc7c823dff57d9cdc4b1f71c2545f7:tests/kansas-sky-picking.test.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T02:33:03.288546+00:00",
+  "emitter": "OpenAI Codex",
+  "notes": "A retry interval previously marked trails dirty even when all cached DEM samples were valid. It now marks trails dirty only when missing/null samples are actually removed for retry. Existing >5000ms cadence, render-driven scheduling, active DEM/style/terrain invalidations, valid zero heights, missing-height omission, aircraft/path updates,96-guide sampling and384-entry cache cap are retained. The unchanged original test failure was reproduced on exact clean base source by controlling only renderer performance.now at4999/5001; original assertions remain intact. Added tests isolate the renderer clock and cover repeated intervals, idle frames, mixed valid/missing samples, recovery, and source invalidations. GPU upload/query counts are deterministic harness evidence; no measured frame-rate or full browser/device compatibility improvement is claimed. No provider/network/data, rights, source admission, AI review credit, configuration, service activation or public deployment changes. Separate NBI metadata work uses disjoint source paths."
+}

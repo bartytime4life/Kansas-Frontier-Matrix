@@ -309,7 +309,12 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     if(failed.has(key))return;
     let bundle=bundles.get(key);
     try { if(!bundle) {bundle=build(input);bundles.set(key,bundle);} } catch {failed.add(key);report("Aircraft renderer unavailable; use the aircraft list.");return;}
-    if(showGuides&&performance.now()-terrainRetry>5000){terrainRetry=performance.now();for(const [key,value]of terrainCache)if(value===null)terrainCache.delete(key);trailDirty=true;}
+    if(showGuides&&performance.now()-terrainRetry>5000){
+      terrainRetry=performance.now();let retryMissing=false;
+      for(const [key,value]of terrainCache)if(value===null){terrainCache.delete(key);retryMissing=true;}
+      // Retry unavailable DEM samples without re-uploading valid cached trails.
+      if(retryMissing)trailDirty=true;
+    }
     if(dirty||trailDirty) upload();
     const project=(target:Bundle)=>{gl!.useProgram(target.program);gl!.bindVertexArray(target.vao);const u=target.u,p=projection;
       gl!.uniform2f(u.u_origin,...origin as [number,number]);
