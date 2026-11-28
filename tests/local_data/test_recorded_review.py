@@ -113,5 +113,25 @@ class RecordedReviewTests(unittest.TestCase):
         self.assertEqual(manager.status()['job']['counts'],{'failed':1})
         self.assertEqual(intake.get_item(self.root,self.identity)['status'],'review')
 
+    def test_whitespace_only_legacy_review_is_regenerated_as_inspection_availability(self):
+        self.path.write_bytes(gzip.compress(b' \n\t\r\n'));intake.analyze(self.root)
+        def legacy_packet(root,item):
+            packet=ai.packet_for(root,item)
+            self.assertEqual(packet['description_policy'],g.AVAILABILITY_VERSION)
+            packet['description_policy']=g.VERSION
+            return packet
+        manager=SmartManager(self.root,self.client,packet_builder=legacy_packet)
+        manager.start({'admin':'Test owner','filters':{},'limit':100,'retryHeld':False});manager.thread.join(10)
+        item=intake.get_item(self.root,self.identity);result=item['ai_review'];credit=result['attribution']
+        self.assertIn('Source text (',result['description'])
+        packet=json.loads((self.root/credit['input_path']).read_text())
+        body=json.dumps({'result':result,'packet':packet})
+        with closing(sqlite3.connect(self.cache)) as db,db:
+            db.execute('UPDATE reviews SET sha=?,context=?,body_sha=?,body=? WHERE id=?',
+                (item['sha256'],intake_review.context(item),hashlib.sha256(body.encode()).hexdigest(),body,self.identity))
+        reader=RecordedReviews(self.cache,[{'version':credit['prompt_version'],'sha256':credit['prompt_sha256']}])
+        task=('new-job',0,self.identity,item['sha256'],intake_review.context(item),'new-cache')
+        self.assertIsNone(reader.get(self.root,item,task,self.client))
+
 
 if __name__=='__main__':unittest.main()

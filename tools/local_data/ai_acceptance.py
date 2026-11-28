@@ -265,7 +265,7 @@ def packet_for(root, item):
     packet={"review_time":utc_now(),"facts":facts,"coverage":coverage,
             "allowed_domains":["unassigned",*intake_review.DOMAINS],"purpose":"private local-use acceptance only"}
     if any(f['id']=='gzip_inspection' for f in facts):
-        packet['description_policy']=(grounded_review.VERSION if any(f['id'].startswith('gzip_text_') for f in facts)
+        packet['description_policy']=(grounded_review.VERSION if any(f['id'].startswith('gzip_text_') and f['text'].strip() for f in facts)
             else grounded_review.AVAILABILITY_VERSION)
     if any(f['id']=='archive_inspection' for f in facts): packet['description_policy']=grounded_review.ARCHIVE_VERSION
     return packet

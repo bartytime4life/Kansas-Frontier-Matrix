@@ -124,7 +124,7 @@ class RasterArchiveTests(unittest.TestCase):
 
     def test_empty_gzip_is_labeled_as_inspection_availability_and_old_rendering_remains_valid(self):
         root=Path(self.temp.name)/'empty-store';manage.init_store(root)
-        path=root/'data/raw/empty.txt.gz';path.write_bytes(gzip.compress(b''));intake.analyze(root)
+        path=root/'data/raw/empty.txt.gz';path.write_bytes(gzip.compress(b' \n\t\r\n'));intake.analyze(root)
         packet=ai.packet_for(root,intake.get_item(root,intake.item_id('raw','empty.txt.gz')))
         self.assertEqual(packet['description_policy'],g.AVAILABILITY_VERSION)
         value={'title_ids':[],'passage_ids':['no_readable_text'],'domain':'unassigned',

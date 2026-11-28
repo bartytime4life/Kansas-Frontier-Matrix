@@ -39,7 +39,7 @@ class RecordedReviews:
         if packet!=value['packet']:raise ValueError('RECORDED_REVIEW_INPUT_CHANGED')
         # Old empty-text output quoted an inspection note as if it were source
         # text. The new availability policy generates a properly labeled review.
-        if any(f['id']=='gzip_inspection' for f in packet['facts']) and not any(f['id'].startswith('gzip_text_') for f in packet['facts']):
+        if any(f['id']=='gzip_inspection' for f in packet['facts']) and not any(f['id'].startswith('gzip_text_') and f['text'].strip() for f in packet['facts']):
             return None
         if ai.grounded_review.is_extractive(packet):
             rendered,_=ai.grounded_review.render(response,packet,ai.grounded_review.inspection_for(packet))
