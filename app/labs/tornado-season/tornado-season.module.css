@@ -1,0 +1,86 @@
+:global(body):has(.page) { min-width: 0; overflow: auto; }
+
+.page {
+  --ink: #f8eee2;
+  --muted: #cad7d9;
+  --teal: #8ad5d4;
+  --amber: #ffbd81;
+  --line: #43636a;
+  --panel: #1a323a;
+  min-height: 100vh;
+  padding: clamp(1rem, 4vw, 2.75rem) 1rem 4rem;
+  color: var(--ink);
+  background: #101f27;
+  color-scheme: dark;
+  font: 1rem/1.55 system-ui, sans-serif;
+}
+.frame { max-width: 65rem; margin-inline: auto; }
+.page h1, .page h2 { font-family: Georgia, serif; font-weight: 400; text-wrap: balance; }
+.page h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); margin: 0; line-height: 1.18; }
+.page p { color: var(--muted); margin: .45rem 0 0; }
+.page a { color: #b2e5e3; text-underline-offset: .2em; }
+.page :is(a, button, select, [tabindex]):focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.nav { display: flex; gap: 0 1.15rem; flex-wrap: wrap; font-size: .94rem; }
+.nav a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+.hero { padding-block: clamp(1.3rem, 4.5vw, 3rem) clamp(1.4rem, 4vw, 2.4rem); }
+.hero h1 { margin: 0; font-size: clamp(2.7rem, 8vw, 5.2rem); line-height: 1.02; letter-spacing: -.04em; }
+.hero p { margin-top: .9rem; max-width: 46rem; font-size: clamp(1rem, 2vw, 1.2rem); }
+.section { border-top: 1px solid var(--line); padding-block: clamp(1.35rem, 4vw, 2.2rem); min-width: 0; }
+.section > p { max-width: 51rem; }
+.heading { display: flex; gap: 1rem; justify-content: space-between; align-items: end; flex-wrap: wrap; }
+.heading > div { flex: 1 1 26rem; min-width: 0; }
+.heading label { display: grid; min-width: min(12rem, 100%); gap: .35rem; color: var(--muted); font-size: .9rem; font-weight: 650; }
+.page :is(button, select) {
+  min-height: 2.75rem;
+  padding: .45rem .7rem;
+  border: 1px solid #77959b;
+  border-radius: .35rem;
+  background: var(--panel);
+  color: var(--ink);
+  font: 1rem/1.2 system-ui, sans-serif;
+}
+.page button { cursor: pointer; }
+.page button:hover:not(:disabled) { border-color: var(--teal); background: #274850; }
+.page button:disabled { opacity: .6; cursor: default; }
+.page button[aria-pressed=true] { border-color: var(--amber); color: var(--amber); background: #3a332e; }
+
+.metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin-top: 1rem; }
+.page [data-kind="tracks"] { --series: var(--amber); }
+.page [data-kind="days"] { --series: var(--teal); }
+.metrics article { min-width: 0; padding: .75rem .9rem; border: 1px solid var(--line); border-top: 3px solid var(--series); border-radius: .35rem; background: var(--panel); }
+.metrics h3 { color: var(--series); font-size: 1rem; margin: 0; }
+.metrics strong { display: block; font-size: clamp(1.75rem, 4.5vw, 2.55rem); line-height: 1.2; margin-top: .32rem; font-variant-numeric: tabular-nums; }
+.metrics p { font-size: .9rem; }
+.page .notice { margin-top: 1rem; padding: .75rem 1rem; border-left: 3px solid var(--amber); background: var(--panel); }
+
+.monthTable { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 1rem; }
+.monthTable th:first-child { width: 6.8rem; }
+.monthTable :is(th, td) { border-bottom: 1px solid var(--line); padding: .4rem .6rem; text-align: left; font-size: .9rem; }
+.monthTable th:first-child { padding-inline-start: 0; }
+.monthTable button { width: 100%; min-height: 2.75rem; text-align: left; font-size: .86rem; padding-inline: .45rem; }
+.monthTable td { font-variant-numeric: tabular-nums; }
+.monthTable small { color: var(--muted); font-size: .82rem; white-space: nowrap; }
+.bar { display: block; width: 100%; height: .53rem; margin-bottom: .24rem; border-radius: .15rem; background: #213b45; }
+.bar i { display: block; height: 100%; background: var(--series); border-radius: inherit; }
+.bar[data-kind="days"] i { background: repeating-linear-gradient(125deg, var(--series) 0 4px, #488386 4px 6px); }
+.page .note { font-size: .88rem; }
+
+.map { margin-top: .9rem; border: 1px solid var(--line); border-radius: .45rem; background: #112b32; }
+.canvas { display: block; width: 100%; height: clamp(12rem, 48vw, 24rem); }
+.map p { margin: 0; padding: .66rem .8rem; border-top: 1px solid var(--line); font-size: .92rem; }
+.tableScroll { overflow: auto; width: 100%; margin-top: .9rem; }
+.records { width: 100%; min-width: 39rem; border-collapse: collapse; font-size: .9rem; }
+.records :is(th, td) { padding: .55rem .6rem; text-align: left; border-bottom: 1px solid var(--line); }
+.records th[scope="row"] { font-weight: 600; }
+.records thead { background: var(--panel); }
+.pager { display: flex; align-items: center; gap: .75rem; margin-top: .85rem; font-size: .9rem; }
+
+@media (max-width: 38rem) {
+  .metrics { gap: .55rem; }
+  .metrics article { padding: .6rem; }
+  .metrics h3 { font-size: .91rem; }
+  .monthTable th:first-child { width: 5.65rem; }
+  .monthTable :is(th, td) { padding-inline: .32rem; }
+  .monthTable button { padding-inline: .32rem; }
+}

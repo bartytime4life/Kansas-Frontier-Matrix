@@ -176,7 +176,17 @@ export const STORIES = Object.freeze([
     palette: ['#10131c', '#c9d6df', '#e4572e'],
     sources: ['NOAA Storm Prediction Center'],
     tables: ['kfm_spc_tornadoes'], feeds: ['tornadoes'],
+    relatedLab: { href: '/labs/tornado-season', label: 'Compare months in Tornado Season Lab ↗' },
     load: () => import('./record-lab.jsx'),
+  }),
+  guided({
+    id: 'tornado-season', group: 'Living record', title: 'Tornado Season Lab', kicker: 'SEASONALITY · TORNADO DAYS',
+    summary: 'Compare months by reported tracks and dates with tornadoes in the NOAA record for Kansas.',
+    try: 'Select a month, map reported starts or endpoints, and download the underlying records.',
+    limit: 'Earlier reports missed more events. Records without mapped paths still contribute to the counts.',
+    href: '/labs/tornado-season',
+    palette: ['#101f27', '#ffbd81', '#8ad5d4'],
+    sources: ['NOAA Storm Prediction Center'], tables: ['kfm_spc_tornadoes'], feeds: ['tornadoes'],
   }),
   ready({
     id: 'shaking-ground', group: 'Living record', title: 'Shaking Ground', kicker: 'EARTHQUAKES',
