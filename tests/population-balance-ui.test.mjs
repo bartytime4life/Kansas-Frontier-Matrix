@@ -91,3 +91,31 @@ test('2020 keeps named county context and real history while selected and print 
   assert.ok(text(print).includes(manifest.sha256));
   assert.equal(nodes(print, node => node.type === 'svg').length, 0);
 });
+
+test('ready population print tables inherit report styling and retain exact signed counts and calculated rates', async t => {
+  const ui = await component(t);
+  const analysis = model.populationBalanceReport(bundle, { fipsA: '20177', fipsB: '20001', year: 2021 }, manifest);
+  const screen = ui.render(analysis);
+  const screenTables = nodes(screen, node => node.type === 'table' && node.props.className === 'exactTable');
+  assert.equal(screenTables.length, 2, 'the real screen composition still applies its named table style');
+  const print = ui.render(analysis, 'PopulationBalancePrint');
+  const printTables = nodes(print, node => node.type === 'table');
+  assert.equal(printTables.length, 2, 'both ready counties print their real exact-value tables');
+  const values = table => nodes(table, node => node.type === 'tr' && node.props['data-component']).map(row => ({
+    component: row.props['data-component'], people: row.props['data-people'], per1000: row.props['data-per1000'],
+    cells: nodes(row, node => node.type === 'td').map(text),
+  }));
+  for (const [index, result] of [analysis.countyA, analysis.countyB].entries()) {
+    assert.equal(printTables[index].props.className, undefined, 'printed exact-value tables inherit the white report styling instead of the dark screen class');
+    const rows = values(printTables[index]);
+    assert.equal(rows.length, 6, 'print retains four contributions, the natural-change subtotal and net change');
+    assert.deepEqual(rows, values(screenTables[index]), 'print retains the full-precision signed metadata and rendered count/rate cells');
+    for (const contribution of result.contributions) {
+      const row = rows.find(row => row.component === contribution.key);
+      assert.equal(row.people, contribution.people); assert.equal(row.per1000, contribution.per1000);
+    }
+    assert.ok(text(print).includes(result.name));
+  }
+  assert.ok(text(print).includes('Mean estimated population denominator'));
+  assert.ok(text(print).includes(manifest.sha256));
+});
