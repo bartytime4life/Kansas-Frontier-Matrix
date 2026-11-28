@@ -1,0 +1,183 @@
+{
+  "receipt_id": "genrec-source-unverified-rights-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/source/source_descriptor.md",
+    "docs/sources/western-kansas-source-family-matrix.md",
+    "fixtures/contracts/v1/source/source_descriptor/README.md",
+    "fixtures/contracts/v1/source/source_descriptor/valid/README.md",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json",
+    "schemas/contracts/v1/source/source_descriptor.schema.json",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py"
+  ],
+  "artifact_hashes": {
+    "contracts/source/source_descriptor.md": "sha256:27e28307cd4af3bc6bfb95ff7f7cd151997a74f06d41ebfc6f8c59626017f173",
+    "docs/sources/western-kansas-source-family-matrix.md": "sha256:79b590fccfb83bd82495c5570fe19e915933d57af73cdbe0720dd01780620648",
+    "fixtures/contracts/v1/source/source_descriptor/README.md": "sha256:83bda068200556f46df078d0aeb5a479600b4b2b4833a80873d4d8e1f2ff2255",
+    "fixtures/contracts/v1/source/source_descriptor/valid/README.md": "sha256:c2c1c8568f65d492008911b114d45520440278388005d4d5e3913762c9f6d885",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json": "sha256:95c6ac77785e4627aabc36f8dd4239bb9fde7f60dc78e5112792af94d32cd362",
+    "schemas/contracts/v1/source/source_descriptor.schema.json": "sha256:84f5111878ff9c2308903ea31d021d6fc6aad2c12e76ebf720b5565b46266d87",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py": "sha256:8516f965777bd976a6b6942f9ed5a3b7bf377cfaf1800769f5d7a46757e2f8ae"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact serving build not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:7d1baa0a8cfa7eb33d73f4de43857ddb955ca5f84df102aa7eb25e5c81de14d3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Git and repository inspection",
+      "GitHub issue/PR/workflow readback and draft delivery",
+      "current native hash-locked project-test environment",
+      "Python process network guard",
+      "schema/consumer regression tests",
+      "documentation and topology/registry/scaffold/gap checks",
+      "generated receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:42df3bfe61b3345fb35f60e18512d68850943790a6fa7933b965093bad697621",
+      "sha256:a8a638d60ed1fc67c7a37029a00f43af29f3978e58fc274fc5249d1af7771d76",
+      "sha256:644d52f216b51af0c2b55faa9a4878fa25bb5db6bafbb7d1ad3a9f02e80330bf",
+      "sha256:b662073154ecc21f8a6f7cda6e564936e13f9b2fe87a13c6d160563ef425ec3a",
+      "sha256:429e5bb94b905943e4f90a431b42b33409087b907fc9bd0af64320f19514b337",
+      "sha256:6b62b92f3ce03844e1cfd5e69314415d1851bcbf75c049ef2acaed609d149bc6",
+      "sha256:d933a82168266adb21d5502e4d329f601ec30a399eea41ea120363b440ed01b6",
+      "sha256:01e2c03e770d7c84d0d329e482703688281792fcf0b2f7c9e431a65b10c13c5c",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:8f7d1e042f33e0648f1c2b22e594a2a0a19adae9847b8c548e6799d50efc829b",
+      "sha256:a3a67a2e974048f5416794ff2e38f2f81ef58fa615d40227d056030443a4f6cd",
+      "sha256:1be558d8ee31770bd30e6c4f5f77fede9c87d96d097a620431777c93d2f0ce6c",
+      "sha256:adad42db1532c02be24edb2771f2d4db06bceecf6801f5324e39511b6a53cad5",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "evidence_refs": [
+      "repo:main@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:contracts/source/source_descriptor.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:docs/sources/western-kansas-source-family-matrix.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:fixtures/contracts/v1/source/source_descriptor/README.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:fixtures/contracts/v1/source/source_descriptor/valid/README.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:schemas/contracts/v1/source/source_descriptor.schema.json@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:tests/validators/test_validate_source_descriptor_entrypoints.py@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:schemas/contracts/v1/sources/source_descriptor.schema.json@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:docs/doctrine/directory-rules.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:docs/adr/README.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:data/registry/sources/hydrology/usgs_nwis.yaml@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:data/registry/sources/atmosphere/noaa_ghcnd.yaml@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:data/registry/sources/soil/noaa-uscrn.yaml@aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366"
+    ]
+  },
+  "truth_labels": {
+    "contracts/source/source_descriptor.md": "PROPOSED",
+    "docs/sources/western-kansas-source-family-matrix.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json": "PROPOSED",
+    "schemas/contracts/v1/source/source_descriptor.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline_reproduction",
+      "outcome": "PASS",
+      "reason": "All four unreviewed positive cases fail against the old schema through rich and alias paths; retained before-null-profile.log. No new schema form had been applied at reproduction."
+    },
+    {
+      "gate": "guarded_source_and_consumer_suites",
+      "outcome": "PASS",
+      "reason": "185 tests and 29 subtests pass, including 56 added null-profile cases and existing entrypoint, USDM, rights/currentness and drought/forecast regressions. Counts overlap with the separate schema suite and are not additive."
+    },
+    {
+      "gate": "full_schema_regressions",
+      "outcome": "PASS",
+      "reason": "501 tests and 26 subtests pass under the Python process network guard; a separately selected common-source case also passes and is included in that larger suite."
+    },
+    {
+      "gate": "fixture_entrypoints",
+      "outcome": "PASS",
+      "reason": "Both CWD-independent schema entrypoints retain expected valid/invalid fixture polarity, including paired-null USDM. Alias bytes and all required rights keys remain unchanged."
+    },
+    {
+      "gate": "legacy_polarity_comparison",
+      "outcome": "PASS",
+      "reason": "16 fixture/approved-pilot records compared against baseline and current schema. Only the intended null-valued USDM changes from invalid to valid; three approved non-null pilot records remain accepted. Shared definitions and all five original conditional rules are unchanged."
+    },
+    {
+      "gate": "repository_health",
+      "outcome": "PASS",
+      "reason": "29-entry registry valid; topology exits 0 with no introduced drift; scaffold 700 markers/625 files with no new/resolved entries; gaps 0 structured parse errors, test-package shadows and broken local links. Baselines unchanged."
+    },
+    {
+      "gate": "documentation_links_and_structure",
+      "outcome": "PASS",
+      "reason": "93 local targets resolve across four changed documents; 23 external links classified, not re-fetched. Critical structure has zero findings."
+    },
+    {
+      "gate": "explicit_document_metadata",
+      "outcome": "FAIL",
+      "reason": "Three inherited DATE_INVALID findings remain in original unknown created notes. Nine missing responsibility/root/truth fields were repaired. Git import date does not establish pre-import authoring dates; no creation date was fabricated or metadata validator weakened. The opt-in extended changed-file scope reports the same three failures; byte-for-byte comparison proves these fields match base. The canonical CI metadata scope is separate and has zero failures."
+    },
+    {
+      "gate": "committed_documentation_ratchets",
+      "outcome": "PASS",
+      "reason": "Four-document graph exits 0 with zero failure findings. Canonical CI metadata scope (README/docs/tools validators docs) has zero failure findings. Extended metadata scope still fails the three unchanged created fields, separately reported below; those extra roots are outside its default baseline walk. No baseline or validator changed."
+    },
+    {
+      "gate": "historical_receipt_integrity",
+      "outcome": "PASS",
+      "reason": "Source convergence receipt validates four artifacts at e568d46b12b8a3210252f003daa0fda653262a2b; prior USDM receipt validates three artifacts at 5f703841e86aca820a3fd8f4965feddb37ef8f74. Historical receipts unchanged."
+    },
+    {
+      "gate": "exact_candidate_hosted_and_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Not observed at authoring. Human review pending; fixture/shape proof is not rights verification, admission, policy/runtime enforcement or source activation. External consumer compatibility remains unverified before live adoption."
+    },
+    {
+      "gate": "full_local_suite_and_all_file_hooks",
+      "outcome": "SKIPPED",
+      "reason": "Full schema family and focused source consumers run in the unchanged hash-locked native project-test environment. No production consumer, workflow or policy code changes; full root hosted results remain separately attributable."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-placement-basis",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366"
+    },
+    {
+      "id": "paired-source-shape-baseline",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/source/source_descriptor.schema.json@aec796b3521e7b3698d7f404a0f98f47f6b0e366"
+    },
+    {
+      "id": "source-meaning-baseline",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_descriptor.md@aec796b3521e7b3698d7f404a0f98f47f6b0e366"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T05:12:44.684842+00:00",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded machine-shape refinement, not a source or rights decision. Both required verification fields may be null together only with unknown/noassertion rights, unknown permissions, pending review, proposed/not_released posture, explicit connector inactivity and public release false/review required. No existing non-null constraints, shared datetime definitions, aliases, schema identifiers, enums, policy or authority boundaries changed. Only the USDM fixture adopts nulls; registry records and historical source-head metadata/receipts are untouched. No source payload acquired, human verification timestamp invented or renewed, source admitted or activated, schedule/settings/runtime/workflow modified, ready/approval/merge performed, or release/deployment/promotion/publication action. The policy_decisions reference names existing accepted ADR-0029 placement authority, following the established source-receipt convention; it is not a new PolicyDecision evaluation, rights acceptance, admission or approval for this contribution."
+}

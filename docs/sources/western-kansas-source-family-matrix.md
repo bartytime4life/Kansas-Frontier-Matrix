@@ -2,7 +2,7 @@
 doc_id: kfm://doc/source-review/western-kansas-family-matrix
 title: Western Kansas source-family review matrix
 type: reference
-version: v1.1
+version: v1.2
 status: draft; repository-grounded; bounded source review; non-authoritative
 owners: ["@bartytime4life — CODEOWNERS review route; accountable source/rights acceptance remains separate"]
 created: 2026-11-27
@@ -11,7 +11,7 @@ policy_label: repository-facing
 owning_root: docs/
 responsibility: Explain the seven drought/hydrology source families, their current scoped registry evidence, publisher documentation, distinct clocks, rights and correction gaps, and next review without admitting or activating a source.
 truth_posture: "CONFIRMED repository declarations and retrieved publisher metadata; PARTIAL seven-family acceptance; UNKNOWN unreviewed terms, spatial support and operational consumer closure"
-evidence_snapshot: "Matrix registry facts: main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d; inactive USDM candidate follow-through: main@490d61906ebb2760565858f41bc1bad436e65c32; publisher documentation read 2026-11-27 local"
+evidence_snapshot: "Matrix registry facts: main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d; inactive USDM candidate: main@490d61906ebb2760565858f41bc1bad436e65c32; unverified-rights shape refinement base: main@aec796b3521e7b3698d7f404a0f98f47f6b0e366; publisher documentation read 2026-11-27 local"
 related:
   - docs/sources/README.md
   - contracts/domains/hydrology/western_kansas_observation_assessment.md
@@ -236,12 +236,14 @@ Existing connector response fixtures remain synthetic examples, not captures
 of this dated ZIP.
 
 Rights and permissions remain `unknown`, review is pending, the connector is
-disabled and public release is false. The schema requires a verification date
-and verifier even for unknown rights: the old July 28 fixture date is explicitly
-retained as a synthetic compatibility sentinel, with the verifier marked
-`UNVERIFIED`. It records no real rights verification. Resolve truthful pending
-representation or obtain the attributable review before creating a registry
-record; do not copy fixture sentinels into authority-bearing records.
+disabled and public release is false. The earlier v0.2 fixture used an explicit
+synthetic sentinel because the shape required non-null verification values.
+The proposed [bounded pre-review form](../../contracts/source/source_descriptor.md#verification-not-yet-performed)
+now permits both required fields to be `null` with strict inactivity and
+non-release constraints; v0.3 removes the date and verifier sentinels. Null means
+no verification, not a fresh or approved rights decision. Existing non-null
+records keep their prior constraints. Registry writer/placement, accountable
+source-specific review and actual archive evidence remain unresolved.
 
 The [offline negative tests](../../tests/schemas/test_usdm_source_descriptor_contracts.py)
 exercise the existing schemas: unresolved rights block public release even

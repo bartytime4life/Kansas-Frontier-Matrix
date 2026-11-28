@@ -2,12 +2,15 @@
 doc_id: kfm://fixture/contracts/v1/source/source-descriptor/readme
 title: source_descriptor fixtures README
 type: fixture-readme
-version: v0.3.0
+version: v0.4.0
 status: draft
 owners: TODO(owner): source steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): rights steward; TODO(owner): sensitivity steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-07-01 expansion
-updated: 2026-09-20
+updated: 2026-11-27
 policy_label: public-review
+owning_root: fixtures/
+responsibility: Explain deterministic SourceDescriptor examples, null verification limits and fixture validation without creating source or release authority.
+truth_posture: "CONFIRMED bounded fixture polarity and guarded pre-review examples / PROPOSED source candidates / UNKNOWN actual rights decisions and runtime consumer acceptance"
 related:
   - valid/README.md
   - valid/valid_1.json
@@ -38,6 +41,18 @@ notes:
 <a id="top"></a>
 
 # `source_descriptor` fixtures
+
+## Unverified-rights shape — 2026-11-27
+
+The existing [inactive USDM fixture](valid/valid_usdm_inactive.json) uses explicit
+paired `null` values for the required verification date and verifier. The
+[paired contract](../../../../../contracts/source/source_descriptor.md#verification-not-yet-performed)
+limits this form to unknown/noassertion rights and permissions, pending review,
+proposed lifecycle, explicit connector inactivity and denied public release.
+It records no actual review or source admission. The
+[entrypoint tests](../../../../../tests/validators/test_validate_source_descriptor_entrypoints.py)
+exercise both schema paths, non-null compatibility and forbidden mutations.
+The older dated inventory and execution notes below retain their original scope.
 
 ## DASC item intake additions — 2026-09-20
 
