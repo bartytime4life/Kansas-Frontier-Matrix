@@ -202,3 +202,141 @@ def test_entrypoints_match_explicit_file_polarity(
     assert valid_result.stdout.startswith("OK ")
     assert invalid_result.returncode == 1
     assert invalid_result.stdout.startswith("FAIL ")
+
+
+@pytest.fixture(params=(IMPLEMENTATION_SCHEMA, DECLARED_SCHEMA), ids=("rich", "alias"))
+def rights_validator(request):
+    return load_validator(request.param)
+
+
+@pytest.fixture
+def unverified_rights_candidate():
+    descriptor = json.loads(
+        (FIXTURE_ROOT / "valid/valid_usdm_inactive.json").read_text()
+    )
+    descriptor["rights"]["last_verified_at"] = None
+    descriptor["rights"]["verified_by"] = None
+    return descriptor
+
+
+@pytest.mark.parametrize(
+    "status,review,activation",
+    (("unknown", "needs_review", "disabled"), ("noassertion", "draft", "fixture_only")),
+)
+def test_unverified_rights_null_profile_passes_without_fabricated_review(
+    rights_validator, unverified_rights_candidate, status, review, activation
+):
+    descriptor = unverified_rights_candidate
+    descriptor["rights"]["rights_status"] = status
+    descriptor["review_state"] = review
+    descriptor["connectors"]["activation_state"] = activation
+    assert not list(rights_validator.iter_errors(descriptor))
+
+
+@pytest.mark.parametrize(
+    "path,value",
+    (
+        (("rights", "rights_status"), "verified_open"),
+        (("rights", "rights_status"), "verified_restricted"),
+        (("rights", "rights_status"), "permission_required"),
+        (("rights", "rights_status"), "denied"),
+        (("rights", "redistribution_allowed"), "yes"),
+        (("rights", "commercial_use_allowed"), "yes"),
+        (("review_state",), "reviewed"),
+        (("review_state",), "approved"),
+        (("lifecycle", "registry_state"), "active"),
+        (("release_state",), "candidate"),
+        (("release_state",), "released"),
+        (("connectors", "activation_state"), "live_candidate"),
+        (("connectors", "activation_state"), "live_active"),
+        (("public_release", "allowed"), True),
+        (("public_release", "requires_review"), False),
+    ),
+)
+def test_null_review_metadata_cannot_upgrade_candidate_posture(
+    rights_validator, unverified_rights_candidate, path, value
+):
+    target = unverified_rights_candidate
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = value
+    errors = list(rights_validator.iter_errors(unverified_rights_candidate))
+    assert any(tuple(error.absolute_path) == path for error in errors)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    (("last_verified_at", "2026-07-28T00:00:00Z"), ("verified_by", "fixture reviewer")),
+)
+def test_partial_null_verification_pair_is_rejected(
+    rights_validator, unverified_rights_candidate, field, value
+):
+    unverified_rights_candidate["rights"][field] = value
+    errors = list(rights_validator.iter_errors(unverified_rights_candidate))
+    assert any(list(error.absolute_path) == ["rights", field] for error in errors)
+
+
+@pytest.mark.parametrize("field", ("last_verified_at", "verified_by"))
+def test_unverified_fields_remain_required(
+    rights_validator, unverified_rights_candidate, field
+):
+    del unverified_rights_candidate["rights"][field]
+    errors = list(rights_validator.iter_errors(unverified_rights_candidate))
+    assert any(
+        list(error.absolute_path) == ["rights"] and error.validator == "required"
+        for error in errors
+    )
+
+
+@pytest.mark.parametrize("remove_object", (True, False))
+def test_null_profile_requires_explicit_connector_inactivity(
+    rights_validator, unverified_rights_candidate, remove_object
+):
+    if remove_object:
+        del unverified_rights_candidate["connectors"]
+        expected_path = []
+    else:
+        del unverified_rights_candidate["connectors"]["activation_state"]
+        expected_path = ["connectors"]
+    errors = list(rights_validator.iter_errors(unverified_rights_candidate))
+    assert any(
+        list(error.absolute_path) == expected_path and error.validator == "required"
+        for error in errors
+    )
+
+
+@pytest.mark.parametrize(
+    "path", (("source_head", "observed_at"), ("lifecycle", "created_at"))
+)
+def test_other_datetime_fields_do_not_become_nullable(
+    rights_validator, unverified_rights_candidate, path
+):
+    unverified_rights_candidate[path[0]][path[1]] = None
+    errors = list(rights_validator.iter_errors(unverified_rights_candidate))
+    assert any(tuple(error.absolute_path) == path for error in errors)
+
+
+@pytest.mark.parametrize(
+    "field,value", (("last_verified_at", "not-a-date"), ("verified_by", ""))
+)
+def test_non_null_verification_still_requires_valid_values(
+    rights_validator, unverified_rights_candidate, field, value
+):
+    descriptor = unverified_rights_candidate
+    descriptor["rights"].update(
+        last_verified_at="2026-07-28T00:00:00Z",
+        verified_by="synthetic fixture reviewer",
+    )
+    descriptor["rights"][field] = value
+    errors = list(rights_validator.iter_errors(descriptor))
+    assert any(list(error.absolute_path) == ["rights", field] for error in errors)
+
+
+def test_legacy_non_null_unknown_rights_record_still_passes(
+    rights_validator, unverified_rights_candidate
+):
+    unverified_rights_candidate["rights"].update(
+        last_verified_at="2026-07-28T00:00:00Z",
+        verified_by="synthetic fixture reviewer",
+    )
+    assert not list(rights_validator.iter_errors(unverified_rights_candidate))

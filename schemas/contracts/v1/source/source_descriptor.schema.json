@@ -156,10 +156,22 @@
                     "type": "string"
                 },
                 "last_verified_at": {
-                    "$ref": "#/$defs/iso_datetime"
+                    "description": "Attributable verification time, or null only in the guarded unreviewed candidate profile. Null is absence of verification, not current or verified rights.",
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/iso_datetime"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "verified_by": {
-                    "type": "string",
+                    "description": "Attributable verifier, or null together with last_verified_at in the guarded unreviewed candidate profile.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
                     "minLength": 1
                 },
                 "rights_notes": {
@@ -789,6 +801,109 @@
                             "reviewed",
                             "approved"
                         ]
+                    }
+                }
+            }
+        },
+        {
+            "$comment": "Paired null verification metadata is allowed only before review for an explicitly inactive, unreleased candidate. Existing non-null records retain their prior constraints.",
+            "if": {
+                "required": [
+                    "rights"
+                ],
+                "properties": {
+                    "rights": {
+                        "type": "object",
+                        "anyOf": [
+                            {
+                                "required": [
+                                    "last_verified_at"
+                                ],
+                                "properties": {
+                                    "last_verified_at": {
+                                        "type": "null"
+                                    }
+                                }
+                            },
+                            {
+                                "required": [
+                                    "verified_by"
+                                ],
+                                "properties": {
+                                    "verified_by": {
+                                        "type": "null"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "connectors"
+                ],
+                "properties": {
+                    "rights": {
+                        "properties": {
+                            "rights_status": {
+                                "enum": [
+                                    "unknown",
+                                    "noassertion"
+                                ]
+                            },
+                            "last_verified_at": {
+                                "type": "null"
+                            },
+                            "verified_by": {
+                                "type": "null"
+                            },
+                            "redistribution_allowed": {
+                                "const": "unknown"
+                            },
+                            "commercial_use_allowed": {
+                                "const": "unknown"
+                            }
+                        }
+                    },
+                    "review_state": {
+                        "enum": [
+                            "draft",
+                            "needs_review"
+                        ]
+                    },
+                    "release_state": {
+                        "const": "not_released"
+                    },
+                    "lifecycle": {
+                        "properties": {
+                            "registry_state": {
+                                "const": "proposed"
+                            }
+                        }
+                    },
+                    "public_release": {
+                        "properties": {
+                            "allowed": {
+                                "const": false
+                            },
+                            "requires_review": {
+                                "const": true
+                            }
+                        }
+                    },
+                    "connectors": {
+                        "required": [
+                            "activation_state"
+                        ],
+                        "properties": {
+                            "activation_state": {
+                                "enum": [
+                                    "disabled",
+                                    "fixture_only"
+                                ]
+                            }
+                        }
                     }
                 }
             }

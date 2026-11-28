@@ -2,12 +2,15 @@
 doc_id: kfm://fixture/contracts/v1/source/source-descriptor/valid/readme
 title: source_descriptor valid fixtures README
 type: fixture-readme
-version: v0.2.0
+version: v0.3.0
 status: draft
 owners: TODO(owner): source steward; TODO(owner): schema steward; TODO(owner): fixture steward; TODO(owner): validator steward; TODO(owner): rights steward; TODO(owner): sensitivity steward; TODO(owner): docs steward
 created: NEEDS VERIFICATION - blank file existed before 2026-07-01 expansion
-updated: 2026-08-03
+updated: 2026-11-27
 policy_label: public-review
+owning_root: fixtures/
+responsibility: Explain selected positive SourceDescriptor examples and the inactive unverified-rights shape without asserting admission or rights verification.
+truth_posture: "CONFIRMED bounded positive fixture validation / PROPOSED source candidates / UNKNOWN actual rights decisions and runtime consumer acceptance"
 related:
   - valid_1.json
   - valid_ku_news_gmd3_aem_announcement_2026_05_11.json
@@ -69,8 +72,16 @@ Use this lane to prove that a well-shaped `SourceDescriptor` example can pass sc
 
 ## Current inventory
 
+**November 27 bounded update:** the existing USDM example now represents an
+unperformed rights review with paired null verification fields, under the
+[contract's inactive pre-review limits](../../../../../../contracts/source/source_descriptor.md#verification-not-yet-performed).
+No synthetic date or reviewer should be copied into an authority-bearing record.
+The selected examples below are not an exhaustive fixture census; older status
+and execution notes retain their historical scope.
+
 | File | Role | Expected result | Status |
 |---|---|---|---|
+| [`valid_usdm_inactive.json`](valid_usdm_inactive.json) | Proposed, disabled, unreleased USDM candidate with unperformed rights verification. | Schema PASS with paired null fields; no permission or activation follows. | PROPOSED review fixture |
 | [`valid_1.json`](valid_1.json) | Positive SourceDescriptor fixture for a USGS NWIS hydrology source. | Schema validation should pass. | CONFIRMED |
 | [`valid_ku_news_gmd3_aem_announcement_2026_05_11.json`](valid_ku_news_gmd3_aem_announcement_2026_05_11.json) | Document-specific candidate-only citation fixture for the 2026-05-11 KU News GMD 3 AEM announcement. | Schema validation should pass; no source/campaign/product authority is established. | CONFIRMED bounded fixture |
 

@@ -2,12 +2,15 @@
 doc_id: kfm://doc/contracts-source-source-descriptor
 title: contracts/source/source_descriptor.md — SourceDescriptor Contract
 type: contract
-version: v0.3
+version: v0.4
 status: draft; PROPOSED; schema-paired; canonical-lowercase; source-admission; source-role-anti-collapse
 owners: OWNER_TBD — Source steward · Contracts steward · Schema steward · Policy steward · Catalog steward · Evidence steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.3 expansion
-updated: 2026-10-19
+updated: 2026-11-27
 policy_label: public; contracts; source; source-descriptor; source-admission; rights; sensitivity; cadence; access; citation; review; release; lifecycle; fail-closed
+owning_root: contracts/
+responsibility: Define SourceDescriptor meaning and the bounded unreviewed-rights form without admitting a source or granting release authority.
+truth_posture: "CONFIRMED bounded paired-schema and fixture tests / PROPOSED semantic contract / UNKNOWN runtime enforcement and attributable source-specific rights acceptance"
 tags: [kfm, contracts, source, source-descriptor, source-role, source-type, rights, sensitivity, cadence, access, citation, source-head, admissibility, review-state, release-state, lifecycle, registry]
 related:
   - ./README.md
@@ -180,6 +183,36 @@ The schema also permits optional `domain_scope`, `secondary_source_roles`, `conn
 
 Rights are policy-significant. Unknown, noassertion, denied, or restricted rights must fail closed for public release unless a later governed policy/review path explicitly resolves them.
 
+#### Verification not yet performed
+
+`last_verified_at` and `verified_by` remain required keys. When no verification
+has occurred, both may be explicitly `null` in the bounded pre-review form:
+
+| Field | Required posture with paired null verification |
+|---|---|
+| `rights.rights_status` | `unknown` or `noassertion` |
+| Redistribution and commercial-use permissions | Both `unknown` |
+| `review_state` | `draft` or `needs_review` |
+| `lifecycle.registry_state` | `proposed` |
+| `release_state` | `not_released` |
+| `connectors.activation_state` | Explicitly `disabled` or `fixture_only`; the connector object and state are required in this form |
+| `public_release` | `allowed: false`, `requires_review: true` |
+
+A partial null pair, missing keys, verified/decided rights status, permission
+grant, reviewed/approved posture, active source or live connector cannot use
+this form. It represents absence of verification, not a rights decision or an
+invitation to invent a timestamp or verifier. The non-null form keeps its
+existing constraints; an actual review that remains inconclusive can still
+record its attributable time and reviewer with unknown rights. Other datetime
+fields remain non-nullable.
+
+The [USDM fixture](../../fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json)
+exercises this shape. The [entrypoint tests](../../tests/validators/test_validate_source_descriptor_entrypoints.py)
+check both schema paths and forbidden transitions. Shape validity does not
+authenticate a review, bind policy, register/admit a source, authorize capture
+or activate a connector. Re-evaluate the complete descriptor and applicable
+governed decision before leaving the pre-review form.
+
 ### Sensitivity
 
 `sensitivity_default` records the default sensitivity class for source material. Sensitivity does not disappear when a source is ingested, transformed, summarized, tiled, mapped, graphed, or answered by AI.
@@ -265,6 +298,9 @@ CONFIRMED by paired schema:
 - If connectors are `live_candidate` or `live_active`, review state must be `reviewed` or `approved`.
 - If source role is `fixture_only`, public release must be false and release state must not be normal public release.
 - If public release is allowed, review state must be `reviewed` or `approved`.
+- Paired null rights verification is limited to the explicit inactive,
+  proposed, not-released pre-review form above; required-key, timestamp and
+  existing non-null-record checks remain in force.
 
 PROPOSED semantic invariants:
 
@@ -330,6 +366,12 @@ NEEDS VERIFICATION in implementation:
 
 ## Fixtures
 
+The existing [inactive USDM example](../../fixtures/contracts/v1/source/source_descriptor/valid/valid_usdm_inactive.json)
+now uses paired null verification fields rather than a synthetic rights date
+and reviewer. This is a schema fixture, not a source registry or rights record.
+The generic entrypoint suite covers the null form, missing/partial fields,
+forbidden posture upgrades, old non-null examples and unrelated datetime fields.
+
 Minimum fixture set PROPOSED:
 
 | Fixture | Purpose |
@@ -363,6 +405,11 @@ Fixtures must avoid credentials, secrets, private URLs, living-person data, prot
 
 Rollback is required if this contract is used as source data storage, source-claim truth, schema authority, policy authority, source-registry instance storage, connector permission, release approval, runtime/API/UI/map permission, or AI authority.
 
-Rollback target for this expansion: previous blob SHA `737dc98d36a75d597b3533c87a6027e23f123e2d`.
+For the bounded null-verification refinement, revert the schema, paired contract,
+USDM fixture, tests and guidance together to the contribution's recorded base.
+Retain historical receipts at their artifact commits. No runtime or registry
+record was migrated by the fixture change.
+
+Historical v0.3 expansion rollback target: previous blob SHA `737dc98d36a75d597b3533c87a6027e23f123e2d`.
 
 <p align="right"><a href="#top">Back to top</a></p>

@@ -2,7 +2,7 @@
   "object_type": "SourceDescriptor",
   "schema_version": "v1",
   "source_id": "src:usdm-weekly",
-  "descriptor_version": "0.2.0",
+  "descriptor_version": "0.3.0",
   "title": "U.S. Drought Monitor — dated weekly classification polygon ZIP candidate",
   "description": "Inactive review fixture for USDM_20261124_M.zip from NDMC: the weekly classification polygon distribution, excluding impacts, grids and tabular statistics. HTTP HEAD metadata was observed; ZIP contents, valid/publication clocks and distribution-specific metadata were not inspected. Not a registry record or admission.",
   "domain_scope": [
@@ -37,11 +37,11 @@
     "attribution_text": "Pending exact publisher credit selection: include NDMC/UNL, USDA, NOAA, NASA and NDMC distribution credit per the Permission page. This note is not approved release copy.",
     "redistribution_allowed": "unknown",
     "commercial_use_allowed": "unknown",
-    "last_verified_at": "2026-07-28T00:00:00Z",
-    "verified_by": "UNVERIFIED — schema-required fixture sentinel; no accountable rights reviewer",
+    "last_verified_at": null,
+    "verified_by": null,
     "license_url": "https://droughtmonitor.unl.edu/About/Permission.aspx",
     "terms_url": "https://droughtmonitor.unl.edu/About/Permission.aspx",
-    "rights_notes": "The required last_verified_at value is retained from the historical July 28 fixture as a synthetic compatibility sentinel, not an actual verification or renewed rights timestamp. rights_status and both permissions remain unknown. This fixture cannot substitute for an attributable source-specific rights record."
+    "rights_notes": "Rights verification has not been performed: both required verification fields are explicitly null under the bounded inactive pre-review form. These are not a rights decision, an accepted source record or a renewed verification timestamp. Unknown rights and permissions, needs_review, proposed lifecycle, not_released, explicit disabled connector and denied public release remain."
   },
   "sensitivity_default": "public",
   "cadence": {
@@ -117,7 +117,7 @@
     "requires_review": true,
     "redaction_required": false,
     "release_conditions": [
-      "Resolve single source identity, registry placement and accountable writer using accepted Directory Rules; this fixture is not a registry entry.",
+      "Resolve single source identity, registry placement and accountable writer using accepted Directory Rules; this fixture is not a registry entry. Before leaving the null-verification pre-review form, record an attributable rights review and revalidate the complete descriptor and governed decision.",
       "Obtain an attributable source-specific rights/admission decision for this exact distribution and approved current publisher credit; existing water/weather/soil self-release exceptions do not extend to USDM.",
       "After authorization, capture the same dated candidate and verify bytes, embedded metadata, native spatial support, source-valid time and actual publication time; HEAD metadata alone is insufficient.",
       "Bind EvidenceBundle, policy decision, review, release, missing/stale/conflict/abstain handling, correction/withdrawal and retained rollback evidence before serving.",
@@ -135,7 +135,7 @@
   "lifecycle": {
     "registry_state": "proposed",
     "created_at": "2026-07-28T00:00:00Z",
-    "updated_at": "2026-11-28T01:49:02.103102Z"
+    "updated_at": "2026-11-28T05:05:17.590175+00:00"
   },
   "governance_refs": {
     "validation_report_ref": "tests/schemas/test_usdm_source_descriptor_contracts.py"
