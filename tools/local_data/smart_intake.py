@@ -12,9 +12,10 @@ import signal
 import sqlite3
 import subprocess
 import time
+import uuid
 
 from tools.local_data import ai_acceptance as ai, intake, intake_review, intake_route
-from tools.local_data.file_io import read_regular, write_new
+from tools.local_data.file_io import hash_regular, read_regular, write_new
 from tools.local_data.manage import canonical, utc_now
 
 ADMIN = 'KFM owner (scheduled local Qwen review)'
@@ -35,6 +36,7 @@ PROVIDERS = {
     'usgs-earthquakes': ('hazards', 'USGS earthquake capture'),
     'nws-alerts': ('hazards', 'NWS alert capture'),
     'archive-texts': ('', 'Archive catalog record and OCR text; historical statements are unverified'),
+    'prism': ('atmosphere','PRISM saved BIL raster archive and provider metadata'),
 }
 
 
@@ -56,6 +58,13 @@ def backup_running(units):
 def provider(item):
     parts = Path(item['relative_path']).parts
     return parts[1] if len(parts) > 1 and parts[0] == 'sql-feeds' else parts[0]
+
+
+def recorded_reader(config):
+    spec=config.get('recorded_review_cache')
+    if not spec:return None
+    from tools.local_data.recorded_review import RecordedReviews
+    return RecordedReviews(Path(spec['path']),spec['trusted_prompts'])
 
 
 class Packets:
@@ -100,9 +109,13 @@ class Packets:
 
 
 class SmartManager(ai.Manager):
-    def __init__(self, root, client, *, owner_policy=None, preparation_status=None, maintenance_file=None, backup_units=(), **kwargs):
+    def __init__(self, root, client, *, owner_policy=None, owner_policies=(), recorded_reviews=None,
+                 preparation_status=None, resolution_status=None, maintenance_file=None, backup_units=(), **kwargs):
         self.owner_policy = owner_policy
+        self.owner_policies=tuple(dict.fromkeys(p for p in (*owner_policies,owner_policy) if p))
+        self.recorded_reviews=recorded_reviews
         self.preparation_status=Path(preparation_status) if preparation_status else None
+        self.resolution_status=Path(resolution_status) if resolution_status else None
         self.maintenance_file=Path(maintenance_file) if maintenance_file else None
         self.backup_units=backup_units
         original_guard=kwargs.get('check_volume',lambda:None)
@@ -128,32 +141,100 @@ class SmartManager(ai.Manager):
         result=super().status()
         if self.preparation_status and self.preparation_status.exists():
             result['preparation']=json.loads(self.preparation_status.read_text())
+        if self.resolution_status and self.resolution_status.exists():
+            result['resolution']=json.loads(self.resolution_status.read_text())
         result['maintenanceReason']=self.maintenance_reason()
         result['maintenance']=bool(result['maintenanceReason'])
         return result
 
+    def authorization(self,item):
+        for digest in self.owner_policies:
+            try:return intake_review.owner_reference_authorization(self.root,digest,item),digest
+            except ValueError:continue
+        return None,None
+
+    def start_owner_selection(self,bindings,limit=100):
+        """Trusted controller selection; exact owner bindings never come from HTTP."""
+        if type(limit) is not int or not 1<=limit<=intake.MAX_CONFIGURED_FILES:
+            raise ValueError('AI_BATCH_REQUEST_INVALID')
+        self.check_volume();self.client.identity()
+        with self.lock:
+            fd=self.worker_lock()
+            try:
+                current=self.status()['job']
+                if current and current['state'] in (*ai.ACTIVE,'paused'):
+                    raise ValueError('AI_RESUME_OR_CANCEL_CURRENT_BATCH')
+                job='qwen-'+uuid.uuid4().hex;tasks=[]
+                with intake.writer_lock(self.root):
+                    with self.db() as db:
+                        pending=dict(db.execute("SELECT id,sha256 FROM items WHERE present=1 AND status='review'"))
+                    for identity,binding in bindings.items():
+                        if pending.get(identity)!=binding['sha256']:continue
+                        item=intake.get_item(self.root,identity)
+                        if (item['status']!='review' or not item['present'] or item['sha256']!=binding['sha256']
+                                or intake_review.context(item)!=binding['context']):continue
+                        key=hashlib.sha256(canonical([identity,binding['context'],self.client.digest,
+                            ai.PROMPT_VERSION,ai.prompt_sha()])).hexdigest()
+                        with self.db() as db:
+                            done=db.execute('SELECT result FROM ai_acceptance_results WHERE cache_key=?',(key,)).fetchone()
+                        if done and json.loads(done[0]).get('resolution_policy') in self.owner_policies:continue
+                        tasks.append((job,len(tasks),identity,item['sha256'],binding['context'],key,'pending'))
+                        if len(tasks)>=limit:break
+                if not tasks:
+                    os.close(fd);return False
+                now=utc_now()
+                with self.db() as db:
+                    selection={'selection':{},'prompt_sha256':ai.prompt_sha(),'limit':limit,'owner_bound':True}
+                    db.execute('INSERT INTO ai_acceptance_jobs VALUES(?,?,?,?,?,?,?,?,?,?,?)',
+                        (job,'running',ADMIN,self.client.model,self.client.digest,json.dumps(selection),now,now,len(tasks),0,None))
+                    db.executemany('INSERT INTO ai_acceptance_tasks(job,seq,item,sha,context,cache_key,state) VALUES(?,?,?,?,?,?,?)',tasks)
+                self.launch(job,fd)
+            except Exception:
+                os.close(fd);raise
+        return True
+
     def process(self, job, task):
-        result = super().process(job, task)
+        self.check_volume()
         item = intake.get_item(self.root, task[2])
         recovered = (item['decision'].get('operator_review') or {}).get('ai_attribution', {})
         recovered_owner = (recovered.get('acceptance_basis') == 'owner_requested_private_reference'
-            and recovered.get('batch_id') == job['id'] and item['sha256'] == task[3])
-        if result.get('ai_reviewed') and result['outcome'] == 'held' and self.owner_policy:
-            try:
-                authorization = intake_review.owner_reference_authorization(self.root, self.owner_policy, item)
-            except ValueError:
-                authorization = None
+            and recovered.get('acceptance_batch_id',recovered.get('batch_id')) == job['id']
+            and recovered.get('model_digest')==self.client.digest and item['sha256'] == task[3])
+        authorization,policy=self.authorization(item)
+        result=None
+        if recovered_owner or (authorization and self.recorded_reviews):
+            if hash_regular(ai.source_path(self.root,item),intake.DEFAULT_HASH_LIMIT,expected_size=item['size_bytes'])[0]!=task[3]:
+                raise ValueError('AI_SOURCE_CHANGED_REANALYZE')
+            if recovered_owner:
+                relative=f"data/receipts/intake/{item['id']}/owner-{job['id']}-{task[1]}.json"
+                if (self.root/relative).exists():
+                    result=json.loads(read_regular(self.root/relative,131072));result['receipt']=relative
+                else:
+                    operator=item['decision']['operator_review']
+                    result={**recovered['review'],'ai_reviewed':True,'attribution':recovered,
+                        'sha256':task[3],'context':task[4],'holds':[],'outcome':'accepted',
+                        'reviewed_at':operator['reviewed_at'],'review_receipt':operator['receipt'],
+                        'source_hold_reasons':recovered['limitations_retained'],
+                        'acceptance_basis':'owner_requested_private_reference',
+                        'authority':{'source_admission':False,'release':False,'publication':False}}
+                    if recovered.get('review_reused'):result['review_reused']=True
+                    write_new(self.root/relative,canonical(result));result['receipt']=relative
+            else:
+                self.client.identity()
+                result=self.recorded_reviews.get(self.root,item,task,self.client)
+        if result is None:result=super().process(job,task)
+        if result.get('ai_reviewed') and result['outcome'] == 'held' and self.owner_policies:
             extraction = result.get('attribution', {}).get('text_extraction', {})
             bad_stream = set(extraction.get('issues', ())) & {'GZIP_INVALID_OR_TRUNCATED','GZIP_TEXT_NOT_PLAINTEXT_UTF8'}
-            if recovered_owner:
-                operator = item['decision']['operator_review']
-                result = {**result,'outcome':'accepted','attribution':recovered,
-                    'source_hold_reasons':result['holds'],'holds':[],
-                    'acceptance_basis':'owner_requested_private_reference',
-                    'review_receipt':operator['receipt'],'reviewed_at':operator['reviewed_at']}
-            elif authorization and not bad_stream and not item['decision'].get('blocking_issues'):
+            archive=result.get('attribution',{}).get('archive_inspection')
+            if archive is not None and not archive.get('structure_validated'):bad_stream=True
+            declared=item.get('declared') or {}
+            restricted=((declared.get('rights') or {}).get('redistribution') in {'restricted','denied'}
+                or declared.get('sensitivity') in {'restricted','controlled'})
+            if authorization and not bad_stream and not restricted and not item['decision'].get('blocking_issues'):
                 self.check_volume()
                 attribution = {**result['attribution'], 'acceptance_basis':'owner_requested_private_reference',
+                    'acceptance_batch_id':job['id'],'review_reused':bool(result.get('review_reused')),
                     'owner_reference_authorization':authorization,
                     'qwen_original_recommendation':result['recommendation'],
                     'limitations_retained':list(result['holds'])}
@@ -162,14 +243,20 @@ class SmartManager(ai.Manager):
                     'revision':item['review_history'][0]['revision'] if item['review_history'] else 0,
                     'decision':'local','domain':result['domain'] if result['domain'] != 'unassigned' else '',
                     'rights':(declared.get('rights') or {}).get('redistribution','unknown'),
-                    'sensitivity':declared.get('sensitivity','unknown'),'reference':'',
+                    'sensitivity':declared.get('sensitivity','unknown'),
+                    'reference':(declared.get('rights') or {}).get('license_id') or '',
                     'reviewer':'Local AI: '+self.client.model,'confirmed':True,
                     'note':('Owner requested private reference retention of this exact file. Qwen supplied the description and evidence; '
                         'its original recommendation and uncertainty remain recorded. This accepts a catalog reference, '
                         'not verified historical assertions, identities, measurements or sharing rights. '
                         +result['description'])[:1600]}
-                saved = intake_review.save(self.root,value,intake_route.load_budget(),ai_attribution=attribution,
-                    expected_context=task[4],owner_policy=self.owner_policy)
+                try:
+                    saved = intake_review.save(self.root,value,intake_route.load_budget(),ai_attribution=attribution,
+                        expected_context=task[4],owner_policy=policy)
+                except ValueError as error:
+                    if str(error)=='INTAKE_BUSY':
+                        raise ai.ProviderError('AI_WORKING_DATA_BUSY_RESUME') from None
+                    raise
                 result = {**result,'outcome':'accepted','attribution':attribution,
                     'source_hold_reasons':result['holds'],'holds':[],
                     'acceptance_basis':'owner_requested_private_reference',
@@ -183,6 +270,7 @@ class SmartManager(ai.Manager):
                 else:
                     write_new(self.root / relative,body)
                 result['receipt'] = relative
+        if policy:result['resolution_policy']=policy
         if result.get('ai_reviewed'):
             try:
                 self.organize(item, result)
@@ -204,11 +292,14 @@ class SmartManager(ai.Manager):
             'authority':{'publication':False,'source_admission':False,'release':False}}
         path = folder / 'records' / item['id'] / (result['attribution']['response_sha256'] + '.json')
         body = canonical(record)
+        if path.exists() and read_regular(path,128*1024)!=body:
+            path=path.with_name(path.stem+'-'+hashlib.sha256(body).hexdigest()[:20]+'.json')
         if path.exists():
             if read_regular(path,128*1024) != body:
                 raise ValueError('SMART_METADATA_RECEIPT_CHANGED')
         else:
             write_new(path,body)
+        result['metadata_record']=str(path.relative_to(self.root))
         with closing(sqlite3.connect(folder / 'catalog.sqlite',timeout=10)) as db:
             with db:
                 db.execute('CREATE TABLE IF NOT EXISTS catalog(id TEXT PRIMARY KEY,sha256 TEXT,provider TEXT,domain TEXT,outcome TEXT,record TEXT)')
@@ -287,17 +378,46 @@ def main():
     with intake.writer_lock(root), intake.open_index(root) as db:
         db.execute('CREATE INDEX IF NOT EXISTS items_summary ON items(present,status,domain,family,lane,size_bytes)')
     policy_hash = config.get('owner_policy')
-    if policy_hash:
-        raw = read_regular(Path(config['owner_policy_source']),4*1024**2)
-        if hashlib.sha256(raw).hexdigest() != policy_hash:
+    specs=list(config.get('additional_owner_policies',[]))
+    if policy_hash:specs.append({'sha256':policy_hash,'source':config['owner_policy_source']})
+    policies={}
+    for spec in specs:
+        raw = read_regular(Path(spec['source']),4*1024**2)
+        if hashlib.sha256(raw).hexdigest() != spec['sha256']:
             raise ValueError('OWNER_POLICY_SOURCE_CHANGED')
-        target = root / 'data/work/intake/owner-policies' / (policy_hash + '.json')
+        policies[spec['sha256']]=json.loads(raw)
+        target = root / 'data/work/intake/owner-policies' / (spec['sha256'] + '.json')
         if not target.exists():write_new(target,raw)
+    release_bindings={}
+    if config.get('resolution_policy'):
+        release_bindings=policies[config['resolution_policy']]['items']
+        priority=config.get('resolution_priority',[])
+        if any(identity not in release_bindings for identity in priority):
+            raise ValueError('AI_RESOLUTION_PRIORITY_NOT_AUTHORIZED')
+        release_bindings={identity:release_bindings[identity] for identity in [*priority,*release_bindings]}
     from tools.local_data.review_cache import Cache,CachedQwen,CachedPackets
     cache=Cache(config.get('preparation_cache',runtime.parent/'run/smart-intake-cache.sqlite'))
     client = CachedQwen(config['model'],config['model_digest'],cache);client.identity()
     manager = SmartManager(root,client,check_volume=guard,packet_builder=CachedPackets(Packets(root),client,cache),owner_policy=policy_hash,
+        owner_policies=[s['sha256'] for s in specs],recorded_reviews=recorded_reader(config),
+        resolution_status=config.get('resolution_status'),
         maintenance_file=drive_work/'phase.json',preparation_status=config.get('preparation_status'),backup_units=BACKUP_UNITS)
+    def start_batch():
+        if release_bindings and manager.start_owner_selection(release_bindings,config.get('batch_limit',100)):return
+        manager.start({'admin':ADMIN,'filters':{},'limit':config.get('batch_limit',100),'retryHeld':False})
+    def resolution_progress():
+        if not release_bindings or not config.get('resolution_status'):return
+        with manager.db() as db:
+            rows={};ids=list(release_bindings)
+            for offset in range(0,len(ids),400):
+                batch=ids[offset:offset+400]
+                rows.update((r[0],r[1:]) for r in db.execute('SELECT id,sha256,status FROM items WHERE present=1 AND id IN ('
+                    +','.join('?' for _ in batch)+')',batch))
+        accepted=sum(rows.get(k)==(v['sha256'],'reviewed') for k,v in release_bindings.items())
+        report={'at':utc_now(),'selection':len(release_bindings),'accepted':accepted,
+            'remaining':len(release_bindings)-accepted,'state':'complete' if accepted==len(release_bindings) else 'processing'}
+        path=Path(config['resolution_status']);temporary=path.with_name('.'+path.name+'.partial')
+        temporary.write_text(json.dumps(report,indent=2)+'\n');temporary.replace(path)
     def pause(_signal,_frame):manager.action='pause';manager.stop.set()
     signal.signal(signal.SIGTERM,pause);signal.signal(signal.SIGINT,pause)
     current = manager.status()['job']
@@ -314,7 +434,7 @@ def main():
         emit(state='deferred',reason='another Qwen batch owns the review lock');return
     else:
         try:
-            manager.start({'admin':ADMIN,'filters':{},'limit':config.get('batch_limit',100),'retryHeld':False})
+            start_batch()
         except ValueError as error:
             if str(error)=='AI_BATCH_ALREADY_RUNNING':emit(state='deferred',reason='metadata preparation owns the Qwen lock');return
             if str(error)=='AI_NO_NEW_PENDING_FILES_MATCH_FILTERS':
@@ -326,7 +446,7 @@ def main():
             manager.thread.join(2)
             if maintenance() or time.monotonic()-began > config.get('max_run_seconds',7200):
                 manager.action='pause';manager.stop.set()
-        export_catalog(root)
+        export_catalog(root);resolution_progress()
         status = manager.status()['job']
         report = {k:status[k] for k in ('id','state','counts','currentStatuses','total','model','digest','error')}
         (runtime.parent / 'run/smart-intake-latest.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -334,7 +454,7 @@ def main():
         if status['state'] != 'completed' or manager.stop.is_set() or cycle+1 >= config.get('max_batches',1) or maintenance():
             break
         try:
-            manager.start({'admin':ADMIN,'filters':{},'limit':config.get('batch_limit',100),'retryHeld':False})
+            start_batch()
         except ValueError as error:
             if str(error)=='AI_NO_NEW_PENDING_FILES_MATCH_FILTERS':break
             raise

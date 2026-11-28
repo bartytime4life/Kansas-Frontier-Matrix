@@ -33,8 +33,8 @@ class Cache:
             raise ValueError('AI_PREPARED_CACHE_CHANGED')
         review=ai.validate_output(value['review'],value['packet'])
         raw=json.loads(value['response'])
-        if value['packet'].get('description_policy')==ai.grounded_review.VERSION:
-            inspection=next(json.loads(f['text']) for f in value['packet']['facts'] if f['id']=='gzip_inspection')
+        if ai.grounded_review.is_extractive(value['packet']):
+            inspection=ai.grounded_review.inspection_for(value['packet'])
             expected,rendering=ai.grounded_review.render(raw,value['packet'],inspection)
         else:
             facts={f['id']:f['text'] for f in value['packet']['facts']}

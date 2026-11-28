@@ -51,7 +51,8 @@
     if (data.maintenance) $("ai-state").textContent += data.maintenanceReason === "backup"
       ? " A backup is running; review progress is saved."
       : " Drive maintenance is running; acceptance will resume afterward.";
-    if (data.preparation) $("ai-state").textContent += ` Prepared metadata: ${(data.preparation.prepared||0)+(data.preparation.cached||0)} packets saved locally. Preparation does not release files.`;
+    if (data.resolution) $("ai-state").textContent += ` Local reference review: ${data.resolution.accepted} of ${data.resolution.selection} accepted; ${data.resolution.remaining} remaining.`;
+    else if (data.preparation) $("ai-state").textContent += ` Prepared metadata: ${(data.preparation.prepared||0)+(data.preparation.cached||0)} packets saved locally. Preparation does not release files.`;
     const results = $("ai-results"); results.replaceChildren();
     if (job?.recent.length) {
       const list = el("ul",{class:"ai-results"});

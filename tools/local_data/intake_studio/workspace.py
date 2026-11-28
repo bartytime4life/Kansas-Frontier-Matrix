@@ -41,7 +41,7 @@ class Workspace:
             root=self.desks['working'].root
             if getattr(store,'automation_config',None):
                 import json
-                from tools.local_data.smart_intake import SmartManager,Packets,BACKUP_UNITS
+                from tools.local_data.smart_intake import SmartManager,Packets,BACKUP_UNITS,recorded_reader
                 config=json.loads(store.automation_config.read_text())
                 if config.get('model') != client.model or config.get('model_digest') != client.digest:
                     raise ValueError('AI_AUTOMATION_MODEL_PIN_MISMATCH')
@@ -51,6 +51,9 @@ class Workspace:
                     cache=Cache(config['preparation_cache']);client=CachedQwen(client.model,client.digest,cache)
                     builder=CachedPackets(builder,client,cache)
                 self.ai=SmartManager(root,client,check_volume=store.check_volume,packet_builder=builder,owner_policy=config.get('owner_policy'),
+                    owner_policies=[s['sha256'] for s in config.get('additional_owner_policies',[])],
+                    recorded_reviews=recorded_reader(config),
+                    resolution_status=config.get('resolution_status'),
                     preparation_status=config.get('preparation_status'),backup_units=BACKUP_UNITS,
                     maintenance_file=config['maintenance_directory']+'/phase.json' if config.get('maintenance_directory') else None)
             else:

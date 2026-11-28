@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 from tools.local_data import intake, intake_review, manage, ai_acceptance as ai
 from tools.local_data.smart_intake import SmartManager, export_catalog,operator_stopped
-from test_ai_acceptance import FakeQwen
+from tests.local_data.test_ai_acceptance import FakeQwen
 
 
 class SmartIntakeTests(unittest.TestCase):

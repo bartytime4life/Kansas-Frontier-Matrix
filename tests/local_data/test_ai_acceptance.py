@@ -24,11 +24,11 @@ class FakeQwen:
         self.calls += 1
         self.before(packet)
         self.last_rendering=None
-        if packet.get('description_policy')==ai.grounded_review.VERSION:
+        if ai.grounded_review.is_extractive(packet):
             selection={'title_ids':[],'passage_ids':[next(iter(ai.grounded_review.choices(packet)[1]))],
                 'domain':'hydrology','recommendation':'hold' if self.hold else 'accept_local',
                 'confidence':'high','concern_codes':[]}
-            inspection=next(json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection')
+            inspection=ai.grounded_review.inspection_for(packet)
             review,self.last_rendering=ai.grounded_review.render(selection,packet,inspection)
             return review,hashlib.sha256(manage.canonical(review)).hexdigest()
         evidence=next((f for f in packet["facts"] if f["id"].startswith("gzip_text_")),packet["facts"][1])

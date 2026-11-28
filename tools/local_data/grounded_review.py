@@ -3,6 +3,8 @@ import re
 import json
 
 VERSION = "source-passages-v2-provider-metadata"
+ARCHIVE_VERSION = "source-passages-v3-raster-metadata"
+AVAILABILITY_VERSION = "source-passages-v3-text-availability"
 CONCERNS = {
     "noisy_text":"OCR wording, names or dates need checking against the original scan.",
     "unclear_subject":"The selected text does not establish a clear subject or catalog domain.",
@@ -27,6 +29,22 @@ Provider metadata is supplied separately when available. It may identify the
 catalog subject even when the OCR excerpt is noisy. Metadata is evidence about
 the catalog record, not proof of every statement or identity in the source.
 """
+ARCHIVE_SYSTEM = SYSTEM + """
+This packet contains text sidecars from a saved BIL raster archive, not OCR or
+the binary cell values. Select evidence only from the supplied archive metadata.
+Provider remarks describe a modeled grid; they do not independently establish
+observed weather. KFM separately renders measured archive/CRC/grid checks.
+Do not infer units, dates, coverage or validity beyond the supplied metadata.
+"""
+
+
+def is_extractive(packet):
+    return packet.get('description_policy') in {VERSION,ARCHIVE_VERSION,AVAILABILITY_VERSION}
+
+
+def inspection_for(packet):
+    key='archive_inspection' if packet.get('description_policy')==ARCHIVE_VERSION else 'gzip_inspection'
+    return next(json.loads(f['text']) for f in packet['facts'] if f['id']==key)
 
 
 def normalized(text):
@@ -34,10 +52,13 @@ def normalized(text):
 
 
 def choices(packet):
-    blocks=[f for f in packet['facts'] if f['id'].startswith('gzip_text_')]
+    blocks=[f for f in packet['facts'] if f['id'].startswith(('gzip_text_','archive_text_'))]
     raw=''.join(f['text'] for f in blocks)
     text=normalized(raw)
     titles={}
+    if packet.get('description_policy')==ARCHIVE_VERSION:
+        variable=inspection_for(packet).get('provider_variable')
+        if variable:titles['raster_variable']=variable['meaning']+' ('+variable['code']+') grid metadata'
     for fact in packet['facts']:
         if fact['id'] == 'source_metadata':
             title = json.loads(fact['text']).get('record',{}).get('title')
@@ -95,6 +116,18 @@ def model_packet(packet):
 
 def scope(inspection):
     x=inspection
+    if x.get('format')=='prism-bil-tar':
+        if not x.get('structure_validated'):
+            return 'KFM could not validate the bounded raster archive. Recorded issues: '+', '.join(x['issues'])+'.'
+        g=x['grid']
+        variable=x.get('provider_variable')
+        label=(f"Saved provider metadata identifies {variable['meaning']} ({variable['code']}; documented units {variable['documented_units']}). " if variable else '')
+        return (label+f"KFM checked {len(x['members'])} archive members and the gzip CRC, and decoded the saved "
+            f"{g['rows']} × {g['columns']} float32 grid: {g['valid_cells']} valid cells, "
+            f"{g['nodata_cells']} NODATA cells; stored range {g['stored_minimum']} to {g['stored_maximum']}. "
+            f"{x['metadata_text_characters']} metadata characters were supplied"
+            + (' as a bounded prefix. ' if x['metadata_text_truncated'] else '. ')
+            + 'These are saved-file checks; climate values, dates and units are not independently certified.')
     amount=(f"KFM supplied {x['text_characters']} text characters from {x['expanded_bytes']} expanded bytes; "
             f"{x['compressed_bytes_read']} compressed bytes were read.")
     remainder=(' The supplied text is a bounded prefix; the remainder is unchecked.' if x['text_truncated']
@@ -108,8 +141,9 @@ def scope(inspection):
     return amount+remainder+crc
 
 
-def title_text(parts):
-    title='Source excerpt: '+' · '.join(parts) if parts else 'Quoted source excerpt'
+def title_text(parts,archive=False):
+    title=(('Raster metadata: ' if archive else 'Source excerpt: ')+' · '.join(parts)
+        if parts else 'Saved raster metadata' if archive else 'Quoted source excerpt')
     return title if len(title)<=140 else title[:139]+'…'
 
 
@@ -119,6 +153,13 @@ def content_text(selected):
 
 
 def selected_content(packet, ids):
+    if packet.get('description_policy')==AVAILABILITY_VERSION and ids==['no_readable_text']:
+        return 'KFM inspection: the bounded reader recovered no readable text; source content remains unverified.'
+    if packet.get('description_policy')==ARCHIVE_VERSION:
+        if ids==['no_readable_text']:
+            return 'KFM inspection: no supported archive metadata text was recovered.'
+        passages=choices(packet)[1]
+        return 'Archive metadata text (whitespace normalized; provider statements unverified): '+' '.join('“'+passages[i]+'”' for i in ids)
     if ids == ['no_usable_excerpt']:
         return 'KFM inspection: no usable OCR excerpt was recovered; the bounded sample contains only an isolated glyph.'
     passages=choices(packet)[1]
@@ -148,7 +189,7 @@ def render(value,packet,inspection):
             or value['confidence'] not in {'high','medium','low'}):
         raise ValueError('AI_PASSAGE_RECOMMENDATION_INVALID')
     selected=[passages[i] for i in value['passage_ids']]
-    title=title_text([titles[i] for i in value['title_ids']])
+    title=title_text([titles[i] for i in value['title_ids']],packet.get('description_policy')==ARCHIVE_VERSION)
     content=selected_content(packet,value['passage_ids'])
     measured=scope(inspection)
     description=metadata_summary(packet)+content+' '+measured
@@ -157,7 +198,8 @@ def render(value,packet,inspection):
     return {'title':title,'description':description,'domain':value['domain'],
         'recommendation':value['recommendation'],'confidence':value['confidence'],
         'evidence':evidence,'concerns':[CONCERNS[i] for i in value['concern_codes']]}, {
-        'version':VERSION,'method':('KFM-measured OCR availability and scope; Qwen-selected metadata context'
+        'version':packet.get('description_policy',VERSION),'method':('Qwen-selected archive metadata; KFM-rendered saved-grid checks'
+            if packet.get('description_policy')==ARCHIVE_VERSION else 'KFM-measured OCR availability and scope; Qwen-selected metadata context'
             if value['passage_ids']==['no_usable_excerpt'] else 'Qwen-selected source quotations; KFM-rendered scope'),
         'metadata_summary':metadata_summary(packet),'title_ids':value['title_ids'],'passage_ids':value['passage_ids'],
         'concern_codes':value['concern_codes'],'content_text':content,'scope_text':measured}
@@ -166,8 +208,9 @@ def render(value,packet,inspection):
 def validate_rendered(review,packet,inspection):
     titles,passages=choices(packet)
     values=list(titles.values())
-    allowed_titles={title_text([]),*(title_text([v]) for v in values),
-                    *(title_text([a,b]) for a in values for b in values if a!=b)}
+    archive=packet.get('description_policy')==ARCHIVE_VERSION
+    allowed_titles={title_text([],archive),*(title_text([v],archive) for v in values),
+                    *(title_text([a,b],archive) for a in values for b in values if a!=b)}
     ids=[e['source'] for e in review['evidence']]
     if not 1<=len(ids)<=2 or len(set(ids))!=len(ids) or any(i not in passages for i in ids):
         raise ValueError('AI_SOURCE_PASSAGES_REQUIRED')
