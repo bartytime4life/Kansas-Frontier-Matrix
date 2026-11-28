@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-sql-feed-acceptance-readback-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/sql-feeds.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/sql-feeds.md": "sha256:2077af5550b0fcea6b27d9e945924b814566734d0ef1b13e584f0abeb7b5cbd2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell and git",
+      "GitHub connector",
+      "read-only user systemd journals and SQLite"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/490d61906ebb2760565858f41bc1bad436e65c32",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/34b987649627a4146d1118af2a9e1d3dd43f39aa",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/5891",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/6038",
+      "local-evidence://feed-acceptance-audit-20261127/acceptance-report.json",
+      "local-evidence://feed-acceptance-audit-20261127/invocation-audit.json",
+      "local-evidence://feed-acceptance-audit-20261127/release-verification.json",
+      "local-evidence://feed-acceptance-audit-20261127/collection.json",
+      "local-evidence://backup-drive-20261117/OPERATIONS.txt"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/sql-feeds.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "retrospective-invocation-correlation",
+      "outcome": "PASS",
+      "reason": "Retained full-field user journals were grouped by USER_INVOCATION_ID/_SYSTEMD_INVOCATION_ID and manager start/terminal events. All five latest invocation IDs matched live systemctl Result=success and ExecMainStatus=0. Earlier failed invocations and maintenance-delayed starts remain explicit."
+    },
+    {
+      "gate": "observed-usgs-rate-limit-recovery",
+      "outcome": "PASS",
+      "reason": "USGS daily November 18: one HTTP 429 wait of 2735 seconds followed by feed_done and successful terminal job. November 19 at its normal scheduled time: four waits totaling 1514 seconds followed by completion and backfill pending zero. Other feeds are not qualified for unobserved retry behavior."
+    },
+    {
+      "gate": "current-release-and-root-change-verification",
+      "outcome": "PASS",
+      "reason": "All 116 active release files match both manifest hashes and the committed 34b98764 archive. Current launcher matches the November 22 reconciliation. The stopped original watcher hash exactly matches a retained ab1c0137 launcher whose only difference from its original launcher is the approved nested storage-root prefix."
+    },
+    {
+      "gate": "full-journal-message-retention",
+      "outcome": "PASS",
+      "reason": "Native journalctl help confirms --all retains long fields. Re-exporting with --all recovered five otherwise-null Wikidata MESSAGE fields as HTTP 431 failures; all full-field exports have zero null MESSAGE entries."
+    },
+    {
+      "gate": "changed-markdown-links-and-structure",
+      "outcome": "PASS",
+      "reason": "Native no-network checker: one document, 5 valid local targets, no invalid local links. External links were classified unverified by the checker. Single H1, balanced fences/comments, heading review, final newline and diff whitespace check."
+    },
+    {
+      "gate": "runtime-tests-or-production-repair",
+      "outcome": "SKIPPED",
+      "reason": "Documentation/accountability-only patch. No feed start/retry, release installation, timer or production database mutation; no new recurring monitor. No runtime suite rerun."
+    },
+    {
+      "gate": "first-process-path-and-non-usgs-retry-qualification",
+      "outcome": "SKIPPED",
+      "reason": "Exited processes lack retrospective cwd observations. Maintenance affected the original clock-time targets. IEM, groundwater, Wikidata and peaks have no observed successful live throttle/wait sequence; peaks was not_due."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "active-merged-runtime",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/34b987649627a4146d1118af2a9e1d3dd43f39aa"
+    },
+    {
+      "id": "merged-wikidata-followup",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/6038"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T01:59:44.544640+00:00",
+  "emitter": "Codex (OpenAI GPT-6)",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Two-file dated operating-readback update in existing docs/runbooks and data/receipts/generated responsibilities under accepted ADR-0029 and Directory Rules section 7.2. Operator-local raw journals, original launcher copies, source records and database state stay outside the Git patch. No secrets, host UUIDs, private absolute paths or provider payloads are imported. Original stopped-watcher files and earlier authored receipts remain historical records; a supplemental audit pointer was added locally. Successful current services are distinguished from historical first failures, outstanding backfill work and not_due outcomes. Current configuration/hash/code evidence is not a retrospective process-path observation, and successful historical job results are not invented direct exit-code readbacks. Repository content and operational notes were treated as evidence, not authority to rerun maintenance or weaken checks. Human review pending; no merge/ready transition or acceptance of unproven provider behavior."
+}

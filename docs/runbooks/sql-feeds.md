@@ -519,7 +519,7 @@ report. It never fetches a provider, writes observation rows, or promotes a hold
 
 ```bash
 set -o pipefail
-journalctl --user -u 'kfm-sql-feed@*' --since '3 days ago' --no-pager -o cat |
+journalctl --user -u 'kfm-sql-feed@*' --since '3 days ago' --all --no-pager -o cat |
   pc-pipeline-data/runtime/sql-feed.sh recovery-report
 ```
 
@@ -530,6 +530,12 @@ journal lookback and expected interval, for example `--since '10 days ago'`
 and `recovery-report --feed storm-events --max-age-hours 192`. Use a journal
 window longer than the freshness and hold thresholds. The report bounds journal
 input and returns a nonzero exit code for unreadable input sizes.
+
+Retain full fields when archiving JSON journal evidence too: use
+`journalctl --user -u UNIT --since START --all --no-pager -o json`.
+Without `--all`, large `MESSAGE` values can appear as `null`, hiding the
+feed failure reason while the service's failed terminal result remains visible.
+The November 27 readback recovered five Wikidata HTTP 431 messages this way.
 
 | Report state | Operator action |
 |---|---|
@@ -653,6 +659,10 @@ evidence; later updates retain the current launcher, storage arguments and prior
 
 ## Installed release and acceptance snapshot, November 17, 2026
 
+This is a historical installation snapshot. The watcher subsequently stopped on
+a storage-root change; the [November 27 retrospective readback](#scheduled-acceptance-readback-november-27-2026)
+records the recovered outcomes and later active release.
+
 **CONFIRMED / IMPLEMENTED, operator-local installation evidence:** at 13:21 CST the
 launcher selected `sql-feeds-ab1c0137106c75f498a746b6814da8c398132609`, the merged
 PR #5889 commit. Its 115 source files matched the committed archive and manifest.
@@ -748,3 +758,65 @@ Geofabrik's "MB" was read back as 2^20 bytes (`kansas-261101.osm.pbf`: listed 11
 `wikidata-kansas` 22:10 and `osm-kansas` 23:00 on November 22; `archive-texts` 23:45;
 `prism` 13:05 and `obstacles` 18:10 on November 23. The hourly analysis is lengthening; if it
 approaches 30 minutes the feeds that start beside it will wait longer or fail again.
+
+## Scheduled acceptance readback, November 27, 2026
+
+**CONFIRMED, retrospective operator-local evidence:** the November 17 watcher
+stopped at 16:58 CST, before the planned target starts, because the launcher hash
+changed. Its recorded hash exactly matches the retained launcher after the
+separately approved storage consolidation changed the data-root prefix to the
+nested KFM store. That retained launcher still pinned `ab1c0137`; its only byte
+changes were the root prefix. The watcher was not running through the scheduled
+acceptance window and must not be described as having captured those runs live.
+
+Storage maintenance paused the original November 17/18 schedule window. The first
+retained post-maintenance activations for IEM, groundwater, daily and Wikidata
+started together at 08:19 CST on November 18. Their invocation IDs, journals and
+terminal job results were recovered separately from later ordinary on-clock runs.
+These delayed activations are not evidence that the original clock-time targets
+ran on schedule.
+
+| Feed | First retained post-maintenance outcome | Later observed outcome |
+|---|---|---|
+| `iem-wind` | Success: 637,005 observation rows and 65 daily rows; backfill next 2016 | November 27: success, 1,084,716 observation rows, 65 daily rows; next 2025 |
+| `usgs-groundwater` | Exit 1, `PIPELINE_LOCK_BUSY`; a second attempt also failed before a later November 18 success | November 27: success, 414,787 rows; next 1987, 40 backfill years and 10 due revisions remain |
+| `usgs-daily` | Success after HTTP 429 and 2,735 seconds of waiting; `record_rows=1510821`, `modified_rows=4795` | November 19: four refusals, 1,514 seconds waited, success and backfill pending zero; November 27 also succeeded |
+| `wikidata-kansas` | Exit 1, HTTP 504; later HTTP 502/431 and a detail-parser failure preceded the #6038 follow-up | November 22 at 22:10: complete cycle, 125 queries, 19,593 rows, pending zero; latest November 26 at 22:10 succeeded as `not_due` |
+| `usgs-peaks` | November 22 at 17:05: success, `not_due`, checked date November 2 | No provider refresh was due in that retained invocation |
+
+The November 19 USGS daily run began at the ordinary scheduled 06:05 time and
+independently records live rate-limit recovery: four `feed_throttled` events report waits of 911,
+49, 145 and 409 seconds, followed by `feed_done` and a successful terminal job
+result under the same invocation ID. The resumed November 18 run independently
+waited 2,735 seconds and completed. This establishes observed recovery for USGS
+daily; the other four feeds have no successful throttle/wait sequence in this audit.
+
+At the November 27 readback, each of the five latest invocation IDs matched its
+live `systemctl --user show` result: `Result=success`, `ExecMainStatus=0`, and no
+running main PID. The early groundwater/Wikidata failures remain historical
+failures, not unresolved latest-run failures. Saved IEM/groundwater backfill work
+remains; successful execution is not a claim that every historical year is loaded.
+Peaks `not_due` and Wikidata's later `not_due` runs do not prove provider fetching
+or live retry behavior. No `spatial_index_failed` event occurred in the latest
+five retained invocations.
+
+The active pin was independently verified as
+`sql-feeds-34b987649627a4146d1118af2a9e1d3dd43f39aa`: all 116 manifest files matched
+both their hashes and the committed archive, and the launcher hash matched the
+November 22 reconciliation. The later deployment was preserved. No feed was
+started or retried and no timer, release code or production database was changed
+during this readback.
+
+Evidence is retained outside the Git checkout in the PC workspace's
+`recovery/feed-acceptance-audit-20261127/`: full-field per-unit JSON journals,
+`collection.json`, `invocation-audit.json`, `acceptance-report.json`,
+`release-verification.json` and read-only `saved-progress.json`. The original
+watcher files remain the original stopped-monitor record, with a pointer to this
+supplemental audit. Failed historical process exits are retained explicitly;
+older successful job results are not invented direct exit-code observations.
+
+No retrospective `/proc` cwd, executable or command-line observation exists for
+the exited target processes. Configuration, archive/hash verification, runtime
+stack paths where available, and new-code journal behavior are supporting evidence
+with a different scope. The retrospective audit is complete; the expired watcher
+was not restarted and no new recurring monitor was created.
