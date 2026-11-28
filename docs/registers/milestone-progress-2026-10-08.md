@@ -2,11 +2,11 @@
 doc_id: kfm://register/milestone-progress-2026-10-08
 title: KFM Milestone and Issue Progress — 2026-10-08
 type: dated-progress-ledger
-version: v1.3
+version: v1.4
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-08
-updated: 2026-11-17
+updated: 2026-11-27
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Record per-milestone progress across the 37 native GitHub milestones and 56 open issues since the 2026-09-16 portfolio audit, name the merged work that moved each milestone, record the issue state changes made in this pass, and list counter anomalies and owner actions, without creating review, policy, source, lifecycle, release, or publication authority."
@@ -28,6 +28,42 @@ notes:
 <a id="top"></a>
 
 # KFM Milestone and Issue Progress — 2026-10-08
+
+## Current repository scan and source-family follow-through — 2026-11-27
+
+The prior sections remain dated evidence. This pass starts from
+`main@9c7ab6014ed568dc51794b3e27c1cf18bf02f11d`, including the temporal and
+drought rehearsals in #5888/#5890, later science features and the locked Python
+profile reconciliation in #6148. Approximately 1,300 paths differ from the
+previous drought branch. The clean pipeline checkout was reused; the separate
+website checkout contains unpublished work outside this pass.
+
+Read-only native scans pass: the 29-entry validator registry; topology with
+zero invariant/new-drift/stale findings and 83 retained warnings; scaffold
+ratchet with 700 retained markers and no new/resolved entries; gap census with
+zero structured parse errors and test-package shadows; the historical
+949-marker/747-entry completion projection. Those inventories are not capability
+acceptance. Exact-main hosted Python 3.12 reports 10,728 passes, 44 skips,
+7,611 passing subtests and two warnings in the root test tree, followed by
+additional out-of-tree suites.
+[Hosted job](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/46070150968/job/140744875755).
+
+The root dependency audit now passes with the repository's picomatch patch;
+the November 17 audit failure is historical, not a current finding at this pin.
+The remaining observed GDAL image-acquisition failure is already being handled
+by open [PR #6150](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/6150)
+at intake. This pass does not duplicate that work or change any check setting.
+
+The next dependency is the
+[seven-family source authority/cadence/rights/correction matrix](../sources/western-kansas-source-family-matrix.md)
+for #2899/#3390/#3393. Three approved pilot descriptors validate at this pin,
+but do not admit complete publisher families. USDM, KGS, EDDI, NASS, modeled
+soil and reference-boundary scopes retain their specific unresolved steps.
+The matrix distinguishes current publisher facts from historical metadata,
+including KGS's 2002 FGDC record and the experimental CPC EDDI transition.
+It recommends one USDM distribution/version as the next candidate review,
+without creating a descriptor, approving terms, admitting data or activating a
+connector. M22 and broader operational acceptance remain partial.
 
 ## Screenshot queue follow-through — 2026-11-17
 
