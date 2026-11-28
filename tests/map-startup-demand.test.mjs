@@ -41,7 +41,7 @@ test('initial restore and guide reopening retain a one-way startup request', () 
     run(latch, { guideOpen, setMapRequested(value) { requested = value; } })();
     assert.equal(requested, expected);
   }
-  const stable = { announce() {}, runMapMutation() {}, runtimeOfficialVisibility() {}, mapRequested: true };
+  const stable = { announce() {}, appendMeasurementPoint() {}, runMapMutation() {}, runtimeOfficialVisibility() {}, mapRequested: true };
   const before = run(`() => ${dependencies}`, { ...stable, guideOpen: false })();
   const after = run(`() => ${dependencies}`, { ...stable, guideOpen: true })();
   assert.deepEqual(after, before, 'returning to welcome must not dispose and recreate Explorer');

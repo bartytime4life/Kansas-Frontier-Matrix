@@ -118,23 +118,124 @@ test("both real generic hover/click fallbacks exclude scene display sources whil
   }
 });
 
+function measurementContext(sourceProfile = false) {
+  const updates = [], counts = [], labels = [], notices = [], announcements = [];
+  const map = { isStyleLoaded: () => true, isMoving: () => false, getCenter: () => ({ lng: -97, lat: 39 }), doubleClickZoom: { enable() {} }, queryRenderedFeatures() { throw new Error("measurement must not enter feature picking"); } };
+  const context = {
+    neonClaimedMapClicksRef: { current: new WeakSet() }, aviationPickingRef: { current: false }, undergroundOpenRef: { current: false },
+    sourceTransectSessionRef: { current: sourceProfile }, styleGenerationReadyRef: { current: true }, mapRef: { current: map },
+    measureModeRef: { current: "distance" }, measureCoordinatesRef: { current: [[-98, 38]] }, measureUnitRef: { current: "metric" }, TRANSECT_LIMITS: { vertices: 64 },
+    setMeasureCoordinateCount: value => counts.push(value), updateMeasurementSource: (_map, data) => updates.push(data), buildMeasurementData: (coordinates, mode) => ({ coordinates, mode }),
+    setMeasurement: label => labels.push(label), setSourceTransectNotice: value => notices.push(value), announce: value => announcements.push(value),
+    measurementLabelFor: (mode, points) => `${mode}:${points.length}`, setMeasureMode: value => assert.equal(value, null), useCallback: fn => fn, map,
+  };
+  context.appendMeasurementPoint = callback("appendMeasurementPoint", context);
+  return { context, updates, counts, labels, notices, announcements, map };
+}
+const measurementClick = nodesMatching(pageTree, node => ts.isCallExpression(node) && node.expression.getText(pageTree) === "map.on" && node.arguments[0]?.getText(pageTree) === '"click"' && node.arguments[1]?.getText(pageTree).includes("appendMeasurementPoint(map"))[0];
 test("real map click completes the existing measurement path before any feature/probe selection", () => {
-  const click = nodesMatching(pageTree, (node) => ts.isCallExpression(node) && node.expression.getText(pageTree) === "map.on" && node.arguments[0]?.getText(pageTree) === '"click"' && node.arguments[1]?.getText(pageTree).includes("measureCoordinatesRef.current"))[0];
-  const updates = [], counts = [], labels = [];
-  const context = { neonClaimedMapClicksRef: { current: new WeakSet() }, aviationPickingRef: { current: false }, undergroundOpenRef: { current: false }, measureModeRef: { current: "distance" }, measureCoordinatesRef: { current: [[-98, 38]] }, measureUnitRef: { current: "metric" }, setMeasureCoordinateCount: (value) => counts.push(value), updateMeasurementSource: (_map, data) => updates.push(data), buildMeasurementData: (coordinates, mode) => ({ coordinates, mode }), setMeasurement: (label) => labels.push(label), measurementLabelFor: (mode, points) => `${mode}:${points.length}`, map: { queryRenderedFeatures() { throw new Error("measurement must not enter feature picking"); } } };
+  const { context, updates, counts, labels } = measurementContext();
   const event = { lngLat: { lng: -97, lat: 39 }, point: [5, 6] };
-  evaluate(click.arguments[1], context)(event);
+  evaluate(measurementClick.arguments[1], context)(event);
   assert.deepEqual(updates, [{ coordinates: [[-98, 38], [-97, 39]], mode: "distance" }]);
   assert.deepEqual(counts, [2]); assert.deepEqual(labels, ["distance:2"]);
   assert.equal(context.neonClaimedMapClicksRef.current.has(event), true, "measurement claims the event before later probe listeners");
   const pointEvent = { lngLat: { lng: -96, lat: 38 }, point: [7, 8] };
   context.measureModeRef.current = "point";
-  context.setMeasureMode = value => assert.equal(value, null);
-  context.map.doubleClickZoom = { enable() {} }; context.announce = () => {};
-  evaluate(click.arguments[1], context)(pointEvent);
+  evaluate(measurementClick.arguments[1], context)(pointEvent);
   assert.equal(context.measureModeRef.current, null);
   assert.equal(context.neonClaimedMapClicksRef.current.has(pointEvent), true, "completed points stay claimed after their mode clears");
   assert.deepEqual(updates.at(-1), { coordinates: [[-96, 38]], mode: "point" });
+});
+test("source-profile pointer and map-center placement share exact coordinates, count, rendering and safe bounds", () => {
+  const { context, updates, counts, labels, notices, map } = measurementContext(true);
+  const center = callback("addSourceTransectCenter", context);
+  center();
+  evaluate(measurementClick.arguments[1], context)({ lngLat: { lng: -96.5, lat: 39.5 } });
+  assert.deepEqual(context.measureCoordinatesRef.current, [[-98, 38], [-97, 39], [-96.5, 39.5]]);
+  assert.deepEqual(counts, [2, 3]); assert.deepEqual(labels, ["distance:2", "distance:3"]);
+  assert.deepEqual(updates.at(-1), { coordinates: context.measureCoordinatesRef.current, mode: "distance" });
+  for (const coordinate of [[-96.5, 39.5], [NaN, 39], [-181, 39], [-97, 86]]) {
+    assert.equal(context.appendMeasurementPoint(map, coordinate), false);
+    assert.equal(counts.length, 2, "invalid or repeated points do not advance the line or source rendering");
+  }
+  assert.match(notices.at(-1), /valid map location/);
+  map.isMoving = () => true; center(); assert.equal(counts.length, 2); assert.match(notices.at(-1), /settle/);
+  map.isMoving = () => false; context.styleGenerationReadyRef.current = false; center(); assert.equal(counts.length, 2);
+  context.styleGenerationReadyRef.current = true;
+  context.measureCoordinatesRef.current = Array.from({ length: 64 }, (_, i) => [-98 + i * .001, 38]);
+  center(); assert.equal(context.measureCoordinatesRef.current.length, 64); assert.equal(counts.length, 2); assert.match(notices.at(-1), /64 points.*Finish.*undo/);
+  context.measureCoordinatesRef.current = context.measureCoordinatesRef.current.slice(0, -1); center(); assert.equal(context.measureCoordinatesRef.current.length, 64); assert.match(notices.at(-1), /Point limit reached/);
+  context.sourceTransectSessionRef.current = false; context.appendMeasurementPoint(map, [-96, 39]); assert.equal(context.measureCoordinatesRef.current.length, 65, "generic measurements do not inherit profile limits");
+  context.measureModeRef.current = "area"; context.appendMeasurementPoint(map, [-95, 39]); assert.equal(updates.at(-1).mode, "area");
+});
+test("a synchronized measurement style accepts placement while unrelated source work is unfinished", () => {
+  const { context, updates, counts, map } = measurementContext(true);
+  // MapLibre's aggregate style.loaded() includes every tile manager and pending
+  // source update, even after this generation's measurement source is installed.
+  map.isStyleLoaded = () => false; map.areTilesLoaded = () => false;
+  callback("addSourceTransectCenter", context)();
+  assert.deepEqual(counts, [2]); assert.deepEqual(updates[0], { coordinates: [[-98, 38], [-97, 39]], mode: "distance" });
+  context.styleGenerationReadyRef.current = false;
+  assert.equal(context.appendMeasurementPoint(map, [-96, 39]), false, "before synchronization or during style replacement, placement stays denied");
+  context.styleGenerationReadyRef.current = true; context.mapRef.current = {};
+  assert.equal(context.appendMeasurementPoint(map, [-96, 39]), false, "a replaced map stays denied");
+  context.mapRef.current = map; map.isMoving = () => true;
+  assert.equal(context.appendMeasurementPoint(map, [-96, 39]), false, "camera movement still pauses placement");
+  assert.deepEqual(counts, [2]); assert.equal(updates.length, 1);
+});
+test("retained center callbacks cannot revive a cancelled or different measurement and missing maps stay honest", () => {
+  for (const mode of [null, "point", "area"]) {
+    const { context, counts } = measurementContext(true); context.measureModeRef.current = mode; callback("addSourceTransectCenter", context)(); assert.deepEqual(counts, []);
+  }
+  const { context, counts, notices } = measurementContext(); callback("addSourceTransectCenter", context)(); assert.deepEqual(counts, []);
+  context.sourceTransectSessionRef.current = true; context.mapRef.current = null; callback("addSourceTransectCenter", context)(); assert.deepEqual(counts, []); assert.match(notices.at(-1), /not ready/);
+});
+test("canvas Enter places only in its owned source-profile session and returns focus without global key handling", () => {
+  const { context, counts } = measurementContext(true), focused = [];
+  const keyboard = callback("handleSourceTransectKey", { ...context, document: { querySelector: selector => ({ focus: options => focused.push({ selector, options }) }) } });
+  let prevented = 0;
+  const event = { key: "Enter", preventDefault: () => prevented++ };
+  keyboard(event); assert.equal(prevented, 1); assert.deepEqual(counts, [2]); assert.equal(focused[0].selector, "[data-terrain-transect] [data-place-map-center]"); assert.deepEqual(focused[0].options, { preventScroll: true });
+  for (const other of [{key:"ArrowRight"},{key:" "},{key:"Enter",repeat:true},{key:"Enter",defaultPrevented:true},{key:"Enter",ctrlKey:true},{key:"Enter",shiftKey:true}]) keyboard({ ...event, ...other });
+  assert.equal(prevented, 1);
+  context.sourceTransectSessionRef.current = false; keyboard(event); assert.equal(prevented, 1);
+  context.sourceTransectSessionRef.current = true; context.measureModeRef.current = "area"; keyboard(event); assert.equal(prevented, 1);
+  context.measureModeRef.current = "distance"; context.mapRef.current = {}; keyboard(event); assert.equal(prevented, 1);
+  const attach = nodesMatching(pageTree, node => ts.isCallExpression(node) && node.expression.getText(pageTree) === 'map.getCanvas().addEventListener' && node.arguments[1]?.getText(pageTree) === 'handleSourceTransectKey');
+  const detach = nodesMatching(pageTree, node => ts.isCallExpression(node) && node.expression.getText(pageTree) === 'map.getCanvas().removeEventListener' && node.arguments[1]?.getText(pageTree) === 'handleSourceTransectKey');
+  assert.equal(attach.length, 1); assert.equal(detach.length, 1);
+});
+
+
+test("Finish and Undo retain source ownership while Cancel, Clear, restore and generic tools retire it", () => {
+  const { context, counts } = measurementContext(true);
+  context.measurementGeometryModeRef = { current: "distance" };
+  context.measureCoordinatesRef.current = [[-98, 38], [-97, 39]];
+  context.setMeasureMode = () => {}; context.setMeasurementGeometryMode = () => {}; context.setSourceTransectSession = () => {}; context.setTerrainProfile = () => {}; context.setMapQueryCandidates = () => {};
+  context.map.doubleClickZoom.disable = () => {};
+  const center = callback("addSourceTransectCenter", context);
+  callback("finishMeasurement", context)(); center();
+  assert.equal(context.measureModeRef.current, null); assert.equal(context.sourceTransectSessionRef.current, true); assert.equal(context.measureCoordinatesRef.current.length, 2); assert.deepEqual(counts, []);
+  callback("undoMeasurementPoint", context)(); assert.equal(context.measureModeRef.current, "distance"); assert.equal(context.sourceTransectSessionRef.current, true); assert.equal(context.measureCoordinatesRef.current.length, 1);
+  center(); assert.equal(context.measureCoordinatesRef.current.length, 2);
+  callback("toggleMeasure", { ...context, measureMode: "distance" })("distance"); center(); assert.equal(context.sourceTransectSessionRef.current, false); assert.equal(context.measureModeRef.current, null); assert.equal(context.measureCoordinatesRef.current.length, 0);
+  context.sourceTransectSessionRef.current = true; context.measureModeRef.current = "distance";
+  callback("clearMeasurement", context)(); center(); assert.equal(context.sourceTransectSessionRef.current, false); assert.equal(context.measureCoordinatesRef.current.length, 0);
+  for (const mode of ["distance", "area", "point"]) {
+    context.sourceTransectSessionRef.current = true;
+    callback("toggleMeasure", { ...context, measureMode: null })(mode);
+    assert.equal(context.sourceTransectSessionRef.current, false); assert.equal(context.measureModeRef.current, mode); center(); assert.equal(context.measureCoordinatesRef.current.length, 0);
+  }
+  const restore = homeDeclaration("loadSavedWorkspace").initializer.body.statements;
+  const start = restore.findIndex(node => node.getText(pageTree) === "measureModeRef.current = null;");
+  const end = restore.findIndex((node, i) => i > start && node.getText(pageTree).startsWith("const savedAnalysisArea"));
+  assert.ok(start > 0 && end > start);
+  for (const restoredMeasurement of [null, { mode: "distance", label: "restored", coordinates: [[-98, 38], [-97, 39]] }]) {
+    context.sourceTransectSessionRef.current = true;
+    new Function(...Object.keys(context), "restoredMeasurement", transpile(restore.slice(start, end).map(node => node.getText(pageTree)).join("\n")))(...Object.values(context), restoredMeasurement);
+    center(); assert.equal(context.sourceTransectSessionRef.current, false); assert.equal(context.measureModeRef.current, null); assert.deepEqual(context.measureCoordinatesRef.current, restoredMeasurement?.coordinates ?? []);
+  }
 });
 
 const drawingUrl = toUrl(transpile(await read("app/terrain-drawing.ts")));
