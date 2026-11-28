@@ -113,6 +113,24 @@ class RecordedReviewTests(unittest.TestCase):
         self.assertEqual(manager.status()['job']['counts'],{'failed':1})
         self.assertEqual(intake.get_item(self.root,self.identity)['status'],'review')
 
+    def test_trusted_unsupported_extractive_policy_defers_to_current_review_engine(self):
+        with closing(sqlite3.connect(self.cache)) as db,db:
+            value=json.loads(db.execute('SELECT body FROM reviews').fetchone()[0])
+            value['packet']['description_policy']='source-passages-v1'
+            raw=manage.canonical(value['packet']);digest=hashlib.sha256(raw).hexdigest()
+            path='data/work/intake/ai-context/'+digest+'.json';(self.root/path).write_bytes(raw)
+            credit=value['result']['attribution']
+            credit.update(input_path=path,input_sha256=digest,prompt_version='legacy-extractive',prompt_sha256='b'*64)
+            body=json.dumps(value);db.execute('UPDATE reviews SET body=?,body_sha=?',
+                (body,hashlib.sha256(body.encode()).hexdigest()))
+        reader=RecordedReviews(self.cache,[{'version':'legacy-extractive','sha256':'b'*64}])
+        task=('new-job',0,self.identity,self.item['sha256'],intake_review.context(self.item),'new-cache')
+        self.assertIsNone(reader.get(self.root,self.item,task,self.client))
+        # Unsupported rendering is not permission to ignore changed evidence.
+        (self.root/credit['response_path']).write_text('{}')
+        with self.assertRaisesRegex(ValueError,'RECORDED_REVIEW_RECEIPT_CHANGED'):
+            reader.get(self.root,self.item,task,self.client)
+
     def test_whitespace_only_legacy_review_is_regenerated_as_inspection_availability(self):
         self.path.write_bytes(gzip.compress(b' \n\t\r\n'));intake.analyze(self.root)
         def legacy_packet(root,item):

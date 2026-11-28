@@ -8,10 +8,11 @@ import json
 from pathlib import Path
 import sqlite3
 import tempfile
+import sys
 import unittest
 from unittest.mock import patch
 
-from tools.local_data import ai_acceptance as ai,intake,manage,grounded_review as g
+from tools.local_data import ai_acceptance as ai,intake,intake_review,manage,grounded_review as g,prepare_intake
 from tools.local_data.review_cache import Cache,CachedQwen,CachedPackets,key_for
 from tools.local_data.smart_intake import SmartManager
 from tools.local_data.prepare_intake import current_item
@@ -19,7 +20,9 @@ from tools.local_data.prepare_intake import current_item
 
 class RecordedQwen:
     model='qwen3.5:test-local';digest='a'*64
+    def identity(self):return {'model':self.model,'digest':self.digest}
     def review(self,packet):
+        self.calls=getattr(self,'calls',0)+1
         selection={'title_ids':[],'passage_ids':[next(iter(g.choices(packet)[1]))],
             'domain':'hydrology','recommendation':'accept_local','confidence':'high','concern_codes':[]}
         inspection=next(json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection')
@@ -100,6 +103,46 @@ class ReviewCacheTests(unittest.TestCase):
                 self.assertEqual(item['sha256'],self.item['sha256'])
             self.assertLessEqual(len(list(Path('/proc/self/fd').iterdir())),baseline+2)
         finally:gc.enable()
+
+
+class PreparationCommandTests(unittest.TestCase):
+    def exercise(self,configured):
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder);root=base/'store';manage.init_store(root)
+            source=root/'data/raw/sample.csv.gz';source.write_bytes(gzip.compress(b'station,river\nQA,2.4\n'))
+            intake.analyze(root);item=intake.get_item(root,intake.item_id('raw','sample.csv.gz'))
+            client=RecordedQwen();ai.Manager(root,client)
+            runtime=base/'pc/runtime';runtime.mkdir(parents=True);(runtime.parent/'run').mkdir()
+            (runtime/'storage-identity.json').write_text(json.dumps({'root':str(root)}))
+            (runtime/'check-data-mount.py').write_text('raise SystemExit(0)\n')
+            policy=manage.canonical({'items':{item['id']:{'sha256':item['sha256'],'context':intake_review.context(item)}}})
+            policy_path=base/'owner-policy.json';policy_path.write_bytes(policy)
+            config={'model':client.model,'model_digest':client.digest,'owner_policy_source':str(policy_path),
+                'owner_policy':hashlib.sha256(policy).hexdigest()}
+            default=runtime.parent/'run/smart-intake-cache.sqlite'
+            expected=base/'configured-cache/prepared.sqlite' if configured else default
+            if configured:config['preparation_cache']=str(expected)
+            path=runtime/'smart-intake.json';path.write_text(json.dumps(config))
+            before=hashlib.sha256((root/'data/work/intake/index.sqlite').read_bytes()).hexdigest()
+            with patch.object(sys,'argv',['prepare_intake','--config',str(path)]), \
+                    patch.object(prepare_intake.ai,'Qwen',return_value=client),patch.object(prepare_intake.signal,'signal'):
+                prepare_intake.main()
+            self.assertTrue(expected.is_file())
+            if configured:self.assertFalse(default.exists())
+            self.assertEqual(client.calls,1)
+            self.assertEqual(hashlib.sha256((root/'data/work/intake/index.sqlite').read_bytes()).hexdigest(),before)
+            self.assertEqual(intake.get_item(root,item['id'])['status'],'review')
+            cache=Cache(expected);saved=cache.get(key_for(item,client));self.assertIsNotNone(saved)
+            consumer=CachedQwen(client.model,client.digest,cache)
+            builder=CachedPackets(lambda *_:self.fail('recorded input should be used'),consumer,cache)
+            with patch.object(consumer,'identity'),patch.object(ai.Qwen,'review',side_effect=AssertionError('unexpected second inference')):
+                result,_=consumer.review(builder(root,item))
+            self.assertEqual(result,saved['review']);self.assertEqual(consumer.last_generated_at,saved['generated_at'])
+            self.assertEqual(client.calls,1)
+
+    def test_preparation_uses_configured_cache_consumed_by_acceptance(self):self.exercise(True)
+
+    def test_preparation_default_cache_remains_consumable(self):self.exercise(False)
 
 
 if __name__=='__main__':unittest.main()

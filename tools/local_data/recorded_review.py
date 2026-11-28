@@ -37,6 +37,11 @@ class RecordedReviews:
             if field=='input_path':packet=json.loads(body)
             else:response=json.loads(body)
         if packet!=value['packet']:raise ValueError('RECORDED_REVIEW_INPUT_CHANGED')
+        # Older extractive formats have a different wire response. Re-run the
+        # current engine rather than interpreting them as standard evidence or
+        # rewriting their original descriptions with an incompatible renderer.
+        if packet.get('description_policy') is not None and not ai.grounded_review.is_extractive(packet):
+            return None
         # Old empty-text output quoted an inspection note as if it were source
         # text. The new availability policy generates a properly labeled review.
         if any(f['id']=='gzip_inspection' for f in packet['facts']) and not any(f['id'].startswith('gzip_text_') and f['text'].strip() for f in packet['facts']):
