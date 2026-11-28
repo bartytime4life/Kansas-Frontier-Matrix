@@ -174,3 +174,25 @@ test('packed spatial identities above the JavaScript safe-integer range stay ins
  assert.equal(answer.rows.length,1);assert.deepEqual(JSON.parse(answer.rows[0].id),[file,1]);
  assert.equal(answer.rows[0].values.resname,'Large capture key');
 });
+
+test('unnamed pages stop source identity lookups after the valid prefix, while orphan extents do not consume offsets',t=>{
+ const db=fixture(t);
+ const insert=db.prepare(`INSERT INTO "${c.table}"(file_id,row_number,resname,geometry_geojson) VALUES(1,?,?,?)`),rt=db.prepare(`INSERT INTO "${c.table}_rtree" VALUES(?,?,?,?,?)`);
+ rt.run(key(1,0),-97.3,-97.3,37.7,37.7);
+ for(let i=100;i<1100;i++){insert.run(i,'Later record '+i,point(-97.3,37.7));rt.run(key(1,i),-97.3,-97.3,37.7,37.7);}
+ let identities=0,existenceLookups=0,payloadLookups=0;
+ const tracked={prepare(sql){
+  const statement=db.prepare(sql);
+  return {all:(...args)=>statement.all(...args),get(...args){
+   if(sql.includes(`FROM "${c.table}" WHERE file_id=?`))existenceLookups++;
+   if(sql.includes(`FROM "${c.table}" t WHERE t.file_id=?`))payloadLookups++;
+   return statement.get(...args);
+  },*iterate(...args){for(const value of statement.iterate(...args)){identities++;yield value;}}};
+ }};
+ const answer=run(tracked,{collection:c.id,bbox:WICHITA,offset:'2',limit:'1'});
+ assert.deepEqual(answer.rows.map(r=>r.id),['[1,4]']);
+ assert.equal(answer.total,1004);assert.equal(identities,4);
+ assert.equal(existenceLookups,3);assert.equal(payloadLookups,1);
+ // Early iterator closure must allow the same connection to serve another page.
+ assert.deepEqual(run(db,{collection:c.id,bbox:WICHITA,limit:'1'}).rows.map(r=>r.id),['[1,1]']);
+});

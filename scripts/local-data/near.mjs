@@ -30,6 +30,25 @@ export function sidecarState(db,table){
  return state;
 }
 
+function unnamedPage(db,c,q,where,params){
+ const t=quote(c.table),r=quote(c.table+'_rtree');
+ // Order extents before consulting the source PK index. A spatial-first join
+ // would look up every matching record before sorting, even for a two-row page.
+ // Decode packed IDs inside SQLite; each component fits its original 32 bits.
+ const identities=db.prepare(`SELECT (r.id >> 32) AS file_id,(r.id & 4294967295) AS row_number
+  FROM ${r} r WHERE ${where} ORDER BY r.id`);
+ const exists=db.prepare(`SELECT 1 FROM ${t} WHERE file_id=? AND row_number=?`);
+ const payload=db.prepare(`SELECT ${c.columns.map(k=>'t.'+quote(k)).join(',')} FROM ${t} t WHERE t.file_id=? AND t.row_number=?`);
+ const rows=[];let skipped=0;
+ for(const identity of identities.iterate(...params)){
+  if(skipped<q.offset){if(exists.get(identity.file_id,identity.row_number))skipped++;continue;}
+  const row=payload.get(identity.file_id,identity.row_number);
+  if(row)rows.push(row); // Orphan extents consume neither OFFSET nor page slots.
+  if(rows.length===q.limit)break;
+ }
+ return rows;
+}
+
 export function nearDataset(database){
  const collections=NEAR_COLLECTIONS.filter(c=>c.database===database),byId=new Map(collections.map(c=>[c.id,c]));
  return {id:'near-'+database,db:database,title:'Recovered '+database+' records in a map area',indexes:[],source,freshness:{collections},
@@ -57,10 +76,10 @@ export function nearDataset(database){
    // LIMIT prevents flattening into the outer join, so full records are fetched
    // only for the final page, including when OFFSET skips earlier identities.
    const selected=`SELECT r.id ${clause} ORDER BY r.id LIMIT ? OFFSET ?`;
-   const rows=db.prepare(`SELECT ${c.columns.map(k=>'t.'+quote(k)).join(',')} FROM (${selected}) selected
+   const values=q.name?db.prepare(`SELECT ${c.columns.map(k=>'t.'+quote(k)).join(',')} FROM (${selected}) selected
     JOIN ${t} t ON t.file_id = (selected.id >> 32) AND t.row_number = (selected.id & 4294967295)
-    ORDER BY selected.id`).all(...params,q.limit,q.offset)
-    .map(values=>({id:JSON.stringify(c.keys.map(k=>values[k])),values}));
+    ORDER BY selected.id`).all(...params,q.limit,q.offset):unnamedPage(db,c,q,where[0],params);
+   const rows=values.map(values=>({id:JSON.stringify(c.keys.map(k=>values[k])),values}));
    const sources=new Map();
    if(c.columns.includes('file_id')){
     const lookup=db.prepare('SELECT source_id, source_url, sha256 FROM kfm_sql_sources WHERE file_id=?');
