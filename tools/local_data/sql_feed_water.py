@@ -49,6 +49,10 @@ and fetches those years again. Every year is also read again at least yearly, fo
 visit can hold several readings at the same time, so rows have no natural key, and whole years are
 replaced instead.
 
+Revision years and unfinished backfill alternate, with the next work type saved after each completed
+year so a row or year cap cannot always leave the backfill behind. Due revisions are ordered by
+their last checked date. Annual rechecks follow once neither revisions nor new years remain.
+
 water-quality, ``kfm_wqp_results`` and ``kfm_wqp_stations``: the Water Quality Portal's Kansas results
 (statecode US:20), one file per year of activity start date (key ``results/YYYY``). The backfill runs
 oldest first from 1901, the first year with Kansas results, at most ``max_years`` years or
@@ -73,6 +77,7 @@ providers' public data (https://www.waterqualitydata.us/portal_userguide/).
 """
 from __future__ import annotations
 
+from collections import deque
 import csv
 from datetime import date, datetime, timedelta, timezone
 import gzip
@@ -595,6 +600,25 @@ def _gw_year(ctx, db, year: int, today: date) -> dict:
                        len(GW_FIELDS) + 3), "rows_in_file": len(rows)}
 
 
+def _gw_plan(checked: dict, due: set, next_year: int, today: date, next_work: str) -> list[tuple[int, str]]:
+    """Share bounded runs between old revisions and contiguous, unfinished history."""
+    queues = {
+        "revisions": deque(sorted((y for y in due if y < next_year),
+                                  key=lambda y: (checked.get(str(y), ""), y))),
+        "backfill": deque(range(next_year, today.year + 1)),
+    }
+    plan = []
+    while queues["revisions"] or queues["backfill"]:
+        work = next_work if queues[next_work] else ("backfill" if next_work == "revisions" else "revisions")
+        plan.append((queues[work].popleft(), work))
+        next_work = "backfill" if work == "revisions" else "revisions"
+    planned = {year for year, _ in plan}
+    stale = sorted((day, int(year)) for year, day in checked.items()
+                   if (today - date.fromisoformat(day)).days >= GW_REREAD_DAYS)
+    plan += [(year, "recheck") for _, year in stale if year not in planned]
+    return plan
+
+
 def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dict:
     db = core.open_db(ctx)
     try:
@@ -604,7 +628,11 @@ def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dic
         now, today = ctx.now(), ctx.now().date()
         checked, due = dict(state.get("checked", {})), set(state.get("due", []))
         next_year = int(state.get("next_year", GW_FIRST_YEAR))
-        summary = {"years": [], "rows": 0, "changed_years": [], "empty_but_loaded": []}
+        next_work = state.get("next_work", "revisions")
+        if next_work not in ("revisions", "backfill"):
+            next_work = "revisions"
+        summary = {"years": [], "rows": 0, "changed_years": [], "empty_but_loaded": [],
+                   "year_counts": {"revisions": 0, "backfill": 0, "recheck": 0}}
         if "modified_through" in state:
             # Find the measurement years affected by the modification window.
             a = _stamp(_moment(state["modified_through"]) - MODIFIED_OVERLAP)
@@ -623,14 +651,12 @@ def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dic
             summary["changed_years"] = sorted(y for y in changed if y < next_year)
             due |= set(summary["changed_years"])
         state = _save(ctx, db, "usgs-groundwater", {**state, "modified_through": _stamp(now), "due": sorted(due)})
-        stale = sorted((d, int(y)) for y, d in checked.items() if (today - date.fromisoformat(d)).days >= GW_REREAD_DAYS)
-        plan = sorted(due) + list(range(next_year, today.year + 1))
-        plan += [y for _, y in stale if y not in plan]
-        for year in plan:
+        for year, work in _gw_plan(checked, due, next_year, today, next_work):
             if len(summary["years"]) >= max_years or summary["rows"] >= row_budget:
                 break
             result = _gw_year(ctx, db, year, today)
             summary["years"].append(year)
+            summary["year_counts"][work] += 1
             summary["rows"] += result.get("rows_in_file", 0)
             if result["state"] == "empty" and _has_version(db, "usgs-field-measurements", f"year/{year}"):
                 # An empty answer for a loaded year is kept for a retry, not taken as a deletion.
@@ -639,9 +665,14 @@ def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dic
             else:
                 checked[str(year)] = str(today)
                 due.discard(year)
-            next_year = year + 1 if year >= next_year else next_year
-            state = _save(ctx, db, "usgs-groundwater", {**state, "checked": checked, "due": sorted(due), "next_year": next_year})
-        return {**summary, "next_year": next_year, "due": len(due), "backfill_pending": max(0, today.year + 1 - next_year), **throttle.summary()}
+            if work == "backfill":
+                next_year = year + 1
+            if work in ("revisions", "backfill"):
+                next_work = "backfill" if work == "revisions" else "revisions"
+            state = _save(ctx, db, "usgs-groundwater", {**state, "checked": checked, "due": sorted(due),
+                                                       "next_year": next_year, "next_work": next_work})
+        return {**summary, "next_year": next_year, "next_work": next_work, "due": len(due),
+                "backfill_pending": max(0, today.year + 1 - next_year), **throttle.summary()}
     finally:
         db.close()
 

@@ -324,6 +324,111 @@ class GroundwaterTests(FeedCase):
         rows = [r for rows in self.years.values() for r in rows if first <= r[11] <= last]
         return ogc(GW_HEADER, rows[:w.PAGE])
 
+    def groundwater_state(self, value=None):
+        db = core.open_db(self.ctx)
+        try:
+            return (core.get_state(db, "usgs-groundwater") if value is None
+                    else w._save(self.ctx, db, "usgs-groundwater", value))
+        finally:
+            db.close()
+
+    def test_repeated_revisions_cannot_spend_every_backfill_run_budget(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx, max_years=1)
+            self.modified = ["2023-01-30"]
+            results = [w.usgs_groundwater(self.ctx, row_budget=5) for _ in range(4)]
+        self.assertEqual([r["years"] for r in results], [[2023], [2024, 2023], [2025, 2023], [2026, 2023]])
+        self.assertEqual((results[-1]["next_year"], results[-1]["backfill_pending"]), (2027, 0))
+        self.assertEqual(self.q("SELECT DISTINCT substr(time,1,4) FROM kfm_usgs_field_measurements ORDER BY 1"),
+                         [("2023",), ("2025",), ("2026",)])
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_usgs_field_measurements"), [(7,)])
+
+    def test_a_single_year_cap_retains_the_next_work_lane_for_legacy_state(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx, max_years=1)
+            state = self.groundwater_state()
+            state.pop("next_work", None)
+            self.groundwater_state(state)
+            self.modified = ["2023-01-30"]
+            first = w.usgs_groundwater(self.ctx, max_years=1)
+            second = w.usgs_groundwater(self.ctx, max_years=1)
+        self.assertEqual((first["years"], second["years"], second["next_year"]), ([2023], [2024], 2025))
+
+    def test_due_revisions_prefer_the_least_recently_checked_year(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx)
+            state = self.groundwater_state()
+            state["checked"].update({"2023": "2026-11-03", "2025": "2026-11-01"})
+            self.groundwater_state(state)
+            self.modified = ["2023-01-30", "2025-01-30"]
+            self.ctx.now = lambda: datetime(2026, 11, 5, 15, 0, tzinfo=timezone.utc)
+            first = w.usgs_groundwater(self.ctx, max_years=1)
+            second = w.usgs_groundwater(self.ctx, max_years=1)
+        self.assertEqual((first["years"], second["years"]), ([2025], [2023]))
+        self.assertEqual(second["due"], 1, "the recurring probe may queue an already checked year again")
+
+    def test_a_failed_backfill_keeps_its_cursor_and_work_lane(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx, max_years=1)
+            self.modified = ["2023-01-30"]
+            w.usgs_groundwater(self.ctx, max_years=1)
+            before = self.groundwater_state()
+            rows = self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number")
+            with patch.object(w, "_gw_year", side_effect=core.FeedError("fixture year unavailable")), \
+                    self.assertRaisesRegex(core.FeedError, "fixture year unavailable"):
+                w.usgs_groundwater(self.ctx, max_years=1)
+            failed = self.groundwater_state()
+            self.assertEqual((failed["next_year"], failed.get("next_work")),
+                             (before["next_year"], before.get("next_work")))
+            self.assertEqual(self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number"), rows)
+            retried = w.usgs_groundwater(self.ctx, max_years=1)
+        self.assertEqual((retried["years"], retried["next_year"]), ([2024], 2025))
+
+    def test_a_due_year_ahead_of_the_cursor_cannot_skip_unvisited_history(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx, max_years=1)
+            state = self.groundwater_state()
+            state["due"] = [2026]
+            self.groundwater_state(state)
+            results = [w.usgs_groundwater(self.ctx, max_years=1) for _ in range(3)]
+        self.assertEqual([r["years"] for r in results], [[2024], [2025], [2026]])
+        self.assertEqual((results[-1]["next_year"], results[-1]["due"]), (2027, 0))
+
+    def test_revisions_and_backfill_alternate_within_a_larger_run(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx, max_years=2)
+            self.modified = ["2023-01-30", "2024-01-30"]
+            result = w.usgs_groundwater(self.ctx, max_years=4)
+        self.assertEqual(result["years"], [2023, 2025, 2024, 2026])
+        self.assertEqual((result["next_year"], result["due"]), (2027, 0))
+        self.assertEqual(result["year_counts"], {"revisions": 2, "backfill": 2, "recheck": 0})
+
+    def test_empty_rereads_keep_loaded_rows_and_do_not_block_later_history(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx)
+            before = self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY file_id,row_number")
+            state = self.groundwater_state()
+            state.update({"next_year": 2025, "next_work": "backfill"})
+            self.groundwater_state(state)
+            self.years[2025] = []
+            results = [w.usgs_groundwater(self.ctx, max_years=1) for _ in range(3)]
+        self.assertEqual([r["years"] for r in results], [[2025], [2025], [2026]])
+        self.assertEqual((results[-1]["next_year"], results[-1]["due"]), (2027, 1))
+        self.assertIn(2025, self.groundwater_state()["due"])
+        self.assertEqual(self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY file_id,row_number"), before)
+
+    def test_completed_backfill_keeps_annual_rechecks_without_duplicate_years(self):
+        with patch.object(w, "GW_FIRST_YEAR", 2023):
+            w.usgs_groundwater(self.ctx)
+            state = self.groundwater_state()
+            state["checked"].update({"2023": "2025-01-01", "2025": "2025-01-01"})
+            state["due"] = [2023]
+            self.groundwater_state(state)
+            result = w.usgs_groundwater(self.ctx)
+        self.assertEqual(result["years"], [2023, 2025])
+        self.assertEqual(result["next_year"], 2027)
+        self.assertEqual(result["year_counts"], {"revisions": 1, "backfill": 0, "recheck": 1})
+
     def relocate_store(self):
         with patch.object(w, "GW_FIRST_YEAR", 2023):
             w.usgs_groundwater(self.ctx, max_years=1)
@@ -346,9 +451,13 @@ class GroundwaterTests(FeedCase):
                 if not old_available:
                     shutil.rmtree(old)
                 self.ctx.now = lambda: datetime(2026, 11, 5, 15, 0, tzinfo=timezone.utc)
-                with patch.object(w, "GW_FIRST_YEAR", 2023):
-                    result = w.usgs_groundwater(self.ctx, max_years=1)
-                self.assertEqual((result["years"], result["next_year"]), ([2023], 2024))
+                db = core.open_db(self.ctx)
+                try:
+                    result = w._gw_year(self.ctx, db, 2023, date(2026, 11, 5))
+                finally:
+                    db.close()
+                self.assertEqual(result["state"], "unchanged")
+                self.assertEqual(self.groundwater_state()["next_year"], 2024)
                 self.assertEqual(self.q("SELECT file_id,source_path,sha256,state FROM kfm_sql_sources ORDER BY file_id"), sources)
                 self.assertEqual(self.q("SELECT * FROM kfm_usgs_field_measurements ORDER BY row_number"), values)
                 self.assertEqual(sorted((self.root / "data/raw/sql-feeds").rglob("*.gz")), captures)
