@@ -1,0 +1,140 @@
+{
+  "receipt_id": "local-qwen-held-resolution-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-qwen-intake-automation.md",
+    "tests/local_data/test_ai_acceptance.py",
+    "tests/local_data/test_ai_acceptance_captured.py",
+    "tests/local_data/test_grounded_review.py",
+    "tests/local_data/test_intake_workspace.py",
+    "tests/local_data/test_raster_archive.py",
+    "tests/local_data/test_recorded_review.py",
+    "tests/local_data/test_review_cache.py",
+    "tests/local_data/test_smart_intake.py",
+    "tools/local_data/ai_acceptance.py",
+    "tools/local_data/grounded_review.py",
+    "tools/local_data/intake.py",
+    "tools/local_data/intake_desk/ai-review.js",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_review.py",
+    "tools/local_data/intake_studio/intake_backend.py",
+    "tools/local_data/intake_studio/workspace.py",
+    "tools/local_data/prepare_intake.py",
+    "tools/local_data/raster_archive.py",
+    "tools/local_data/recorded_review.py",
+    "tools/local_data/review_cache.py",
+    "tools/local_data/smart_intake.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-qwen-intake-automation.md": "sha256:e756baf05bfe9327b2b362efc6d2ad2fa89811841433836813d18ad08cae5877",
+    "tests/local_data/test_ai_acceptance.py": "sha256:97da533c6c033f07143332c392c86c21853dd8d48bbe480af5d85def25c1bcf0",
+    "tests/local_data/test_ai_acceptance_captured.py": "sha256:040cd27bc23884443452d12a932a91727abb66e5d13cb332668fd28aaaddb5aa",
+    "tests/local_data/test_grounded_review.py": "sha256:faf3718164c66eb93c132629e1d2b44867d5ec8d2b5f6d8cf596df0e910c35a0",
+    "tests/local_data/test_intake_workspace.py": "sha256:efa230fc36626e3fa40bd9679e7947d4a0b55ddb0062f0a123e6ed42e9b06e88",
+    "tests/local_data/test_raster_archive.py": "sha256:c3b4d8231e65ce3ce352a2919a8e44fd250521eee209bc25d30ecee55d464a05",
+    "tests/local_data/test_recorded_review.py": "sha256:5fca52bd5b30c84997a7bd9255073d94219feda04a070a8b134538978bca6885",
+    "tests/local_data/test_review_cache.py": "sha256:67674ec686c5f41ad7ae38e22bfd556c2548d8644f8a75f1217b916e73c1e2e8",
+    "tests/local_data/test_smart_intake.py": "sha256:c44a745a28844b1385c406785d2fbcbc4d3e7c933c780d6a7060035e8380c4e7",
+    "tools/local_data/ai_acceptance.py": "sha256:f7db524ebdf627b29f03717bd03d898bedeeb8990b3658afed9f8701d167bf30",
+    "tools/local_data/grounded_review.py": "sha256:a942e6705162ce2eb9adda5a4f25c5468ed43662b199a4f05e504198711b2be7",
+    "tools/local_data/intake.py": "sha256:63c1a4d5f2a36f85fa6eb5180df6c55e5d6d0df0ca3264ac961d30cf90dbcff1",
+    "tools/local_data/intake_desk/ai-review.js": "sha256:a67f97987d20202dafba992bb2ea65bc40e364ed476a051bbfc9f4e8ef86bb5d",
+    "tools/local_data/intake_desk/desk.js": "sha256:f135c2ec9bb043f12bbd5f75d95811b1025ca8d1e90c8710804fcda4b7c7f81f",
+    "tools/local_data/intake_review.py": "sha256:0aeefa8193bca73507456fb8a6a675fc815c9b0853a5d1b82e809c5225c5f4ca",
+    "tools/local_data/intake_studio/intake_backend.py": "sha256:fb8003a3b225e107c994e0450062c7babbd6545d76aba120bd467486cb8c81c1",
+    "tools/local_data/intake_studio/workspace.py": "sha256:90595600aca3f28dea144c222cbcda66224781eb7c50d68fd60ed459c86be676",
+    "tools/local_data/prepare_intake.py": "sha256:7f5d93f005325586dc0a2b349b55f66e3a4b35bd9b4123d5887258a08eaddd71",
+    "tools/local_data/raster_archive.py": "sha256:543113f108242f02b13422eb54bd2498947ab402658ca9a3520f2011a85e1819",
+    "tools/local_data/recorded_review.py": "sha256:90000cafab5df8b89aec0151fd8aa7cc1b1ad44827177004279e0d4460a2cfee",
+    "tools/local_data/review_cache.py": "sha256:9d278e7c5efeed41a278940c0b31b5a67384482fb0981b75f58ddf8769025749",
+    "tools/local_data/smart_intake.py": "sha256:00ce95d0671f6749acf796347d457d1ff43f1387d9373f90aaefd52c4c2539ab"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Current Codex session; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@490d61906ebb2760565858f41bc1bad436e65c32",
+      "commit:291584f9e16131ddeabf799030e71b8196074027",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://prism.oregonstate.edu/documents/PRISM_datasets.pdf",
+      "https://prism.oregonstate.edu/faq/"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-qwen-intake-automation.md": "PROPOSED",
+    "tests/local_data/test_ai_acceptance.py": "PROPOSED",
+    "tests/local_data/test_ai_acceptance_captured.py": "PROPOSED",
+    "tests/local_data/test_grounded_review.py": "PROPOSED",
+    "tests/local_data/test_intake_workspace.py": "PROPOSED",
+    "tests/local_data/test_raster_archive.py": "PROPOSED",
+    "tests/local_data/test_recorded_review.py": "PROPOSED",
+    "tests/local_data/test_review_cache.py": "PROPOSED",
+    "tests/local_data/test_smart_intake.py": "PROPOSED",
+    "tools/local_data/ai_acceptance.py": "PROPOSED",
+    "tools/local_data/grounded_review.py": "PROPOSED",
+    "tools/local_data/intake.py": "PROPOSED",
+    "tools/local_data/intake_desk/ai-review.js": "PROPOSED",
+    "tools/local_data/intake_desk/desk.js": "PROPOSED",
+    "tools/local_data/intake_review.py": "PROPOSED",
+    "tools/local_data/intake_studio/intake_backend.py": "PROPOSED",
+    "tools/local_data/intake_studio/workspace.py": "PROPOSED",
+    "tools/local_data/prepare_intake.py": "PROPOSED",
+    "tools/local_data/raster_archive.py": "PROPOSED",
+    "tools/local_data/recorded_review.py": "PROPOSED",
+    "tools/local_data/review_cache.py": "PROPOSED",
+    "tools/local_data/smart_intake.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Canonical offline local-data suite, Python 3.14.4",
+      "outcome": "PASS",
+      "reason": "1202 passed, 45 skipped, 714 subtests passed. Includes fail-closed restrictions, bounded raster inspection and interrupted owner acceptance."
+    },
+    {
+      "gate": "Installed compatibility backport, Python 3.14.4",
+      "outcome": "PASS",
+      "reason": "102 review/extraction/reuse/recovery tests against exact frozen candidate module bytes; existing installed Studio shell retained."
+    },
+    {
+      "gate": "Live dev first batch and combined workspace",
+      "outcome": "PASS",
+      "reason": "All first 100 accepted references independently rehashed and reconstructed from actual saved Qwen responses, including two Studio uploads and seven raster archives. The transient INTAKE_BUSY file succeeded on retry. Desktop and phone review-credit checks passed."
+    },
+    {
+      "gate": "Local Markdown targets and final artifact hashes",
+      "outcome": "PASS",
+      "reason": "Focused local link check and receipt integrity validator; provider documentation consulted separately."
+    },
+    {
+      "gate": "Exact-head hosted checks and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending source PR. Generation and local operational verification do not constitute human approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "PRISM-dataset-variable-definitions",
+      "validated": true,
+      "evidence_ref": "https://prism.oregonstate.edu/documents/PRISM_datasets.pdf"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-28T02:44:13.463635+00:00",
+  "emitter": "Codex",
+  "notes": "Source proposal for guarded local Qwen automation, bounded raster metadata and exact owner-requested private reference retention. Real existing generations retain original timestamps, recommendations, model and input/response credits. No private policies, source payloads, item IDs, runtime configuration, prompts or hidden reasoning are included. The canonical account gateway remains intact. Local legacy-shell compatibility deployment is separately audited outside Git. The remaining operational selection is processing, not represented as completely accepted or verified. No public release, source admission, merge or publication."
+}

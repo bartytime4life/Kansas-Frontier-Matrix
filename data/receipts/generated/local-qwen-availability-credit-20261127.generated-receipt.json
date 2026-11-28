@@ -1,0 +1,55 @@
+{
+  "receipt_id": "local-qwen-availability-credit-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/grounded_review.py",
+    "tests/local_data/test_raster_archive.py"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/grounded_review.py": "sha256:39126f597e860553c39d7a7843d97fcb9d892a759d6ccf0443e8b9eb8e1b33d1",
+    "tests/local_data/test_raster_archive.py": "sha256:d05b06cc741fd8017a5f13436cee7e6204cd22c058f559ba5d36f6cc87810952"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Current Codex session; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "commit:9e5064533da414c03561310a5193ad73684af31f",
+      "data/receipts/generated/local-qwen-held-resolution-20261127.generated-receipt.json"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/grounded_review.py": "CONFIRMED",
+    "tests/local_data/test_raster_archive.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Empty-capture attribution and existing review/extraction/recovery regressions",
+      "outcome": "PASS",
+      "reason": "Assertion distinguishes KFM-measured text availability from source quotations. The source description, raw model response and model-prompt SHA remain unchanged."
+    },
+    {
+      "gate": "Exact-head hosted checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending this successor; the parent head completed 54 workflows successfully and one skipped."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-28T03:09:06.476788+00:00",
+  "emitter": "Codex",
+  "notes": "Successor authorship for the two changed artifact bytes. Corrects only the new empty-text availability method label; the earlier authorship receipt remains historical evidence for its own source revision. The affected capture is still held at correction time. No source content, review output, prompt, rights, retention scope or source-admission authority changes. Human review pending."
+}

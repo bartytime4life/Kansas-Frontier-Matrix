@@ -56,6 +56,35 @@ class WorkspaceTests(unittest.TestCase):
     def auth(self):
         return {**self.account_headers, "Origin": self.server.origin}
 
+    def test_configured_studio_resumes_with_the_same_smart_worker_policy(self):
+        from tools.local_data.smart_intake import SmartManager
+        self.store.qwen_model='qwen3.5:test';self.store.qwen_digest='a'*64
+        self.store.automation_config=self.base/'smart-intake.json'
+        self.store.automation_config.write_text(json.dumps({'model':self.store.qwen_model,'model_digest':self.store.qwen_digest,'owner_policy':None}))
+        workspace=Workspace(self.store,18776,self.server.token)
+        self.assertIsInstance(workspace.ai,SmartManager)
+
+    def test_studio_refuses_a_different_automation_model_pin(self):
+        self.store.qwen_model='qwen3.5:test';self.store.qwen_digest='a'*64
+        self.store.automation_config=self.base/'smart-intake.json'
+        self.store.automation_config.write_text(json.dumps({'model':self.store.qwen_model,'model_digest':'b'*64}))
+        with self.assertRaisesRegex(ValueError,'AI_AUTOMATION_MODEL_PIN_MISMATCH'):
+            Workspace(self.store,18776,self.server.token)
+
+    def test_preparation_is_visible_but_maintenance_still_blocks_acceptance(self):
+        from tools.local_data.review_cache import CachedQwen
+        self.store.qwen_model='qwen3.5:test';self.store.qwen_digest='a'*64
+        self.store.automation_config=self.base/'smart-intake.json'
+        maintenance=self.base/'maintenance';maintenance.mkdir();(maintenance/'phase.json').write_text(json.dumps({'phase':'verifying'}))
+        preparation=self.base/'preparation.json';preparation.write_text(json.dumps({'state':'preparing','prepared':3,'cached':2}))
+        self.store.automation_config.write_text(json.dumps({'model':self.store.qwen_model,'model_digest':self.store.qwen_digest,
+            'preparation_cache':str(self.base/'cache.sqlite'),'preparation_status':str(preparation),
+            'maintenance_directory':str(maintenance)}))
+        workspace=Workspace(self.store,18776,self.server.token)
+        self.assertIsInstance(workspace.ai.client,CachedQwen)
+        self.assertTrue(workspace.ai.status()['maintenance'])
+        self.assertEqual(workspace.ai.status()['preparation']['prepared'],3)
+
     def test_shared_shell_navigation_uses_one_origin_without_frames(self):
         for route, active in (("/working-data", "working-nav"), ("/library", "library-nav")):
             code, body, headers = self.request(route, headers=self.auth)

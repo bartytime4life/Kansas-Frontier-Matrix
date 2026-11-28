@@ -17,9 +17,10 @@ from tools.local_data import intake, intake_review, intake_route
 from tools.local_data.file_io import check_directory, hash_regular, open_regular, read_regular, write_new
 from tools.local_data.manage import canonical, utc_now
 from tools.local_data.acquisition import validate_root
-from tools.local_data import grounded_review, text_sample
+from tools.local_data import grounded_review, text_sample, raster_archive
 
-PROMPT_VERSION = "kfm-local-acceptance-v5-format-scope"
+PROMPT_VERSION = "kfm-local-acceptance-v6-raster-archive"
+GZIP_TEXT_SUFFIXES = ('.txt.gz', '.csv.gz', '.tsv.gz', '.json.gz', '.jsonl.gz', '.ndjson.gz', '.geojson.gz')
 ACTIVE = {"running", "pausing", "cancelling"}
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS ai_acceptance_jobs (
@@ -94,7 +95,10 @@ class ProviderError(RuntimeError):
 
 def prompt_sha():
     return hashlib.sha256(canonical({'packet_policy':PROMPT_VERSION,'standard':SYSTEM,'gzip':grounded_review.SYSTEM,
-        'rendering':grounded_review.VERSION,'extraction':text_sample.VERSION})).hexdigest()
+        'rendering':grounded_review.VERSION,'extraction':text_sample.VERSION,
+        'raster_rendering':grounded_review.ARCHIVE_VERSION,'raster_prompt':grounded_review.ARCHIVE_SYSTEM,
+        'text_availability':grounded_review.AVAILABILITY_VERSION,
+        'raster_extraction':raster_archive.VERSION,'gzip_text_suffixes':GZIP_TEXT_SUFFIXES})).hexdigest()
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -131,14 +135,15 @@ class Qwen:
     def review(self, packet):
         self.identity()
         self.last_rendering = None
-        inspection=next((json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection'),None)
-        extractive=packet.get('description_policy')==grounded_review.VERSION
+        extractive=grounded_review.is_extractive(packet)
+        inspection=grounded_review.inspection_for(packet) if extractive else None
         facts = {f["id"]:f["text"] for f in packet["facts"] if len(f["text"].strip())>=2}
         wire_schema = json.loads(json.dumps(OUTPUT_SCHEMA))
         wire_schema["properties"]["evidence"] = {"type":"array","minItems":1,"maxItems":3,
             "items":{"type":"string","enum":list(facts)}}
         if extractive: wire_schema=grounded_review.schema(packet)
-        system=grounded_review.SYSTEM if extractive else SYSTEM
+        system=(grounded_review.ARCHIVE_SYSTEM if packet.get('description_policy')==grounded_review.ARCHIVE_VERSION
+            else grounded_review.SYSTEM if extractive else SYSTEM)
         self.last_prompt_sha256=hashlib.sha256(system.encode()).hexdigest()
         messages = [{"role":"system","content":system},
                     {"role":"user","content":json.dumps(grounded_review.model_packet(packet) if extractive else packet,ensure_ascii=False)}]
@@ -179,7 +184,7 @@ def validate_output(value, packet):
             or value["confidence"] not in {"high","medium","low"}):
         raise ValueError("AI_RECOMMENDATION_INVALID")
     facts = {f["id"]:f["text"] for f in packet["facts"]}
-    extractive=packet.get('description_policy')==grounded_review.VERSION
+    extractive=grounded_review.is_extractive(packet)
     if extractive:
         facts.update(grounded_review.choices(packet)[1])
     if not isinstance(value["evidence"], list) or not 1 <= len(value["evidence"]) <= 3:
@@ -196,7 +201,7 @@ def validate_output(value, packet):
             or any(not isinstance(v,str) or not 1 <= len(v) <= 300 for v in value["concerns"])):
         raise ValueError("AI_CONCERNS_INVALID")
     if extractive:
-        inspection=next(json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection')
+        inspection=grounded_review.inspection_for(packet)
         grounded_review.validate_rendered(value,packet,inspection)
     return value
 
@@ -237,7 +242,13 @@ def packet_for(root, item):
         fact("studio_review",snapshot["review"],3000)
         fact("ocr",snapshot["analysis"].get("text", ""),6000)
         coverage = "metadata plus saved, hash-bound Studio review and bounded derived OCR; OCR may be incomplete"
-    elif profile["format"]["kind"] == "gzip" and original_name.lower().endswith(".txt.gz"):
+    elif profile["format"]["kind"] == "gzip" and original_name.lower().endswith('.tar.gz'):
+        archive=raster_archive.inspect(path)
+        fact('archive_inspection',archive['inspection'],16384)
+        for offset in range(0,len(archive['text']),1000):
+            fact('archive_text_'+str(offset//1000+1),archive['text'][offset:offset+1000],1000)
+        coverage='bounded saved tar.gz BIL archive, text sidecars and grid structure; no independent climate validation'
+    elif profile["format"]["kind"] == "gzip" and original_name.lower().endswith(GZIP_TEXT_SUFFIXES):
         sample = text_sample.gzip_text(path)
         fact("gzip_inspection",sample["inspection"])
         for offset in range(0,len(sample["text"]),1000):
@@ -253,7 +264,10 @@ def packet_for(root, item):
         coverage = "metadata plus the first bounded text bytes; not every record"
     packet={"review_time":utc_now(),"facts":facts,"coverage":coverage,
             "allowed_domains":["unassigned",*intake_review.DOMAINS],"purpose":"private local-use acceptance only"}
-    if any(f['id']=='gzip_inspection' for f in facts): packet['description_policy']=grounded_review.VERSION
+    if any(f['id']=='gzip_inspection' for f in facts):
+        packet['description_policy']=(grounded_review.VERSION if any(f['id'].startswith('gzip_text_') and f['text'].strip() for f in facts)
+            else grounded_review.AVAILABILITY_VERSION)
+    if any(f['id']=='archive_inspection' for f in facts): packet['description_policy']=grounded_review.ARCHIVE_VERSION
     return packet
 
 
@@ -269,11 +283,13 @@ def gates(item, review, packet):
         reasons.append("CONTENT_SENSITIVITY_REQUIRES_ADMIN")
     if item["profile"]["format"]["family"] == "unknown": reasons.append("FORMAT_UNRECOGNIZED")
     if (item["profile"]["format"]["family"] == "archive"
-            and not any((f["id"] in {"sample","ocr"} or f["id"].startswith("gzip_text_")) and f["text"].strip() for f in packet["facts"])):
+            and not any((f["id"] in {"sample","ocr"} or f["id"].startswith(("gzip_text_","archive_text_"))) and f["text"].strip() for f in packet["facts"])):
         reasons.append("ARCHIVE_CONTENT_NOT_INSPECTED")
     for fact in packet["facts"]:
         if fact["id"] == "gzip_inspection" and json.loads(fact["text"])["issues"]:
             reasons.append("GZIP_EXTRACTION_REQUIRES_ADMIN")
+        if fact['id']=='archive_inspection' and not json.loads(fact['text']).get('structure_validated'):
+            reasons.append('RASTER_ARCHIVE_REQUIRES_REVIEW')
     if (declared.get("rights") or {}).get("redistribution") in {"restricted","denied"}: reasons.append("CAPTURE_RIGHTS_RESTRICTED")
     if declared.get("sensitivity") in {"restricted","controlled"}: reasons.append("CAPTURE_SENSITIVITY_RESTRICTED")
     if item["size_bytes"] > intake.DEFAULT_HASH_LIMIT: reasons.append("FILE_REQUIRES_SEPARATE_LARGE_FILE_REVIEW")
@@ -285,9 +301,10 @@ def gates(item, review, packet):
 
 
 class Manager:
-    def __init__(self, root, client, *, check_volume=lambda:None):
+    def __init__(self, root, client, *, check_volume=lambda:None, packet_builder=None):
         self.root, self.client = root, client
         self.check_volume = check_volume
+        self.packet_builder = packet_builder or packet_for
         self.lock = threading.RLock()
         self.stop = threading.Event()
         self.action = "pause"
@@ -300,8 +317,10 @@ class Manager:
             return
         try:
             with self.db() as db:
-                db.execute("UPDATE ai_acceptance_tasks SET state='pending' WHERE state='working'")
-                db.execute("UPDATE ai_acceptance_jobs SET state='paused',error='INTERRUPTED_RESTART',updated=? WHERE state IN ('running','pausing','cancelling')",(utc_now(),))
+                if db.execute("SELECT 1 FROM ai_acceptance_tasks WHERE state='working' LIMIT 1").fetchone():
+                    db.execute("UPDATE ai_acceptance_tasks SET state='pending' WHERE state='working'")
+                if db.execute("SELECT 1 FROM ai_acceptance_jobs WHERE state IN ('running','pausing','cancelling') LIMIT 1").fetchone():
+                    db.execute("UPDATE ai_acceptance_jobs SET state='paused',error='INTERRUPTED_RESTART',updated=? WHERE state IN ('running','pausing','cancelling')",(utc_now(),))
         finally:
             os.close(fd)
 
@@ -457,10 +476,10 @@ class Manager:
                 self.launch(job["id"],fd)
             elif action in {"pause","cancel"}:
                 if job["state"] == "paused" and action == "cancel":
-                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state='cancelled',updated=? WHERE id=?",(utc_now(),job["id"]))
+                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state='cancelled',error='ADMIN_CANCELLED',updated=? WHERE id=?",(utc_now(),job["id"]))
                 elif job["state"] in ACTIVE:
                     self.action = action; self.stop.set()
-                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state=?,updated=? WHERE id=?",("pausing" if action=="pause" else "cancelling",utc_now(),job["id"]))
+                    with self.db() as db: db.execute("UPDATE ai_acceptance_jobs SET state=?,error=?,updated=? WHERE id=?",("pausing" if action=="pause" else "cancelling","ADMIN_PAUSED" if action=="pause" else "ADMIN_CANCELLED",utc_now(),job["id"]))
                 else: raise ValueError("AI_BATCH_NOT_RUNNING")
             else: raise ValueError("AI_ACTION_INVALID")
         return self.status()
@@ -469,6 +488,8 @@ class Manager:
         _,seq,identity,sha,context,key = task
         try:
             self.check_volume()
+        except ProviderError:
+            raise
         except RuntimeError:
             raise ProviderError("AI_DATA_VOLUME_UNAVAILABLE") from None
         item = intake.get_item(self.root,identity)
@@ -496,7 +517,7 @@ class Manager:
         actual,_ = hash_regular(path,intake.DEFAULT_HASH_LIMIT,expected_size=item["size_bytes"])
         if actual != sha:
             raise ValueError("AI_SOURCE_CHANGED_REANALYZE")
-        packet = packet_for(self.root,item)
+        packet = self.packet_builder(self.root,item)
         with self.db() as db:
             cached = db.execute("SELECT result FROM ai_acceptance_results WHERE cache_key=?",(key,)).fetchone()
         draft = json.loads(cached[0]) if cached else None
@@ -535,10 +556,12 @@ class Manager:
             "input_sha256":hashlib.sha256(canonical(packet)).hexdigest(),
             "input_path":f"data/work/intake/ai-context/{hashlib.sha256(canonical(packet)).hexdigest()}.json",
             "response_sha256":response_hash,"coverage":packet["coverage"],"review":review,
-            "generated_at":utc_now(),"options":{"temperature":0,"num_ctx":8192,"num_predict":800,"think":False}}
+            "generated_at":getattr(self.client,'last_generated_at',None) or utc_now(),"options":{"temperature":0,"num_ctx":8192,"num_predict":800,"think":False}}
         inspection = next((json.loads(f["text"]) for f in packet["facts"] if f["id"]=="gzip_inspection"),None)
         if inspection is not None:
             attribution["text_extraction"] = inspection
+        archive=next((json.loads(f['text']) for f in packet['facts'] if f['id']=='archive_inspection'),None)
+        if archive is not None:attribution['archive_inspection']=archive
         rendering=getattr(self.client,'last_rendering',None)
         if rendering is not None: attribution['description_rendering']=rendering
         generation_prompt=getattr(self.client,'last_prompt_sha256',None)
@@ -557,6 +580,8 @@ class Manager:
                 db.execute("INSERT OR REPLACE INTO ai_acceptance_results VALUES (?,?,?,?,?,?)",(key,identity,sha,context,utc_now(),json.dumps(pending)))
             try:
                 self.check_volume()
+            except ProviderError:
+                raise
             except RuntimeError:
                 raise ProviderError("AI_DATA_VOLUME_UNAVAILABLE") from None
             revision = item["review_history"][0]["revision"] if item["review_history"] else 0
@@ -593,6 +618,11 @@ class Manager:
             job = {"id":job_id,"admin":row[0]}
             while not self.stop.is_set():
                 with self.db() as db:
+                    requested = db.execute('SELECT state FROM ai_acceptance_jobs WHERE id=?',(job_id,)).fetchone()[0]
+                    if requested in {'pausing','cancelling'}:
+                        self.action = 'pause' if requested == 'pausing' else 'cancel'
+                        self.stop.set()
+                        break
                     task = db.execute("SELECT job,seq,item,sha,context,cache_key FROM ai_acceptance_tasks WHERE job=? AND state='pending' ORDER BY seq LIMIT 1",(job_id,)).fetchone()
                     if not task: break
                     db.execute("UPDATE ai_acceptance_tasks SET state='working' WHERE job=? AND seq=?",(job_id,task[1]))

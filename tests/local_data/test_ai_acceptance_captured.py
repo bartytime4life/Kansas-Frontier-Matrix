@@ -82,11 +82,21 @@ class CapturedAcceptanceTests(unittest.TestCase):
         self.assertNotIn("OUTSIDE FILE", text)
 
     def test_nontext_declared_archive_remains_uninspected(self):
-        self.capture(name="hydrology.csv.gz")
+        self.capture(name="hydrology.bin.gz")
         with patch.object(ai.text_sample, "gzip_text") as reader:
             self.assertEqual(self.run_batch()["counts"], {"held":1})
         reader.assert_not_called()
         self.assertIn("ARCHIVE_CONTENT_NOT_INSPECTED", self.item()["ai_review"]["holds"])
+
+    def test_declared_compressed_text_formats_use_bounded_utf8_reader(self):
+        for name, text in [('hydrology.csv.gz', b'station,water_level\nQA,2.4\n'),
+                           ('hydrology.jsonl.gz', b'{"station":"QA","water_level":2.4}\n')]:
+            with self.subTest(name=name):
+                payload, _ = self.capture(name=name, content=gzip.compress(text, mtime=0))
+                with patch.object(ai.text_sample, 'gzip_text', wraps=ai.text_sample.gzip_text) as reader:
+                    packet = ai.packet_for(self.root, self.item())
+                reader.assert_called_once_with(payload)
+                self.assertTrue(any(f['id'].startswith('gzip_text_') and 'water_level' in f['text'] for f in packet['facts']))
 
     def test_declared_nontext_name_overrides_txt_gzip_physical_name(self):
         import copy

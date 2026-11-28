@@ -314,11 +314,21 @@ async function openItem(id) {
       el("p",{class:"fine",text:`AI reviewer: ${a.model} · requested by ${a.requested_by} · ${ai.outcome==='accepted'?'Accepted for private local use':ai.outcome==='pending'?'AI draft saved; not accepted':'Held for admin review'} · ${ai.reviewed_at}`}),
       el("p",{class:"fine",text:`Review scope: ${a.coverage}. Confidence: ${ai.confidence} (model self-assessment).`}));
     if (ai.concerns?.length) section.append(el("ul",{},...ai.concerns.map(v=>el("li",{text:v}))));
-    if (a.description_rendering) section.append(el("p",{class:"fine",text:"Qwen selected the quoted source passages. KFM rendered the quotations and measured inspection scope; OCR names, dates and historical assertions remain unverified."}));
+    if (a.acceptance_basis === "owner_requested_private_reference") section.append(el("p",{class:"fine",text:
+      `Accepted as a private catalog reference under the owner's request. Qwen's original recommendation: ${a.qwen_original_recommendation}. Its uncertainty and source limitations remain recorded.`}));
+    if (a.description_rendering) section.append(el("p",{class:"fine",text:
+      a.description_rendering.version === 'source-passages-v3-raster-metadata'
+        ? "Qwen selected the archive metadata passages. KFM checked the saved archive and grid structure; these checks do not independently certify climate values."
+        : a.description_rendering.version === 'source-passages-v3-text-availability'
+        ? "KFM recovered no readable text. Qwen reviewed the supplied catalog context; the source content remains unverified."
+        : a.description_rendering.passage_ids?.includes('no_usable_excerpt')
+        ? "KFM found no usable OCR excerpt. Qwen reviewed the supplied catalog context; the source content remains unverified."
+        : "Qwen selected the quoted source passages. KFM rendered the quotations and measured inspection scope; OCR names, dates and historical assertions remain unverified."}));
     if (a.text_extraction) {
       const x=a.text_extraction;
       section.append(el("p",{class:"fine",text:`Gzip text inspected: ${x.text_characters} characters from ${x.expanded_bytes} expanded bytes; ${x.compressed_bytes_read} compressed bytes read. ${x.text_truncated?'Bounded excerpt; more text remains unchecked.':'Complete text of the first member supplied.'} First-member CRC ${x.crc_validated?'validated':'not validated'}.`}));
     }
+    if (a.review_reused) section.append(el("p",{class:"fine",text:`The earlier Qwen review was reused with its original generation time: ${a.generated_at}. The owner's local acceptance is recorded separately.`}));
     section.append(el("details",{},el("summary",{text:"Evidence and AI attribution"}),
       el("ul",{},...ai.evidence.map(v=>el("li",{text:`${v.source}: ${v.quote}`}))),
       kv([["Model digest",a.model_digest],["Requested by",a.requested_by],["Batch",a.batch_id],

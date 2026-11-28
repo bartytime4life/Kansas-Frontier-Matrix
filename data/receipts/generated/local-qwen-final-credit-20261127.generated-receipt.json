@@ -1,0 +1,138 @@
+{
+  "receipt_id": "local-qwen-final-credit-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-qwen-intake-automation.md",
+    "tests/local_data/test_ai_acceptance.py",
+    "tests/local_data/test_ai_acceptance_captured.py",
+    "tests/local_data/test_grounded_review.py",
+    "tests/local_data/test_intake_workspace.py",
+    "tests/local_data/test_raster_archive.py",
+    "tests/local_data/test_recorded_review.py",
+    "tests/local_data/test_review_cache.py",
+    "tests/local_data/test_smart_intake.py",
+    "tools/local_data/ai_acceptance.py",
+    "tools/local_data/grounded_review.py",
+    "tools/local_data/intake.py",
+    "tools/local_data/intake_desk/ai-review.js",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_review.py",
+    "tools/local_data/intake_studio/intake_backend.py",
+    "tools/local_data/intake_studio/workspace.py",
+    "tools/local_data/prepare_intake.py",
+    "tools/local_data/raster_archive.py",
+    "tools/local_data/recorded_review.py",
+    "tools/local_data/review_cache.py",
+    "tools/local_data/smart_intake.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-qwen-intake-automation.md": "sha256:e756baf05bfe9327b2b362efc6d2ad2fa89811841433836813d18ad08cae5877",
+    "tests/local_data/test_ai_acceptance.py": "sha256:97da533c6c033f07143332c392c86c21853dd8d48bbe480af5d85def25c1bcf0",
+    "tests/local_data/test_ai_acceptance_captured.py": "sha256:040cd27bc23884443452d12a932a91727abb66e5d13cb332668fd28aaaddb5aa",
+    "tests/local_data/test_grounded_review.py": "sha256:faf3718164c66eb93c132629e1d2b44867d5ec8d2b5f6d8cf596df0e910c35a0",
+    "tests/local_data/test_intake_workspace.py": "sha256:efa230fc36626e3fa40bd9679e7947d4a0b55ddb0062f0a123e6ed42e9b06e88",
+    "tests/local_data/test_raster_archive.py": "sha256:401ea3b3331e4ae41cfb1107b2779e5c374f45a1b5c884097b01de323d91f9ac",
+    "tests/local_data/test_recorded_review.py": "sha256:c251d6d859dcd75e9be68c0094a3d9248c3f2fe8d50ef07a0f671c5fcd63c092",
+    "tests/local_data/test_review_cache.py": "sha256:67674ec686c5f41ad7ae38e22bfd556c2548d8644f8a75f1217b916e73c1e2e8",
+    "tests/local_data/test_smart_intake.py": "sha256:c44a745a28844b1385c406785d2fbcbc4d3e7c933c780d6a7060035e8380c4e7",
+    "tools/local_data/ai_acceptance.py": "sha256:2b8382895dd560a8b04a9b726c482660231f0a0dc271a36716d2be0a471ba393",
+    "tools/local_data/grounded_review.py": "sha256:39126f597e860553c39d7a7843d97fcb9d892a759d6ccf0443e8b9eb8e1b33d1",
+    "tools/local_data/intake.py": "sha256:63c1a4d5f2a36f85fa6eb5180df6c55e5d6d0df0ca3264ac961d30cf90dbcff1",
+    "tools/local_data/intake_desk/ai-review.js": "sha256:a67f97987d20202dafba992bb2ea65bc40e364ed476a051bbfc9f4e8ef86bb5d",
+    "tools/local_data/intake_desk/desk.js": "sha256:f135c2ec9bb043f12bbd5f75d95811b1025ca8d1e90c8710804fcda4b7c7f81f",
+    "tools/local_data/intake_review.py": "sha256:0aeefa8193bca73507456fb8a6a675fc815c9b0853a5d1b82e809c5225c5f4ca",
+    "tools/local_data/intake_studio/intake_backend.py": "sha256:fb8003a3b225e107c994e0450062c7babbd6545d76aba120bd467486cb8c81c1",
+    "tools/local_data/intake_studio/workspace.py": "sha256:90595600aca3f28dea144c222cbcda66224781eb7c50d68fd60ed459c86be676",
+    "tools/local_data/prepare_intake.py": "sha256:7f5d93f005325586dc0a2b349b55f66e3a4b35bd9b4123d5887258a08eaddd71",
+    "tools/local_data/raster_archive.py": "sha256:543113f108242f02b13422eb54bd2498947ab402658ca9a3520f2011a85e1819",
+    "tools/local_data/recorded_review.py": "sha256:99d0eb5a9a7eb79725bf490543bf5c65698dd95a02a0289bee718ce842b686b4",
+    "tools/local_data/review_cache.py": "sha256:9d278e7c5efeed41a278940c0b31b5a67384482fb0981b75f58ddf8769025749",
+    "tools/local_data/smart_intake.py": "sha256:00ce95d0671f6749acf796347d457d1ff43f1387d9373f90aaefd52c4c2539ab"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Current Codex session; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "commit:9e5064533da414c03561310a5193ad73684af31f",
+      "commit:e4744ea342550f2af642ab1d010410c9b09e53d2",
+      "docs/doctrine/directory-rules.md",
+      "https://prism.oregonstate.edu/documents/PRISM_datasets.pdf"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-qwen-intake-automation.md": "PROPOSED",
+    "tests/local_data/test_ai_acceptance.py": "PROPOSED",
+    "tests/local_data/test_ai_acceptance_captured.py": "PROPOSED",
+    "tests/local_data/test_grounded_review.py": "PROPOSED",
+    "tests/local_data/test_intake_workspace.py": "PROPOSED",
+    "tests/local_data/test_raster_archive.py": "PROPOSED",
+    "tests/local_data/test_recorded_review.py": "PROPOSED",
+    "tests/local_data/test_review_cache.py": "PROPOSED",
+    "tests/local_data/test_smart_intake.py": "PROPOSED",
+    "tools/local_data/ai_acceptance.py": "PROPOSED",
+    "tools/local_data/grounded_review.py": "PROPOSED",
+    "tools/local_data/intake.py": "PROPOSED",
+    "tools/local_data/intake_desk/ai-review.js": "PROPOSED",
+    "tools/local_data/intake_desk/desk.js": "PROPOSED",
+    "tools/local_data/intake_review.py": "PROPOSED",
+    "tools/local_data/intake_studio/intake_backend.py": "PROPOSED",
+    "tools/local_data/intake_studio/workspace.py": "PROPOSED",
+    "tools/local_data/prepare_intake.py": "PROPOSED",
+    "tools/local_data/raster_archive.py": "PROPOSED",
+    "tools/local_data/recorded_review.py": "PROPOSED",
+    "tools/local_data/review_cache.py": "PROPOSED",
+    "tools/local_data/smart_intake.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Complete final offline local-data suite",
+      "outcome": "PASS",
+      "reason": "1203 passed, 45 skipped, 714 subtests passed, Python 3.14.4."
+    },
+    {
+      "gate": "Final frozen review runtime",
+      "outcome": "PASS",
+      "reason": "103 review/extraction/reuse/recovery tests passed; 21 focused archive/recorded-review tests passed. Whitespace-only legacy reviews are regenerated, not reused as source quotations."
+    },
+    {
+      "gate": "Source and credit audit",
+      "outcome": "PASS",
+      "reason": "500 accepted references rehashed and reconstructed from actual Qwen responses, including 41 raster archives; no errors. Actual empty capture remains held pending native acceptance with corrected availability metadata."
+    },
+    {
+      "gate": "Generation and integrity labels",
+      "outcome": "PASS",
+      "reason": "Model prompt and resumable batch identity remain unchanged. Only whitespace availability detection, reuse eligibility and method credit are corrected. Final artifact hashes validated; historical authoring receipts remain preserved."
+    },
+    {
+      "gate": "Exact-head hosted results and final real-file availability smoke",
+      "outcome": "SKIPPED",
+      "reason": "Pending final push/runtime activation at authorship. Parent 9e5064533d completed 54 workflows successfully and one skipped; no human approval is inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "PRISM-dataset-variable-definitions",
+      "validated": true,
+      "evidence_ref": "https://prism.oregonstate.edu/documents/PRISM_datasets.pdf"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-28T03:16:10.428540+00:00",
+  "emitter": "Codex",
+  "notes": "Final current artifact hashes supersede the two historical authoring receipts for present-byte validation. The real whitespace-only capture exposed a missing strip check: empty source text now receives an inspection-availability description and credit, and its old quoted-placeholder review is not reused. Original source bytes and prior reviews/receipts remain unchanged. Model prompts, acceptance scope, restrictions, rights and source-admission authority are unchanged. Operational policy selections, item IDs, private data, prompts and hidden reasoning are excluded. Human review pending."
+}

@@ -24,11 +24,11 @@ class FakeQwen:
         self.calls += 1
         self.before(packet)
         self.last_rendering=None
-        if packet.get('description_policy')==ai.grounded_review.VERSION:
+        if ai.grounded_review.is_extractive(packet):
             selection={'title_ids':[],'passage_ids':[next(iter(ai.grounded_review.choices(packet)[1]))],
                 'domain':'hydrology','recommendation':'hold' if self.hold else 'accept_local',
                 'confidence':'high','concern_codes':[]}
-            inspection=next(json.loads(f['text']) for f in packet['facts'] if f['id']=='gzip_inspection')
+            inspection=ai.grounded_review.inspection_for(packet)
             review,self.last_rendering=ai.grounded_review.render(selection,packet,inspection)
             return review,hashlib.sha256(manage.canonical(review)).hexdigest()
         evidence=next((f for f in packet["facts"] if f["id"].startswith("gzip_text_")),packet["facts"][1])
@@ -125,12 +125,13 @@ class AcceptanceTests(unittest.TestCase):
         self.assertIn('CONTENT_SENSITIVITY_REQUIRES_ADMIN',intake.get_item(self.root,self.id)['ai_review']['holds'])
 
     def test_uninspected_archive_is_held_even_when_model_is_high_confidence(self):
-        import gzip
+        import zipfile
         self.path.unlink()
-        archive=self.root/'data/raw/hydrology.csv.gz'
-        archive.write_bytes(gzip.compress(b'Synthetic river water notes, QA only.'))
+        archive=self.root/'data/raw/hydrology.zip'
+        with zipfile.ZipFile(archive,'w') as bundle:
+            bundle.writestr('notes.txt','Synthetic river water notes, QA only.')
         intake.analyze(self.root)
-        identity=intake.item_id('raw','hydrology.csv.gz')
+        identity=intake.item_id('raw','hydrology.zip')
         self.assertEqual(self.run_batch()['counts'],{'held':1})
         item=intake.get_item(self.root,identity)
         self.assertEqual(item['status'],'review')

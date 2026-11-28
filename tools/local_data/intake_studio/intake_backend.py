@@ -222,7 +222,7 @@ def integration(review):
 
 class Store:
     def __init__(self, root, runtime, *, kfm_root=None, pipeline_lock=None, store_check=None, working_connection=None,
-                 library_root=None, archive_root=None, raster_python=None, inbox=None, qwen_model=None, qwen_digest=None):
+                 library_root=None, archive_root=None, raster_python=None, inbox=None, qwen_model=None, qwen_digest=None, automation_config=None):
         self.root = Path(root).expanduser().resolve()
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(self.root, 0o700)
@@ -238,6 +238,7 @@ class Store:
         self.raster_python = Path(raster_python) if raster_python else None
         self.inbox = Path(inbox) if inbox else None
         self.qwen_model, self.qwen_digest = qwen_model, qwen_digest
+        self.automation_config=Path(automation_config).resolve() if automation_config else None
         self.lock = threading.RLock()
         self.extract_lock = threading.Lock()
         self.uploads = UploadSessions(self.root, max_bytes=MAX_BYTES, chunk_bytes=UPLOAD_CHUNK_BYTES,
@@ -1017,13 +1018,16 @@ def main():
     parser.add_argument("--inbox", type=Path, help="existing read-only downloads inbox for Working Data")
     parser.add_argument("--qwen-model", help="installed local Qwen model used for admin smart acceptance")
     parser.add_argument("--qwen-digest", help="exact installed Ollama model digest; required with --qwen-model")
+    parser.add_argument("--automation-config", type=Path, help="trusted local review automation configuration")
     a = parser.parse_args()
     if bool(a.qwen_model) != bool(a.qwen_digest):
         parser.error("--qwen-model and --qwen-digest must be supplied together")
+    if a.automation_config and not (a.qwen_model and a.kfm_root and a.store_check):
+        parser.error("--automation-config requires pinned Qwen, Working Data and the volume guard")
     store = Store(a.store, a.runtime, kfm_root=a.kfm_root, pipeline_lock=a.pipeline_lock,
                   store_check=a.store_check, working_connection=a.working_connection,
                   library_root=a.library_root, archive_root=a.archive_root, raster_python=a.raster_python, inbox=a.inbox,
-                  qwen_model=a.qwen_model, qwen_digest=a.qwen_digest)
+                  qwen_model=a.qwen_model, qwen_digest=a.qwen_digest, automation_config=a.automation_config)
     server = Server(a.port, store)
     print(f"KFM Local Intake: {server.origin}", flush=True)
     print(f"Private inbox: {store.root}", flush=True)
