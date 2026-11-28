@@ -820,3 +820,34 @@ the exited target processes. Configuration, archive/hash verification, runtime
 stack paths where available, and new-code journal behavior are supporting evidence
 with a different scope. The retrospective audit is complete; the expired watcher
 was not restarted and no new recurring monitor was created.
+
+## Groundwater work scheduling follow-up, November 27, 2026
+
+The successful groundwater invocations in the November 27 readback conceal a
+backfill stall: `next_year` advanced to 1987 on November 23 and remained there
+through November 27. Recurring older revision years used each run's row budget
+before the planner reached its unfinished history. A successful service result
+alone therefore does not prove backfill progress.
+
+The proposed planner alternates due revisions and contiguous backfill years.
+It checkpoints an optional `next_work` value after each completed year, so work
+cut off by a row or year cap gives the other queue the next turn. Existing state
+without that value starts with revisions. Due revisions prefer the least recently
+checked year, then year number, so rediscovered recent work does not always win
+over an older queued revision. Annual rechecks follow after both queues finish.
+Future due years are visited in backfill order and cannot jump the cursor over
+unvisited years. Empty answers for a previously loaded year retain its rows and
+its due entry; failed work retains its cursor and turn for a later retry.
+
+The existing limits remain: at most 80 processed years by default, with the
+400,000-row budget checked before starting another complete year. One complete
+year can exceed the remaining row budget, as before. Request pacing, throttle
+budget, timer cadence, receipt identities and per-year transactions are unchanged.
+`feed_done` gains `year_counts` for revisions/backfill/rechecks and `next_work`,
+alongside the existing cursor and pending counts.
+
+No database migration or source-history rewrite is required. Older releases can
+ignore the optional state field. After review, merge and a pinned installation,
+observe normal scheduled runs for both queue progress and contiguous cursor
+advancement, including when a budget ends after one year. Until then this remains
+a proposed source fix; the earlier deployed release and its rollback are preserved.

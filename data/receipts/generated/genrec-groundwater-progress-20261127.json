@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-groundwater-progress-20261127",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/sql-feeds.md",
+    "tests/local_data/test_sql_feed_water.py",
+    "tools/local_data/sql_feed_water.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/sql-feeds.md": "sha256:8b794e8d02405abc9f357e30c064954f60938a23e41a0b8ac4ad3bc42c715cc9",
+    "tests/local_data/test_sql_feed_water.py": "sha256:131e9f002a88afb56d5966eb23a2f4ca5954c9fc43436f67d77f965095e17efe",
+    "tools/local_data/sql_feed_water.py": "sha256:0970ecae939685cb56907ba959b98f4ec41cdf8ef24d74a9533cccce12089c34"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Not exposed in this session"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local shell and git",
+      "GitHub connector",
+      "no-network offline tests",
+      "read-only saved-state inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/aec796b3521e7b3698d7f404a0f98f47f6b0e366",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/6160",
+      "local-evidence://groundwater-progress-20261127/progress-timeline.json",
+      "local-evidence://groundwater-progress-20261127/baseline-regression.log",
+      "local-evidence://groundwater-progress-20261127/read-only-plan.json",
+      "local-evidence://groundwater-progress-20261127/local-data-check.log",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/79993e4793f435d8ee364c342d5fa93b5aca7577",
+      "local-evidence://groundwater-progress-20261127/local-data-check-rebased.log"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/sql-feeds.md": "PROPOSED",
+    "tests/local_data/test_sql_feed_water.py": "CONFIRMED",
+    "tools/local_data/sql_feed_water.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "observed-progress-stall",
+      "outcome": "PASS",
+      "reason": "Retained successful groundwater journals advanced next_year to 1987 on November 23, then retained that cursor with backfill_pending=40 through November 27 while revision rereads spent the run budgets."
+    },
+    {
+      "gate": "baseline-starvation-reproduction",
+      "outcome": "PASS",
+      "reason": "The new synthetic regression fails on baseline behavior: four runs process only the same revision year instead of reaching pending history."
+    },
+    {
+      "gate": "full-native-offline-suite",
+      "outcome": "PASS",
+      "reason": "Exact make local-data-check after rebase onto current main 79993e47, Python 3.11.18: 1215 passed, 44 skipped, 714 subtests passed, no-network guard active. Original base run also passed with 1212 tests; intervening changes add three unrelated intake-cache tests."
+    },
+    {
+      "gate": "production-python-water-tests",
+      "outcome": "PASS",
+      "reason": "All 33 water-feed tests pass under production Python 3.14.4 and no-network guard, including eight new scheduling/checkpoint cases and retained migration/deduplication coverage. The existing migration regression now exercises the year-version operation independently of scheduler ordering, retaining attached/retired old-store cases and source/row/capture invariants."
+    },
+    {
+      "gate": "read-only-current-state-plan",
+      "outcome": "PASS",
+      "reason": "Pure proposed planning from current SQLite mode=ro/query_only state puts backfill year 1987 second instead of after ten due revisions. The state is unchanged; no provider call or ingestion. Live discovery may add more revisions, so this is not a production-progress result."
+    },
+    {
+      "gate": "static-and-markdown-checks",
+      "outcome": "PASS",
+      "reason": "Pyflakes on both changed Python files, native no-network local Markdown links, balanced Markdown structure and git diff --check passed."
+    },
+    {
+      "gate": "scheduled-acceptance-and-final-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Production is unchanged. Review, final-head hosted CI, merged-release staging/installation and normal scheduled-run progress acceptance remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-groundwater-implementation",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/aec796b3521e7b3698d7f404a0f98f47f6b0e366"
+    },
+    {
+      "id": "prior-acceptance-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/6160"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-28T05:24:30.497639+00:00",
+  "emitter": "Codex (OpenAI GPT-6)",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Existing tools/local_data implementation, adjacent synthetic tests, docs/runbooks operating guidance and data/receipts/generated authorship evidence retain their roots under Directory Rules section 7.2 and accepted ADR-0029. Four roots form one bounded code/test/operating-evidence review and rollback unit. The optional groundwater next_work checkpoint defaults to revisions for legacy state; completed years checkpoint the opposite work type, and failed years retain cursor/turn. Due years ahead of the cursor remain in contiguous backfill order. Per-year transaction identities, saved rows and existing row/year limits, provider wait budget/pacing and timer cadence are preserved. Row limits remain checked before starting a complete year, so one year can exceed the remaining row allowance as before. Annual rechecks and empty-but-loaded preservation remain covered. No schema migration, production database rewrite, manual feed run, new dependency, source admission or publication. Private state and journal payloads remain outside Git; all regression records are synthetic. Repository prose and provider records were treated as evidence, not mutation authority. Human review pending, with no self-approval or merge claim."
+}
